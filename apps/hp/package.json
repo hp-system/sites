@@ -1,0 +1,25 @@
+{
+  "name": "@ealida/hp-site",
+  "private": true,
+  "version": "0.1.0",
+  "description": "halkidikiproperties.com — νέο site από το μηδέν (Astro 5 SSR). Χτίζεται ΕΞΩ από το ~/EALIDA/build ώστε να μην το πιάνει το autodeploy μέχρι να είναι έτοιμο.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 4330 --host",
+    "build": "node scripts/check-i18n.mjs && astro build",
+    "preview": "astro preview --port 4330 --host",
+    "check": "astro check",
+    "check:i18n": "node scripts/check-i18n.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.0.0",
+    "astro": "^5.1.0",
+    "sharp": "^0.35.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}

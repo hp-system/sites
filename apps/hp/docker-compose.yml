@@ -1,0 +1,55 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# ΤΟ ΝΕΟ SITE της halkidikiproperties.com — ΞΕΧΩΡΙΣΤΟ compose project.
+#
+# 🔴 ΓΙΑΤΙ ΕΙΝΑΙ ΞΕΧΩΡΙΣΤΟ ΚΑΙ ΟΧΙ ΣΤΟ `infra/docker-compose.yml` ΤΟΥ EALIDA:
+#    Το deploy του EALIDA κάνει `git archive | tar -x --overwrite` πάνω στο
+#    /opt/ealida, οπότε ΚΑΘΕ αλλαγή σε παρακολουθούμενο αρχείο επαναφέρεται.
+#    Η υπηρεσία `hp-site` σβήστηκε **δύο φορές μέσα σε μία ώρα** (30/7 22:02 και
+#    01:21) — και την πρώτη φορά ΣΙΩΠΗΛΑ: το container συνέχιζε να τρέχει, το
+#    site δούλευε, και θα το βρίσκαμε μόνο στο επόμενο restart του box.
+#    Το autodeploy τρέχει κάθε 120΄΄, άρα ήταν βρόχος, όχι περιστατικό.
+#
+# 🪤 ΚΑΙ ΓΙΑΤΙ ΖΕΙ ΕΔΩ, ΜΕΣΑ ΣΤΟΝ ΠΗΓΑΙΟ, ΚΑΙ ΟΧΙ ΜΟΝΟ ΣΤΟ BOX:
+#    Το έγραψα πρώτα απευθείας στο `/opt/ealida/hp-site/` — και το έσβησε το
+#    **δικό μου** `rsync --delete` στο επόμενο deploy, αφού δεν υπήρχε στην πηγή.
+#    Το build μετά απαντούσε «no configuration file provided» ενώ ο κώδικας είχε
+#    συγχρονιστεί κανονικά: η διόρθωση φαινόταν σωστή τοπικά και δεν έβγαινε ποτέ.
+#    Τώρα ταξιδεύει μαζί με τον κώδικα και δεν μπορεί να χαθεί.
+#
+# ΑΝΕΒΑΣΜΑ (από τον Mac):
+#   rsync -az --delete --exclude node_modules --exclude dist --exclude .astro \
+#     ~/EALIDA/site/ root@100.110.33.2:/opt/ealida/hp-site/
+#   ssh … 'cd /opt/ealida/hp-site && docker compose build hp-site \
+#                                  && docker compose up -d hp-site'
+#   (build πρώτα, swap μετά: αποτυχημένο build δεν ρίχνει το ζωντανό)
+# ═══════════════════════════════════════════════════════════════════════════
+name: hp-site
+
+services:
+  hp-site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      EALIDA_API: http://api:3020/api
+      # 🔒 Η ΔΗΜΟΣΙΑ ΔΙΕΥΘΥΝΣΗ, ΡΗΤΑ. Το φρένο εγγραφής του EALIDA κρίνει από αυτήν.
+      #    ΔΕΝ τη μαντεύουμε από κεφαλίδες: ο tunnel μπορεί να μην τις περάσει, και
+      #    τότε η εγγραφή ανοίγει σε όλους — συνέβη 6/8.
+      PUBLIC_ORIGIN: https://hp.rewize.app
+    # ⚠️ ΚΑΜΙΑ ΔΗΜΟΣΙΑ ΘΥΡΑ. Η πρόσβαση γίνεται ΜΟΝΟ μέσω Cloudflare Tunnel:
+    #    hp.rewize.app → http://hp-site:4331
+
+# 🔑 ΤΟ ΚΡΙΣΙΜΟ — ΧΩΡΙΣ ΑΥΤΟ ΣΠΑΕΙ ΤΟ hp.rewize.app.
+#    Ξεχωριστό compose project σημαίνει ΞΕΧΩΡΙΣΤΟ δίκτυο (`hp-site_default`).
+#    Τότε δύο πράγματα σπάνε ταυτόχρονα και σιωπηλά:
+#      · ο tunnel δεν λύνει το όνομα `hp-site` → σφάλμα στο hp.rewize.app
+#      · το `EALIDA_API` δεν λύνει το `api`   → η σελίδα σηκώνεται ΧΩΡΙΣ ακίνητα
+#    Με `external: true` μπαίνουμε στο ΥΠΑΡΧΟΝ δίκτυο του EALIDA, όπου ζουν ήδη
+#    ο tunnel και το api.
+#    ⚠️ Το `ealida_default` το φτιάχνει το EALIDA compose. Αν κάποιος κάνει
+#       `docker compose down` εκεί, το δίκτυο φεύγει και ΑΥΤΟ εδώ δεν ξεκινά.
+networks:
+  default:
+    name: ealida_default
+    external: true

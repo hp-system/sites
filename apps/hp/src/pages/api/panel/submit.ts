@@ -1,0 +1,85 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ΥΠΟΒΟΛΗ ΑΚΙΝΗΤΟΥ ΑΠΟ ΤΟΝ ΠΙΝΑΚΑ → `POST /site/property-submission`
+//
+// 🔴 ΤΟ ΟΝΟΜΑ ΚΑΙ ΤΟ E-MAIL ΔΕΝ ΕΡΧΟΝΤΑΙ ΑΠΟ ΤΗ ΦΟΡΜΑ — ΕΡΧΟΝΤΑΙ ΑΠΟ ΤΟ ΕΙΣΙΤΗΡΙΟ.
+//    Αν τα δεχόμασταν από το σώμα του αιτήματος, οποιοσδήποτε θα υπέβαλλε ακίνητο
+//    στο όνομα τρίτου: το CRM θα δημιουργούσε ή θα ένωνε επαφή με ξένο e-mail
+//    (`upsertContact`) και ο πραγματικός άνθρωπος θα δεχόταν τηλέφωνο για ακίνητο
+//    που δεν έχει. Εδώ η ταυτότητα αποδεικνύεται, δεν δηλώνεται.
+//
+// 🪤 ΤΟ API ΑΠΑΝΤΑ 404 ΟΤΑΝ ΛΕΙΠΕΙ name Ή email (`NotFoundException`, ΟΧΙ 400).
+//    Μη το μεταφράσεις σε «δεν βρέθηκε» — ο χρήστης θα νόμιζε ότι χάθηκε η σελίδα.
+//
+// ⛔ ΜΗΝ προωθήσεις εδώ πεδία που δεν διαβάζει ο διακομιστής: μπαίνουν στη βάση
+//    μέσα στο `attributes` μόνο όσα αναγνωρίζει, τα υπόλοιπα χάνονται σιωπηλά και
+//    ο ιδιοκτήτης νομίζει ότι τα έστειλε.
+// ═══════════════════════════════════════════════════════════════════════════
+import type { APIRoute } from 'astro';
+import { memberOf } from '../../../lib/member';
+import { forwardIp } from '../../../lib/clientip';
+
+export const prerender = false;
+
+const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
+
+const json = (d: unknown) => new Response(JSON.stringify(d), {
+  status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
+});
+
+const clean = (v: unknown, n: number) => String(v ?? '').trim().slice(0, n);
+
+// Το EALIDA κρατά `category` και `subcategory` πεζά. Η φόρμα δίνει ένα «είδος»·
+// εδώ γίνεται το ζεύγος που περιμένει η βάση.
+const KIND: Record<string, { category: string; subcategory: string }> = {
+  house:      { category: 'residential', subcategory: 'house' },
+  apartment:  { category: 'residential', subcategory: 'apartment' },
+  maisonette: { category: 'residential', subcategory: 'maisonette' },
+  villa:      { category: 'residential', subcategory: 'villa' },
+  land:       { category: 'land',        subcategory: 'plot' },
+  commercial: { category: 'commercial',  subcategory: 'commercial' },
+};
+
+export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
+  const token = cookies.get('member_token')?.value;
+  const me = await memberOf(token);
+  if (!me || me.blocked) {
+    return json({ ok: false, message: 'Η σύνδεσή σας έληξε. Μπείτε ξανά και δοκιμάστε.' });
+  }
+  // Ο ίδιος έλεγχος που κάνει και η σελίδα πριν δείξει τη φόρμα — εδώ όμως είναι ο
+  // δεσμευτικός: η σελίδα μπορεί να παρακαμφθεί, αυτό όχι.
+  if (!me.name || !me.email) {
+    return json({ ok: false, message: 'Συμπληρώστε πρώτα το όνομά σας στα στοιχεία σας.' });
+  }
+
+  let b: Record<string, unknown> = {};
+  try { b = await request.json(); } catch { /* κενό → πέφτει στον έλεγχο περιοχής */ }
+
+  const area = clean(b.area, 120);
+  if (!area) return json({ ok: false, message: 'Γράψτε την περιοχή.' });
+
+  const k = KIND[clean(b.kind, 20)] ?? KIND.house;
+  const payload = {
+    name: me.name, email: me.email, phone: me.phone || undefined,
+    category: k.category, subcategory: k.subcategory,
+    area,
+    sqm: Number(String(b.sqm ?? '').replace(/\D/g, '')) || undefined,
+    price: Number(String(b.price ?? '').replace(/\D/g, '')) || undefined,
+    description: clean(b.desc, 3000) || undefined,
+  };
+
+  try {
+    const r = await fetch(`${API}/site/property-submission`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...forwardIp(request, clientAddress) },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!r.ok) {
+      // 404 εδώ σημαίνει «λείπει name/email», όχι «χάθηκε η σελίδα».
+      return json({ ok: false, message: 'Δεν μπόρεσε να σταλεί. Δοκιμάστε ξανά ή τηλεφωνήστε μας.' });
+    }
+    return json({ ok: true });
+  } catch {
+    return json({ ok: false, message: 'Δεν έχουμε σύνδεση αυτή τη στιγμή. Δοκιμάστε ξανά.' });
+  }
+};

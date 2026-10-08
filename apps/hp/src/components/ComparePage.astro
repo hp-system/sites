@@ -1,0 +1,184 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΣΥΓΚΡΙΣΗ ΑΓΑΠΗΜΕΝΩΝ — `/panel/compare`
+//
+// Το σημερινό site έχει σελίδα σύγκρισης (`comparePage.blade.php`) αλλά **δεν την
+// βρίσκει κανείς**: ζει χωριστά, χωρίς σύνδεσμο από τα αγαπημένα. Εδώ είναι η
+// φυσική της θέση — δίπλα στη λίστα που θέλεις να συγκρίνεις.
+//
+// 🔑 ΚΑΜΙΑ ΝΕΑ ΑΠΟΘΗΚΕΥΣΗ. Συγκρίνει ό,τι έχει ήδη αποθηκεύσει ο πελάτης. Δεν
+//    χρειάζεται endpoint, δεν χρειάζεται «λίστα σύγκρισης» — η λίστα υπάρχει.
+//
+// 📱 ΣΤΟ ΚΙΝΗΤΟ Ο ΠΙΝΑΚΑΣ ΚΥΛΑΕΙ ΟΡΙΖΟΝΤΙΑ ΜΕΣΑ ΣΤΟ ΚΟΥΤΙ ΤΟΥ, ποτέ η σελίδα.
+//    Η πρώτη στήλη μένει κολλημένη — αλλιώς κυλάς δεξιά και δεν ξέρεις τι κοιτάς.
+//
+// 🪤 ΤΙΜΗ «ΚΑΤΟΠΙΝ ΑΙΤΗΜΑΤΟΣ»: `priceVisible` κρίνει, ΟΧΙ «αν price > 0». Ακίνητο
+//    με κρυφή τιμή έχει κανονικά νούμερο στη βάση — σκέτος έλεγχος θα το τύπωνε.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { listUrl, prefix, propertyUrl, t, type Lang } from '../lib/i18n';
+import { allProperties, refOf, priceOf, priceVisible, pick, type SiteProperty } from '../lib/api';
+import { viewerFor, placeOf } from '../lib/gate';
+import { money, num, sqm as sqmFmt } from '../lib/format';
+import { coverOf, marked, altOf } from '../lib/photos';
+import type { Member } from '../lib/member';
+
+interface Props { lang: Lang; me: Member; token?: string }
+const { lang, me, token } = Astro.props;
+const p = prefix(lang);
+const viewer = viewerFor(me.level);
+
+let items: SiteProperty[] = [];
+let failed = false;
+try {
+  const all = await allProperties(600, token);
+  const byRef = new Map(all.map((x) => [refOf(x).toLowerCase(), x]));
+  items = me.favorites.map((f) => byRef.get(f.toLowerCase())).filter((x): x is SiteProperty => !!x);
+} catch { failed = true; }
+
+// 🚧 ΟΡΙΟ ΕΞΙ. Πάνω από αυτό ο πίνακας γίνεται αδιάβαστος ακόμη και σε υπολογιστή,
+//    και η σύγκριση χάνει το νόημά της. Το λέμε ρητά αντί να κόβουμε σιωπηλά.
+const MAX = 6;
+const shown = items.slice(0, MAX);
+const cut = Math.max(0, items.length - MAX);
+
+type Row = { label: string; val: (p: SiteProperty) => string };
+const rows: Row[] = [
+  { label: t(lang, 'cmp.price'), val: (x) => {
+      const a = x.attributes ?? {};
+      return priceVisible(a) ? money(priceOf(a), lang) : t(lang, 'cmp.on_request');
+    } },
+  { label: t(lang, 'cmp.area'), val: (x) => placeOf(x.attributes ?? {}, lang, viewer) || '—' },
+  { label: t(lang, 'cmp.sqm'), val: (x) => {
+      const n = Number(x.attributes?.sqm ?? 0);
+      return n > 0 ? sqmFmt(n, lang) : '—';
+    } },
+  { label: t(lang, 'cmp.plot'), val: (x) => {
+      const n = Number(x.attributes?.plot_sqm ?? x.attributes?.land_sqm ?? 0);
+      return n > 0 ? sqmFmt(n, lang) : '—';
+    } },
+  { label: t(lang, 'cmp.beds'), val: (x) => {
+      const n = Number(x.attributes?.bedrooms ?? 0);
+      return n > 0 ? num(n, lang) : '—';
+    } },
+  { label: t(lang, 'cmp.baths'), val: (x) => {
+      const n = Number(x.attributes?.bathrooms ?? 0);
+      return n > 0 ? num(n, lang) : '—';
+    } },
+  { label: t(lang, 'cmp.year'), val: (x) => {
+      const y = Number(x.attributes?.year_built ?? x.attributes?.construction_year ?? 0);
+      return y > 1800 ? String(y) : '—';
+    } },
+  { label: t(lang, 'cmp.ppsqm'), val: (x) => {
+      const a = x.attributes ?? {};
+      const n = Number(a.sqm ?? 0);
+      const pr = priceOf(a);
+      return priceVisible(a) && n > 0 && pr > 0 ? money(Math.round(pr / n), lang) : '—';
+    } },
+];
+---
+
+<Base lang={lang} title={t(lang, 'pnl.compare')} noindex description={t(lang, 'cmp.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="cmp">
+    <div class="wrap">
+      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
+        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span>
+        <a href={`${p}/panel/favorites`}>{t(lang, 'pnl.fav')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.compare')}</b>
+      </nav>
+
+      <h1 class="t-h2 cmp__h">{t(lang, 'pnl.compare')}</h1>
+
+      {failed ? (
+        <p class="say">{t(lang, 'cmp.fail')}</p>
+      ) : shown.length < 2 ? (
+        <div class="empty">
+          <p class="empty__h">{t(lang, 'cmp.empty_h')}</p>
+          <p class="empty__s">{t(lang, 'cmp.empty_s')}</p>
+          <a class="btn" href={listUrl(lang)}>{t(lang, 'ui.see_props')}</a>
+        </div>
+      ) : (
+        <>
+          {cut > 0 && <p class="say">{t(lang, 'cmp.cut', { max: MAX, n: items.length })}</p>}
+          <div class="scroll">
+            <table>
+              <caption class="sr-only">{t(lang, 'cmp.caption', { n: shown.length })}</caption>
+              <thead>
+                <tr>
+                  <th scope="col" class="corner"><span class="sr-only">{t(lang, 'cmp.feature')}</span></th>
+                  {shown.map((x) => (
+                    <th scope="col">
+                      {/* 🪤 `coverOf` παίρνει τα ΧΑΡΑΚΤΗΡΙΣΤΙΚΑ, όχι το ακίνητο, και δεν
+                          δέχεται πλάτος. Το πλάτος το βάζει το `marked`. Το είχα γράψει
+                          `coverOf(x, 400)` — θα έβγαινε σπασμένη εικόνα σε κάθε στήλη.
+                          🔒 ΠΑΝΤΑ μέσα από `marked`: η καθαρή εικόνα δεν φεύγει ποτέ. */}
+                      <a class="pick" href={propertyUrl(lang, refOf(x))}>
+                        {(() => {
+                          const cv = coverOf(x.attributes ?? {});
+                          const ttl = pick(x.attributes?.title, lang) || x.title;
+                          // `altOf` θέλει ΤΡΙΑ ορίσματα — το τρίτο είναι η εφεδρεία.
+                          return cv
+                            ? <img src={marked(cv.url, 400)} alt={altOf(cv, lang, ttl)}
+                                   width="120" height="80" loading="lazy" decoding="async" />
+                            : <span class="noimg" aria-hidden="true"></span>;
+                        })()}
+                        <b>{pick(x.attributes?.title, lang) || x.title}</b>
+                      </a>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr>
+                    <th scope="row">{r.label}</th>
+                    {shown.map((x) => <td>{r.val(x)}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .cmp { padding: var(--s6) 0 var(--s9); }
+  .cmp .wrap { max-width: 1180px; }
+  .crumb { font-size: 12px; color: var(--faint); display: flex; gap: 7px; align-items: center;
+           margin-bottom: 10px; flex-wrap: wrap; }
+  .crumb a { color: var(--muted); }
+  .crumb span { color: var(--line); }
+  .cmp__h { margin: 0 0 8px; }
+  .say { font-size: 14px; color: var(--faint); margin: 0 0 18px; }
+
+  /* Ο πίνακας κυλάει ΜΕΣΑ στο κουτί του — η σελίδα δεν κουνιέται ποτέ πλάγια. */
+  .scroll { overflow-x: auto; border: 1px solid var(--line-soft); -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line-soft);
+           vertical-align: top; }
+  td { font-variant-numeric: tabular-nums; }
+
+  /* Η πρώτη στήλη μένει ορατή όσο κυλάς — αλλιώς δεν ξέρεις ποια γραμμή διαβάζεις. */
+  tbody th { position: sticky; left: 0; background: var(--paper); font-weight: 400;
+             color: var(--faint); font-size: 12.5px; white-space: nowrap; z-index: 1; }
+  .corner { position: sticky; left: 0; background: var(--paper); z-index: 2; }
+  thead th { background: var(--paper-2); vertical-align: bottom; }
+  thead .corner { background: var(--paper-2); }
+
+  .pick { display: block; min-width: 130px; }
+  .noimg { display: block; width: 120px; height: 80px; background: var(--paper-2); margin-bottom: 7px; }
+  .pick img { display: block; width: 120px; height: 80px; object-fit: cover; margin-bottom: 7px; }
+  .pick b { font-size: 13px; font-weight: 600; line-height: 1.3; display: block; }
+
+  .empty { border: 1px solid var(--line); padding: 26px 22px; max-width: 46ch; }
+  .empty__h { margin: 0 0 8px; font-size: 18px; font-weight: 400; }
+  .empty__s { margin: 0 0 18px; font-size: 14px; color: var(--muted); }
+</style>

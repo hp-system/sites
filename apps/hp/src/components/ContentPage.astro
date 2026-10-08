@@ -1,0 +1,111 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΜΙΑ ΣΕΛΙΔΑ ΚΕΙΜΕΝΟΥ — για τις 13 που έλειπαν από το μενού.
+//
+// 🔑 ΕΝΑ ΣΥΣΤΑΤΙΚΟ ΓΙΑ ΟΛΕΣ, ΟΧΙ ΔΕΚΑΤΡΙΑ. Το κείμενο ζει στο `lib/pages.ts`, η
+//    εμφάνιση εδώ. Έτσι μια αλλαγή στη διάταξη πιάνει και τις δεκατρείς, και μια
+//    διόρθωση κειμένου δεν αγγίζει κώδικα.
+//
+// 📐 ΠΛΑΤΟΣ ΑΝΑΓΝΩΣΗΣ, ΟΧΙ ΠΛΑΤΟΣ ΟΘΟΝΗΣ. Το σώμα κλείνει στα ~68 χαρακτήρες: πάνω
+//    από αυτό το μάτι χάνει τη γραμμή στην επιστροφή. Οι λίστες και τα «γεγονότα»
+//    ανοίγουν, γιατί διαβάζονται με σάρωση, όχι με ροή.
+//
+// 🔗 ΚΑΘΕ ΣΕΛΙΔΑ ΤΕΛΕΙΩΝΕΙ ΜΕ ΔΡΟΜΟ. Ο επισκέπτης που διάβασε «ποιοι είμαστε» δεν
+//    πρέπει να βρεθεί σε αδιέξοδο — ή βλέπει ακίνητα, ή τηλεφωνεί.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { listUrl, prefix, type Lang } from '../lib/i18n';
+import { company } from '../lib/company';
+import type { PageContent, PageKey } from '../lib/pages';
+
+// 🪤 ΤΟ `Base` ΔΕΝ ΔΕΧΕΤΑΙ `canonical` ΟΥΤΕ `hreflangLangs`. Δέχεται `path` (ίδιο σε
+//    όλες τις γλώσσες) ή `pathFor(lang)` (όταν το slug αλλάζει ανά γλώσσα, όπως στα
+//    «Έργα»). Το είχα γράψει με φανταστικά ονόματα — θα περνούσαν σιωπηλά και τα
+//    canonical θα έδειχναν όλα στην αρχική.
+interface Props { lang: Lang; page: PageContent; pathFor: (l: Lang) => string }
+const { lang, page, pathFor } = Astro.props;
+const p = prefix(lang);
+const co = await company();
+
+const ctaHref = page.cta
+  ? page.cta.to === 'list' ? listUrl(lang)
+  : page.cta.to === 'phone' ? co.phoneHref
+  : page.cta.to === 'sell' ? `${p}/sell`
+  : `${p}/login`
+  : null;
+---
+
+<Base lang={lang} title={page.title} description={page.lead ?? page.h1} pathFor={pathFor}>
+  <Header lang={lang} solid pathFor={pathFor} />
+
+  <main id="main" class="cp">
+    <article class="wrap">
+      <h1 class="t-display cp__h">{page.h1}</h1>
+      {page.lead && <p class="lead">{page.lead}</p>}
+
+      {page.blocks.map((b) => (
+        b.kind === 'text' ? (
+          <section class="blk">
+            {b.h && <h2 class="t-h3 blk__h">{b.h}</h2>}
+            {b.p.map((t) => <p class="body">{t}</p>)}
+          </section>
+        ) : b.kind === 'list' ? (
+          <section class="blk">
+            {b.h && <h2 class="t-h3 blk__h">{b.h}</h2>}
+            <ul class="list">
+              {b.items.map((it) => (
+                <li><b>{it.t}</b>{it.d && <span>{it.d}</span>}</li>
+              ))}
+            </ul>
+          </section>
+        ) : (
+          <section class="blk">
+            {b.h && <h2 class="t-h3 blk__h">{b.h}</h2>}
+            <dl class="facts">
+              {b.items.map((it) => (<div class="fact"><dt>{it.t}</dt><dd>{it.d}</dd></div>))}
+            </dl>
+          </section>
+        )
+      ))}
+
+      {page.cta && ctaHref && (
+        <div class="end">
+          <a class="btn" href={ctaHref} data-ev={`content:${page.cta.to}`}>{page.cta.label}</a>
+        </div>
+      )}
+    </article>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .cp { padding: var(--s7) 0 var(--s9); }
+  .cp .wrap { max-width: 760px; }
+  .cp__h { margin: 0 0 var(--s3); text-wrap: balance; }
+  .lead { font-size: clamp(16.5px, 2.2vw, 19px); line-height: 1.6; color: var(--ink-2);
+          margin: 0 0 var(--s5); max-width: 60ch; }
+
+  .blk { margin-bottom: var(--s5); }
+  .blk__h { margin: 0 0 var(--s2); }
+  .body { font-size: 15.5px; line-height: 1.72; color: var(--ink-2); margin: 0 0 14px;
+          max-width: 68ch; }
+  .body:last-child { margin-bottom: 0; }
+
+  .list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line-soft); }
+  .list li { padding: 14px 0; border-bottom: 1px solid var(--line-soft); font-size: 15px;
+             line-height: 1.6; }
+  .list b { font-weight: 600; display: block; }
+  .list span { display: block; color: var(--muted); font-size: 14px; margin-top: 3px;
+               max-width: 62ch; }
+
+  .facts { margin: 0; border-top: 1px solid var(--line-soft); }
+  .fact { display: flex; justify-content: space-between; align-items: baseline; gap: 18px;
+          padding: 13px 0; border-bottom: 1px solid var(--line-soft); }
+  .fact dt { font-size: 13px; color: var(--faint); flex: none; }
+  .fact dd { margin: 0; font-size: 15px; text-align: right; min-width: 0; overflow-wrap: anywhere; }
+
+  .end { margin-top: var(--s6); }
+</style>

@@ -1,0 +1,180 @@
+---
+// Κεφαλίδα — διαφανής πάνω από τη φωτογραφία του hero.
+// Δουλειά της: να μη σε εμποδίζει.
+//
+// 🔴 ΚΑΙ ΓΙ' ΑΥΤΟ ΑΚΡΙΒΩΣ ΕΞΑΦΑΝΙΖΟΤΑΝ ΣΤΗ ΛΙΣΤΑ (George, 30/7: «το λογότυπο
+//    και όλο γενικά το header δεν υπάρχει»). ΥΠΗΡΧΕ — απλώς είναι φτιαγμένη να
+//    επιπλέει πάνω σε φωτογραφία: `position: absolute` (δεν πιάνει χώρο) και
+//    `color: #fff`. Στη λίστα δεν υπάρχει φωτογραφία, άρα **λευκά γράμματα σε
+//    λευκό φόντο** — αόρατη, και από πάνω σκέπαζε και τα πρώτα 60px της σελίδας.
+//    Ο διακόπτης `solid` τη γυρίζει σε κανονική μπάρα: μέσα στη ροή, με φόντο
+//    και σκούρα γράμματα. Η αρχική μένει ΑΚΡΙΒΩΣ όπως ήταν.
+import Logo from './Logo.astro';
+import LangSwitch from './LangSwitch.astro';
+import { listUrl, prefix, t, type Lang } from '../lib/i18n';
+import { company } from '../lib/company';
+import { memberOf } from '../lib/member';
+import { pageExists } from '../lib/pages';
+interface Props {
+  lang: Lang; solid?: boolean;
+  /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
+      Αλλού ο διακόπτης το βρίσκει μόνος του από τη διεύθυνση. Δες `LangSwitch.astro`. */
+  pathFor?: (l: Lang) => string;
+}
+const { lang, solid = false, pathFor } = Astro.props;
+const p = prefix(lang);
+const co = await company();
+
+// ── ΕΙΝΑΙ ΜΕΣΑ; ────────────────────────────────────────────────────────────
+// 🔴 ΤΟ ΚΕΝΟ ΠΟΥ ΚΛΕΙΝΕΙ ΕΔΩ: η κεφαλίδα έλεγε **πάντα** «Σύνδεση», ακόμη και σε
+//    συνδεδεμένο μέλος, και **κανένας σύνδεσμος προς `/panel` δεν υπήρχε σε όλο το
+//    site**. Το μέλος έπρεπε να γράψει τη διεύθυνση με το χέρι — και επειδή η
+//    «Αποσύνδεση» ζούσε μόνο μέσα στον πίνακα, δεν μπορούσε ούτε να βγει.
+//
+// 💰 ΜΗΔΕΝ ΚΟΣΤΟΣ ΓΙΑ ΤΟΝ ΕΠΙΣΚΕΠΤΗ: χωρίς cookie το `memberOf` γυρίζει `null`
+//    **χωρίς καμία κλήση** (member.ts:63). Για το μέλος, η απάντηση είναι στη μνήμη
+//    30΄΄. Δεν προστίθεται καθυστέρηση σε καμία δημόσια σελίδα.
+//
+// 🪤 ΤΟ ΕΠΙΠΕΔΟ ΔΕΝ ΔΙΑΒΑΖΕΤΑΙ ΑΠΟ ΤΟ COOKIE — έρχεται από τη βάση μέσω `memberOf`.
+//    Το εισιτήριο είναι απλό base64: όποιος το επεξεργαστεί θα «γινόταν» exclusive.
+const me = await memberOf(Astro.cookies.get('member_token')?.value);
+const inside = !!me && !me.blocked;
+// Μόνο το μικρό όνομα: «Ο λογαριασμός μου» σε κάθε γλώσσα χωράει, το ονοματεπώνυμο όχι.
+const who = (me?.name || '').trim().split(/\s+/)[0] || '';
+
+// 🛡️ ΔΙΧΤΥ: ΔΕΝ ΔΕΙΧΝΟΥΜΕ ΣΥΝΔΕΣΜΟ ΓΙΑ ΣΕΛΙΔΑ ΠΟΥ ΔΕΝ ΥΠΑΡΧΕΙ.
+//    Έτσι γεννήθηκαν οι 124 νεκροί σύνδεσμοι: τα μενού γράφτηκαν πριν τις σελίδες και
+//    κανείς δεν ξαναπέρασε. Τώρα η ύπαρξη κρίνεται από το `lib/pages.ts` — αν λείπει
+//    το κείμενο, λείπει και ο σύνδεσμος. Δεν μπορεί να ξανασυμβεί σιωπηλά.
+const has = (k: string) => pageExists(k as any);
+---
+<header class:list={['site-header', solid && 'site-header--solid']}>
+  <div class="site-header__in">
+  <a class="brandlink" href={p || '/'} aria-label="Halkidiki Properties">
+    <span class="brandlink__sm"><Logo variant="mono" size="sm" /></span>
+    <span class="brandlink__md"><Logo variant="mono" size="md" /></span>
+  </a>
+
+  <nav class="navlinks" aria-label={t(lang, 'a11y.nav')}>
+    <a href={listUrl(lang)}>{t(lang, 'nav.properties')}</a>
+    {has('halkidiki') && <a href={`${p}/halkidiki`}>{t(lang, 'nav.halkidiki')}</a>}
+    {has('sell') && <a href={`${p}/sell`}>{t(lang, 'nav.sell')}</a>}
+    {has('services') && <a href={`${p}/services`}>{t(lang, 'nav.services')}</a>}
+    {has('about') && <a href={`${p}/about`}>{t(lang, 'nav.company')}</a>}
+  </nav>
+
+  <div class="navright">
+    {/* 🪤 ΤΟ ΤΗΛΕΦΩΝΟ ΕΙΝΑΙ ΠΡΩΤΟ ΣΤΟ ΚΙΝΗΤΟ.
+        Πριν, το μόνο τηλέφωνο ήταν μέσα στο κλειστό μενού και στο υποσέλιδο —
+        δηλαδή μετά από πέντε οθόνες κύλισης. Σε αγορά όπου η απόφαση γίνεται με
+        ένα τηλεφώνημα, αυτό είναι χαμένος πελάτης. Ένα πάτημα, από την 1η οθόνη. */}
+    <a class="tel" href={co.phoneHref} aria-label={co.phone} data-ev="call:header">
+      <svg viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M5.2 2.6h2.1l1.1 2.8-1.5 1.1a8.4 8.4 0 0 0 4.6 4.6l1.1-1.5 2.8 1.1v2.1a1.3 1.3 0 0 1-1.4 1.3A12.6 12.6 0 0 1 3.9 4A1.3 1.3 0 0 1 5.2 2.6Z"
+              fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" />
+      </svg>
+      <span class="tel__n num">{co.phone}</span>
+    </a>
+    {/* Ο διακόπτης γλώσσας ζει εδώ στο desktop· στο κινητό είναι ΠΡΩΤΟΣ μέσα στο μενού. */}
+    <span class="langslot"><LangSwitch lang={lang} tone={solid ? 'plain' : 'onphoto'} pathFor={pathFor} /></span>
+    {/* ⚠️ ΣΗΜΑΝΣΗ: κάθε σημείο εγγραφής έχει ΔΙΚΟ ΤΟΥ όνομα συμβάντος.
+        Σήμερα το παλιό site μετρά τα πάντα ως ένα «register_link_click», γι' αυτό
+        δεν μπορέσαμε να απαντήσουμε ποιο σημείο αποδίδει. Δες lib/track.ts. */}
+    {inside
+      ? <a class="acct" href={`${p}/panel`} data-ev="panel:header">{who || 'Ο λογαριασμός μου'}</a>
+      : <a href={`${p}/login`} data-ev="register:header">{t(lang, 'nav.login')}</a>}
+    <button class="burger" type="button" data-menu-open
+            aria-label={t(lang, 'ui.menu')} aria-expanded="false" aria-controls="mobile-menu">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+  </div>
+</header>
+
+<style>
+  /* 🪤 ΤΟ ΜΕΝΟΥ ΕΜΦΑΝΙΖΕΤΑΙ ΜΟΝΟ ΟΤΑΝ ΧΩΡΑΕΙ — στα 1080, όχι στα 760.
+     Με το παλιό κατώφλι, στα 760-1080 (tablet, μικρό laptop) οι πέντε σύνδεσμοι
+     ακουμπούσαν το λογότυπο και έσπαγαν σε δύο σειρές: το «Η ΕΤΑΙΡΕΙΑ» έπεφτε
+     κάτω και η κεφαλίδα φούσκωνε από 60 σε 88px. Κάτω από το 1080 δουλεύει το
+     burger — που ήδη υπάρχει και δοκιμάστηκε. Το `gap` εγγυάται ότι τα τρία
+     μέρη δεν ακουμπούν ΠΟΤΕ, σε κανένα πλάτος. */
+  /* Η κεφαλίδα ήταν το ΜΟΝΟ μπλοκ εκτός της στήλης: το λογότυπο ξεκινούσε στα 40
+     ενώ ο H1 από κάτω του στα 120. Τώρα μοιράζεται τη γεωμετρία του `.wrap`. */
+  .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 20; color: #fff; }
+
+  /* ── ΣΥΜΠΑΓΗΣ ΕΚΔΟΧΗ — για σελίδες ΧΩΡΙΣ φωτογραφία από πίσω ──────────────
+     `static` αντί για `absolute`: πιάνει τον χώρο της αντί να κάθεται πάνω στο
+     περιεχόμενο. Χρώμα μελανιού αντί για λευκό, ώστε να διαβάζεται. Το φόντο
+     απλώνεται «πέρα ως πέρα» (George) επειδή μπαίνει στο ΕΞΩΤΕΡΙΚΟ στοιχείο,
+     ενώ το περιεχόμενο μένει στη στήλη των 1200 όπως όλη η σελίδα. */
+  .site-header--solid {
+    position: static; color: var(--ink);
+    background: var(--paper); border-bottom: 1px solid var(--line-soft);
+  }
+  /* Το λογότυπο είναι «mono», δηλαδή παίρνει το χρώμα του γονέα — δεν χρειάζεται
+     δεύτερη εκδοχή, αρκεί που άλλαξε το `color`. */
+  .site-header--solid .tel:hover, .site-header--solid a:hover { opacity: .7; }
+
+  .site-header__in {
+    max-width: var(--max); margin: 0 auto; padding: 14px var(--gut);
+    display: flex; align-items: center; justify-content: space-between; gap: var(--s5);
+  }
+  .brandlink { min-width: 0; display: inline-flex; align-items: center; min-height: 44px; }
+  .brandlink__md { display: none; }
+  .navlinks { display: none; }
+  .navright {
+    display: flex; align-items: center; gap: var(--s3); flex: none;
+    font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+  }
+  .langslot { display: none; }
+  /* Ο αριθμός φαίνεται ΚΑΙ στο κινητό: ένα εικονίδιο ακουστικού 17px δεν λέει
+     σε κανέναν ότι μπορεί να τηλεφωνήσει. Ο στόχος αφής είναι 44×44 σε κάθε
+     περίπτωση — μετρήθηκε 17×44 και ήταν κάτω από το ελάχιστο. */
+  .tel {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; min-width: 44px; justify-content: center;
+  }
+  .tel svg { width: 17px; height: 17px; flex: none; }
+  .tel__n { display: inline; font-size: 11px; letter-spacing: .04em; }
+  /* Στόχος αφής 44×44 (μετρήθηκε 20×12): οι γραμμές μένουν 20×12 οπτικά, αλλά η
+     περιοχή που δέχεται το δάχτυλο είναι ολόκληρη. Αρνητικό margin ώστε να μην
+     αλλάξει η στοίχιση της κεφαλίδας. */
+  .burger {
+    width: 44px; height: 44px; margin: 0 -12px;
+    position: relative; background: none; border: 0; padding: 0; cursor: pointer;
+  }
+  .burger i {
+    position: absolute; left: 12px; right: 12px; height: 1.5px; background: currentColor;
+  }
+  .burger i:nth-child(1) { top: 16px; }
+  .burger i:nth-child(2) { top: 21px; }
+  .burger i:nth-child(3) { top: 26px; }
+
+  @media (min-width: 760px) {
+    .site-header__in { padding: 22px var(--gut); }
+    .brandlink__sm { display: none; }
+    .brandlink__md { display: inline-flex; }
+    .navright { gap: var(--s5); font-size: 12px; letter-spacing: .1em; }
+    .langslot { display: inline-flex; }
+    .tel__n { font-size: 12px; letter-spacing: .06em; }
+  }
+
+  @media (min-width: 1080px) {
+    .navlinks {
+      display: flex; gap: var(--s6);
+      font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+    }
+    .burger { display: none; }
+  }
+</style>
+
+<style>
+  /* Ο λογαριασμός ξεχωρίζει διακριτικά από τους υπόλοιπους συνδέσμους — μια τελεία,
+     όχι εικονίδιο: το εικονίδιο «άνθρωπος» θα ζητούσε δεύτερο χρώμα και θα τραβούσε
+     το μάτι από το τηλέφωνο, που είναι ο πρώτος στόχος της κεφαλίδας. */
+  .acct { position: relative; padding-left: 13px; }
+  .acct::before {
+    content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .55;
+  }
+</style>

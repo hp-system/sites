@@ -1,0 +1,236 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΚΑΘΕ ΔΙΕΥΘΥΝΣΗ ΜΕ ΠΡΟΘΕΜΑ ΓΛΩΣΣΑΣ, ΚΑΙ Η ΛΙΣΤΑ ΣΕ ΟΛΕΣ ΤΙΣ ΜΟΡΦΕΣ.
+//
+//   /en                               → η αρχική στα αγγλικά
+//   /ακινητα                          → όλα τα ακίνητα (ελληνικά, χωρίς πρόθεμα)
+//   /ακινητα/κασσανδρα                → ένα θέμα
+//   /ακινητα/κασσανδρα/βιλες          → εγκεκριμένο ζεύγος
+//   /en/properties/villas-for-sale    → το ίδιο, αγγλικά
+//
+// ⚠️ ΓΙΑΤΙ ΕΝΑ ΑΡΧΕΙΟ ΚΑΙ ΟΧΙ ΔΥΟ. Υπήρχε ξεχωριστό `[lang]/index.astro`. Επειδή
+//    στο Astro τα πιο συγκεκριμένα routes προηγούνται, εκείνο άρπαζε **κάθε**
+//    μονοπάτι ενός τμήματος: το `/ακινητα` έμπαινε ως `lang = 'ακινητα'`, δεν
+//    ήταν έγκυρη γλώσσα, και γύριζε **404** — ενώ το `/ακινητα/κασσανδρα`
+//    περνούσε κανονικά εδώ. Δηλαδή η ΡΙΖΑ της λίστας ήταν η μόνη σπασμένη
+//    διεύθυνση, και σιωπηλά: κάθε δοκιμή σε υποσελίδα έδειχνε ότι όλα δουλεύουν.
+//
+// 🛡️ ΑΓΝΩΣΤΟ ΘΕΜΑ = 404, ΟΧΙ «όλα τα ακίνητα». Μια σελίδα με όλο τον κατάλογο
+//    σε λάθος διεύθυνση είναι διπλότυπο για τη Google και ψέμα για τον επισκέπτη.
+// ═══════════════════════════════════════════════════════════════════════════
+import ListingPage from '../components/ListingPage.astro';
+import HomePage from '../components/HomePage.astro';
+import PropertyPage from '../components/PropertyPage.astro';
+import LoginPage from '../components/LoginPage.astro';
+import PanelPage from '../components/PanelPage.astro';
+import FavoritesPage from '../components/FavoritesPage.astro';
+import ProfilePage from '../components/ProfilePage.astro';
+import NotFoundPage from '../components/NotFoundPage.astro';
+import CollectionPage from '../components/CollectionPage.astro';
+import ComparePage from '../components/ComparePage.astro';
+import SubmitPage from '../components/SubmitPage.astro';
+import ContentPage from '../components/ContentPage.astro';
+import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, type PageKey } from '../lib/pages';
+import { memberOf, type Member } from '../lib/member';
+import { PUBLISHED, DEFAULT_LANG, SLUG, prefix, type Lang } from '../lib/i18n';
+import { facetBySlug, PAIRS, type Facet } from '../lib/listing';
+import { allProperties, refOf, type SiteProperty } from '../lib/api';
+
+export const prerender = false;
+
+const raw = String(Astro.params.path ?? '').replace(/^\/+|\/+$/g, '');
+const parts = raw.split('/').filter(Boolean).map((s) => decodeURIComponent(s));
+
+let lang: Lang = DEFAULT_LANG;
+let rest = parts;
+const withPrefix = PUBLISHED.find((l) => l === parts[0] && l !== DEFAULT_LANG);
+if (withPrefix) {
+  lang = withPrefix as Lang;
+  rest = parts.slice(1);
+}
+
+// 🪤 ΤΑ ΕΛΛΗΝΙΚΑ ΔΕΝ ΕΧΟΥΝ ΠΡΟΘΕΜΑ — ΑΛΛΑ Ο ΚΟΣΜΟΣ ΤΟ ΓΡΑΦΕΙ.
+//    Το `/el` έδινε **404**, ενώ και οι οκτώ άλλες γλώσσες έδιναν 200: ο επιλογέας
+//    παράγει `/` για τα ελληνικά, όμως όποιος γράφει τη διεύθυνση με το χέρι — ή
+//    αντιγράφει ένα `/en/...` και αλλάζει τη γλώσσα — φτάνει στο `/el`. Μόνιμη
+//    ανακατεύθυνση: μία σελίδα, μία διεύθυνση, καμία διπλότυπη για τη Google.
+//    🪤 ΑΠΟ ΤΟ `pathname`, ΟΧΙ ΑΠΟ ΤΑ `parts`. Τα `parts` είναι **αποκωδικοποιημένα**
+//    (`decodeURIComponent` πιο πάνω), οπότε το `/el/ακινητα` έφτιαχνε κεφαλίδα
+//    ανακατεύθυνσης με ωμά ελληνικά γράμματα → **HTTP 500**. Το `pathname` κρατά
+//    την κωδικοποίηση όπως ήρθε.
+if (parts[0] === DEFAULT_LANG) {
+  const to = Astro.url.pathname.replace(/^\/el(?=\/|$)/i, '') || '/';
+  return Astro.redirect(to + Astro.url.search, 301);
+}
+
+// Σκέτο πρόθεμα γλώσσας («/en», «/he») → η αρχική εκείνης της γλώσσας.
+const isHome = !!withPrefix && rest.length === 0;
+
+const facets: Facet[] = [];
+let notFound = !parts.length;
+
+// ── Η ΜΙΑ ΠΟΡΤΑ: /login · /en/login ──────────────────────────────────────
+// 🔑 ΙΔΙΑ ΛΕΞΗ ΣΕ ΟΛΕΣ ΤΙΣ ΓΛΩΣΣΕΣ, επίτηδες. Τα υπόλοιπα slug μεταφράζονται
+//    (`ακινητα`/`properties`/`emlak`) γιατί τα διαβάζει η Google. Αυτή η σελίδα
+//    είναι `noindex` — δεν κερδίζει τίποτα από μετάφραση, και ένα μεταφρασμένο
+//    slug θα σήμαινε ότι κάθε ένας από τους 10 συνδέσμους «εγγραφή» πρέπει να
+//    ξέρει τη γλώσσα του για να μη σπάσει.
+const isLogin = !isHome && rest.length === 1 && rest[0].toLowerCase() === 'login';
+// Ο πίνακας του μέλους ΚΑΙ οι υποσελίδες του. Ίδια λογική: μία λέξη, noindex,
+// χωρίς μετάφραση slug.
+//
+// 🔴 ΓΙΑΤΙ ΑΛΛΑΞΕ. Πριν δεχόταν ΜΟΝΟ `/panel` σκέτο (`rest.length === 1`). Το
+//    `/panel/favorites` έπεφτε στον έλεγχο λίστας, το «panel» δεν ήταν το slug της
+//    λίστας, και γύριζε 404 **με μηδέν bytes** — ενώ ο ίδιος ο πίνακας το συνέδεε
+//    τρεις φορές. Το μέλος έβλεπε «Αγαπημένα — 7 ακίνητα», πατούσε, λευκή οθόνη.
+//
+// 🛡️ ΛΕΥΚΗ ΛΙΣΤΑ, ΟΧΙ «ό,τι αρχίζει με panel». Χωρίς αυτήν, το `/panel/οτιδήποτε`
+//    θα έδινε τον πίνακα σε άπειρες διευθύνσεις — διπλότυπα για τη Google και
+//    ψέμα για τον επισκέπτη.
+const PANEL_PAGES = ['', 'favorites', 'profile', 'collection', 'compare', 'submit'] as const;
+const panelRoot = !isHome && rest.length >= 1 && rest[0].toLowerCase() === 'panel';
+const panelSeg = panelRoot ? (rest[1] ?? '').toLowerCase() : '';
+const isPanel = panelRoot && rest.length <= 2 && (PANEL_PAGES as readonly string[]).includes(panelSeg);
+// Ο προορισμός επιστροφής — από πού πάτησε «εγγραφή». Καθαρίζεται στη σελίδα.
+const nextParam = Astro.url.searchParams.get('next') ?? '';
+
+// ── ΚΑΡΤΕΛΑ ΑΚΙΝΗΤΟΥ: /ακινητο/7838 · /en/property/7838 ───────────────────
+// 🪤 ΕΛΕΓΧΕΤΑΙ ΠΡΙΝ ΤΗ ΛΙΣΤΑ. Σε γλώσσες όπου τα δύο slug ΣΥΜΠΙΠΤΟΥΝ (bg και tr
+//    έχουν «Имоти»/«emlak» και για τα δύο), αν προηγούνταν ο έλεγχος λίστας το
+//    `/bg/Имоти/8075` θα διαβαζόταν ως «θέμα 8075» → άγνωστο θέμα → 404.
+//
+// 🔑 ΤΟ ΜΟΤΙΒΟ ΤΟΥ ΚΩΔΙΚΟΥ ΔΕΧΕΤΑΙ ΚΑΙ ΓΡΑΜΜΑΤΑ — ΤΟ ΠΛΗΡΩΣΑΜΕ.
+//    Είχα βάλει `^\d{1,6}$` («ο κωδικός είναι αριθμός»). Ίσχυε για 516 από τα
+//    526 ακίνητα — και ΑΚΡΙΒΩΣ γι' αυτό πέρασε τον έλεγχο: το δείγμα των 12 που
+//    δοκίμασα ήταν όλο αριθμητικό. Τα 10 που έσπαγαν είναι φτιαγμένα ΑΠΕΥΘΕΙΑΣ
+//    στο EALIDA, χωρίς κωδικό Onsea, οπότε παίρνουν `reference` = «HP-8564».
+//    Ένα ανά κατηγορία (γραφείο, χωράφι, ρετιρέ, μεζονέτα…) — δηλαδή ακριβώς
+//    τα ακίνητα που θα χρησιμοποιούσαμε για να δοκιμάσουμε τις ΑΛΛΕΣ καρτέλες.
+//    Το μοτίβο καλύπτει και μελλοντικά προθέματα (`ON-`, `RW-`) χωρίς νέα αλλαγή.
+// ✅ Επαληθεύτηκε ότι ΚΑΝΕΝΑ από τα 64 θεματικά slug δεν ταιριάζει εδώ.
+const REF_RE = /^[A-Za-z]{0,3}-?\d{1,6}$/;
+let property: SiteProperty | null = null;
+let allItems: SiteProperty[] = [];
+// Το εισιτήριο διαβάζεται ΜΙΑ φορά και το χρησιμοποιούν και η καρτέλα (για να
+// έρθουν τα κρυφά ακίνητα) και ο πίνακας. Ήταν κλεισμένο μέσα στο `if (maybeProp)`.
+const memberToken = Astro.cookies.get('member_token')?.value;
+const maybeProp = !isHome && rest.length === 2
+  && rest[0].toLowerCase() === SLUG[lang].property.toLowerCase()
+  && REF_RE.test(rest[1]);
+
+if (maybeProp) {
+  try {
+    allItems = await allProperties(600, memberToken);
+    // Πεζά/κεφαλαία αδιάφορα: το «hp-8564» γραμμένο με το χέρι πρέπει να βρίσκει
+    // το ίδιο ακίνητο με το «HP-8564» του συνδέσμου.
+    const want = rest[1].toLowerCase();
+    property = allItems.find((p) => refOf(p).toLowerCase() === want) ?? null;
+  } catch {
+    property = null;                       // το API έπεσε → 404, όχι άδεια σελίδα
+  }
+  if (!property) notFound = true;
+}
+
+// ── ΟΙ ΣΕΛΙΔΕΣ ΤΟΥ ΜΕΝΟΥ ────────────────────────────────────────────────────
+// 13 σελίδες που έδιναν 404 σε 9 γλώσσες = 124 νεκροί σύνδεσμοι. Το κείμενο ζει
+// στο `lib/pages.ts`· εδώ μόνο η αναγνώριση της διεύθυνσης.
+//
+// 🪤 ΤΟ SLUG ΤΩΝ «ΕΡΓΩΝ» ΜΕΤΑΦΡΑΖΕΤΑΙ (`/εργα`, `/проекти`, `/projeler`), των υπόλοιπων
+//    όχι. Δεχόμαστε ΚΑΙ το αγγλικό `projects` και στέλνουμε **301** στο μεταφρασμένο —
+//    αλλιώς η ίδια σελίδα ζει σε δύο διευθύνσεις και η μία μένει σπασμένη για πάντα.
+const joined = rest.join('/').toLowerCase();
+let pageKey: PageKey | null = null;
+if (!isHome && !isLogin && !panelRoot && rest.length >= 1 && rest.length <= 2) {
+  if ((PAGE_KEYS as readonly string[]).includes(joined)) pageKey = joined as PageKey;
+  else if (rest.length === 1 && rest[0].toLowerCase() === SLUG[lang].projects.toLowerCase()) {
+    pageKey = 'projects';
+  }
+}
+// Το αγγλικό «projects» σε γλώσσα που το λέει αλλιώς → μόνιμα στο σωστό.
+if (pageKey === 'projects' && joined === 'projects'
+    && SLUG[lang].projects.toLowerCase() !== 'projects') {
+  // 🪤 ΔΕΥΤΕΡΗ ΦΟΡΑ ΤΟ ΙΔΙΟ ΛΑΘΟΣ ΣΤΗΝ ΙΔΙΑ ΝΥΧΤΑ: το slug είναι «εργα»/«проекти»
+  //    — ωμά γράμματα σε κεφαλίδα ανακατεύθυνσης δίνουν **HTTP 500**, όχι 301.
+  //    Κάθε τιμή που μπαίνει σε `Location` περνάει από `encodeURI`. Χωρίς εξαίρεση.
+  return Astro.redirect(
+    encodeURI(`${prefix(lang)}/${SLUG[lang].projects}`) + Astro.url.search, 301);
+}
+// 🚪 ΤΟ `/request` ΔΕΝ ΕΧΕΙ ΠΙΑ ΝΟΗΜΑ. Υπήρχε ως «ζητήστε πρόσβαση»· τώρα υπάρχει
+//    **μία** πόρτα για όλο το site (George 6/8). Μόνιμη ανακατεύθυνση αντί για 404 —
+//    ο σύνδεσμος ζει ακόμα μέσα στο «Ιδιωτική συλλογή» και σε παλιά μηνύματα.
+if (!isHome && rest.length === 1 && rest[0].toLowerCase() === 'request') {
+  return Astro.redirect(`${prefix(lang)}/login`, 301);
+}
+
+// Άγνωστη υποσελίδα πίνακα («/panel/οτιδήποτε») → 404 αμέσως, ΧΩΡΙΣ να δοκιμαστεί
+// ως θέμα λίστας: αλλιώς το μήνυμα λάθους θα μιλούσε για «άγνωστο θέμα».
+if (panelRoot && !isPanel) notFound = true;
+
+if (!isHome && !isLogin && !isPanel && !pageKey && !notFound && !property) {
+  // Το πρώτο κομμάτι πρέπει να είναι το «ακινητα» της συγκεκριμένης γλώσσας.
+  if (!rest.length || rest[0].toLowerCase() !== SLUG[lang].list.toLowerCase()) {
+    notFound = true;
+  } else {
+    const slugs = rest.slice(1);
+    if (slugs.length > 2) notFound = true;
+    for (const s of slugs) {
+      const f = facetBySlug(lang, s);
+      // άγνωστο θέμα, ή το ίδιο θέμα δύο φορές
+      if (!f || facets.some((x) => x.key === f.key)) { notFound = true; break; }
+      facets.push(f);
+    }
+    // 🚧 ΔΥΟ ΘΕΜΑΤΑ ΜΟΝΟ ΑΝ ΕΙΝΑΙ ΕΓΚΕΚΡΙΜΕΝΟ ΖΕΥΓΟΣ. Χωρίς αυτό κάθε συνδυασμός
+    //    θα ήταν έγκυρη διεύθυνση: 10 θέματα → 90 ζεύγη × 9 γλώσσες = 810 σχεδόν
+    //    ίδιες σελίδες, οι περισσότερες με ελάχιστα ή μηδέν ακίνητα.
+    if (!notFound && facets.length === 2) {
+      const [a, b] = facets.map((f) => f.key);
+      if (!PAIRS.some(([x, y]) => (x === a && y === b) || (x === b && y === a))) notFound = true;
+    }
+  }
+}
+
+// ── Ο ΠΙΝΑΚΑΣ ΘΕΛΕΙ ΛΟΓΑΡΙΑΣΜΟ ────────────────────────────────────────────
+// Η ανακατεύθυνση ΠΡΕΠΕΙ να γίνει εδώ: μέσα σε component το `Astro.redirect()`
+// αγνοείται σιωπηλά και η σελίδα βγαίνει με 200.
+let me: Member | null = null;
+if (isPanel) {
+  me = await memberOf(memberToken);
+  if (!me) {
+    // Ο προορισμός είναι η σελίδα που ΖΗΤΗΣΕ, όχι η ρίζα του πίνακα: όποιος
+    // πάτησε «Αγαπημένα» πρέπει να προσγειωθεί στα αγαπημένα μετά την είσοδο.
+    const back = `${prefix(lang)}/panel${panelSeg ? `/${panelSeg}` : ''}`;
+    return Astro.redirect(`${prefix(lang)}/login?next=${encodeURIComponent(back)}`, 302);
+  }
+  // 🎚️ Ο ΜΕΣΙΤΗΣ ΒΛΕΠΕΙ Ο,ΤΙ Ο ΕΠΙΣΚΕΠΤΗΣ (George 6/8) — άρα καμία δουλειά στην
+  //    κλειστή συλλογή. Ανακατεύθυνση στον πίνακά του, όχι 404: υπάρχει λογαριασμός,
+  //    απλώς δεν του ανήκει αυτή η σελίδα.
+  if (me.level === 'agent' && panelSeg === 'collection') {
+    return Astro.redirect(`${prefix(lang)}/panel`, 302);
+  }
+}
+
+// Σελίδα του μενού χωρίς κείμενο ΔΕΝ εμφανίζεται κενή: πέφτει στο κανονικό 404.
+// «Σύντομα κοντά σας» είναι χειρότερο από 404 — ο επισκέπτης έχασε τον χρόνο του.
+const content = pageKey ? pageContent(pageKey, lang) : null;
+if (pageKey && !content) notFound = true;
+
+// 🪤 Ο ΚΩΔΙΚΑΣ ΜΕΝΕΙ 404, Η ΟΘΟΝΗ ΓΙΝΕΤΑΙ ΣΕΛΙΔΑ. Δελεαστικό να γυρίσει 200 «για
+//    να φαίνεται ωραία» — τότε όμως η Google ευρετηριάζει ανύπαρκτες σελίδες ως
+//    έγκυρες (soft 404). Φιλική σελίδα, αυστηρός κωδικός.
+if (notFound) Astro.response.status = 404;
+---
+{notFound ? <NotFoundPage lang={lang} />
+  : pageKey && content ? (
+      <ContentPage lang={lang} page={content}
+        pathFor={(l) => `${prefix(l)}/${pageKey === 'projects' ? SLUG[l].projects : pageKey}`} />
+    )
+  : isPanel && me && panelSeg === 'favorites' ? <FavoritesPage lang={lang} me={me} token={memberToken} />
+  : isPanel && me && panelSeg === 'profile' ? <ProfilePage lang={lang} me={me} />
+  : isPanel && me && panelSeg === 'collection' ? <CollectionPage lang={lang} me={me} token={memberToken} />
+  : isPanel && me && panelSeg === 'compare' ? <ComparePage lang={lang} me={me} token={memberToken} />
+  : isPanel && me && panelSeg === 'submit' ? <SubmitPage lang={lang} me={me} />
+  : isPanel && me ? <PanelPage lang={lang} me={me} />
+  : isLogin ? <LoginPage lang={lang} next={nextParam} />
+  : isHome ? <HomePage lang={lang} />
+  : property ? <PropertyPage lang={lang} item={property} all={allItems} />
+  : <ListingPage lang={lang} facets={facets} />}

@@ -1,0 +1,103 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΤΟ ΛΟΓΟΤΥΠΟ — το ΠΡΑΓΜΑΤΙΚΟ, όχι σχεδιασμένο από εμένα.
+//
+// Απόφαση George 27/7: «κράτησε το κανονικό μας λογότυπο, ίδιο σαν αυτό που
+// έχουμε στο watermark πίσω, ΧΩΡΙΣ το website από κάτω. Σκέτο το logo και δίπλα
+// τη λέξη Halkidiki Properties.»
+//
+// Οι διαδρομές του σπιτιού είναι αυτούσιες από το επίσημο HP-logo-small.svg.
+// Δύο εκδοχές, ίδιο σχήμα:
+//   variant="mono"  → παίρνει currentColor· λευκό πάνω σε φωτογραφία
+//   variant="brand" → τα κανονικά χρώματα (πράσινο/μπλε), για λευκό φόντο
+// ═══════════════════════════════════════════════════════════════════════════
+import LT from '../lib/logotype.json';
+
+interface Props { variant?: 'mono' | 'brand'; size?: 'sm' | 'md' }
+const { variant = 'mono', size = 'md' } = Astro.props;
+
+const P1 = 'M16.819 11.101L20.612 14.895L5.36 30.1349V51.7429H0V27.908L16.819 11.101ZM24.339 18.744L28.132 22.5369L16.091 34.577V51.7429H10.731V32.3619L24.339 18.744Z';
+const P2 = 'M20.3218 7.587L16.5278 11.38L39.6908 34.58V51.743H45.0619V32.362L20.3218 7.587ZM55.7938 51.743H50.4229V30.135L44.5479 24.235V15.6H35.9088L24.1149 3.793L27.9078 0L38.1278 10.228H49.9109V22.022L55.7969 27.908L55.7938 51.743Z';
+const uid = 'lg' + Math.random().toString(36).slice(2, 8);
+---
+<span class:list={['logo', `logo--${variant}`, `logo--${size}`]}>
+  <svg class="logo__mark" viewBox="0 0 56 52" width="56" height="52"
+       aria-hidden="true" focusable="false">
+    {variant === 'brand' && (
+      <defs>
+        <linearGradient id={`${uid}g`} x1="0.137" y1="0.91" x2="0.728" y2="0.094">
+          <stop offset="0" stop-color="#90b840" /><stop offset="0.251" stop-color="#a5cf4e" />
+          <stop offset="1" stop-color="#c2ea66" />
+        </linearGradient>
+        <linearGradient id={`${uid}b`} x1="1" y1="0.77" x2="0.29">
+          <stop offset="0" stop-color="#0063a3" /><stop offset="1" stop-color="#1cb9f0" />
+        </linearGradient>
+      </defs>
+    )}
+    <path fill-rule="evenodd" clip-rule="evenodd" d={P1}
+          fill={variant === 'brand' ? `url(#${uid}g)` : 'currentColor'} />
+    <path fill-rule="evenodd" clip-rule="evenodd" d={P2}
+          fill={variant === 'brand' ? `url(#${uid}b)` : 'currentColor'} />
+  </svg>
+  {/* ═══════════════════════════════════════════════════════════════════════
+      ΤΟ ΛΕΚΤΙΚΟ ΕΙΝΑΙ ΤΟ ΙΔΙΟ ΤΟ ΣΧΕΔΙΟ ΤΟΥ ΛΟΓΟΤΥΠΟΥ ΜΑΣ — ΟΧΙ ΑΝΑΠΑΡΑΣΤΑΣΗ.
+      Τα 19 περιγράμματα γραμμάτων βγήκαν αυτούσια από το public/logo-full.svg
+      (9 για «Halkidiki», 10 για «PROPERTIES») και ζουν στο lib/logotype.json.
+
+      🪤 ΓΙΑΤΙ ΟΧΙ ΜΕ ΚΕΙΜΕΝΟ: το είχα χτίσει με CSS και Mont. Δύο προβλήματα —
+         (α) οι δύο λέξεις δεν είχαν το ίδιο μήκος (χρειαζόταν μαντεμένο
+             letter-spacing), (β) ακόμη κι όταν το διόρθωσα με flex, το κείμενο
+             έβγαινε **8% φαρδύτερο** από το σήμα σε σχέση με το πρωτότυπο:
+             τα γράμματα του λογοτύπου είναι σχεδιασμένα πιο στενά από τη Mont
+             όπως την αποδίδει ο browser (3,075 έναντι 2,849).
+      ✅ Με τα πραγματικά περιγράμματα η αναλογία είναι εξ ορισμού ακριβής,
+         σε κάθε μέγεθος και σε κάθε συσκευή, χωρίς να εξαρτάται από φόρτωση
+         γραμματοσειράς.
+      ═══════════════════════════════════════════════════════════════════════ */}
+  <svg class="logo__word" viewBox="0 0 148.419 42.234" width="148.419" height="42.234"
+       preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false">
+    <g>
+      {LT.paths.map((q) => (
+        <path d={q.d} transform={q.t}
+              fill={variant === 'brand' ? (q.w === 'a' ? '#036dac' : '#a5cf4e') : 'currentColor'} />
+      ))}
+    </g>
+  </svg>
+  <span class="sr-only">Halkidiki Properties</span>
+
+<style>
+  /* ═════════════════════════════════════════════════════════════════════════
+     🪤 ΤΟ SAFARI ΕΚΟΒΕ ΤΟ «PROPERTIES» ΑΠΟ ΚΑΤΩ (φωτογραφία από iPhone, 27/7).
+     Είχα δώσει μόνο `height` με `width: auto`. Ο Chrome βγάζει το πλάτος από τις
+     αναλογίες του viewBox· το Safari **δεν το κάνει αξιόπιστα** για inline SVG
+     μέσα σε flex, δίνει λάθος κουτί και κόβει — τα SVG έχουν `overflow: hidden`
+     από προεπιλογή, οπότε το κόψιμο είναι αθόρυβο.
+
+     Η θωράκιση είναι τριπλή, και η καθεμία αρκεί μόνη της:
+       · ρητά `width`/`height` στο ίδιο το <svg>  → εγγενής αναλογία
+       · `aspect-ratio` στο CSS                   → το πλάτος βγαίνει από το ύψος
+       · `overflow: visible`                      → ακόμη κι αν κάτι πάει στραβά,
+                                                    το σχέδιο ΔΕΝ κόβεται σιωπηλά
+     ═════════════════════════════════════════════════════════════════════════ */
+  .logo {
+    display: inline-flex; align-items: center; min-width: 0;
+    gap: calc(var(--h) * 0.271);
+  }
+  .logo__mark {
+    flex: none; height: var(--h); width: auto;
+    aspect-ratio: 56 / 52; overflow: visible;
+  }
+  /* 0,8162 = ύψος λεκτικού / ύψος σήματος, μετρημένο με getBBox() στο πρωτότυπο. */
+  .logo__word {
+    flex: none; height: calc(var(--h) * 0.8162); width: auto;
+    aspect-ratio: 148.419 / 42.234; overflow: visible;
+  }
+
+  /* George, 28/7: «το λογότυπο λίγο μεγαλύτερο» — desktop 26 → 34px.
+     Όλα τα υπόλοιπα (κενό, μέγεθος λεκτικού) ακολουθούν αυτόματα, γιατί
+     είναι γραμμένα ως αναλογίες του `--h`. Μία τιμή, ένα σημείο. */
+  .logo--sm { --h: 24px; }
+  .logo--md { --h: 34px; }
+
+  .logo--brand { color: var(--ink); }
+</style>

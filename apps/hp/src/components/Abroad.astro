@@ -1,0 +1,123 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΑΓΟΡΑ ΑΠΟ ΤΟ ΕΞΩΤΕΡΙΚΟ — «Εσείς κάνετε δύο πράγματα.»
+//
+// ΓΙΑΤΙ ΑΞΙΖΕΙ ΤΗ ΘΕΣΗ ΤΟΥ: το 70% της κίνησής μας είναι Βουλγαρία, Σερβία,
+// Ρουμανία, Γερμανία. Αυτός ο επισκέπτης δεν φοβάται το σπίτι — φοβάται τη
+// ΔΙΑΔΙΚΑΣΙΑ σε ξένη χώρα, με ξένη γλώσσα και ξένο δίκαιο.
+//
+// 🔴 Η ΜΟΡΦΗ ΑΛΛΑΞΕ 28/7 (επιλογή George από 3 mockups): από τέσσερα βήματα σε
+// **δύο στήλες, «Εσείς» απέναντι σε «Εμείς»**. Ο λόγος είναι επικοινωνιακός και
+// φαίνεται σε ένα δευτερόλεπτο: **η διαφορά όγκου**. Δύο γραμμές στη στήλη του
+// πελάτη, πέντε στη δική μας — και η δική μας είναι μαύρη, δηλαδή προφανώς η
+// βαριά. Μια λίστα βημάτων έλεγε «να τι πρέπει να κάνεις»· αυτό λέει «να τι
+// ΔΕΝ θα κάνεις».
+//
+// ΤΡΕΙΣ ΔΙΟΡΘΩΣΕΙΣ ΤΟΥ GEORGE ΠΑΝΩ ΣΤΟ MOCKUP:
+//  1. Το πληρεξούσιο πάει **στους νομικούς ΤΗΣ ΕΤΑΙΡΕΙΑΣ**, όχι «σε δικηγόρο
+//     που εγκρίνετε εσείς». Είναι δική μας ομάδα, και αυτό είναι το επιχείρημα.
+//  2. Ο έλεγχος τίτλων γίνεται από το **«Νομικό τμήμα Halkidiki Properties»**,
+//     όχι από γενικό «δικηγόρο».
+//  3. ⛔ Η **συντήρηση ΑΦΑΙΡΕΘΗΚΕ**: «δεν το αναλαμβάνουμε». Μένει μόνο η
+//     παράδοση και οι λογαριασμοί.
+// ═══════════════════════════════════════════════════════════════════════════
+import { t, prefix, type Lang } from '../lib/i18n';
+import { pageExists } from '../lib/pages';
+import { company } from '../lib/company';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+// Τα δύο μέρη είναι δεδομένα, όχι markup: αν αύριο προστεθεί βήμα, μπαίνει εδώ.
+const YOU = [['ab.you1_t', 'ab.you1_d'], ['ab.you2_t', 'ab.you2_d']];
+const US = [
+  ['ab.us1_t', 'ab.us1_d'], ['ab.us2_t', 'ab.us2_d'], ['ab.us3_t', 'ab.us3_d'],
+  ['ab.us4_t', 'ab.us4_d'], ['ab.us5_t', 'ab.us5_d'],
+];
+
+// 🛡️ Αν η σελίδα «Επικοινωνία» δεν έχει ακόμη κείμενο, ο σύνδεσμος **δεν σβήνει** —
+//    γίνεται τηλέφωνο. Εδώ το κάλεσμα είναι το προϊόν: κενό κουμπί θα ήταν χαμένος
+//    πελάτης, όχι απλώς λείπουσα σελίδα.
+const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
+---
+<section class="abroad" aria-labelledby="abroad-h">
+  <div class="wrap">
+    <div class="abroad__head">
+      <p class="t-label abroad__eyebrow">{t(lang, 'abroad.eyebrow')}</p>
+      <h2 id="abroad-h" class="t-h2 abroad__h">{t(lang, 'ab.h2')}</h2>
+      <p class="abroad__sub">{t(lang, 'ab.sub')}</p>
+    </div>
+
+    <div class="two">
+      <div class="two__col">
+        <h3 class="two__k">{t(lang, 'ab.you_h')}</h3>
+        <ul class="two__l">
+          {YOU.map(([tk, dk]) => (
+            <li><b>{t(lang, tk)}</b><i>{t(lang, dk)}</i></li>
+          ))}
+        </ul>
+      </div>
+      {/* Η μαύρη στήλη ΕΙΝΑΙ το μήνυμα: όγκος και βάρος με μια ματιά. */}
+      <div class="two__col two__col--us">
+        <h3 class="two__k">{t(lang, 'ab.us_h')}</h3>
+        <ul class="two__l">
+          {US.map(([tk, dk]) => (
+            <li><b>{t(lang, tk)}</b><i>{t(lang, dk)}</i></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="abroad__foot">
+      <p class="abroad__p">{t(lang, 'ab.close')}</p>
+      <a class="btn" href={contactHref} data-ev="contact:abroad">{t(lang, 'ab.cta')}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .abroad { padding: var(--s7) 0; background: var(--paper-2); border-top: 1px solid var(--line); }
+  .abroad__head { max-width: 52ch; }
+  .abroad__eyebrow { color: var(--faint); }
+  .abroad__h { margin: var(--s2) 0 0; }
+  .abroad__sub { margin: var(--s3) 0 0; color: var(--muted); font-size: 15px; max-width: 58ch; }
+
+  /* ΚΙΝΗΤΟ: οι δύο στήλες γίνονται δύο κάρτες, η μία κάτω από την άλλη —
+     η αντίθεση κρατιέται από το χρώμα, όχι από τη θέση. */
+  .two {
+    display: grid; gap: 1px; background: var(--line);
+    margin: var(--s6) 0 0; border: 1px solid var(--line);
+  }
+  .two__col { background: var(--paper-2); padding: var(--s5) var(--s4); }
+  .two__col--us { background: var(--ink-deep); color: #fff; }
+  .two__k {
+    margin: 0 0 var(--s4); font-size: 11px; font-weight: 600;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--faint);
+  }
+  .two__col--us .two__k { color: rgba(255,255,255,.55); }
+
+  .two__l { list-style: none; margin: 0; padding: 0; }
+  .two__l li { padding: 11px 0; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.4; }
+  .two__col--us .two__l li { border-top-color: rgba(255,255,255,.14); }
+  .two__l li:first-child { border-top: 0; }
+  .two__l b { font-weight: 600; }
+  .two__l i { display: block; font-style: normal; font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .two__col--us .two__l i { color: rgba(255,255,255,.5); }
+
+  .abroad__foot { margin: var(--s5) 0 0; }
+  .abroad__p { margin: 0 0 var(--s4); font-size: 15px; max-width: 64ch; line-height: 1.55; }
+  .abroad__p :global(b) { font-weight: 600; }
+
+  @media (min-width: 760px) {
+    .abroad { padding: 74px 0; }
+    /* Η στήλη μας είναι ΦΑΡΔΥΤΕΡΗ — όχι για να χωρέσει, αλλά γιατί έτσι
+       διαβάζεται η αναλογία της δουλειάς πριν διαβαστεί λέξη. */
+    .two { grid-template-columns: .82fr 1.18fr; }
+    .two__col { padding: var(--s5); }
+    .abroad__foot {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--s6); margin-top: var(--s6);
+    }
+    .abroad__p { margin: 0; }
+  }
+</style>

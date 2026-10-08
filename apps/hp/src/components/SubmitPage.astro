@@ -1,0 +1,224 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΚΑΤΑΧΩΡΗΣΗ ΑΚΙΝΗΤΟΥ — `/panel/submit`
+//
+// ✅ ΕΧΕΙ ΠΡΑΓΜΑΤΙΚΟ ΠΡΟΟΡΙΣΜΟ: `POST /site/property-submission` → μπαίνει στο EALIDA
+//    ως **draft** (`readiness: 'draft'`), δηλαδή **δεν εμφανίζεται πουθενά** μέχρι να
+//    το εγκρίνει άνθρωπος. Ο ιδιοκτήτης δεν δημοσιεύει· υποβάλλει.
+//
+// 🔑 ΤΟ ΣΗΜΕΡΙΝΟ SITE ΖΗΤΑΕΙ ΠΕΝΤΕ ΒΗΜΑΤΑ, ΜΕ ΧΩΡΟΥΣ ΑΝΑ ΟΡΟΦΟ ΚΑΙ ΝΟΜΙΚΑ ΑΡΧΕΙΑ.
+//    Εδώ ζητάμε το ελάχιστο που κάνει το τηλεφώνημα χρήσιμο. Ο μεσίτης παίρνει τα
+//    υπόλοιπα στην κουβέντα — και ο ιδιοκτήτης δεν εγκαταλείπει στο βήμα 3.
+//    (George, εγγραφή: «τα ελάχιστα στοιχεία από τον πελάτη». Ίδια λογική.)
+//
+// 🪤 ΤΟ API ΘΕΛΕΙ **name + email** ΥΠΟΧΡΕΩΤΙΚΑ (`site.service.ts:626`) — αλλιώς 404.
+//    Τα παίρνουμε από τον ΛΟΓΑΡΙΑΣΜΟ, δεν τα ξαναρωτάμε. Αν λείπει το όνομα (τα
+//    περισσότερα μέλη δεν το έχουν), στέλνουμε τον χρήστη να το συμπληρώσει πρώτα
+//    αντί να τον αφήσουμε να γράψει τα πάντα και να φάει σφάλμα στο τέλος.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { prefix, t, type Lang } from '../lib/i18n';
+import { company } from '../lib/company';
+import type { Member } from '../lib/member';
+
+interface Props { lang: Lang; me: Member }
+const { lang, me } = Astro.props;
+const p = prefix(lang);
+const co = await company();
+
+// Ο έλεγχος γίνεται ΠΡΙΝ δει τη φόρμα, όχι μετά τη συμπλήρωση.
+const canSubmit = !!me.name && !!me.email;
+
+const KINDS: [string, string][] = [
+  ['house', t(lang, 'sb.k.house')], ['apartment', t(lang, 'sb.k.apartment')],
+  ['maisonette', t(lang, 'sb.k.maisonette')], ['villa', t(lang, 'sb.k.villa')],
+  ['land', t(lang, 'sb.k.land')], ['commercial', t(lang, 'sb.k.commercial')],
+];
+
+// 🗣️ ΤΑ ΜΗΝΥΜΑΤΑ ΤΟΥ `<script>` ΠΕΡΝΟΥΝ ΩΣ ΔΕΔΟΜΕΝΑ, ΟΧΙ ΩΣ ΚΩΔΙΚΑΣ.
+//    Το script τρέχει στον browser και ΔΕΝ βλέπει το frontmatter ούτε το `t()`.
+//    Ίδιο μοτίβο με το `data-family` του FilterSheet.
+const JS_T = {
+  sending: t(lang, 'auth.sending'),
+  e_area: t(lang, 'sb.e.area'),
+  e_fail: t(lang, 'sb.e.fail'),
+  e_offline: t(lang, 'sb.e.offline'),
+};
+---
+
+<Base lang={lang} title={t(lang, 'sb.title')} noindex
+      description={t(lang, 'sb.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="sb">
+    <div class="wrap">
+      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
+        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{t(lang, 'sb.title')}</b>
+      </nav>
+
+      <h1 class="t-h2 sb__h">{t(lang, 'sb.h1')}</h1>
+      <p class="sb__s">{t(lang, 'sb.sub')}</p>
+
+      {!canSubmit ? (
+        <div class="ask">
+          <p class="ask__h">{t(lang, 'sb.need_h')}</p>
+          <p class="ask__s">{t(lang, 'sb.need_s')}</p>
+          <a class="btn" href={`${p}/panel/profile`}>{t(lang, 'pnl.profile')}</a>
+        </div>
+      ) : (
+        <form id="f" novalidate data-i18n={JSON.stringify(JS_T)}>
+          <fieldset>
+            <legend class="lg">{t(lang, 'sb.what')}</legend>
+            <div class="opts" role="radiogroup" aria-labelledby="kindL">
+              <span id="kindL" class="sr-only">{t(lang, 'sb.kind_l')}</span>
+              {KINDS.map(([v, label], i) => (
+                <label class="opt">
+                  <input type="radio" name="kind" value={v} checked={i === 0} />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div class="two">
+            <div>
+              <label class="fl" for="area">{t(lang, 'sb.area')}</label>
+              <input class="fi" id="area" name="area" autocomplete="address-level2"
+                     placeholder={t(lang, 'sb.area_ph')} maxlength="120" />
+            </div>
+            <div>
+              <label class="fl" for="sqm">{t(lang, 'sb.sqm')}</label>
+              <input class="fi" id="sqm" name="sqm" inputmode="numeric" maxlength="7" />
+            </div>
+          </div>
+
+          <label class="fl" for="price">{t(lang, 'sb.price')} <span class="opt-t">{t(lang, 'sb.optional')}</span></label>
+          <input class="fi" id="price" name="price" inputmode="numeric" maxlength="12" />
+
+          <label class="fl" for="desc">{t(lang, 'sb.desc')} <span class="opt-t">{t(lang, 'sb.optional')}</span></label>
+          <textarea class="fi ta" id="desc" name="desc" rows="4" maxlength="3000"></textarea>
+
+          <p class="err" id="e" role="alert" aria-live="polite" hidden></p>
+
+          <button class="btn go" type="submit">{t(lang, 'sb.send')}</button>
+
+          {/* Το `{b}` είναι το έντονο κομμάτι της πρότασης — μπαίνει ως <b>, γι' αυτό
+              η φράση σπάει στα δύο αντί να τυπωθεί με ένα `t()`. */}
+          <p class="fine" set:html={t(lang, 'sb.fine', { b: `<b>${t(lang, 'sb.fine_b')}</b>` })}></p>
+        </form>
+      )}
+
+      <div class="done" id="ok" hidden>
+        <p class="done__h">{t(lang, 'sb.ok_h')}</p>
+        <p class="done__s">{t(lang, 'sb.ok_s')}</p>
+        <a class="btn" href={co.phoneHref}>{co.phone}</a>
+      </div>
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<script>
+  const $ = (id: string) => document.getElementById(id) as HTMLElement;
+  const form = document.getElementById('f') as HTMLFormElement | null;
+  let busy = false;
+
+  // Τα κείμενα έρχονται από το `data-i18n` — δες το `JS_T` στο frontmatter.
+  const L: Record<string, string> = JSON.parse(form?.dataset.i18n || '{}');
+
+  form?.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (busy) return;
+    const err = $('e');
+    err.hidden = true;
+
+    const kind = (form.querySelector('input[name=kind]:checked') as HTMLInputElement)?.value ?? '';
+    const area = (form.querySelector('#area') as HTMLInputElement).value.trim();
+    const sqm = (form.querySelector('#sqm') as HTMLInputElement).value.replace(/\D/g, '');
+    const price = (form.querySelector('#price') as HTMLInputElement).value.replace(/\D/g, '');
+    const desc = (form.querySelector('#desc') as HTMLTextAreaElement).value.trim();
+
+    // Ο ΜΟΝΟΣ υποχρεωτικός έλεγχος εδώ. Χωρίς περιοχή, η υποβολή δεν είναι
+    // αξιοποιήσιμη — ο σύμβουλος δεν ξέρει καν ποιον να τη δώσει.
+    if (!area) {
+      err.textContent = L.e_area;
+      err.hidden = false;
+      (form.querySelector('#area') as HTMLInputElement).focus();
+      return;
+    }
+
+    busy = true;
+    const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+    const was = btn.textContent;
+    btn.disabled = true; btn.textContent = L.sending;
+
+    try {
+      const r = await fetch('/api/panel/submit', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ kind, area, sqm, price, desc }),
+      });
+      const b = await r.json().catch(() => ({}));
+      if (b?.ok) {
+        form.hidden = true;
+        $('ok').hidden = false;
+        $('ok').scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+      err.textContent = b?.message || L.e_fail;
+      err.hidden = false;
+    } catch {
+      err.textContent = L.e_offline;
+      err.hidden = false;
+    } finally {
+      busy = false; btn.disabled = false; btn.textContent = was;
+    }
+  });
+</script>
+
+<style>
+  .sb { padding: var(--s6) 0 var(--s9); }
+  .sb .wrap { max-width: 620px; }
+  .crumb { font-size: 12px; color: var(--faint); display: flex; gap: 7px; align-items: center;
+           margin-bottom: 10px; }
+  .crumb a { color: var(--muted); }
+  .crumb span { color: var(--line); }
+  .sb__h { margin: 0 0 8px; }
+  .sb__s { font-size: 14.5px; color: var(--ink-2); margin: 0 0 26px; max-width: 52ch; }
+
+  fieldset { border: 0; padding: 0; margin: 0 0 20px; }
+  .lg { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint);
+        font-weight: 600; padding: 0; margin-bottom: 9px; }
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 7px; }
+  .opt { border: 1px solid var(--line); padding: 12px 13px; font-size: 14px; cursor: pointer;
+         display: flex; align-items: center; gap: 9px; min-width: 0; }
+  .opt input { accent-color: var(--ink); flex: none; }
+  .opt:has(input:checked) { border-color: var(--ink); background: var(--paper-2); font-weight: 600; }
+  .opt:has(input:focus-visible) { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+  .fl { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+        color: var(--faint); font-weight: 600; margin: 0 0 5px; }
+  .opt-t { letter-spacing: 0; text-transform: none; font-weight: 400; }
+  /* 16px: κάτω από αυτό το iPhone κάνει ζουμ στο πεδίο και ΔΕΝ ξαναμικραίνει. */
+  .fi { width: 100%; font: inherit; font-size: 16px; padding: 11px 12px; margin-bottom: 16px;
+        border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+  .fi:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+  .ta { resize: vertical; min-height: 96px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .two > div { min-width: 0; }
+
+  .err { color: var(--red, #A3341F); font-size: 13.5px; margin: 0 0 14px; }
+  .go { width: 100%; justify-content: center; }
+  .fine { font-size: 12.5px; color: var(--faint); margin: 14px 0 0; }
+
+  .ask { border: 1px solid var(--line); padding: 20px; }
+  .ask__h { margin: 0 0 6px; font-size: 17px; font-weight: 600; }
+  .ask__s { margin: 0 0 15px; font-size: 13.5px; color: var(--muted); }
+
+  .done { border: 1px solid var(--line); padding: 24px 22px; }
+  .done__h { margin: 0 0 8px; font-size: 20px; font-weight: 300; }
+  .done__s { margin: 0 0 16px; font-size: 14px; color: var(--muted); }
+</style>

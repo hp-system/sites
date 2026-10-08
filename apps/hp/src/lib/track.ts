@@ -1,0 +1,80 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ΣΗΜΑΝΣΗ ΣΥΜΒΑΝΤΩΝ — το μάθημα της 27/7.
+//
+// ΤΟ ΠΡΟΒΛΗΜΑ ΤΟΥ ΣΗΜΕΡΙΝΟΥ SITE: όλα τα σημεία εγγραφής πυροδοτούν ΕΝΑ
+// συμβάν, `register_link_click`. Ο σύνδεσμος της κεφαλίδας, το «ξεκλείδωσε την
+// περιοχή», το «δες τις φωτογραφίες» — όλα μαζί. Αποτέλεσμα: όταν ρωτήθηκε
+// «ποιο φέρνει τις εγγραφές;», τα δεδομένα 12 μηνών ΔΕΝ μπόρεσαν να απαντήσουν.
+//
+// ΕΔΩ: κάθε σημείο έχει δικό του όνομα. Σε τρεις μήνες θα ξέρουμε.
+//
+// Πώς μπαίνει: `data-ev="register:header"` σε οποιοδήποτε στοιχείο. Τίποτε άλλο.
+// Το script είναι ~15 γραμμές και δεν φορτώνει βιβλιοθήκη.
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Τα ονόματα είναι ΚΛΕΙΣΤΗ λίστα — αλλιώς σε έναν χρόνο έχουμε 40 παραλλαγές. */
+export const EVENTS = {
+  // Σημεία εγγραφής / σύνδεσης — το ερώτημα που θέλουμε να απαντηθεί
+  REGISTER_HEADER: 'register:header',
+  REGISTER_MENU: 'register:menu',
+  REGISTER_UNLOCK_AREA: 'register:unlock_area',       // σελίδα ακινήτου
+  REGISTER_UNLOCK_PHOTOS: 'register:unlock_photos',   // σελίδα ακινήτου
+  REGISTER_WHY_PAGE: 'register:why_page',             // «Γιατί να εγγραφείτε» — 10× απόδοση
+  REGISTER_OFF_MARKET: 'register:off_market',         // το μπλοκ των 79
+
+  // Πρόθεση αγοραστή
+  SEARCH_SUBMIT: 'search:submit',
+  SEARCH_ID: 'search:by_id',
+  FILTERS_OPEN: 'search:filters_open',
+  CARD_CLICK: 'property:card_click',
+  FEATURE_CLICK: 'property:feature_click',
+
+  // Πρόθεση πωλητή — ο ακριβότερος lead
+  VALUATION_START: 'seller:valuation_start',
+  VALUATION_REPORT: 'seller:valuation_report',
+  SELL_DOOR: 'seller:door_click',
+
+  // ΕΠΙΚΟΙΝΩΝΙΑ — η υψηλότερη πρόθεση σε όλη τη σελίδα.
+  // Ξεχωριστό όνομα ΑΝΑ ΣΗΜΕΙΟ: αν όλα λέγονταν «κλικ στο τηλέφωνο», δεν θα
+  // μαθαίναμε ποτέ αν αξίζει το τηλέφωνο στην κεφαλίδα του κινητού.
+  CALL_HEADER: 'call:header',
+  CALL_MENU: 'call:menu',
+  CALL_FOOTER: 'call:footer',
+  CONTACT_TRUST: 'contact:trust',
+} as const;
+
+/** Όλα τα επιτρεπτά ονόματα — ο έλεγχος γίνεται στον browser, δες πιο κάτω. */
+export const EVENT_NAMES: string[] = Object.values(EVENTS);
+
+/** Το snippet που μπαίνει μία φορά στο Base.astro. */
+export const TRACK_SNIPPET = `
+(function(){
+  function send(name, extra){
+    try {
+      if (typeof window.gtag === 'function') window.gtag('event', name, extra || {});
+      else (window.dataLayer = window.dataLayer || []).push(Object.assign({event:name}, extra||{}));
+    } catch(e){}
+  }
+  // Δικλείδα: αν κάποιο component βάλει όνομα εκτός λίστας, το βλέπουμε ΤΩΡΑ
+  // αντί να το ανακαλύψουμε σε τρεις μήνες ως κενό στην αναφορά.
+  var KNOWN = __EVENT_NAMES__;
+  function check(name){
+    if (KNOWN.indexOf(name) === -1 && location.hostname === 'localhost') {
+      console.warn('[track] άγνωστο συμβάν «' + name + '» — πρόσθεσέ το στο lib/track.ts');
+    }
+    return name;
+  }
+  document.addEventListener('click', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
+    if (!el) return;
+    send(check(el.getAttribute('data-ev')), { ev_page: location.pathname });
+  }, { passive: true });
+  document.addEventListener('submit', function(e){
+    var f = e.target;
+    if (f && f.getAttribute && f.getAttribute('data-ev')) {
+      send(check(f.getAttribute('data-ev')), { ev_page: location.pathname });
+    }
+  }, { passive: true });
+  window.__track = send;
+})();
+`.trim().replace('__EVENT_NAMES__', JSON.stringify(Object.values(EVENTS)));

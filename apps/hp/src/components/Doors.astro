@@ -1,0 +1,54 @@
+---
+// ΜΠΛΟΚ 9 — Τρεις πόρτες.
+//
+// Αντικαθιστούν τα έξι banner του σημερινού site. Τρία προβλήματα είχαν:
+// όλα φωτογραφίες αρχείου, έξι ισοδύναμες προτροπές ακυρώνονταν μεταξύ τους,
+// και το έκτο έβγαζε τον επισκέπτη ΕΚΤΟΣ site (villanatalia.eu).
+// Τρεις πόρτες, γιατί τρεις είναι και οι πραγματικοί επισκέπτες.
+//
+// 🔴 28/7 — ΚΑΝΕΝΑΣ ΑΡΙΘΜΟΣ (George): «δεν θέλω να γράφουμε νούμερα, πόσα
+// properties έχουμε, γιατί είναι πολύ δεσμευτικό». Έφυγαν τα {n}/{min}/{max}
+// από την πόρτα του αγοραστή — μαζί τους και τα props που τα τροφοδοτούσαν.
+//
+// Και η πόρτα του ΠΩΛΗΤΗ ξαναγράφηκε από την αρχή: απαριθμούσε τι κάνουμε ΕΜΕΙΣ
+// (φωτογράφιση, drone, κείμενα ×5, ΠΕΑ, «χωρίς προκαταβολή») — «δεν είναι ωραίο
+// motivation αυτό για έναν owner». Τώρα μιλά για ΑΓΟΡΑΣΤΕΣ: ότι ο κατάλληλος
+// μπορεί να είναι ήδη στο πελατολόγιό μας. Οι υπηρεσίες ζουν πίσω από το CTA.
+import { t, listUrl, prefix, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = prefix(lang);
+---
+<section class="section" aria-label={t(lang, 'doors.eyebrow')}>
+  <div class="wrap">
+    <div class="doors">
+      <div class="door">
+        <h2 class="t-h2 door__h">{t(lang, 'doors.buy')}</h2>
+        <p>{t(lang, 'doors.buy.p')}</p>
+        <a class="shead__link" href={listUrl(lang)}>{t(lang, 'doors.buy.cta')}</a>
+      </div>
+      <div class="door">
+        <h2 class="t-h2 door__h">{t(lang, 'doors.sell')}</h2>
+        <p>{t(lang, 'doors.sell.p')}</p>
+        <a class="shead__link" href={`${p}/sell`}>{t(lang, 'doors.sell.cta')}</a>
+      </div>
+      <div class="door">
+        <h2 class="t-h2 door__h">{t(lang, 'doors.partner')}</h2>
+        <p>{t(lang, 'doors.partner.p')}</p>
+        <a class="shead__link" href={`${p}/partners`}>{t(lang, 'doors.partner.cta')}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .doors { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .door { background: var(--paper); padding: var(--s5) var(--s4); }
+  .door__h { font-size: clamp(21px, 4vw, 26px); }
+  .door p { margin: var(--s2) 0 var(--s4); color: var(--muted); font-size: 14px; }
+  @media (min-width: 760px) {
+    .doors { grid-template-columns: repeat(3, 1fr); }
+    .door { padding: var(--s6) var(--s5); }
+  }
+</style>

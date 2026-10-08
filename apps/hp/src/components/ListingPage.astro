@@ -1,0 +1,594 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// Η ΣΕΛΙΔΑ ΛΙΣΤΑΣ. Δύο πρόσωπα, μία σελίδα (απόφαση George, 29/7).
+//
+//  · Ήρθε από ΑΝΑΖΗΤΗΣΗ (γυμνή λίστα)  → αποτελέσματα αμέσως, φίλτρα ένα κλικ
+//  · Ήρθε σε ΘΕΜΑΤΙΚΗ σελίδα (Κασσάνδρα, Βίλες) → editorial κεφαλίδα με τον τόπο
+//    ως τίτλο, και μετά το ίδιο πλέγμα.
+//
+// 📊 Η δομή δεν είναι γούστο — βγήκε από 32 μέρες logs: το 41% δεν αγγίζει
+//    κανένα φίλτρο, και όσοι τα αγγίζουν χρησιμοποιούν πέντε από τα δέκα. Μόνιμη
+//    πλαϊνή στήλη θα έτρωγε το ένα τέταρτο της οθόνης για μειοψηφία.
+//
+// ⚠️ ΤΟ ΦΙΛΤΡΑΡΙΣΜΑ ΓΙΝΕΤΑΙ **ΤΟΠΙΚΑ**, ΠΟΤΕ ΜΕ ΠΡΟΩΘΗΣΗ ΣΤΟ API.
+//    Το EALIDA API αγνοεί ΣΙΩΠΗΛΑ ό,τι δεν αναγνωρίζει: `?luxury=1` γυρίζει
+//    και τα 527 χωρίς σφάλμα, `?pool=1` γυρίζει 0, και ο δήμος σε ονομαστική
+//    γυρίζει 3 αντί για 250. Δες τα σχόλια στο lib/listing.ts.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import MobileMenu from './MobileMenu.astro';
+import Footer from './Footer.astro';
+import PropertyCard from './PropertyCard.astro';
+import { allProperties, refOf, priceOf, priceVisible, pick } from '../lib/api';
+import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
+import { prefix, propertyUrl, type Lang } from '../lib/i18n';
+import { num, seaLabel } from '../lib/format';
+import {
+  runQuery, queryFromParams, paramsOf, indexable as isIndexable,
+  facetUrl, ui, FACETS, SORTS, SORT_DEFAULT, PER_PAGE, PER_PAGE_OPTIONS,
+  cardsPerPage, SUBTYPES, MUNIS, SEAS,
+  type Facet, type Query, type Sort,
+} from '../lib/listing';
+
+interface Props { lang: Lang; facets: Facet[] }
+const { lang, facets } = Astro.props;
+
+const viewer = await viewerOf(Astro.cookies);
+const memberToken = Astro.cookies.get('member_token')?.value;
+
+// ── Το ερώτημα: τα θέματα του URL + οι επιτρεπτές παράμετροι.
+// 🛡️ ΡΗΤΗ ALLOW-LIST. Το `queryFromParams` δέχεται ΜΟΝΟ έξι παραμέτρους. Το
+//    `area` λείπει σκόπιμα: το EALIDA API φιλτράρει κανονικά σε περιοχή, οπότε
+//    ένα «περνάω ό,τι έρθει» θα άφηνε μη συνδεδεμένο να μάθει με `?area=Σάνη`
+//    ποια ακίνητα είναι στη Σάνη — παρακάμπτοντας ολόκληρο το lib/gate.ts.
+const sp = Astro.url.searchParams;
+const q: Query = Object.assign({}, ...facets.map((f) => f.q), queryFromParams(sp));
+
+let items: Awaited<ReturnType<typeof allProperties>> = [];
+let apiDown = false;
+try {
+  items = await allProperties(600, memberToken);
+} catch {
+  apiDown = true;
+}
+
+// ── ΠΟΣΑ ΑΝΑ ΣΕΛΙΔΑ, ΚΑΙ ΓΙΑΤΙ ΜΙΑ ΛΙΓΟΤΕΡΗ ΓΙΑ ΤΟΝ ΕΠΙΣΚΕΠΤΗ ─────────────
+// 🪤 «Το τελευταίο το έχεις μόνο του» (George, 30/7). Δεν έφταιγε το 24 — είναι
+//    πολλαπλάσιο του 3. Έφταιγε ότι το ΚΟΥΤΙ ΕΓΓΡΑΦΗΣ πιάνει κι αυτό ένα κελί
+//    του πλέγματος: 24 κάρτες + 1 κουτί = 25 = οκτώ σειρές και ένα ορφανό.
+//    Τώρα το κουτί ΠΑΙΡΝΕΙ τη θέση μιας κάρτας αντί να προστίθεται.
+const per = q.per ?? PER_PAGE;
+const wantsJoin = !viewer.member;
+const res = runQuery(items, q, cardsPerPage(per, wantsJoin));
+
+// ── Κεφαλίδα: τα ονόματα των θεμάτων, στη γλώσσα του επισκέπτη.
+const names = facets.map((f) => f.name[lang]);
+const heading = names.length ? names.join(' · ') : ui(lang, 'all');
+const isThemed = facets.length > 0;
+
+// ── SEO ────────────────────────────────────────────────────────────────────
+const pathFor = (l: Lang) => facetUrl(l, ...facets.map((f) => f.key));
+const noindex = !isIndexable(facets.map((f) => f.key), sp);
+
+const title = isThemed
+  ? `${heading} — ${ui(lang, 'all')}`
+  : ui(lang, 'all');
+const desc = isThemed
+  ? `${heading}. ${ui(lang, 'all')}.`
+  : ui(lang, 'all');
+
+// 🪤 ΤΟ URL ΜΕΣΑ ΣΤΟ JSON-LD ΠΕΡΝΑΕΙ ΑΠΟ `propertyUrl(lang, …)`.
+//    Στην αρχική ήταν σκληροκωδικοποιημένο `/ακινητο/<id>` και δήλωνε ΕΛΛΗΝΙΚΟ
+//    URL σε ΚΑΙ ΤΙΣ ΕΝΝΕΑ γλώσσες — URL που στην αγγλική εκδοχή δεν υπάρχει καν.
+const jsonLd = res.items.length ? [{
+  '@context': 'https://schema.org', '@type': 'ItemList',
+  name: heading,
+  numberOfItems: res.total,
+  itemListElement: res.items.slice(0, 12).map((p, i) => ({
+    '@type': 'ListItem', position: i + 1,
+    url: `${Astro.site?.toString().replace(/\/$/, '') ?? ''}${propertyUrl(lang, refOf(p))}`,
+  })),
+}] : [];
+
+// ── Δήμοι για το υποσέλιδο (ίδιο μοτίβο με την αρχική).
+const munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
+  .slice(0, 4)
+  .map((k) => {
+    const src = items.find((p) => muniKey(p.attributes ?? {}) === k);
+    return { name: municipalityOf(src?.attributes ?? {}, lang) || k, key: k };
+  });
+
+// ── Σελιδοποίηση: κρατάει τις παραμέτρους, αλλάζει μόνο τη σελίδα.
+const pageUrl = (n: number) => `${pathFor(lang)}${paramsOf({ ...q, page: n })}`;
+const sortUrl = (s: Sort) => `${pathFor(lang)}${paramsOf({ ...q, sort: s, page: 1 })}`;
+// Αλλαγή «ανά σελίδα» → πάντα πίσω στην πρώτη σελίδα: η σελίδα 7 των 12 δεν
+// αντιστοιχεί σε τίποτα όταν γίνουν 48.
+const perUrl = (n: number) => `${pathFor(lang)}${paramsOf({ ...q, per: n, page: 1 })}`;
+// ΟΙ ΕΞΙ ΤΥΠΟΙ, με τη σειρά του σημερινού site (Recommended πρώτο).
+const sortLabel: Record<Sort, string> = {
+  rec: ui(lang, 'sortRec'),
+  price_desc: ui(lang, 'sortPriceDesc'), price_asc: ui(lang, 'sortPriceAsc'),
+  sqm_desc: ui(lang, 'sortSqmDesc'), sqm_asc: ui(lang, 'sortSqmAsc'),
+  new: ui(lang, 'sortNew'),
+};
+const cur: Sort = q.sort ?? SORT_DEFAULT;
+
+// ΠΡΟΤΡΟΠΗ ΕΓΓΡΑΦΗΣ — μετά την τρίτη κάρτα, όχι αναδυόμενο παράθυρο, και ΜΟΝΟ
+// σε μη συνδεδεμένους. Στο σημείο αυτό ο επισκέπτης έχει ήδη δει τρία ακίνητα
+// και ξέρει τι του λείπει: η ακριβής περιοχή, που είναι και ο κανόνας του gate.
+const JOIN_AFTER = 3;
+const showJoin = wantsJoin && res.items.length >= JOIN_AFTER + 1;
+
+// Πόσα φίλτρα είναι ενεργά — για το σήμα πάνω στο κουμπί και για το «Καθαρισμός».
+// ⚠️ Μετρώνται ΜΟΝΟ όσα ήρθαν από παραμέτρους. Ό,τι κλειδώνει η ΔΙΕΥΘΥΝΣΗ (π.χ.
+//    ο δήμος στη σελίδα «Κασσάνδρα») δεν είναι επιλογή του χρήστη εδώ.
+const fromUrl = queryFromParams(sp);
+const activeCount = [
+  fromUrl.priceMin, fromUrl.priceMax, fromUrl.sqmMin, fromUrl.sqmMax,
+  fromUrl.beds, fromUrl.subcategory, fromUrl.municipality, fromUrl.sea,
+].filter(Boolean).length;
+
+// ── ΟΙ ΕΠΙΛΟΓΕΣ ΤΩΝ ΤΡΙΩΝ ΝΕΩΝ ΦΙΛΤΡΩΝ ────────────────────────────────────
+// 💡 Τα ονόματα ΔΕΝ γράφονται χειροκίνητα σε 9 γλώσσες — διαβάζονται από τα ΙΔΙΑ
+//    ΤΑ ΔΕΔΟΜΕΝΑ (`subcategory_i18n`). Έτσι μένουν συνεπή με τους τίτλους των
+//    καρτών, και αν ο τροφοδότης προσθέσει μετάφραση, εμφανίζεται μόνη της.
+const labelOf = (sub: string) => {
+  const hit = items.find((p) => String(p.attributes?.subcategory ?? '').toLowerCase() === sub);
+  return pick(hit?.attributes?.subcategory_i18n, lang) || sub;
+};
+const typeOpts = SUBTYPES.map((x) => ({ v: x.v, label: labelOf(x.v) }));
+const muniOpts = MUNIS.map((x) => ({
+  v: x.v,
+  label: FACETS.find((f) => f.q.municipality === x.v)?.name[lang] ?? x.v,
+}));
+const seaOpts = SEAS.map((x) => ({ v: x.v, label: seaLabel(x.v, lang) || x.v }));
+
+// Ποια φίλτρα κλειδώνει ήδη η διεύθυνση — αυτά ΔΕΝ επαναλαμβάνονται στη φόρμα.
+const lockedBy = (k: keyof Query) => facets.some((f) => f.q[k] !== undefined);
+// Η τρέχουσα διεύθυνση με τις παραμέτρους της, για την επιστροφή μετά τη σύνδεση.
+const here = `${pathFor(lang)}${paramsOf(q)}`;
+
+// Άλλα θέματα για γρήγορη μετάβαση — μόνο όσα δεν είναι ήδη ενεργά.
+---
+<Base lang={lang} title={title} description={desc} pathFor={pathFor} noindex={noindex} jsonLd={jsonLd}>
+  {/* 🔴 `solid` — ΑΛΛΙΩΣ Η ΚΕΦΑΛΙΔΑ ΕΙΝΑΙ ΛΕΥΚΗ ΠΑΝΩ ΣΕ ΛΕΥΚΟ.
+      Δες το σχόλιο στην κορυφή του Header.astro: εδώ δεν υπάρχει φωτογραφία. */}
+  <Header lang={lang} solid pathFor={pathFor} />
+  <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={res.total} />
+
+  <main id="main" class="wrap list">
+    {/* 🪤 ΕΠΑΝΕΛΑΜΒΑΝΕ ΤΟΝ ΤΙΤΛΟ. Στη γυμνή λίστα έγραφε «Halkidiki Properties ·
+        Ακίνητα προς πώληση στη Χαλκιδική» και ΑΜΕΣΩΣ από κάτω ο H1 έλεγε το ίδιο
+        ακριβώς — δύο φορές η ίδια φράση, η μία σε αχνό γκρι. Τώρα το τελευταίο
+        σκαλί μπαίνει ΜΟΝΟ όταν υπάρχει θέμα, δηλαδή όταν λέει κάτι διαφορετικό. */}
+    <nav class="crumb" aria-label="breadcrumb">
+      <a href={prefix(lang) || '/'}>Halkidiki Properties</a>
+      {isThemed && (
+        <>
+          <span aria-hidden="true">·</span>
+          <a href={facetUrl(lang)}>{ui(lang, 'all')}</a>
+          {names.map((n) => (<><span aria-hidden="true">·</span><span>{n}</span></>))}
+        </>
+      )}
+    </nav>
+
+    {/* ΤΟ ΠΛΗΘΟΣ ΤΕΡΜΑ ΔΕΞΙΑ, ΣΤΗ ΓΡΑΜΜΗ ΤΟΥ ΤΙΤΛΟΥ (George, 30/7: «μπορείς να
+        το πας τέρμα δεξιά στη σελίδα, π.χ. πάνω από την ταξινόμηση ή ακόμη πιο
+        πάνω, σε όποιο σημείο να είναι όμορφο»).
+        Μέσα στη μπάρα εργαλείων έμενε 459px μακριά από το δεξί άκρο — δεξιά
+        μεριά μεν, «τέρμα δεξιά» όχι: το έσπρωχναν μέσα η ταξινόμηση και το «ανά
+        σελίδα». Εδώ δεν το σπρώχνει τίποτα, και διαβάζεται μαζί με τον τίτλο:
+        «Ακίνητα προς πώληση στη Χαλκιδική … Βρέθηκαν 527». */}
+    <div class="head">
+      <h1 class={isThemed ? 't-display head__h' : 't-h2 head__h'}>{heading}</h1>
+      <p class="count t-data">{apiDown ? '—' : ui(lang, 'found', { n: num(res.total, lang) })}</p>
+    </div>
+
+    {/* ΔΥΟ ΟΜΑΔΕΣ, ΟΧΙ ΠΕΝΤΕ ΣΚΟΡΠΙΑ ΣΤΟΙΧΕΙΑ (George, 30/7):
+          ΑΡΙΣΤΕΡΑ  = ΕΝΕΡΓΕΙΕΣ  → φίλτρα · αποθήκευση · κωδικός
+          ΔΕΞΙΑ     = ΟΨΗ        → πλήθος · ταξινόμηση · ανά σελίδα
+        «Το βρέθηκαν 527 μπορείς να το πας τέρμα δεξιά, π.χ. πάνω από την
+         ταξινόμηση» + «το αποθήκευση ζήτησης θα το χωρίσεις αριστερά δίπλα στα
+         φίλτρα». Το πλήθος κάθεται ΔΙΠΛΑ στην ταξινόμηση: είναι το αποτέλεσμα
+         των φίλτρων, άρα ανήκει στην ίδια πλευρά με το πώς το βλέπεις.
+        🪤 Η ΠΑΝΩ ΓΡΑΜΜΗ ΕΦΥΓΕ: ήταν `border-block` (πάνω ΚΑΙ κάτω) και μαζί με
+           τη γραμμή του `.head` έκανε δύο παράλληλες γραμμές με 12px ανάμεσα. */}
+    <div class="tools">
+      <div class="tools__l">
+        <button class="btn" id="ftog" aria-expanded="false" aria-controls="fbar">
+          {ui(lang, 'filters')}{activeCount > 0 && <b class="badge">{activeCount}</b>}
+        </button>
+        {/* 🔐 Η ΑΠΟΘΗΚΕΥΣΗ ΑΝΑΖΗΤΗΣΗΣ ΟΔΗΓΕΙ ΣΕ ΕΓΓΡΑΦΗ — και κρατά ΤΟ ΕΡΩΤΗΜΑ μαζί
+            της, ώστε μετά τη σύνδεση να συνεχίσει από εκεί που ήταν και όχι από την αρχή. */}
+        {!viewer.member && (
+          <a class="btn btn--save" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}&save=1`}
+             data-ev="member:save_search">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M5 3h14v18l-7-5-7 5V3z" />
+            </svg>
+            {ui(lang, 'saveSearch')}
+          </a>
+        )}
+
+      </div>
+
+      {/* 🔑 ΑΝΑΖΗΤΗΣΗ ΜΕ ΚΩΔΙΚΟ — ΣΤΟ ΚΕΝΤΡΟ ΤΗΣ ΜΠΑΡΑΣ (George, 30/7: «βάλ'
+          το κάπου πιο κεντραρισμένα»). Τρίτη ομάδα ανάμεσα στις δύο, όχι μέλος
+          της αριστερής: αριστερά ΕΝΕΡΓΕΙΕΣ · κέντρο ΚΩΔΙΚΟΣ · δεξιά ΟΨΗ.
+          Δική της φόρμα GET, όχι πεδίο των φίλτρων: ο κωδικός ΔΕΝ στενεύει
+          αναζήτηση, την αντικαθιστά — αλλιώς «5496» μέσα σε φίλτρο «Σιθωνία»
+          θα έβγαζε κενό για ακίνητο που υπάρχει. */}
+      <form class="idform" method="get" action={pathFor(lang)} role="search">
+        <label class="idform__l" for="idq">{ui(lang, 'idLabel')}</label>
+        <svg class="idform__i" viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.3" />
+          <path d="M10.4 10.4 14 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+        <input class="idform__in" id="idq" name="id" type="text" inputmode="numeric"
+               maxlength="6" autocomplete="off" value={q.id ?? ''} placeholder={ui(lang, 'idPh')} />
+        <button class="idform__go" type="submit">{ui(lang, 'idGo')}</button>
+      </form>
+
+      <div class="tools__r">
+        <details class="sortbox">
+          <summary class="btn"><span class="sort__k">{ui(lang, 'sort')}: </span>{sortLabel[cur]}</summary>
+          <ul>
+            {SORTS.map((s) => (
+              <li><a href={sortUrl(s)} aria-current={s === cur ? 'true' : undefined}>{sortLabel[s]}</a></li>
+            ))}
+          </ul>
+        </details>
+        {/* Πόσα ανά σελίδα — όλα πολλαπλάσια του 3, όσες κι αν είναι οι στήλες. */}
+        <details class="sortbox sortbox--per">
+          <summary class="btn"><span class="sort__k">{ui(lang, 'perPage')}: </span>{per}</summary>
+          <ul>
+            {PER_PAGE_OPTIONS.map((n) => (
+              <li><a href={perUrl(n)} aria-current={n === per ? 'true' : undefined}>{n}</a></li>
+            ))}
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    {/* Τα φίλτρα ανοίγουν με κλικ. Είναι φόρμα GET: δουλεύει και χωρίς JavaScript.
+        ΤΑ ΘΕΜΑΤΑ ΤΗΣ ΔΙΕΥΘΥΝΣΗΣ ΔΕΝ ΕΙΝΑΙ ΕΔΩ — αν κάποιος είναι στη σελίδα
+        «Κασσάνδρα», ο δήμος είναι ήδη κλειδωμένος από το URL και δεν επαναλαμβάνεται. */}
+    <form class="fbar" id="fbar" hidden method="get" action={pathFor(lang)}>
+      {!lockedBy('subcategory') && !lockedBy('category') && (
+        <label class="f"><span>{ui(lang, 'type')}</span>
+          <select name="type">
+            <option value="">{ui(lang, 'any')}</option>
+            {typeOpts.map((o) => (
+              <option value={o.v} selected={fromUrl.subcategory === o.v}>{o.label}</option>
+            ))}
+          </select>
+        </label>
+      )}
+      {!lockedBy('municipality') && (
+        <label class="f"><span>{ui(lang, 'muni')}</span>
+          <select name="muni">
+            <option value="">{ui(lang, 'any')}</option>
+            {muniOpts.map((o) => (
+              <option value={o.v} selected={fromUrl.municipality === o.v}>{o.label}</option>
+            ))}
+          </select>
+        </label>
+      )}
+      {!lockedBy('sea') && (
+        <label class="f"><span>{ui(lang, 'seaLabel')}</span>
+          <select name="sea">
+            <option value="">{ui(lang, 'any')}</option>
+            {seaOpts.map((o) => (
+              <option value={o.v} selected={fromUrl.sea === o.v}>{o.label}</option>
+            ))}
+          </select>
+        </label>
+      )}
+      <label class="f"><span>{ui(lang, 'priceFrom')}</span>
+        <input type="number" name="price_min" min="0" step="10000" value={q.priceMin ?? ''} inputmode="numeric" /></label>
+      <label class="f"><span>{ui(lang, 'priceTo')}</span>
+        <input type="number" name="price_max" min="0" step="10000" value={q.priceMax ?? ''} inputmode="numeric" /></label>
+      <label class="f"><span>{ui(lang, 'areaFrom')}</span>
+        <input type="number" name="sqm_min" min="0" step="10" value={q.sqmMin ?? ''} inputmode="numeric" /></label>
+      <label class="f"><span>{ui(lang, 'areaTo')}</span>
+        <input type="number" name="sqm_max" min="0" step="10" value={q.sqmMax ?? ''} inputmode="numeric" /></label>
+      {/* 🛏️ «Τουλάχιστον», όχι «ακριβώς» — δες το σχόλιο στο lib/listing.ts */}
+      <label class="f f--beds"><span>{ui(lang, 'beds')}</span>
+        <select name="beds">
+          <option value="">{ui(lang, 'any')}</option>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <option value={n} selected={q.beds === n}>{n}+</option>
+          ))}
+        </select>
+      </label>
+      {q.sort && q.sort !== 'new' && <input type="hidden" name="sort" value={q.sort} />}
+      <button class="btn btn--go" type="submit">{ui(lang, 'apply')}</button>
+      {activeCount > 0 && <a class="btn btn--clear" href={pathFor(lang)}>{ui(lang, 'clear')}</a>}
+    </form>
+
+    {res.items.length === 0 ? (
+      /* Δύο ΔΙΑΦΟΡΕΤΙΚΑ αδιέξοδα, δύο διαφορετικά μηνύματα. Το «δοκιμάστε να
+         αφαιρέσετε ένα φίλτρο» είναι λάθος συμβουλή όταν ψάχνει με κωδικό:
+         δεν υπάρχει φίλτρο να αφαιρεθεί, ο κωδικός απλώς δεν αντιστοιχεί σε
+         ακίνητο — και ο επισκέπτης πρέπει να το ακούσει καθαρά. */
+      <div class="empty">
+        <p class="t-h3">{q.id ? ui(lang, 'idNone') : ui(lang, 'none')}</p>
+        {!q.id && <p>{ui(lang, 'noneHint')}</p>}
+        <a class="btn" href={facetUrl(lang)}>{ui(lang, 'all')}</a>
+      </div>
+    ) : (
+      <>
+        <ul class="grid">
+          {res.items.map((p, i) => (
+            <>
+              <li><PropertyCard p={p} lang={lang} viewer={viewer} eager={i < 3} /></li>
+              {showJoin && i === JOIN_AFTER - 1 && (
+                <li class="join">
+                  {/* 🔐 ΟΣΟ ΨΗΛΟ ΟΣΟ ΜΙΑ ΚΑΡΤΑ, ΟΧΙ ΛΩΡΙΔΑ (George, 30/7).
+                      Στέκεται μέσα στη ροή των αποτελεσμάτων, στη θέση όπου ο
+                      επισκέπτης έχει ήδη δει τρία ακίνητα και ξέρει τι χάνει —
+                      όχι αναδυόμενο παράθυρο που τον διακόπτει. */}
+                  <span class="join__lock" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.4">
+                      <rect x="4" y="10.5" width="16" height="10.5" rx="1" />
+                      <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+                    </svg>
+                  </span>
+                  <b class="join__h t-h3">{ui(lang, 'joinH')}</b>
+                  <ul class="join__list">
+                    <li>{ui(lang, 'joinB1')}</li>
+                    <li>{ui(lang, 'joinB2')}</li>
+                    <li>{ui(lang, 'joinB3')}</li>
+                  </ul>
+                  <a class="join__b" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`}
+                     data-ev="member:join_from_list">
+                    {ui(lang, 'joinCta')}
+                  </a>
+                </li>
+              )}
+            </>
+          ))}
+        </ul>
+
+        {res.pages > 1 && (
+          <nav class="pager" aria-label="pagination">
+            {res.page > 1 && <a class="btn" href={pageUrl(res.page - 1)} rel="prev">{ui(lang, 'prev')}</a>}
+            <span class="t-data">{ui(lang, 'pageOf', { a: res.page, b: res.pages })}</span>
+            {res.page < res.pages && <a class="btn" href={pageUrl(res.page + 1)} rel="next">{ui(lang, 'next')}</a>}
+          </nav>
+        )}
+      </>
+    )}
+
+    {/* 🚫 ΕΔΩ ΥΠΗΡΧΕ ΣΕΙΡΑ ΘΕΜΑΤΙΚΩΝ ΣΥΝΔΕΣΜΩΝ (Κασσάνδρα, Σιθωνία…) ΜΕΤΑ ΤΗ
+        ΣΕΛΙΔΟΠΟΙΗΣΗ — «αν είναι για SEO, τράβα και βάλ' τα στο footer· δεν τα
+        θέλω εκεί, φαίνονται πάρα πολύ άσχημα» (George, 30/7). Μετακόμισαν στο
+        υποσέλιδο (Footer.astro), που έτσι κι αλλιώς είναι σε ΚΑΘΕ σελίδα — άρα
+        το SEO κερδίζει, όχι μόνο δεν χάνει. */}
+  </main>
+
+  <Footer lang={lang} munis={munis} />
+</Base>
+
+<style>
+  .list { padding-block: var(--s5) var(--s7); }
+  /* 🪤 ΗΤΑΝ ΣΧΕΔΟΝ ΑΟΡΑΤΟ — «σαν σβησμένα με σβηστήρα» (George, 30/7).
+     12px σε `--faint` πάνω σε λευκό δίνει 5,13:1: περνά το πρότυπο, αλλά σε
+     ΜΙΚΡΟ μέγεθος και κεφαλαία διαβάζεται σαν ξεθωριασμένο. Το ανέβασα σε
+     `--muted` (6,50:1) και 13px, και οι σύνδεσμοι παίρνουν υπογράμμιση στο
+     πέρασμα ώστε να φαίνεται ότι είναι σύνδεσμοι. */
+  .crumb { font-size: 13px; color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .crumb a { color: var(--ink-2); text-decoration: none; }
+  .crumb a:hover { text-decoration: underline; }
+  /* Τίτλος αριστερά, πλήθος τέρμα δεξιά, στην ίδια οπτική γραμμή.
+     `baseline` και όχι `center`: τα δύο κείμενα κάθονται στην ίδια γραμμή
+     γραφής, όσο κι αν διαφέρουν σε μέγεθος. Σε στενή οθόνη το πλήθος πέφτει
+     από κάτω μόνο του — δεν στριμώχνεται δίπλα στον τίτλο. */
+  .head {
+    margin: var(--s4) 0 0;
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    justify-content: space-between; gap: var(--s2) var(--s4);
+  }
+  .head__h { margin: 0; max-width: 56ch; }
+
+  /* 🚫 Η ΠΑΝΩ ΓΡΑΜΜΗ ΕΦΥΓΕ (George, 30/7: «η πάνω γραμμή θέλω να φύγει τελείως»).
+     Ήταν `border-block`, που σημαίνει ΠΑΝΩ ΚΑΙ ΚΑΤΩ — δύο παράλληλες γραμμές με
+     λίγα pixel ανάμεσα, χωρίς να χωρίζουν τίποτα. Μένει μόνο η κάτω, που όντως
+     χωρίζει τα εργαλεία από τα αποτελέσματα. Έφυγε και το πάνω padding μαζί,
+     αλλιώς θα έμενε το κενό της γραμμής που δεν υπάρχει πια. */
+  .tools {
+    display: flex; align-items: center; gap: var(--s3) var(--s4); flex-wrap: wrap;
+    justify-content: space-between;
+    margin: var(--s5) 0 0; padding: 0 0 var(--s3);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  /* ΤΡΕΙΣ ΟΜΑΔΕΣ: αριστερά ενέργειες · ΚΕΝΤΡΟ κωδικός · δεξιά όψη.
+     🪤 Το σκέτο `space-between` ΔΕΝ κεντράρει το μεσαίο: μοιράζει τα κενά, και
+        με αριστερή ομάδα φαρδύτερη από τη δεξιά ο κωδικός έπεφτε 86px αριστερά
+        του κέντρου. Με `flex: 1` και στις δύο ακρινές ομάδες, οι δύο πλευρές
+        έχουν ΙΔΙΟ πλάτος και το μεσαίο κάθεται στο πραγματικό κέντρο. */
+  .tools__l, .tools__r { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; flex: 1; }
+  .tools__r { justify-content: flex-end; }
+  .count { margin: 0; color: var(--muted); }
+
+  /* ── ΑΝΑΖΗΤΗΣΗ ΜΕ ΚΩΔΙΚΟ ──────────────────────────────────────────────── */
+  .idform {
+    display: flex; align-items: center; border: 1px solid var(--line);
+    height: var(--toolh); box-sizing: border-box;
+  }
+  /* Η ετικέτα υπάρχει για τους αναγνώστες οθόνης· οπτικά την αντικαθιστά το
+     εικονίδιο και το placeholder, όπως στο σημερινό site. */
+  .idform__l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .idform__i { width: 14px; height: 14px; margin-inline-start: 10px; color: var(--faint); flex: none; }
+  .idform__in {
+    border: 0; background: none; color: var(--ink); font: inherit; font-size: 16px;
+    padding: 0 8px; width: 104px; min-width: 0;
+  }
+  .idform__in::placeholder { color: var(--faint); }
+  .idform:focus-within { border-color: var(--ink); }
+  .idform__go {
+    appearance: none; border: 0; background: var(--ink); color: var(--paper);
+    font: inherit; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    padding: 0 13px; align-self: stretch; cursor: pointer; white-space: nowrap;
+  }
+  .idform__go:hover { opacity: .86; }
+  /* 📏 ΕΝΑ ΚΟΙΝΟ ΥΨΟΣ ΓΙΑ ΟΛΗ ΤΗ ΜΠΑΡΑ (George, 30/7: «το πεδίο κωδικός δεν
+     έχει το ίδιο ύψος με τα άλλα κουμπιά — όλο αυτό πρέπει να έχει το ίδιο ύψος»).
+     Το πεδίο ήταν καρφωμένο 34px ενώ τα κουμπιά έβγαιναν 36 από το padding τους.
+     Ίδιο μάθημα με τα φίλτρα σήμερα το πρωί: ύψος ΔΗΛΩΜΕΝΟ σε μία μεταβλητή,
+     όχι προϊόν εσωτερικών περιθωρίων που ο καθένας υπολογίζει αλλιώς.
+     ⚠️ 44 ΚΑΙ ΟΧΙ 38: δοκιμάστηκε 38 και τα κουμπιά έμειναν 44 — ο καθολικός
+        κανόνας στόχου αφής (`min-height: 44px`) ΝΙΚΑΕΙ το `height`, όπως
+        ακριβώς και στα φίλτρα το πρωί. Το 44 είναι και το σωστό για δάχτυλο. */
+  .tools { --toolh: 44px; }
+  .btn {
+    appearance: none; border: 1px solid var(--line); background: none; color: var(--ink);
+    font: inherit; font-size: 13px; padding: 0 15px; cursor: pointer; text-decoration: none;
+    white-space: nowrap;
+    display: inline-flex; align-items: center;
+  }
+  .tools .btn { height: var(--toolh); box-sizing: border-box; }
+  .btn--go { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn--save { display: inline-flex; align-items: center; gap: 6px; }
+  .badge {
+    display: inline-grid; place-items: center; min-width: 17px; height: 17px;
+    margin-inline-start: 7px; padding: 0 4px; background: var(--ink); color: var(--paper);
+    font-size: 10.5px; font-weight: 700; line-height: 1;
+  }
+  /* 🔴 ΕΙΧΑ ΒΑΛΕΙ ΟΡΙΖΟΝΤΙΑ ΚΥΛΙΣΗ — ΛΑΘΟΣ, ΑΦΑΙΡΕΘΗΚΕ (George, 30/7):
+     «δεν μου αρέσει η λογική του scroll δεξιά-αριστερά· φτιάξε 2 σειρές και
+     χώρεσέ τα όλα να φαίνονται καθαρά».
+     Είχε δίκιο και για δεύτερο λόγο: το «Αποθήκευση» έμενε κρυμμένο έξω από την
+     οθόνη, δηλαδή το κουμπί που οδηγεί σε **εγγραφή** δεν το έβλεπε κανείς.
+     ΔΥΟ ΡΗΤΕΣ ΣΕΙΡΕΣ: πάνω τα δύο κουμπιά ενεργειών, κάτω πλήθος και ταξινόμηση. */
+  /* ΔΥΟ ΣΕΙΡΕΣ ΣΤΟ ΚΙΝΗΤΟ, ΟΧΙ ΟΡΙΖΟΝΤΙΑ ΚΥΛΙΣΗ (George, 30/7: «δεν μου αρέσει
+     η λογική του scroll δεξιά-αριστερά· φτιάξε 2 σειρές»). Είχε δίκιο και για
+     δεύτερο λόγο: το «Αποθήκευση» έμενε κρυμμένο έξω από την οθόνη — δηλαδή το
+     κουμπί που οδηγεί σε ΕΓΓΡΑΦΗ δεν το έβλεπε κανείς.
+     Οι δύο ομάδες γίνονται απλώς οι δύο σειρές· δεν χρειάζονται πια ρητές
+     περιοχές πλέγματος, η δομή τις δίνει μόνη της. */
+  @media (max-width: 700px) {
+    .tools { flex-direction: column; align-items: stretch; gap: var(--s3); }
+    /* `flex-start` και όχι `space-between`: με δύο στοιχεία ανά σειρά, το
+       «σπρώξ' τα στις άκρες» άφηνε μια τρύπα στη μέση και τα δύο κουμπιά
+       έμοιαζαν ασύνδετα. Μαζεμένα αριστερά διαβάζονται ως ομάδα — και ο George
+       το είχε προτείνει ρητά για την αποθήκευση («αριστερά δίπλα στα φίλτρα»). */
+    .tools__l, .tools__r { justify-content: flex-start; gap: var(--s2) var(--s3); flex: none; }
+    /* Ο κωδικός παίρνει δική του γραμμή: με τρία στοιχεία σε 375px το πεδίο θα
+       συρρικνωνόταν σε δύο ψηφία.
+       🪤 ΗΤΑΝ `flex: 1 0 100%` — σωστό όταν η μπάρα ήταν ΣΕΙΡΑ, αλλά τώρα είναι
+          ΣΤΗΛΗ: εκεί ο κύριος άξονας είναι ο κάθετος, οπότε το «100%» έγινε
+          ύψος-βάση και ΝΙΚΗΣΕ το δηλωμένο ύψος — το πεδίο βγήκε 27,6px.
+          Στη στήλη το πλάτος το δίνει ήδη το `stretch`· δεν χρειάζεται flex. */
+    .idform { flex: none; }
+    .idform__in { width: 100%; }
+    .tools .btn { width: fit-content; }
+    /* «Ταξινόμηση: Πρόσφατα» → «Πρόσφατα». Το πρόθεμα είναι περιττό σε 375px:
+       έφτανε ως τα 358 από τα 375 διαθέσιμα. */
+    .sort__k { display: none; }
+  }
+
+  /* Η ταξινόμηση δεξιά και διακριτική: στα logs κανείς δεν την άλλαξε ποτέ.
+     🪤 ΕΙΧΕ `margin-inline-start: auto` — από την ΠΑΛΙΑ δομή, όταν καθόταν
+        απευθείας μέσα στη μπάρα και έπρεπε να σπρωχτεί μόνη της δεξιά. Τώρα τη
+        δεξιά στοίχιση την κάνει η ομάδα `.tools__r`, οπότε το παλιό περιθώριο
+        απλώς άνοιγε ένα κενό ΜΕΣΑ στην ομάδα — ορατό στο κινητό, όπου έσπρωχνε
+        την ταξινόμηση στη μέση του πουθενά. */
+  .sortbox { position: relative; }
+  .sortbox summary { list-style: none; }
+  .sortbox summary::-webkit-details-marker { display: none; }
+  .sortbox ul {
+    position: absolute; inset-inline-end: 0; z-index: 5; margin: 4px 0 0; padding: 6px 0;
+    list-style: none; background: var(--paper); border: 1px solid var(--line); min-width: 200px;
+    box-shadow: 0 8px 26px rgba(14,18,20,.14);
+  }
+  .sortbox li a { display: block; padding: 8px 14px; font-size: 13.5px; text-decoration: none; color: var(--ink); }
+  .sortbox li a[aria-current] { font-weight: 600; }
+  .sortbox li a:hover { background: var(--paper-2); }
+
+  .fbar { display: flex; gap: var(--s3); flex-wrap: wrap; align-items: end; padding: var(--s4) 0 0; }
+  .fbar[hidden] { display: none; }
+  .f { display: grid; gap: 4px; }
+  .f span { font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); }
+  /* 📏 ΟΛΑ ΤΑ ΦΙΛΤΡΑ ΣΤΟ ΙΔΙΟ ΥΨΟΣ (George, 30/7: «κάποια είναι πιο μεγάλα,
+     κάποια πιο μικρά σε ύψος· φαίνονται άσχημα»).
+     🪤 Η ΑΙΤΙΑ ΗΤΑΝ ΟΤΙ ΤΟ ΥΨΟΣ ΔΕΝ ΗΤΑΝ ΔΗΛΩΜΕΝΟ ΠΟΥΘΕΝΑ. Με σκέτο padding,
+        το τελικό ύψος το αποφασίζει ο browser χωριστά για κάθε είδος πεδίου:
+        το `<select>` βάζει δικό του εσωτερικό περιθώριο για το βελάκι, το
+        `<input type=number>` άλλο — και τα κουμπιά «Εφαρμογή/Καθαρισμός» έχουν
+        δικό τους padding από την κλάση `.btn`. Τρία διαφορετικά ύψη στην ίδια
+        σειρά. Ένα δηλωμένο ύψος τα ισοφαρίζει σε κάθε browser και γλώσσα.
+     ⚠️ 44 ΚΑΙ ΟΧΙ 42: δοκιμάστηκε 42 και τα οκτώ πεδία συμμορφώθηκαν, αλλά το
+        κουμπί «Εφαρμογή» έμεινε 44 — έχει `min-height: 44px` από τον καθολικό
+        κανόνα στόχου αφής, και το `min-height` κερδίζει πάντα το `height`.
+        Το σωστό ήταν να ανέβουν τα πεδία, όχι να κατέβει το κουμπί: το 44 είναι
+        το ελάχιστο για δάχτυλο, και τα πεδία το χρειάζονται εξίσου.
+     ⚠️ `box-sizing: border-box` ώστε το περίγραμμα να μετράει ΜΕΣΑ στα 44. */
+  .f input, .f select, .fbar .btn {
+    box-sizing: border-box; height: 44px;
+  }
+  .f input, .f select {
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    font: inherit; font-size: 16px; padding: 0 10px; width: 140px;
+  }
+  /* Τα κουμπιά κάθονται στη γραμμή των πεδίων, όχι των ετικετών. */
+  .fbar .btn { display: inline-flex; align-items: center; }
+  .f--beds select { width: 110px; }
+
+  .grid { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: var(--s5) var(--s4); }
+  @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 520px) and (max-width: 759px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* Η προτροπή πιάνει ΟΛΟ το πλάτος, μέσα στη ροή των αποτελεσμάτων. */
+  /* 🔐 ΤΟ ΚΟΥΤΙ ΕΓΓΡΑΦΗΣ — όσο ψηλό όσο μια κάρτα, όχι λωρίδα (George, 30/7).
+     Καταλαμβάνει μία θέση του πλέγματος σε desktop· σε κινητό απλώνεται. */
+  .join {
+    grid-column: 1 / -1; background: var(--ink); color: var(--paper);
+    padding: var(--s5) var(--s4); display: grid; gap: var(--s3);
+    align-content: center; justify-items: start; text-align: start;
+  }
+  @media (min-width: 760px) {
+    .join { grid-column: span 1; padding: var(--s5); }
+  }
+  .join__lock {
+    display: grid; place-items: center; width: 44px; height: 44px;
+    border: 1px solid rgba(255,255,255,.28); color: var(--paper);
+  }
+  .join__h { margin: 0; color: var(--paper); }
+  .join__list {
+    margin: 0; padding: 0; list-style: none; display: grid; gap: 7px;
+    font-size: 14px; color: rgba(255,255,255,.82);
+  }
+  .join__list li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; }
+  .join__list li::before { content: '·'; opacity: .6; }
+  .join__b {
+    margin-top: var(--s2); border: 1px solid var(--paper); background: var(--paper); color: var(--ink);
+    font-size: 13px; letter-spacing: .05em; text-transform: uppercase; padding: 13px 26px;
+    text-decoration: none; white-space: nowrap;
+  }
+  .join__b:hover { background: transparent; color: var(--paper); }
+
+  .empty { margin: var(--s6) 0; text-align: center; display: grid; gap: var(--s3); justify-items: center; }
+  .pager { display: flex; gap: var(--s3); align-items: center; justify-content: center; margin: var(--s6) 0 0; }
+
+</style>
+
+<script>
+  // Τα φίλτρα ανοίγουν/κλείνουν. Η φόρμα δουλεύει και χωρίς αυτό — απλά μένει ανοιχτή.
+  const t = document.getElementById('ftog');
+  const b = document.getElementById('fbar');
+  if (t && b) {
+    // Αν ο επισκέπτης έχει ήδη ενεργό φίλτρο, ανοίγουν από μόνα τους.
+    const active = b.querySelectorAll('input[type=number]');
+    let any = false;
+    active.forEach((i) => { if ((i as HTMLInputElement).value) any = true; });
+    if (any) { (b as HTMLElement).hidden = false; t.setAttribute('aria-expanded', 'true'); }
+    t.addEventListener('click', () => {
+      const open = t.getAttribute('aria-expanded') === 'true';
+      t.setAttribute('aria-expanded', String(!open));
+      (b as HTMLElement).hidden = open;
+    });
+  }
+</script>

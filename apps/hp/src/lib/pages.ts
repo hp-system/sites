@@ -15,7 +15,7 @@
 // ⛔ ΜΗΝ βάλεις εδώ σελίδα χωρίς πραγματικό κείμενο. Μια σελίδα «Σύντομα κοντά σας»
 //    είναι χειρότερη από 404: ο επισκέπτης έχασε τον χρόνο του ΚΑΙ δεν έμαθε τίποτα.
 // ═══════════════════════════════════════════════════════════════════════════
-import type { Lang } from './i18n';
+import { prefix, SLUG, type Lang } from './i18n';
 
 export type Block =
   | { kind: 'text'; h?: string; p: string[] }
@@ -70,6 +70,11 @@ export function pageContent(key: PageKey, lang: Lang): PageContent | null {
 export function pageExists(key: PageKey): boolean {
   const d = CONTENT[key];
   return !!d && Object.keys(d).length > 0;
+}
+
+/** URL of a content page in a language — one rule for the router, the page head and the sitemap (B-16). */
+export function contentUrl(key: PageKey, l: Lang): string {
+  return `${prefix(l)}/${key === 'projects' ? SLUG[l].projects : key}`;
 }
 
 /** Ποιες γλώσσες έχουν ΔΙΚΟ ΤΟΥΣ κείμενο — για τα hreflang, χωρίς ψέματα. */

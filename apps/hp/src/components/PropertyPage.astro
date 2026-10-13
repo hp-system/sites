@@ -237,7 +237,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
       <div class="gal" id="gal">
         {gallery.map(({ p, i, open }) => (
           <a class:list={['cell', !open && 'cell--locked']} href={loginHref}
-             data-ev={open ? 'property:photo_open' : 'register:gallery'}
+             data-ev={open ? 'property:photo_open' : 'register:unlock_photos'}
              aria-label={open ? altOf(p, lang, heading) : pui(lang, 'morePhotos', { n: hidden })}>
             {open ? (
               <img src={marked(p.url, i === 0 ? 1920 : 800)} srcset={markedSrcSet(p.url)}
@@ -368,7 +368,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
                 <b>{pui(lang, 'unlockH')}</b>
                 <em>{pui(lang, 'unlockP')}</em>
-                <a class="btn btn--go" href={loginHref} data-ev="register:map">{pui(lang, 'freeReg')}</a>
+                <a class="btn btn--go" href={loginHref} data-ev="register:unlock_area">{pui(lang, 'freeReg')}</a>
               </span>
             </div>
           )}

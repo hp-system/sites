@@ -30,7 +30,7 @@ import CollectionPage from '../components/CollectionPage.astro';
 import ComparePage from '../components/ComparePage.astro';
 import SubmitPage from '../components/SubmitPage.astro';
 import ContentPage from '../components/ContentPage.astro';
-import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, type PageKey } from '../lib/pages';
+import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, pageLangs, contentUrl, type PageKey } from '../lib/pages';
 import { memberOf, type Member } from '../lib/member';
 import { PUBLISHED, DEFAULT_LANG, SLUG, prefix, type Lang } from '../lib/i18n';
 import { facetBySlug, PAIRS, type Facet } from '../lib/listing';
@@ -221,8 +221,8 @@ if (notFound) Astro.response.status = 404;
 ---
 {notFound ? <NotFoundPage lang={lang} />
   : pageKey && content ? (
-      <ContentPage lang={lang} page={content}
-        pathFor={(l) => `${prefix(l)}/${pageKey === 'projects' ? SLUG[l].projects : pageKey}`} />
+      <ContentPage lang={lang} page={content} langs={pageLangs(pageKey)}
+        pathFor={(l) => contentUrl(pageKey, l)} />
     )
   : isPanel && me && panelSeg === 'favorites' ? <FavoritesPage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'profile' ? <ProfilePage lang={lang} me={me} />

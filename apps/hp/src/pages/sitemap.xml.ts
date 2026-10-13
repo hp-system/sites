@@ -22,6 +22,7 @@ import type { APIRoute } from 'astro';
 import { hreflangs, hreflangsBy, propertyUrl, type Lang } from '../lib/i18n';
 import { allProperties, refOf } from '../lib/api';
 import { facetUrl, FACETS, PAIRS } from '../lib/listing';
+import { PAGE_KEYS, pageExists, pageLangs, contentUrl } from '../lib/pages';
 import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
 
 export const prerender = false;
@@ -36,6 +37,8 @@ type Page = {
    * μεταξύ τους. Η Google απορρίπτει τότε ΟΛΟΚΛΗΡΟ το σύμπλεγμα.
    */
   pathFor?: (l: Lang) => string;
+  /** B-16: only these languages (a content page with its own text in some languages only). */
+  langs?: Lang[];
   lastmod: string;
 };
 
@@ -50,6 +53,10 @@ const PAGES: Page[] = [
   { pathFor: (l) => facetUrl(l), lastmod: BUILD_DAY },
   ...FACETS.map((f) => ({ pathFor: (l: Lang) => facetUrl(l, f.key), lastmod: BUILD_DAY })),
   ...PAIRS.map(([a, b]) => ({ pathFor: (l: Lang) => facetUrl(l, a, b), lastmod: BUILD_DAY })),
+
+  // B-16: the content pages, each only in the languages where it has its own text (English
+  // fallbacks under other prefixes carry a canonical to the original and stay out).
+  ...PAGE_KEYS.filter(pageExists).map((k) => ({ pathFor: (l: Lang) => contentUrl(k, l), langs: pageLangs(k), lastmod: BUILD_DAY })),
 
   // ⏭️ Μένουν: άρθρα από cms_contents (184) — το άρθρο για τους φόρους ξένων είναι
   //    ήδη η 4η σελίδα μας σε εμφανίσεις (41.268).
@@ -92,7 +99,7 @@ const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 function urlBlock(page: Page): string {
-  const alts = page.pathFor ? hreflangsBy(page.pathFor) : hreflangs(page.path ?? '/');
+  const alts = page.pathFor ? hreflangsBy(page.pathFor, page.langs) : hreflangs(page.path ?? '/');
   // Κάθε γλωσσική εκδοχή είναι δικό της <url> και παραθέτει ΟΛΟΚΛΗΡΟ το σύνολο
   // των εναλλακτικών, τον εαυτό της συμπεριλαμβανομένου — έτσι το απαιτεί το
   // πρότυπο· μισό σύμπλεγμα = απορρίπτεται ολόκληρο.

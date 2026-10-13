@@ -19,16 +19,22 @@ import Footer from './Footer.astro';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
 import type { PageContent, PageKey } from '../lib/pages';
+import { EVENTS } from '../lib/track';
 
 // 🪤 ΤΟ `Base` ΔΕΝ ΔΕΧΕΤΑΙ `canonical` ΟΥΤΕ `hreflangLangs`. Δέχεται `path` (ίδιο σε
 //    όλες τις γλώσσες) ή `pathFor(lang)` (όταν το slug αλλάζει ανά γλώσσα, όπως στα
 //    «Έργα»). Το είχα γράψει με φανταστικά ονόματα — θα περνούσαν σιωπηλά και τα
 //    canonical θα έδειχναν όλα στην αρχική.
-interface Props { lang: Lang; page: PageContent; pathFor: (l: Lang) => string }
-const { lang, page, pathFor } = Astro.props;
+interface Props { lang: Lang; page: PageContent; pathFor: (l: Lang) => string; langs: Lang[] }
+const { lang, page, pathFor, langs } = Astro.props;
+// B-16: in a language without its own text the page shows the English (else Greek) original;
+// that copy points its canonical at the original instead of claiming to be a version of its own.
+const canonicalLang = langs.includes(lang) ? undefined : (langs.includes('en') ? 'en' : langs[0]);
 const p = prefix(lang);
 const co = await company();
 
+// B-11: one closed event name per call-to-action target (lib/track.ts, scripts/check-events.mjs).
+const CTA_EV = { list: EVENTS.CONTENT_LIST, phone: EVENTS.CONTENT_PHONE, login: EVENTS.CONTENT_LOGIN, sell: EVENTS.CONTENT_SELL } as const;
 const ctaHref = page.cta
   ? page.cta.to === 'list' ? listUrl(lang)
   : page.cta.to === 'phone' ? co.phoneHref
@@ -37,7 +43,7 @@ const ctaHref = page.cta
   : null;
 ---
 
-<Base lang={lang} title={page.title} description={page.lead ?? page.h1} pathFor={pathFor}>
+<Base lang={lang} title={page.title} description={page.lead ?? page.h1} pathFor={pathFor} langs={langs} canonicalLang={canonicalLang}>
   <Header lang={lang} solid pathFor={pathFor} />
 
   <main id="main" class="cp">
@@ -72,7 +78,7 @@ const ctaHref = page.cta
 
       {page.cta && ctaHref && (
         <div class="end">
-          <a class="btn" href={ctaHref} data-ev={`content:${page.cta.to}`}>{page.cta.label}</a>
+          <a class="btn" href={ctaHref} data-ev={CTA_EV[page.cta.to]}>{page.cta.label}</a>
         </div>
       )}
     </article>

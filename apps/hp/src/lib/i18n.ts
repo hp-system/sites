@@ -99,9 +99,13 @@ export function hreflangs(path = '/'): { lang: string; href: string }[] {
  *
  * @param build δέχεται τη γλώσσα και επιστρέφει το ΠΛΗΡΕΣ path της, με πρόθεμα.
  */
-export function hreflangsBy(build: (l: Lang) => string): { lang: string; href: string }[] {
-  const out = PUBLISHED.map((l) => ({ lang: l, href: build(l as Lang) || '/' }));
-  out.push({ lang: 'x-default', href: build('en') });
+export function hreflangsBy(build: (l: Lang) => string, only?: readonly Lang[]): { lang: string; href: string }[] {
+  // `only` (B-16): a page with its own text in some languages lists just those — an English
+  // fallback served under /bg/… is not a Bulgarian version. x-default stays English when it exists.
+  const langs = only ? PUBLISHED.filter((l) => only.includes(l)) : PUBLISHED;
+  const out = langs.map((l) => ({ lang: l, href: build(l as Lang) || '/' }));
+  const xdef = langs.includes('en') ? 'en' : langs[0];
+  if (xdef) out.push({ lang: 'x-default', href: build(xdef) });
   return out;
 }
 

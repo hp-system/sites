@@ -32,11 +32,16 @@ interface Props {
   pathFor?: (l: Lang) => string;
   /** Ρητό «μη με ευρετηριάζεις» — π.χ. λίστα με παραμέτρους ή σελίδα >1. */
   noindex?: boolean;
+  /** B-16: languages that have this page's own text (hreflang lists only these; needs `pathFor`). */
+  langs?: Lang[];
+  /** B-16: canonical points to this language's URL (a fallback page → its English original). */
+  canonicalLang?: Lang;
   jsonLd?: unknown[];
 }
 const {
   lang, title, description, path = '/',
   ogImage, ogImageW, ogImageH, ogImageAlt, pathFor, noindex = false, jsonLd = [],
+  langs, canonicalLang,
 } = Astro.props;
 
 // 🌍 Το `og:locale` θέλει μορφή γλώσσα_ΧΩΡΑ («el_GR»), όχι σκέτο «el» — αλλιώς
@@ -64,10 +69,10 @@ const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 //    Το `encodeURI` αφήνει άθικτα τα `:/?#` και κωδικοποιεί μόνο τα μη-ASCII.
 const enc = (u: string) => encodeURI(u);
 const canonical = enc(site + (pathFor
-  ? pathFor(lang)
+  ? pathFor(canonicalLang ?? lang)
   : (`${prefix(lang)}${path === '/' ? '' : path}` || '/')));
 const alts = (pathFor
-  ? hreflangsBy(pathFor)
+  ? hreflangsBy(pathFor, langs)
   : hreflangs(path === '/' ? '/' : path)
 ).map((a) => ({ ...a, href: enc(a.href) }));
 

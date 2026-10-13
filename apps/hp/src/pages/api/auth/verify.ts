@@ -20,7 +20,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
 import { forwardIp } from '../../../lib/clientip';
-import { originHeader } from '../../../lib/origin';
+import { isHttps, originHeader } from '../../../lib/origin';
 
 /** Δες `request.ts` — λίστα αποκλεισμού: άγνωστη προέλευση ΑΝΟΙΓΕΙ, κενή κλείνει. */
 /**
@@ -98,7 +98,8 @@ export const POST: APIRoute = async ({ request, cookies, url, clientAddress }) =
       sameSite: 'lax',
       // 🪤 ΜΟΝΟ σε https. Σε τοπική ανάπτυξη (http) ένα `Secure` cookie αγνοείται
       //    σιωπηλά και η σύνδεση δεν «κολλάει» ποτέ — ώρες ψαξίματος για το τίποτα.
-      secure: url.protocol === 'https:',
+      // B-05: url.protocol is "http:" behind the tunnel — isHttps() also reads PUBLIC_ORIGIN / x-forwarded-proto.
+      secure: isHttps(request, url),
       maxAge: MAX_AGE,
     });
 

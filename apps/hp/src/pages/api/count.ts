@@ -33,7 +33,8 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     // 🔐 Ο μετρητής μετράει ό,τι ΒΛΕΠΕΙ ο συγκεκριμένος επισκέπτης. Χωρίς το token
     //    το μέλος έβλεπε πλήθος χωρίς τα ιδιωτικά — δηλαδή ο αριθμός δεν συμφωνούσε
     //    με τη λίστα που θα του σερβίραμε.
-    const items = await allProperties(cookies.get('member_token')?.value);
+    const token = cookies.get('member_token')?.value;
+    const items = await allProperties(token);
     // ⛔ Το `area` ΔΕΝ είναι φίλτρο εδώ: η περιοχή είναι κλειδωμένη για τους μη
     //    συνδεδεμένους και δεν την ξεγλιστράμε μέσω μετρητή.
     const sub = q.get('subcategory') || '';
@@ -71,7 +72,9 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     return new Response(JSON.stringify({ total }), {
       headers: {
         'content-type': 'application/json',
-        'cache-control': 'public, max-age=30, s-maxage=120',
+        // B-06 (traps T-K08): a member's count includes private properties — never shared caches.
+        'cache-control': token ? 'private, max-age=30' : 'public, max-age=30, s-maxage=120',
+        ...(token ? { vary: 'cookie' } : {}),
       },
     });
   } catch {

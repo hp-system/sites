@@ -165,8 +165,9 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
       : (noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large')}
   />
 
+  {/* B-07 (traps T-K09): CRM text may contain "</script>"; `<` written as \u003c keeps the JSON valid and the page intact. */}
   {jsonLd.map((b) => (
-    <script type="application/ld+json" set:html={JSON.stringify(b)} />
+    <script type="application/ld+json" set:html={JSON.stringify(b).replace(/</g, '\\u003c')} />
   ))}
 </head>
 <body>

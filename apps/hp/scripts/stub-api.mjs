@@ -21,6 +21,8 @@ export function startStub({ port = 4339, n = 1200 } = {}) {
       bedrooms: 1 + (i % 5),
       sqm: 50 + (i % 200),
       pools: [['3'], ['2'], []][i % 3],
+      // Property 10001 carries hostile text, as a CRM editor could type it (B-07 JSON-LD test).
+      ...(i === 1 ? { description_en: 'Sea view </script><script>window.__pwned=1</script> & more' } : {}),
     },
   }));
   const captured = [];
@@ -34,6 +36,8 @@ export function startStub({ port = 4339, n = 1200 } = {}) {
       let body = null;
       try { body = JSON.parse(raw); } catch { /* keep null */ }
       captured.push({ path: url.pathname, headers: req.headers, body });
+      // A successful code check returns a member token, as the CRM does.
+      if (url.pathname === '/api/site/member/verify-code') return send(200, { ok: true, token: 'stub-token', name: 'Stub', needs: [] });
       return send(200, { ok: true });
     }
     if (url.pathname === '/__captured') return send(200, captured);

@@ -12,12 +12,13 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
 import { forwardIp } from '../../../lib/clientip';
+import { isHttps } from '../../../lib/origin';
 
 export const prerender = false;
 
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
-export const POST: APIRoute = async ({ request, cookies, redirect, clientAddress }) => {
+export const POST: APIRoute = async ({ request, url, cookies, redirect, clientAddress }) => {
   const token = cookies.get('member_token')?.value;
 
   if (token) {
@@ -33,6 +34,7 @@ export const POST: APIRoute = async ({ request, cookies, redirect, clientAddress
     } catch { /* το cookie φεύγει έτσι κι αλλιώς — δες το σχόλιο πάνω */ }
   }
 
-  cookies.delete('member_token', { path: '/' });
+  // Same attributes as when it was set (B-05), so the browser matches and removes it.
+  cookies.delete('member_token', { path: '/', httpOnly: true, sameSite: 'lax', secure: isHttps(request, url) });
   return redirect('/', 303);
 };

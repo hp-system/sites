@@ -18,6 +18,13 @@ export default defineConfig({
   compressHTML: true,
   server: { port: 4330, host: true },
   devToolbar: { enabled: false },
+  // B-24: Astro's own CSRF check compares the browser Origin with the URL the container sees.
+  // Behind the Cloudflare tunnel that URL is `https://localhost` (Astro does not trust the Host
+  // header without `allowedDomains`), so every same-site form POST (logout) got 403 — measured
+  // on hp.rewize.app 2026-10-13. The same check now runs in src/middleware.ts against the public
+  // origin (PUBLIC_ORIGIN / forwarded host). Rejected: `security.allowedDomains` — depends on a
+  // Host header we cannot see and bakes the host list into the build (one image serves all hosts).
+  security: { checkOrigin: false },
 
   // Ο χρόνος του build, καρφωμένος τη στιγμή που γίνεται — ΟΧΙ στην εκκίνηση του
   // server. Το `<lastmod>` του sitemap κρέμεται από αυτό, και η υπηρεσία έχει

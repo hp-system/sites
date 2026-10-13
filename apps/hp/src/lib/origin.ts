@@ -9,6 +9,20 @@
 //   neither → NO header at all. Never a made-up "safe" origin: an unknown origin OPENS signup.
 import { requestHost } from './seo';
 
+/**
+ * Is the visitor on https? (B-05, traps T-K06). Behind the Cloudflare tunnel the container is
+ * reached over plain http, so `url.protocol` alone says "http:" and the member cookie would go
+ * out without `Secure`. The explicit PUBLIC_ORIGIN wins (like originHeader), then the proxy's
+ * `x-forwarded-proto`, then the request itself. Local dev (http, no PUBLIC_ORIGIN) stays
+ * non-Secure — a Secure cookie on http is dropped silently by the browser.
+ */
+export function isHttps(request: Request, url: URL): boolean {
+  const cfg = (import.meta.env.PUBLIC_ORIGIN || process.env.PUBLIC_ORIGIN || '').trim();
+  if (cfg) return cfg.startsWith('https://');
+  const proto = (request.headers.get('x-forwarded-proto') ?? '').split(',')[0].trim().toLowerCase();
+  return proto === 'https' || url.protocol === 'https:';
+}
+
 export function originHeader(request: Request, url: URL): Record<string, string> {
   // Ρητή ρύθμιση πρώτα: δεν εξαρτάται από κεφαλίδες που μπορεί να μην περάσει ο tunnel.
   const cfg = (import.meta.env.PUBLIC_ORIGIN || process.env.PUBLIC_ORIGIN || '').trim();

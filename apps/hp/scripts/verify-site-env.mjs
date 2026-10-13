@@ -2,6 +2,9 @@
 // 127.0.0.1:4331 (no API needed), probes /robots.txt with and without the production host header.
 // Usage (from site/, after `pnpm build`): node scripts/verify-site-env.mjs   → exit 1 on any FAIL.
 import { spawn } from 'node:child_process';
+import { assertSitePortFree } from './stub-api.mjs';
+
+await assertSitePortFree();   // never probe someone else's server
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const PROD = 'www.halkidikiproperties.com';
 const cases = [

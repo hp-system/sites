@@ -4,7 +4,26 @@
 // Not a contract: only the fields the site reads for list/count/sitemap/forms.
 import { createServer } from 'node:http';
 
-export function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} } } = {}) {
+/**
+ * Safety: the acceptance tests start their OWN site on 127.0.0.1:4331 against this stub and send
+ * form POSTs to it. If anything already answers on that port (e.g. a local build wired to the
+ * real CRM through the SSH tunnel), those POSTs would reach real data — so refuse to start.
+ * (2026-10-13: a test reached a real-data server this way; it crashed before any POST.)
+ */
+export async function assertSitePortFree(port = 4331) {
+  // Bind test, not a request: a busy but slow server would time out and look "free".
+  const busy = await new Promise((resolve) => {
+    const probe = createServer();
+    probe.once('error', () => resolve(true));
+    probe.listen(port, '127.0.0.1', () => probe.close(() => resolve(false)));
+  });
+  if (busy) {
+    console.error(`🔴 Port ${port} is in use — another server runs there (maybe wired to the real CRM). Stop it first; tests will not run.`);
+    process.exit(3);
+  }
+}
+
+export async function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} }, junk = false } = {}) {
   // Pools cycle through "private pool" (3), "no pool" (2) and nothing: 1/3 really have a pool.
   const items = Array.from({ length: n }, (_, i) => ({
     id: `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
@@ -30,7 +49,10 @@ export function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} 
         electricity: true, water: false, drilling: true, orientation: '9' } : {}),
     },
   }));
+  // A CRM record without any public id (B-26): must be invisible everywhere on the site.
+  if (junk) items.push({ id: 'fce9d938-0000-4000-8000-000000000000', reference: '', title: '10', attributes: { category: '1', subcategory: '10' } });
   const captured = [];
+  await assertSitePortFree();
 
   const server = createServer(async (req, res) => {
     const url = new URL(req.url, `http://127.0.0.1:${port}`);
@@ -67,7 +89,7 @@ export function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} 
     }
     return send(404, { message: 'stub: not implemented', path: url.pathname });
   });
-  return new Promise((resolve) => server.listen(port, '127.0.0.1', () => resolve({ server, items, captured, base: `http://127.0.0.1:${port}/api` })));
+  return await new Promise((resolve) => server.listen(port, '127.0.0.1', () => resolve({ server, items, captured, base: `http://127.0.0.1:${port}/api` })));
 }
 
 if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}` || import.meta.url === `file://${process.argv[1]}`) {

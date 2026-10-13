@@ -89,7 +89,9 @@ async function fetchAll(memberToken?: string): Promise<SiteProperty[]> {
       break;
     }
   }
-  return out.filter(isRealProperty);
+  // B-26: a property without a public id (empty `reference`, no `onsea_id`) has no URL — it was
+  // counted, missing from the list and declared in the sitemap as `/<lang>/property/` (404 × 9).
+  return out.filter((p) => isRealProperty(p) && REF_RE.test(refOf(p)));
 }
 
 // ── ΚΟΙΝΗ ΜΝΗΜΗ ───────────────────────────────────────────────────────────

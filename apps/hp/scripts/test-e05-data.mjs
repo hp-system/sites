@@ -11,7 +11,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let fails = 0;
 const check = (name, ok, detail) => { if (!ok) fails++; console.log(`${ok ? 'OK  ' : 'FAIL'} ${name} — ${detail}`); };
 
-const stub = await startStub({ port: 4339, n: N });
+const stub = await startStub({ port: 4339, n: N, junk: true });   // + 1 record without a public id (B-26)
 const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
   env: { ...process.env, HOST: '127.0.0.1', PORT: '4331', EALIDA_API: stub.base, SITE_ENV: 'production', PUBLIC_ORIGIN: 'https://hp.rewize.app' },
 });
@@ -26,11 +26,12 @@ try {
   const smMs = Date.now() - t0;
   const enProps = (sm.match(/<loc>[^<]*\/en\/property\/[^<]+<\/loc>/g) || []).length;
   check('B-01 sitemap lists every property', enProps === N, `${enProps} /en/property/ URLs of ${N} (first fetch ${smMs} ms)`);
+  check('B-26 no empty-id URL in the sitemap', !/\/property\/<\/loc>/.test(sm), /\/property\/<\/loc>/.test(sm) ? 'found /property/ with empty id' : 'none');
   const count = await (await fetch(SITE + '/api/count')).json();
   check('B-01 /api/count = all properties', count.total === N, `total=${count.total}, expected ${N}`);
 
   // B-04 — pool counter equals the properties with a real pool code (3/4/5/6).
-  const pools = stub.items.filter((p) => p.attributes.pools.some((x) => ['3', '4', '5', '6'].includes(x))).length;
+  const pools = stub.items.filter((p) => (p.attributes.pools ?? []).some((x) => ['3', '4', '5', '6'].includes(x))).length;
   const pc = await (await fetch(SITE + '/api/count?pool=1')).json();
   check('B-04 pool counter ignores code "2"', pc.total === pools, `pool=1 → ${pc.total}, expected ${pools}`);
 

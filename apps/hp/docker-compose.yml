@@ -37,6 +37,9 @@ services:
       #    ΔΕΝ τη μαντεύουμε από κεφαλίδες: ο tunnel μπορεί να μην τις περάσει, και
       #    τότε η εγγραφή ανοίγει σε όλους — συνέβη 6/8.
       PUBLIC_ORIGIN: https://hp.rewize.app
+      # Explicit environment (E-01): preview never becomes indexable, whatever host header the
+      # proxy sends. The production deployment sets `production`. See src/lib/seo.ts.
+      SITE_ENV: preview
     # ⚠️ ΚΑΜΙΑ ΔΗΜΟΣΙΑ ΘΥΡΑ. Η πρόσβαση γίνεται ΜΟΝΟ μέσω Cloudflare Tunnel:
     #    hp.rewize.app → http://hp-site:4331
 

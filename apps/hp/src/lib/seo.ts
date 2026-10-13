@@ -37,8 +37,27 @@ export function requestHost(request: Request, url: URL): string {
   return raw.replace(/:\d+$/, ''); // χωρίς θύρα
 }
 
+/**
+ * Explicit environment (E-01, traps T-A01). The host switch above is kept as the fallback, but
+ * it fails silently if the go-live proxy does not pass `x-forwarded-host`: the real site would
+ * send `X-Robots-Tag: noindex` and drop out of Google. So the deployment says where it runs:
+ *   SITE_ENV=production → always indexable · SITE_ENV=preview → never · unset → host check.
+ * Read from `process.env` at runtime (not `import.meta.env`, which Vite may inline at build
+ * time), so one image runs as preview or production.
+ */
+const SITE_ENV = (process.env.SITE_ENV ?? '').trim().toLowerCase();
+export const SITE_MODE: 'production' | 'preview' | 'host' =
+  SITE_ENV === 'production' || SITE_ENV === 'preview' ? SITE_ENV : 'host';
+if (SITE_MODE === 'host') {
+  console.warn(`[hp-site] SITE_ENV=${SITE_ENV || '(unset)'} → isProd falls back to the request host; set SITE_ENV=production|preview`);
+} else {
+  console.log(`[hp-site] SITE_ENV=${SITE_MODE} → isProd forced ${SITE_MODE === 'production'}`);
+}
+
 /** Είμαστε στο πραγματικό site; Τα πάντα κρέμονται από αυτό. */
 export function isProd(request: Request, url: URL): boolean {
+  if (SITE_MODE === 'production') return true;
+  if (SITE_MODE === 'preview') return false;
   return (PROD_HOSTS as readonly string[]).includes(requestHost(request, url));
 }
 

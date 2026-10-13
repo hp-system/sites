@@ -434,66 +434,100 @@ export function schemaTypesOf(a: Attrs): string[] {
 //
 // 🌍 ΟΙ ΚΩΔΙΚΟΙ ΕΧΟΥΝ ΜΕΤΑΦΡΑΣΗ ΜΟΝΟ ΣΕ 5 ΓΛΩΣΣΕΣ (el en bg de sr) — από την πηγή.
 //    Οι υπόλοιπες τέσσερις πέφτουν στα αγγλικά· καλύτερα αγγλικά παρά κενό.
+//    → Superseded 2026-10-13 (B-25): the site now carries all 9 languages, see below.
 // ═══════════════════════════════════════════════════════════════════════════
 
-type L5 = { el: string; en: string; bg?: string; de?: string; sr?: string };
-const pickL = (t: L5, lang: string): string =>
-  (t as Record<string, string | undefined>)[lang] ?? t.en;
+// B-25 (2026-10-13): all 9 languages, as every visible text must be (R-008). The CRM sources
+// give only el/en/bg/de/sr; ro/tr/he/ru and the bg/de/sr orientations were added by the site —
+// to be reviewed by native speakers (open question Q-014). `pickL` keeps the English fallback
+// only as a safety net; scripts/check-i18n-dicts.mjs fails the build on any gap.
+type L9 = Record<Lang, string>;
+const pickL = (t: L9, lang: string): string =>
+  (t as Record<string, string | undefined>)[lang] || t.en;
 
 /** Οικοδομήσιμο — η πρώτη ερώτηση κάθε αγοραστή γης. */
-const BUILDABLE: Record<string, L5> = {
-  '1': { el: 'Άρτιο οικοδομήσιμο', en: 'Buildable', bg: 'Сграден', de: 'Baubar', sr: 'Može se graditi' },
+const BUILDABLE: Record<string, L9> = {
+  '1': { el: 'Άρτιο οικοδομήσιμο', en: 'Buildable', bg: 'Сграден', de: 'Baubar', sr: 'Može se graditi',
+         ro: 'Construibil', tr: 'İmara uygun', he: 'ניתן לבנייה', ru: 'Пригоден для застройки' },
   '2': { el: 'Άρτιο και οικοδομήσιμο κατά κανόνα', en: 'Buildable under standard regulations',
          bg: 'Изгражда се съгласно стандартните разпоредби', de: 'Nach Standardvorschriften baubar',
-         sr: 'Može se graditi prema standardnim propisima' },
+         sr: 'Može se graditi prema standardnim propisima',
+         ro: 'Construibil conform reglementărilor standard', tr: 'Standart yönetmeliğe göre imara uygun',
+         he: 'ניתן לבנייה לפי התקנות הרגילות', ru: 'Застройка по стандартным нормам' },
   '3': { el: 'Άρτιο και οικοδομήσιμο κατά παρέκκλιση', en: 'Buildable under special regulations',
          bg: 'Съгласно специални разпоредби', de: 'Baubar unter besonderen Vorschriften',
-         sr: 'Prema posebnim propisima' },
+         sr: 'Prema posebnim propisima',
+         ro: 'Construibil conform reglementărilor speciale', tr: 'Özel yönetmeliğe göre imara uygun',
+         he: 'ניתן לבנייה לפי תקנות מיוחדות', ru: 'Застройка по особым нормам' },
   '4': { el: 'Μη οικοδομήσιμο', en: 'Not buildable', bg: 'Не може да се строи',
-         de: 'Nicht baubar', sr: 'Nije moguće graditi' },
+         de: 'Nicht baubar', sr: 'Nije moguće graditi',
+         ro: 'Neconstruibil', tr: 'İmara uygun değil', he: 'לא ניתן לבנייה', ru: 'Не подлежит застройке' },
 };
 
-const PLAN: Record<string, L5> = {
+const PLAN: Record<string, L9> = {
   '1': { el: 'Εντός σχεδίου', en: 'Within the plan', bg: 'В рамките на плана',
-         de: 'Innerhalb des Plans', sr: 'Unutar plana' },
+         de: 'Innerhalb des Plans', sr: 'Unutar plana',
+         ro: 'În intravilan', tr: 'İmar planı içinde', he: 'בתוך תוכנית המתאר', ru: 'В границах плана застройки' },
   '2': { el: 'Εκτός σχεδίου, εντός ζώνης', en: 'Out of plan, within the zone',
          bg: 'Извън градоустройствен план в зоната', de: 'Außerhalb des Stadtplans innerhalb der Zone',
-         sr: 'Vangradski plan unutar zone' },
+         sr: 'Vangradski plan unutar zone',
+         ro: 'În extravilan, în zonă', tr: 'İmar planı dışında, yerleşim alanı içinde',
+         he: 'מחוץ לתוכנית, בתוך האזור', ru: 'Вне плана, в пределах зоны' },
   '3': { el: 'Εκτός σχεδίου', en: 'Out of plan', bg: 'Извън плана',
-         de: 'Aus dem Plan', sr: 'Izvan plana' },
+         de: 'Aus dem Plan', sr: 'Izvan plana',
+         ro: 'În extravilan', tr: 'İmar planı dışında', he: 'מחוץ לתוכנית המתאר', ru: 'Вне плана застройки' },
 };
 
-const ROAD: Record<string, L5> = {
-  asphalt: { el: 'Άσφαλτος', en: 'Asphalt road', bg: 'Асфалт', de: 'Asphaltstraße', sr: 'Asfalt' },
-  dirt: { el: 'Χωματόδρομος', en: 'Dirt road', bg: 'Черен път', de: 'Feldweg', sr: 'Zemljani put' },
+const ROAD: Record<string, L9> = {
+  asphalt: { el: 'Άσφαλτος', en: 'Asphalt road', bg: 'Асфалт', de: 'Asphaltstraße', sr: 'Asfalt',
+             ro: 'Drum asfaltat', tr: 'Asfalt yol', he: 'כביש סלול', ru: 'Асфальтированная дорога' },
+  dirt: { el: 'Χωματόδρομος', en: 'Dirt road', bg: 'Черен път', de: 'Feldweg', sr: 'Zemljani put',
+          ro: 'Drum de pământ', tr: 'Toprak yol', he: 'דרך עפר', ru: 'Грунтовая дорога' },
   // 🪤 ΠΡΟΣΟΧΗ ΣΤΗ ΔΙΑΤΥΠΩΣΗ. Στην παλιά βάση αυτό ήταν «Μόνο με σκάφος» — για
   //    παραθαλάσσιο τεμάχιο είναι **προνόμιο**, όχι ελάττωμα. Το «Χωρίς πρόσβαση»
   //    διαβάζεται ανάποδα. Λέμε τι ΕΙΝΑΙ, χωρίς κρίση.
-  none: { el: 'Χωρίς δρόμο', en: 'No road access', bg: 'Без път', de: 'Kein Straßenzugang', sr: 'Bez puta' },
+  none: { el: 'Χωρίς δρόμο', en: 'No road access', bg: 'Без път', de: 'Kein Straßenzugang', sr: 'Bez puta',
+          ro: 'Fără drum de acces', tr: 'Yol bağlantısı yok', he: 'ללא דרך גישה', ru: 'Без подъездной дороги' },
 };
 
-const ORIENT: Record<string, L5> = {
-  '1': { el: 'Βόρειος', en: 'North' }, '2': { el: 'Δυτικός', en: 'West' },
-  '3': { el: 'Νότιος', en: 'South' }, '4': { el: 'Ανατολικός', en: 'East' },
-  '5': { el: 'Βορειοανατολικός', en: 'Northeast' }, '6': { el: 'Βορειοδυτικός', en: 'Northwest' },
-  '7': { el: 'Νοτιοανατολικός', en: 'Southeast' }, '8': { el: 'Νοτιοδυτικός', en: 'Southwest' },
-  '9': { el: 'Πανοραμικός', en: 'Panoramic' },
+const ORIENT: Record<string, L9> = {
+  '1': { el: 'Βόρειος', en: 'North', bg: 'Север', de: 'Nord', sr: 'Sever', ro: 'Nord', tr: 'Kuzey', he: 'צפון', ru: 'Север' },
+  '2': { el: 'Δυτικός', en: 'West', bg: 'Запад', de: 'West', sr: 'Zapad', ro: 'Vest', tr: 'Batı', he: 'מערב', ru: 'Запад' },
+  '3': { el: 'Νότιος', en: 'South', bg: 'Юг', de: 'Süd', sr: 'Jug', ro: 'Sud', tr: 'Güney', he: 'דרום', ru: 'Юг' },
+  '4': { el: 'Ανατολικός', en: 'East', bg: 'Изток', de: 'Ost', sr: 'Istok', ro: 'Est', tr: 'Doğu', he: 'מזרח', ru: 'Восток' },
+  '5': { el: 'Βορειοανατολικός', en: 'Northeast', bg: 'Североизток', de: 'Nordost', sr: 'Severoistok', ro: 'Nord-est', tr: 'Kuzeydoğu', he: 'צפון-מזרח', ru: 'Северо-восток' },
+  '6': { el: 'Βορειοδυτικός', en: 'Northwest', bg: 'Северозапад', de: 'Nordwest', sr: 'Severozapad', ro: 'Nord-vest', tr: 'Kuzeybatı', he: 'צפון-מערב', ru: 'Северо-запад' },
+  '7': { el: 'Νοτιοανατολικός', en: 'Southeast', bg: 'Югоизток', de: 'Südost', sr: 'Jugoistok', ro: 'Sud-est', tr: 'Güneydoğu', he: 'דרום-מזרח', ru: 'Юго-восток' },
+  '8': { el: 'Νοτιοδυτικός', en: 'Southwest', bg: 'Югозапад', de: 'Südwest', sr: 'Jugozapad', ro: 'Sud-vest', tr: 'Güneybatı', he: 'דרום-מערב', ru: 'Юго-запад' },
+  '9': { el: 'Πανοραμικός', en: 'Panoramic', bg: 'Панорамна', de: 'Panorama', sr: 'Panoramska', ro: 'Panoramică', tr: 'Panoramik', he: 'פנורמי', ru: 'Панорамная' },
 };
 
-const YES: L5 = { el: 'Ναι', en: 'Yes', bg: 'Да', de: 'Ja', sr: 'Da' };
-const NO: L5 = { el: 'Όχι', en: 'No', bg: 'Не', de: 'Nein', sr: 'Ne' };
+const YES: L9 = { el: 'Ναι', en: 'Yes', bg: 'Да', de: 'Ja', sr: 'Da', ro: 'Da', tr: 'Evet', he: 'כן', ru: 'Да' };
+const NO: L9 = { el: 'Όχι', en: 'No', bg: 'Не', de: 'Nein', sr: 'Ne', ro: 'Nu', tr: 'Hayır', he: 'לא', ru: 'Нет' };
 
 const LBL = {
-  buildable: { el: 'Οικοδομήσιμο', en: 'Buildable', bg: 'Сграден', de: 'Bebaubar', sr: 'Gradnja' },
-  plan: { el: 'Ένταξη σε σχέδιο', en: 'Town plan', bg: 'Градоустройствен план', de: 'Bebauungsplan', sr: 'Urbanistički plan' },
-  road: { el: 'Πρόσβαση δρόμου', en: 'Road access', bg: 'Достъп до път', de: 'Straßenzugang', sr: 'Pristup putu' },
-  power: { el: 'Ηλεκτρικό ρεύμα', en: 'Electricity', bg: 'Електричество', de: 'Strom', sr: 'Struja' },
-  water: { el: 'Παροχή νερού', en: 'Water supply', bg: 'Водоснабдяване', de: 'Wasseranschluss', sr: 'Vodovod' },
-  drill: { el: 'Γεώτρηση', en: 'Borehole', bg: 'Сондаж', de: 'Bohrloch', sr: 'Bunar' },
-  build: { el: 'Συντελεστής δόμησης', en: 'Building coefficient', bg: 'Коефициент на застрояване', de: 'Baukoeffizient', sr: 'Koeficijent izgradnje' },
-  cover: { el: 'Συντελεστής κάλυψης', en: 'Coverage coefficient', bg: 'Коефициент на покритие', de: 'Überbauungsziffer', sr: 'Koeficijent pokrivenosti' },
-  orient: { el: 'Προσανατολισμός', en: 'Orientation', bg: 'Ориентация', de: 'Ausrichtung', sr: 'Orijentacija' },
-} satisfies Record<string, L5>;
+  buildable: { el: 'Οικοδομήσιμο', en: 'Buildable', bg: 'Сграден', de: 'Bebaubar', sr: 'Gradnja',
+               ro: 'Construibil', tr: 'İmar durumu', he: 'אפשרות בנייה', ru: 'Возможность застройки' },
+  plan: { el: 'Ένταξη σε σχέδιο', en: 'Town plan', bg: 'Градоустройствен план', de: 'Bebauungsplan', sr: 'Urbanistički plan',
+          ro: 'Plan urbanistic', tr: 'İmar planı', he: 'תוכנית מתאר', ru: 'Градостроительный план' },
+  road: { el: 'Πρόσβαση δρόμου', en: 'Road access', bg: 'Достъп до път', de: 'Straßenzugang', sr: 'Pristup putu',
+          ro: 'Acces rutier', tr: 'Yol erişimi', he: 'גישה לכביש', ru: 'Подъезд' },
+  power: { el: 'Ηλεκτρικό ρεύμα', en: 'Electricity', bg: 'Електричество', de: 'Strom', sr: 'Struja',
+           ro: 'Electricitate', tr: 'Elektrik', he: 'חשמל', ru: 'Электричество' },
+  water: { el: 'Παροχή νερού', en: 'Water supply', bg: 'Водоснабдяване', de: 'Wasseranschluss', sr: 'Vodovod',
+           ro: 'Alimentare cu apă', tr: 'Su bağlantısı', he: 'אספקת מים', ru: 'Водоснабжение' },
+  drill: { el: 'Γεώτρηση', en: 'Borehole', bg: 'Сондаж', de: 'Bohrloch', sr: 'Bunar',
+           ro: 'Foraj', tr: 'Sondaj kuyusu', he: 'קידוח', ru: 'Скважина' },
+  build: { el: 'Συντελεστής δόμησης', en: 'Building coefficient', bg: 'Коефициент на застрояване', de: 'Baukoeffizient', sr: 'Koeficijent izgradnje',
+           ro: 'Coeficient de utilizare a terenului', tr: 'İnşaat katsayısı', he: 'אחוזי בנייה', ru: 'Коэффициент застройки' },
+  cover: { el: 'Συντελεστής κάλυψης', en: 'Coverage coefficient', bg: 'Коефициент на покритие', de: 'Überbauungsziffer', sr: 'Koeficijent pokrivenosti',
+           ro: 'Procent de ocupare a terenului', tr: 'Taban alanı katsayısı', he: 'אחוזי תכסית', ru: 'Коэффициент покрытия' },
+  orient: { el: 'Προσανατολισμός', en: 'Orientation', bg: 'Ориентация', de: 'Ausrichtung', sr: 'Orijentacija',
+            ro: 'Orientare', tr: 'Cephe yönü', he: 'כיוון', ru: 'Ориентация' },
+} satisfies Record<string, L9>;
+
+/** For the language guard only (scripts/check-i18n-dicts.mjs): every land label/value table. */
+export const LAND_TEXT = { LBL, BUILDABLE, PLAN, ROAD, ORIENT, YES_NO: { YES, NO } };
 
 /** Είναι γη; Η υποκατηγορία είναι ο αξιόπιστος δείκτης (field/plot/island). */
 export function isLand(a: Attrs): boolean {
@@ -506,7 +540,7 @@ export function isLand(a: Attrs): boolean {
 export function landFactsOf(a: Attrs, lang: string): { label: string; value: string }[] {
   const g = (k: string) => (a as Record<string, unknown>)[k];
   const out: { label: string; value: string }[] = [];
-  const put = (l: L5, v?: string) => { if (v) out.push({ label: pickL(l, lang), value: v }); };
+  const put = (l: L9, v?: string) => { if (v) out.push({ label: pickL(l, lang), value: v }); };
 
   put(LBL.buildable, BUILDABLE[String(g('buildable_type') ?? '')] && pickL(BUILDABLE[String(g('buildable_type'))], lang));
   put(LBL.plan, PLAN[String(g('plan_type') ?? '')] && pickL(PLAN[String(g('plan_type'))], lang));

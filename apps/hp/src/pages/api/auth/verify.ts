@@ -63,7 +63,7 @@ export const POST: APIRoute = async ({ request, cookies, url, clientAddress }) =
   const code = String(body.code ?? '').replace(/\D/g, '').slice(0, 6);
 
   if (!identifier || code.length !== 6) {
-    return json({ ok: false, message: 'Βάλτε και τα έξι ψηφία.' });
+    return json({ ok: false, code: 'code_len' });
   }
 
   try {
@@ -85,11 +85,10 @@ export const POST: APIRoute = async ({ request, cookies, url, clientAddress }) =
     // (Ο George όρισε 6/8 ότι κινητό και e-mail γίνονται μοναδικά· αυτό μένει ως
     //  εφεδρεία για τα διπλά που ΥΠΑΡΧΟΥΝ ήδη, μέχρι να γίνει το merge.)
     if (Array.isArray(b?.choose) && b.choose.length) {
-      return json({ ok: false, needEmail: true,
-        message: 'Για αυτόν τον αριθμό χρειαζόμαστε και το email σας.' });
+      return json({ ok: false, needEmail: true, code: 'need_email' });
     }
     if (!r.ok || !b?.token) {
-      return json({ ok: false, message: String(b?.message ?? 'Κάτι πήγε στραβά. Δοκιμάστε ξανά.') });
+      return json({ ok: false, ...(typeof b?.message === 'string' ? { message: b.message } : { code: 'code_bad' }) });
     }
 
     cookies.set('member_token', String(b.token), {
@@ -110,10 +109,12 @@ export const POST: APIRoute = async ({ request, cookies, url, clientAddress }) =
       needs: Array.isArray(b?.needs) ? b.needs.map(String) : [],
     });
   } catch {
-    return json({ ok: false, message: 'Δεν έχουμε σύνδεση αυτή τη στιγμή. Δοκιμάστε ξανά.' });
+    return json({ ok: false, code: 'offline' });
   }
 };
 
+// B-15: the site's own errors go out as a `code`; the page shows its translation (all 9 languages).
+// A `message` is only the CRM's own text, passed through unchanged.
 function json(data: unknown) {
   return new Response(JSON.stringify(data), {
     status: 200,

@@ -23,6 +23,9 @@ export function startStub({ port = 4339, n = 1200 } = {}) {
       pools: [['3'], ['2'], []][i % 3],
       // Property 10001 carries hostile text, as a CRM editor could type it (B-07 JSON-LD test).
       ...(i === 1 ? { description_en: 'Sea view </script><script>window.__pwned=1</script> & more' } : {}),
+      // Property 10002 is land with every land fact set (B-25 labels in all languages).
+      ...(i === 2 ? { category: 'land', subcategory: 'plot', buildable_type: '1', plan_type: '3', road_access: 'dirt',
+        electricity: true, water: false, drilling: true, orientation: '9' } : {}),
     },
   }));
   const captured = [];
@@ -41,6 +44,12 @@ export function startStub({ port = 4339, n = 1200 } = {}) {
       return send(200, { ok: true });
     }
     if (url.pathname === '/__captured') return send(200, captured);
+    // Members: `stub-token` has a name, `stub-noname` has none (header falls back to its label).
+    if (url.pathname === '/api/site/member/me') {
+      const tok = req.headers['x-member-token'];
+      if (tok !== 'stub-token' && tok !== 'stub-noname') return send(401, { message: 'no session' });
+      return send(200, { email: 'stub@example.com', name: tok === 'stub-token' ? 'Stub User' : '', phone: '', favorites: [], level: 'member', blocked: false });
+    }
     if (url.pathname === '/api/site/properties') {
       const limit = Math.min(60, Number(url.searchParams.get('limit') ?? 60));
       const page = Math.max(1, Number(url.searchParams.get('page') ?? 1));

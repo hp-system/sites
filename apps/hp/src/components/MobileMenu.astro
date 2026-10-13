@@ -93,7 +93,7 @@ const has = (k: string) => pageExists(k as any);
 
     <div class="mm__foot">
       {inside
-      ? <a class="btn" href={`${p}/panel`} data-ev="panel:menu">Ο λογαριασμός μου</a>
+      ? <a class="btn" href={`${p}/panel`} data-ev="panel:menu">{t(lang, 'pnl.title')}</a>
       : <a class="btn" href={`${p}/login`} data-ev="register:menu">{t(lang, 'nav.login')}</a>}
       {inside && (
       <form method="post" action="/api/auth/logout" class="mm__out">

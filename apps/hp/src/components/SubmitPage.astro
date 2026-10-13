@@ -45,6 +45,9 @@ const JS_T = {
   e_area: t(lang, 'sb.e.area'),
   e_fail: t(lang, 'sb.e.fail'),
   e_offline: t(lang, 'sb.e.offline'),
+  // B-15: texts for the error codes of /api/panel/submit.
+  e_expired: t(lang, 'auth.e.expired'),
+  e_name_first: t(lang, 'sb.e.name_first'),
 };
 ---
 
@@ -168,7 +171,8 @@ const JS_T = {
         $('ok').scrollIntoView({ block: 'center', behavior: 'smooth' });
         return;
       }
-      err.textContent = b?.message || L.e_fail;
+      // B-15: the endpoint answers with a `code`; its text is in the page language.
+      err.textContent = (b?.code && (L as Record<string, string>)[`e_${b.code}`]) || b?.message || L.e_fail;
       err.hidden = false;
     } catch {
       err.textContent = L.e_offline;

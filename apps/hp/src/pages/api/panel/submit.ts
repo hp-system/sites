@@ -22,6 +22,8 @@ export const prerender = false;
 
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
+// B-15: the site's own errors go out as a `code`; the page shows its translation (all 9 languages).
+// A `message` is only the CRM's own text, passed through unchanged.
 const json = (d: unknown) => new Response(JSON.stringify(d), {
   status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
 });
@@ -43,19 +45,19 @@ export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
   const token = cookies.get('member_token')?.value;
   const me = await memberOf(token);
   if (!me || me.blocked) {
-    return json({ ok: false, message: 'Η σύνδεσή σας έληξε. Μπείτε ξανά και δοκιμάστε.' });
+    return json({ ok: false, code: 'expired' });
   }
   // Ο ίδιος έλεγχος που κάνει και η σελίδα πριν δείξει τη φόρμα — εδώ όμως είναι ο
   // δεσμευτικός: η σελίδα μπορεί να παρακαμφθεί, αυτό όχι.
   if (!me.name || !me.email) {
-    return json({ ok: false, message: 'Συμπληρώστε πρώτα το όνομά σας στα στοιχεία σας.' });
+    return json({ ok: false, code: 'name_first' });
   }
 
   let b: Record<string, unknown> = {};
   try { b = await request.json(); } catch { /* κενό → πέφτει στον έλεγχο περιοχής */ }
 
   const area = clean(b.area, 120);
-  if (!area) return json({ ok: false, message: 'Γράψτε την περιοχή.' });
+  if (!area) return json({ ok: false, code: 'area' });
 
   const k = KIND[clean(b.kind, 20)] ?? KIND.house;
   const payload = {
@@ -76,10 +78,10 @@ export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
     });
     if (!r.ok) {
       // 404 εδώ σημαίνει «λείπει name/email», όχι «χάθηκε η σελίδα».
-      return json({ ok: false, message: 'Δεν μπόρεσε να σταλεί. Δοκιμάστε ξανά ή τηλεφωνήστε μας.' });
+      return json({ ok: false, code: 'fail' });
     }
     return json({ ok: true });
   } catch {
-    return json({ ok: false, message: 'Δεν έχουμε σύνδεση αυτή τη στιγμή. Δοκιμάστε ξανά.' });
+    return json({ ok: false, code: 'offline' });
   }
 };

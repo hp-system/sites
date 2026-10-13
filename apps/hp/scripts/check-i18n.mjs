@@ -27,6 +27,8 @@
 //    ⏭️ Η αναδιάρθρωση παραμένει το σωστό επόμενο βήμα.
 // ═══════════════════════════════════════════════════════════════════════════
 import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 const FILE = new URL('../src/lib/i18n.ts', import.meta.url);
 const src = readFileSync(FILE, 'utf8');
@@ -83,7 +85,14 @@ for (const [lang, keys] of Object.entries(merged)) {
 
 if (!broken.length) {
   console.log(`✅ i18n: ${Object.keys(merged).length} γλώσσες × ${base.size} κλειδιά — καμία δεν λείπει.`);
-  process.exit(0);
+  // Stage 2 (B-02): the VALUES of every dictionary — empty texts, foreign alphabets, and the
+  // dictionaries this stage cannot read (LIST_UI, FACETS, PROP_UI, land tables, CONTENT).
+  // A separate process because it needs Node's type stripping to import the .ts dictionaries.
+  const stage2 = spawnSync(process.execPath, [
+    '--experimental-strip-types', '--disable-warning=ExperimentalWarning',
+    fileURLToPath(new URL('./check-i18n-dicts.mjs', import.meta.url)),
+  ], { stdio: 'inherit' });
+  process.exit(stage2.status ?? 1);
 }
 
 console.error('\n🔴 ΤΟ ΧΤΙΣΙΜΟ ΣΤΑΜΑΤΗΣΕ — ΘΑ ΕΒΓΑΙΝΑΝ ΓΛΩΣΣΕΣ ΑΠΟ ΤΗ GOOGLE\n');

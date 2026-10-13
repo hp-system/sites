@@ -22,6 +22,8 @@ export const prerender = false;
 
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
+// B-15: the site's own errors go out as a `code`; the page shows its translation (all 9 languages).
+// A `message` is only the CRM's own text, passed through unchanged.
 const json = (d: unknown) => new Response(JSON.stringify(d), {
   status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
 });
@@ -30,7 +32,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   const token = cookies.get('member_token')?.value;
   // Χωρίς εισιτήριο δεν συμπληρώνεται τίποτα. Δεν είναι «σφάλμα εισόδου» — είναι
   // ακριβώς η γραμμή που κρατά την κατάληψη λογαριασμού έξω.
-  if (!token) return json({ ok: false, message: 'Η σύνδεσή σας έληξε. Ξεκινήστε από την αρχή.' });
+  if (!token) return json({ ok: false, code: 'expired' });
 
   let body: Record<string, unknown> = {};
   try { body = await request.json(); } catch { /* κενό → πέφτει στους ελέγχους */ }
@@ -42,7 +44,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   const payload: Record<string, unknown> = {};
   if (step === 'verify') {
     payload.code = String(body.code ?? '').replace(/\D/g, '').slice(0, 6);
-    if (String(payload.code).length !== 6) return json({ ok: false, message: 'Βάλτε και τα έξι ψηφία.' });
+    if (String(payload.code).length !== 6) return json({ ok: false, code: 'code_len' });
   } else {
     const name = String(body.name ?? '').trim().slice(0, 40);
     // 🗄️ Χωριστά, όπως τα κρατά η βάση — δες `LoginPage.astro`.
@@ -59,7 +61,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
     if (surname) payload.surname = surname;
     if (email) payload.email = email;
     if (phone) payload.phone = phone;
-    if (!name && !surname && !email && !phone) return json({ ok: false, message: 'Συμπληρώστε το πεδίο.' });
+    if (!name && !surname && !email && !phone) return json({ ok: false, code: 'fill' });
   }
 
   try {
@@ -74,7 +76,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
       signal: AbortSignal.timeout(12000),
     });
     const b = await r.json().catch(() => ({}));
-    if (!r.ok) return json({ ok: false, message: String(b?.message ?? 'Δεν μπόρεσε να αποθηκευτεί.') });
+    if (!r.ok) return json({ ok: false, ...(typeof b?.message === 'string' ? { message: b.message } : { code: 'save' }) });
     return json({
       ok: b?.ok !== false,
       message: typeof b?.message === 'string' ? b.message : undefined,
@@ -85,6 +87,6 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
       needs: Array.isArray(b?.needs) ? b.needs.map(String) : [],
     });
   } catch {
-    return json({ ok: false, message: 'Δεν έχουμε σύνδεση αυτή τη στιγμή. Δοκιμάστε ξανά.' });
+    return json({ ok: false, code: 'offline' });
   }
 };

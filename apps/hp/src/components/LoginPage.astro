@@ -103,6 +103,11 @@ const JS_T = {
   e_closed: t(lang, 'auth.e.closed'),
   e_not_mobile: t(lang, 'auth.e.not_mobile'),
   e_too_many: raw('auth.e.too_many'),
+  // B-15: texts for the error codes of /api/auth/verify and /api/auth/complete.
+  e_need_email: t(lang, 'auth.e.need_email'),
+  e_expired: t(lang, 'auth.e.expired'),
+  e_fill: t(lang, 'auth.e.fill'),
+  e_offline: t(lang, 'sb.e.offline'),
 };
 ---
 
@@ -291,6 +296,9 @@ const JS_T = {
   const steps = ['s0', 's1', 's2', 's3', 's4', 's5'].map((id) => $(id));
   const show = (id: string) => steps.forEach((el) => (el.hidden = el.id !== id));
   const fail = (id: string, msg: string) => { const e = $(id); e.textContent = msg; e.hidden = false; };
+  // B-15: a site error comes as `code` → translated text; a `message` is the CRM's own text.
+  const said = (r: { code?: string; message?: string }, fallback: string) =>
+    (r?.code && (L as Record<string, string>)[`e_${r.code}`]) || r?.message || fallback;
   const clear = (id: string) => { $(id).hidden = true; };
   const post = async (u: string, b: unknown) =>
     (await fetch(u, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) })).json().catch(() => ({}));
@@ -420,8 +428,8 @@ const JS_T = {
 
     if (!r.ok) {
       // Πολλοί λογαριασμοί στο ίδιο κινητό — μένει ως εφεδρεία μέχρι το merge.
-      if (r.needEmail) { pickMode('email'); return fail('e1', r.message); }
-      return fail('e2', r.message || L.e_code_bad);
+      if (r.needEmail) { pickMode('email'); return fail('e1', said(r, L.e_need_email)); }
+      return fail('e2', said(r, L.e_code_bad));
     }
     needs = Array.isArray(r.needs) ? r.needs : [];
     if (needs.length) return askMissing();
@@ -463,7 +471,7 @@ const JS_T = {
     if (busy) return; busy = true;
     const r = await post('/api/auth/complete', body);
     busy = false;
-    if (!r.ok) return fail('e3', r.message || L.e_save);
+    if (!r.ok) return fail('e3', said(r, L.e_save));
     // Αν το νέο στοιχείο θέλει επαλήθευση, μας το λέει με `pending`.
     if (r.pending) {
       const where = r.channel === 'email' ? L.ch_new_email : L.ch_new_sms;
@@ -484,7 +492,7 @@ const JS_T = {
     if (busy) return; busy = true;
     const r = await post('/api/auth/complete', { step: 'verify', code });
     busy = false;
-    if (!r.ok) return fail('e4', r.message || L.e_code_bad);
+    if (!r.ok) return fail('e4', said(r, L.e_code_bad));
     needs = Array.isArray(r.needs) ? r.needs : [];
     ($('cd2') as HTMLInputElement).value = '';
     if (needs.length) return askMissing();

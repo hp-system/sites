@@ -21,12 +21,14 @@
 //        run, later the real domain): no X-Robots-Tag, robots with sitemap and bot blocks, and
 //        EVERY <loc> of the sitemap answers 200 with canonical = loc, index, no placeholder.
 //        `--max=N` checks only the first N URLs (a quick run; the release run checks all).
+//        `--delay=MS` waits between URL checks (real CRM data behind the server: be gentle).
 // The production host header is sent in production mode too, so a host-based server
 // (SITE_ENV unset) is checked the same way.
 const args = process.argv.slice(2);
 const BASE = (args.find((a) => !a.startsWith('--')) ?? 'http://localhost:4331').replace(/\/$/, '');
 const MODE = args.find((a) => a.startsWith('--mode='))?.split('=')[1] ?? 'preview';
 const MAX = Number(args.find((a) => a.startsWith('--max='))?.split('=')[1] ?? Infinity);
+const DELAY = Number(args.find((a) => a.startsWith('--delay='))?.split('=')[1] ?? 0);
 const PROD = 'www.halkidikiproperties.com';
 const ORIGIN = `https://${PROD}`;
 if (!['preview', 'production'].includes(MODE)) {
@@ -134,6 +136,7 @@ if (MODE === 'preview') {
     else if (!indexed) bad(`${path} → δεν εκπέμπει index`);
     else if (holes.length || metaHole) bad(`${path} → αγέμιστο placeholder ${holes.join(',') || metaHole}`);
     else passed++;
+    if (DELAY) await new Promise((r) => setTimeout(r, DELAY));
   }
   ok(`${passed}/${locs.length} URLs → 200 · canonical = loc · index · no placeholder`);
 }

@@ -71,7 +71,7 @@ const PAGES: Page[] = [
  */
 async function propertyPages(): Promise<Page[]> {
   try {
-    const items = await allProperties(1000);
+    const items = await allProperties();
     return items.map((it) => {
       const id = refOf(it);
       const upd = it.updatedAt ?? it.createdAt ?? '';

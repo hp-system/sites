@@ -41,7 +41,7 @@ let secret: SiteProperty[] = [];
 let ultra: SiteProperty[] = [];
 let failed = false;
 try {
-  const all = await allProperties(600, token);
+  const all = await allProperties(token);
   for (const it of all) {
     const a = it.attributes ?? {};
     if (isSecretFlag(a.ultra_secret)) ultra.push(it);

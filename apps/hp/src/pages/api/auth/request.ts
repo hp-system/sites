@@ -19,7 +19,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
 import { forwardIp } from '../../../lib/clientip';
-import { requestHost } from '../../../lib/seo';
+import { originHeader } from '../../../lib/origin';
 
 export const prerender = false;
 
@@ -45,15 +45,7 @@ const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://loca
  *
  * ⛔ ΜΗΝ ΕΠΙΣΤΡΕΨΕΙΣ ΠΟΤΕ «ασφαλή» ψεύτικη προέλευση εδώ. Κενό = κλειστό.
  */
-function originHeader(request: Request, url: URL): Record<string, string> {
-  // Ρητή ρύθμιση πρώτα: δεν εξαρτάται από κεφαλίδες που μπορεί να μην περάσει ο tunnel.
-  const cfg = (import.meta.env.PUBLIC_ORIGIN || process.env.PUBLIC_ORIGIN || '').trim();
-  if (cfg) return { origin: cfg.replace(/\/$/, '') };
-  const fwd = request.headers.get('x-forwarded-host');
-  if (!fwd) return {};                       // ⇒ το EALIDA το θεωρεί κλειστό. Σωστά.
-  const proto = (request.headers.get('x-forwarded-proto') ?? 'https').split(',')[0].trim();
-  return { origin: `${proto}://${requestHost(request, url)}` };
-}
+// originHeader() moved to lib/origin.ts (shared by every proxy, B-03/B-19) — same code.
 
 /** Καθαρίζει και ελέγχει, ΧΩΡΙΣ να «διορθώνει» — μια σιωπηλή διόρθωση κρύβει το λάθος. */
 const clean = (v: unknown, max = 120) => (typeof v === 'string' ? v.trim().slice(0, max) : '');

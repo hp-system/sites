@@ -16,6 +16,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
 import { forwardIp } from '../../../lib/clientip';
+import { originHeader } from '../../../lib/origin';
 
 export const prerender = false;
 
@@ -25,7 +26,7 @@ const json = (d: unknown) => new Response(JSON.stringify(d), {
   status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
 });
 
-export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
+export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) => {
   const token = cookies.get('member_token')?.value;
   // Χωρίς εισιτήριο δεν συμπληρώνεται τίποτα. Δεν είναι «σφάλμα εισόδου» — είναι
   // ακριβώς η γραμμή που κρατά την κατάληψη λογαριασμού έξω.
@@ -67,6 +68,7 @@ export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
       headers: {
         'content-type': 'application/json', 'x-member-token': token,
         ...forwardIp(request, clientAddress),   // και εδώ φρενάρει ανά διεύθυνση
+        ...originHeader(request, url),          // B-19: like request/verify; the CRM ignores it here today
       },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(12000),

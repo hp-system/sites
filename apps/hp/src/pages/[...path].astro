@@ -34,7 +34,7 @@ import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, type PageKey } fro
 import { memberOf, type Member } from '../lib/member';
 import { PUBLISHED, DEFAULT_LANG, SLUG, prefix, type Lang } from '../lib/i18n';
 import { facetBySlug, PAIRS, type Facet } from '../lib/listing';
-import { allProperties, refOf, type SiteProperty } from '../lib/api';
+import { allProperties, refOf, REF_RE, type SiteProperty } from '../lib/api';
 
 export const prerender = false;
 
@@ -108,7 +108,7 @@ const nextParam = Astro.url.searchParams.get('next') ?? '';
 //    τα ακίνητα που θα χρησιμοποιούσαμε για να δοκιμάσουμε τις ΑΛΛΕΣ καρτέλες.
 //    Το μοτίβο καλύπτει και μελλοντικά προθέματα (`ON-`, `RW-`) χωρίς νέα αλλαγή.
 // ✅ Επαληθεύτηκε ότι ΚΑΝΕΝΑ από τα 64 θεματικά slug δεν ταιριάζει εδώ.
-const REF_RE = /^[A-Za-z]{0,3}-?\d{1,6}$/;
+// REF_RE now lives in lib/api.ts — shared with /api/inquiry (B-03), same pattern.
 let property: SiteProperty | null = null;
 let allItems: SiteProperty[] = [];
 // Το εισιτήριο διαβάζεται ΜΙΑ φορά και το χρησιμοποιούν και η καρτέλα (για να
@@ -120,7 +120,7 @@ const maybeProp = !isHome && rest.length === 2
 
 if (maybeProp) {
   try {
-    allItems = await allProperties(600, memberToken);
+    allItems = await allProperties(memberToken);
     // Πεζά/κεφαλαία αδιάφορα: το «hp-8564» γραμμένο με το χέρι πρέπει να βρίσκει
     // το ίδιο ακίνητο με το «HP-8564» του συνδέσμου.
     const want = rest[1].toLowerCase();

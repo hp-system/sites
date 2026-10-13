@@ -37,7 +37,7 @@ const viewer = viewerFor(me.level);
 let items: SiteProperty[] = [];
 let failed = false;
 try {
-  const all = await allProperties(600, token);
+  const all = await allProperties(token);
   const want = new Set(me.favorites.map((f) => f.toLowerCase()));
   // Κρατάμε τη σειρά του ΜΕΛΟΥΣ, όχι του καταλόγου — το πρώτο που αποθήκευσε
   // είναι αυτό που ψάχνει.

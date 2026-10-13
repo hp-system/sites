@@ -48,7 +48,7 @@ const q: Query = Object.assign({}, ...facets.map((f) => f.q), queryFromParams(sp
 let items: Awaited<ReturnType<typeof allProperties>> = [];
 let apiDown = false;
 try {
-  items = await allProperties(600, memberToken);
+  items = await allProperties(memberToken);
 } catch {
   apiDown = true;
 }

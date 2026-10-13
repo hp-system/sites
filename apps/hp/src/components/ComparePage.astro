@@ -33,7 +33,7 @@ const viewer = viewerFor(me.level);
 let items: SiteProperty[] = [];
 let failed = false;
 try {
-  const all = await allProperties(600, token);
+  const all = await allProperties(token);
   const byRef = new Map(all.map((x) => [refOf(x).toLowerCase(), x]));
   items = me.favorites.map((f) => byRef.get(f.toLowerCase())).filter((x): x is SiteProperty => !!x);
 } catch { failed = true; }

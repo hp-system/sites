@@ -36,7 +36,7 @@ export const GET: APIRoute = async ({ params }) => {
   if (!ref || !Number.isInteger(idx) || idx < 0 || idx > 200) return notFound();
 
   // Ίδια μνήμη με τις σελίδες — δεν προστίθεται αίτημα προς το EALIDA.
-  const all = await allProperties(600).catch(() => []);
+  const all = await allProperties().catch(() => []);
   const want = ref.toLowerCase();
   const item = all.find((p) => refOf(p).toLowerCase() === want);
   if (!item) return notFound();

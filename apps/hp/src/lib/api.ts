@@ -65,12 +65,29 @@ export function isRealProperty(p: SiteProperty): boolean {
   return !STOCK_PHOTO.test(JSON.stringify(p.attributes ?? {}));
 }
 
-async function fetchAll(max = 600, memberToken?: string): Promise<SiteProperty[]> {
+/**
+ * Everything the viewer may see, until the API's own `total` (B-01, traps T-K01).
+ * Until 2026-10 callers passed a ceiling (600, sitemap 1000) and the cache key ignored it, so
+ * the first caller decided the set for everyone; past 600 properties the rest vanished from
+ * list, counter and sitemap. Now there is one set per viewer. SAFETY_MAX only stops a runaway
+ * loop (an API that never reaches `total`); hitting it is logged, never silent.
+ * Rejected: raising the ceiling to the expected volume — the same silent cut, later.
+ */
+const PAGE_SIZE = 60;      // API maximum for /site/properties
+const SAFETY_MAX = 5_000;
+let ceilingWarned = false;
+
+async function fetchAll(memberToken?: string): Promise<SiteProperty[]> {
   const out: SiteProperty[] = [];
-  for (let page = 1; out.length < max; page++) {
-    const r = await api.properties({ limit: 60, page }, memberToken);
+  for (let page = 1; ; page++) {
+    const r = await api.properties({ limit: PAGE_SIZE, page }, memberToken);
     out.push(...r.items);
     if (out.length >= r.total || r.items.length === 0) break;
+    if (out.length >= SAFETY_MAX) {
+      if (!ceilingWarned) console.warn(`[hp-site] allProperties stopped at SAFETY_MAX=${SAFETY_MAX} of total=${r.total}`);
+      ceilingWarned = true;
+      break;
+    }
   }
   return out.filter(isRealProperty);
 }
@@ -127,11 +144,11 @@ function trim(): void {
   if (oldest) caches.delete(oldest);
 }
 
-function revalidate(max: number, memberToken?: string): Promise<SiteProperty[]> {
+function revalidate(memberToken?: string): Promise<SiteProperty[]> {
   const key = viewerKey(memberToken);
   const running = inflights.get(key);
   if (running) return running;                  // ένα αίτημα εν πτήσει ΑΝΑ ΘΕΑΤΗ
-  const p = fetchAll(max, memberToken)
+  const p = fetchAll(memberToken)
     .then((items) => { caches.set(key, { at: Date.now(), items }); trim(); return items; })
     .catch((e) => {
       // Αν πέσει το API και έχουμε παλιά δεδομένα ΤΟΥ ΙΔΙΟΥ θεατή, μένουμε όρθιοι.
@@ -144,17 +161,20 @@ function revalidate(max: number, memberToken?: string): Promise<SiteProperty[]> 
   return p;
 }
 
-export async function allProperties(max = 600, memberToken?: string): Promise<SiteProperty[]> {
+export async function allProperties(memberToken?: string): Promise<SiteProperty[]> {
   const key = viewerKey(memberToken);
   const hit = caches.get(key);
   const age = hit ? Date.now() - hit.at : Infinity;
   if (hit && age < TTL) return hit.items;
   if (hit && age < STALE_MAX) {
-    void revalidate(max, memberToken).catch(() => {});  // από πίσω· ο καλών δεν περιμένει
+    void revalidate(memberToken).catch(() => {});  // από πίσω· ο καλών δεν περιμένει
     return hit.items;
   }
-  return revalidate(max, memberToken);
+  return revalidate(memberToken);
 }
+
+/** Shape of a public property id in a URL or form: `8075`, `HP-8564` (router and /api/inquiry, B-03). */
+export const REF_RE = /^[A-Za-z]{0,3}-?\d{1,6}$/;
 
 /** Δημόσιο αναγνωριστικό — ΤΟ ΙΔΙΟ id με το παλιό site, ώστε να μη σπάσει κανένα URL. */
 export function refOf(p: SiteProperty): string {

@@ -42,7 +42,7 @@ const memberToken = Astro.cookies.get('member_token')?.value;
 let items: Awaited<ReturnType<typeof allProperties>> = [];
 let apiDown = false;
 try {
-  items = await allProperties(600, memberToken);
+  items = await allProperties(memberToken);
 } catch (e) {
   // Το site δεν πέφτει επειδή έπεσε το API — δείχνει σκελετό και το λέει στα logs.
   apiDown = true;

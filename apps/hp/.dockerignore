@@ -3,3 +3,6 @@ dist
 .astro
 .git
 *.log
+# B-22: screenshots and editor backups never enter the build context
+shots
+*.bak*

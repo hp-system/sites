@@ -3,10 +3,12 @@
 // auth/verify.ts, and inquiry.ts and auth/complete.ts did not send it at all.
 //
 // The rule, from the 2026-08-06 incident (full history in the Greek comment of
-// pages/api/auth/request.ts): the CRM signup brake is a BLOCK LIST of origins.
+// pages/api/auth/request.ts), when the CRM signup brake was a BLOCK LIST of origins:
 //   explicit PUBLIC_ORIGIN → sent as is (does not depend on tunnel headers)
 //   no PUBLIC_ORIGIN, x-forwarded-host present → `${proto}://${host}`
-//   neither → NO header at all. Never a made-up "safe" origin: an unknown origin OPENS signup.
+//   neither → NO header at all. Never a made-up "safe" origin.
+// Today the CRM gate is an allow list of OPEN hosts (unknown = closed, B-20); the rule above is
+// right under both models, so it stays.
 import { requestHost } from './seo';
 
 /**

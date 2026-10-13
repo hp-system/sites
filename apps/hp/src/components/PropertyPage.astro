@@ -706,7 +706,10 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .qf__ok, .tf__ok { margin: 0; font-size: 13px; color: var(--ink); }
   /* Η παγίδα-μέλι φεύγει από την ΟΘΟΝΗ αλλά όχι από το DOM — τα ρομπότ
      διαβάζουν HTML, δεν κοιτούν pixel. `display:none` το προσπερνούν πολλά. */
-  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  /* B-23: no physical offset — `left: -9999px` widened every RTL (he) page to ~11,000 px.
+     Clipped to 1 px in place; the selector matches `.qf input` so its padding/border cannot win. */
+  .hp, .qf .hp, .tf .hp { position: absolute; inset-inline-start: 0; top: 0; width: 1px; height: 1px;
+    padding: 0; margin: 0; border: 0; opacity: 0; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
 
   /* ═══ ΚΙΝΗΤΗ ΜΠΑΡΑ ═══ */
   .bar { position: fixed; inset: auto 0 0 0; z-index: 30; display: flex;

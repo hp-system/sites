@@ -65,7 +65,11 @@ if (cmsHero) {
 // Ακίνητα με σημαία «εκτός δημοσίευσης». Μετρήθηκε στη βάση: 81 συνολικά,
 // τα 2 είναι δημόσια → 79 πραγματικά εκτός. Στη Φ2 έρχεται από το API.
 // ⚠️ Ο αριθμός ΔΕΝ εμφανίζεται πουθενά πια — κρίνει μόνο αν το μπλοκ υπάρχει.
-const OFF_MARKET = 79;
+// B-18: the CMS can override it (key `offmarket.count`, a number); 79 stays the fallback.
+const offRaw = await cmsText(lang, 'offmarket.count');
+const OFF_MARKET = offRaw !== null && /^\d+$/.test(offRaw) ? Number(offRaw) : 79;
+// B-13 / D-157: the valuation form is off until its real page exists (M3).
+const SHOW_VALUATION = false;
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 
 // Η ετικέτα του μεγάλου ακινήτου ΕΡΧΕΤΑΙ ΠΛΕΟΝ ΟΝΤΩΣ ΑΠΟ ΤΟ CMS (5/8).
@@ -233,7 +237,9 @@ const meta = {
     <Construction lang={lang} />
 
     {/* 8 εργαλείο ιδιοκτήτη */}
-    {d.benchmarks.length > 0 && (
+    {/* B-13 / D-157 (George, 2026-10-12): hidden until the real valuation page exists — the form
+        posted to /valuation, which no route serves (404). The component stays for M3. */}
+    {SHOW_VALUATION && d.benchmarks.length > 0 && (
       <Valuation lang={lang} comparables={d.comparables}
                  benchmarks={d.benchmarks} seafrontPremium={d.seafrontPremium} />
     )}

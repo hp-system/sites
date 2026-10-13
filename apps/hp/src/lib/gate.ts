@@ -38,6 +38,10 @@ import { memberOf } from './member';
  *    `viewerOf()` επιστρέφει σήμερα το πολύ `member`. Η υποδομή μπαίνει ΤΩΡΑ
  *    ώστε όταν ο George ορίσει τι ακριβώς δίνει το δεύτερο επίπεδο, να μη
  *    χρειαστεί να ξαναγραφτεί κανένα component.
+ * → Outdated (B-20, checked 2026-10-13): the level is active. `memberOf()` (lib/member.ts) reads
+ *   `level` from `GET /site/member/me`, which the CRM resolves from the contact's `member_level`
+ *   (`resolveLevel`, apps/api/src/site/member-level.ts in the CRM clone at dcbca61); `exclusive`
+ *   is granted only explicitly in the CRM contact card (D-161 test contacts).
  */
 export type Level = 'guest' | 'agent' | 'member' | 'exclusive';
 

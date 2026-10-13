@@ -44,6 +44,10 @@ const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://loca
  * πραγματικά SMS σε επινοημένους αριθμούς.
  *
  * ⛔ ΜΗΝ ΕΠΙΣΤΡΕΨΕΙΣ ΠΟΤΕ «ασφαλή» ψεύτικη προέλευση εδώ. Κενό = κλειστό.
+ * → Updated (B-20, checked 2026-10-13): the CRM gate is no longer a block list. In the CRM code
+ *   (signup-gate.ts `signupAllowed`, clone dcbca61) `MEMBER_SIGNUP_OPEN_ORIGINS` lists the OPEN
+ *   hosts; empty list or unknown origin = closed; `MEMBER_SIGNUP_CLOSED_ORIGINS` is legacy and
+ *   only logs a warning. The rule above (no made-up origin) stays right under both models.
  */
 // originHeader() moved to lib/origin.ts (shared by every proxy, B-03/B-19) — same code.
 

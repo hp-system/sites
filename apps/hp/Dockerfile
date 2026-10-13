@@ -31,6 +31,10 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
 COPY . .
+# B-10: the canonical/sitemap origin is fixed at build time (astro.config.mjs `site`). Explicit,
+# so a brand build can pass its own: docker compose build --build-arg SITE_URL=https://…
+ARG SITE_URL=https://www.halkidikiproperties.com
+ENV SITE_URL=$SITE_URL
 RUN pnpm build
 
 FROM node:22-bookworm-slim

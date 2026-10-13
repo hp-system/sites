@@ -17,6 +17,8 @@
 //    `PUBLISHED` γλώσσες. Σήμερα υπάρχει μόνο η αρχική — οι εσωτερικοί σύνδεσμοι
 //    δίνουν ακόμα 404, και ένα sitemap που δηλώνει 404 είναι ενεργή ζημιά.
 //    Επαλήθευση πριν από κάθε προσθήκη: `node scripts/verify-sitemap.mjs`.
+//    → B-20: that script never existed; the check is `node scripts/verify-seo.mjs <base> --mode=production`
+//      (every <loc> answers 200, canonical = loc, index).
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
 import { hreflangs, hreflangsBy, propertyUrl, type Lang } from '../lib/i18n';

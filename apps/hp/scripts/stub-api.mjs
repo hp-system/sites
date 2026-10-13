@@ -4,7 +4,7 @@
 // Not a contract: only the fields the site reads for list/count/sitemap/forms.
 import { createServer } from 'node:http';
 
-export function startStub({ port = 4339, n = 1200 } = {}) {
+export function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} } } = {}) {
   // Pools cycle through "private pool" (3), "no pool" (2) and nothing: 1/3 really have a pool.
   const items = Array.from({ length: n }, (_, i) => ({
     id: `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
@@ -23,6 +23,8 @@ export function startStub({ port = 4339, n = 1200 } = {}) {
       pools: [['3'], ['2'], []][i % 3],
       // Property 10001 carries hostile text, as a CRM editor could type it (B-07 JSON-LD test).
       ...(i === 1 ? { description_en: 'Sea view </script><script>window.__pwned=1</script> & more' } : {}),
+      // Properties 10003…10009 feed the home valuation benchmarks (≥ 5 per area, category residency).
+      ...(i >= 3 && i <= 9 ? { category: 'residency', area: 'Stubville', sqm: 100 + i } : {}),
       // Property 10002 is land with every land fact set (B-25 labels in all languages).
       ...(i === 2 ? { category: 'land', subcategory: 'plot', buildable_type: '1', plan_type: '3', road_access: 'dirt',
         electricity: true, water: false, drilling: true, orientation: '9' } : {}),
@@ -44,6 +46,8 @@ export function startStub({ port = 4339, n = 1200 } = {}) {
       return send(200, { ok: true });
     }
     if (url.pathname === '/__captured') return send(200, captured);
+    // CMS texts/images (lib/content.ts); a test passes its own `content`.
+    if (url.pathname === '/api/site/content') return send(200, content);
     // Members: `stub-token` has a name, `stub-noname` has none (header falls back to its label).
     if (url.pathname === '/api/site/member/me') {
       const tok = req.headers['x-member-token'];

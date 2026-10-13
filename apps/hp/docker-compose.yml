@@ -30,6 +30,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # B-10: canonical/sitemap origin, fixed in the image at build time (see Dockerfile).
+      args:
+        SITE_URL: https://www.halkidikiproperties.com
     restart: unless-stopped
     environment:
       EALIDA_API: http://api:3020/api
@@ -40,6 +43,9 @@ services:
       # Explicit environment (E-01): preview never becomes indexable, whatever host header the
       # proxy sends. The production deployment sets `production`. See src/lib/seo.ts.
       SITE_ENV: preview
+      # B-10: font switch. Empty = Mont (licensed). `fallback` = the free font stack, an
+      # emergency switch (src/lib/typeface.ts); the fallback files ship after Q-034.
+      TYPEFACE: ""
     # ⚠️ ΚΑΜΙΑ ΔΗΜΟΣΙΑ ΘΥΡΑ. Η πρόσβαση γίνεται ΜΟΝΟ μέσω Cloudflare Tunnel:
     #    hp.rewize.app → http://hp-site:4331
 

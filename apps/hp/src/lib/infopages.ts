@@ -36,4 +36,6 @@ export const EN_MOVED: Record<string, string> = {
   'services/investors': '/en/services/investor-services',
   'services/developers': '/en/services/construction-services',
   projects: '/en/construction',
+  // The old site had the same text twice; one URL keeps it (open question for George).
+  'sell/work-with-us-exclusively': '/en/work-with-us-exclusively',
 };

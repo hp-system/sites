@@ -21,6 +21,8 @@ export type Brand = {
     foundedYear: number;
   };
   address: { street: string; city: string; postalCode: string; region: string; country: string };
+  /** The address in Latin letters, for the English pages (contact page). */
+  addressLatin?: { street: string; city: string; country: string };
   contact: {
     /** What the visitor reads — same in header, menu and footer. */
     phoneText: string;

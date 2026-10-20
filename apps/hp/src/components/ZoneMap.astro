@@ -1,0 +1,181 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΜΠΛΟΚ 5+6 — Ο ΧΑΡΤΗΣ ΤΩΝ ΖΩΝΩΝ.
+//
+// Αντικαθιστά ΚΑΙ την «ιδιωτική συλλογή» (που απορρίφθηκε: «αγροτεμάχια, κενές
+// παύλες, τιμές από κάτω») ΚΑΙ το παλιό μπλοκ γεωγραφίας.
+//
+// Η ιδέα: κάθε περιοχή εμφανίζεται ως ΖΩΝΗ με πλήρη αληθινά στοιχεία —
+// πόσα ακίνητα, πόσα πρώτης γραμμής, διάμεση τιμή — και λείπει ΜΟΝΟ το όνομα.
+// Το όνομα είναι ακριβώς αυτό που ξεκλειδώνει η εγγραφή.
+//
+// «Η σπανιότητά μας δεν είναι 2 κρυφά ακίνητα — είναι 527 κρυμμένες θέσεις.»
+//
+// ⛔ ΚΑΝΟΝΕΣ: καμία κάρτα ακινήτου · καμία φωτογραφία · καμία παύλα-γέμισμα ·
+//    καμία λέξη «κρυφό/απόρρητο/αποκλειστικό» · κανένα τοπωνύμιο στο DOM
+//    για ανώνυμο επισκέπτη.
+// ═══════════════════════════════════════════════════════════════════════════
+import { MAP_W, MAP_H, type ZoneMap } from '../lib/zones';
+import { t, listUrl, prefix, type Lang } from '../lib/i18n';
+import { money, num } from '../lib/format';
+import type { Viewer } from '../lib/gate';
+import type { Place } from '../lib/home';
+
+// 🪤 ΔΥΟ ΠΗΓΕΣ ΑΡΙΘΜΩΝ, ΜΙΑ ΑΛΗΘΕΙΑ:
+//    Το `map.munis` αθροίζει ΜΟΝΟ όσα ακίνητα μπήκαν στον χάρτη (έχουν συντεταγμένες
+//    και ανήκουν σε περιοχή με ≥3 ακίνητα). Το `munis` είναι το πραγματικό σύνολο.
+//    Χωρίς αυτόν τον διαχωρισμό η ίδια σελίδα έγραφε «Κασσάνδρα 250» στο μενού και
+//    «Κασσάνδρα 247 ακίνητα» εδώ. Ο χάρτης δίνει ΘΕΣΗ· η βάση δίνει ΑΡΙΘΜΟ.
+interface Props { map: ZoneMap; lang: Lang; viewer: Viewer; members: number; munis: Place[]; rest?: number }
+const { map, lang, viewer, members, munis, rest = 0 } = Astro.props;
+const url = listUrl(lang);
+const shown = map.zones.length;
+---
+<section class="zmap" aria-labelledby="zmap-h">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <p class="t-label">{t(lang, 'zmap.eyebrow')}</p>
+        <h2 id="zmap-h" class="t-h2">{t(lang, 'zmap.h2')}</h2>
+        <p class="zmap__sub">
+          {t(lang, 'zmap.sub2')}
+        </p>
+      </div>
+    </div>
+
+    <figure class="zmap__fig">
+      <svg class="zmap__svg" viewBox={`0 0 ${MAP_W} ${MAP_H}`} role="img"
+           aria-label={t(lang, 'zmap.alt', { n: shown })}>
+        <defs>
+          {/* Χωρίς αιχμηρό κέντρο: η κηλίδα λέει «κάπου εδώ», ποτέ «εδώ». */}
+          <radialGradient id="zg">
+            <stop offset="0%" stop-color="var(--zone)" stop-opacity=".42" />
+            <stop offset="55%" stop-color="var(--zone)" stop-opacity=".20" />
+            <stop offset="100%" stop-color="var(--zone)" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Οι κηλίδες: θέση = κεντροβαρές ΠΕΡΙΟΧΗΣ, μέγεθος = απόθεμα.
+            Λένε «κάπου εδώ», ποτέ «εδώ». */}
+        {map.zones.map((z) => (
+          <g class="z">
+            <circle cx={z.x} cy={z.y} r={z.r} fill="url(#zg)" />
+            {/* `non-scaling-stroke`: το πάχος μετριέται σε pixel ΟΘΟΝΗΣ, όχι σε μονάδες
+                του viewBox. Χωρίς αυτό, στο κινητό ο χάρτης αποδίδεται σε 350px από
+                1000 — κλίμακα 0,35 — και ο δακτύλιος έβγαινε 0,39px: αόρατος. */}
+            {z.front > 0 && (
+              <circle cx={z.x} cy={z.y} r={z.r * 0.42} fill="none" vector-effect="non-scaling-stroke"
+                      stroke="var(--sea)" stroke-width="1.2" stroke-opacity=".75" />
+            )}
+            <circle cx={z.x} cy={z.y} r="2.4" fill="var(--zone)" fill-opacity=".55" />
+          </g>
+        ))}
+
+      </svg>
+
+      {/* Τα ονόματα ΔΕΝ είναι <text> μέσα στο SVG: εκεί το μέγεθος ακολουθούσε την
+          κλίμακα του viewBox και στο κινητό έπεφτε στα ~5px. Ως HTML από πάνω,
+          τοποθετημένα σε ποσοστά, κρατούν σταθερό μέγεθος σε κάθε οθόνη. */}
+      <div class="zmap__names" aria-hidden="true">
+        {map.munis.map((m) => (
+          <span class="zmap__muni"
+                style={`left:${(m.x / MAP_W * 100).toFixed(2)}%;top:${(m.y / MAP_H * 100).toFixed(2)}%`}>
+            {/* ΟΧΙ `toUpperCase()` σε JavaScript: κρατά τον τόνο («ΚΑΣΣΆΝΔΡΑ»).
+                Στα ελληνικά κεφαλαία ο τόνος ΦΕΥΓΕΙ — και αυτό το ξέρει το CSS
+                `text-transform: uppercase` όταν η σελίδα δηλώνει lang="el". */}
+            {m.name}
+          </span>
+        ))}
+      </div>
+
+      <figcaption class="zmap__cap">
+        {t(lang, 'zmap.cap')}
+      </figcaption>
+    </figure>
+
+    {/* ΤΕΣΣΕΡΙΣ ΠΟΡΤΕΣ ΠΟΥ ΑΝΟΙΓΟΥΝ ΠΡΑΓΜΑΤΙΚΑ.
+        George, 27/7: «για τις ζώνες δεν βλέπω κάποιο value για τον πελάτη» — σωστά.
+        Οι κωδικοί «Ζ-01» ήταν γρίφος χωρίς κλειδί: απαντούσαν στη ΔΙΚΗ ΜΑΣ ανάγκη
+        (εγγραφές), όχι στη δική του (να βρει ακίνητο). Έφυγαν.
+        Μένει ό,τι είναι χρήσιμο: τέσσερις δήμοι που πατιούνται και φορτώνουν λίστα. */}
+    <ul class="mgrid">
+      {munis.map((m) => (
+        <li>
+          <a class="mcell" href={`${url}?municipality=${encodeURIComponent(m.key ?? m.name)}`}>
+            <b>{m.name}</b>
+            <span class="num">{num(m.count, lang)} {t(lang, 'search.count')}</span>
+          </a>
+        </li>
+      ))}
+      {/* 🪤 ΤΟ ΑΘΡΟΙΣΜΑ ΠΡΕΠΕΙ ΝΑ ΒΓΑΙΝΕΙ: 250+149+65+61 = 525, ενώ η σελίδα
+          γράφει παντού 527. Τα δύο που έλειπαν (Πολύγυρος, κενός δήμος) δεν
+          είχαν καμία γραμμή. Εμφανίζεται μόνο όταν όντως υπάρχει υπόλοιπο. */}
+      {rest > 0 && (
+        <li>
+          <a class="mcell" href={url}>
+            <b>{t(lang, 'zmap.rest')}</b>
+            <span class="num">{num(rest, lang)} {t(lang, 'search.count')}</span>
+          </a>
+        </li>
+      )}
+    </ul>
+
+    {/* Η προτροπή εγγραφής ΔΕΝ ζει εδώ. Ζει στη σελίδα του ακινήτου, όπου ο
+        επισκέπτης θέλει ΗΔΗ αυτό το ακίνητο και του λείπει μόνο το «πού» —
+        εκεί το κλείδωμα δημιουργεί επιθυμία, εδώ δημιουργούσε απογοήτευση.
+        Εδώ μένει μία γραμμή πολιτικής, χωρίς κουμπί. */}
+    <p class="zpolicy">
+      {t(lang, 'zmap.policy')}
+    </p>
+  </div>
+</section>
+
+<style>
+  .zmap {
+    padding: var(--s7) 0; background: var(--paper-2);
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    --zone: #2C3A42; --sea: var(--ink);   /* καμία εξαίρεση στην παλέτα — ο δακτύλιος ξεχωρίζει με πυκνότητα, όχι με χρώμα */
+  }
+  @media (prefers-color-scheme: dark) { .zmap { --zone: #8FA6B2; --sea: var(--ink); } }
+  :root[data-theme='dark'] .zmap { --zone: #8FA6B2; --sea: var(--ink); }
+
+  .zmap__sub { margin: var(--s2) 0 0; color: var(--muted); font-size: 14.5px; max-width: 62ch; }
+
+  .zmap__fig { margin: var(--s5) 0 0; position: relative; }
+  .zmap__svg { width: 100%; height: auto; display: block; }
+  .zmap__names { position: absolute; inset: 0; pointer-events: none; }
+  .zmap__muni {
+    position: absolute; transform: translate(-50%, -50%); white-space: nowrap;
+    text-transform: uppercase;
+    font-size: 9.5px; letter-spacing: .16em; color: var(--muted); font-weight: 600;
+  }
+  @media (min-width: 1080px) {
+    .mgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  @media (min-width: 760px) { .zmap__muni { font-size: 11px; letter-spacing: .18em; } }
+  .zmap__cap { margin: var(--s3) 0 0; font-size: 11.5px; color: var(--faint); max-width: 66ch; }
+
+  .mgrid {
+    list-style: none; margin: var(--s5) 0 0; padding: 0;
+    display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line);
+  }
+  .mcell {
+    background: var(--paper); padding: 16px 18px; min-height: 44px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3);
+  }
+  .mcell:hover { background: var(--paper-2); }
+  .mcell b { font-size: 19px; font-weight: 300; letter-spacing: -.012em; }
+  .mcell span { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  /* 🪤 `1fr` ΔΕΝ συρρικνώνεται κάτω από το περιεχόμενό του (min-width:auto).
+     Με τέσσερις στήλες στα 900px, το «Αριστοτέλης · 61 ακίνητα» χρειαζόταν 227px
+     σε στήλη 204px και έσπρωχνε ΟΛΗ τη σελίδα σε οριζόντιο σκρολ (915 > 900).
+     Δύο ζώνες: 2 στήλες μέχρι το 1080, 4 από κει και πάνω — με minmax ως δικλείδα. */
+
+  .zpolicy { margin: var(--s4) 0 0; font-size: 12.5px; color: var(--faint); }
+
+  @media (min-width: 760px) {
+    .zmap { padding: 74px 0; }
+    .mgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>

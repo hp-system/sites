@@ -1,0 +1,558 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// Η ΜΙΑ ΚΑΙ ΜΟΝΑΔΙΚΗ ΠΟΡΤΑ — εγγραφή ΚΑΙ σύνδεση, στην ίδια οθόνη.
+//
+// 🔑 ΚΑΝΕΝΑΣ ΟΠΤΙΚΟΣ ΔΙΑΧΩΡΙΣΜΟΣ (George 6/8): «δεν διαχωρίζουμε register από login
+//    οπτικά». Άρα ΚΑΜΙΑ λέξη «εγγραφή» ή «σύνδεση» στα κουμπιά και τους τίτλους —
+//    ο χρήστης δεν χρειάζεται να ξέρει αν τον ξέρουμε ήδη. Το σύστημα το ξέρει.
+//    ⛔ ΜΗΝ προσθέσεις καρτέλες «Εγγραφή | Σύνδεση». Είναι η ίδια πράξη.
+//
+// George, 6/8: «είναι η μοναδική διαδικασία που θα υπάρχει στη σελίδα, και θα
+// οδηγούνται οι χρήστες σε αυτό από οπουδήποτε πατήσουν register» → κείμενα ΓΕΝΙΚΑ.
+//
+// 🔄 ΞΑΝΑΓΡΑΦΤΗΚΕ 6/8 ΜΕ ΔΙΚΗ ΤΟΥ ΟΔΗΓΙΑ. Η προηγούμενη ζητούσε ονοματεπώνυμο +
+//    e-mail + κινητό στο πρώτο βήμα. Το έκοψε, και είχε δίκιο:
+//    «αν η επαφή υπάρχει, δεν πρέπει να τον ρωτάει το ονοματεπώνυμο… στην αρχή θα
+//     πρέπει να τους ζητάμε ή το ένα ή το άλλο… να μην τον ταλαιπωρούμε χωρίς λόγο.»
+//
+//   ΒΗΜΑ 0  Πώς θέλετε να συνδεθείτε;  [ Με email ] [ Με κινητό ]
+//   ΒΗΜΑ 1  ΕΝΑ πεδίο — αυτό που διάλεξε
+//   ΒΗΜΑ 2  Ο εξαψήφιος, στο ΙΔΙΟ κανάλι
+//   ΒΗΜΑ 3  ΜΟΝΟ αν λείπει κάτι: όνομα + το άλλο στοιχείο, ΜΕΤΑ την επαλήθευση
+//
+// 🪤 ΓΙΑΤΙ ΔΥΟ ΚΟΥΜΠΙΑ ΚΑΙ ΟΧΙ ΕΝΑ ΠΕΔΙΟ ΠΟΥ «ΚΑΤΑΛΑΒΑΙΝΕΙ ΜΟΝΟ ΤΟΥ»
+//    Ο κωδικός χώρας. Ένα σκέτο `6977943773` πρέπει να το μαντέψουμε ως Ελλάδα —
+//    και για τον Βούλγαρο ή τον Γερμανό αγοραστή σπάει σιωπηλά. Με την επιλογή
+//    μπροστά, ο επιλογέας χώρας εμφανίζεται ΠΡΙΝ το πληκτρολόγιο, με προεπιλογή
+//    τη γλώσσα της σελίδας. Ένα πάτημα παραπάνω, μηδέν μαντεψιά.
+//
+// 🇬🇷 ΜΟΝΟ ΚΙΝΗΤΑ (George 6/8). Για +30 απαιτείται `69` + 10 ψηφία, ελεγμένο ΠΡΙΝ
+//    φύγει αίτημα. Για τις άλλες χώρες αποφασίζει ο πάροχος — δικός μας κανόνας θα
+//    έκοβε έγκυρους αριθμούς που δεν ξέρουμε.
+//
+// 🌍 ΚΑΙ ΣΤΙΣ ΕΝΝΕΑ ΓΛΩΣΣΕΣ. Τα κείμενα ζουν πλέον στο `lib/i18n.ts` (ομάδα `auth.`),
+//    συμπληρωμένα ΚΑΙ στις εννέα ταυτόχρονα — ένα ελληνικό κλειδί χωρίς τις άλλες
+//    οκτώ θα τις έβγαζε ΟΛΕΣ από τα hreflang. Δες τον φύλακα `scripts/check-i18n.mjs`.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import { prefix, t, T, type Lang } from '../lib/i18n';
+import { company } from '../lib/company';
+
+interface Props { lang: Lang; next?: string }
+const { lang, next = '/' } = Astro.props;
+const co = await company();
+
+// 🛡️ Ο προορισμός επιστροφής δεν φεύγει ΠΟΤΕ από το site μας. Χωρίς αυτό, ένα
+//    `/login?next=https://κακό.gr` θα έστελνε τον μόλις συνδεδεμένο πελάτη — με το
+//    εισιτήριό του φρέσκο — σε ξένη σελίδα. Κλασική ανοιχτή ανακατεύθυνση.
+const safeNext = /^\/(?!\/)/.test(next) ? next : `${prefix(lang)}/`;
+
+const COUNTRIES = [
+  { c: '+30',  n: t(lang, 'auth.c.gr'), f: '🇬🇷', l: 'el' },
+  { c: '+359', n: t(lang, 'auth.c.bg'), f: '🇧🇬', l: 'bg' },
+  { c: '+381', n: t(lang, 'auth.c.rs'), f: '🇷🇸', l: 'sr' },
+  { c: '+49',  n: t(lang, 'auth.c.de'), f: '🇩🇪', l: 'de' },
+  { c: '+40',  n: t(lang, 'auth.c.ro'), f: '🇷🇴', l: 'ro' },
+  { c: '+90',  n: t(lang, 'auth.c.tr'), f: '🇹🇷', l: 'tr' },
+  { c: '+972', n: t(lang, 'auth.c.il'), f: '🇮🇱', l: 'he' },
+  { c: '+7',   n: t(lang, 'auth.c.ru'), f: '🇷🇺', l: 'ru' },
+  { c: '+44',  n: t(lang, 'auth.c.uk'), f: '',   l: '' },
+  { c: '+357', n: t(lang, 'auth.c.cy'), f: '🇨🇾', l: '' },
+];
+// Η χώρα προεπιλέγεται από τη γλώσσα της σελίδας — ο Έλληνας δεν βλέπει καν ότι
+// υπάρχει επιλογή, ο Σέρβος βρίσκει το +381 ήδη διαλεγμένο.
+const defCode = COUNTRIES.find((x) => x.l === lang)?.c ?? '+30';
+
+// 🗣️ ΤΑ ΚΕΙΜΕΝΑ ΤΟΥ `<script>` ΠΕΡΝΟΥΝ ΩΣ ΔΕΔΟΜΕΝΑ (`data-i18n`), ΟΧΙ ΩΣ ΚΩΔΙΚΑΣ.
+//    Το script τρέχει στον browser και ΔΕΝ βλέπει ούτε το frontmatter ούτε το `t()`.
+//    Εδώ ζουν τα περισσότερα μηνύματα λάθους — αυτά ακριβώς που ξεχνιούνται.
+//
+// 🪤 ΟΣΑ ΚΡΑΤΟΥΝ {where}/{hint}/{n}/{s} ΠΕΡΝΟΥΝ ΑΚΑΤΕΡΓΑΣΤΑ και γεμίζουν στον
+//    browser. Διαβάζονται από το `T` και όχι με `t()`, γιατί το `t()` φωνάζει
+//    «αγέμιστο placeholder» — σωστά για σελίδα, λάθος για πρότυπο.
+const raw = (k: string): string => T[lang]?.[k] ?? T.el[k] ?? k;
+const JS_T = {
+  cont: t(lang, 'auth.continue'),
+  sending: t(lang, 'auth.sending'),
+  checking: t(lang, 'auth.checking'),
+  verify: t(lang, 'auth.verify'),
+  sent: raw('auth.sent'),
+  sent_hint: raw('auth.sent_hint'),
+  sent2: raw('auth.sent2'),
+  sent2_hint: raw('auth.sent2_hint'),
+  ch_sms: t(lang, 'auth.ch.sms'),
+  ch_email: t(lang, 'auth.ch.email'),
+  ch_whatsapp: t(lang, 'auth.ch.whatsapp'),
+  ch_new_email: t(lang, 'auth.ch.new_email'),
+  ch_new_sms: t(lang, 'auth.ch.new_sms'),
+  in_time: raw('auth.in_time'),
+  more_s: t(lang, 'auth.more_s'),
+  why_phone: t(lang, 'auth.why_phone'),
+  e_email: t(lang, 'auth.e.email'),
+  e_phone: t(lang, 'auth.e.phone'),
+  e_gr_mobile: t(lang, 'auth.e.gr_mobile'),
+  e_code_len: t(lang, 'auth.e.code_len'),
+  e_code_bad: t(lang, 'auth.e.code_bad'),
+  e_first: t(lang, 'auth.e.first'),
+  e_last: t(lang, 'auth.e.last'),
+  e_save: t(lang, 'auth.e.save'),
+  e_resend: t(lang, 'auth.e.resend'),
+  e_generic: t(lang, 'auth.e.generic'),
+  e_signup_closed: t(lang, 'auth.e.signup_closed'),
+  e_closed: t(lang, 'auth.e.closed'),
+  e_not_mobile: t(lang, 'auth.e.not_mobile'),
+  e_too_many: raw('auth.e.too_many'),
+  // B-15: texts for the error codes of /api/auth/verify and /api/auth/complete.
+  e_need_email: t(lang, 'auth.e.need_email'),
+  e_expired: t(lang, 'auth.e.expired'),
+  e_fill: t(lang, 'auth.e.fill'),
+  e_offline: t(lang, 'sb.e.offline'),
+};
+---
+
+<Base lang={lang} title={t(lang, 'auth.meta_title')} noindex
+      description={t(lang, 'auth.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="auth">
+    <div class="box" data-next={safeNext} data-def={defCode} data-i18n={JSON.stringify(JS_T)}>
+      <p class="t-label">Halkidiki Properties</p>
+      <h1 class="t-h2 auth__h">{t(lang, 'auth.h1')}</h1>
+      <p class="say">{t(lang, 'auth.sub')}</p>
+
+      {/* ── ΒΗΜΑ 0 — η επιλογή ── */}
+      <div id="s0">
+        <p class="q">{t(lang, 'auth.how')}</p>
+        <div class="picks">
+          <button class="pick" type="button" data-m="phone">
+            <b>{t(lang, 'auth.by_phone')}</b><small>{t(lang, 'auth.by_phone_s')}</small></button>
+          <button class="pick" type="button" data-m="email">
+            <b>{t(lang, 'auth.by_email')}</b><small>{t(lang, 'auth.by_email_s')}</small></button>
+        </div>
+      </div>
+
+      {/* ── ΒΗΜΑ 1 — το ένα πεδίο ── */}
+      <form id="s1" hidden novalidate>
+        <div id="fPhone" hidden>
+          <label class="fl" for="ph">{t(lang, 'auth.phone_l')}</label>
+          <div class="row">
+            <select class="fi fi--cc" id="cc" aria-label={t(lang, 'auth.country')}>
+              {COUNTRIES.map((x) => <option value={x.c} selected={x.c === defCode}>{x.f} {x.c}</option>)}
+            </select>
+            <input class="fi" id="ph" type="tel" inputmode="tel" autocomplete="tel-national"
+                   maxlength="20" placeholder={t(lang, 'auth.phone_ph')} />
+          </div>
+        </div>
+        <div id="fEmail" hidden>
+          <label class="fl" for="em">{t(lang, 'auth.email_l')}</label>
+          <input class="fi" id="em" type="email" inputmode="email" autocomplete="email"
+                 autocapitalize="off" spellcheck="false" maxlength="120" placeholder={t(lang, 'auth.email_ph')} />
+        </div>
+        <p class="err" id="e1" role="alert" aria-live="assertive" hidden></p>
+        <button class="btn" type="submit">{t(lang, 'auth.continue')}</button>
+        <p class="fine"><button type="button" class="lnk" id="other">{t(lang, 'auth.other_way')}</button></p>
+      </form>
+
+      {/* ── ΒΗΜΑ 2 — ο κωδικός ── */}
+      <form id="s2" hidden novalidate>
+        <h2 class="h2">{t(lang, 'auth.code_h')}</h2>
+        <p class="say" id="sent"></p>
+        {/* Ένα πεδίο, όχι έξι κουτάκια: η αυτόματη συμπλήρωση του κινητού γεμίζει
+            ΜΟΝΟ ένα πεδίο με `one-time-code`. Με έξι, ο χρήστης πληκτρολογεί.
+
+            🔊 ΤΟ `placeholder` ΔΕΝ ΕΙΝΑΙ ΟΝΟΜΑ ΠΕΔΙΟΥ. Ο αναγνώστης οθόνης έλεγε σκέτο
+               «κείμενο, μηδέν μηδέν μηδέν…» — ο τυφλός χρήστης δεν μάθαινε ποτέ τι να
+               γράψει. Και το placeholder εξαφανίζεται μόλις αρχίσεις να πληκτρολογείς,
+               οπότε δεν βοηθά ούτε όποιον ξεχάστηκε. Ρητό label, πάντα. */}
+        <label class="sr-only" for="cd">{t(lang, 'auth.code_l')}</label>
+        <input class="fi fi--code" id="cd" type="text" inputmode="numeric"
+               autocomplete="one-time-code" maxlength="7" placeholder="000000"
+               aria-describedby="sent" />
+        <p class="err" id="e2" role="alert" aria-live="assertive" hidden></p>
+        <button class="btn" type="submit">{t(lang, 'auth.verify')}</button>
+        <p class="fine">
+          {t(lang, 'auth.not_arrived')} <button type="button" class="lnk" id="again">{t(lang, 'auth.resend')}</button><span id="wait"></span>
+          · <button type="button" class="lnk" id="back">{t(lang, 'auth.change')}</button>
+        </p>
+      </form>
+
+      {/* ── ΒΗΜΑ 3 — μόνο ό,τι λείπει ── */}
+      <form id="s3" hidden novalidate>
+        <h2 class="h2">{t(lang, 'auth.more_h')}</h2>
+        <p class="say" id="why">{t(lang, 'auth.more_s')}</p>
+        {/* 🗄️ ΔΥΟ ΠΕΔΙΑ, ΟΧΙ ΕΝΑ — «έτσι τα κρατάμε στο EALIDA» (George 6/8).
+            Η βάση έχει `name` + `surname` χωριστά. Με ένα πεδίο θα έπρεπε να
+            μαντέψουμε πού κόβει το επώνυμο — και στα ελληνικά διπλά ονόματα
+            («Άννα Μαρία Παπαδοπούλου») η μαντεψιά βγαίνει λάθος. */}
+        <div id="nName" hidden>
+          <div class="row">
+            <div style="flex:1;min-width:0">
+              <label class="fl" for="nm">{t(lang, 'auth.first')}</label>
+              <input class="fi" id="nm" autocomplete="given-name" maxlength="40" />
+            </div>
+            <div style="flex:1;min-width:0">
+              <label class="fl" for="sn">{t(lang, 'auth.last')}</label>
+              <input class="fi" id="sn" autocomplete="family-name" maxlength="40" />
+            </div>
+          </div>
+        </div>
+        <div id="nEmail" hidden>
+          <label class="fl" for="em2">{t(lang, 'auth.email')}</label>
+          <input class="fi" id="em2" type="email" inputmode="email" autocomplete="email"
+                 autocapitalize="off" spellcheck="false" maxlength="120" />
+        </div>
+        <div id="nPhone" hidden>
+          <label class="fl" for="ph2">{t(lang, 'auth.phone')}</label>
+          <div class="row">
+            <select class="fi fi--cc" id="cc2" aria-label={t(lang, 'auth.country')}>
+              {COUNTRIES.map((x) => <option value={x.c} selected={x.c === defCode}>{x.f} {x.c}</option>)}
+            </select>
+            <input class="fi" id="ph2" type="tel" inputmode="tel" maxlength="20" />
+          </div>
+        </div>
+        <p class="err" id="e3" role="alert" aria-live="assertive" hidden></p>
+        <button class="btn" type="submit">{t(lang, 'auth.save')}</button>
+        <p class="fine"><a href={safeNext}>{t(lang, 'auth.not_now')}</a></p>
+      </form>
+
+      {/* ── ΒΗΜΑ 3β — επαλήθευση του νέου στοιχείου ── */}
+      <form id="s4" hidden novalidate>
+        <h2 class="h2">{t(lang, 'auth.confirm_h')}</h2>
+        <p class="say" id="sent2"></p>
+        <label class="sr-only" for="cd2">{t(lang, 'auth.code_l')}</label>
+        <input class="fi fi--code" id="cd2" type="text" inputmode="numeric"
+               autocomplete="one-time-code" maxlength="7" placeholder="000000"
+               aria-describedby="sent2" />
+        <p class="err" id="e4" role="alert" aria-live="assertive" hidden></p>
+        <button class="btn" type="submit">{t(lang, 'auth.verify')}</button>
+      </form>
+
+      {/* ── ΤΕΛΟΣ ── */}
+      <div id="s5" hidden>
+        <h2 class="h2">{t(lang, 'auth.done_h')}</h2>
+        <p class="say">{t(lang, 'auth.done_s')}</p>
+        <a class="btn" href={safeNext} id="go">{t(lang, 'auth.continue')}</a>
+      </div>
+
+      {/* Το `{b}` είναι το έντονο κομμάτι κάθε γραμμής. Μπαίνει ως <b> μέσα στη
+          φράση, γιατί σε άλλες γλώσσες αλλάζει θέση μέσα στην πρόταση. */}
+      <ul class="gains">
+        <li set:html={t(lang, 'auth.gain1', { b: `<b>${t(lang, 'auth.gain1_b')}</b>` })}></li>
+        <li set:html={t(lang, 'auth.gain2', { b: `<b>${t(lang, 'auth.gain2_b')}</b>` })}></li>
+        <li set:html={t(lang, 'auth.gain3', { b: `<b>${t(lang, 'auth.gain3_b')}</b>` })}></li>
+      </ul>
+      <p class="fine">
+        {t(lang, 'auth.terms')}<br>
+        {t(lang, 'auth.help')} <a href={co.phoneHref}>{co.phone}</a>
+      </p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .auth { min-height: 70vh; display: grid; place-items: start center; padding: var(--s6) var(--gut) var(--s9); }
+  .box { width: 100%; max-width: 420px; }
+  .auth__h { margin: 10px 0 6px; }
+  .h2 { font-size: clamp(19px, 3vw, 22px); font-weight: 300; margin: 0 0 6px; line-height: 1.2; }
+  .say { color: var(--muted); font-size: 13.5px; margin: 0 0 18px; }
+  .q { font-size: 14px; color: var(--ink-2); margin: 0 0 12px; }
+
+  .picks { display: grid; gap: 9px; }
+  .pick { all: unset; cursor: pointer; box-sizing: border-box; display: block; width: 100%;
+          min-height: 66px; padding: 13px 16px; border: 1px solid var(--line); }
+  .pick:hover { border-color: var(--ink); }
+  .pick:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .pick b { display: block; font-size: 15.5px; font-weight: 600; }
+  .pick small { display: block; font-size: 12px; color: var(--faint); margin-top: 2px; }
+
+  .fl { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .18em;
+        text-transform: uppercase; color: var(--faint); margin: 0 0 6px; }
+  /* 🪤 16px ΑΚΡΙΒΩΣ. Κάτω από αυτό, το Safari του iPhone ΜΕΓΕΘΥΝΕΙ μόνο του τη
+     σελίδα μόλις ο χρήστης πατήσει το πεδίο — και δεν ξαναμικραίνει ποτέ. */
+  .fi { width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px;
+        border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+        font-size: 16px; font-family: var(--f); border-radius: var(--r); }
+  .fi:focus-visible { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(3,109,172,.16); }
+  .fi--cc { width: 122px; flex: none; padding-inline: 10px; }
+  .fi--code { font-size: 26px; letter-spacing: .34em; text-align: center; font-variant-numeric: tabular-nums; }
+  .row { display: flex; gap: 8px; }
+
+  .btn { width: 100%; margin-top: 14px; }
+  .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--ink-2); }
+  .lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .fine { font-size: 11.5px; line-height: 1.6; color: var(--faint); margin: 12px 0 0; }
+  .fine a { color: var(--ink-2); }
+  .err { margin: 12px 0 0; padding: 10px 12px; border: 1px solid #A3312B; color: #A3312B; font-size: 13px; }
+
+  .gains { list-style: none; margin: 22px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line-soft); }
+  .gains li { font-size: 13.5px; color: var(--ink-2); padding: 5px 0; }
+  [hidden] { display: none !important; }
+</style>
+
+<script>
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const box = document.querySelector('.box') as HTMLElement;
+  const steps = ['s0', 's1', 's2', 's3', 's4', 's5'].map((id) => $(id));
+  const show = (id: string) => steps.forEach((el) => (el.hidden = el.id !== id));
+  const fail = (id: string, msg: string) => { const e = $(id); e.textContent = msg; e.hidden = false; };
+  // B-15: a site error comes as `code` → translated text; a `message` is the CRM's own text.
+  const said = (r: { code?: string; message?: string }, fallback: string) =>
+    (r?.code && (L as Record<string, string>)[`e_${r.code}`]) || r?.message || fallback;
+  const clear = (id: string) => { $(id).hidden = true; };
+  const post = async (u: string, b: unknown) =>
+    (await fetch(u, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) })).json().catch(() => ({}));
+
+  // 🌍 Τα κείμενα της γλώσσας της σελίδας — δες το `JS_T` στο frontmatter.
+  const L: Record<string, string> = JSON.parse(box.dataset.i18n || '{}');
+  /** Γεμίζει τα {…}, όπως ακριβώς το `t()` στον διακομιστή. */
+  const fill = (s: string, vars: Record<string, string | number> = {}) => {
+    for (const [k, v] of Object.entries(vars)) s = s.split(`{${k}}`).join(String(v));
+    return s;
+  };
+
+  let mode: 'phone' | 'email' = 'phone';
+  let identifier = '';
+  let needs: string[] = [];
+  let busy = false;
+
+  const REMEMBER = 'hp_login_mode';
+  try {
+    const saved = localStorage.getItem(REMEMBER);
+    if (saved === 'phone' || saved === 'email') mode = saved;
+  } catch { /* ιδιωτική περιήγηση — απλώς δεν θυμόμαστε */ }
+
+  function pickMode(m: 'phone' | 'email') {
+    mode = m;
+    try { localStorage.setItem(REMEMBER, m); } catch { /* όπως πάνω */ }
+    $('fPhone').hidden = m !== 'phone';
+    $('fEmail').hidden = m !== 'email';
+    show('s1');
+    ($(m === 'phone' ? 'ph' : 'em') as HTMLInputElement).focus();
+  }
+  document.querySelectorAll<HTMLButtonElement>('.pick').forEach((b) =>
+    b.addEventListener('click', () => pickMode(b.dataset.m as 'phone' | 'email')));
+  $('other').addEventListener('click', () => show('s0'));
+
+  // ── Βήμα 1: το αναγνωριστικό ──────────────────────────────────────────
+  ($('s1') as HTMLFormElement).addEventListener('submit', async (ev) => {
+    ev.preventDefault(); clear('e1');
+    if (mode === 'email') {
+      const v = ($('em') as HTMLInputElement).value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)) return fail('e1', L.e_email);
+      identifier = v;
+    } else {
+      const cc = ($('cc') as HTMLSelectElement).value;
+      const e = toE164(cc, ($('ph') as HTMLInputElement).value);
+      // 🇬🇷 Ο έλεγχος γίνεται ΠΡΙΝ φύγει SMS: κάθε λάθος μήνυμα είναι και χρήμα
+      //    και ένας πελάτης που περιμένει κάτι που δεν θα έρθει ποτέ.
+      //    Ελέγχεται το ΤΕΛΙΚΟ νούμερο — όχι ό,τι πληκτρολογήθηκε — ώστε να πιάνει
+      //    και όποιον επικόλλησε «+30 697…» ενώ ο επιλογέας έλεγε άλλη χώρα.
+      if (e.startsWith('+30') && !/^69\d{8}$/.test(natOf(e, '+30')))
+        return fail('e1', L.e_gr_mobile);
+      if (e.replace(/\D/g, '').length < 8) return fail('e1', L.e_phone);
+      identifier = e;
+    }
+    await send();
+  });
+
+  /**
+   * 📞 ΕΝΑΣ ΚΑΝΟΝΑΣ ΓΙΑ ΤΟΝ ΑΡΙΘΜΟ — και για τα δύο σημεία που ζητούν κινητό.
+   *
+   * 🪤 ΤΟ ΠΡΑΓΜΑΤΙΚΟ ΣΦΑΛΜΑ ΗΤΑΝ Η ΕΠΙΚΟΛΛΗΣΗ. Ο κόσμος **δεν** πληκτρολογεί τα
+   *    ψηφία· αντιγράφει τον αριθμό του από κάπου, μαζί με τον κωδικό χώρας. Με το
+   *    παλιό `cc + digits`, ένας Βούλγαρος που επικολλούσε «+359888123456» με τον
+   *    επιλογέα στο +359 έστελνε **+359359888123456** — και έπαιρνε «δεν βρέθηκε».
+   *    8.481 από τα 9.830 μέλη μας είναι ξένα, άρα αυτό ΔΕΝ είναι ακραία περίπτωση.
+   *
+   * Ο κανόνας: αν ο χρήστης έγραψε διεθνή μορφή (`+` ή `00`), **αυτή μετράει** και ο
+   * επιλογέας αγνοείται — ξέρει τον αριθμό του καλύτερα από εμάς. Αλλιώς κόβουμε το
+   * εθνικό μηδέν και βάζουμε τον επιλεγμένο κωδικό.
+   */
+  function toE164(ccSel: string, raw: string): string {
+    const s = String(raw).trim();
+    const digits = s.replace(/\D/g, '');
+    if (!digits) return '';
+    // Ο χρήστης έδωσε ολόκληρο διεθνή αριθμό — τον σεβόμαστε αυτούσιο.
+    if (/^\+/.test(s)) return '+' + digits;
+    if (/^00/.test(s)) return '+' + digits.replace(/^00/, '');
+    const cc = ccSel.replace(/\D/g, '');
+    let nat = digits.replace(/^0+/, '');            // εθνικό πρόθεμα κλήσης
+    // Επικόλληση χωρίς «+»: «306977943773» με επιλογέα +30 → μη διπλασιάσεις.
+    // Το μήκος φρουρεί: κόβουμε μόνο αν αυτό που μένει είναι πιστευτός αριθμός.
+    if (cc && nat.startsWith(cc) && nat.length - cc.length >= 7) nat = nat.slice(cc.length);
+    return ccSel + nat;
+  }
+
+  /** Το εθνικό μέρος ενός E.164 για δεδομένο κωδικό χώρας — '' αν είναι άλλης χώρας. */
+  function natOf(e: string, cc: string): string {
+    return e.startsWith(cc) ? e.slice(cc.length) : '';
+  }
+
+  async function send() {
+    if (busy) return; busy = true;
+    const btn = ($('s1') as HTMLFormElement).querySelector('button[type=submit]') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = L.sending;
+    const r = await post('/api/auth/request', { identifier });
+    busy = false; btn.disabled = false; btn.textContent = L.cont;
+
+    if (!r.ok) {
+      const m: Record<string, string> = {
+        signup_closed: L.e_signup_closed,
+        closed: L.e_closed,
+        bad_email: L.e_email,
+        bad_phone: L.e_phone,
+        not_mobile: L.e_not_mobile,
+        too_many: fill(L.e_too_many, { n: r.retryAfterSec ?? 60 }),
+      };
+      return fail('e1', m[r.reason] ?? L.e_generic);
+    }
+    // Λέμε ΠΟΥ στάλθηκε — αλλιώς ο χρήστης ψάχνει σε λάθος εφαρμογή.
+    const where = r.channel === 'whatsapp' ? L.ch_whatsapp : r.channel === 'email' ? L.ch_email : L.ch_sms;
+    $('sent').textContent = r.hint
+      ? fill(L.sent_hint, { where, hint: r.hint })
+      : fill(L.sent, { where });
+    show('s2'); ($('cd') as HTMLInputElement).focus(); countdown(); grabOtp();
+  }
+
+  // ── Βήμα 2: ο κωδικός ─────────────────────────────────────────────────
+  ($('s2') as HTMLFormElement).addEventListener('submit', async (ev) => {
+    ev.preventDefault(); clear('e2');
+    const code = ($('cd') as HTMLInputElement).value.replace(/\D/g, '');
+    if (code.length !== 6) return fail('e2', L.e_code_len);
+    if (busy) return; busy = true;
+    const btn = ($('s2') as HTMLFormElement).querySelector('button[type=submit]') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = L.checking;
+    const r = await post('/api/auth/verify', { identifier, code });
+    busy = false; btn.disabled = false; btn.textContent = L.verify;
+
+    if (!r.ok) {
+      // Πολλοί λογαριασμοί στο ίδιο κινητό — μένει ως εφεδρεία μέχρι το merge.
+      if (r.needEmail) { pickMode('email'); return fail('e1', said(r, L.e_need_email)); }
+      return fail('e2', said(r, L.e_code_bad));
+    }
+    needs = Array.isArray(r.needs) ? r.needs : [];
+    if (needs.length) return askMissing();
+    finish();
+  });
+
+  // ── Βήμα 3: ό,τι λείπει ───────────────────────────────────────────────
+  function askMissing() {
+    $('nName').hidden = !needs.includes('name');
+    $('nEmail').hidden = !needs.includes('email');
+    $('nPhone').hidden = !needs.includes('phone');
+    $('why').textContent = needs.includes('phone') ? L.why_phone : L.more_s;
+    show('s3');
+  }
+
+  ($('s3') as HTMLFormElement).addEventListener('submit', async (ev) => {
+    ev.preventDefault(); clear('e3');
+    const body: Record<string, string> = { step: 'send' };
+    if (needs.includes('name')) {
+      const n = ($('nm') as HTMLInputElement).value.trim();
+      const sn = ($('sn') as HTMLInputElement).value.trim();
+      if (n.length < 2) return fail('e3', L.e_first);
+      if (sn.length < 2) return fail('e3', L.e_last);
+      body.name = n; body.surname = sn;
+    }
+    if (needs.includes('email')) {
+      const v = ($('em2') as HTMLInputElement).value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)) return fail('e3', L.e_email);
+      body.email = v;
+    }
+    if (needs.includes('phone')) {
+      const cc = ($('cc2') as HTMLSelectElement).value;
+      const e = toE164(cc, ($('ph2') as HTMLInputElement).value);
+      if (e.startsWith('+30') && !/^69\d{8}$/.test(natOf(e, '+30')))
+        return fail('e3', L.e_gr_mobile);
+      if (e.replace(/\D/g, '').length < 8) return fail('e3', L.e_phone);
+      body.phone = e;
+    }
+    if (busy) return; busy = true;
+    const r = await post('/api/auth/complete', body);
+    busy = false;
+    if (!r.ok) return fail('e3', said(r, L.e_save));
+    // Αν το νέο στοιχείο θέλει επαλήθευση, μας το λέει με `pending`.
+    if (r.pending) {
+      const where = r.channel === 'email' ? L.ch_new_email : L.ch_new_sms;
+      $('sent2').textContent = r.hint
+        ? fill(L.sent2_hint, { where, hint: r.hint })
+        : fill(L.sent2, { where });
+      return show('s4');
+    }
+    needs = Array.isArray(r.needs) ? r.needs : [];
+    if (needs.length) return askMissing();
+    finish();
+  });
+
+  ($('s4') as HTMLFormElement).addEventListener('submit', async (ev) => {
+    ev.preventDefault(); clear('e4');
+    const code = ($('cd2') as HTMLInputElement).value.replace(/\D/g, '');
+    if (code.length !== 6) return fail('e4', L.e_code_len);
+    if (busy) return; busy = true;
+    const r = await post('/api/auth/complete', { step: 'verify', code });
+    busy = false;
+    if (!r.ok) return fail('e4', said(r, L.e_code_bad));
+    needs = Array.isArray(r.needs) ? r.needs : [];
+    ($('cd2') as HTMLInputElement).value = '';
+    if (needs.length) return askMissing();
+    finish();
+  });
+
+  function finish() {
+    show('s5');
+    setTimeout(() => { location.href = ($('go') as HTMLAnchorElement).href; }, 1100);
+  }
+
+  // ── Ο ΚΩΔΙΚΟΣ ΠΑΝΩ ΑΠΟ ΤΟ ΠΛΗΚΤΡΟΛΟΓΙΟ ────────────────────────────────
+  // George 6/8: «όποιον δρόμο και να διαλέξω, θέλω να εμφανίζεται ο κωδικός στο
+  // κάτω μέρος του τηλεφώνου για να τον επιλέγω αμέσως με ένα κλικ».
+  //
+  // Δύο μηχανισμοί, και οι δύο χρειάζονται `autocomplete="one-time-code"`:
+  //  · iPhone → το λειτουργικό διαβάζει μόνο του το SMS (και το e-mail, iOS 15+)
+  //    και προτείνει τον κωδικό στη μπάρα πάνω από το πληκτρολόγιο. ΕΝΑ πάτημα.
+  //  · Android Chrome → WebOTP: ο κωδικός μπαίνει **μόνος του**, χωρίς κανένα πάτημα.
+  //
+  // ⚠️ ΚΑΙ ΤΑ ΔΥΟ ΘΕΛΟΥΝ ΤΟ ΜΗΝΥΜΑ ΝΑ ΤΕΛΕΙΩΝΕΙ ΜΕ `@τομέας #κωδικός`.
+  //    Χωρίς αυτή τη γραμμή, το iPhone «μαντεύει» (συχνά πετυχαίνει) και το Android
+  //    **δεν δουλεύει καθόλου**. Είναι στο κείμενο του SMS, δηλαδή δική τους δουλειά.
+  function grabOtp() {
+    if (!('OTPCredential' in window)) return;          // μόνο Android Chrome σήμερα
+    otpAbort?.abort();
+    otpAbort = new AbortController();
+    navigator.credentials
+      .get({ otp: { transport: ['sms'] }, signal: otpAbort.signal } as CredentialRequestOptions)
+      .then((c: any) => {
+        if (!c?.code) return;
+        const f = $('cd') as HTMLInputElement;
+        f.value = c.code;
+        // Υποβάλλεται μόνο του: αν τον έχει ήδη διαβάσει το λειτουργικό, το
+        // «πάτησε τώρα Επιβεβαίωση» είναι περιττό βήμα.
+        ($('s2') as HTMLFormElement).requestSubmit();
+      })
+      .catch(() => { /* ο χρήστης το ακύρωσε ή έληξε — γράφει με το χέρι */ });
+  }
+  let otpAbort: AbortController | undefined;
+
+  // ── Ξαναστείλτε, με αντίστροφη μέτρηση ────────────────────────────────
+  let timer: number | undefined;
+  function countdown(sec = 45) {
+    const again = $('again') as HTMLButtonElement, wait = $('wait');
+    again.disabled = true;
+    const tick = () => {
+      wait.textContent = sec > 0 ? fill(L.in_time, { s: String(sec).padStart(2, '0') }) : '';
+      if (sec-- <= 0) { clearInterval(timer); again.disabled = false; }
+    };
+    tick(); clearInterval(timer); timer = window.setInterval(tick, 1000);
+  }
+  $('again').addEventListener('click', async () => {
+    clear('e2');
+    const r = await post('/api/auth/request', { identifier });
+    if (!r.ok) return fail('e2', L.e_resend);
+    countdown();
+  });
+  $('back').addEventListener('click', () => { clearInterval(timer); otpAbort?.abort(); show('s1'); });
+
+  // Αν έχει ξαναμπεί, ανοίγει κατευθείαν με τον τρόπο που είχε διαλέξει.
+  if (box.dataset.remember !== 'no') { /* η επιλογή γίνεται από τον χρήστη· δες `pickMode` */ }
+</script>

@@ -1,0 +1,135 @@
+---
+// ΜΠΛΟΚ 8 — «Πόσο αξίζει το ακίνητό σας;»
+//
+// Η προτροπή για ιδιοκτήτες που ζήτησε ο George. Ένα banner «πούλησε μαζί μας»
+// δεν φέρνει τίποτα — το έχουν όλοι. Εμείς έχουμε κάτι που κανείς στη Χαλκιδική
+// δεν έχει: 493 ακίνητα με τιμή ΚΑΙ τετραγωνικά, δηλαδή πραγματικούς δείκτες.
+//
+// Το εύρος βγαίνει ΑΜΕΣΩΣ, χωρίς email. Το email ζητείται μόνο για την πλήρη
+// αναφορά με τα συγκρίσιμα. Κάθε υποβολή = ιδιοκτήτης που σκέφτεται να πουλήσει.
+import Select from './Select.astro';
+import { t, prefix, type Lang } from '../lib/i18n';
+import { money, num, seaLabel, SEA_KEYS } from '../lib/format';
+
+export type Benchmark = { area: string; median: number; n: number };
+interface Props {
+  lang: Lang;
+  comparables: number;         // πόσα ακίνητα στηρίζουν την εκτίμηση
+  benchmarks: Benchmark[];     // διάμεσος €/τ.μ. ανά περιοχή
+  seafrontPremium: number;     // πόσο ακριβότερη η πρώτη γραμμή, σε %
+}
+const { lang, comparables, benchmarks, seafrontPremium } = Astro.props;
+
+// 🔴 Η ΠΡΟΕΠΙΛΟΓΗ ΔΕΝ ΕΙΝΑΙ ΠΙΑ Η #1 ΣΕ ΑΠΟΘΕΜΑ (διόρθωση 29/7).
+//
+// Ήταν `benchmarks[0]`, και το `benchmarks` έρχεται ταξινομημένο **κατά πλήθος
+// φθίνουσα**. Δηλαδή το ΜΟΝΟ όνομα που φαίνεται πραγματικά στη σελίδα ήταν η
+// περιοχή με το μεγαλύτερο απόθεμά μας. Αυτό αντιφάσκει με τον ίδιο τον λόγο
+// που βγήκαν τα πλήθη από εδώ (απόφαση George 27/7: «θα αποκάλυπτε πού έχουμε
+// απόθεμα») — βγάλαμε τον αριθμό και αφήσαμε την κορυφή της κατάταξης.
+//
+// Τώρα: **αλφαβητικά πρώτη**. Το αποτέλεσμα παραμένει αληθινό από την πρώτη
+// στιγμή (κάθε περιοχή της λίστας έχει αρκετά συγκρίσιμα), αλλά η σειρά δεν
+// λέει τίποτα για το πού έχουμε βάθος.
+// ⚠️ ΜΗΝ το γυρίσεις σε `benchmarks[0]` για «καλύτερο δείγμα».
+const b = [...benchmarks].sort((x, y) => x.area.localeCompare(y.area, lang))[0];
+const SQM = 180;
+
+// Οι λίστες περνούν από το ΔΙΚΟ μας Select (σωστή γραμματοσειρά, χωρίς το μπλε
+// του λειτουργικού) και τα ονόματα της θάλασσας από το ένα λεξιλόγιο (format.ts).
+//
+// ΑΛΦΑΒΗΤΙΚΑ (George, 28/7). Ταξινομημένες κατά πλήθος, η λίστα διάβαζε
+// «πού έχουμε τα περισσότερα» — δηλαδή πληροφορία δική ΜΑΣ, σε λίστα που ο
+// ιδιοκτήτης τη σαρώνει ψάχνοντας ΤΗ ΔΙΚΗ ΤΟΥ περιοχή.
+// 🪤 `localeCompare` με τη γλώσσα της σελίδας: στα ελληνικά το «Άφυτος» πρέπει
+//    να πάει πριν το «Βουρβουρού», που η προεπιλεγμένη ταξινόμηση δεν το κάνει.
+const AREAS = [...benchmarks]
+  .sort((x, y) => x.area.localeCompare(y.area, lang))
+  .map((x) => ({ v: x.area, label: x.area }));
+
+// ΥΠΟΕΙΔΗ, όχι «κατοικία/γη» (George: «εδώ μπορείς να βάλεις τα subtypes, όχι το
+// ακριβώς residency land»). Τα ίδια κλειδιά με τα φίλτρα — ένα λεξιλόγιο.
+const TYPES = [
+  { v: 'detached house', label: t(lang, 'kinds.villas') },
+  { v: 'maisonette',     label: t(lang, 'kinds.maisonettes') },
+  { v: 'apartment',      label: t(lang, 'kinds.apartments') },
+  { v: 'field',          label: t(lang, 'kinds.land') },
+  { v: 'hotel',          label: t(lang, 'kinds.hotels') },
+];
+const SEA = SEA_KEYS.map((k) => ({ v: k, label: seaLabel(k, lang) }));
+const lo = Math.round((b.median * SQM * 0.82) / 10000) * 10000;
+const hi = Math.round((b.median * SQM * 1.1) / 10000) * 10000;
+---
+<section class="section section--tint" aria-labelledby="val-h">
+  <div class="wrap">
+    <div class="shead">
+      <div>
+        <h2 id="val-h" class="t-h2">{t(lang, 'val.h2')}</h2>
+        <p>{t(lang, 'val.sub', { n: num(comparables, lang) })}</p>
+      </div>
+    </div>
+
+    <form class="valu" action={`${prefix(lang)}/valuation`} method="get" data-ev="seller:valuation_report">
+      <div class="valu__row">
+        <div class="vf"><Select name="area" label={t(lang, 'val.area')} options={AREAS} value={b.area} /></div>
+        <div class="vf"><Select name="type" label={t(lang, 'val.type')} options={TYPES} /></div>
+        <label class="vf">
+          <span class="vf__l">{t(lang, 'val.sqm')}</span>
+          <input class="vf__v" type="number" name="sqm" value={SQM} min="20" max="5000" inputmode="numeric" />
+        </label>
+        <div class="vf"><Select name="sea" label={t(lang, 'val.sea')} options={SEA} /></div>
+      </div>
+
+      {/* Το αποτέλεσμα αριστερά, η ενέργεια δεξιά, στην ΙΔΙΑ ζώνη (George, 28/7):
+          «το estimated range θα πρέπει να το δίνει έτσι όπως το δίνει αριστερά,
+          και το send me the full report πήγαινέ το δεξιά, ώστε να μικρύνει το
+          ύψος πάλι αυτού του container και να είναι πιο οργανωμένο». */}
+      <output class="valu__out">
+        <div class="valu__res">
+          <p class="t-label">{t(lang, 'val.result')}</p>
+          <p class="valu__range">{money(lo, lang)} – {money(hi, lang)}</p>
+          <p class="valu__note">
+            {/* ⚠️ ΧΩΡΙΣ πλήθος ακινήτων ανά περιοχή (απόφαση George 27/7):
+                θα αποκάλυπτε πού έχουμε απόθεμα. */}
+            {t(lang, 'val.median_area')} <b class="num">{num(b.median, lang)} €/{t(lang, 'val.sqm_unit')}</b>
+            · {t(lang, 'val.premium_txt')}
+            <b class="num">+{seafrontPremium}%</b>
+          </p>
+        </div>
+        <button class="btn valu__go" type="submit">{t(lang, 'val.cta')}</button>
+      </output>
+    </form>
+  </div>
+</section>
+
+<style>
+  .valu { border: 1px solid var(--line); padding: var(--s5); background: var(--paper); }
+  .valu__row { display: grid; gap: var(--s3); margin-bottom: var(--s5); }
+  .vf { border: 1px solid var(--line); padding: 10px 12px; display: block; }
+  .vf__l { display: block; font-size: 9.5px; font-weight: 600; letter-spacing: .18em;
+           text-transform: uppercase; color: var(--faint); }
+  /* 🍏 16px ΑΚΡΙΒΩΣ, ΟΧΙ 15. Κάτω από 16 το Safari του iPhone κάνει ΑΥΤΟΜΑΤΟ ΖΟΥΜ
+     μόλις ακουμπήσεις το πεδίο — και **δεν ξαναμικραίνει** μόνο του. Ο χρήστης μένει
+     με τη σελίδα μεγεθυμένη και σκρολάρει πλάγια για να δει το κουμπί. Ένα εικονοστοιχείο
+     διαφορά, ολόκληρη η φόρμα χαλασμένη. Το ίδιο ισχύει σε ΚΑΘΕ input/select/textarea. */
+  .vf__v { display: block; width: 100%; margin-top: 3px; padding: 0; font: inherit; font-size: 16px;
+           color: var(--ink); background: transparent; border: 0; appearance: none; min-height: 24px; }
+  .valu__out { display: block; border-top: 1px solid var(--line); padding-top: var(--s4); }
+  .valu__range {
+    margin: var(--s2) 0 0; font-size: clamp(23px, 6vw, 31px); font-weight: 300;
+    letter-spacing: -.016em; font-variant-numeric: lining-nums tabular-nums;
+  }
+  .valu__note { margin: var(--s2) 0 var(--s4); font-size: 12.5px; color: var(--muted); max-width: 62ch; }
+  .valu__note b { color: var(--ink-2); font-weight: 600; }
+  @media (min-width: 760px) {
+    .valu__row { grid-template-columns: repeat(4, 1fr); }
+    /* Αποτέλεσμα ‖ ενέργεια — μία ζώνη αντί για δύο στοιβαγμένες.
+       Το κουμπί στοιχίζεται στη ΒΑΣΗ, δηλαδή στη γραμμή της τιμής. */
+    .valu__out {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end; gap: var(--s5);
+    }
+    .valu__note { margin-bottom: 0; }
+    .valu__go { justify-self: end; white-space: nowrap; }
+  }
+</style>

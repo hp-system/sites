@@ -1,0 +1,8 @@
+---
+// Η ελληνική αρχική. Δεν παίρνει prefix — είναι η προεπιλογή.
+// Όλο το περιεχόμενο ζει στο components/HomePage.astro, ώστε ΜΙΑ σελίδα να
+// σερβίρεται σε έξι γλώσσες χωρίς αντίγραφα.
+import HomePage from '../components/HomePage.astro';
+import { DEFAULT_LANG } from '../lib/i18n';
+---
+<HomePage lang={DEFAULT_LANG} />

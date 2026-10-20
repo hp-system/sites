@@ -1,0 +1,279 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// Η ΑΡΧΙΚΗ — έντεκα μπλοκ, με τη σειρά των εγκεκριμένων κανόνων.
+// Κάθε μπλοκ κάνει μία δουλειά. Το αρχείο μένει λεπτό: η λογική είναι στο lib.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Hero from './Hero.astro';
+import SearchBar from './SearchBar.astro';
+import FilterSheet from './FilterSheet.astro';
+import FeaturedGrid from './FeaturedGrid.astro';
+import FeatureProperty from './FeatureProperty.astro';
+import OffMarket from './OffMarket.astro';
+import Collections from './Collections.astro';
+import Construction from './Construction.astro';
+import Valuation from './Valuation.astro';
+import Doors from './Doors.astro';
+import Abroad from './Abroad.astro';
+import Footer from './Footer.astro';
+
+import { allProperties, refOf, priceOf, priceVisible } from '../lib/api';
+import { buildHome } from '../lib/home';
+import { coverOf, marked, clean, heroReady, shareImage, SHARE_W, SHARE_H, type Photo } from '../lib/photos';
+import { hasPool } from '../lib/listing';
+import { t, listUrl, DEFAULT_LANG, type Lang } from '../lib/i18n';
+import { num } from '../lib/format';
+import { viewerOf, municipalityOf } from '../lib/gate';
+import { company } from '../lib/company';
+import { cmsText, cmsImage } from '../lib/content';
+
+interface Props { lang?: Lang }
+const lang: Lang = Astro.props.lang ?? DEFAULT_LANG;
+// Ο κανόνας ορατότητας περνά από ΕΔΩ σε όλα τα components — δες lib/gate.ts:
+// ο δήμος είναι δημόσιος, η ΠΕΡΙΟΧΗ μόνο σε μέλη.
+const viewer = await viewerOf(Astro.cookies);
+
+// 🔐 ΤΟ TOKEN ΤΟΥ ΜΕΛΟΥΣ ΠΕΡΝΑΕΙ ΣΤΟ API (29/7). Ως τότε δεν περνούσε ποτέ:
+//    το `viewer.member` άλλαζε μόνο ΤΙ ΕΜΦΑΝΙΖΑΜΕ, ενώ τα ΔΕΔΟΜΕΝΑ ήταν πάντα
+//    το ανώνυμο σύνολο — η ιδιωτική συλλογή δεν ξεκλείδωνε ποτέ, ούτε για μέλος.
+//    Η μνήμη είναι πλέον ανά θεατή· δες το σχόλιο στο lib/api.ts.
+const memberToken = Astro.cookies.get('member_token')?.value;
+
+let items: Awaited<ReturnType<typeof allProperties>> = [];
+let apiDown = false;
+try {
+  items = await allProperties(memberToken);
+} catch (e) {
+  // Το site δεν πέφτει επειδή έπεσε το API — δείχνει σκελετό και το λέει στα logs.
+  apiDown = true;
+  console.error('[αρχική] το EALIDA API δεν απάντησε:', (e as Error).message);
+}
+
+const d = buildHome(items, lang);
+
+// 🖼️ Η ΕΙΚΟΝΑ ΤΗΣ ΠΡΩΤΗΣ ΟΘΟΝΗΣ — ΤΟ CMS ΥΠΕΡΙΣΧΥΕΙ **ΜΟΝΟ ΟΤΑΝ ΕΧΕΙ ΤΙΜΗ**.
+//    Η σημερινή δεν είναι σκληροκωδικοποίηση, είναι ΑΠΟΦΑΣΗ: ο George τη διάλεξε
+//    27/7 μέσα από 8.405 φωτογραφίες με 11 κριτές, και το σημείο εστίασης
+//    ρυθμίστηκε για το κόψιμο στα 390px. Ένα κατά λάθος ανέβασμα στο CMS δεν
+//    επιτρέπεται να τη σβήσει — γι' αυτό η υπερίσχυση είναι μονόδρομη.
+//    ⚠️ Σήμερα το `media` γυρίζει `{}` (καμία εικόνα ανεβασμένη), άρα αδρανές.
+const cmsHero = await cmsImage('hero.main');
+if (cmsHero) {
+  d.heroPhoto = { url: cmsHero.url, tag: 'hero',
+                  alt: (d.heroPhoto as any)?.alt ?? {}, focal: cmsHero.focal } as any;
+}
+// Ακίνητα με σημαία «εκτός δημοσίευσης». Μετρήθηκε στη βάση: 81 συνολικά,
+// τα 2 είναι δημόσια → 79 πραγματικά εκτός. Στη Φ2 έρχεται από το API.
+// ⚠️ Ο αριθμός ΔΕΝ εμφανίζεται πουθενά πια — κρίνει μόνο αν το μπλοκ υπάρχει.
+// B-18: the CMS can override it (key `offmarket.count`, a number); 79 stays the fallback.
+const offRaw = await cmsText(lang, 'offmarket.count');
+const OFF_MARKET = offRaw !== null && /^\d+$/.test(offRaw) ? Number(offRaw) : 79;
+// B-13 / D-157: the valuation form is off until its real page exists (M3).
+const SHOW_VALUATION = false;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+// Η ετικέτα του μεγάλου ακινήτου ΕΡΧΕΤΑΙ ΠΛΕΟΝ ΟΝΤΩΣ ΑΠΟ ΤΟ CMS (5/8).
+// George: «δεν ξέρω αν θέλω να είναι της εβδομάδας — μπορεί του μήνα, ή να μη λέει
+// τίποτα και να διαφημίζουμε ό,τι θέλουμε». Ακριβώς γι' αυτό δεν είναι σταθερά:
+//   · γράφει κάτι στο CMS  → αυτό βγαίνει
+//   · αφήνει το πεδίο κενό → ΚΑΝΕΝΑ λεκτικό, σκέτο το ακίνητο
+// 🪤 ΔΕΝ πέφτει πίσω στο λεξικό. Το `t(lang,'week.eyebrow')` λέει «Το ακίνητο της
+//    εβδομάδας» — αν το βάζαμε ως εφεδρεία, το άδειασμα του πεδίου δεν θα έσβηνε
+//    ποτέ την ετικέτα και ο George δεν θα είχε τρόπο να την κλείσει.
+const FEATURE_LABEL: string | null = await cmsText(lang, 'week.eyebrow');
+
+// ── Οι τέσσερις συλλογές — έτοιμες αναζητήσεις για τα πιο συχνά αιτήματα ──
+const url = listUrl(lang);
+// Το πλακίδιο συλλογής παίρνει φωτό από ακίνητο που ΠΕΡΝΑΕΙ τη δικλείδα
+// «έτοιμο για μεγάλη θέση» — αλλιώς έβγαινε χωματόδρομος για την «πρώτη γραμμή».
+// Προτιμάται το ακριβότερο: το πλακίδιο είναι βιτρίνα, όχι δείγμα.
+// …και ΠΟΤΕ το ίδιο ακίνητο σε δύο πλακίδια: το 7010 είναι και πρώτη γραμμή
+// και με πισίνα, οπότε χωρίς φύλαξη έβγαινε η ίδια φωτογραφία δύο φορές.
+//
+// 🔴 29/7 — ΤΟ ΦΡΑΓΜΑ ΕΠΕΚΤΑΘΗΚΕ ΣΕ ΟΛΗ ΤΗ ΣΕΛΙΔΑ. Μετρήθηκε ότι η ΙΔΙΑ
+//    φωτογραφία (pool-2974737149) κατέβαινε ΔΥΟ ΦΟΡΕΣ: καθαρή `_800.jpg` για
+//    το πλακίδιο συλλογής και υδατογραφημένη `_800w.jpg` για την κάρτα του
+//    ίδιου ακινήτου. 95 + 99 KB — αλλά το βάρος είναι το μικρό κακό: ο
+//    επισκέπτης έβλεπε **την ίδια εικόνα δύο φορές στην ίδια σελίδα**.
+//    Το παλιό `usedTiles` έπιανε μόνο τη σύγκρουση ΜΕΤΑΞΥ πλακιδίων.
+const usedTiles = new Set<string>([
+  ...d.featured.map((p) => p.id),          // οι έξι κάρτες
+  ...(d.week ? [d.week.id] : []),           // το μεγάλο ακίνητο
+]);
+const pickPhoto = (f: (a: any) => boolean) => {
+  const hit = items
+    .filter((p) => !usedTiles.has(p.id) && f(p.attributes ?? {})
+                   && heroReady(p.attributes) && priceVisible(p.attributes))
+    .sort((a, b) => priceOf(b.attributes) - priceOf(a.attributes))[0]
+    ?? items.find((p) => !usedTiles.has(p.id) && f(p.attributes ?? {}));
+  if (hit) usedTiles.add(hit.id);
+  return hit ? coverOf(hit.attributes) : null;
+};
+const collections = [
+  { key: 'sea',  title: t(lang, 'coll.sea'),  sub: `${num(d.seafront, lang)} ${t(lang, 'geo.count')}`,
+    href: `${url}?sea_access=front`, photo: pickPhoto((a) => a.sea_access === 'front') },
+  // 🪤 ΤΟ ΠΛΑΚΙΔΙΟ ΕΛΕΓΕ **308** ΕΝΩ Η ΑΛΗΘΕΙΑ ΕΙΝΑΙ **103** (διορθώθηκε 30/7).
+  //    Το `pools` δεν είναι σημαία ναι/όχι — είναι πολλαπλή επιλογή με κωδικούς,
+  //    και ο κωδικός «2» σημαίνει **ΧΩΡΙΣ ΠΙΣΙΝΑ**: τον έχουν 203 ακίνητα.
+  //    Ο έλεγχος `pools.length > 0` τα μετρούσε όλα ως «με πισίνα».
+  //    Το `hasPool()` κοιτάζει ΤΙΜΕΣ (3/4/5/6) — δες lib/listing.ts.
+  { key: 'pool', title: t(lang, 'coll.pool'), sub: `${num(items.filter((p) => hasPool(p.attributes ?? {})).length, lang)} ${t(lang, 'geo.count')}`,
+    href: `${url}?pool=1`, photo: pickPhoto((a) => hasPool(a)) },
+  { key: 'land', title: t(lang, 'coll.land'), sub: `${num(items.filter((p) => p.attributes?.category === 'land').length, lang)} ${t(lang, 'geo.count')}`,
+    href: `${url}?category=land`, photo: pickPhoto((a) => a.category === 'land') },
+  // 🪤 ΕΔΩ ΗΤΑΝ «Σπάνια & μοναδικά» με σύνδεσμο `?rare=1` — φίλτρο που ΔΕΝ ΥΠΑΡΧΕΙ.
+  //    Η μόνη συλλογή χωρίς μετρήσιμο κριτήριο, δηλαδή η μόνη που δεν μπορούσε
+  //    να δουλέψει. Αντικαταστάθηκε από κάτι που ΚΑΙ μετριέται ΚΑΙ ζητείται:
+  //    τα ακίνητα άνω του εκατομμυρίου έχουν 4,23 αιτήματα ανά ακίνητο (μετρήθηκε
+  //    στα 4.973 αιτήματα) και το απόθεμα είναι 176 — αρκετό για να μη μοιάζει άδειο.
+  { key: 'top', title: t(lang, 'coll.top'), sub: `${num(d.overMillion, lang)} ${t(lang, 'geo.count')}`,
+    href: `${url}?price_min=1000000`, photo: pickPhoto((a) => priceOf(a) >= 1_000_000) },
+];
+
+// ── Structured data — σήμερα το site έχει ΜΟΝΟ microdata ImageObject ──────
+// 🛡️ Η εικόνα κοινοποίησης ΔΕΝ χτίζεται εδώ. Το `shareImage()` κρίνει μόνο του
+//    «τοπίο ή ακίνητο» και διαλέγει καθαρή ή υδατογραφημένη — δες lib/photos.ts.
+//    Ως τις 29/7 εδώ καθόταν σκέτο `clean()`: αν άδειαζε ο πίνακας τοπίων, κάθε
+//    κοινοποίηση σε WhatsApp/Viber μοίραζε το καθαρό πρωτότυπο ενός ακινήτου.
+const co = await company();
+const ogPhoto = shareImage(d.heroPhoto as Photo | null);
+const jsonLd = [
+  {
+    '@context': 'https://schema.org', '@type': 'RealEstateAgent',
+    '@id': `${site}#org`, name: co.legalName, url: site,
+    // 🔴 ΑΥΤΑ ΤΑ ΔΙΑΒΑΖΕΙ Η GOOGLE. Κενή τιμή εδώ δεν «δείχνει άσχημα» — βγάζει
+    //    το τηλέφωνο από το προφίλ της επιχείρησης. Γι' αυτό κάθε πεδίο περνά
+    //    από το `company()`, που κρατά τη σημερινή τιμή όταν το CMS είναι κενό.
+    telephone: co.phoneE164, email: co.email,
+    areaServed: { '@type': 'AdministrativeArea', name: 'Halkidiki, Greece' },
+    address: { '@type': 'PostalAddress', streetAddress: co.street, addressLocality: co.city,
+               addressRegion: co.region, postalCode: co.postalCode, addressCountry: 'GR' },
+    foundingDate: String(co.foundedYear),
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'WebSite', url: site,
+    inLanguage: lang, publisher: { '@id': `${site}#org` },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${site}${url}?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
+  },
+  {
+    // Η λίστα των επιλεγμένων — έτσι το κάνει και το LuxuryEstate, που κατατάσσεται.
+    '@context': 'https://schema.org', '@type': 'ItemList',
+    name: t(lang, 'featured.h2'), numberOfItems: d.featured.length,
+    itemListElement: d.featured.map((p, i) => {
+      const a = p.attributes ?? {};
+      const c = coverOf(a);
+      return {
+        '@type': 'ListItem', position: i + 1,
+        item: {
+          '@type': 'RealEstateListing',
+          url: `${site}/ακινητο/${refOf(p)}`,
+          // ⚠️ ΔΗΜΟΣ, όχι περιοχή. Το structured data είναι δημόσιο κείμενο:
+          // αν γράψει «Βουρβουρού», το κλείδωμα της γεωγραφίας καταρρέει εδώ.
+          name: `${a.subcategory ?? ''} — ${municipalityOf(a, lang)}`.trim(),
+          ...(c ? { image: marked(c.url, 800) } : {}),
+          ...(priceVisible(a) ? {
+            offers: { '@type': 'Offer', price: priceOf(a), priceCurrency: 'EUR',
+                      availability: 'https://schema.org/InStock' },
+          } : {}),
+        },
+      };
+    }),
+  },
+];
+
+const meta = {
+  // Ίδιες μεταβλητές με το description: ο τίτλος βγάζει τον αριθμό στο SERP
+  // («527 оферти»), και αυτό είναι το μισό του CTR. Χωρίς τα vars τυπωνόταν
+  // αυτούσιο το «{n}».
+  title: t(lang, 'meta.title', { n: num(d.total, lang), f: num(d.seafront, lang) }),
+  desc: t(lang, 'meta.desc', { n: num(d.total, lang), f: num(d.seafront, lang) }),
+};
+---
+<Base lang={lang} title={meta.title} description={meta.desc} path="/"
+      ogImage={ogPhoto} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={d.heroAlt}
+      jsonLd={jsonLd}>
+  {/* 1 κεφαλίδα (μέσα στο hero) · 2 hero */}
+  <Hero lang={lang} photo={d.heroPhoto} alt={d.heroAlt}
+        munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} total={d.total} />
+  <SearchBar lang={lang} total={d.total} />
+  <FilterSheet lang={lang} total={d.total}
+               munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} />
+
+  <main id="main">
+    {apiDown && (
+      <div class="wrap" style="padding:var(--s7) 0">
+        <p class="t-body">Τα ακίνητα δεν είναι διαθέσιμα αυτή τη στιγμή. Δοκιμάστε σε λίγο.</p>
+      </div>
+    )}
+
+    {/* 3 επιλεγμένα */}
+    {d.featured.length > 0 && (
+      <FeaturedGrid items={d.featured} lang={lang} total={d.total} viewer={viewer} />
+    )}
+
+    {/* 4 το μεγάλο ακίνητο (ετικέτα προαιρετική, από CMS) */}
+    {d.week && <FeatureProperty p={d.week} lang={lang} viewer={viewer} eyebrow={FEATURE_LABEL} />}
+
+    {/* 5 SECRET PORTFOLIO — καμία κάρτα, κανένας γρίφος, και από 28/7 κανένας αριθμός. */}
+    <OffMarket lang={lang} count={OFF_MARKET} />
+
+    {/* 6 ⛔ Ο ΧΑΡΤΗΣ ΤΩΝ ΖΩΝΩΝ ΑΦΑΙΡΕΘΗΚΕ (George, 28/7: «όλο αυτό το πράγμα
+        θεωρώ ότι πρέπει να φύγει τελείως και να μην υπάρχει»).
+        Είναι η ΤΡΙΤΗ εκδοχή του ίδιου μπλοκ που απορρίπτεται — πρώτα οι
+        κλειδωμένες κάρτες, μετά οι κωδικοί ζωνών, τώρα και ο χάρτης κάλυψης.
+        ⛔ ΜΗΝ ΤΟ ΞΑΝΑΠΡΟΤΕΙΝΕΙΣ σε άλλη μορφή. Το `lib/zones.ts` μένει στον
+        δίσκο γιατί το `buildZones` δίνει και τα πλήθη δήμων. */}
+
+    {/* 7 συλλογές — μένουν ακριβώς ως έχουν (George: «μια χαρά είναι»). */}
+    <Collections items={collections} lang={lang} />
+
+    {/* 7b ΜΕΛΕΤΗ & ΚΑΤΑΣΚΕΥΗ — μπαίνει ΑΜΕΣΩΣ μετά τις συλλογές επίτηδες:
+        η μία από τις τέσσερις είναι «Γη & οικόπεδα» (207 από τα 527), και η
+        επόμενη σκέψη του επισκέπτη είναι «και μετά τι;». Εδώ είναι η απάντηση. */}
+    <Construction lang={lang} />
+
+    {/* 8 εργαλείο ιδιοκτήτη */}
+    {/* B-13 / D-157 (George, 2026-10-12): hidden until the real valuation page exists — the form
+        posted to /valuation, which no route serves (404). The component stays for M3. */}
+    {SHOW_VALUATION && d.benchmarks.length > 0 && (
+      <Valuation lang={lang} comparables={d.comparables}
+                 benchmarks={d.benchmarks} seafrontPremium={d.seafrontPremium} />
+    )}
+
+    {/* 9 τρεις πόρτες */}
+    <Doors lang={lang} />
+
+
+    {/* George, 28/7: «η αγορά της Χαλκιδικής» και «ποιοι είμαστε» φεύγουν τελείως.
+        Μένει ΜΟΝΟ η αγορά από το εξωτερικό — δες Abroad.astro. */}
+    <Abroad lang={lang} />
+  </main>
+
+  {/* 11 υποσέλιδο */}
+  <Footer lang={lang} munis={d.munis} />
+</Base>
+
+<style>
+  /* 🕳️ ΤΟ ΚΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗ ΜΠΑΡΑ ΑΝΑΖΗΤΗΣΗΣ (George, 30/7: «αρκετά μεγάλο,
+     μίκρυνέ το κατά 50%»). Ήταν 107px στο desktop και 97px στο κινητό, από ΔΥΟ
+     πηγές που καμία δεν ήταν γραμμένη ως «κενό κάτω από τη μπάρα»:
+       (α) μισή μπάρα φάντασμα από το `transform` — λύθηκε στο SearchBar.astro
+       (β) το κανονικό κενό κάθε τμήματος: 74px desktop, 48px κινητό
+
+     Το (β) είναι ΚΑΘΟΛΙΚΟ — ο ρυθμός ΟΛΗΣ της σελίδας (`.section` στο base.css).
+     ⛔ ΜΗΝ το αλλάξεις εκεί: θα μετακινούσε κάθε τμήμα σε κάθε σελίδα.
+     Μόνο το ΠΡΩΤΟ τμήμα χρειάζεται λιγότερο, επειδή από πάνω του δεν υπάρχει
+     άλλο τμήμα αλλά η μπάρα, που ήδη χωρίζει οπτικά.
+
+     Στο κινητό δεν χρειάζεται τίποτα: μόνο το (α) έφερε ήδη 97 → 48. */
+  @media (min-width: 760px) {
+    /* 🪤 `:global` ΥΠΟΧΡΕΩΤΙΚΟ: το `<section>` το παράγει ΑΛΛΟ αρχείο
+       (FeaturedGrid), οπότε χωρίς αυτό ο κανόνας δεν θα έβρισκε ποτέ στόχο
+       και θα «δούλευε» σιωπηλά χωρίς να κάνει τίποτα. */
+    #main > :global(section:first-of-type) { padding-top: 54px; }
+  }
+</style>

@@ -1,0 +1,184 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// Ο σκελετός κάθε σελίδας. Εδώ ζει ΟΛΟ το SEO — μία φορά, σωστά.
+//
+// Τι διορθώνει σε σχέση με το σημερινό site:
+//   · hreflang           → σήμερα ΜΗΔΕΝ σε εξάγλωσσο site
+//   · JSON-LD            → σήμερα μόνο microdata ImageObject
+//   · Cache-Control      → σήμερα «no-cache, private» σε κάθε απάντηση
+//   · μία H1, ιεραρχία   → σήμερα οι τίτλοι ενοτήτων είναι <span>
+//   · meta keywords      → φεύγει, αγνοείται από το 2009
+// ═══════════════════════════════════════════════════════════════════════════
+import { t, hreflangs, hreflangsBy, prefix, isRTL, type Lang } from '../lib/i18n';
+import { typeface } from '../lib/typeface';
+import { isProd } from '../lib/seo';
+import { TRACK_SNIPPET } from '../lib/track';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  path?: string;
+  ogImage?: string;
+  /** Διαστάσεις της εικόνας κοινοποίησης — χωρίς αυτές, LinkedIn/Slack κατεβάζουν
+      ολόκληρο το αρχείο για να τη μετρήσουν, ή παρατούν την προεπισκόπηση. */
+  ogImageW?: number;
+  ogImageH?: number;
+  ogImageAlt?: string;
+  /** Για σελίδες με ΔΙΑΦΟΡΕΤΙΚΟ slug ανά γλώσσα (π.χ. η λίστα). Επιστρέφει το
+      πλήρες path με πρόθεμα. Όταν δίνεται, αγνοείται το `path`. */
+  pathFor?: (l: Lang) => string;
+  /** Ρητό «μη με ευρετηριάζεις» — π.χ. λίστα με παραμέτρους ή σελίδα >1. */
+  noindex?: boolean;
+  /** B-16: languages that have this page's own text (hreflang lists only these; needs `pathFor`). */
+  langs?: Lang[];
+  /** B-16: canonical points to this language's URL (a fallback page → its English original). */
+  canonicalLang?: Lang;
+  jsonLd?: unknown[];
+}
+const {
+  lang, title, description, path = '/',
+  ogImage, ogImageW, ogImageH, ogImageAlt, pathFor, noindex = false, jsonLd = [],
+  langs, canonicalLang,
+} = Astro.props;
+
+// 🌍 Το `og:locale` θέλει μορφή γλώσσα_ΧΩΡΑ («el_GR»), όχι σκέτο «el» — αλλιώς
+//    το Facebook το αγνοεί και πέφτει στο en_US. Οι χώρες είναι οι αγορές μας.
+const OG_LOCALE: Record<string, string> = {
+  el: 'el_GR', en: 'en_GB', de: 'de_DE', bg: 'bg_BG', sr: 'sr_RS',
+  ro: 'ro_RO', tr: 'tr_TR', he: 'he_IL', ru: 'ru_RU',
+};
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+// Το `path` είναι ΑΝΕΞΑΡΤΗΤΟ γλώσσας («/»). Το prefix το βάζει το canonical —
+// αλλιώς και οι έξι γλώσσες δήλωναν το ίδιο canonical και η Google θα κρατούσε μία.
+// 🪤 Το `|| '/'` δεν είναι καλλωπισμός: χωρίς αυτό η ελληνική αρχική δήλωνε
+//    canonical ΧΩΡΙΣ κάθετο ενώ το hreflang της ίδιας σελίδας το είχε — δύο
+//    γραφές του ίδιου URL, μέσα στο ίδιο <head>.
+// 🌍 ΣΕΛΙΔΕΣ ΜΕ SLUG ΑΝΑ ΓΛΩΣΣΑ δίνουν δικό τους `pathFor` — η λίστα λέγεται
+//    `ακινητα` / `properties` / `Имоти` / `nadlan`… και το κοινό `hreflangs()`
+//    θα παρήγε `/en/ακινητα`. Δες το σχόλιο στο `hreflangsBy()` (lib/i18n.ts).
+// 🪤 ΚΑΙ ΤΑ ΔΥΟ ΠΕΡΝΟΥΝ ΑΠΟ `encodeURI` — ΑΛΛΙΩΣ ΔΗΛΩΝΟΥΜΕ ΤΟ ΙΔΙΟ URL ΜΕ ΔΥΟ ΓΡΑΦΕΣ.
+//    Τα slugs της λίστας είναι ελληνικά και κυριλλικά (`/ακινητα`, `/bg/Имоти`).
+//    Το sitemap τα κωδικοποιεί υποχρεωτικά (`%CE%B1%CE%BA…`, το απαιτεί το
+//    πρότυπο), ενώ το canonical τα έγραφε **ωμά**. Αποτέλεσμα: 30 σελίδες όπου
+//    το `<loc>` του sitemap και το `<link rel=canonical>` της ίδιας σελίδας
+//    έδειχναν σε δύο διαφορετικές συμβολοσειρές — για τη Google, δύο URL.
+//    Το `encodeURI` αφήνει άθικτα τα `:/?#` και κωδικοποιεί μόνο τα μη-ASCII.
+const enc = (u: string) => encodeURI(u);
+const canonical = enc(site + (pathFor
+  ? pathFor(canonicalLang ?? lang)
+  : (`${prefix(lang)}${path === '/' ? '' : path}` || '/')));
+const alts = (pathFor
+  ? hreflangsBy(pathFor, langs)
+  : hreflangs(path === '/' ? '/' : path)
+).map((a) => ({ ...a, href: enc(a.href) }));
+
+// Ευρετηρίαση ΜΟΝΟ στο πραγματικό domain. Ο ίδιος έλεγχος κυβερνά και το
+// robots.txt και το sitemap.xml — δες lib/seo.ts.
+const indexable = isProd(Astro.request, Astro.url);
+
+// Ανώνυμος επισκέπτης → η σελίδα αποθηκεύεται στο edge. Μέλος → ποτέ.
+// ΑΥΤΟ μόνο του ξεκλειδώνει το caching: σήμερα μπαίνει session cookie σε ΚΑΘΕ
+// ανώνυμο αίτημα και γι' αυτό τίποτα δεν αποθηκεύεται πουθενά.
+const isMember = !!Astro.cookies.get('member_token')?.value;
+Astro.response.headers.set(
+  'Cache-Control',
+  isMember ? 'private, no-store' : 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400',
+);
+Astro.response.headers.set('Vary', 'Cookie, Accept-Encoding');
+
+const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δες lib/typeface.ts
+---
+<!doctype html>
+<html lang={lang} dir={isRTL(lang) ? 'rtl' : 'ltr'} data-typeface={tf}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  {/* hreflang — πλήρες σύμπλεγμα, με x-default */}
+  {alts.map((a) => (
+    <link rel="alternate" hreflang={a.lang} href={`${site}${a.href}`} />
+  ))}
+
+  {/* Οι γραμματοσειρές είναι στο κρίσιμο μονοπάτι — προφορτώνονται.
+      Μόνο τα δύο βάρη που εμφανίζονται πάνω από τη γραμμή. */}
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/mont-300.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/mont-600.woff2" crossorigin />
+  {/* Οι εικόνες έρχονται από άλλο host — ανοίγουμε τη σύνδεση νωρίς. */}
+  <link rel="preconnect" href="https://media.onsea.gr" crossorigin />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Halkidiki Properties" />
+  <meta property="og:locale" content={OG_LOCALE[lang] ?? lang} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  {/* Το `twitter:card` δήλωνε μεγάλη εικόνα ενώ δεν υπήρχε `twitter:image` πουθενά —
+      καμία εικόνα δεν εμφανιζόταν. Το `secure_url` το ζητούν ακόμα παλιοί καταναλωτές. */}
+  {ogImage && (
+    <>
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:image:secure_url" content={ogImage} />
+      {ogImageW && <meta property="og:image:width" content={String(ogImageW)} />}
+      {ogImageH && <meta property="og:image:height" content={String(ogImageH)} />}
+      {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
+      <meta name="twitter:image" content={ogImage} />
+      {ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
+    </>
+  )}
+  <meta name="twitter:card" content="summary_large_image" />
+
+  {/* ═══ ΕΙΚΟΝΙΔΙΑ ═══
+      · favicon.svg  → το κύριο. ΧΩΡΙΣ πλαίσιο, και προσαρμόζεται: σκούρο σήμα σε
+                       φωτεινή καρτέλα, ΛΕΥΚΟ σε σκοτεινή. Το διαβάζουν Safari,
+                       Chrome, Firefox και προηγείται όλων.
+      · favicon-32/16 → εφεδρεία για ό,τι δεν διαβάζει SVG. Διάφανο φόντο.
+      · apple-touch-icon → το iOS ΓΕΜΙΖΕΙ τη διαφάνεια με ΜΑΥΡΟ, άρα εδώ ΠΡΕΠΕΙ να
+                       υπάρχει φόντο· λευκό, με το σήμα στα χρώματα του brand. */}
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+  {/* Το χρώμα της μπάρας στο κινητό. ΕΝΑ, λευκό — το site είναι πάντα φωτεινό
+      (George, 3/8: το σκούρο θέμα αφαιρέθηκε· δες tokens.css).
+      🪤 Ήταν δύο γραμμές με `prefers-color-scheme`. Αν έμενε η σκούρα, το iPhone
+         θα έβαφε τη μπάρα του **μαύρη πάνω από λευκή σελίδα** — δηλαδή το σκούρο
+         θέμα θα «επιβίωνε» ακριβώς στο σημείο που κοιτάει πρώτο ο επισκέπτης. */}
+  <meta name="theme-color" content="#FFFFFF" />
+  {/* 🔒 Ο ΦΥΛΑΚΑΣ: μέχρι να δείξει εδώ το halkidikiproperties.com, κάθε σελίδα
+      λέει ρητά «μη με ευρετηριάζεις». Ανοίγει μόνος του στο cutover. */}
+  {/* 🚧 ΔΥΟ ΞΕΧΩΡΙΣΤΟΙ ΛΟΓΟΙ ΝΑ ΜΗΝ ΜΠΕΙ ΣΤΗ GOOGLE, και πρέπει να ισχύουν ΚΑΙ ΟΙ ΔΥΟ:
+      · `indexable` — δεν είμαστε στο πραγματικό domain (φύλακας του demo)
+      · `noindex`   — η ΣΥΓΚΕΚΡΙΜΕΝΗ σελίδα δεν αξίζει ευρετηρίαση: λίστα με
+        φίλτρα τιμής/ταξινόμησης ή σελίδα >1. Χωρίς αυτό, κάθε συνδυασμός
+        παραμέτρων γίνεται ξεχωριστή σελίδα — χιλιάδες σχεδόν-ίδιες, που η
+        Google τις κρίνει χαμηλής ποιότητας και τιμωρεί ΟΛΟ το site. */}
+  {/* 🪤 ΤΟ `follow` ΔΙΑΦΕΡΕΙ ΑΝΑΛΟΓΑ ΜΕ ΤΟΝ ΛΟΓΟ:
+      · εκτός production → `nofollow`, δεν θέλουμε ίχνος του demo πουθενά
+      · φιλτραρισμένη λίστα → `follow`, ΘΕΛΟΥΜΕ να φτάσει στα ακίνητα από εκεί.
+        Ένα `nofollow` θα έκοβε το μονοπάτι ανακάλυψης προς 527 σελίδες. */}
+  <meta
+    name="robots"
+    content={!indexable
+      ? 'noindex, nofollow'
+      : (noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large')}
+  />
+
+  {/* B-07 (traps T-K09): CRM text may contain "</script>"; `<` written as \u003c keeps the JSON valid and the page intact. */}
+  {jsonLd.map((b) => (
+    <script type="application/ld+json" set:html={JSON.stringify(b).replace(/</g, '\\u003c')} />
+  ))}
+</head>
+<body>
+  <a class="sr-only" href="#main">{t(lang, 'a11y.skip')}</a>
+  <slot />
+  {/* Σήμανση: ένα listener για όλη τη σελίδα, χωρίς βιβλιοθήκη. Δες lib/track.ts. */}
+  <script is:inline set:html={TRACK_SNIPPET} />
+</body>
+</html>

@@ -1,0 +1,69 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// «ΔΕΝ ΒΡΕΘΗΚΕ» — η σελίδα που ΔΕΝ ΥΠΗΡΧΕ.
+//
+// 🔴 ΤΙ ΕΒΛΕΠΕ Ο ΕΠΙΣΚΕΠΤΗΣ ΜΕΧΡΙ ΣΗΜΕΡΑ: `return new Response(null, { status: 404 })`
+//    — δηλαδή **μηδέν bytes**. Ούτε λογότυπο, ούτε μενού, ούτε τηλέφωνο, ούτε δρόμος
+//    πίσω. Απόλυτα λευκή οθόνη. Ο επισκέπτης δεν σκέφτεται «λάθος διεύθυνση»·
+//    σκέφτεται **«έπεσε το site»** και φεύγει. Και επειδή το ίδιο το site κουβαλούσε
+//    124 νεκρούς συνδέσμους, αυτή δεν ήταν σπάνια οθόνη — ήταν καθημερινή.
+//
+// 🔑 ΤΡΕΙΣ ΔΡΟΜΟΙ, ΟΧΙ ΕΝΑΣ. Όποιος έφτασε εδώ ήθελε κάτι. Του δίνουμε τα ακίνητα
+//    (το 90% των περιπτώσεων), την αρχική, και **το τηλέφωνο** — γιατί σε αυτή την
+//    αγορά ένας χαμένος σύνδεσμος δεν πρέπει να είναι χαμένος πελάτης.
+//
+// 🪤 Η ΚΑΤΑΣΤΑΣΗ ΠΡΕΠΕΙ ΝΑ ΜΕΙΝΕΙ 404. Δελεαστικό να γυρίσει 200 «για να φαίνεται
+//    ωραία» — αλλά τότε η Google ευρετηριάζει άπειρες ανύπαρκτες σελίδες ως έγκυρες
+//    (soft 404). Η σελίδα είναι φιλική· ο κωδικός παραμένει αυστηρός. Δες τον
+//    δρομολογητή: `new Response(html, { status: 404 })`.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { listUrl, prefix, t, type Lang } from '../lib/i18n';
+import { company } from '../lib/company';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const p = prefix(lang);
+const co = await company();
+---
+
+<Base lang={lang} title={t(lang, 'nf.title')} noindex
+      description={t(lang, 'nf.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="nf">
+    <div class="wrap">
+      <p class="t-label">404</p>
+      <h1 class="t-h2 nf__h">{t(lang, 'nf.title')}</h1>
+      <p class="nf__s">{t(lang, 'nf.sub')}</p>
+
+      <div class="ways">
+        <a class="way" href={listUrl(lang)}>
+          <span><b>{t(lang, 'ui.see_props')}</b><small>{t(lang, 'nf.props_s')}</small></span><i>›</i></a>
+        <a class="way" href={p || '/'}>
+          <span><b>{t(lang, 'nf.home')}</b><small>{t(lang, 'nf.home_s')}</small></span><i>›</i></a>
+        <a class="way" href={co.phoneHref} data-ev="call:404">
+          <span><b>{t(lang, 'trust.cta')}</b><small>{co.phone}</small></span><i>›</i></a>
+      </div>
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .nf { padding: var(--s8) 0 var(--s9); }
+  .nf .wrap { max-width: 560px; }
+  .nf__h { margin: 6px 0 10px; }
+  .nf__s { font-size: 15px; color: var(--ink-2); margin: 0 0 28px; max-width: 46ch; }
+
+  .ways { border-top: 1px solid var(--line-soft); }
+  .way { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+         padding: 16px 0; border-bottom: 1px solid var(--line-soft); font-size: 15px; }
+  .way > span { min-width: 0; }
+  .way b { font-weight: 600; }
+  .way small { display: block; font-size: 12.5px; color: var(--faint); margin-top: 2px; }
+  .way i { font-style: normal; color: var(--faint); flex: none; }
+</style>

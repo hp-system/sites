@@ -1,0 +1,129 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΜΕΛΕΤΗ & ΚΑΤΑΣΚΕΥΗ — νέο μπλοκ, 28/7 (αίτημα George).
+//
+// «Είμαστε ΚΑΙ κατασκευαστική εταιρεία. Κάποιος μπορεί να πάρει από εμάς μια γη
+//  και εμείς να την αναπτύξουμε στον ανώτατο βαθμό — είτε για το προσωπικό του
+//  όνειρο, είτε για επαγγελματική δραστηριότητα. Είναι πολύ μεγάλο κομμάτι της
+//  εταιρείας και θέλω να το προβάλουμε σε πολύ καλό σημείο.»
+//
+// ΓΙΑΤΙ ΕΔΩ, ΑΜΕΣΩΣ ΜΕΤΑ ΤΙΣ ΣΥΛΛΟΓΕΣ: η μία από τις τέσσερις συλλογές είναι
+// «Γη & οικόπεδα», και **207 από τα 527 ακίνητά μας (39%) είναι γη**. Ο
+// επισκέπτης μόλις είδε οικόπεδα και η επόμενη σκέψη του είναι «και μετά τι;».
+// Αυτό το μπλοκ είναι η απάντηση. Δεν είναι διαφημιστικό παρένθετο — είναι το
+// επόμενο βήμα της ίδιας σκέψης.
+//
+// ΤΟ ΠΕΡΙΕΧΟΜΕΝΟ ΕΙΝΑΙ ΑΛΗΘΙΝΟ: οι έξι δυνατότητες είναι σύνοψη των 23
+// υπηρεσιών που ήδη δημοσιεύει το σημερινό site στη σελίδα «Υπηρεσίες
+// Κατασκευαστή» — γεωθερμία, βιοκλιματικές, φωτοβολταϊκά, ζωντανή επίβλεψη με
+// βίντεο, εγγύηση κατασκευής, πισίνες, άδειες δόμησης, ΜΠΕ. Δεν εφευρέθηκε τίποτα.
+//
+// 📍 ΤΑ ΕΡΓΑ ΔΕΝ ΜΠΑΙΝΟΥΝ ΕΔΩ (George, 28/7): «για τα projects που έχουμε χτίσει
+//    στο παρελθόν θα κάνουμε ειδική σελίδα που θα οδηγεί εκεί.»
+//    Άρα αυτό το μπλοκ λέει **τι μπορούμε**, και η ΑΠΟΔΕΙΞΗ — φωτογραφίες,
+//    ονόματα, μεγέθη — ζει ένα κλικ παρακάτω, στο `projectsUrl(lang)`.
+//    ⛔ ΜΗΝ προσθέσεις εδώ λωρίδα με φωτογραφίες έργων· θα διπλώνει τη σελίδα.
+//    ⏳ Η σελίδα των έργων δεν έχει χτιστεί — ο σύνδεσμος δίνει 404 όπως όλοι οι
+//       εσωτερικοί σήμερα.
+// ═══════════════════════════════════════════════════════════════════════════
+import { t, prefix, projectsUrl, type Lang } from '../lib/i18n';
+import { pageExists } from '../lib/pages';
+import { company } from '../lib/company';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const CAPS = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
+const STRIP = ['s1', 's2', 's3', 's4'];
+
+// 🛡️ Αν η σελίδα «Επικοινωνία» δεν έχει ακόμη κείμενο, ο σύνδεσμος **δεν σβήνει** —
+//    γίνεται τηλέφωνο. Εδώ το κάλεσμα είναι το προϊόν: κενό κουμπί θα ήταν χαμένος
+//    πελάτης, όχι απλώς λείπουσα σελίδα.
+const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
+---
+<section class="cx" aria-labelledby="cx-h">
+  <div class="wrap">
+    <div class="cx__top">
+      <div class="cx__lead">
+        <p class="t-label cx__eyebrow">{t(lang, 'cx.eyebrow')}</p>
+        <h2 id="cx-h" class="cx__h">{t(lang, 'cx.h2')}</h2>
+        <p class="cx__p">{t(lang, 'cx.p')}</p>
+        <p class="cx__acts">
+          {/* «Δείτε τι χτίζουμε» → η ΣΕΛΙΔΑ ΤΩΝ ΕΡΓΩΝ (George, 28/7: «για τα
+              projects που έχουμε χτίσει θα κάνουμε ειδική σελίδα που θα οδηγεί
+              εκεί»). Γι' αυτό το μπλοκ εδώ ΔΕΝ χρειάζεται φωτογραφίες έργων:
+              λέει τι μπορούμε, και η απόδειξη ζει ένα κλικ παρακάτω. */}
+          <a class="btn cx__btn" href={projectsUrl(lang)} data-ev="construction:portfolio">
+            {t(lang, 'cx.cta1')}
+          </a>
+          {/* Ο ιδιοκτήτης οικοπέδου είναι ΑΛΛΟ κοινό από τον αγοραστή — δικό του κουμπί. */}
+          <a class="btn btn--ghost cx__btn cx__btn--ghost" href={contactHref}
+             data-ev="construction:have_land">{t(lang, 'cx.cta2')}</a>
+        </p>
+      </div>
+
+      <div class="cx__caps">
+        {CAPS.map((k) => (
+          <div class="cap">
+            <b>{t(lang, `cx.${k}_t`)}</b>
+            <span>{t(lang, `cx.${k}_d`)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="cx__strip">
+      {STRIP.map((k) => (
+        <div class="st">
+          <b>{t(lang, `cx.${k}_t`)}</b>
+          <span>{t(lang, `cx.${k}_d`)}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Μαύρο, όπως το Secret Portfolio: είναι τα δύο μπλοκ που δεν πουλάνε ακίνητο
+     αλλά ΙΚΑΝΟΤΗΤΑ. Το χρώμα τα δένει και τα ξεχωρίζει από τη ροή των καρτών. */
+  .cx { background: var(--ink-deep); color: #fff; padding: var(--s7) 0; }
+  .cx__top { display: grid; gap: var(--s6); }
+  .cx__eyebrow { color: rgba(255,255,255,.5); }
+  .cx__h {
+    margin: var(--s2) 0 0; font-weight: 300; letter-spacing: -.02em; line-height: 1.08;
+    font-size: clamp(28px, 5.4vw, 44px); max-width: 16ch;
+  }
+  .cx__p {
+    margin: var(--s4) 0 0; font-size: 15.5px; line-height: 1.6;
+    color: rgba(255,255,255,.78); max-width: 48ch;
+  }
+  .cx__acts { display: flex; flex-wrap: wrap; gap: var(--s3); margin: var(--s5) 0 0; }
+  .cx__btn { background: #fff; color: var(--ink-deep); border-color: #fff; }
+  .cx__btn--ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.4); }
+
+  .cx__caps {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.14);
+  }
+  .cap { background: var(--ink-deep); padding: var(--s4); min-width: 0; }
+  .cap b { display: block; font-size: 14px; font-weight: 600; }
+  .cap span { display: block; margin-top: 3px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
+
+  .cx__strip {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: rgba(255,255,255,.14); margin: var(--s6) 0 0;
+    border: 1px solid rgba(255,255,255,.14);
+  }
+  /* 🪤 ΕΙΧΕ `padding-left: 0` — το κείμενο ακουμπούσε ΠΑΝΩ στη διαχωριστική
+     γραμμή αριστερά (George, 28/7: «δεν τα έχεις κεντρίσει καλά, να μην
+     ακουμπάνε τέρμα αριστερά»). Ίσο padding σε όλες τις πλευρές. */
+  .st { background: var(--ink-deep); padding: var(--s4); min-width: 0; }
+  .st b { display: block; font-size: clamp(18px, 3.4vw, 24px); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; }
+  .st span { display: block; margin-top: 5px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
+
+  @media (min-width: 760px) {
+    .cx { padding: 74px 0; }
+    .cx__top { grid-template-columns: 1.05fr 1fr; gap: var(--s7); align-items: start; }
+    .cx__strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+</style>

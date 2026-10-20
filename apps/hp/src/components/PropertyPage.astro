@@ -448,7 +448,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             <a class="tel num" href={co.phoneHref} data-ev="call:property">{pui(lang, 'or')} {co.phone}</a>
 
             {/* Η ΑΠΛΗ ΦΟΡΜΑ — τέσσερα πεδία, χωρίς βήματα, πάντα ορατή. */}
-            <form class="qf" id="qf" data-ev="lead:form_submit">
+            <form class="qf" id="qf" data-ev="lead:form_submit" data-ev-defer>
               <span class="qf__h lab">{pui(lang, 'reqInfo')}</span>
               <label class="sr-only" for="qf-n">{pui(lang, 'fName')}</label>
               <input id="qf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} />
@@ -489,7 +489,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
       <form method="dialog" class="modal__x"><button aria-label="×">×</button></form>
       <b class="modal__h t-h3">{pui(lang, 'reqTour')} — #{id}</b>
       <p class="modal__s">{pui(lang, 'whenSuits')}</p>
-      <form class="tf" id="tf">
+      <form class="tf" id="tf" data-ev="lead:tour_submit" data-ev-defer>
         <div class="when" role="group">
           <label><input type="radio" name="when" value="sat" checked /><span data-day="0"></span></label>
           <label><input type="radio" name="when" value="sun" /><span data-day="1"></span></label>
@@ -832,6 +832,10 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         form.querySelectorAll('input, button').forEach((x) => ((x as HTMLInputElement).hidden = true));
         const ok = form.querySelector(okSel) as HTMLElement | null;
         if (ok) ok.hidden = false;
+        // The lead counts only now — after the server accepted it (Q-013), never on click.
+        const ev = form.getAttribute('data-ev');
+        const track = (window as unknown as { __track?: (n: string, x?: object) => void }).__track;
+        if (ev && track) track(ev, { ev_page: location.pathname, property_id: propertyId });
       } catch {
         if (btn) { btn.disabled = false; }
       }

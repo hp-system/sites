@@ -4,6 +4,12 @@ Two white-label site templates on the CRM: `apps/hp` and `apps/rewize`, shared c
 `packages/kit`. Knowledge base: clone **`hp-system/ssot`** next to this repo and read
 `ssot/docs/HUB.md` and `ssot/CONTRIBUTING.md` before the first change.
 
+**Team rules for every session (import — requires `ssot` cloned next to this repo):**
+
+@../ssot/docs/00_meta/team-rules-for-claude.md
+
+If the import does not load, open that file and read it before anything else.
+
 ## Workflow
 1. Work only on a branch from `dev`: `hp/…`, `rewize/…` or `kit/…`. **Never push to `main`; never merge to `main`** (release manager only).
 2. One topic per PR; PR to `dev`; say how you verified it; link the issue.

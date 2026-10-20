@@ -12,6 +12,7 @@
 //   variant="brand" → τα κανονικά χρώματα (πράσινο/μπλε), για λευκό φόντο
 // ═══════════════════════════════════════════════════════════════════════════
 import LT from '../lib/logotype.json';
+import { brand } from '../brand/index';
 
 interface Props { variant?: 'mono' | 'brand'; size?: 'sm' | 'md' }
 const { variant = 'mono', size = 'md' } = Astro.props;
@@ -59,11 +60,11 @@ const uid = 'lg' + Math.random().toString(36).slice(2, 8);
     <g>
       {LT.paths.map((q) => (
         <path d={q.d} transform={q.t}
-              fill={variant === 'brand' ? (q.w === 'a' ? '#036dac' : '#a5cf4e') : 'currentColor'} />
+              fill={variant === 'brand' ? (q.w === 'a' ? brand.colors.primary : brand.colors.secondary) : 'currentColor'} />
       ))}
     </g>
   </svg>
-  <span class="sr-only">Halkidiki Properties</span>
+  <span class="sr-only">{brand.name}</span>
 </span>
 
 <style>

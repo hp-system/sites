@@ -23,6 +23,7 @@ import Footer from './Footer.astro';
 import { listUrl, prefix, t, type Lang } from '../lib/i18n';
 import type { Member } from '../lib/member';
 import { company } from '../lib/company';
+import { brand } from '../brand/index';
 
 interface Props { lang: Lang; me: Member }
 const { lang } = Astro.props;
@@ -130,7 +131,7 @@ const favLabel = favN === 1 ? t(lang, 'ui.one_prop') : t(lang, 'pnl.n_props', { 
         <div class="adv__pic" aria-hidden="true"></div>
         <div class="adv__t">
           <p class="tiny">{t(lang, 'pnl.adv')}</p>
-          <p class="adv__n">Halkidiki Properties</p>
+          <p class="adv__n">{brand.name}</p>
         </div>
         <a class="btn btn--ghost adv__b" href={co.phoneHref}>{t(lang, 'pnl.call')}</a>
       </div>

@@ -26,6 +26,8 @@
 //    λίστα ακριβώς γι' αυτό — πρόσθεσε εγγραφή, τίποτα άλλο δεν αλλάζει.
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { brand } from '../brand/index';
+
 export type HeroShot = {
   /** Καθαρή εικόνα, ΧΩΡΙΣ υδατογράφημα — κανόνας για κάθε μεγάλη φωτογραφία. */
   url: string;
@@ -36,7 +38,7 @@ export type HeroShot = {
 
 export const HERO_SHOTS: HeroShot[] = [
   {
-    url: 'https://media.onsea.gr/properties/ums_8549/detached-house-aerial-halkidiki-2983255106.jpg',
+    url: `${brand.web.mediaOrigin}/properties/ums_8549/detached-house-aerial-halkidiki-2983255106.jpg`,
     // Ελαφρώς αριστερά του κέντρου: κρατά την καμπύλη της παραλίας και τα βουνά
     // όταν το κάδρο στενεύει στα 390px.
     focal: { x: 42, y: 52 },

@@ -24,6 +24,7 @@ import { allProperties, refOf, priceOf, priceVisible, pick } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
 import { prefix, propertyUrl, type Lang } from '../lib/i18n';
 import { num, seaLabel } from '../lib/format';
+import { brand } from '../brand/index';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
   facetUrl, ui, FACETS, SORTS, SORT_DEFAULT, PER_PAGE, PER_PAGE_OPTIONS,
@@ -162,7 +163,7 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
         ακριβώς — δύο φορές η ίδια φράση, η μία σε αχνό γκρι. Τώρα το τελευταίο
         σκαλί μπαίνει ΜΟΝΟ όταν υπάρχει θέμα, δηλαδή όταν λέει κάτι διαφορετικό. */}
     <nav class="crumb" aria-label="breadcrumb">
-      <a href={prefix(lang) || '/'}>Halkidiki Properties</a>
+      <a href={prefix(lang) || '/'}>{brand.name}</a>
       {isThemed && (
         <>
           <span aria-hidden="true">·</span>

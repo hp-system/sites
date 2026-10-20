@@ -31,6 +31,7 @@ import { prefix, propertyUrl, listUrl, t, type Lang } from '../lib/i18n';
 import { rentalUrl } from '../lib/contact';
 import { company } from '../lib/company';
 import { ui, facetUrl, FACETS } from '../lib/listing';
+import { brand } from '../brand/index';
 import {
   descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
   energyOf, oldPriceOf, floorName, pui, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
@@ -122,7 +123,7 @@ const isAccommodation = types.length > 1;          // η γη μένει σκέ�
 //    σελίδα στην οποία ήδη στέκεσαι.
 const muniFacet = FACETS.find((f) => f.q.municipality === myMuni);
 const crumbs: { name: string; url?: string }[] = [
-  { name: 'Halkidiki Properties', url: prefix(lang) || '/' },
+  { name: brand.name, url: prefix(lang) || '/' },
   { name: ui(lang, 'all'), url: listUrl(lang) },
   ...(muniFacet ? [{ name: muniFacet.name[lang], url: facetUrl(lang, muniFacet.key) }] : []),
   { name: `#${id}` },
@@ -145,7 +146,7 @@ const jsonLd = [
     url: abs(here),
     sku: id,
     ...(share ? { image: share } : {}),
-    address: { '@type': 'PostalAddress', addressRegion: muni, addressCountry: 'GR' },
+    address: { '@type': 'PostalAddress', addressRegion: muni, addressCountry: brand.address.country },
     ...(sqmN > 0
       ? (isAccommodation
         ? { floorSize: { '@type': 'QuantitativeValue', value: sqmN, unitCode: 'MTK' } }
@@ -156,9 +157,9 @@ const jsonLd = [
       : {}),
     ...(priceOk && price > 0 ? {
       offers: {
-        '@type': 'Offer', price, priceCurrency: 'EUR',
+        '@type': 'Offer', price, priceCurrency: brand.market.currency,
         availability: 'https://schema.org/InStock', url: abs(here),
-        seller: { '@type': 'RealEstateAgent', name: 'Halkidiki Properties' },
+        seller: { '@type': 'RealEstateAgent', name: brand.name },
       },
     } : {}),
   },
@@ -184,7 +185,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   <main id="main" class="prop">
     <div class="wrap">
       <nav class="crumb" aria-label="breadcrumb">
-        <a href={prefix(lang) || '/'}>Halkidiki Properties</a>
+        <a href={prefix(lang) || '/'}>{brand.name}</a>
         <span aria-hidden="true">·</span>
         <a href={listUrl(lang)}>{ui(lang, 'all')}</a>
         <span aria-hidden="true">·</span>

@@ -15,6 +15,7 @@ import { isProd } from '../lib/seo';
 import { TRACK_SNIPPET } from '../lib/track';
 import '../styles/tokens.css';
 import '../styles/base.css';
+import { brand } from '../brand/index';
 
 interface Props {
   lang: Lang;
@@ -111,10 +112,10 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   <link rel="preload" as="font" type="font/woff2" href="/fonts/mont-300.woff2" crossorigin />
   <link rel="preload" as="font" type="font/woff2" href="/fonts/mont-600.woff2" crossorigin />
   {/* Οι εικόνες έρχονται από άλλο host — ανοίγουμε τη σύνδεση νωρίς. */}
-  <link rel="preconnect" href="https://media.onsea.gr" crossorigin />
+  <link rel="preconnect" href={brand.web.mediaOrigin} crossorigin />
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Halkidiki Properties" />
+  <meta property="og:site_name" content={brand.name} />
   <meta property="og:locale" content={OG_LOCALE[lang] ?? lang} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />

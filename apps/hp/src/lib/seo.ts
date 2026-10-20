@@ -15,6 +15,8 @@
 //    ευρετηριάσιμο. Καμία μεταβλητή να θυμηθεί κανείς, κανένα «ξέχασα το noindex».
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { brand } from '../brand/index';
+
 /**
  * Οι δύο μορφές του παραγωγικού domain. Το canonical δείχνει ΠΑΝΤΑ στο www
  * (έτσι το δηλώνει και το σημερινό robots.txt με `Host:`), αλλά ο έλεγχος
@@ -24,7 +26,7 @@
  * ⚠️ Το halkidikiproperties.**gr** ΔΕΝ είναι εδώ σκόπιμα: αν κάποτε σερβίρει το
  *    ίδιο site, θέλει δικό του canonical (αλλιώς δύο domains με ίδιο περιεχόμενο).
  */
-export const PROD_HOSTS = ['www.halkidikiproperties.com', 'halkidikiproperties.com'] as const;
+export const PROD_HOSTS: readonly string[] = brand.web.prodHosts;
 
 /**
  * Ο host του αιτήματος όπως τον βλέπει ο επισκέπτης.
@@ -66,7 +68,7 @@ export function isProd(request: Request, url: URL): boolean {
  * Σταθερή και σε μη-παραγωγικό host: όταν δείχνουμε στον George την προεπισκόπηση
  * θέλουμε να βλέπει τα ΠΡΑΓΜΑΤΙΚΑ URL που θα βγουν live, όχι διευθύνσεις Tailscale.
  */
-export const ORIGIN = (import.meta.env.SITE ?? 'https://www.halkidikiproperties.com').replace(/\/$/, '');
+export const ORIGIN = (import.meta.env.SITE ?? brand.web.origin).replace(/\/$/, '');
 
 /**
  * Πότε χτίστηκε αυτή η έκδοση — μπαίνει στο `<lastmod>` του sitemap.

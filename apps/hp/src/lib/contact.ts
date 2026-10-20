@@ -13,16 +13,18 @@
 // ⏭️ Φ2: έρχεται από τις ρυθμίσεις του site στο EALIDA, όχι από εδώ.
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { brand } from '../brand/index';
+
 /** Ό,τι βλέπει ο επισκέπτης. Ίδιο σε κεφαλίδα, μενού, υποσέλιδο. */
-export const PHONE_TEXT = '+30 2311 2412 24';
+export const PHONE_TEXT = brand.contact.phoneText;
 
 /** Ό,τι καλεί το τηλέφωνο. Χωρίς κενά — κάποιες συσκευές σκοντάφτουν σε αυτά. */
-export const PHONE_HREF = 'tel:+302311241224';
+export const PHONE_HREF = brand.contact.phoneHref;
 
 /** Η μορφή που θέλει το schema.org (E.164). */
-export const PHONE_E164 = '+302311241224';
+export const PHONE_E164 = brand.contact.phoneE164;
 
-export const EMAIL = 'info@halkidikiproperties.com';
+export const EMAIL = brand.contact.email;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ΑΚΙΝΗΤΑ ΠΟΥ ΕΝΟΙΚΙΑΖΟΝΤΑΙ ΚΙΟΛΑΣ
@@ -37,8 +39,6 @@ export const EMAIL = 'info@halkidikiproperties.com';
 //    Εδώ το κουμπί υπάρχει ΜΟΝΟ αν ο κωδικός είναι μέσα στον χάρτη.
 // ⏭️ Φ2: γίνεται πεδίο `rental_url` στο EALIDA και ο χάρτης σβήνει.
 // ═══════════════════════════════════════════════════════════════════════════
-export const RENTALS: Record<string, string> = {
-  '7010': 'https://www.villanatalia.eu/',
-};
+export const RENTALS: Record<string, string> = brand.rentals;
 
 export const rentalUrl = (id: string): string | null => RENTALS[String(id)] ?? null;

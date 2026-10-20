@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Sell
   path: /en/sell
-image: /pages/sell-secret-portfolio/6a3758c4-1623746003-hero.webp
-image_alt: 'Halkidiki coastline: private sale of a property through the secret portfolio'
+image: ''
+image_alt: ''
 related:
 - label: Sell your property in Halkidiki
   href: /en/sell
@@ -48,3 +48,5 @@ So your property, even though it is not openly advertised, continues to be displ
 The **Exclusive Secret Portfolio** is a product that is addressed mainly to luxury properties, hotels, but also smaller special properties whose owners do not want their public display.
 
 If you are interested in assigning your property through the **Exclusive Secret Portfolio** product, contact us with the form below or give us a [call](/en/contact).
+
+<img src="/pages/sell-secret-portfolio/6a3758c4-1623746003.webp" alt="Halkidiki coastline: private sale of a property through the secret portfolio" width="400" height="300" loading="lazy" decoding="async" />

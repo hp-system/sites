@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Sell
   path: /en/sell
-image: /pages/sell-assign-to-halkidiki-real-estate/5382f593-1634546117-hero.webp
-image_alt: Assigning a property for sale to Halkidiki Properties, shown as a digital listing
+image: ''
+image_alt: ''
 related:
 - label: Sell your property in Halkidiki
   href: /en/sell
@@ -50,3 +50,5 @@ By assigning your property to Halkidiki Properties, you gain access to our exten
 ## Ready to assign your property?
 
 Our team is committed to providing our clients with exceptional service and support, and we take pride in our reputation for honesty, transparency, and professionalism. If you're ready to sell your property in Halkidiki, let us take the stress out of the process. [Contact us](/en/contact) today to learn more about our assign-to-sell services and how we can help you get the best possible price for your property.
+
+<img src="/pages/sell-assign-to-halkidiki-real-estate/5382f593-1634546117.webp" alt="Assigning a property for sale to Halkidiki Properties, shown as a digital listing" width="400" height="300" loading="lazy" decoding="async" />

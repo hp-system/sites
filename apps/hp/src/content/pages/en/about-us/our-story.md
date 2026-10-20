@@ -9,8 +9,8 @@ schema: AboutPage
 parents:
 - name: About us
   path: /en/about-us
-image: /pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp
-image_alt: Offices of Halkidiki Properties, the story since 2007
+image: ''
+image_alt: ''
 related:
 - label: About Halkidiki Properties
   href: /en/about-us
@@ -52,3 +52,5 @@ We undertake as a contractor the study and construction of the emblematic biocli
 ## 2020
 
 In this difficult year, the last stages of the on the move digital transformation were completed with teleworking applications and new structures and systems that allow remote access to the user, as the use of the most modern technologies is a reality. A.I. systems, machine learning, big data, automated customer service platforms and Business Analytics Science are just the beginning of what is to come in the Real Estate industry. We are now creating an in-house Hub of innovation and research with the aim of our active presence in the digital future of Real Estate. At the same time, new important projects are in full swing, as corporate responsibility develops.
+
+<img src="/pages/about-us-our-story/f66781db-aboutus-our-story-banner.webp" alt="Offices of Halkidiki Properties, the story since 2007" width="800" height="450" loading="lazy" decoding="async" />

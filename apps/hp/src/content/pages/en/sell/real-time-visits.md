@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Sell
   path: /en/sell
-image: /pages/sell-real-time-visits/37818ed8-1623745980-hero.webp
-image_alt: Buyer looking at a property for sale on a tablet
+image: ''
+image_alt: ''
 related:
 - label: Sell your property in Halkidiki
   href: /en/sell
@@ -40,3 +40,5 @@ From the very first day of the publication of your property on the **Halkidiki P
 After you choose the way and the frequency that you want to be informed, our company sends you special reports which keep you informed about the potential buyers of your property.
 
 We are also developing a unique **Owner’s Panel** system through which you will be able to track the sale of your property, as well as detailed statistics.
+
+<img src="/pages/sell-real-time-visits/37818ed8-1623745980.webp" alt="Buyer looking at a property for sale on a tablet" width="400" height="300" loading="lazy" decoding="async" />

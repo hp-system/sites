@@ -9,8 +9,8 @@ schema: WebPage
 parents:
 - name: Sell
   path: /en/sell
-image: /pages/sell-the-future-of-real-estate/49ed2b3f-1623746026-hero.webp
-image_alt: 'Network of buyer profiles: technology that matches properties with buyers'
+image: ''
+image_alt: ''
 related:
 - label: Sell your property in Halkidiki
   href: /en/sell
@@ -46,3 +46,5 @@ AI, Image recognition, IoT, dedicated Social Media marketing, Data analytics, Da
 We create automated communication that keeps every customer consistently informed.
 
 So we can deal with the most important things in this world.
+
+<img src="/pages/sell-the-future-of-real-estate/49ed2b3f-1623746026.webp" alt="Network of buyer profiles: technology that matches properties with buyers" width="400" height="300" loading="lazy" decoding="async" />

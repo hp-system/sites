@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Sell
   path: /en/sell
-image: /pages/sell-advertise-your-property-worldwide/29a40cde-1623745992-hero.webp
-image_alt: Property advertised on real estate portals worldwide
+image: ''
+image_alt: ''
 related:
 - label: Sell your property in Halkidiki
   href: /en/sell
@@ -54,3 +54,5 @@ Indicatively, we mention the following collaborators who, with their collaborati
 **China:** Juwai
 
 **Globally:** Domaza, Green Acres
+
+<img src="/pages/sell-advertise-your-property-worldwide/29a40cde-1623745992.webp" alt="Property advertised on real estate portals worldwide" width="400" height="300" loading="lazy" decoding="async" />

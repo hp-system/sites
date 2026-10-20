@@ -9,8 +9,8 @@ schema: WebPage
 parents:
 - name: Sell
   path: /en/sell
-image: /pages/sell-why-halkidiki-properties/25be6170-1623746038-hero.webp
-image_alt: Happy couple at the seaside after selling with Halkidiki Properties
+image: ''
+image_alt: ''
 related:
 - label: Sell your property in Halkidiki
   href: /en/sell
@@ -52,3 +52,5 @@ Here are some reasons why you should choose us to sell your property:
 ### Customized Solutions for Your Needs
 
 Selling your property can be a complex and time-consuming process. But when you choose Halkidiki Properties, you can trust that we will work hard to sell your property quickly and at the best possible price. [**Contact us**](/en/contact) today to learn more about our services and how we can help you sell your Halkidiki property.
+
+<img src="/pages/sell-why-halkidiki-properties/25be6170-1623746038.webp" alt="Happy couple at the seaside after selling with Halkidiki Properties" width="400" height="300" loading="lazy" decoding="async" />

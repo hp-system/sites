@@ -15,11 +15,14 @@ import { company } from '../lib/company';
 import { FACETS, facetUrl } from '../lib/listing';
 import { pageExists } from '../lib/pages';
 import { brand } from '../brand/index';
+import { EN_MOVED } from '../lib/infopages';
 interface Props { lang: Lang; munis?: { name: string; key?: string }[] }
 const { lang } = Astro.props;
 const p = prefix(lang);
 // English: the old site's URL /en/about-us (the info page); other languages keep /about.
 const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
+// Same for services and projects: English links the old site's URLs (no redirect hop).
+const moved = (k: string) => (lang === 'en' && EN_MOVED[k]) || `${p}/${k}`;
 const co = await company();
 // Δήμοι πρώτα, μετά οι συλλογές — ό,τι δείχνει και η αρχική.
 const seoLinks = FACETS.map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
@@ -58,17 +61,17 @@ import { consentText } from '../lib/consent';
 
       <nav aria-label={t(lang, 'foot.services')}>
         <h2 class="fcol__h">{t(lang, 'foot.services')}</h2>
-        {has('services/buyers') && <a href={`${p}/services/buyers`}>{t(lang, 'foot.buyers')}</a>}
-        {has('services/owners') && <a href={`${p}/services/owners`}>{t(lang, 'foot.owners')}</a>}
-        {has('services/investors') && <a href={`${p}/services/investors`}>{t(lang, 'foot.investors')}</a>}
-        {has('services/developers') && <a href={`${p}/services/developers`}>{t(lang, 'foot.builders')}</a>}
+        {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')}</a>}
+        {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')}</a>}
+        {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')}</a>}
+        {has('services/developers') && <a href={moved('services/developers')}>{t(lang, 'foot.builders')}</a>}
       </nav>
 
       <nav aria-label={t(lang, 'foot.company')}>
         <h2 class="fcol__h">{t(lang, 'foot.company')}</h2>
         {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
         {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
-        {has('projects') && <a href={`${p}/projects`}>{t(lang, 'foot.projects')}</a>}
+        {has('projects') && <a href={moved('projects')}>{t(lang, 'foot.projects')}</a>}
         {has('contact') && <a href={`${p}/contact`}>{t(lang, 'foot.contact')}</a>}
       </nav>
     </div>

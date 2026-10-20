@@ -64,6 +64,8 @@ const pages = defineCollection({
     })).default([]),
     /** Address, phone and e-mail from the brand config (contact page). */
     contact_card: z.boolean().default(false),
+    /** Services described on the page (sections of a services page) → Service.hasOfferCatalog. */
+    catalog: z.array(z.object({ name: z.string(), url: z.string() })).default([]),
   }),
 });
 

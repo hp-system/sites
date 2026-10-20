@@ -30,6 +30,8 @@ import CollectionPage from '../components/CollectionPage.astro';
 import ComparePage from '../components/ComparePage.astro';
 import SubmitPage from '../components/SubmitPage.astro';
 import ContentPage from '../components/ContentPage.astro';
+import AreaPage from '../components/AreaPage.astro';
+import { areaPage, type AreaPage as AreaContent } from '../content/areas/en';
 import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, pageLangs, contentUrl, type PageKey } from '../lib/pages';
 import { memberOf, type Member } from '../lib/member';
 import { PUBLISHED, DEFAULT_LANG, SLUG, prefix, type Lang } from '../lib/i18n';
@@ -162,11 +164,20 @@ if (!isHome && rest.length === 1 && rest[0].toLowerCase() === 'request') {
   return Astro.redirect(`${prefix(lang)}/login`, 301);
 }
 
+// ── AREA AND CATEGORY PAGES: /en/property-for-sale/{kassandra | villas | …} ──
+// English only for now (George 20/10/2026). A slug we have no content for is 404,
+// never the whole catalogue — same rule as the list themes above.
+let area: AreaContent | null = null;
+if (lang === 'en' && !pageKey && rest.length === 2 && rest[0].toLowerCase() === 'property-for-sale') {
+  area = areaPage(rest[1]) ?? null;
+  if (!area) notFound = true;
+}
+
 // Άγνωστη υποσελίδα πίνακα («/panel/οτιδήποτε») → 404 αμέσως, ΧΩΡΙΣ να δοκιμαστεί
 // ως θέμα λίστας: αλλιώς το μήνυμα λάθους θα μιλούσε για «άγνωστο θέμα».
 if (panelRoot && !isPanel) notFound = true;
 
-if (!isHome && !isLogin && !isPanel && !pageKey && !notFound && !property) {
+if (!isHome && !isLogin && !isPanel && !pageKey && !area && !notFound && !property) {
   // Το πρώτο κομμάτι πρέπει να είναι το «ακινητα» της συγκεκριμένης γλώσσας.
   if (!rest.length || rest[0].toLowerCase() !== SLUG[lang].list.toLowerCase()) {
     notFound = true;
@@ -230,6 +241,7 @@ if (notFound) Astro.response.status = 404;
   : isPanel && me && panelSeg === 'compare' ? <ComparePage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'submit' ? <SubmitPage lang={lang} me={me} />
   : isPanel && me ? <PanelPage lang={lang} me={me} />
+  : area ? <AreaPage page={area} />
   : isLogin ? <LoginPage lang={lang} next={nextParam} />
   : isHome ? <HomePage lang={lang} />
   : property ? <PropertyPage lang={lang} item={property} all={allItems} />

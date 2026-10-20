@@ -26,6 +26,7 @@ import { allProperties, refOf } from '../lib/api';
 import { facetUrl, FACETS, PAIRS } from '../lib/listing';
 import { PAGE_KEYS, pageExists, pageLangs, contentUrl } from '../lib/pages';
 import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
+import { AREA_PAGES, areaUrl } from '../content/areas/en';
 
 export const prerender = false;
 
@@ -59,6 +60,9 @@ const PAGES: Page[] = [
   // B-16: the content pages, each only in the languages where it has its own text (English
   // fallbacks under other prefixes carry a canonical to the original and stay out).
   ...PAGE_KEYS.filter(pageExists).map((k) => ({ pathFor: (l: Lang) => contentUrl(k, l), langs: pageLangs(k), lastmod: BUILD_DAY })),
+
+  // Area and category pages — English only until the translation phase (George 20/10/2026).
+  ...AREA_PAGES.map((p) => ({ pathFor: () => areaUrl(p.slug), langs: ['en'] as Lang[], lastmod: BUILD_DAY })),
 
   // ⏭️ Μένουν: άρθρα από cms_contents (184) — το άρθρο για τους φόρους ξένων είναι
   //    ήδη η 4η σελίδα μας σε εμφανίσεις (41.268).

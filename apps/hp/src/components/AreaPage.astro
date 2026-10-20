@@ -1,0 +1,283 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// AREA AND CATEGORY PAGES — /en/property-for-sale/{kassandra | villas | …}.
+// Approved mockup (George 20/10/2026): https://claude.ai/artifact/9XV4H3E3jVn7eoHaWWxjio
+//
+//   H1 + short intro · "from €" guide · 6 properties + "Show properties"
+//   · villages as general information · About {place} · buying guide + FAQ
+//   · other areas · call to action
+//
+// Rules this page keeps:
+//  · NO count of properties anywhere (George 17/10) — the "from €" guide is prices only.
+//  · Cards show the municipality, never the village: the village list is general
+//    information and is never tied to a property (lib/gate.ts).
+//  · English only for now — hreflang lists `en` alone until the translation phase.
+// ⏭️ Greek visitors will see only listings with a valid energy certificate (PEA) in
+//    the cards once the field reaches the site — see the GitHub issue on the PEA rule.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import MobileMenu from './MobileMenu.astro';
+import Footer from './Footer.astro';
+import PropertyCard from './PropertyCard.astro';
+import { allProperties, refOf, priceOf, priceVisible } from '../lib/api';
+import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
+import { listUrl, prefix, propertyUrl, type Lang } from '../lib/i18n';
+import { money } from '../lib/format';
+import { matches, runQuery, paramsOf, type Query } from '../lib/listing';
+import { contentUrl, pageExists } from '../lib/pages';
+import { brand } from '../brand/index';
+import { AREA_PAGES, areaUrl, type AreaPage } from '../content/areas/en';
+
+interface Props { page: AreaPage }
+const { page } = Astro.props;
+const lang: Lang = 'en';
+
+const CARDS = 6;   // George 20/10: six properties, then the button to the full list
+
+const viewer = await viewerOf(Astro.cookies);
+const memberToken = Astro.cookies.get('member_token')?.value;
+
+let items: Awaited<ReturnType<typeof allProperties>> = [];
+try {
+  items = await allProperties(memberToken);
+} catch {
+  items = [];
+}
+
+const q = page.q as Query;
+const cards = runQuery(items, q, CARDS).items;
+
+// "From €" — the lowest VISIBLE price of each row. A hidden price ("price on request")
+// never sets the floor, and a row with nothing behind it is left out entirely.
+const floorOf = (rq: Partial<Query>) => {
+  const prices = items
+    .filter((p) => matches(p, rq as Query) && priceVisible(p.attributes ?? {}))
+    .map((p) => priceOf(p.attributes ?? {}))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  return prices.length ? Math.floor(Math.min(...prices) / 1000) * 1000 : 0;
+};
+const prices = page.prices
+  .map((r) => ({ label: r.label, from: floorOf(r.q) }))
+  .filter((r) => r.from > 0);
+
+const url = areaUrl(page.slug);
+// English only for now: hreflang lists `en` alone (Base `langs`), and the language switcher
+// sends other languages to their own property list until these pages are translated.
+const pathFor = (l: Lang) => (l === 'en' ? url : listUrl(l));
+const showAll = `${listUrl(lang)}${paramsOf(q)}`;
+const contact = pageExists('contact') ? contentUrl('contact', lang) : listUrl(lang);
+
+const others = AREA_PAGES.filter((p) => p.kind === page.kind && p.slug !== page.slug);
+const otherKind = AREA_PAGES.filter((p) => p.kind !== page.kind);
+
+// Footer municipalities — same pattern as the listing.
+const munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
+  .slice(0, 4)
+  .map((k) => {
+    const src = items.find((p) => muniKey(p.attributes ?? {}) === k);
+    return { name: municipalityOf(src?.attributes ?? {}, lang) || k, key: k };
+  });
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const jsonLd: unknown[] = [
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: brand.name, item: `${site}${prefix(lang) || '/'}` },
+      { '@type': 'ListItem', position: 2, name: 'Property for sale', item: `${site}${listUrl(lang)}` },
+      { '@type': 'ListItem', position: 3, name: page.name, item: `${site}${url}` },
+    ],
+  },
+];
+if (page.faq.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: page.faq.map((f) => ({
+      '@type': 'Question', name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
+// The six cards as a list — no total: the page never states how many properties exist.
+if (cards.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': 'ItemList', name: page.h1,
+    itemListElement: cards.map((p, i) => ({
+      '@type': 'ListItem', position: i + 1, url: `${site}${propertyUrl(lang, refOf(p))}`,
+    })),
+  });
+}
+---
+<Base lang={lang} title={`${page.title} | ${brand.name}`} description={page.description}
+      pathFor={pathFor} langs={['en']} jsonLd={jsonLd}>
+  <Header lang={lang} solid pathFor={pathFor} />
+  <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
+
+  <main id="main" class="area">
+    <section class="wrap a-top">
+      <nav class="crumb" aria-label="breadcrumb">
+        <a href={prefix(lang) || '/'}>{brand.name}</a>
+        <span aria-hidden="true">·</span>
+        <a href={listUrl(lang)}>Property for sale</a>
+        <span aria-hidden="true">·</span>
+        <span>{page.name}</span>
+      </nav>
+      <h1 class="t-display a-h1">{page.h1}</h1>
+      <p class="a-lead">{page.intro}</p>
+
+      {prices.length > 0 && (
+        <div class="a-from" aria-label="Price guide">
+          <p class="t-label">Price guide</p>
+          <dl>
+            {prices.map((r) => (
+              <div><dt>{r.label}</dt><dd><small>from</small> {money(r.from, lang)}</dd></div>
+            ))}
+          </dl>
+        </div>
+      )}
+    </section>
+
+    <section class="a-band">
+      <div class="wrap">
+        <h2 class="t-h2">Selected properties {page.kind === 'municipality' ? `in ${page.name}` : `— ${page.name.toLowerCase()}`}</h2>
+        {cards.length ? (
+          <>
+            <ul class="grid">
+              {cards.map((p, i) => <li><PropertyCard p={p} lang={lang} viewer={viewer} eager={i < 3} /></li>)}
+            </ul>
+            <p class="a-row"><a class="btn" href={showAll} data-ev="area:show_all">Show properties</a></p>
+          </>
+        ) : (
+          <div class="a-empty" data-empty>
+            <p class="t-h3">No properties to show here right now.</p>
+            <p>Tell us what you are looking for and an adviser will send you a shortlist.</p>
+            <p class="a-row"><a class="btn" href={listUrl(lang)}>All properties</a></p>
+          </div>
+        )}
+      </div>
+    </section>
+
+    {page.villages && page.villages.length > 0 && (
+      <section class="wrap a-sec">
+        <p class="t-label">General information</p>
+        <h2 class="t-h2">Villages and areas of {page.name}</h2>
+        <div class="a-vil">
+          {page.villages.map((g) => (
+            <div>
+              <h3 class="a-vil__g">{g.group}</h3>
+              <ul class="chips">{g.names.map((n) => <li>{n}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {page.about.paragraphs.length > 0 && (
+      <section class="wrap a-sec a-about">
+        <h2 class="t-h2">{page.about.heading}</h2>
+        {page.about.paragraphs.map((t) => <p>{t}</p>)}
+      </section>
+    )}
+
+    <section class="a-band">
+      <div class="wrap a-two">
+        <div>
+          <h2 class="t-h2">How to buy, costs and taxes</h2>
+          <p>{page.buying}</p>
+        </div>
+        {page.faq.length > 0 && (
+          <div class="faq">
+            <p class="t-label">Frequently asked questions</p>
+            {page.faq.map((f, i) => (
+              <details open={i === 0}>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+
+    <section class="wrap a-sec">
+      <p class="t-label">{page.kind === 'municipality' ? 'Other areas of Halkidiki' : 'Other property types'}</p>
+      <ul class="a-links">
+        {others.map((p) => <li><a href={areaUrl(p.slug)}>{p.name}</a></li>)}
+      </ul>
+      <p class="t-label">{page.kind === 'municipality' ? 'Property types' : 'Areas of Halkidiki'}</p>
+      <ul class="a-links">
+        {otherKind.map((p) => <li><a href={areaUrl(p.slug)}>{p.name}</a></li>)}
+      </ul>
+    </section>
+
+    <section class="a-cta">
+      <div class="wrap">
+        <h2 class="t-h2">Tell us what you are looking for{page.kind === 'municipality' ? ` in ${page.name}` : ''}</h2>
+        <p>Budget and type are enough. An adviser replies with a shortlist and can book a viewing in person or by video call.</p>
+        <p class="a-row">
+          <a class="btn btn--onphoto" href={contact} data-ev="area:book_viewing">Book a viewing</a>
+          <a class="btn btn--line" href={contact} data-ev="area:adviser">Talk to an adviser</a>
+          <a class="a-phone" href={brand.contact.phoneHref} data-ev="area:call">{brand.contact.phoneText}</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} munis={munis} />
+</Base>
+
+<style>
+  .area { display: block; }
+  .crumb { font-size: 13px; color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .crumb a { color: var(--ink-2); text-decoration: none; }
+  .crumb a:hover { text-decoration: underline; }
+  .a-top { padding-top: var(--s5); padding-bottom: var(--s6); }
+  .a-h1 { margin: var(--s4) 0 var(--s4); max-width: 22ch; }
+  .a-lead { font-size: 18px; line-height: 1.55; color: var(--ink-2); max-width: 64ch; margin: 0; }
+  .a-from { margin-top: var(--s6); }
+  .a-from dl { margin: var(--s3) 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+  @media (min-width: 760px) { .a-from dl { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .a-from dl > div { padding: var(--s3) var(--s3) var(--s3) 0; border-bottom: 1px solid var(--line); }
+  .a-from dt { font-weight: 600; font-size: 15px; }
+  .a-from dd { margin: 2px 0 0; font-size: 22px; font-weight: 300; font-variant-numeric: tabular-nums; }
+  .a-from dd small { font-size: 13px; color: var(--muted); }
+
+  .a-band { background: var(--paper-2); padding: var(--s7) 0; }
+  .a-sec { padding-top: var(--s7); padding-bottom: var(--s6); }
+  .grid { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: var(--s5) var(--s4); }
+  @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 520px) and (max-width: 759px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  .a-row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin: var(--s5) 0 0; }
+  .a-empty { border: 1px dashed var(--line); padding: var(--s6); margin-top: var(--s5); background: var(--paper); }
+  .a-empty p { margin: 0 0 var(--s2); }
+
+  .a-vil { display: grid; gap: var(--s5) var(--s6); margin-top: var(--s4); }
+  @media (min-width: 760px) { .a-vil { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .a-vil__g { margin: 0 0 var(--s2); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips li { border: 1px solid var(--line); padding: 4px 10px; font-size: 14px; }
+
+  .a-about p { max-width: 70ch; color: var(--ink-2); line-height: 1.65; margin: var(--s4) 0 0; }
+
+  /* FAQ next to the buying guide on desktop, below it on phones (George 20/10). */
+  .a-two { display: grid; gap: var(--s6); }
+  @media (min-width: 900px) { .a-two { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--s7); } }
+  .a-two p { color: var(--ink-2); line-height: 1.6; }
+  .faq details { border-top: 1px solid var(--line); padding: var(--s3) 0; }
+  .faq details:last-child { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: var(--s3); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-weight: 300; font-size: 20px; line-height: 1; }
+  .faq details[open] summary::after { content: "−"; }
+  .faq details p { margin: var(--s2) 0 0; }
+
+  .a-links { list-style: none; margin: var(--s2) 0 var(--s5); padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .a-links a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+  .a-cta { background: var(--ink-deep); color: #fff; padding: var(--s7) 0; }
+  .a-cta .t-h2 { color: #fff; }
+  .a-cta p { color: #C9CDD0; max-width: 56ch; }
+  .btn--line { background: transparent; color: #fff; border-color: #fff; }
+  .a-phone { color: #fff; font-variant-numeric: tabular-nums; }
+</style>

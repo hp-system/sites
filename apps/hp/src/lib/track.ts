@@ -57,6 +57,11 @@ export const EVENTS = {
   // μαθαίναμε ποτέ αν αξίζει το τηλέφωνο στην κεφαλίδα του κινητού.
   CALL_HEADER: 'call:header',
   CALL_MENU: 'call:menu',
+  // Area and category pages (/en/property-for-sale/…, 20/10/2026).
+  AREA_SHOW_ALL: 'area:show_all',
+  AREA_BOOK_VIEWING: 'area:book_viewing',
+  AREA_ADVISER: 'area:adviser',
+  AREA_CALL: 'area:call',
   CALL_FOOTER: 'call:footer',
   CALL_PROPERTY: 'call:property',
   CALL_PROPERTY_BAR: 'call:property_bar',

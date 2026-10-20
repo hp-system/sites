@@ -1,8 +1,10 @@
-# How we work in `sites`
+# Contributing to `sites`
 
-The full team agreement is in `hp-system/ssot` → `CONTRIBUTING.md`. Short version:
-- Branch from `dev`: `hp/<topic>`, `rewize/<topic>`, `kit/<topic>`. Never push to `main`.
-- PR to `dev`: CI green + one review; `packages/kit` needs a reviewer from each template team.
-- Every PR links its issue (board "Company roadmap", field Brand) and says how it was verified.
-- Documentation of the change goes to `ssot` (one change file, see `docs/10_governance/changelog/changelog-scheme.md`).
-- Release: `dev` → `main` + tag `hp-v…` / `rewize-v…`, merged by Sergei; deploy by Sergei.
+**Binding rules: `ENGINEERING.md` in `hp-system/ssot`** (branches, commits, PRs, releases, hotfix, Definition of Done). Team and roles: `ssot/CONTRIBUTING.md`.
+
+Short version for this repo:
+1. Issue on the board "Company roadmap" (Brand: HP / Rewize) → branch from `dev`: `feature/<issue>-<slug>`, `fix/…`, `refactor/…`, `test/…`, `chore/…` (`hotfix/…` from `main`). Put the area in the slug: `feature/42-hp-search-filters`.
+2. Work only in your template (`apps/hp` or `apps/rewize`). `packages/kit` changes need a reviewer from each template team (`.github/CODEOWNERS`).
+3. Conventional Commits with scope `hp`, `rewize` or `kit`.
+4. PR to `dev`, template filled, CI green, **one approval from someone else**, you squash-merge.
+5. Releases: release manager opens `dev → main`, tags `hp-vX.Y.Z` / `rewize-vX.Y.Z`, deploys. Nobody else touches `main`.

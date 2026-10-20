@@ -11,8 +11,8 @@ Two white-label site templates on the CRM: `apps/hp` and `apps/rewize`, shared c
 If the import does not load, open that file and read it before anything else.
 
 ## Workflow
-1. Work only on a branch from `dev`: `hp/…`, `rewize/…` or `kit/…`. **Never push to `main`; never merge to `main`** (release manager only).
-2. One topic per PR; PR to `dev`; say how you verified it; link the issue.
+1. Binding rules: `ssot/ENGINEERING.md`. Work only on a branch from `dev` named `<type>/<issue>-<slug>` (`feature/`, `fix/`, `refactor/`, `test/`, `chore/`; `hotfix/` from `main`). **Never push to `main` or `dev`; never merge to `main`** (release manager only). Conventional Commits with scope `hp` / `rewize` / `kit`.
+2. One topic per PR to `dev`, template filled, CI green, one approval from someone else before you squash-merge.
 3. Touch only your template's folder unless the task is in `packages/kit`; a `kit` change is reviewed by both template teams.
 4. Run `corepack pnpm build` and the tests before opening a PR.
 5. Document the change in `ssot`: one change file (`docs/10_governance/changelog/changelog-scheme.md`); decisions as ADR/decision files. Never renumber or rewrite existing entries.

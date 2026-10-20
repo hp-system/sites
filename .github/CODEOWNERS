@@ -1,0 +1,6 @@
+# Code owners (review requests; enforced only with GitHub Team — ssot/ENGINEERING.md §11)
+*                @serhioprog @geotsigaras-sys
+/apps/hp/        @serhioprog
+/apps/rewize/    @gstavrakisrw @tvavdinoudis-cmyk
+/packages/kit/   @serhioprog @gstavrakisrw @tvavdinoudis-cmyk
+/.github/        @serhioprog

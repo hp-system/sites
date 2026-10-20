@@ -1,0 +1,233 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// INFO PAGE — legal, sell, company and services pages (English first,
+// George 20/10/2026). Same reading layout as the articles.
+//
+//   breadcrumb · H1 · lead · image · text (old site's, faithful) · FAQ · form
+//   · related links (side column on desktop, at the end on phones) · CTA
+//
+// SEO (George 20/10: "full seo optimized"): title = page title + brand, one H1,
+// canonical self, hreflang en + x-default, BreadcrumbList + the page's own
+// schema.org type, Open Graph image, related internal links.
+// ═══════════════════════════════════════════════════════════════════════════
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import MobileMenu from './MobileMenu.astro';
+import Footer from './Footer.astro';
+import InfoForm from './InfoForm.astro';
+import { allProperties } from '../lib/api';
+import { muniKey, municipalityOf } from '../lib/gate';
+import { listUrl, prefix, type Lang } from '../lib/i18n';
+import { brand } from '../brand/index';
+import { HERO_SHOTS } from '../lib/hero';
+import { company } from '../lib/company';
+import type { InfoPage } from '../lib/infopages';
+import { AREA_PAGES, areaUrl } from '../content/areas/en';
+
+interface Props { page: InfoPage }
+const { page } = Astro.props;
+const d = page.data;
+const lang: Lang = 'en';
+
+const { Content, headings } = await render(page);
+const toc = d.toc ? headings.filter((h) => h.depth === 2 && h.text.trim()) : [];
+
+const url = d.path;
+const pathFor = (l: Lang) => (l === 'en' ? url : listUrl(l));
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const abs = (p: string) => (p.startsWith('http') ? p : `${site}${p}`);
+const image = d.image || HERO_SHOTS[0]?.url || '';
+const imageAlt = d.image_alt || (d.image ? d.h1 : HERO_SHOTS[0]?.alt.en ?? d.h1);
+const title = `${d.title} | ${brand.name}`;
+const contact = '/en/contact';
+const terms = '/en/terms-of-services';
+const privacy = '/en/privacy-policy';
+const areas = AREA_PAGES.filter((p) => p.kind === 'municipality');
+const co = await company();
+
+let munis: { name: string; key: string }[] = [];
+try {
+  const items = await allProperties(Astro.cookies.get('member_token')?.value);
+  munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
+    .slice(0, 4)
+    .map((k) => {
+      const src = items.find((p) => muniKey(p.attributes ?? {}) === k);
+      return { name: municipalityOf(src?.attributes ?? {}, lang) || k, key: k };
+    });
+} catch {
+  munis = [];
+}
+
+// ── STRUCTURED DATA ───────────────────────────────────────────────────────
+const org = {
+  '@type': 'RealEstateAgent', name: brand.name, url: `${site}${prefix(lang) || '/'}`,
+  telephone: brand.contact.phoneE164, email: brand.contact.email,
+  address: { '@type': 'PostalAddress', streetAddress: brand.address.street, addressLocality: brand.address.city,
+    postalCode: brand.address.postalCode, addressRegion: brand.address.region, addressCountry: brand.address.country },
+  areaServed: brand.market.areaServed,
+  ...(co.foundedYear ? { foundingDate: String(co.foundedYear) } : {}),
+};
+const crumbs = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: d.h1, path: url }];
+const jsonLd: unknown[] = [
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.path) })),
+  },
+];
+if (d.schema === 'Service') {
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': 'Service', name: d.h1, description: d.description,
+    url: abs(url), serviceType: d.h1, provider: org, areaServed: brand.market.areaServed,
+  });
+} else if (d.schema !== 'FAQPage') {
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': d.schema, name: d.h1, description: d.description, url: abs(url),
+    inLanguage: 'en', ...(d.schema === 'AboutPage' || d.schema === 'ContactPage' ? { mainEntity: org } : {}),
+  });
+}
+if (d.faq.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  });
+}
+---
+<Base lang={lang} title={title} description={d.description} pathFor={pathFor} langs={['en']} jsonLd={jsonLd}
+      ogImage={image ? abs(image) : undefined} ogImageAlt={imageAlt}>
+  <Header lang={lang} solid pathFor={pathFor} />
+  <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
+
+  <main id="main" class="info">
+    <header class="wrap info-top">
+      <nav class="crumb" aria-label="breadcrumb">
+        {crumbs.slice(0, -1).map((c, i) => (
+          <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+        ))}
+      </nav>
+      <h1 class="t-display info-h1">{d.h1}</h1>
+      {d.lead && <p class="info-lead">{d.lead}</p>}
+    </header>
+
+    {d.image && (
+      <figure class="wrap info-hero">
+        <img src={d.image} alt={imageAlt} width="1200" height="600" fetchpriority="high" decoding="async" />
+      </figure>
+    )}
+
+    <div class="wrap info-grid">
+      <article class="prose">
+        <Content />
+
+        {d.faq.length > 0 && (
+          <section class="faq" aria-label="Frequently asked questions">
+            {d.faq.map((f, i) => (
+              <details open={i === 0}><summary><h2 class="faq-q">{f.q}</h2></summary><p>{f.a}</p></details>
+            ))}
+          </section>
+        )}
+
+        {d.form && <InfoForm source={d.form.source} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy} />}
+      </article>
+
+      <aside class="info-side" aria-label="Related pages">
+        {toc.length > 1 && (
+          <nav class="side-box">
+            <p class="t-label">On this page</p>
+            <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+          </nav>
+        )}
+        {d.related.length > 0 && (
+          <div class="side-box">
+            <p class="t-label">Related</p>
+            <ul>{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
+          </div>
+        )}
+        <div class="side-box">
+          <p class="t-label">Property for sale in Halkidiki</p>
+          <ul>{areas.map((p) => <li><a href={areaUrl(p.slug)}>Property for sale in {p.name}</a></li>)}</ul>
+        </div>
+      </aside>
+    </div>
+
+    {d.related.length > 0 && (
+      <section class="info-band">
+        <div class="wrap">
+          <p class="t-label">Related</p>
+          <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
+          <p class="t-label info-areas-l">Property for sale in Halkidiki</p>
+          <ul class="links">{areas.map((p) => <li><a href={areaUrl(p.slug)}>Property for sale in {p.name}</a></li>)}</ul>
+        </div>
+      </section>
+    )}
+
+    <section class="info-cta">
+      <div class="wrap">
+        <h2 class="t-h2">Questions about buying or selling in Halkidiki?</h2>
+        <p>Tell us what you are looking for. An adviser replies with a shortlist and can book a viewing in person or by video call.</p>
+        <p class="row">
+          <a class="btn btn--onphoto" href={contact} data-ev="content:phone">Contact an adviser</a>
+          <a class="btn btn--line" href={listUrl(lang)} data-ev="content:list">See properties for sale</a>
+          <a class="phone" href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} munis={munis} />
+</Base>
+
+<style>
+  .info { display: block; }
+  .crumb { font-size: 13px; color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .crumb a { color: var(--ink-2); text-decoration: none; }
+  .crumb a:hover { text-decoration: underline; }
+  .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
+  .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
+  .info-lead { font-size: 19px; line-height: 1.6; color: var(--ink-2); max-width: 64ch; margin: 0; }
+  .info-hero { margin: 0 auto; }
+  .info-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; }
+
+  .info-grid { display: grid; gap: var(--s7); padding-top: var(--s5); padding-bottom: var(--s7); }
+  @media (min-width: 1000px) { .info-grid { grid-template-columns: minmax(0, 1fr) 300px; } }
+  .info-side { display: none; }
+  @media (min-width: 1000px) { .info-side { display: block; position: sticky; top: var(--s5); align-self: start; } }
+  .side-box { border-top: 1px solid var(--ink); padding: var(--s3) 0 var(--s5); }
+  .side-box ul { list-style: none; margin: var(--s2) 0 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+  .side-box a { color: var(--ink-2); text-decoration: none; }
+  .side-box a:hover { text-decoration: underline; }
+
+  .prose { max-width: 68ch; font-size: 17px; line-height: 1.7; color: var(--ink-2); min-width: 0; }
+  .prose :global(h2) { font-size: clamp(22px, 3.4vw, 28px); font-weight: 400; line-height: 1.25; color: var(--ink); margin: var(--s7) 0 var(--s3); scroll-margin-top: var(--s5); }
+  .prose :global(h3) { font-size: 19px; font-weight: 600; color: var(--ink); margin: var(--s5) 0 var(--s2); }
+  .prose :global(h4) { font-size: 17px; font-weight: 600; color: var(--ink); margin: var(--s4) 0 var(--s2); }
+  .prose :global(p), .prose :global(ul), .prose :global(ol) { margin: 0 0 var(--s4); }
+  .prose :global(a) { color: var(--ink); text-underline-offset: 3px; }
+  .prose :global(strong) { color: var(--ink); }
+  .prose :global(img) { max-width: 100%; height: auto; display: block; margin: var(--s4) 0; }
+  .prose :global(table) { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.45; margin: var(--s2) 0 var(--s5); display: block; overflow-x: auto; }
+  .prose :global(td), .prose :global(th) { border-bottom: 1px solid var(--line); padding: 8px 10px 8px 0; vertical-align: top; text-align: left; }
+  .prose :global(.gallery) { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin: var(--s4) 0; }
+  .prose :global(.gallery img) { margin: 0; aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+
+  .faq details { border-top: 1px solid var(--line); padding: var(--s3) 0; }
+  .faq details:last-child { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-weight: 300; font-size: 20px; line-height: 1; color: var(--ink); }
+  .faq details[open] summary::after { content: "−"; }
+  .faq .faq-q { font-size: 17px; font-weight: 600; line-height: 1.4; margin: 0; color: var(--ink); }
+  .faq details p { margin: var(--s2) 0 0; white-space: pre-line; }
+
+  .info-band { background: var(--paper-2); padding: var(--s6) 0; }
+  .links { list-style: none; margin: var(--s2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .links a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .info-areas-l { margin: var(--s5) 0 0; }
+
+  .info-cta { background: var(--ink-deep); color: #fff; padding: var(--s7) 0; }
+  .info-cta .t-h2 { color: #fff; }
+  .info-cta p { color: #C9CDD0; max-width: 56ch; }
+  .row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin: var(--s5) 0 0; }
+  .btn--line { background: transparent; color: #fff; border-color: #fff; }
+  .phone { color: #fff; font-variant-numeric: tabular-nums; }
+</style>

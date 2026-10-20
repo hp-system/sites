@@ -11,7 +11,7 @@
     "check": "astro check",
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:events": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/check-events.mjs",
-    "test": "node scripts/test-filter-params.mjs && node scripts/test-no-counts.mjs && node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/test-brand.mjs && node scripts/test-area-pages.mjs && node scripts/test-articles.mjs"
+    "test": "node scripts/test-filter-params.mjs && node scripts/test-no-counts.mjs && node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/test-brand.mjs && node scripts/test-area-pages.mjs && node scripts/test-articles.mjs && node scripts/test-legal-pages.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^9.0.0",

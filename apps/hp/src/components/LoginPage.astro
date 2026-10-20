@@ -244,7 +244,8 @@ const JS_T = {
         <li set:html={t(lang, 'auth.gain3', { b: `<b>${t(lang, 'auth.gain3_b')}</b>` })}></li>
       </ul>
       <p class="fine">
-        {t(lang, 'auth.terms')}<br>
+        {t(lang, 'auth.terms')}
+        <a href="/en/terms-of-services">Terms of Services</a> · <a href="/en/privacy-policy">Privacy Policy</a><br>
         {t(lang, 'auth.help')} <a href={co.phoneHref}>{co.phone}</a>
       </p>
     </div>

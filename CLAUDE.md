@@ -12,7 +12,7 @@ If the import does not load, open that file and read it before anything else.
 
 ## Workflow
 1. Binding rules: `ssot/ENGINEERING.md`. Work only on a branch from `dev` named `<type>/<issue>-<slug>` (`feature/`, `fix/`, `refactor/`, `test/`, `chore/`; `hotfix/` from `main`). **Never push to `main` or `dev`; never merge to `main`** (release manager only). Conventional Commits with scope `hp` / `rewize` / `kit`.
-2. One topic per PR to `dev`, template filled, CI green, one approval from someone else before you squash-merge.
+2. One topic per PR to `dev`, template filled, CI green, then squash-merge. **Never request a reviewer** unless the person you work for asks and names who.
 3. Touch only your template's folder. `packages/kit` (all data access and integration) belongs to Sergei: other developers request changes by issue.
 4. Run `corepack pnpm build` and the tests before opening a PR.
 5. Document the change in `ssot`: one change file (`docs/10_governance/changelog/changelog-scheme.md`); decisions as ADR/decision files. Never renumber or rewrite existing entries.

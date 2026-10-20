@@ -434,7 +434,14 @@ export function runQuery(all: SiteProperty[], q: Query, perPage = PER_PAGE): Res
 //    έλεγε σε μη συνδεδεμένο ποια ακίνητα είναι στη Σάνη χωρίς να δει τη λέξη
 //    πουθενά — παρακάμπτοντας ολόκληρο το lib/gate.ts.
 const PARAMS = ['price_min', 'price_max', 'sqm_min', 'sqm_max', 'beds',
-                'type', 'muni', 'sea', 'pool', 'sort', 'page', 'per', 'id'] as const;
+                'type', 'muni', 'sea', 'pool', 'sort', 'page', 'per', 'id',
+                // the names the search bar, filter sheet, collections and menu send (aliases below)
+                'category', 'subcategory', 'municipality', 'sea_access', 'bedrooms'] as const;
+
+/** Category keys a URL may ask for — the same values as `catKey()`. */
+const CATEGORIES = ['residency', 'land', 'business'] as const;
+/** Kinds a URL may ask for: the listing subtypes plus `hotel` (filter sheet). */
+const KIND_KEYS = [...SUBTYPES.map((x) => x.v), 'hotel'].map((v) => ({ v }));
 
 export function queryFromParams(sp: URLSearchParams): Partial<Query> {
   const num = (k: string) => {
@@ -448,12 +455,17 @@ export function queryFromParams(sp: URLSearchParams): Partial<Query> {
     const v = sp.get(k) ?? '';
     return list.some((x) => x.v === v) ? v : undefined;
   };
+  // The site's own forms and links send the long names (`category`, `subcategory`,
+  // `municipality`, `sea_access`, `bedrooms`); the short ones are what `paramsOf()`
+  // writes. Both are accepted, short name first — before this every form search
+  // returned the whole catalogue while /api/count showed a filtered number.
   return {
     priceMin: num('price_min'), priceMax: num('price_max'),
-    sqmMin: num('sqm_min'), sqmMax: num('sqm_max'), beds: num('beds'),
-    subcategory: one('type', SUBTYPES),
-    municipality: one('muni', MUNIS),
-    sea: one('sea', SEAS),
+    sqmMin: num('sqm_min'), sqmMax: num('sqm_max'), beds: num('beds') ?? num('bedrooms'),
+    category: one('category', CATEGORIES.map((v) => ({ v }))),
+    subcategory: one('type', KIND_KEYS) ?? one('subcategory', KIND_KEYS),
+    municipality: one('muni', MUNIS) ?? one('municipality', MUNIS),
+    sea: one('sea', SEAS) ?? one('sea_access', SEAS),
     pool: sp.get('pool') === '1' || undefined,
     sort: s && SORTS.includes(s) ? s : undefined,
     page: num('page'),
@@ -474,6 +486,7 @@ export function paramsOf(q: Query): string {
   if (q.sqmMin) sp.set('sqm_min', String(q.sqmMin));
   if (q.sqmMax) sp.set('sqm_max', String(q.sqmMax));
   if (q.beds) sp.set('beds', String(q.beds));
+  if (q.category) sp.set('category', q.category);
   if (q.subcategory) sp.set('type', q.subcategory);
   if (q.municipality) sp.set('muni', q.municipality);
   if (q.sea) sp.set('sea', q.sea);

@@ -206,6 +206,7 @@ const uid = `c${id}`;
   // αντί για ένα script ανά κάρτα.
   document.querySelectorAll<HTMLElement>('.ph').forEach((ph) => {
     const rail = ph.querySelector<HTMLElement>('.rail');
+    if (!rail) return;
 
     // 🖼️ ΞΥΠΝΗΜΑ ΤΩΝ ΚΡΥΦΩΝ. Μία φορά, με το πρώτο σημάδι ενδιαφέροντος για ΑΥΤΗ
     //    την κάρτα. Τα `once: true` + `passive: true` σημαίνουν μηδέν κόστος μετά.

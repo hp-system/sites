@@ -1,10 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // HALKIDIKI PROPERTIES — the values the site used before they were gathered here.
 // Moved as they were: this file changes nothing on the page. Open points:
-//   · foundedYear 2021 is what the site prints; George decided 2007 (Q-035) — the
-//     CMS field overrides it once filled, so it is left as it was.
-//   · legalName is the brand name; the registered company is a separate fact that
-//     the CMS will carry. Same for the ΓΕΜΗ shown here.
+//   · foundedYear 2007 and ΓΕΜΗ 158806004000 (GREEK PROPERTIES Μ.Ι.Κ.Ε.) set by George
+//     20/10/2026 (Q-035); before that the site printed 2021 and a wrong ΓΕΜΗ.
+//   · legalName is the brand name; the registered company name is a separate fact
+//     that the CMS will carry.
 // ═══════════════════════════════════════════════════════════════════════════
 import type { Brand } from './types';
 
@@ -13,8 +13,8 @@ export const hp: Brand = {
   name: 'Halkidiki Properties',
   company: {
     legalName: 'Halkidiki Properties',
-    gemi: '116495906000',
-    foundedYear: 2021,
+    gemi: '158806004000',
+    foundedYear: 2007,
   },
   address: { street: 'Νέο Ρύσιο', city: 'Θεσσαλονίκη', postalCode: '57001', region: 'Θεσσαλονίκη', country: 'GR' },
   contact: {

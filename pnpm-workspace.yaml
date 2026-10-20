@@ -1,3 +1,8 @@
 packages:
   - "apps/*"
   - "packages/*"
+# Native build steps allowed for the whole workspace (pnpm 11+ reads this only at the root).
+# apps/hp needs esbuild (Vite/Astro) and sharp (required by Astro at build time).
+allowBuilds:
+  esbuild: true
+  sharp: true

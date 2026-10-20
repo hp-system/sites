@@ -46,6 +46,15 @@ export type Brand = {
     /** Folded spelling → canonical municipality key (Greek nominative). See lib/gate.ts. */
     municipalityAliases: Record<string, string>;
   };
+  /** Measurement. GTM loads only on the production host with SITE_ENV=production (lib/consent.ts). */
+  analytics: {
+    /** Google Tag Manager container, or null for a brand without measurement. */
+    gtmId: string | null;
+    /** First-party cookie that stores the visitor's consent choice. */
+    consentCookie: string;
+    /** Privacy policy path, linked from the consent banner (language prefix added). */
+    privacyPath: string;
+  };
   /** Property id → rental page, for properties that are also let (button «rent it»). */
   rentals: Record<string, string>;
 };

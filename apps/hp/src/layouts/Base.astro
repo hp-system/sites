@@ -13,6 +13,8 @@ import { t, hreflangs, hreflangsBy, prefix, isRTL, type Lang } from '../lib/i18n
 import { typeface } from '../lib/typeface';
 import { isProd } from '../lib/seo';
 import { TRACK_SNIPPET } from '../lib/track';
+import { analyticsOn, consentHeadScript } from '../lib/consent';
+import CookieConsent from '../components/CookieConsent.astro';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import { brand } from '../brand/index';
@@ -91,6 +93,9 @@ Astro.response.headers.set(
 );
 Astro.response.headers.set('Vary', 'Cookie, Accept-Encoding');
 
+// Consent defaults on every page; the GTM loader only on the real production host.
+const headScript = consentHeadScript(analyticsOn(Astro.request, Astro.url) ? brand.analytics.gtmId : null);
+
 const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δες lib/typeface.ts
 ---
 <!doctype html>
@@ -98,6 +103,8 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {/* Consent Mode defaults (+ GTM on production) — the only blocking script in <head>, tiny, inline. */}
+  <script is:inline id="consent-default" set:html={headScript} />
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
@@ -179,6 +186,7 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
 <body>
   <a class="sr-only" href="#main">{t(lang, 'a11y.skip')}</a>
   <slot />
+  <CookieConsent lang={lang} />
   {/* Σήμανση: ένα listener για όλη τη σελίδα, χωρίς βιβλιοθήκη. Δες lib/track.ts. */}
   <script is:inline set:html={TRACK_SNIPPET} />
 </body>

@@ -27,6 +27,7 @@ const seoLinks = FACETS.map((f) => ({ href: facetUrl(lang, f.key), name: f.name[
 //    κανείς δεν ξαναπέρασε. Τώρα η ύπαρξη κρίνεται από το `lib/pages.ts` — αν λείπει
 //    το κείμενο, λείπει και ο σύνδεσμος. Δεν μπορεί να ξανασυμβεί σιωπηλά.
 const has = (k: string) => pageExists(k as any);
+import { consentText } from '../lib/consent';
 ---
 <footer class="site-footer">
   <div class="wrap">
@@ -74,7 +75,8 @@ const has = (k: string) => pageExists(k as any);
         το υποσέλιδο θα έγραφε περασμένη χρονιά σε ΚΑΘΕ σελίδα και στις 9 γλώσσες,
         και δεν θα το πρόσεχε κανείς για μήνες. Τώρα υπολογίζεται ανά αίτημα.
         Το έτος ΕΝΑΡΞΗΣ, η επωνυμία και το ΓΕΜΗ έρχονται από το CMS. */}
-    <p class="fbot">© {co.foundedYear}–{co.year} {co.legalName} · {t(lang, 'foot.reg')} {co.gemi}</p>
+    <p class="fbot">© {co.foundedYear}–{co.year} {co.legalName} · {t(lang, 'foot.reg')} {co.gemi}
+      · <button type="button" class="fcookie" data-cookie-settings>{consentText(lang).footerLink}</button></p>
   </div>
 </footer>
 
@@ -102,5 +104,6 @@ const has = (k: string) => pageExists(k as any);
     margin: var(--s6) 0 0; padding-top: var(--s4); border-top: 1px solid var(--line);
     font-size: 11.5px; color: var(--faint);
   }
+  .fcookie { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
   @media (min-width: 760px) { .fcols { grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--s6); } }
 </style>

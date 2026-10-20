@@ -31,6 +31,8 @@ export const hp: Brand = {
     mediaOrigin: 'https://media.onsea.gr',
   },
   market: { currency: 'EUR', areaServed: 'Halkidiki, Greece' },
+  // The live site's container (rewize.com v21 model, D-140).
+  analytics: { gtmId: 'GTM-TF5K9FH', consentCookie: 'site_consent', privacyPath: '/privacy-policy' },
   colors: { primary: '#036dac', secondary: '#a5cf4e' },
   geography: {
     municipalityAliases: {

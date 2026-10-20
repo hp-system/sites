@@ -45,7 +45,8 @@ export const EVENTS = {
   CONSTRUCTION_HAVE_LAND: 'construction:have_land',
 
   // Leads on the property page
-  LEAD_FORM_SUBMIT: 'lead:form_submit',
+  LEAD_FORM_SUBMIT: 'lead:form_submit',               // sent after the server answered 200
+  LEAD_TOUR_SUBMIT: 'lead:tour_submit',               // viewing request form, after 200
   LEAD_TOUR_OPEN: 'lead:tour_open',
   LEAD_TOUR_OPEN_BAR: 'lead:tour_open_bar',
   LEAD_WHATSAPP: 'lead:whatsapp',
@@ -87,13 +88,45 @@ export const EVENTS = {
 /** Όλα τα επιτρεπτά ονόματα — ο έλεγχος γίνεται στον browser, δες πιο κάτω. */
 export const EVENT_NAMES: string[] = Object.values(EVENTS);
 
+/**
+ * GA4 names. GA4 rejects ":" in event names, so the site's internal names are mapped here:
+ * the contact/lead ones to the names the live HP container already reports
+ * (click_to_call, click_to_whatsapp, property_inquiry …), everything else to the same
+ * name with "_" (lead:tour_open → lead_tour_open). The internal name travels as `ev_name`,
+ * and the place of a contact click as `link_location` (header, menu, footer, property …).
+ */
+export const GA_NAMES: Record<string, string> = {
+  'lead:form_submit': 'property_inquiry',
+  'lead:tour_submit': 'viewing_request',
+  'lead:whatsapp': 'click_to_whatsapp',
+  'lead:whatsapp_bar': 'click_to_whatsapp',
+  'call:header': 'click_to_call',
+  'call:menu': 'click_to_call',
+  'call:footer': 'click_to_call',
+  'call:property': 'click_to_call',
+  'call:property_bar': 'click_to_call',
+  'call:404': 'click_to_call',
+  'area:call': 'click_to_call',
+  'article:call': 'click_to_call',
+  'content:phone': 'click_to_call',
+  'area:show_all': 'show_properties',
+  'area:book_viewing': 'book_viewing',
+  'article:book_viewing': 'book_viewing',
+};
+
 /** Το snippet που μπαίνει μία φορά στο Base.astro. */
+
 export const TRACK_SNIPPET = `
 (function(){
+  // GA4-safe name (no ":"), mapped as in GA_NAMES (lib/track.ts). Always a dataLayer event:
+  // GTM triggers read \`event\`, and the consent state decides what GTM may store.
+  var GA = __GA_NAMES__;
+  function ga(name){ return GA[name] || String(name).replace(/:/g, '_'); }
+  window.__evName = ga;
   function send(name, extra){
     try {
-      if (typeof window.gtag === 'function') window.gtag('event', name, extra || {});
-      else (window.dataLayer = window.dataLayer || []).push(Object.assign({event:name}, extra||{}));
+      var p = Object.assign({ event: ga(name), ev_name: name, link_location: String(name).split(':')[1] || '' }, extra || {});
+      (window.dataLayer = window.dataLayer || []).push(p);
     } catch(e){}
   }
   // Δικλείδα: αν κάποιο component βάλει όνομα εκτός λίστας, το βλέπουμε ΤΩΡΑ
@@ -112,10 +145,12 @@ export const TRACK_SNIPPET = `
   }, { passive: true });
   document.addEventListener('submit', function(e){
     var f = e.target;
-    if (f && f.getAttribute && f.getAttribute('data-ev')) {
+    // Forms with data-ev-defer report themselves after the server answered 200 (window.__track).
+    if (f && f.getAttribute && f.getAttribute('data-ev') && !f.hasAttribute('data-ev-defer')) {
       send(check(f.getAttribute('data-ev')), { ev_page: location.pathname });
     }
   }, { passive: true });
   window.__track = send;
 })();
-`.trim().replace('__EVENT_NAMES__', JSON.stringify(Object.values(EVENTS)));
+`.trim().replace('__EVENT_NAMES__', JSON.stringify(Object.values(EVENTS)))
+  .replace('__GA_NAMES__', JSON.stringify(GA_NAMES));

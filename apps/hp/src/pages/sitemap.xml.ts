@@ -28,6 +28,7 @@ import { PAGE_KEYS, pageExists, pageLangs, contentUrl } from '../lib/pages';
 import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { CATEGORIES, allArticles, articleUrl, categoryUrl, inCategory } from '../lib/articles';
+import { allInfoPages, infoLastmod, EN_MOVED } from '../lib/infopages';
 
 export const prerender = false;
 
@@ -60,12 +61,27 @@ const PAGES: Page[] = [
 
   // B-16: the content pages, each only in the languages where it has its own text (English
   // fallbacks under other prefixes carry a canonical to the original and stay out).
-  ...PAGE_KEYS.filter(pageExists).map((k) => ({ pathFor: (l: Lang) => contentUrl(k, l), langs: pageLangs(k), lastmod: BUILD_DAY })),
 
   // Area and category pages — English only until the translation phase (George 20/10/2026).
   ...AREA_PAGES.map((p) => ({ pathFor: () => areaUrl(p.slug), langs: ['en'] as Lang[], lastmod: BUILD_DAY })),
 
 ];
+
+/**
+ * Content pages and info pages. An older content page whose English URL is now served
+ * by an info page (or moved to one) keeps only its other languages here.
+ */
+async function contentPages(): Promise<Page[]> {
+  const info = await allInfoPages();
+  const paths = new Set(info.map((p) => p.data.path));
+  const old: Page[] = PAGE_KEYS.filter(pageExists).map((k) => {
+    const enTaken = paths.has(contentUrl(k, 'en')) || (EN_MOVED[k] ? paths.has(EN_MOVED[k]) : false);
+    const langs = pageLangs(k).filter((l) => !(l === 'en' && enTaken));
+    return { pathFor: (l: Lang) => contentUrl(k, l), langs, lastmod: BUILD_DAY };
+  }).filter((p) => p.langs.length > 0);
+  const own: Page[] = info.map((p) => ({ pathFor: () => p.data.path, langs: ['en'] as Lang[], lastmod: infoLastmod(p, BUILD_DAY) }));
+  return [...old, ...own];
+}
 
 /** Articles and their category lists — English only for now; list page 2+ is noindex, so left out. */
 async function articlePages(): Promise<Page[]> {
@@ -143,7 +159,7 @@ export const GET: APIRoute = async ({ request, url }) => {
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${[...PAGES, ...(await articlePages()), ...(await propertyPages())].map(urlBlock).join('\n')}
+${[...PAGES, ...(await contentPages()), ...(await articlePages()), ...(await propertyPages())].map(urlBlock).join('\n')}
 </urlset>
 `;
 

@@ -34,6 +34,8 @@ import AreaPage from '../components/AreaPage.astro';
 import { areaPage, type AreaPage as AreaContent } from '../content/areas/en';
 import ArticlePage from '../components/ArticlePage.astro';
 import ArticleListPage from '../components/ArticleListPage.astro';
+import InfoPageView from '../components/InfoPage.astro';
+import { findInfoPage, EN_MOVED, type InfoPage } from '../lib/infopages';
 import { findArticle, isCategory, categoryUrl, inCategory, PER_PAGE, type Article } from '../lib/articles';
 import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, pageLangs, contentUrl, type PageKey } from '../lib/pages';
 import { memberOf, type Member } from '../lib/member';
@@ -144,8 +146,21 @@ if (maybeProp) {
 //    όχι. Δεχόμαστε ΚΑΙ το αγγλικό `projects` και στέλνουμε **301** στο μεταφρασμένο —
 //    αλλιώς η ίδια σελίδα ζει σε δύο διευθύνσεις και η μία μένει σπασμένη για πάντα.
 const joined = rest.join('/').toLowerCase();
+
+// ── INFO PAGES (EN): legal, sell, company, services — at the old site's URLs ──
+// English first (George 20/10/2026). They take precedence over the older content
+// pages with the same key (contact, sell, services). The new site's own earlier
+// paths (/en/about, /en/partners, /en/services/buyers…) move permanently to the
+// old site's URLs once the target page exists.
+let info: InfoPage | null = null;
+if (lang === 'en' && !isHome && !isLogin && !panelRoot && rest.length >= 1) {
+  const moved = EN_MOVED[joined];
+  if (moved && (await findInfoPage(moved))) return Astro.redirect(moved + Astro.url.search, 301);
+  info = await findInfoPage(`/en/${joined}`);
+}
+
 let pageKey: PageKey | null = null;
-if (!isHome && !isLogin && !panelRoot && rest.length >= 1 && rest.length <= 2) {
+if (!info && !isHome && !isLogin && !panelRoot && rest.length >= 1 && rest.length <= 2) {
   if ((PAGE_KEYS as readonly string[]).includes(joined)) pageKey = joined as PageKey;
   else if (rest.length === 1 && rest[0].toLowerCase() === SLUG[lang].projects.toLowerCase()) {
     pageKey = 'projects';
@@ -201,7 +216,7 @@ if (lang === 'en' && !pageKey && rest.length >= 1 && rest[0].toLowerCase() === '
 // ως θέμα λίστας: αλλιώς το μήνυμα λάθους θα μιλούσε για «άγνωστο θέμα».
 if (panelRoot && !isPanel) notFound = true;
 
-if (!isHome && !isLogin && !isPanel && !pageKey && !area && !article && !articleList && !notFound && !property) {
+if (!isHome && !isLogin && !isPanel && !info && !pageKey && !area && !article && !articleList && !notFound && !property) {
   // Το πρώτο κομμάτι πρέπει να είναι το «ακινητα» της συγκεκριμένης γλώσσας.
   if (!rest.length || rest[0].toLowerCase() !== SLUG[lang].list.toLowerCase()) {
     notFound = true;
@@ -255,6 +270,7 @@ if (pageKey && !content) notFound = true;
 if (notFound) Astro.response.status = 404;
 ---
 {notFound ? <NotFoundPage lang={lang} />
+  : info ? <InfoPageView page={info} />
   : pageKey && content ? (
       <ContentPage lang={lang} page={content} langs={pageLangs(pageKey)}
         pathFor={(l) => contentUrl(pageKey, l)} />

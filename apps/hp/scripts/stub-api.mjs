@@ -23,7 +23,7 @@ export async function assertSitePortFree(port = 4331) {
   }
 }
 
-export async function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} }, junk = false } = {}) {
+export async function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} }, junk = false, variety = false } = {}) {
   // Pools cycle through "private pool" (3), "no pool" (2) and nothing: 1/3 really have a pool.
   const items = Array.from({ length: n }, (_, i) => ({
     id: `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
@@ -47,6 +47,13 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
       // Property 10002 is land with every land fact set (B-25 labels in all languages).
       ...(i === 2 ? { category: 'land', subcategory: 'plot', buildable_type: '1', plan_type: '3', road_access: 'dirt',
         electricity: true, water: false, drilling: true, orientation: '9' } : {}),
+      // `variety`: kinds, municipalities and sea distance cycle, so filters can be told apart.
+      ...(variety && i > 9 ? {
+        category: i % 4 === 0 ? 'land' : 'residency',
+        subcategory: i % 4 === 0 ? 'plot' : ['detached house', 'maisonette', 'apartment'][i % 3],
+        municipality: ['Κασσάνδρα', 'Σιθωνία', 'Αριστοτέλης', 'Νέα Προποντίδα'][i % 4],
+        sea_access: ['front', 'walking', 'nearby'][i % 3],
+      } : {}),
     },
   }));
   // A CRM record without any public id (B-26): must be invisible everywhere on the site.

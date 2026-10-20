@@ -103,7 +103,6 @@ const shown = map.zones.length;
         <li>
           <a class="mcell" href={`${url}?municipality=${encodeURIComponent(m.key ?? m.name)}`}>
             <b>{m.name}</b>
-            <span class="num">{num(m.count, lang)} {t(lang, 'search.count')}</span>
           </a>
         </li>
       ))}
@@ -114,7 +113,6 @@ const shown = map.zones.length;
         <li>
           <a class="mcell" href={url}>
             <b>{t(lang, 'zmap.rest')}</b>
-            <span class="num">{num(rest, lang)} {t(lang, 'search.count')}</span>
           </a>
         </li>
       )}

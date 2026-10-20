@@ -70,10 +70,10 @@ const has = (k: string) => pageExists(k as any);
     <ul class="mm__list">
       {munis.map((m) => (
         <li><a href={`${url}?municipality=${encodeURIComponent(m.key ?? m.name)}`}>
-          <span>{m.name}</span><b class="num">{num(m.n, lang)}</b>
+          <span>{m.name}</span>
         </a></li>
       ))}
-      <li><a href={url}><span>{t(lang, 'ui.all_halkidiki')}</span><b class="num">{num(total, lang)}</b></a></li>
+      <li><a href={url}><span>{t(lang, 'ui.all_halkidiki')}</span></a></li>
     </ul>
 
     <p class="mm__lab">{t(lang, 'mm.what')}</p>

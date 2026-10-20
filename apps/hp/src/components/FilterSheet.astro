@@ -175,7 +175,7 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
     <div class="fs__foot">
       <button class="fs__reset" type="reset">{t(lang, 'f.clear')}</button>
       <button class="fs__go" type="submit">
-        {t(lang, 'f.show')} <b class="num" data-fs-count>{num(total, lang)}</b> {t(lang, 'search.count')}
+        <span data-fs-label data-none={t(lang, 'f.none')}>{t(lang, 'f.show_all')}</span>
       </button>
     </div>
   </form>
@@ -197,8 +197,10 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
 
     // ── Ο ζωντανός μετρητής ────────────────────────────────────────────────
     const form = dlg.querySelector('form')!;
-    const out = dlg.querySelector<HTMLElement>('[data-fs-count]')!;
-    const fmt = new Intl.NumberFormat(document.documentElement.lang || 'el');
+    // No number is shown (George 17/10: no property counts in public text) — the button
+    // only says whether anything matches.
+    const out = dlg.querySelector<HTMLElement>('[data-fs-label]')!;
+    const showAll = out.textContent ?? '';
     let timer: number | undefined;
     let ctrl: AbortController | undefined;
 
@@ -211,9 +213,10 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
       try {
         const r = await fetch(`/api/count?${p}`, { signal: ctrl.signal });
         const j = await r.json();
-        out.textContent = fmt.format(j.total ?? 0);
-        out.closest('button')?.toggleAttribute('data-empty', (j.total ?? 0) === 0);
-      } catch { /* ακύρωση ή δίκτυο — ο προηγούμενος αριθμός μένει */ }
+        const none = j.any === false;
+        out.textContent = none ? (out.dataset.none ?? showAll) : showAll;
+        out.closest('button')?.toggleAttribute('data-empty', none);
+      } catch { /* ακύρωση ή δίκτυο — η προηγούμενη ένδειξη μένει */ }
       finally { delete out.dataset.busy; }
     }
     // ── ΤΑ ΦΙΛΤΡΑ ΠΡΟΣΑΡΜΟΖΟΝΤΑΙ ΣΤΟ ΕΙΔΟΣ ───────────────────────────────

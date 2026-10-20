@@ -110,23 +110,23 @@ const pickPhoto = (f: (a: any) => boolean) => {
   return hit ? coverOf(hit.attributes) : null;
 };
 const collections = [
-  { key: 'sea',  title: t(lang, 'coll.sea'),  sub: `${num(d.seafront, lang)} ${t(lang, 'geo.count')}`,
+  { key: 'sea',  title: t(lang, 'coll.sea'),  sub: t(lang, 'f.show_all'),
     href: `${url}?sea_access=front`, photo: pickPhoto((a) => a.sea_access === 'front') },
   // 🪤 ΤΟ ΠΛΑΚΙΔΙΟ ΕΛΕΓΕ **308** ΕΝΩ Η ΑΛΗΘΕΙΑ ΕΙΝΑΙ **103** (διορθώθηκε 30/7).
   //    Το `pools` δεν είναι σημαία ναι/όχι — είναι πολλαπλή επιλογή με κωδικούς,
   //    και ο κωδικός «2» σημαίνει **ΧΩΡΙΣ ΠΙΣΙΝΑ**: τον έχουν 203 ακίνητα.
   //    Ο έλεγχος `pools.length > 0` τα μετρούσε όλα ως «με πισίνα».
   //    Το `hasPool()` κοιτάζει ΤΙΜΕΣ (3/4/5/6) — δες lib/listing.ts.
-  { key: 'pool', title: t(lang, 'coll.pool'), sub: `${num(items.filter((p) => hasPool(p.attributes ?? {})).length, lang)} ${t(lang, 'geo.count')}`,
+  { key: 'pool', title: t(lang, 'coll.pool'), sub: t(lang, 'f.show_all'),
     href: `${url}?pool=1`, photo: pickPhoto((a) => hasPool(a)) },
-  { key: 'land', title: t(lang, 'coll.land'), sub: `${num(items.filter((p) => p.attributes?.category === 'land').length, lang)} ${t(lang, 'geo.count')}`,
+  { key: 'land', title: t(lang, 'coll.land'), sub: t(lang, 'f.show_all'),
     href: `${url}?category=land`, photo: pickPhoto((a) => a.category === 'land') },
   // 🪤 ΕΔΩ ΗΤΑΝ «Σπάνια & μοναδικά» με σύνδεσμο `?rare=1` — φίλτρο που ΔΕΝ ΥΠΑΡΧΕΙ.
   //    Η μόνη συλλογή χωρίς μετρήσιμο κριτήριο, δηλαδή η μόνη που δεν μπορούσε
   //    να δουλέψει. Αντικαταστάθηκε από κάτι που ΚΑΙ μετριέται ΚΑΙ ζητείται:
   //    τα ακίνητα άνω του εκατομμυρίου έχουν 4,23 αιτήματα ανά ακίνητο (μετρήθηκε
   //    στα 4.973 αιτήματα) και το απόθεμα είναι 176 — αρκετό για να μη μοιάζει άδειο.
-  { key: 'top', title: t(lang, 'coll.top'), sub: `${num(d.overMillion, lang)} ${t(lang, 'geo.count')}`,
+  { key: 'top', title: t(lang, 'coll.top'), sub: t(lang, 'f.show_all'),
     href: `${url}?price_min=1000000`, photo: pickPhoto((a) => priceOf(a) >= 1_000_000) },
 ];
 
@@ -186,11 +186,9 @@ const jsonLd = [
 ];
 
 const meta = {
-  // Ίδιες μεταβλητές με το description: ο τίτλος βγάζει τον αριθμό στο SERP
-  // («527 оферти»), και αυτό είναι το μισό του CTR. Χωρίς τα vars τυπωνόταν
-  // αυτούσιο το «{n}».
-  title: t(lang, 'meta.title', { n: num(d.total, lang), f: num(d.seafront, lang) }),
-  desc: t(lang, 'meta.desc', { n: num(d.total, lang), f: num(d.seafront, lang) }),
+  // No property counts in public text (George 17/10): title and description carry no number.
+  title: t(lang, 'meta.title'),
+  desc: t(lang, 'meta.desc'),
 };
 ---
 <Base lang={lang} title={meta.title} description={meta.desc} path="/"

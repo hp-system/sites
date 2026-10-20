@@ -42,9 +42,9 @@ byline_note: 2026 rules (Law 5246/2025, AADE guidance)
 
 What you pay once when you buy, what you pay every year, what changes if you rent it out, and what to expect if you sell. The figures below are the 2026 rules; use the calculator for your own numbers.
 
-Short answer
-
-A foreign buyer in Greece pays about **6 % on top of the price**: 3.09 % transfer tax on resale homes (new builds: 24 % VAT, suspended until 31 December 2026), about 1 % notary and 1 % lawyer plus VAT, and about 0.5 % land-registry fees. Example: **€21,245** for a €350,000 resale home, before the agency commission. After buying, you pay the yearly ENFIA property tax. A 15 % transfer tax for non-EU buyers has been announced for 1 July 2027 but is not law yet.
+> **Short answer**
+>
+> A foreign buyer in Greece pays about **6 % on top of the price**: 3.09 % transfer tax on resale homes (new builds: 24 % VAT, suspended until 31 December 2026), about 1 % notary and 1 % lawyer plus VAT, and about 0.5 % land-registry fees. Example: **€21,245** for a €350,000 resale home, before the agency commission. After buying, you pay the yearly ENFIA property tax. A 15 % transfer tax for non-EU buyers has been announced for 1 July 2027 but is not law yet.
 
 ## Property cost calculator — Greece 2026
 

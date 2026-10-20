@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Sell
   path: /en/sell
-image: /pages/sell-make-purchase-easy/255faab8-1623746016-hero.webp
-image_alt: Couple on a beach while their property in Halkidiki is sold for them
+image: ''
+image_alt: ''
 related:
 - label: Sell your property in Halkidiki
   href: /en/sell
@@ -62,3 +62,5 @@ More specifically, the owner assigns through a special power of attorney, the sa
 Our engineers, lawyers and accountants specialise in buying and selling real estate and have many years of experience.
 
 This service is accompanied by an exclusive property assignment order or is offered autonomously to non-customers of our company for a fee.
+
+<img src="/pages/sell-make-purchase-easy/255faab8-1623746016.webp" alt="Couple on a beach while their property in Halkidiki is sold for them" width="400" height="300" loading="lazy" decoding="async" />

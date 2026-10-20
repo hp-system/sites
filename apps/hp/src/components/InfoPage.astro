@@ -81,6 +81,10 @@ if (d.schema === 'Service') {
   jsonLd.push({
     '@context': 'https://schema.org', '@type': 'Service', name: d.h1, description: d.description,
     url: abs(url), serviceType: d.h1, provider: org, areaServed: brand.market.areaServed,
+    ...(d.catalog.length ? { hasOfferCatalog: {
+      '@type': 'OfferCatalog', name: d.h1,
+      itemListElement: d.catalog.map((c) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: c.name, url: abs(c.url) } })),
+    } } : {}),
   });
 } else if (d.schema !== 'FAQPage') {
   jsonLd.push({
@@ -250,6 +254,10 @@ if (d.faq.length) {
   .prose :global(.steps img) { width: 48px; height: 48px; margin: 0; flex: none; }
   .prose :global(.logos img) { object-fit: contain; aspect-ratio: 3 / 2; background: #fff; padding: 10px; border: 1px solid var(--line); }
   .prose :global(blockquote) { margin: 0 0 var(--s4); padding-left: var(--s3); border-left: 2px solid var(--ink); font-size: 20px; color: var(--ink); }
+
+  .prose :global(.gallery figure) { margin: 0; min-width: 0; }
+  .prose :global(figcaption) { font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .prose :global(h2[id]) { scroll-margin-top: var(--s5); }
 
   .faq details { border-top: 1px solid var(--line); padding: var(--s3) 0; }
   .faq details:last-child { border-bottom: 1px solid var(--line); }

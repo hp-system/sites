@@ -9,8 +9,8 @@ schema: AboutPage
 parents:
 - name: About us
   path: /en/about-us
-image: /pages/about-us-company-social-responsibility/7adfe48a-aboutus-company-responsibility-banner-hero.webp
-image_alt: 'Tote bag reading coexist with the earth: corporate social responsibility'
+image: ''
+image_alt: ''
 related:
 - label: About Halkidiki Properties
   href: /en/about-us
@@ -81,3 +81,5 @@ Support for teams such as the sports club [Stavroupoli BC](http://www.stavroupol
 - Development of innovations such as the use of Big Data, AR, AI agent and new technologies, aiming to serve our customers with immediacy and consistency.
 - Creation of detailed real estate statistics with forecasts of market trends.
 - Participation in institutional investments.
+
+<img src="/pages/about-us-company-social-responsibility/7adfe48a-aboutus-company-responsibility-banner.webp" alt="Tote bag reading coexist with the earth: corporate social responsibility" width="800" height="450" loading="lazy" decoding="async" />

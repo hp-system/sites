@@ -9,8 +9,8 @@ schema: AboutPage
 parents:
 - name: About us
   path: /en/about-us
-image: /pages/about-us-philosophy/9916c9c1-aboutus-philosophy-banner-hero.webp
-image_alt: Beach chairs and umbrella by the sea in Greece
+image: ''
+image_alt: ''
 related:
 - label: About Halkidiki Properties
   href: /en/about-us
@@ -44,3 +44,5 @@ The result of our philosophy is proven by the trust of our customers who entrust
 These people, over time, we have the honor of calling them good friends…
 
 It is insurmountable satisfaction offered by the image of people who dream, throughout their lives, of heavenly Greece to unlock the door of their own new home with a smile.
+
+<img src="/pages/about-us-philosophy/9916c9c1-aboutus-philosophy-banner.webp" alt="Beach chairs and umbrella by the sea in Greece" width="800" height="450" loading="lazy" decoding="async" />

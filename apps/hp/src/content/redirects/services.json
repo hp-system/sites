@@ -1,0 +1,1707 @@
+{
+ "_about": "Old site service URLs (5 languages, from each page's hreflang alternates, checked against the SEO export 20/10/2026) → the English page that now holds the text; sub-services became sections (#anchor = old slug). Map only — no redirect engine yet (George 20/10/2026). The hotel page has no sr/bg URL of its own on the old site (its hreflang pointed at the marinas page).",
+ "status": 301,
+ "redirects": [
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων",
+   "lang": "el",
+   "to": "/en/services/buyer-services",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst",
+   "lang": "de",
+   "to": "/en/services/buyer-services",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca",
+   "lang": "sr",
+   "to": "/en/services/buyer-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/buyer-services",
+   "lang": "bg",
+   "to": "/en/services/buyer-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/buyer-services/air-water-and-road-transportation",
+   "lang": "en",
+   "to": "/en/services/buyer-services#air-water-and-road-transportation",
+   "clicks_12m": 0,
+   "impressions_12m": 21
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αεροπορικές-πλωτές-και-οδικές-μεταφορές",
+   "lang": "el",
+   "to": "/en/services/buyer-services#air-water-and-road-transportation",
+   "clicks_12m": 0,
+   "impressions_12m": 5
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/helikopter-und-lear-jet-vermietungen",
+   "lang": "de",
+   "to": "/en/services/buyer-services#air-water-and-road-transportation",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/vazdušni-vodeni-i-drumski-transport",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#air-water-and-road-transportation",
+   "clicks_12m": 0,
+   "impressions_12m": 169
+  },
+  {
+   "from": "/bg/услуги/buyer-services/въздушен-воден-и-автомобилен-транспорт",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#air-water-and-road-transportation",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/buyer-services/appraisals-legal-and-accounting-audit",
+   "lang": "en",
+   "to": "/en/services/buyer-services#appraisals-legal-and-accounting-audit",
+   "clicks_12m": 1,
+   "impressions_12m": 93
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/εκτιμησεις-νομικος-και-λογιστικος-ελεγχος",
+   "lang": "el",
+   "to": "/en/services/buyer-services#appraisals-legal-and-accounting-audit",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/geschäftsbeurteilungen-rechts-und-rechnungsprüfung",
+   "lang": "de",
+   "to": "/en/services/buyer-services#appraisals-legal-and-accounting-audit",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/procena-pravna-i-računovodstvena-revizija",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#appraisals-legal-and-accounting-audit",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/bg/услуги/buyer-services/оценки,-правен-и-счетоводен-одит",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#appraisals-legal-and-accounting-audit",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/en/services/buyer-services/architectural-services-3d-designs",
+   "lang": "en",
+   "to": "/en/services/buyer-services#architectural-services-3d-designs",
+   "clicks_12m": 0,
+   "impressions_12m": 26
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αρχιτεκτονικες-υπηρεσιες-3d-designs-μελετες",
+   "lang": "el",
+   "to": "/en/services/buyer-services#architectural-services-3d-designs",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/architektonische-dienstleistungen-und-studien-3d-entwürfe",
+   "lang": "de",
+   "to": "/en/services/buyer-services#architectural-services-3d-designs",
+   "clicks_12m": 0,
+   "impressions_12m": 18
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/arhitektonske-usluge-i-studije-3d-dizajni",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#architectural-services-3d-designs",
+   "clicks_12m": 0,
+   "impressions_12m": 35
+  },
+  {
+   "from": "/bg/услуги/buyer-services/архитектурни-услуги,-3d-проекти-проучвания",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#architectural-services-3d-designs",
+   "clicks_12m": 0,
+   "impressions_12m": 25
+  },
+  {
+   "from": "/en/services/buyer-services/company-establishment-and-management",
+   "lang": "en",
+   "to": "/en/services/buyer-services#company-establishment-and-management",
+   "clicks_12m": 0,
+   "impressions_12m": 11
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/ιδρυση-και-διαχειριση-εταιρειων",
+   "lang": "el",
+   "to": "/en/services/buyer-services#company-establishment-and-management",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/unternehmensgrundung-und-leitung",
+   "lang": "de",
+   "to": "/en/services/buyer-services#company-establishment-and-management",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/osnivanje-i-upravljanje-kompanijom",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#company-establishment-and-management",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/buyer-services/регистрация-и-управление-а-фирми",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#company-establishment-and-management",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/buyer-services/enquiry-viewing-trip-and-selection-of-property",
+   "lang": "en",
+   "to": "/en/services/buyer-services#enquiry-viewing-trip-and-selection-of-property",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αναζητηση-επισκεψη-και-ευρεση-ακινητου",
+   "lang": "el",
+   "to": "/en/services/buyer-services#enquiry-viewing-trip-and-selection-of-property",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/anfrage-besichtigungstour-und-auswahl-der-immobilie",
+   "lang": "de",
+   "to": "/en/services/buyer-services#enquiry-viewing-trip-and-selection-of-property",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/upit-obilazak-i-pregled-nekretnine,-izbor-nekretnine",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#enquiry-viewing-trip-and-selection-of-property",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/bg/услуги/buyer-services/запитване-огледи-и-избор-на-имот",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#enquiry-viewing-trip-and-selection-of-property",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/en/services/buyer-services/entire-purchases-conduction",
+   "lang": "en",
+   "to": "/en/services/buyer-services#entire-purchases-conduction",
+   "clicks_12m": 0,
+   "impressions_12m": 9
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-διεκπεραιωση-αγοραπωλησιων",
+   "lang": "el",
+   "to": "/en/services/buyer-services#entire-purchases-conduction",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/gesamte-kaufabwicklung",
+   "lang": "de",
+   "to": "/en/services/buyer-services#entire-purchases-conduction",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/sprovođenje-celokupne-kupovine",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#entire-purchases-conduction",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/bg/услуги/buyer-services/цялостно-финализиране-на-сделките",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#entire-purchases-conduction",
+   "clicks_12m": 0,
+   "impressions_12m": 84
+  },
+  {
+   "from": "/en/services/buyer-services/financial-studies-and-business-plans",
+   "lang": "en",
+   "to": "/en/services/buyer-services#financial-studies-and-business-plans",
+   "clicks_12m": 0,
+   "impressions_12m": 9
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/οικονομοτεχνικές-μελέτες-επιχειρηματικά-πλάνα",
+   "lang": "el",
+   "to": "/en/services/buyer-services#financial-studies-and-business-plans",
+   "clicks_12m": 1,
+   "impressions_12m": 98
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/financial-studies-and-business-plans",
+   "lang": "de",
+   "to": "/en/services/buyer-services#financial-studies-and-business-plans",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/finansijska-proučavanja-i-biznis-planovi",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#financial-studies-and-business-plans",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/buyer-services/финансови-проучвания-и-бизнес-планове",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#financial-studies-and-business-plans",
+   "clicks_12m": 0,
+   "impressions_12m": 16
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-διαχειριση-ακινητης-περιουσιας",
+   "lang": "el",
+   "to": "/en/services/buyer-services/full-property-management",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/vollständige-hausverwaltung",
+   "lang": "de",
+   "to": "/en/services/buyer-services/full-property-management",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/potpuno-upravljanje-imovinom",
+   "lang": "sr",
+   "to": "/en/services/buyer-services/full-property-management",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/bg/услуги/buyer-services/цялостно-управление-на-недвижими-имоти",
+   "lang": "bg",
+   "to": "/en/services/buyer-services/full-property-management",
+   "clicks_12m": 1,
+   "impressions_12m": 44
+  },
+  {
+   "from": "/en/services/buyer-services/full-support-for-any-legal-and-financial-services",
+   "lang": "en",
+   "to": "/en/services/buyer-services#full-support-for-any-legal-and-financial-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-υποστηριξη-για-νομικες-και-χρηματοοικονομικες-υπηρεσιες",
+   "lang": "el",
+   "to": "/en/services/buyer-services#full-support-for-any-legal-and-financial-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/volle-unterstützung-für-alle-rechts-und-finanzdienstleistungen",
+   "lang": "de",
+   "to": "/en/services/buyer-services#full-support-for-any-legal-and-financial-services",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/puna-podrška-za-sve-pravne-i-finansijske-usluge",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#full-support-for-any-legal-and-financial-services",
+   "clicks_12m": 0,
+   "impressions_12m": 5
+  },
+  {
+   "from": "/bg/услуги/buyer-services/пълна-поддръжка-за-всякакви-правни-и-финансови-услуги",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#full-support-for-any-legal-and-financial-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/buyer-services/mediation-and-negotiation-for-property",
+   "lang": "en",
+   "to": "/en/services/buyer-services#mediation-and-negotiation-for-property",
+   "clicks_12m": 1,
+   "impressions_12m": 33
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/μεσολαβηση-και-διαπραγματευση-ακινητων",
+   "lang": "el",
+   "to": "/en/services/buyer-services#mediation-and-negotiation-for-property",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/delegation-der-vermögensverwaltung",
+   "lang": "de",
+   "to": "/en/services/buyer-services#mediation-and-negotiation-for-property",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/posredovanje-i-pregovaranje-o-nekretnini",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#mediation-and-negotiation-for-property",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/buyer-services/посредничество-и-договаряне-на-имот",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#mediation-and-negotiation-for-property",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/en/services/buyer-services/translations-and-interpretations",
+   "lang": "en",
+   "to": "/en/services/buyer-services#translations-and-interpretations",
+   "clicks_12m": 0,
+   "impressions_12m": 16
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/μεταφρασεις-και-διερμηνειες",
+   "lang": "el",
+   "to": "/en/services/buyer-services#translations-and-interpretations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/ubersetzungen-und-interpretationen",
+   "lang": "de",
+   "to": "/en/services/buyer-services#translations-and-interpretations",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/prevodi-i-sudska-tumacenja",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#translations-and-interpretations",
+   "clicks_12m": 0,
+   "impressions_12m": 9
+  },
+  {
+   "from": "/bg/услуги/buyer-services/преводи-и-разяснения",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#translations-and-interpretations",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/en/services/buyer-services/vip-concierge-dedicated-service-partners",
+   "lang": "en",
+   "to": "/en/services/buyer-services#vip-concierge-dedicated-service-partners",
+   "clicks_12m": 3,
+   "impressions_12m": 213
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αποκλειστικοί-συνεργάτες-τύπου-vip-concierge",
+   "lang": "el",
+   "to": "/en/services/buyer-services#vip-concierge-dedicated-service-partners",
+   "clicks_12m": 3,
+   "impressions_12m": 81
+  },
+  {
+   "from": "/de/dienstleistungen/kundendienst/dedizierte-servicepartner-vip-concierge",
+   "lang": "de",
+   "to": "/en/services/buyer-services#vip-concierge-dedicated-service-partners",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/usluge-kupca/vip-concierge-ekskluzivne-usluge-partnera",
+   "lang": "sr",
+   "to": "/en/services/buyer-services#vip-concierge-dedicated-service-partners",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/bg/услуги/buyer-services/ексклузивни-партньори-vip-concierge",
+   "lang": "bg",
+   "to": "/en/services/buyer-services#vip-concierge-dedicated-service-partners",
+   "clicks_12m": 0,
+   "impressions_12m": 17
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες",
+   "lang": "el",
+   "to": "/en/services/construction-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen",
+   "lang": "de",
+   "to": "/en/services/construction-services",
+   "clicks_12m": 1,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge",
+   "lang": "sr",
+   "to": "/en/services/construction-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги",
+   "lang": "bg",
+   "to": "/en/services/construction-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/construction-services/applications-of-geothermal-energy",
+   "lang": "en",
+   "to": "/en/services/construction-services#applications-of-geothermal-energy",
+   "clicks_12m": 0,
+   "impressions_12m": 254
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εφαρμογες-γεωθερμιας",
+   "lang": "el",
+   "to": "/en/services/construction-services#applications-of-geothermal-energy",
+   "clicks_12m": 1,
+   "impressions_12m": 17
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/anwendungen-der-geothermie",
+   "lang": "de",
+   "to": "/en/services/construction-services#applications-of-geothermal-energy",
+   "clicks_12m": 0,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/primene-geotermalne-energije",
+   "lang": "sr",
+   "to": "/en/services/construction-services#applications-of-geothermal-energy",
+   "clicks_12m": 0,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/приложения-за-геотермалната-енергия",
+   "lang": "bg",
+   "to": "/en/services/construction-services#applications-of-geothermal-energy",
+   "clicks_12m": 2,
+   "impressions_12m": 22
+  },
+  {
+   "from": "/en/services/construction-services/bioclimatic-passive-residences",
+   "lang": "en",
+   "to": "/en/services/construction-services#bioclimatic-passive-residences",
+   "clicks_12m": 1,
+   "impressions_12m": 12
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/βιοκλιματικές-παθητικές-κατοικίες",
+   "lang": "el",
+   "to": "/en/services/construction-services#bioclimatic-passive-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 16
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/bioklimatische-passivwohnungen",
+   "lang": "de",
+   "to": "/en/services/construction-services#bioclimatic-passive-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/bioklimatske-pasivne-rezidencije",
+   "lang": "sr",
+   "to": "/en/services/construction-services#bioclimatic-passive-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/биоклиматични-пасивни-жилища",
+   "lang": "bg",
+   "to": "/en/services/construction-services#bioclimatic-passive-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/en/services/construction-services/biological-sewage-treatment-systems",
+   "lang": "en",
+   "to": "/en/services/construction-services#biological-sewage-treatment-systems",
+   "clicks_12m": 4,
+   "impressions_12m": 90
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/συστήματα-βιολογικού-καθαρισμού-υδάτων",
+   "lang": "el",
+   "to": "/en/services/construction-services#biological-sewage-treatment-systems",
+   "clicks_12m": 2,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/biologische-kläranlagen",
+   "lang": "de",
+   "to": "/en/services/construction-services#biological-sewage-treatment-systems",
+   "clicks_12m": 1,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/biološki-sistem-za-prečišćavanje-kanalizacije",
+   "lang": "sr",
+   "to": "/en/services/construction-services#biological-sewage-treatment-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/биологични-системи-за-пречистване-на-отпадъчни-води",
+   "lang": "bg",
+   "to": "/en/services/construction-services#biological-sewage-treatment-systems",
+   "clicks_12m": 1,
+   "impressions_12m": 54
+  },
+  {
+   "from": "/en/services/construction-services/building-licenses",
+   "lang": "en",
+   "to": "/en/services/construction-services#building-licenses",
+   "clicks_12m": 0,
+   "impressions_12m": 9
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/άδειες-δόμησης",
+   "lang": "el",
+   "to": "/en/services/construction-services#building-licenses",
+   "clicks_12m": 0,
+   "impressions_12m": 10
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/baugenehmigungen",
+   "lang": "de",
+   "to": "/en/services/construction-services#building-licenses",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/dozvola-za-gradnju",
+   "lang": "sr",
+   "to": "/en/services/construction-services#building-licenses",
+   "clicks_12m": 1,
+   "impressions_12m": 10
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/разрешителни-за-строеж",
+   "lang": "bg",
+   "to": "/en/services/construction-services#building-licenses",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/en/services/construction-services/complete-structural-renovation-solutions",
+   "lang": "en",
+   "to": "/en/services/construction-services#complete-structural-renovation-solutions",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ολοκληρωμένες-λύσεις-δομικών-ανακαινίσεων",
+   "lang": "el",
+   "to": "/en/services/construction-services#complete-structural-renovation-solutions",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/komplette-lösungen-für-die-strukturelle-sanierung",
+   "lang": "de",
+   "to": "/en/services/construction-services#complete-structural-renovation-solutions",
+   "clicks_12m": 0,
+   "impressions_12m": 5
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/kompletna-rešenja-za-strukturnu-obnovu",
+   "lang": "sr",
+   "to": "/en/services/construction-services#complete-structural-renovation-solutions",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/цялостни-решения-за-строителни-ремонти",
+   "lang": "bg",
+   "to": "/en/services/construction-services#complete-structural-renovation-solutions",
+   "clicks_12m": 1,
+   "impressions_12m": 45
+  },
+  {
+   "from": "/en/services/construction-services/complete-structural-studies",
+   "lang": "en",
+   "to": "/en/services/construction-services#complete-structural-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ολοκληρωμένες-μελέτες-κατασκευής",
+   "lang": "el",
+   "to": "/en/services/construction-services#complete-structural-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/vollständige-strukturuntersuchungen",
+   "lang": "de",
+   "to": "/en/services/construction-services#complete-structural-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/kompletne-građevinske-studije",
+   "lang": "sr",
+   "to": "/en/services/construction-services#complete-structural-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/цялостни-строителни-проекти",
+   "lang": "bg",
+   "to": "/en/services/construction-services#complete-structural-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 53
+  },
+  {
+   "from": "/en/services/construction-services/construction-guarantee",
+   "lang": "en",
+   "to": "/en/services/construction-services#construction-guarantee",
+   "clicks_12m": 3,
+   "impressions_12m": 47
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εγγύηση-κατασκευής",
+   "lang": "el",
+   "to": "/en/services/construction-services#construction-guarantee",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/baugarantie",
+   "lang": "de",
+   "to": "/en/services/construction-services#construction-guarantee",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/garancija-na-izgradnju",
+   "lang": "sr",
+   "to": "/en/services/construction-services#construction-guarantee",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/гаранция-на-строителството",
+   "lang": "bg",
+   "to": "/en/services/construction-services#construction-guarantee",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/en/services/construction-services/constructions-of-concrete-stone-brick-panel",
+   "lang": "en",
+   "to": "/en/services/construction-services#constructions-of-concrete-stone-brick-panel",
+   "clicks_12m": 0,
+   "impressions_12m": 17
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/κατασκευές-από-μπετόν-πέτρα-τούβλο-πάνελ",
+   "lang": "el",
+   "to": "/en/services/construction-services#constructions-of-concrete-stone-brick-panel",
+   "clicks_12m": 6,
+   "impressions_12m": 147
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/konstruktionen-aus-beton-stein-ziegel-platten",
+   "lang": "de",
+   "to": "/en/services/construction-services#constructions-of-concrete-stone-brick-panel",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/konstrukcija-od-betona-kamena-cigle-i-panela",
+   "lang": "sr",
+   "to": "/en/services/construction-services#constructions-of-concrete-stone-brick-panel",
+   "clicks_12m": 1,
+   "impressions_12m": 13
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/конструкции-от-бетон-камък-тухла-панел",
+   "lang": "bg",
+   "to": "/en/services/construction-services#constructions-of-concrete-stone-brick-panel",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/construction-services/cost-estimation-and-analysis-for-a-construction",
+   "lang": "en",
+   "to": "/en/services/construction-services#cost-estimation-and-analysis-for-a-construction",
+   "clicks_12m": 8,
+   "impressions_12m": 285
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ανάλυση-και-προ-κοστολογηση-έργου",
+   "lang": "el",
+   "to": "/en/services/construction-services#cost-estimation-and-analysis-for-a-construction",
+   "clicks_12m": 0,
+   "impressions_12m": 8
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/kostenabschätzung-und-analyse-für-ein-bauwerk",
+   "lang": "de",
+   "to": "/en/services/construction-services#cost-estimation-and-analysis-for-a-construction",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/procena-troškova-i-analiza-za-građevinu",
+   "lang": "sr",
+   "to": "/en/services/construction-services#cost-estimation-and-analysis-for-a-construction",
+   "clicks_12m": 1,
+   "impressions_12m": 8
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/предварителна-оценка-и-анализ-на-разходите-за-даден-проект",
+   "lang": "bg",
+   "to": "/en/services/construction-services#cost-estimation-and-analysis-for-a-construction",
+   "clicks_12m": 1,
+   "impressions_12m": 11
+  },
+  {
+   "from": "/en/services/construction-services/electrical-and-plumbing-installations",
+   "lang": "en",
+   "to": "/en/services/construction-services#electrical-and-plumbing-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 111
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ηλεκτρικες-και-υδραυλικες-εγκαταστασεις",
+   "lang": "el",
+   "to": "/en/services/construction-services#electrical-and-plumbing-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/elektro-und-sanitarinstallationen",
+   "lang": "de",
+   "to": "/en/services/construction-services#electrical-and-plumbing-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/elektricne-i-vodovodne-instalacije",
+   "lang": "sr",
+   "to": "/en/services/construction-services#electrical-and-plumbing-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 5
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/електро-и-вик-инсталации",
+   "lang": "bg",
+   "to": "/en/services/construction-services#electrical-and-plumbing-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/construction-services/electro-mechanical-studies",
+   "lang": "en",
+   "to": "/en/services/construction-services#electro-mechanical-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 15
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ηλεκτρομηχανολογικές-μελέτες",
+   "lang": "el",
+   "to": "/en/services/construction-services#electro-mechanical-studies",
+   "clicks_12m": 7,
+   "impressions_12m": 514
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/elektro-mechanische-studien-und-statische-untersuchungen-von-gebäuden",
+   "lang": "de",
+   "to": "/en/services/construction-services#electro-mechanical-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/elektro-mehanička-ispitivanja",
+   "lang": "sr",
+   "to": "/en/services/construction-services#electro-mechanical-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/електромеханични-проекти",
+   "lang": "bg",
+   "to": "/en/services/construction-services#electro-mechanical-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/construction-services/environmental-impact-studies",
+   "lang": "en",
+   "to": "/en/services/construction-services#environmental-impact-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/μελέτες-περιβαλλοντικών-επιπτώσεων",
+   "lang": "el",
+   "to": "/en/services/construction-services#environmental-impact-studies",
+   "clicks_12m": 1,
+   "impressions_12m": 6
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/umweltverträglichkeitsstudien",
+   "lang": "de",
+   "to": "/en/services/construction-services#environmental-impact-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 12
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/studije-uticaja-na-životnu-okolinu",
+   "lang": "sr",
+   "to": "/en/services/construction-services#environmental-impact-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/проучвания-за-въздействието-върху-околната-среда",
+   "lang": "bg",
+   "to": "/en/services/construction-services#environmental-impact-studies",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/construction-services/excavation-and-foundation",
+   "lang": "en",
+   "to": "/en/services/construction-services#excavation-and-foundation",
+   "clicks_12m": 0,
+   "impressions_12m": 21
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εκσκαφές-και-θεμελιώσεις",
+   "lang": "el",
+   "to": "/en/services/construction-services#excavation-and-foundation",
+   "clicks_12m": 1,
+   "impressions_12m": 18
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/ausgrabung-und-gründung",
+   "lang": "de",
+   "to": "/en/services/construction-services#excavation-and-foundation",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/iskopavanje-i-postavljanje-temelja",
+   "lang": "sr",
+   "to": "/en/services/construction-services#excavation-and-foundation",
+   "clicks_12m": 0,
+   "impressions_12m": 19
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/изкопни-дейсности-и-полагане-на-основи",
+   "lang": "bg",
+   "to": "/en/services/construction-services#excavation-and-foundation",
+   "clicks_12m": 0,
+   "impressions_12m": 9
+  },
+  {
+   "from": "/en/services/construction-services/financial-viability-and-feasibility-reports",
+   "lang": "en",
+   "to": "/en/services/construction-services#financial-viability-and-feasibility-reports",
+   "clicks_12m": 0,
+   "impressions_12m": 17
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/οικονομοτεχνικές-μελέτες-βιωσιμότητας-και-σκοπιμότητας",
+   "lang": "el",
+   "to": "/en/services/construction-services#financial-viability-and-feasibility-reports",
+   "clicks_12m": 0,
+   "impressions_12m": 74
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/finanzierbarkeits-und-durchführbarkeitsberichte",
+   "lang": "de",
+   "to": "/en/services/construction-services#financial-viability-and-feasibility-reports",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/izveštaj-o-finansijskoj-održivosti-i-izvodljivosti",
+   "lang": "sr",
+   "to": "/en/services/construction-services#financial-viability-and-feasibility-reports",
+   "clicks_12m": 1,
+   "impressions_12m": 46
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/доклади-за-финансова-приложимост-и-рентабилност",
+   "lang": "bg",
+   "to": "/en/services/construction-services#financial-viability-and-feasibility-reports",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/en/services/construction-services/hybrid-systems-for-independent-residences",
+   "lang": "en",
+   "to": "/en/services/construction-services#hybrid-systems-for-independent-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 5
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/υβριδικα-συστηματα-για-ανεξαρτητες-κατοικιες",
+   "lang": "el",
+   "to": "/en/services/construction-services#hybrid-systems-for-independent-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/hybride-systeme-für-unabhängige-wohnungen",
+   "lang": "de",
+   "to": "/en/services/construction-services#hybrid-systems-for-independent-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/hibridni-sistemi-za-samostalne-stambene-jedinice",
+   "lang": "sr",
+   "to": "/en/services/construction-services#hybrid-systems-for-independent-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 18
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/хибридни-системи-за-самостоятелни-домове",
+   "lang": "bg",
+   "to": "/en/services/construction-services#hybrid-systems-for-independent-residences",
+   "clicks_12m": 0,
+   "impressions_12m": 34
+  },
+  {
+   "from": "/en/services/construction-services/individual-heating-cooling-systems",
+   "lang": "en",
+   "to": "/en/services/construction-services#individual-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 47
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/αυτονομα-συστηματα-ψυξης-θερμανσης",
+   "lang": "el",
+   "to": "/en/services/construction-services#individual-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 17
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/individuelle-heiz-kθhlsysteme",
+   "lang": "de",
+   "to": "/en/services/construction-services#individual-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/individualni-sistem-za-grejanje-i-rashladjivanje",
+   "lang": "sr",
+   "to": "/en/services/construction-services#individual-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/автономни-охладително-отоплителни-системи",
+   "lang": "bg",
+   "to": "/en/services/construction-services#individual-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/en/services/construction-services/landscaping-and-management-of-surrounding-area",
+   "lang": "en",
+   "to": "/en/services/construction-services#landscaping-and-management-of-surrounding-area",
+   "clicks_12m": 0,
+   "impressions_12m": 25
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/διαμόρφωση-και-διαχείριση-περιβάλλοντα-χώρου-αρχιτεκτονική-κήπου",
+   "lang": "el",
+   "to": "/en/services/construction-services#landscaping-and-management-of-surrounding-area",
+   "clicks_12m": 19,
+   "impressions_12m": 860
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/landschaftsgestaltung-und-management-der-umgebung-gartenarchitektur",
+   "lang": "de",
+   "to": "/en/services/construction-services#landscaping-and-management-of-surrounding-area",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/uređenje-i-uravljanje-okoline-baštenska-arhitektura",
+   "lang": "sr",
+   "to": "/en/services/construction-services#landscaping-and-management-of-surrounding-area",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/озеленяване-и-подръжка-ландшафтна-архитектура",
+   "lang": "bg",
+   "to": "/en/services/construction-services#landscaping-and-management-of-surrounding-area",
+   "clicks_12m": 1,
+   "impressions_12m": 20
+  },
+  {
+   "from": "/en/services/construction-services/metal-building-constructions",
+   "lang": "en",
+   "to": "/en/services/construction-services#metal-building-constructions",
+   "clicks_12m": 5,
+   "impressions_12m": 84
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/μεταλλικές-κατασκευές-κατοικιών",
+   "lang": "el",
+   "to": "/en/services/construction-services#metal-building-constructions",
+   "clicks_12m": 0,
+   "impressions_12m": 25
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/metallbaukonstruktionen",
+   "lang": "de",
+   "to": "/en/services/construction-services#metal-building-constructions",
+   "clicks_12m": 0,
+   "impressions_12m": 25
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/metalne-građevinske-konstrukcije",
+   "lang": "sr",
+   "to": "/en/services/construction-services#metal-building-constructions",
+   "clicks_12m": 0,
+   "impressions_12m": 15
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/сгради-от-метални-конструкции",
+   "lang": "bg",
+   "to": "/en/services/construction-services#metal-building-constructions",
+   "clicks_12m": 3,
+   "impressions_12m": 20
+  },
+  {
+   "from": "/en/services/construction-services/photovoltaic-systems-installations",
+   "lang": "en",
+   "to": "/en/services/construction-services#photovoltaic-systems-installations",
+   "clicks_12m": 5,
+   "impressions_12m": 76
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εγκατασταση-φωτοβολταικων-συστηματων",
+   "lang": "el",
+   "to": "/en/services/construction-services#photovoltaic-systems-installations",
+   "clicks_12m": 5,
+   "impressions_12m": 79
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/anlagen-für-photovoltaikanlagen",
+   "lang": "de",
+   "to": "/en/services/construction-services#photovoltaic-systems-installations",
+   "clicks_12m": 1,
+   "impressions_12m": 21
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/instalacija-fotonaponskih-sistema",
+   "lang": "sr",
+   "to": "/en/services/construction-services#photovoltaic-systems-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/инсталация-на-фотоволтаични-системи",
+   "lang": "bg",
+   "to": "/en/services/construction-services#photovoltaic-systems-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/construction-services/remote-monitoring-systems",
+   "lang": "en",
+   "to": "/en/services/construction-services#remote-monitoring-systems",
+   "clicks_12m": 2,
+   "impressions_12m": 43
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/συστήματα-απομακρυσμένης-εποπτείας",
+   "lang": "el",
+   "to": "/en/services/construction-services#remote-monitoring-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/eigentumssicherung-und-bewachung",
+   "lang": "de",
+   "to": "/en/services/construction-services#remote-monitoring-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/sigurnost-i-bezbednost-nekretnine",
+   "lang": "sr",
+   "to": "/en/services/construction-services#remote-monitoring-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/охрана-на-имот-сот-и-сод",
+   "lang": "bg",
+   "to": "/en/services/construction-services#remote-monitoring-systems",
+   "clicks_12m": 2,
+   "impressions_12m": 41
+  },
+  {
+   "from": "/en/services/construction-services/supervision-and-live-video-reporting",
+   "lang": "en",
+   "to": "/en/services/construction-services#supervision-and-live-video-reporting",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/επίβλεψη-και-ενημέρωση-reporting-με-ζωντανό-βίντεο",
+   "lang": "el",
+   "to": "/en/services/construction-services#supervision-and-live-video-reporting",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/überwachung-und-live-video-berichterstattung",
+   "lang": "de",
+   "to": "/en/services/construction-services#supervision-and-live-video-reporting",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/nadgledanje-i-video-izveštavanje-uživo",
+   "lang": "sr",
+   "to": "/en/services/construction-services#supervision-and-live-video-reporting",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/надзор-и-видео-доклад-на-живо",
+   "lang": "bg",
+   "to": "/en/services/construction-services#supervision-and-live-video-reporting",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/construction-services/swimming-pool-constructions",
+   "lang": "en",
+   "to": "/en/services/construction-services#swimming-pool-constructions",
+   "clicks_12m": 5,
+   "impressions_12m": 150
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ειδικές-κατασκευές-πισινών",
+   "lang": "el",
+   "to": "/en/services/construction-services#swimming-pool-constructions",
+   "clicks_12m": 1,
+   "impressions_12m": 45
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/schwimmbadbau",
+   "lang": "de",
+   "to": "/en/services/construction-services#swimming-pool-constructions",
+   "clicks_12m": 1,
+   "impressions_12m": 19
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/izgradnja-bazena",
+   "lang": "sr",
+   "to": "/en/services/construction-services#swimming-pool-constructions",
+   "clicks_12m": 5,
+   "impressions_12m": 111
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/изграждане-на-басейни",
+   "lang": "bg",
+   "to": "/en/services/construction-services#swimming-pool-constructions",
+   "clicks_12m": 1,
+   "impressions_12m": 13
+  },
+  {
+   "from": "/en/services/construction-services/thermal-insulation-studies-and-installations",
+   "lang": "en",
+   "to": "/en/services/construction-services#thermal-insulation-studies-and-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/μελέτες-και-εφαρμογές-θερμομόνωσης",
+   "lang": "el",
+   "to": "/en/services/construction-services#thermal-insulation-studies-and-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/untersuchungen-und-anlagen-zur-wärmedämmung",
+   "lang": "de",
+   "to": "/en/services/construction-services#thermal-insulation-studies-and-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/ispitivanje-i-instalacija-toplotne-izolacije",
+   "lang": "sr",
+   "to": "/en/services/construction-services#thermal-insulation-studies-and-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/проектиране-и-монтаж-на-термоизолации",
+   "lang": "bg",
+   "to": "/en/services/construction-services#thermal-insulation-studies-and-installations",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/en/services/construction-services/underfloor-heating-cooling-systems",
+   "lang": "en",
+   "to": "/en/services/construction-services#underfloor-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 22
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/συστηματα-ενδοδαπεδιας-ψυξης-θερμανσης",
+   "lang": "el",
+   "to": "/en/services/construction-services#underfloor-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/de/dienstleistungen/bauleistungen/fußbodenheizung-kuhlsysteme",
+   "lang": "de",
+   "to": "/en/services/construction-services#underfloor-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/sr/usluge/gradevinske-usluge/podni-sistemi-za-grejanje-i-hlađenje",
+   "lang": "sr",
+   "to": "/en/services/construction-services#underfloor-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 66
+  },
+  {
+   "from": "/bg/услуги/строителни-услуги/подово-отоплеителни-охладителни-системи",
+   "lang": "bg",
+   "to": "/en/services/construction-services#underfloor-heating-cooling-systems",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-για-επενδυτες",
+   "lang": "el",
+   "to": "/en/services/investor-services",
+   "clicks_12m": 0,
+   "impressions_12m": 11
+  },
+  {
+   "from": "/de/dienstleistungen/dienstleistungen-fur-investoren",
+   "lang": "de",
+   "to": "/en/services/investor-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-za-investitore",
+   "lang": "sr",
+   "to": "/en/services/investor-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/инвеститорски-услуги",
+   "lang": "bg",
+   "to": "/en/services/investor-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/investor-services/hellenic-republic-assets-development-fund-hradf-tenders",
+   "lang": "en",
+   "to": "/en/services/investor-services#hellenic-republic-assets-development-fund-hradf-tenders",
+   "clicks_12m": 3,
+   "impressions_12m": 1163
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-για-επενδυτες/δημοπρασιες-ταιπεδ",
+   "lang": "el",
+   "to": "/en/services/investor-services#hellenic-republic-assets-development-fund-hradf-tenders",
+   "clicks_12m": 0,
+   "impressions_12m": 71
+  },
+  {
+   "from": "/de/dienstleistungen/dienstleistungen-fur-investoren/ausschreibungen-des-fonds-für-die-entwicklung-des-vermögens-der-hellenischen-republik",
+   "lang": "de",
+   "to": "/en/services/investor-services#hellenic-republic-assets-development-fund-hradf-tenders",
+   "clicks_12m": 3,
+   "impressions_12m": 37
+  },
+  {
+   "from": "/sr/usluge/usluge-za-investitore/tenderi-helenskog-republickog-fonda-za-razvoj-imovine",
+   "lang": "sr",
+   "to": "/en/services/investor-services#hellenic-republic-assets-development-fund-hradf-tenders",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/инвеститорски-услуги/фонд-за-развитие-на-активите-на-република-гърция",
+   "lang": "bg",
+   "to": "/en/services/investor-services#hellenic-republic-assets-development-fund-hradf-tenders",
+   "clicks_12m": 0,
+   "impressions_12m": 2
+  },
+  {
+   "from": "/en/services/investor-services/hotel-designs-and-constructions",
+   "lang": "en",
+   "to": "/en/services/investor-services#hotel-designs-and-constructions",
+   "clicks_12m": 0,
+   "impressions_12m": 12
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-για-επενδυτες/μελετες-και-κατασκευες-ξενοδοχειων",
+   "lang": "el",
+   "to": "/en/services/investor-services#hotel-designs-and-constructions",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/de/dienstleistungen/dienstleistungen-fur-investoren/hoteldesigns-und-konstruktionen",
+   "lang": "de",
+   "to": "/en/services/investor-services#hotel-designs-and-constructions",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/investor-services/ports-and-marinas-design",
+   "lang": "en",
+   "to": "/en/services/investor-services#ports-and-marinas-design",
+   "clicks_12m": 0,
+   "impressions_12m": 42
+  },
+  {
+   "from": "/el/υπηρεσιες/υπηρεσιες-για-επενδυτες/μαρίνες-λιμάνια",
+   "lang": "el",
+   "to": "/en/services/investor-services#ports-and-marinas-design",
+   "clicks_12m": 2,
+   "impressions_12m": 36
+  },
+  {
+   "from": "/de/dienstleistungen/dienstleistungen-fur-investoren/häfen-marinas-design",
+   "lang": "de",
+   "to": "/en/services/investor-services#ports-and-marinas-design",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-za-investitore/dizajn-marina-luka",
+   "lang": "sr",
+   "to": "/en/services/investor-services#ports-and-marinas-design",
+   "clicks_12m": 0,
+   "impressions_12m": 122
+  },
+  {
+   "from": "/bg/услуги/инвеститорски-услуги/марини-пристанища",
+   "lang": "bg",
+   "to": "/en/services/investor-services#ports-and-marinas-design",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες",
+   "lang": "el",
+   "to": "/en/services/seller-services",
+   "clicks_12m": 0,
+   "impressions_12m": 23
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste",
+   "lang": "de",
+   "to": "/en/services/seller-services",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca",
+   "lang": "sr",
+   "to": "/en/services/seller-services",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача",
+   "lang": "bg",
+   "to": "/en/services/seller-services",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/en/services/seller-services/ad-packages-for-worldwide-portals",
+   "lang": "en",
+   "to": "/en/services/seller-services#ad-packages-for-worldwide-portals",
+   "clicks_12m": 0,
+   "impressions_12m": 10
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες/πακετα-διαφημισης-σε-portals",
+   "lang": "el",
+   "to": "/en/services/seller-services#ad-packages-for-worldwide-portals",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste/werbepakete-für-die-portale",
+   "lang": "de",
+   "to": "/en/services/seller-services#ad-packages-for-worldwide-portals",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca/oglasni-paketi-za-portale",
+   "lang": "sr",
+   "to": "/en/services/seller-services#ad-packages-for-worldwide-portals",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача/рекламни-пакети-в-портали",
+   "lang": "bg",
+   "to": "/en/services/seller-services#ad-packages-for-worldwide-portals",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/seller-services/aerial-photos-and-videos",
+   "lang": "en",
+   "to": "/en/services/seller-services#aerial-photos-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες/αεροφωτογραφιες-αεροβιντεοληψεις",
+   "lang": "el",
+   "to": "/en/services/seller-services#aerial-photos-and-videos",
+   "clicks_12m": 2,
+   "impressions_12m": 58
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste/airfotos-und-airvideos",
+   "lang": "de",
+   "to": "/en/services/seller-services#aerial-photos-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca/fotografije-i-video-vazduha",
+   "lang": "sr",
+   "to": "/en/services/seller-services#aerial-photos-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача/снимки-и-въздушни-видеозаписи",
+   "lang": "bg",
+   "to": "/en/services/seller-services#aerial-photos-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 5
+  },
+  {
+   "from": "/en/services/seller-services/delegation-of-property-management",
+   "lang": "en",
+   "to": "/en/services/seller-services#delegation-of-property-management",
+   "clicks_12m": 0,
+   "impressions_12m": 30
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες/αναθεση-διαχειρισης-ακινητου",
+   "lang": "el",
+   "to": "/en/services/seller-services#delegation-of-property-management",
+   "clicks_12m": 28,
+   "impressions_12m": 582
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste/delegation-der-vermögensverwaltung",
+   "lang": "de",
+   "to": "/en/services/seller-services#delegation-of-property-management",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca/delegiranje-upravljanjem-nekretnina",
+   "lang": "sr",
+   "to": "/en/services/seller-services#delegation-of-property-management",
+   "clicks_12m": 0,
+   "impressions_12m": 3
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача/възлагане-и-управление-на-имот",
+   "lang": "bg",
+   "to": "/en/services/seller-services#delegation-of-property-management",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/en/services/seller-services/energy-efficiency-certificates-pea",
+   "lang": "en",
+   "to": "/en/services/seller-services#energy-efficiency-certificates-pea",
+   "clicks_12m": 17,
+   "impressions_12m": 2219
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες/πιστοποιητικα-ενεργειακης-αποδοσης-πεα",
+   "lang": "el",
+   "to": "/en/services/seller-services#energy-efficiency-certificates-pea",
+   "clicks_12m": 9,
+   "impressions_12m": 488
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste/energieeffizienzzertifikat-energieinspektionen",
+   "lang": "de",
+   "to": "/en/services/seller-services#energy-efficiency-certificates-pea",
+   "clicks_12m": 0,
+   "impressions_12m": 17
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca/sertifikati-o-energetskoj-efikasnosti-pea",
+   "lang": "sr",
+   "to": "/en/services/seller-services#energy-efficiency-certificates-pea",
+   "clicks_12m": 1,
+   "impressions_12m": 40
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача/сертификати-за-енергийна-ефективност-(pea)",
+   "lang": "bg",
+   "to": "/en/services/seller-services#energy-efficiency-certificates-pea",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/en/services/seller-services/online-delegation-and-selection-of-ad-package",
+   "lang": "en",
+   "to": "/en/services/seller-services#online-delegation-and-selection-of-ad-package",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες/ηλεκτρονικη-αναθεση-και-επιλογη-πακετου-διαφημισης-ακινητου",
+   "lang": "el",
+   "to": "/en/services/seller-services#online-delegation-and-selection-of-ad-package",
+   "clicks_12m": 0,
+   "impressions_12m": 10
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste/online-delegation-und-auswahl-von-ad-paketen",
+   "lang": "de",
+   "to": "/en/services/seller-services#online-delegation-and-selection-of-ad-package",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca/online-delegiranje-i-izbor-reklamnog-paketa",
+   "lang": "sr",
+   "to": "/en/services/seller-services#online-delegation-and-selection-of-ad-package",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача/онлайн-възлагане-и-избор-на-пакет-за-реклама-на-недвижими-имоти",
+   "lang": "bg",
+   "to": "/en/services/seller-services#online-delegation-and-selection-of-ad-package",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/en/services/seller-services/photorealistic-and-360-view",
+   "lang": "en",
+   "to": "/en/services/seller-services#photorealistic-and-360-view",
+   "clicks_12m": 0,
+   "impressions_12m": 10
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες/φωτορεαλιστικα-και-360-view",
+   "lang": "el",
+   "to": "/en/services/seller-services#photorealistic-and-360-view",
+   "clicks_12m": 1,
+   "impressions_12m": 39
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste/fotorealistisch-und-360-ansicht",
+   "lang": "de",
+   "to": "/en/services/seller-services#photorealistic-and-360-view",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca/fotorealizam-i-360-pogled",
+   "lang": "sr",
+   "to": "/en/services/seller-services#photorealistic-and-360-view",
+   "clicks_12m": 0,
+   "impressions_12m": 134
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача/визуализации-и-360-градусов-изглед",
+   "lang": "bg",
+   "to": "/en/services/seller-services#photorealistic-and-360-view",
+   "clicks_12m": 0,
+   "impressions_12m": 4
+  },
+  {
+   "from": "/en/services/seller-services/professional-photography-and-videos",
+   "lang": "en",
+   "to": "/en/services/seller-services#professional-photography-and-videos",
+   "clicks_12m": 1,
+   "impressions_12m": 26
+  },
+  {
+   "from": "/el/υπηρεσιες/για-πωλητες/επαγγελματικές-φωτογραφίες-και-βιντεολήψεις",
+   "lang": "el",
+   "to": "/en/services/seller-services#professional-photography-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 25
+  },
+  {
+   "from": "/de/dienstleistungen/verkauferdienste/professionelle-fotografie-und-videos",
+   "lang": "de",
+   "to": "/en/services/seller-services#professional-photography-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 0
+  },
+  {
+   "from": "/sr/usluge/usluge-prodavca/profesionalne-fotografije-i-video",
+   "lang": "sr",
+   "to": "/en/services/seller-services#professional-photography-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 7
+  },
+  {
+   "from": "/bg/услуги/услуги-на-продавача/професионални-снимки-и-видео",
+   "lang": "bg",
+   "to": "/en/services/seller-services#professional-photography-and-videos",
+   "clicks_12m": 0,
+   "impressions_12m": 1
+  }
+ ]
+}

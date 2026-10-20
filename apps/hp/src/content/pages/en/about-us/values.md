@@ -9,8 +9,8 @@ schema: AboutPage
 parents:
 - name: About us
   path: /en/about-us
-image: /pages/about-us-values/4a4e6e1e-aboutus-values-banner-hero.webp
-image_alt: Wooden blocks reading core values, strategy and vision
+image: ''
+image_alt: ''
 related:
 - label: About Halkidiki Properties
   href: /en/about-us
@@ -59,3 +59,5 @@ In addition to our core values, our mission statement more clearly defines our t
 They travel thousands of miles regardless of the weather, selling and building houses, building relationships, solving problems, negotiating, going underground, jumping fences, photographing, get wet, discovering neighborhoods. They are obsessed with the prices, the market values and the new properties. They make sure and act to ensure that our customers get the ideal home for them. They are always available, but above all they love their job.
 
 They are the people who make the companies and not the other way around.
+
+<img src="/pages/about-us-values/4a4e6e1e-aboutus-values-banner.webp" alt="Wooden blocks reading core values, strategy and vision" width="800" height="450" loading="lazy" decoding="async" />

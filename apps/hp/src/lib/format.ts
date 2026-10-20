@@ -1,5 +1,6 @@
 // Μορφοποίηση — μία φορά, σωστά, παντού.
 import type { Lang } from './i18n';
+import { brand } from '../brand/index';
 
 // 🪤 ΚΑΘΕ ΝΕΑ ΓΛΩΣΣΑ ΘΕΛΕΙ ΓΡΑΜΜΗ ΕΔΩ. Χωρίς αυτήν το `LOCALE[lang]` είναι
 //    `undefined` και το Intl πέφτει στο locale του SERVER (en-US) — δηλαδή
@@ -13,7 +14,7 @@ const LOCALE: Record<Lang, string> = {
 /** Τιμή. Λεπτό αδιάσπαστο διάστημα πριν το € ώστε να μη σπάει σε νέα γραμμή. */
 export function money(n: number, lang: Lang = 'el'): string {
   return new Intl.NumberFormat(LOCALE[lang], {
-    style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+    style: 'currency', currency: brand.market.currency, maximumFractionDigits: 0,
   }).format(n).replace(/\s/g, ' ');
 }
 

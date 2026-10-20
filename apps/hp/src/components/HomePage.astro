@@ -26,6 +26,7 @@ import { num } from '../lib/format';
 import { viewerOf, municipalityOf } from '../lib/gate';
 import { company } from '../lib/company';
 import { cmsText, cmsImage } from '../lib/content';
+import { brand } from '../brand/index';
 
 interface Props { lang?: Lang }
 const lang: Lang = Astro.props.lang ?? DEFAULT_LANG;
@@ -145,9 +146,9 @@ const jsonLd = [
     //    το τηλέφωνο από το προφίλ της επιχείρησης. Γι' αυτό κάθε πεδίο περνά
     //    από το `company()`, που κρατά τη σημερινή τιμή όταν το CMS είναι κενό.
     telephone: co.phoneE164, email: co.email,
-    areaServed: { '@type': 'AdministrativeArea', name: 'Halkidiki, Greece' },
+    areaServed: { '@type': 'AdministrativeArea', name: brand.market.areaServed },
     address: { '@type': 'PostalAddress', streetAddress: co.street, addressLocality: co.city,
-               addressRegion: co.region, postalCode: co.postalCode, addressCountry: 'GR' },
+               addressRegion: co.region, postalCode: co.postalCode, addressCountry: brand.address.country },
     foundingDate: String(co.foundedYear),
   },
   {
@@ -176,7 +177,7 @@ const jsonLd = [
           name: `${a.subcategory ?? ''} — ${municipalityOf(a, lang)}`.trim(),
           ...(c ? { image: marked(c.url, 800) } : {}),
           ...(priceVisible(a) ? {
-            offers: { '@type': 'Offer', price: priceOf(a), priceCurrency: 'EUR',
+            offers: { '@type': 'Offer', price: priceOf(a), priceCurrency: brand.market.currency,
                       availability: 'https://schema.org/InStock' },
           } : {}),
         },

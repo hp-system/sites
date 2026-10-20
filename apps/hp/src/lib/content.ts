@@ -17,6 +17,7 @@
 //    το λεξικό. Η πλήρης μεταφορά είναι ξεχωριστή απόφαση.
 // ═══════════════════════════════════════════════════════════════════════════
 import type { Lang } from './i18n';
+import { brand } from '../brand/index';
 
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
@@ -34,7 +35,7 @@ let inflight: Promise<Payload> | null = null;
 async function load(): Promise<Payload> {
   if (cache && Date.now() - cache.at < TTL) return cache.data;
   if (inflight) return inflight;
-  inflight = fetch(`${API}/site/content?site=hp`, { signal: AbortSignal.timeout(4000) })
+  inflight = fetch(`${API}/site/content?site=${brand.key}`, { signal: AbortSignal.timeout(4000) })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
     .then((d: Payload) => { cache = { at: Date.now(), data: d ?? {} }; return cache.data; })
     // Το CMS κάτω ΔΕΝ αδειάζει τη σελίδα: γυρνάμε ό,τι είχαμε, αλλιώς κενό —

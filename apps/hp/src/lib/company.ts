@@ -17,6 +17,7 @@
 //       συμπληρωθούν ΟΛΑ. Είναι το μόνο που κρατά το τηλέφωνο στη σελίδα.
 // ═══════════════════════════════════════════════════════════════════════════
 import { PHONE_TEXT, PHONE_HREF, PHONE_E164, EMAIL } from './contact';
+import { brand } from '../brand/index';
 
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
@@ -33,10 +34,11 @@ export type Company = {
 
 // Οι σημερινές τιμές, όπως είναι γραμμένες στη σελίδα σήμερα.
 const FALLBACK = {
-  legalName: 'Halkidiki Properties',
-  gemi: '116495906000',
-  street: 'Νέο Ρύσιο', city: 'Θεσσαλονίκη', postalCode: '57001', region: 'Θεσσαλονίκη',
-  foundedYear: 2021,
+  legalName: brand.company.legalName,
+  gemi: brand.company.gemi,
+  street: brand.address.street, city: brand.address.city,
+  postalCode: brand.address.postalCode, region: brand.address.region,
+  foundedYear: brand.company.foundedYear,
 } as const;
 
 type Raw = Partial<Record<
@@ -50,7 +52,7 @@ let inflight: Promise<Raw> | null = null;
 async function load(): Promise<Raw> {
   if (cache && Date.now() - cache.at < TTL) return cache.raw;
   if (inflight) return inflight;
-  inflight = fetch(`${API}/site/company?site=hp`, { signal: AbortSignal.timeout(4000) })
+  inflight = fetch(`${API}/site/company?site=${brand.key}`, { signal: AbortSignal.timeout(4000) })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
     .then((j) => {
       const raw: Raw = (j && j.company) || {};

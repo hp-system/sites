@@ -14,6 +14,7 @@ import { company } from '../lib/company';
 //    `?municipality=` που η μηχανή αγνοεί.
 import { FACETS, facetUrl } from '../lib/listing';
 import { pageExists } from '../lib/pages';
+import { brand } from '../brand/index';
 interface Props { lang: Lang; munis?: { name: string; key?: string }[] }
 const { lang } = Astro.props;
 const p = prefix(lang);
@@ -33,7 +34,7 @@ const has = (k: string) => pageExists(k as any);
       <div class="fbrand">
         {/* ΤΟ ΠΡΑΓΜΑΤΙΚΟ ΣΗΜΑ. Εδώ ήταν ζωγραφισμένο ένα γενικό σπιτάκι με στέγη —
             διαφορετικό λογότυπο από την κεφαλίδα, στην ΙΔΙΑ σελίδα. */}
-        <a class="brand" href={p || '/'} aria-label="Halkidiki Properties">
+        <a class="brand" href={p || '/'} aria-label={brand.name}>
           <Logo variant="mono" size="md" />
         </a>
         {/* Τρεις γραμμές, μία πληροφορία η καθεμία (George, 28/7). Πριν, η

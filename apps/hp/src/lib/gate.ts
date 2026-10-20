@@ -15,6 +15,7 @@ import type { Attrs } from './api';
 import { pick } from './api';
 import type { Lang } from './i18n';
 import { memberOf } from './member';
+import { brand } from '../brand/index';
 
 /**
  * ΤΡΙΑ ΕΠΙΠΕΔΑ, ΟΧΙ ΔΥΟ — το όραμα του George (30/7):
@@ -136,14 +137,7 @@ function fold(s: string): string {
 }
 
 /** Πτυχωμένη μορφή → κανονικό όνομα (ελληνική ονομαστική). */
-const MUNI_ALIAS: Record<string, string> = {
-  'κασσανδρα': 'Κασσάνδρα',            'kassandra': 'Κασσάνδρα',
-  'σιθωνια': 'Σιθωνία',                'sithonia': 'Σιθωνία',
-  'νεα προποντιδα': 'Νέα Προποντίδα',  'ν προποντιδα': 'Νέα Προποντίδα',
-  'nea propontida': 'Νέα Προποντίδα',
-  'αριστοτελη': 'Αριστοτέλης',         'aristoteli': 'Αριστοτέλης',
-  'πολυγυρο': 'Πολύγυρος',             'polygyro': 'Πολύγυρος',
-};
+const MUNI_ALIAS: Record<string, string> = brand.geography.municipalityAliases;
 
 /**
  * Το ΚΛΕΙΔΙ του δήμου — ελληνική ονομαστική, ίδιο σε ΟΛΕΣ τις γλώσσες και σε

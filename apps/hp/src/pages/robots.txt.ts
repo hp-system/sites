@@ -20,6 +20,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
 import { isProd, ORIGIN } from '../lib/seo';
+import { brand } from '../brand/index';
 
 export const prerender = false;
 
@@ -35,7 +36,7 @@ const MEDIA_MONITORS = ['Mediatoolkitbot'];
 
 const block = (agents: string[]) => agents.map((a) => `User-agent: ${a}\nDisallow: /`).join('\n\n');
 
-const PRODUCTION = `# Halkidiki Properties
+const PRODUCTION = `# ${brand.name}
 # ═══════════════════════════════════════════════════════════════════════
 # ΔΕΝ αποκλείονται (και δεν πρέπει): Googlebot, Bingbot, DuckDuckBot,
 # Applebot, Yandex, AhrefsBot/AhrefsSiteAudit, meta-externalagent,
@@ -88,7 +89,7 @@ Sitemap: ${ORIGIN}/sitemap.xml
  * ⚠️ Το κόστος είναι πραγματικό και το δεχόμαστε: η προεπισκόπηση θα σαρώνεται. Ο στόχος
  * είναι «να μη φαίνεται», όχι «να μη διαβάζεται» — και τα δύο μαζί δεν γίνονται.
  */
-const STAGING = `# Περιβάλλον προεπισκόπησης — ΔΕΝ είναι το halkidikiproperties.com.
+const STAGING = `# Περιβάλλον προεπισκόπησης — ΔΕΝ είναι το ${brand.web.prodHosts.at(-1)}.
 # Η σάρωση επιτρέπεται ΕΠΙΤΗΔΕΣ, ώστε να διαβαστεί το «noindex» που στέλνει ο διακομιστής
 # σε κάθε απάντηση (X-Robots-Tag). Με «Disallow: /» η μηχανή δεν θα το έβλεπε ποτέ, και η
 # διεύθυνση θα μπορούσε να εμφανιστεί σκέτη στα αποτελέσματα.

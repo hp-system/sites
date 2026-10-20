@@ -38,6 +38,7 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import { prefix, t, T, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
+import { brand } from '../brand/index';
 
 interface Props { lang: Lang; next?: string }
 const { lang, next = '/' } = Astro.props;
@@ -117,7 +118,7 @@ const JS_T = {
 
   <main id="main" class="auth">
     <div class="box" data-next={safeNext} data-def={defCode} data-i18n={JSON.stringify(JS_T)}>
-      <p class="t-label">Halkidiki Properties</p>
+      <p class="t-label">{brand.name}</p>
       <h1 class="t-h2 auth__h">{t(lang, 'auth.h1')}</h1>
       <p class="say">{t(lang, 'auth.sub')}</p>
 

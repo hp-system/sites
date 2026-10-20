@@ -15,6 +15,7 @@ import { listUrl, prefix, t, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
 import { pageExists } from '../lib/pages';
+import { brand } from '../brand/index';
 interface Props {
   lang: Lang; solid?: boolean;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -50,7 +51,7 @@ const has = (k: string) => pageExists(k as any);
 ---
 <header class:list={['site-header', solid && 'site-header--solid']}>
   <div class="site-header__in">
-  <a class="brandlink" href={p || '/'} aria-label="Halkidiki Properties">
+  <a class="brandlink" href={p || '/'} aria-label={brand.name}>
     <span class="brandlink__sm"><Logo variant="mono" size="sm" /></span>
     <span class="brandlink__md"><Logo variant="mono" size="md" /></span>
   </a>

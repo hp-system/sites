@@ -1,5 +1,7 @@
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
+// The production origin comes from the brand (src/brand) — one place for every company fact.
+import { brand } from './src/brand/index.ts';
 
 // ───────────────────────────────────────────────────────────────────────────
 // SSR με node adapter — ΟΧΙ static build.
@@ -13,7 +15,7 @@ import node from '@astrojs/node';
 export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'standalone' }),
-  site: process.env.SITE_URL || 'https://www.halkidikiproperties.com',
+  site: process.env.SITE_URL || brand.web.origin,
   build: { inlineStylesheets: 'always' },   // ένα αίτημα λιγότερο στο κρίσιμο μονοπάτι
   compressHTML: true,
   server: { port: 4330, host: true },

@@ -1,0 +1,311 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ARTICLE — /en/articles/{category}/{slug}.
+// Approved mockup (George 20/10/2026): https://claude.ai/artifact/X2trzP7RaqkgAQza73Me1n
+//
+//   category · H1 · byline (author NAME + ROLE, no photo) · hero · text
+//   · FAQ · sources · related articles + area links (end, and in the side
+//     column under the contents on desktop) · call to action
+//
+// The text is the old site's, copied faithfully. The cost calculator is placed by
+// the markdown marker (lib/remark-widgets.mjs) and wired here.
+// English only for now — hreflang lists `en` alone.
+// ═══════════════════════════════════════════════════════════════════════════
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import MobileMenu from './MobileMenu.astro';
+import Footer from './Footer.astro';
+import { allProperties } from '../lib/api';
+import { muniKey, municipalityOf } from '../lib/gate';
+import { listUrl, prefix, type Lang } from '../lib/i18n';
+import { contentUrl, pageExists } from '../lib/pages';
+import { brand } from '../brand/index';
+import {
+  articleUrl, articlesRoot, categoryName, categoryUrl, relatedTo, readingMinutes, dateText,
+  excerptOf, type Article,
+} from '../lib/articles';
+import { authorOf } from '../content/articles/authors';
+import { AREA_PAGES, areaUrl } from '../content/areas/en';
+
+interface Props { article: Article }
+const { article } = Astro.props;
+const a = article.data;
+const lang: Lang = 'en';
+
+const { Content, headings } = await render(article);
+const toc = headings.filter((h) => h.depth === 2 && h.text.trim());
+const body = article.body ?? '';
+// The old texts already carry their own FAQ / sources sections in some articles:
+// the accordion and the list are added only when the text does not have them.
+const bodyHasFaq = /^#{2,3}\s.*(frequently asked|faq)/im.test(body);
+const bodyHasSources = /^#{2,3}\s.*sources/im.test(body);
+
+const author = authorOf(a.author);
+const minutes = readingMinutes(article);
+const updated = dateText(a.updated || a.published);
+const related = await relatedTo(article, 3);
+const areas = AREA_PAGES.filter((p) => p.kind === 'municipality');
+
+const url = articleUrl(article);
+const pathFor = (l: Lang) => (l === 'en' ? url : listUrl(l));
+const contact = pageExists('contact') ? contentUrl('contact', lang) : listUrl(lang);
+
+let munis: { name: string; key: string }[] = [];
+try {
+  const items = await allProperties(Astro.cookies.get('member_token')?.value);
+  munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
+    .slice(0, 4)
+    .map((k) => {
+      const src = items.find((p) => muniKey(p.attributes ?? {}) === k);
+      return { name: municipalityOf(src?.attributes ?? {}, lang) || k, key: k };
+    });
+} catch {
+  munis = [];
+}
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const image = a.hero_image || a.og_image;
+const jsonLd: unknown[] = [
+  {
+    '@context': 'https://schema.org', '@type': 'Article',
+    mainEntityOfPage: `${site}${url}`, headline: a.h1, inLanguage: 'en',
+    ...(image ? { image: `${site}${image}` } : {}),
+    ...(a.published ? { datePublished: a.published } : {}),
+    ...(a.updated ? { dateModified: a.updated } : {}),
+    // Name and role only — no author photo (George 20/10).
+    ...(author ? { author: { '@type': 'Person', name: author.name, jobTitle: author.role,
+      worksFor: { '@type': 'Organization', name: brand.name } } } : {}),
+    publisher: { '@type': 'Organization', name: brand.name },
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: brand.name, item: `${site}${prefix(lang) || '/'}` },
+      { '@type': 'ListItem', position: 2, name: 'Articles', item: `${site}${categoryUrl('all-news')}` },
+      { '@type': 'ListItem', position: 3, name: categoryName(a.category), item: `${site}${categoryUrl(a.category)}` },
+      { '@type': 'ListItem', position: 4, name: a.h1, item: `${site}${url}` },
+    ],
+  },
+];
+if (a.faq.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: a.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  });
+}
+if (a.has_calculator) {
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': 'WebApplication',
+    name: 'Property cost calculator — Greece 2026', applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any', url: `${site}${url}`, offers: { '@type': 'Offer', price: '0', priceCurrency: brand.market.currency },
+  });
+}
+---
+<Base lang={lang} title={a.title} description={a.description}
+      pathFor={pathFor} langs={['en']} jsonLd={jsonLd} ogImage={image ? `${site}${image}` : undefined}>
+  <Header lang={lang} solid pathFor={pathFor} />
+  <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
+
+  <main id="main" class="art">
+    <header class="wrap art-top">
+      <nav class="crumb" aria-label="breadcrumb">
+        <a href={prefix(lang) || '/'}>{brand.name}</a>
+        <span aria-hidden="true">·</span>
+        <a href={categoryUrl('all-news')}>Articles</a>
+        <span aria-hidden="true">·</span>
+        <a href={categoryUrl(a.category)}>{categoryName(a.category)}</a>
+      </nav>
+      <p class="t-label art-cat">{categoryName(a.category)}</p>
+      <h1 class="t-display art-h1">{a.h1}</h1>
+      <p class="art-by">
+        {author && <span class="art-au"><b>{author.name}</b> · {author.role}</span>}
+        <span>{minutes} min read</span>
+        {updated && <span>Updated {updated}</span>}
+        {a.byline_note && <span>{a.byline_note}</span>}
+      </p>
+    </header>
+
+    {image && (
+      <figure class="wrap art-hero">
+        <img src={image} alt={a.h1} width="1200" height="675" fetchpriority="high" decoding="async" />
+      </figure>
+    )}
+
+    <div class="wrap art-grid">
+      <article class="prose">
+        <Content />
+
+        {a.faq.length > 0 && !bodyHasFaq && (
+          <section class="faq" aria-labelledby="faq-h">
+            <h2 id="faq-h">Frequently asked questions</h2>
+            {a.faq.map((f, i) => (
+              <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>
+            ))}
+          </section>
+        )}
+
+        {a.sources.length > 0 && !bodyHasSources && (
+          <section aria-labelledby="src-h">
+            <h2 id="src-h">Official sources</h2>
+            <ul class="src">{a.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.title}</a></li>)}</ul>
+          </section>
+        )}
+      </article>
+
+      <aside class="art-side" aria-label="On this page">
+        {toc.length > 1 && (
+          <nav class="side-box">
+            <p class="t-label">On this page</p>
+            <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+          </nav>
+        )}
+        {related.length > 0 && (
+          <div class="side-box">
+            <p class="t-label">Related articles</p>
+            <ul>{related.map((r) => <li><a href={articleUrl(r)}>{r.data.h1}</a></li>)}</ul>
+          </div>
+        )}
+        <div class="side-box">
+          <p class="t-label">Areas of Halkidiki</p>
+          <ul>{areas.map((p) => <li><a href={areaUrl(p.slug)}>{p.name}</a></li>)}</ul>
+        </div>
+      </aside>
+    </div>
+
+    {related.length > 0 && (
+      <section class="art-band">
+        <div class="wrap">
+          <h2 class="t-h2">Related articles</h2>
+          <ul class="rel">
+            {related.map((r) => (
+              <li>
+                <a class="card" href={articleUrl(r)}>
+                  {(r.data.hero_image || r.data.og_image) && (
+                    <img src={r.data.hero_image || r.data.og_image} alt="" width="600" height="400" loading="lazy" decoding="async" />
+                  )}
+                  <span class="t-label">{categoryName(r.data.category)}</span>
+                  <span class="card__t">{r.data.h1}</span>
+                  <span class="card__x">{excerptOf(r)}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="t-label art-areas-l">Property for sale in Halkidiki</p>
+          <ul class="links">{areas.map((p) => <li><a href={areaUrl(p.slug)}>{p.name}</a></li>)}</ul>
+          <p class="art-more"><a href={categoryUrl('all-news')}>All articles</a></p>
+        </div>
+      </section>
+    )}
+
+    <section class="art-cta">
+      <div class="wrap">
+        <h2 class="t-h2">Want the figures for a property you like?</h2>
+        <p>Send us the property or your budget. An adviser replies with the costs, a shortlist and a viewing in person or by video call.</p>
+        <p class="row">
+          <a class="btn btn--onphoto" href={contact} data-ev="article:book_viewing">Book a viewing</a>
+          <a class="btn btn--line" href={contact} data-ev="article:adviser">Talk to an adviser</a>
+          <a class="phone" href={brand.contact.phoneHref} data-ev="article:call">{brand.contact.phoneText}</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} munis={munis} />
+</Base>
+
+<script>
+  import { wireCalculators } from '../lib/costcalc';
+  wireCalculators(document);
+</script>
+
+<style>
+  .art { display: block; }
+  .crumb { font-size: 13px; color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .crumb a { color: var(--ink-2); text-decoration: none; }
+  .crumb a:hover { text-decoration: underline; }
+  .art-top { padding-top: var(--s5); padding-bottom: var(--s5); }
+  .art-cat { margin: var(--s5) 0 0; color: var(--faint); }
+  .art-h1 { margin: var(--s3) 0 var(--s4); max-width: 24ch; }
+  .art-by { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; font-size: 14px; color: var(--muted); }
+  .art-au b { color: var(--ink); font-weight: 600; }
+  .art-hero { margin: 0 auto; }
+  .art-hero img { width: 100%; height: auto; max-height: 560px; object-fit: cover; display: block; }
+
+  .art-grid { display: grid; gap: var(--s7); padding-top: var(--s6); padding-bottom: var(--s7); }
+  @media (min-width: 1000px) { .art-grid { grid-template-columns: minmax(0, 1fr) 300px; } }
+  /* On phones the side column is not shown: the same links come at the end (George 20/10). */
+  .art-side { display: none; }
+  @media (min-width: 1000px) { .art-side { display: block; position: sticky; top: var(--s5); align-self: start; } }
+  .side-box { border-top: 1px solid var(--ink); padding: var(--s3) 0 var(--s5); }
+  .side-box ul { list-style: none; margin: var(--s2) 0 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+  .side-box a { color: var(--ink-2); text-decoration: none; }
+  .side-box a:hover { text-decoration: underline; }
+
+  /* Reading text: about 68 characters a line. */
+  .prose { max-width: 68ch; font-size: 17px; line-height: 1.7; color: var(--ink-2); min-width: 0; }
+  .prose :global(h2) { font-size: clamp(22px, 3.4vw, 28px); font-weight: 400; line-height: 1.25; color: var(--ink); margin: var(--s7) 0 var(--s3); scroll-margin-top: var(--s5); }
+  .prose :global(h3) { font-size: 19px; font-weight: 600; color: var(--ink); margin: var(--s5) 0 var(--s2); }
+  .prose :global(p), .prose :global(ul), .prose :global(ol) { margin: 0 0 var(--s4); }
+  .prose :global(a) { color: var(--ink); text-underline-offset: 3px; }
+  .prose :global(strong) { color: var(--ink); }
+  .prose :global(img) { max-width: 100%; height: auto; display: block; margin: var(--s4) 0; }
+  .prose :global(table) { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.45; margin: var(--s2) 0 var(--s5); display: block; overflow-x: auto; }
+  .prose :global(th) { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--faint); font-weight: 600; border-bottom: 1px solid var(--ink); padding: 8px 10px 8px 0; }
+  .prose :global(td) { border-bottom: 1px solid var(--line); padding: 10px 10px 10px 0; vertical-align: top; color: var(--ink); }
+  .prose :global(blockquote) { margin: var(--s4) 0; padding: var(--s3) var(--s4); background: var(--paper-2); }
+
+  /* Calculator (server-rendered by lib/costcalc.ts). */
+  .prose :global(.calc) { border: 1px solid var(--ink); margin: var(--s4) 0 var(--s5); font-size: 15px; line-height: 1.45; color: var(--ink); max-width: none; }
+  .prose :global(.c-in) { display: grid; gap: 14px 16px; padding: 16px 18px; }
+  @media (min-width: 760px) { .prose :global(.c-in) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .prose :global(.c-in label) { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+  .prose :global(.c-in input[type=number]), .prose :global(.c-in select) { font: inherit; font-size: 15px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: 8px 10px; width: 100%; min-width: 0; border-radius: 0; }
+  .prose :global(.c-chk) { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .prose :global(.c-chk label) { display: flex; gap: 6px; align-items: center; color: var(--ink-2); font-size: 14px; }
+  .prose :global(.c-chk label[hidden]) { display: none; }
+  .prose :global(.c-out) { display: grid; border-top: 1px solid var(--line); }
+  @media (min-width: 760px) { .prose :global(.c-out) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .prose :global(.c-out > div + div) { border-left: 1px solid var(--line); } }
+  .prose :global(.c-out > div) { padding: 14px 18px; min-width: 0; }
+  .prose :global(.c-out table) { display: table; margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .prose :global(.c-out td) { padding: 6px 8px 6px 0; }
+  .prose :global(.c-out td:nth-child(n+2)) { text-align: right; white-space: nowrap; }
+  .prose :global(.c-lab) { font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); margin: 0 0 6px; }
+  .prose :global(.c-tot) { display: flex; justify-content: space-between; gap: 10px; font-weight: 600; padding-top: 8px; font-variant-numeric: tabular-nums; }
+  .prose :global(.c-tot.big) { font-size: 20px; }
+  .prose :global(.c-notes) { display: grid; gap: 6px; padding: 0 18px 14px; font-size: 14px; }
+  .prose :global(.c-notes span) { padding: 8px 10px; }
+  .prose :global(.c-notes .ok) { background: #E8F3EC; color: #1E5B34; }
+  .prose :global(.c-notes .warn) { background: #FBF1DE; color: #6B4A0E; }
+  .prose :global(.c-fine) { font-size: 12px; color: var(--faint); padding: 0 18px 14px; margin: 0; }
+
+  .faq details { border-top: 1px solid var(--line); padding: var(--s3) 0; }
+  .faq details:last-child { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; font-weight: 600; color: var(--ink); list-style: none; display: flex; justify-content: space-between; gap: var(--s3); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-weight: 300; font-size: 20px; line-height: 1; }
+  .faq details[open] summary::after { content: "−"; }
+  .faq details p { margin: var(--s2) 0 0; }
+  .src { list-style: none; padding: 0; display: grid; gap: 6px; }
+
+  .art-band { background: var(--paper-2); padding: var(--s7) 0; }
+  .rel { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: var(--s5) var(--s4); }
+  @media (min-width: 760px) { .rel { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .card { display: grid; gap: 6px; text-decoration: none; color: inherit; }
+  .card img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: #E7E6E2; }
+  .card .t-label { color: var(--faint); margin-top: 4px; }
+  .card__t { font-size: 19px; line-height: 1.3; color: var(--ink); }
+  .card__x { font-size: 14px; color: var(--muted); }
+  .card:hover .card__t { text-decoration: underline; text-underline-offset: 3px; }
+  .art-areas-l { margin: var(--s6) 0 0; }
+  .links { list-style: none; margin: var(--s2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .links a, .art-more a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .art-more { margin: var(--s5) 0 0; }
+
+  .art-cta { background: var(--ink-deep); color: #fff; padding: var(--s7) 0; }
+  .art-cta .t-h2 { color: #fff; }
+  .art-cta p { color: #C9CDD0; max-width: 56ch; }
+  .row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin: var(--s5) 0 0; }
+  .btn--line { background: transparent; color: #fff; border-color: #fff; }
+  .phone { color: #fff; font-variant-numeric: tabular-nums; }
+</style>

@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 // The production origin comes from the brand (src/brand) — one place for every company fact.
 import { brand } from './src/brand/index.ts';
+// Article widgets (the cost calculator) rendered from markdown markers.
+import { remarkWidgets } from './src/lib/remark-widgets.mjs';
 
 // ───────────────────────────────────────────────────────────────────────────
 // SSR με node adapter — ΟΧΙ static build.
@@ -18,6 +20,7 @@ export default defineConfig({
   site: process.env.SITE_URL || brand.web.origin,
   build: { inlineStylesheets: 'always' },   // ένα αίτημα λιγότερο στο κρίσιμο μονοπάτι
   compressHTML: true,
+  markdown: { remarkPlugins: [remarkWidgets] },
   server: { port: 4330, host: true },
   devToolbar: { enabled: false },
   // B-24: Astro's own CSRF check compares the browser Origin with the URL the container sees.

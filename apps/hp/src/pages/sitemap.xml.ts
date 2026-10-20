@@ -27,6 +27,7 @@ import { facetUrl, FACETS, PAIRS } from '../lib/listing';
 import { PAGE_KEYS, pageExists, pageLangs, contentUrl } from '../lib/pages';
 import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
+import { CATEGORIES, allArticles, articleUrl, categoryUrl, inCategory } from '../lib/articles';
 
 export const prerender = false;
 
@@ -64,9 +65,20 @@ const PAGES: Page[] = [
   // Area and category pages — English only until the translation phase (George 20/10/2026).
   ...AREA_PAGES.map((p) => ({ pathFor: () => areaUrl(p.slug), langs: ['en'] as Lang[], lastmod: BUILD_DAY })),
 
-  // ⏭️ Μένουν: άρθρα από cms_contents (184) — το άρθρο για τους φόρους ξένων είναι
-  //    ήδη η 4η σελίδα μας σε εμφανίσεις (41.268).
 ];
+
+/** Articles and their category lists — English only for now; list page 2+ is noindex, so left out. */
+async function articlePages(): Promise<Page[]> {
+  const day = (iso: string) => (Date.parse(iso) ? new Date(iso).toISOString().slice(0, 10) : BUILD_DAY);
+  const lists: Page[] = [];
+  for (const c of CATEGORIES) {
+    if ((await inCategory(c.key)).length) lists.push({ pathFor: () => categoryUrl(c.key), langs: ['en'] as Lang[], lastmod: BUILD_DAY });
+  }
+  const arts = (await allArticles()).map((a) => ({
+    pathFor: () => articleUrl(a), langs: ['en'] as Lang[], lastmod: day(a.data.updated || a.data.published),
+  }));
+  return [...lists, ...arts];
+}
 
 /**
  * ΟΙ ΚΑΡΤΕΛΕΣ ΤΩΝ ΑΚΙΝΗΤΩΝ — Ο ΚΥΡΙΟΣ ΟΓΚΟΣ, ΚΑΙ ΕΛΕΙΠΕ ΟΛΟΚΛΗΡΟΣ.
@@ -131,7 +143,7 @@ export const GET: APIRoute = async ({ request, url }) => {
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${[...PAGES, ...(await propertyPages())].map(urlBlock).join('\n')}
+${[...PAGES, ...(await articlePages()), ...(await propertyPages())].map(urlBlock).join('\n')}
 </urlset>
 `;
 

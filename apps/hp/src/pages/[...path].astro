@@ -32,6 +32,9 @@ import SubmitPage from '../components/SubmitPage.astro';
 import ContentPage from '../components/ContentPage.astro';
 import AreaPage from '../components/AreaPage.astro';
 import { areaPage, type AreaPage as AreaContent } from '../content/areas/en';
+import ArticlePage from '../components/ArticlePage.astro';
+import ArticleListPage from '../components/ArticleListPage.astro';
+import { findArticle, isCategory, categoryUrl, inCategory, PER_PAGE, type Article } from '../lib/articles';
 import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, pageLangs, contentUrl, type PageKey } from '../lib/pages';
 import { memberOf, type Member } from '../lib/member';
 import { PUBLISHED, DEFAULT_LANG, SLUG, prefix, type Lang } from '../lib/i18n';
@@ -173,11 +176,32 @@ if (lang === 'en' && !pageKey && rest.length === 2 && rest[0].toLowerCase() === 
   if (!area) notFound = true;
 }
 
+// ── ARTICLES: /en/articles/{category}[/{slug}] ─────────────────────────────
+// English only for now. `/en/articles` → 301 to all-news (the old site does the same).
+// Unknown category or article → 404. Old slugs with ":" are 404 until the 301 engine
+// (their `old_url` is kept in each article file).
+let article: Article | null = null;
+let articleList: { category: string; page: number } | null = null;
+if (lang === 'en' && !pageKey && rest.length >= 1 && rest[0].toLowerCase() === 'articles') {
+  if (rest.length === 1) return Astro.redirect(categoryUrl('all-news'), 301);
+  const cat = rest[1].toLowerCase();
+  if (!isCategory(cat) || rest.length > 3) notFound = true;
+  else if (rest.length === 2) {
+    const page = Number(Astro.url.searchParams.get('page') ?? '1');
+    if (!Number.isInteger(page) || page < 1) notFound = true;
+    else if (page > 1 && (page - 1) * PER_PAGE >= (await inCategory(cat)).length) notFound = true;
+    else articleList = { category: cat, page };
+  } else {
+    article = await findArticle(cat, rest[2]);
+    if (!article) notFound = true;
+  }
+}
+
 // Άγνωστη υποσελίδα πίνακα («/panel/οτιδήποτε») → 404 αμέσως, ΧΩΡΙΣ να δοκιμαστεί
 // ως θέμα λίστας: αλλιώς το μήνυμα λάθους θα μιλούσε για «άγνωστο θέμα».
 if (panelRoot && !isPanel) notFound = true;
 
-if (!isHome && !isLogin && !isPanel && !pageKey && !area && !notFound && !property) {
+if (!isHome && !isLogin && !isPanel && !pageKey && !area && !article && !articleList && !notFound && !property) {
   // Το πρώτο κομμάτι πρέπει να είναι το «ακινητα» της συγκεκριμένης γλώσσας.
   if (!rest.length || rest[0].toLowerCase() !== SLUG[lang].list.toLowerCase()) {
     notFound = true;
@@ -242,6 +266,8 @@ if (notFound) Astro.response.status = 404;
   : isPanel && me && panelSeg === 'submit' ? <SubmitPage lang={lang} me={me} />
   : isPanel && me ? <PanelPage lang={lang} me={me} />
   : area ? <AreaPage page={area} />
+  : article ? <ArticlePage article={article} />
+  : articleList ? <ArticleListPage category={articleList.category} page={articleList.page} />
   : isLogin ? <LoginPage lang={lang} next={nextParam} />
   : isHome ? <HomePage lang={lang} />
   : property ? <PropertyPage lang={lang} item={property} all={allItems} />

@@ -1,0 +1,12 @@
+{
+  "name": "sites",
+  "private": true,
+  "description": "Site templates of hp-system: HP and Rewize (white label) + shared kit",
+  "packageManager": "pnpm@12.11.2",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "pnpm -r --if-present run build",
+    "check": "pnpm -r --if-present run check",
+    "test": "pnpm -r --if-present run test"
+  }
+}

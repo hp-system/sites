@@ -1,0 +1,10 @@
+# Force LF everywhere (same rule as the code repos, trap T-J01).
+* text=auto eol=lf
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.pdf  binary
+*.zip  binary
+# Frozen handover data stored with CRLF — keep byte-identical.
+seo/*.csv -text

@@ -1,0 +1,153 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// The cookie banner (Consent Mode v2). See lib/consent.ts for the rules.
+//
+// · Rendered at the end of <body>, OUTSIDE <main>, as role="dialog" with `hidden`:
+//   crawlers read the page content untouched, and the banner is not page content.
+// · A fixed overlay at the bottom: it reserves no space in the page, so showing it
+//   causes no layout shift. The script below only reveals it when no choice exists.
+// · Keyboard: focus moves into the banner when it opens, Tab stays inside it until
+//   the visitor chooses, Escape closes the settings panel.
+// · Any element with `data-cookie-settings` (footer link) reopens it.
+// ═══════════════════════════════════════════════════════════════════════════
+import { consentText, CONSENT_COOKIE, CONSENT_MAX_AGE } from '../lib/consent';
+import { prefix, type Lang } from '../lib/i18n';
+import { brand } from '../brand/index';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = consentText(lang);
+const privacyHref = `${prefix(lang)}${brand.analytics.privacyPath}`;
+---
+<div id="cc" class="cc" role="dialog" aria-modal="true" aria-labelledby="cc-t" aria-describedby="cc-b" hidden
+     data-cookie={CONSENT_COOKIE} data-max-age={CONSENT_MAX_AGE}>
+  <div class="cc__box">
+    <p class="cc__t" id="cc-t">{c.title}</p>
+    <p class="cc__b" id="cc-b">{c.body} <a href={privacyHref}>{c.privacy}</a></p>
+
+    <div class="cc__set" id="cc-set" hidden>
+      <label class="cc__opt"><input type="checkbox" checked disabled /> <span><b>{c.necessary}</b> {c.necessaryHint}</span></label>
+      <label class="cc__opt"><input type="checkbox" id="cc-a" /> <span><b>{c.analytics}</b> {c.analyticsHint}</span></label>
+      <label class="cc__opt"><input type="checkbox" id="cc-m" /> <span><b>{c.marketing}</b> {c.marketingHint}</span></label>
+    </div>
+
+    <div class="cc__btns">
+      <button type="button" class="cc__btn cc__btn--line" data-cc="reject">{c.reject}</button>
+      <button type="button" class="cc__btn cc__btn--line" data-cc="settings" aria-controls="cc-set" aria-expanded="false">{c.settings}</button>
+      <button type="button" class="cc__btn cc__btn--line" data-cc="save" hidden>{c.save}</button>
+      <button type="button" class="cc__btn" data-cc="accept">{c.accept}</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const box = document.getElementById('cc') as HTMLElement | null;
+  if (box) {
+    const name = box.dataset.cookie || 'site_consent';
+    const maxAge = Number(box.dataset.maxAge || 15552000);
+    const set = document.getElementById('cc-set') as HTMLElement;
+    const a = document.getElementById('cc-a') as HTMLInputElement;
+    const m = document.getElementById('cc-m') as HTMLInputElement;
+    const btn = (k: string) => box.querySelector(`[data-cc="${k}"]`) as HTMLButtonElement;
+    let lastFocus: HTMLElement | null = null;
+
+    const read = () => {
+      const r = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+      return r ? decodeURIComponent(r[1]) : null;
+    };
+    const focusables = () => Array.from(box.querySelectorAll<HTMLElement>('a[href], button:not([hidden]), input:not([disabled])'))
+      .filter((el) => el.offsetParent !== null);
+
+    const open = (withSettings = false) => {
+      const v = read();
+      a.checked = !!v && v.includes('.a1');
+      m.checked = !!v && v.includes('.m1');
+      showSettings(withSettings);
+      lastFocus = document.activeElement as HTMLElement | null;
+      box.hidden = false;
+      (withSettings ? a : btn('accept')).focus();
+    };
+    const close = () => {
+      box.hidden = true;
+      if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+    };
+    const showSettings = (on: boolean) => {
+      set.hidden = !on;
+      btn('settings').hidden = on;
+      btn('settings').setAttribute('aria-expanded', String(on));
+      btn('save').hidden = !on;
+    };
+    const choose = (analytics: boolean, marketing: boolean) => {
+      const v = `v1.a${analytics ? 1 : 0}.m${marketing ? 1 : 0}`;
+      const secure = location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = `${name}=${encodeURIComponent(v)}; Max-Age=${maxAge}; Path=/; SameSite=Lax${secure}`;
+      const g = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+      if (typeof g === 'function') {
+        g('consent', 'update', {
+          analytics_storage: analytics ? 'granted' : 'denied',
+          ad_storage: marketing ? 'granted' : 'denied',
+          ad_user_data: marketing ? 'granted' : 'denied',
+          ad_personalization: marketing ? 'granted' : 'denied',
+        });
+      }
+      ((window as unknown as { dataLayer?: unknown[] }).dataLayer ||= []).push({ event: 'consent_update', analytics, marketing });
+      close();
+    };
+
+    btn('accept').addEventListener('click', () => choose(true, true));
+    btn('reject').addEventListener('click', () => choose(false, false));
+    btn('settings').addEventListener('click', () => { showSettings(true); a.focus(); });
+    btn('save').addEventListener('click', () => choose(a.checked, m.checked));
+
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !set.hidden) { showSettings(false); btn('settings').focus(); return; }
+      if (e.key !== 'Tab') return;
+      const f = focusables();
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    document.addEventListener('click', (e) => {
+      const el = (e.target as Element | null)?.closest?.('[data-cookie-settings]');
+      if (el) { e.preventDefault(); open(true); }
+    });
+
+    if (!read()) open(false);
+  }
+</script>
+
+<style>
+  .cc {
+    position: fixed; inset: auto 0 0 0; z-index: 1000;
+    padding: 0 max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-bottom));
+    pointer-events: none;
+  }
+  .cc__box {
+    pointer-events: auto; max-width: 720px; margin: 0 auto; background: var(--paper, #fff); color: var(--ink, #0e1214);
+    border: 1px solid var(--line, rgba(14, 18, 20, .13)); box-shadow: 0 12px 40px rgba(14, 18, 20, .18);
+    padding: 20px 22px;
+  }
+  /* `hidden` must win over the display rules below (settings panel, Save button). */
+  .cc[hidden], .cc [hidden] { display: none !important; }
+  .cc__t { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+  .cc__b { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2, #3c4247); }
+  .cc__b a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+  .cc__set { display: grid; gap: 10px; margin: 14px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line, rgba(14, 18, 20, .13)); }
+  .cc__opt { display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; font-size: 14px; line-height: 1.45; color: var(--ink-2, #3c4247); }
+  .cc__opt input { margin: 3px 0 0; width: 16px; height: 16px; accent-color: var(--ink, #0e1214); }
+  .cc__opt b { color: var(--ink, #0e1214); font-weight: 600; margin-right: 4px; }
+  .cc__btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+  .cc__btn {
+    appearance: none; border: 1px solid var(--ink, #0e1214); background: var(--ink, #0e1214); color: #fff;
+    font: inherit; font-size: 13px; letter-spacing: .04em; padding: 11px 18px; min-height: 44px; cursor: pointer;
+  }
+  .cc__btn--line { background: transparent; color: var(--ink, #0e1214); }
+  .cc__btn:focus-visible { outline: 2px solid var(--brand, #036dac); outline-offset: 2px; }
+  @media (max-width: 520px) {
+    .cc__btns { justify-content: stretch; }
+    .cc__btn { flex: 1 1 calc(50% - 8px); }
+    .cc__btn:not(.cc__btn--line) { flex-basis: 100%; order: -1; }
+  }
+</style>

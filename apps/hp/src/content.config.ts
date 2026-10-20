@@ -56,6 +56,14 @@ const pages = defineCollection({
     old_url: z.string().default(''),
     /** The live text is short — kept faithful, listed for content work. */
     needs_content: z.boolean().default(false),
+    /** Tiles to the pages below this one (sell, about us, careers hubs). */
+    cards: z.array(z.object({
+      title: z.string(), href: z.string(), text: z.string(),
+      image: z.string().default(''), image_alt: z.string().default(''),
+      width: z.number().default(0), height: z.number().default(0),
+    })).default([]),
+    /** Address, phone and e-mail from the brand config (contact page). */
+    contact_card: z.boolean().default(false),
   }),
 });
 

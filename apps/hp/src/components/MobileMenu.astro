@@ -28,6 +28,8 @@ interface Props { lang: Lang; munis: { name: string; n: number; key?: string }[]
 const { lang, munis, total, pathFor } = Astro.props;
 
 const p = prefix(lang);
+// English: the old site's URL /en/about-us (the info page); other languages keep /about.
+const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
 const url = listUrl(lang);
 const co = await company();
 
@@ -87,7 +89,7 @@ const has = (k: string) => pageExists(k as any);
     <ul class="mm__list mm__list--plain">
       <li>{has('sell') && <a href={`${p}/sell`}>{t(lang, 'nav.sell')}</a>}</li>
       <li>{has('services') && <a href={`${p}/services`}>{t(lang, 'nav.services')}</a>}</li>
-      <li>{has('about') && <a href={`${p}/about`}>{t(lang, 'nav.company')}</a>}</li>
+      <li>{has('about') && <a href={aboutHref}>{t(lang, 'nav.company')}</a>}</li>
       <li>{has('contact') && <a href={`${p}/contact`}>{t(lang, 'foot.contact')}</a>}</li>
     </ul>
 

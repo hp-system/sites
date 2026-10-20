@@ -45,6 +45,8 @@ const terms = '/en/terms-of-services';
 const privacy = '/en/privacy-policy';
 const areas = AREA_PAGES.filter((p) => p.kind === 'municipality');
 const co = await company();
+const addr = brand.addressLatin ?? { street: brand.address.street, city: brand.address.city, country: brand.address.country };
+const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addr.street} ${brand.address.postalCode}, ${addr.city}`)}`;
 
 let munis: { name: string; key: string }[] = [];
 try {
@@ -117,7 +119,28 @@ if (d.faq.length) {
 
     <div class="wrap info-grid">
       <article class="prose">
+        {d.contact_card && (
+          <address class="ccard">
+            <p><span class="t-label">Office</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
+            <p><span class="t-label">Phone</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
+            <p><span class="t-label">E-mail</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
+            <p><a href={mapUrl} rel="noopener" target="_blank">Get directions to our office on Google Maps</a></p>
+          </address>
+        )}
+
         <Content />
+
+        {d.cards.length > 0 && (
+          <ul class="cards">
+            {d.cards.map((c, i) => (
+              <li>
+                {c.image && <img src={c.image} alt={c.image_alt || c.title} width={c.width || 800} height={c.height || 500} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />}
+                <h2><a href={c.href}>{c.title}</a></h2>
+                <p>{c.text}</p>
+              </li>
+            ))}
+          </ul>
+        )}
 
         {d.faq.length > 0 && (
           <section class="faq" aria-label="Frequently asked questions">
@@ -209,6 +232,24 @@ if (d.faq.length) {
   .prose :global(td), .prose :global(th) { border-bottom: 1px solid var(--line); padding: 8px 10px 8px 0; vertical-align: top; text-align: left; }
   .prose :global(.gallery) { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin: var(--s4) 0; }
   .prose :global(.gallery img) { margin: 0; aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+
+  .ccard { font-style: normal; border-top: 1px solid var(--ink); padding-top: var(--s3); margin: 0 0 var(--s5); }
+  .ccard p { margin: 0 0 var(--s2); }
+  .ccard .t-label { display: block; }
+  .cards { list-style: none; padding: 0; margin: var(--s5) 0; display: grid; gap: var(--s5) var(--s4); }
+  @media (min-width: 640px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .cards li { min-width: 0; }
+  .prose .cards :global(img), .cards img { margin: 0 0 var(--s3); width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+  .prose .cards h2 { font-size: 20px; margin: 0 0 var(--s2); }
+  .cards h2 a { text-decoration: none; }
+  .cards h2 a:hover { text-decoration: underline; }
+  .cards p { font-size: 15px; line-height: 1.55; margin: 0; }
+
+  .prose :global(.steps) { list-style: none; padding: 0; display: grid; gap: var(--s3); }
+  .prose :global(.steps li) { display: flex; gap: var(--s3); align-items: center; }
+  .prose :global(.steps img) { width: 48px; height: 48px; margin: 0; flex: none; }
+  .prose :global(.logos img) { object-fit: contain; aspect-ratio: 3 / 2; background: #fff; padding: 10px; border: 1px solid var(--line); }
+  .prose :global(blockquote) { margin: 0 0 var(--s4); padding-left: var(--s3); border-left: 2px solid var(--ink); font-size: 20px; color: var(--ink); }
 
   .faq details { border-top: 1px solid var(--line); padding: var(--s3) 0; }
   .faq details:last-child { border-bottom: 1px solid var(--line); }

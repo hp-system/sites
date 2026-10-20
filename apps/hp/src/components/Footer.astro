@@ -18,6 +18,8 @@ import { brand } from '../brand/index';
 interface Props { lang: Lang; munis?: { name: string; key?: string }[] }
 const { lang } = Astro.props;
 const p = prefix(lang);
+// English: the old site's URL /en/about-us (the info page); other languages keep /about.
+const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
 const co = await company();
 // Δήμοι πρώτα, μετά οι συλλογές — ό,τι δείχνει και η αρχική.
 const seoLinks = FACETS.map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
@@ -64,7 +66,7 @@ import { consentText } from '../lib/consent';
 
       <nav aria-label={t(lang, 'foot.company')}>
         <h2 class="fcol__h">{t(lang, 'foot.company')}</h2>
-        {has('about') && <a href={`${p}/about`}>{t(lang, 'foot.about')}</a>}
+        {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
         {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
         {has('projects') && <a href={`${p}/projects`}>{t(lang, 'foot.projects')}</a>}
         {has('contact') && <a href={`${p}/contact`}>{t(lang, 'foot.contact')}</a>}

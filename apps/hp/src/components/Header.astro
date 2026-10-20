@@ -24,6 +24,8 @@ interface Props {
 }
 const { lang, solid = false, pathFor } = Astro.props;
 const p = prefix(lang);
+// English: the old site's URL /en/about-us (the info page); other languages keep /about.
+const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
 const co = await company();
 
 // ── ΕΙΝΑΙ ΜΕΣΑ; ────────────────────────────────────────────────────────────
@@ -61,7 +63,7 @@ const has = (k: string) => pageExists(k as any);
     {has('halkidiki') && <a href={`${p}/halkidiki`}>{t(lang, 'nav.halkidiki')}</a>}
     {has('sell') && <a href={`${p}/sell`}>{t(lang, 'nav.sell')}</a>}
     {has('services') && <a href={`${p}/services`}>{t(lang, 'nav.services')}</a>}
-    {has('about') && <a href={`${p}/about`}>{t(lang, 'nav.company')}</a>}
+    {has('about') && <a href={aboutHref}>{t(lang, 'nav.company')}</a>}
   </nav>
 
   <div class="navright">

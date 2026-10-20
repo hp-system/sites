@@ -64,3 +64,17 @@ export async function checkRedirect(from, to) {
   const loc = r.headers.get('location') ?? '';
   check(`${from} → 301 ${to}`, r.status === 301 && loc.endsWith(to), `${r.status} ${loc}`);
 }
+
+/** The sitemap exists only in production: a second, production instance on :4332 (after start()). */
+export async function productionSitemap() {
+  const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
+    env: { ...process.env, HOST: '127.0.0.1', PORT: '4332', EALIDA_API: 'http://127.0.0.1:4339/api', SITE_ENV: 'production', PUBLIC_ORIGIN: 'https://www.halkidikiproperties.com' },
+  });
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  try {
+    for (let i = 0; i < 40; i++) { try { await fetch('http://127.0.0.1:4332/robots.txt'); break; } catch { await sleep(250); } }
+    return await (await fetch('http://127.0.0.1:4332/sitemap.xml')).text();
+  } finally {
+    site.kill();
+  }
+}

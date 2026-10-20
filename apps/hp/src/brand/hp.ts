@@ -17,6 +17,7 @@ export const hp: Brand = {
     foundedYear: 2007,
   },
   address: { street: 'Νέο Ρύσιο', city: 'Θεσσαλονίκη', postalCode: '57001', region: 'Θεσσαλονίκη', country: 'GR' },
+  addressLatin: { street: 'Neo Rysio', city: 'Thessaloniki', country: 'Greece' },
   contact: {
     // Format set by George (28/7): «+30 2311 2412 24».
     phoneText: '+30 2311 2412 24',

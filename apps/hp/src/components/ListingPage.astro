@@ -84,7 +84,6 @@ const desc = isThemed
 const jsonLd = res.items.length ? [{
   '@context': 'https://schema.org', '@type': 'ItemList',
   name: heading,
-  numberOfItems: res.total,
   itemListElement: res.items.slice(0, 12).map((p, i) => ({
     '@type': 'ListItem', position: i + 1,
     url: `${Astro.site?.toString().replace(/\/$/, '') ?? ''}${propertyUrl(lang, refOf(p))}`,
@@ -182,7 +181,7 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
         «Ακίνητα προς πώληση στη Χαλκιδική … Βρέθηκαν 527». */}
     <div class="head">
       <h1 class={isThemed ? 't-display head__h' : 't-h2 head__h'}>{heading}</h1>
-      <p class="count t-data">{apiDown ? '—' : ui(lang, 'found', { n: num(res.total, lang) })}</p>
+      {apiDown && <p class="count t-data">—</p>}
     </div>
 
     {/* ΔΥΟ ΟΜΑΔΕΣ, ΟΧΙ ΠΕΝΤΕ ΣΚΟΡΠΙΑ ΣΤΟΙΧΕΙΑ (George, 30/7):

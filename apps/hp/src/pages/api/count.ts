@@ -69,7 +69,9 @@ export const GET: APIRoute = async ({ url, cookies }) => {
       return true;
     }).length;
 
-    return new Response(JSON.stringify({ total }), {
+    // No property counts in public output (George 17/10): the endpoint only says whether
+    // anything matches, so the filter button can show "no results".
+    return new Response(JSON.stringify({ any: total > 0 }), {
       headers: {
         'content-type': 'application/json',
         // B-06 (traps T-K08): a member's count includes private properties — never shared caches.
@@ -78,9 +80,9 @@ export const GET: APIRoute = async ({ url, cookies }) => {
       },
     });
   } catch {
-    // Ο μετρητής δεν σπάει ΠΟΤΕ τη φόρμα: γυρίζει null και το UI κρατά τον
-    // προηγούμενο αριθμό.
-    return new Response(JSON.stringify({ total: null }), {
+    // Ο μετρητής δεν σπάει ΠΟΤΕ τη φόρμα: γυρίζει null και το UI κρατά την
+    // προηγούμενη ένδειξη.
+    return new Response(JSON.stringify({ any: null }), {
       status: 200, headers: { 'content-type': 'application/json' },
     });
   }

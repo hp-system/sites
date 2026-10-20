@@ -28,12 +28,13 @@ try {
   check('B-01 sitemap lists every property', enProps === N, `${enProps} /en/property/ URLs of ${N} (first fetch ${smMs} ms)`);
   check('B-26 no empty-id URL in the sitemap', !/\/property\/<\/loc>/.test(sm), /\/property\/<\/loc>/.test(sm) ? 'found /property/ with empty id' : 'none');
   const count = await (await fetch(SITE + '/api/count')).json();
-  check('B-01 /api/count = all properties', count.total === N, `total=${count.total}, expected ${N}`);
+  // /api/count no longer publishes a number (no public property counts) — only whether anything matches.
+  check('B-01 /api/count says the catalogue is not empty', count.any === true && !('total' in count), JSON.stringify(count));
 
   // B-04 — pool counter equals the properties with a real pool code (3/4/5/6).
   const pools = stub.items.filter((p) => (p.attributes.pools ?? []).some((x) => ['3', '4', '5', '6'].includes(x))).length;
   const pc = await (await fetch(SITE + '/api/count?pool=1')).json();
-  check('B-04 pool counter ignores code "2"', pc.total === pools, `pool=1 → ${pc.total}, expected ${pools}`);
+  check('B-04 pool counter answers for real pools only', pc.any === (pools > 0), `pool=1 → ${JSON.stringify(pc)}, real pools ${pools}`);
 
   // B-03 — letter id kept, visitor IP and origin forwarded; junk id dropped.
   const post = (body, headers = {}) => fetch(SITE + '/api/inquiry', {

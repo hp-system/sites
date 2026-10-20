@@ -20,11 +20,11 @@ import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
 import { pageExists } from '../lib/pages';
 
-interface Props { lang: Lang; munis: { name: string; n: number; key?: string;
+interface Props { lang: Lang; munis: { name: string; n: number; key?: string }[]; total: number;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
       Αλλού ο διακόπτης το βρίσκει μόνος του από τη διεύθυνση. Δες `LangSwitch.astro`. */
   pathFor?: (l: Lang) => string;
-}[]; total: number }
+}
 const { lang, munis, total, pathFor } = Astro.props;
 
 const p = prefix(lang);

@@ -49,7 +49,7 @@ export const GET: APIRoute = async ({ params }) => {
   const bytes = await tinyBlur(marked(photo.url, 400));
   if (!bytes) return notFound();
 
-  return new Response(bytes, {
+  return new Response(new Uint8Array(bytes), {
     status: 200,
     headers: {
       'content-type': 'image/jpeg',

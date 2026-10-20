@@ -197,7 +197,7 @@ const meta = {
       ogImage={ogPhoto} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={d.heroAlt}
       jsonLd={jsonLd}>
   {/* 1 κεφαλίδα (μέσα στο hero) · 2 hero */}
-  <Hero lang={lang} photo={d.heroPhoto} alt={d.heroAlt}
+  <Hero lang={lang} photo={d.heroPhoto as Photo | null} alt={d.heroAlt}
         munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} total={d.total} />
   <SearchBar lang={lang} total={d.total} />
   <FilterSheet lang={lang} total={d.total}

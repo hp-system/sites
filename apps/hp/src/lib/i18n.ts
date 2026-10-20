@@ -78,7 +78,7 @@ export function projectsUrl(lang: Lang): string {
  */
 export function hreflangs(path = '/'): { lang: string; href: string }[] {
   const clean = path === '/' ? '' : path;
-  const out = PUBLISHED.map((l) => ({ lang: l, href: `${prefix(l)}${clean}` || '/' }));
+  const out: { lang: string; href: string }[] = PUBLISHED.map((l) => ({ lang: l, href: `${prefix(l)}${clean}` || '/' }));
   out.push({ lang: 'x-default', href: `${prefix('en')}${clean}` });
   return out;
 }
@@ -103,7 +103,7 @@ export function hreflangsBy(build: (l: Lang) => string, only?: readonly Lang[]):
   // `only` (B-16): a page with its own text in some languages lists just those — an English
   // fallback served under /bg/… is not a Bulgarian version. x-default stays English when it exists.
   const langs = only ? PUBLISHED.filter((l) => only.includes(l)) : PUBLISHED;
-  const out = langs.map((l) => ({ lang: l, href: build(l as Lang) || '/' }));
+  const out: { lang: string; href: string }[] = langs.map((l) => ({ lang: l, href: build(l as Lang) || '/' }));
   const xdef = langs.includes('en') ? 'en' : langs[0];
   if (xdef) out.push({ lang: 'x-default', href: build(xdef) });
   return out;

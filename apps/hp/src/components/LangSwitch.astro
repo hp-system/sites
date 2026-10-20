@@ -61,7 +61,7 @@ function hrefFor(l: Lang): string {
   return prefix(l) || '/';
 }
 const href = hrefFor;
-const label = { el: 'Γλώσσα', en: 'Language', bg: 'Език', sr: 'Jezik', de: 'Sprache', ro: 'Limbă' }[lang];
+const label = ({ el: 'Γλώσσα', en: 'Language', bg: 'Език', sr: 'Jezik', de: 'Sprache', ro: 'Limbă', tr: 'Dil', he: 'שפה', ru: 'Язык' } satisfies Record<Lang, string>)[lang];
 ---
 <details class:list={['lsw', tone === 'onphoto' && 'lsw--onphoto', block && 'lsw--block']}>
   <summary aria-label={label}>

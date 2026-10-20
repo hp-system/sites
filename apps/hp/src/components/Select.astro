@@ -1,0 +1,140 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΔΙΚΟ ΜΑΣ DROPDOWN — αντικαθιστά το native <select>.
+//
+// ΓΙΑΤΙ: ο George το εντόπισε σωστά — το native popup του λειτουργικού
+//   (α) αποδίδει τις επιλογές με ΑΛΛΗ γραμματοσειρά (δεν παίρνει τη Mont)
+//   (β) βάφει την επιλεγμένη γραμμή με το μπλε του συστήματος.
+// Κανένα από τα δύο δεν διορθώνεται με CSS. Άρα φτιάχνουμε δικό μας listbox.
+//
+// Προσβασιμότητα: πλήρες πληκτρολόγιο (↑↓ Home End Enter Esc), σωστά ARIA,
+// και <noscript> εφεδρεία με κανονικό <select> ώστε να δουλεύει χωρίς JS.
+// ═══════════════════════════════════════════════════════════════════════════
+export type Opt = { v: string; label: string };
+interface Props { name: string; label: string; options: Opt[]; value?: string }
+const { name, label, options, value = '' } = Astro.props;
+const current = options.find((o) => o.v === value) ?? options[0];
+const id = `sel-${name}-${Math.random().toString(36).slice(2, 7)}`;
+---
+<div class="sel" data-select data-name={name}>
+  <span class="sel__l" id={`${id}-l`}>{label}</span>
+
+  <button class="sel__btn" type="button" id={id}
+          aria-haspopup="listbox" aria-expanded="false" aria-labelledby={`${id}-l ${id}`}>
+    <span class="sel__val">{current.label}</span>
+    <svg class="sel__caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+  </button>
+
+  <ul class="sel__list" role="listbox" tabindex="-1" aria-labelledby={`${id}-l`} hidden>
+    {options.map((o) => (
+      <li class="sel__opt" role="option" data-v={o.v}
+          aria-selected={o.v === current.v ? 'true' : 'false'}>{o.label}</li>
+    ))}
+  </ul>
+
+  <input type="hidden" name={name} value={current.v} />
+
+  <noscript>
+    {/* 🔊 ΤΟ ΕΦΕΔΡΙΚΟ ΠΕΔΙΟ ΕΙΧΕ ΜΕΙΝΕΙ ΑΝΩΝΥΜΟ. Η ετικέτα από πάνω είναι απλό
+        `<span>` — φαίνεται, αλλά **δεν συνδέεται** με το πεδίο. Χωρίς JavaScript, η
+        αρχική έδειχνε πέντε τέτοια: ο αναγνώστης οθόνης έλεγε πέντε φορές «λίστα»
+        χωρίς να πει ποια. Το `aria-label` το λύνει χωρίς να αλλάξει τίποτα οπτικά. */}
+    <select name={name} class="sel__native" aria-label={label}>
+      {options.map((o) => <option value={o.v} selected={o.v === current.v}>{o.label}</option>)}
+    </select>
+  </noscript>
+</div>
+
+<style>
+  .sel { position: relative; display: block; min-width: 0; }
+  .sel__l {
+    display: block; font-size: 9px; font-weight: 600; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--faint);
+  }
+  .sel__btn {
+    display: flex; width: 100%; align-items: center; justify-content: space-between; gap: var(--s2);
+    /* 44px στόχος αφής: το κουμπί ήταν 26px ύψος — και είναι το ΚΥΡΙΟ χειριστήριο
+       της αναζήτησης, το πρώτο πράγμα που αγγίζει ο επισκέπτης στο κινητό. */
+    /* 📏 ΧΑΜΗΛΩΣΕ ΓΙΑ ΤΗ ΣΥΜΠΑΓΗ ΜΠΑΡΑ (George, 30/7: «μίκρυνε το ύψος
+       τουλάχιστον 40%, κρατώντας όλες τις πληροφορίες»). Ήταν 44px — το
+       κλασικό ελάχιστο για δάχτυλο. Εδώ επιτρέπεται μικρότερο επειδή ο ΓΟΝΕΑΣ
+       (`.search__f`) είναι ολόκληρος πατητός και ξεπερνά τα 44px· ο στόχος
+       αφής δεν είναι το κείμενο, είναι το πεδίο. */
+    margin-top: 1px; padding: 0; min-height: 22px; margin-bottom: -4px;
+    background: none; border: 0; cursor: pointer;
+    font: inherit; font-size: 15px; color: var(--ink); text-align: start;
+  }
+  .sel__val { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sel__caret { width: 10px; height: 6px; flex: none; color: var(--faint); transition: transform .18s ease; }
+  .sel[data-open] .sel__caret { transform: rotate(180deg); }
+
+  .sel__list {
+    position: absolute; z-index: 30; left: -14px; right: -14px; top: calc(100% + 11px);
+    margin: 0; padding: var(--s1) 0; list-style: none;
+    background: var(--paper); border: 1px solid var(--line);
+    box-shadow: 0 18px 44px rgba(0,0,0,.16);
+    max-height: 280px; overflow-y: auto;
+  }
+  /* Οι επιλογές είναι ΔΙΚΟ μας HTML — άρα Mont, και δικό μας χρώμα επισήμανσης. */
+  .sel__opt {
+    padding: 11px 16px; font-size: 15px; color: var(--ink-2); cursor: pointer;
+    min-height: 44px; display: flex; align-items: center;
+  }
+  .sel__opt:hover, .sel__opt[data-active] { background: var(--paper-2); color: var(--ink); }
+  .sel__opt[aria-selected='true'] { color: var(--ink); font-weight: 600; }
+  .sel__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .sel__native { font: inherit; width: 100%; margin-top: 3px; }
+</style>
+
+<script>
+  // Ένα νησάκι, μικρό και αυτόνομο. Δένεται σε κάθε [data-select] της σελίδας.
+  document.querySelectorAll<HTMLElement>('[data-select]').forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('.sel__btn')!;
+    const list = root.querySelector<HTMLUListElement>('.sel__list')!;
+    const valEl = root.querySelector<HTMLElement>('.sel__val')!;
+    const input = root.querySelector<HTMLInputElement>('input[type=hidden]')!;
+    const opts = Array.from(root.querySelectorAll<HTMLLIElement>('.sel__opt'));
+    let active = Math.max(0, opts.findIndex((o) => o.getAttribute('aria-selected') === 'true'));
+
+    const setActive = (i: number) => {
+      active = (i + opts.length) % opts.length;
+      opts.forEach((o, n) => o.toggleAttribute('data-active', n === active));
+      opts[active].scrollIntoView({ block: 'nearest' });
+    };
+    const open = () => {
+      list.hidden = false; root.setAttribute('data-open', '');
+      btn.setAttribute('aria-expanded', 'true'); setActive(active);
+    };
+    const close = () => {
+      list.hidden = true; root.removeAttribute('data-open');
+      btn.setAttribute('aria-expanded', 'false');
+    };
+    const choose = (i: number) => {
+      opts.forEach((o, n) => o.setAttribute('aria-selected', n === i ? 'true' : 'false'));
+      valEl.textContent = opts[i].textContent;
+      input.value = opts[i].dataset.v ?? '';
+      close(); btn.focus();
+    };
+
+    btn.addEventListener('click', () => (list.hidden ? open() : close()));
+    opts.forEach((o, i) => o.addEventListener('click', () => choose(i)));
+
+    root.addEventListener('keydown', (e) => {
+      const k = (e as KeyboardEvent).key;
+      if (list.hidden) {
+        if (k === 'ArrowDown' || k === 'Enter' || k === ' ') { e.preventDefault(); open(); }
+        return;
+      }
+      if (k === 'Escape') { e.preventDefault(); close(); btn.focus(); }
+      else if (k === 'ArrowDown') { e.preventDefault(); setActive(active + 1); }
+      else if (k === 'ArrowUp') { e.preventDefault(); setActive(active - 1); }
+      else if (k === 'Home') { e.preventDefault(); setActive(0); }
+      else if (k === 'End') { e.preventDefault(); setActive(opts.length - 1); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); choose(active); }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!root.contains(e.target as Node)) close();
+    });
+  });
+</script>

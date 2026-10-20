@@ -1,0 +1,122 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΤΑ ΑΓΑΠΗΜΕΝΑ ΤΟΥ ΜΕΛΟΥΣ — `/panel/favorites`
+//
+// 🔴 ΓΙΑΤΙ ΥΠΑΡΧΕΙ ΑΥΤΗ Η ΣΕΛΙΔΑ. Ο πίνακας την έδειχνε **τρεις φορές** (πλακίδιο με
+//    τον αριθμό, σειρά «Αγαπημένα», σειρά «Τα στοιχεία μου») και δεν υπήρχε: ο
+//    δρομολογητής δεχόταν μόνο `/panel` σκέτο, οπότε το `/panel/favorites` έπεφτε στον
+//    έλεγχο λίστας, δεν έβρισκε θέμα «panel», και γύριζε **404 με μηδέν bytes**.
+//    Το μέλος έβλεπε «Αγαπημένα — 7 ακίνητα», πατούσε, και έπαιρνε λευκή οθόνη.
+//
+// 🪤 ΤΑ ΑΓΑΠΗΜΕΝΑ ΕΙΝΑΙ ΚΩΔΙΚΟΙ, ΟΧΙ ΑΚΙΝΗΤΑ. Το `me.favorites` δίνει αναγνωριστικά·
+//    το ακίνητο μπορεί να έχει **αποσυρθεί** από τότε που το αποθήκευσε. Δεν είναι
+//    σφάλμα — είναι το φυσιολογικό. Γι' αυτό μετράμε ΚΑΙ όσα δεν βρέθηκαν και το λέμε,
+//    αντί να δείχνουμε σιωπηλά λιγότερα από τον αριθμό που υποσχεθήκαμε στον πίνακα.
+//
+// 🔑 Η ΚΑΡΤΑ ΕΙΝΑΙ Η ΙΔΙΑ ΜΕ ΤΗ ΛΙΣΤΑ (`PropertyCard`). Δεύτερη υλοποίηση θα σήμαινε
+//    δεύτερος κανόνας για το τι κρύβεται από ποιον — και ο ένας θα άρχιζε να λέει
+//    ψέματα. Ο `viewer` περνάει αυτούσιος, ώστε το μέλος να βλέπει εδώ ό,τι ακριβώς
+//    βλέπει και στη λίστα.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import PropertyCard from './PropertyCard.astro';
+import { listUrl, prefix, t, type Lang } from '../lib/i18n';
+import { allProperties, refOf, type SiteProperty } from '../lib/api';
+import { viewerFor } from '../lib/gate';
+import type { Member } from '../lib/member';
+
+interface Props { lang: Lang; me: Member; token?: string }
+const { lang, me, token } = Astro.props;
+const p = prefix(lang);
+const viewer = viewerFor(me.level);
+
+// Το εισιτήριο περνάει στο API: χωρίς αυτό δεν θα έρχονταν καθόλου τα κρυφά ακίνητα,
+// και ένα αγαπημένο της κλειστής συλλογής θα «εξαφανιζόταν» χωρίς εξήγηση.
+let items: SiteProperty[] = [];
+let failed = false;
+try {
+  const all = await allProperties(token);
+  const want = new Set(me.favorites.map((f) => f.toLowerCase()));
+  // Κρατάμε τη σειρά του ΜΕΛΟΥΣ, όχι του καταλόγου — το πρώτο που αποθήκευσε
+  // είναι αυτό που ψάχνει.
+  const byRef = new Map(all.map((x) => [refOf(x).toLowerCase(), x]));
+  items = me.favorites
+    .map((f) => byRef.get(f.toLowerCase()))
+    .filter((x): x is SiteProperty => !!x);
+  if (!want.size) items = [];
+} catch {
+  failed = true;                    // το API έπεσε — το λέμε, δεν δείχνουμε «κανένα»
+}
+
+const missing = failed ? 0 : Math.max(0, me.favorites.length - items.length);
+---
+
+<Base lang={lang} title={t(lang, 'pnl.fav')} noindex
+      description={t(lang, 'fav.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="fav">
+    <div class="wrap">
+      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
+        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.fav')}</b>
+      </nav>
+
+      <h1 class="t-h2 fav__h">{t(lang, 'pnl.fav')}</h1>
+
+      {failed ? (
+        <p class="say">{t(lang, 'fav.fail')}</p>
+      ) : items.length === 0 ? (
+        /* Το άδειο δεν είναι σφάλμα — είναι η πρώτη επίσκεψη. Δίνουμε δρόμο, όχι λύπη. */
+        <div class="empty">
+          <p class="empty__h">{t(lang, 'fav.empty_h')}</p>
+          <p class="empty__s">{t(lang, 'fav.empty_s')}</p>
+          <a class="btn" href={listUrl(lang)}>{t(lang, 'ui.see_props')}</a>
+        </div>
+      ) : (
+        <>
+          <p class="say">{items.length === 1
+            ? t(lang, 'ui.one_prop')
+            : t(lang, 'pnl.n_props', { n: items.length })}</p>
+          <div class="grid">
+            {items.map((it, i) => <PropertyCard p={it} lang={lang} viewer={viewer} eager={i < 2} />)}
+          </div>
+          {missing > 0 && (
+            /* 🪤 ΤΟ ΛΕΜΕ, ΔΕΝ ΤΟ ΚΡΥΒΟΥΜΕ. Αν ο πίνακας έλεγε «7» και εδώ βλέπει 5,
+               χωρίς εξήγηση θα νόμιζε ότι χάθηκαν τα αγαπημένα του. */
+            <p class="gone">{missing === 1
+              ? t(lang, 'fav.gone1')
+              : t(lang, 'fav.gone_n', { n: missing })}
+              {' '}{t(lang, 'fav.gone_ask')}</p>
+          )}
+        </>
+      )}
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .fav { padding: var(--s6) 0 var(--s9); }
+  .fav .wrap { max-width: 1180px; }
+  .crumb { font-size: 12px; color: var(--faint); display: flex; gap: 7px; align-items: center;
+           margin-bottom: 10px; }
+  .crumb a { color: var(--muted); }
+  .crumb span { color: var(--line); }
+  .fav__h { margin: 0 0 6px; }
+  .say { font-size: 14px; color: var(--faint); margin: 0 0 22px; }
+
+  .grid { display: grid; gap: var(--s4);
+          grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); }
+  /* min-width:0 — χωρίς αυτό μια μεγάλη λέξη μέσα στην κάρτα φουσκώνει τη στήλη
+     και σπάει το πλέγμα στο κινητό. Το πληρώσαμε ήδη μία φορά στις μακέτες. */
+  .grid > :global(*) { min-width: 0; }
+
+  .empty { border: 1px solid var(--line); padding: 28px 22px; max-width: 46ch; }
+  .empty__h { margin: 0 0 8px; font-size: 18px; font-weight: 400; }
+  .empty__s { margin: 0 0 18px; font-size: 14px; color: var(--muted); }
+
+  .gone { margin: 22px 0 0; font-size: 13px; color: var(--faint); max-width: 60ch; }
+</style>

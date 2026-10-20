@@ -1,0 +1,128 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// Η ΚΛΕΙΣΤΗ ΣΥΛΛΟΓΗ — `/panel/collection`
+//
+// Το κίνητρο ολόκληρης της εγγραφής. Η αρχική σελίδα τη διαφημίζει· μέχρι σήμερα
+// δεν υπήρχε πουθενά να τη δει ο πελάτης αφού μπει.
+//
+// 🎚️ ΤΡΙΑ ΕΠΙΠΕΔΑ, ΚΑΙ ΤΟ ΦΙΛΤΡΟ ΓΙΝΕΤΑΙ ΣΤΟΝ ΔΙΑΚΟΜΙΣΤΗ, ΟΧΙ ΕΔΩ:
+//      επισκέπτης → δεν φτάνει καν εδώ (ο δρομολογητής τον στέλνει στην είσοδο)
+//      μέλος      → βλέπει `secret_portfolio`, ΟΧΙ `ultra_secret`
+//      exclusive  → βλέπει και τα δύο
+//    Το `allProperties(600, token)` επιστρέφει **ήδη** μόνο ό,τι δικαιούται. Εδώ
+//    απλώς ξεχωρίζουμε τα κρυφά από τα δημόσια για να τα δείξουμε μαζί.
+//
+// ⛔ ΜΗΝ ΠΡΟΣΘΕΣΕΙΣ ΕΔΩ ΔΙΚΟ ΣΟΥ ΦΙΛΤΡΟ ΕΠΙΠΕΔΟΥ. Αν το site κρίνει ποιος βλέπει τι,
+//    τότε υπάρχουν δύο κανόνες — και μόλις αποκλίνουν, ο ένας διαρρέει ακίνητα.
+//    Ο κανόνας ζει στο `publicConds()` του API. Εδώ μόνο εμφάνιση.
+//
+// 🪤 `isSecretFlag`, ΟΧΙ `=== true`: δύο ακίνητα έχουν την τιμή **«on»** (HTML
+//    checkbox). Με `=== true` αυτή η σελίδα θα έδειχνε **άδεια** σε πελάτη που
+//    δικαιούται να δει — και θα φαινόταν ότι δεν έχουμε τίποτα κρυφό.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import PropertyCard from './PropertyCard.astro';
+import { prefix, t, type Lang } from '../lib/i18n';
+import { allProperties, type SiteProperty } from '../lib/api';
+import { viewerFor, isSecretFlag } from '../lib/gate';
+import { company } from '../lib/company';
+import type { Member } from '../lib/member';
+
+interface Props { lang: Lang; me: Member; token?: string }
+const { lang, me, token } = Astro.props;
+const p = prefix(lang);
+const co = await company();
+const viewer = viewerFor(me.level);
+const isExclusive = me.level === 'exclusive';
+
+let secret: SiteProperty[] = [];
+let ultra: SiteProperty[] = [];
+let failed = false;
+try {
+  const all = await allProperties(token);
+  for (const it of all) {
+    const a = it.attributes ?? {};
+    if (isSecretFlag(a.ultra_secret)) ultra.push(it);
+    else if (isSecretFlag(a.secret_portfolio)) secret.push(it);
+  }
+} catch {
+  failed = true;
+}
+const total = secret.length + ultra.length;
+---
+
+<Base lang={lang} title={t(lang, 'pnl.collection')} noindex
+      description={t(lang, 'cl.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="cl">
+    <div class="wrap">
+      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
+        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.collection')}</b>
+      </nav>
+
+      <h1 class="t-h2 cl__h">{t(lang, 'pnl.collection')}</h1>
+      <p class="cl__s">{t(lang, 'cl.sub')}</p>
+
+      {failed ? (
+        <p class="say">{t(lang, 'cl.fail')}</p>
+      ) : total === 0 ? (
+        <div class="empty">
+          <p class="empty__h">{t(lang, 'cl.empty_h')}</p>
+          <p class="empty__s">{t(lang, 'cl.empty_s')}</p>
+          <a class="btn" href={co.phoneHref}>{co.phone}</a>
+        </div>
+      ) : (
+        <>
+          <p class="say">{total === 1
+            ? t(lang, 'ui.one_prop')
+            : t(lang, 'pnl.n_props', { n: total })}</p>
+          <div class="grid">
+            {[...ultra, ...secret].map((it, i) => (
+              <PropertyCard p={it} lang={lang} viewer={viewer} eager={i < 2} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {!isExclusive && !failed && (
+        /* Ο πελάτης πρέπει να ξέρει ότι υπάρχει και δεύτερη πόρτα — αλλιώς νομίζει
+           ότι βλέπει τα πάντα. Δεν λέμε πόσα είναι: αυτό θα ήταν ο κατάλογος. */
+        <div class="ask ask--deep">
+          <p class="ask__h">{t(lang, 'cl.more_h')}</p>
+          <p class="ask__s">{t(lang, 'cl.more_s')}</p>
+          <a class="btn btn--onphoto" href={co.phoneHref}>{t(lang, 'cl.more_cta')}</a>
+        </div>
+      )}
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .cl { padding: var(--s6) 0 var(--s9); }
+  .cl .wrap { max-width: 1180px; }
+  .crumb { font-size: 12px; color: var(--faint); display: flex; gap: 7px; align-items: center;
+           margin-bottom: 10px; }
+  .crumb a { color: var(--muted); }
+  .crumb span { color: var(--line); }
+  .cl__h { margin: 0 0 8px; }
+  .cl__s { font-size: 14.5px; color: var(--ink-2); margin: 0 0 6px; max-width: 58ch; }
+  .say { font-size: 14px; color: var(--faint); margin: 0 0 22px; }
+
+  .grid { display: grid; gap: var(--s4);
+          grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); }
+  .grid > :global(*) { min-width: 0; }
+
+  .empty { border: 1px solid var(--line); padding: 26px 22px; max-width: 46ch; margin-top: 18px; }
+  .empty__h { margin: 0 0 8px; font-size: 18px; font-weight: 400; }
+  .empty__s { margin: 0 0 18px; font-size: 14px; color: var(--muted); }
+
+  .ask { border: 1px solid var(--line); padding: 20px; margin-top: 34px; max-width: 560px; }
+  .ask--deep { background: var(--ink-deep); border-color: var(--ink-deep); color: #fff; }
+  .ask__h { margin: 0 0 6px; font-size: 20px; font-weight: 300; }
+  .ask__s { margin: 0 0 14px; font-size: 13.5px; color: rgba(255,255,255,.72); }
+</style>

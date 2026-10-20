@@ -1,0 +1,142 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΤΑ ΣΤΟΙΧΕΙΑ ΜΟΥ — `/panel/profile`
+//
+// 🔴 ΤΙ ΜΠΟΡΕΙ ΚΑΙ ΤΙ ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΚΑΝΕΙ ΑΥΤΗ Η ΣΕΛΙΔΑ, ΚΑΙ ΓΙΑΤΙ.
+//    Το API έχει `POST /site/member/complete`, που **προσθέτει ό,τι λείπει** — και
+//    στέλνει κωδικό στο νέο στοιχείο πριν το δεχτεί. Δεν έχει «άλλαξε το e-mail μου
+//    από το Α στο Β». Είναι σκόπιμο: η αλλαγή υπάρχοντος στοιχείου είναι το κλασικό
+//    πρώτο βήμα κατάληψης λογαριασμού, και θέλει σχεδιασμό που δεν έχει γίνει.
+//    ⛔ ΜΗΝ φτιάξεις εδώ πεδία που «αποθηκεύουν» χωρίς endpoint — θα δείχνουν ότι
+//    δέχτηκαν την αλλαγή και δεν θα έχει αλλάξει τίποτα. Χειρότερο από το να λείπει.
+//
+// ✅ ΑΥΤΟ ΠΟΥ ΚΑΝΕΙ: δείχνει τι ξέρουμε, και **προσθέτει ό,τι λείπει** με τον
+//    υπάρχοντα, επαληθευμένο δρόμο. Για αλλαγή υπάρχοντος, ο σύμβουλος.
+//
+// 🪤 Η ΜΟΝΗ ΕΞΟΔΟΣ ΑΠΟ ΤΟΝ ΛΟΓΑΡΙΑΣΜΟ ΖΟΥΣΕ ΜΟΝΟ ΜΕΣΑ ΣΤΟΝ ΠΙΝΑΚΑ. Την κρατάμε
+//    και εδώ: όποιος ψάχνει «πώς βγαίνω» κοιτάζει τα στοιχεία του, όχι την αρχική.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { prefix, t, type Lang } from '../lib/i18n';
+import { company } from '../lib/company';
+import type { Member } from '../lib/member';
+
+interface Props { lang: Lang; me: Member }
+const { lang, me } = Astro.props;
+const p = prefix(lang);
+const co = await company();
+
+// Το API δίνει ενιαίο `name`· η βάση το κρατά χωριστά. Κόβουμε μόνο για ΕΜΦΑΝΙΣΗ —
+// δεν αποθηκεύουμε τίποτα από αυτόν τον χωρισμό.
+const parts = (me.name || '').trim().split(/\s+/).filter(Boolean);
+const first = parts[0] ?? '';
+const last = parts.slice(1).join(' ');
+
+const isExclusive = me.level === 'exclusive';
+const isAgent = me.level === 'agent';
+const badge = isExclusive ? t(lang, 'lvl.exclusive') : isAgent ? t(lang, 'lvl.agent') : t(lang, 'lvl.member');
+
+const missing: string[] = [];
+if (!me.name) missing.push(t(lang, 'pf.m_name'));
+if (!me.email) missing.push(t(lang, 'pf.m_email'));
+if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
+---
+
+<Base lang={lang} title={t(lang, 'pnl.profile')} noindex
+      description={t(lang, 'pf.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="pf">
+    <div class="wrap">
+      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
+        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.profile')}</b>
+      </nav>
+
+      <div class="hd">
+        <h1 class="t-h2 pf__h">{t(lang, 'pnl.profile')}</h1>
+        <span class:list={['badge', isExclusive && 'badge--gold']}>{badge}</span>
+      </div>
+
+      <dl class="facts">
+        <div class="fact">
+          <dt>{t(lang, 'auth.first')}</dt>
+          <dd>{first || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
+        </div>
+        <div class="fact">
+          <dt>{t(lang, 'auth.last')}</dt>
+          <dd>{last || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
+        </div>
+        <div class="fact">
+          <dt>{t(lang, 'pf.email')}</dt>
+          <dd class="mono">{me.email || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
+        </div>
+        <div class="fact">
+          <dt>{t(lang, 'auth.phone')}</dt>
+          <dd class="mono">{me.phone || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
+        </div>
+      </dl>
+
+      {missing.length > 0 && (
+        /* Ο ΜΟΝΟΣ δρόμος που υπάρχει σήμερα, και είναι ο σωστός: το νέο στοιχείο
+           επαληθεύεται με κωδικό πριν μπει.
+           🪤 ΔΥΟ ΚΛΕΙΔΙΑ, ΟΧΙ ΕΝΑ ΜΕ ΑΡΙΘΜΟ: το παλιό «Λείπει {n} στοιχεία» τύπωνε
+              «Λείπει 2 στοιχεία». Ο ενικός και ο πληθυντικός είναι άλλη πρόταση. */
+        <div class="ask">
+          <p class="ask__h">{missing.length === 1
+            ? t(lang, 'pf.miss1')
+            : t(lang, 'pf.miss_n', { n: missing.length })}</p>
+          <p class="ask__s">{t(lang, 'pf.miss_s', { list: missing.join(t(lang, 'pf.and')) })}</p>
+          <a class="btn" href={`${p}/login?next=${encodeURIComponent(`${p}/panel/profile`)}`}>{t(lang, 'pf.fill')}</a>
+        </div>
+      )}
+
+      <div class="note">
+        <p class="note__h">{t(lang, 'pf.chg_h')}</p>
+        <p class="note__s">{t(lang, 'pf.chg_s')}</p>
+        <a class="btn" href={co.phoneHref}>{co.phone}</a>
+      </div>
+
+      <form method="post" action="/api/auth/logout" class="out">
+        <button class="lnk" type="submit">{t(lang, 'pnl.logout')}</button>
+      </form>
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .pf { padding: var(--s6) 0 var(--s9); }
+  .pf .wrap { max-width: 620px; }
+  .crumb { font-size: 12px; color: var(--faint); display: flex; gap: 7px; align-items: center;
+           margin-bottom: 10px; }
+  .crumb a { color: var(--muted); }
+  .crumb span { color: var(--line); }
+  .hd { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
+  .pf__h { margin: 0; }
+  .badge { font-size: 10px; font-weight: 600; letter-spacing: .16em; padding: 6px 10px;
+           border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap; }
+  .badge--gold { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+
+  .facts { margin: 0; border-top: 1px solid var(--line-soft); }
+  .fact { display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
+          padding: 13px 0; border-bottom: 1px solid var(--line-soft); }
+  .fact dt { font-size: 12px; color: var(--faint); flex: none; }
+  .fact dd { margin: 0; font-size: 15px; text-align: right; min-width: 0; overflow-wrap: anywhere; }
+  .mono { font-variant-numeric: tabular-nums; }
+  .none { color: var(--faint); font-style: italic; font-size: 13.5px; }
+
+  .ask { border: 1px solid var(--line); padding: 18px; margin-top: 24px; }
+  .ask__h { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+  .ask__s { margin: 0 0 14px; font-size: 13.5px; color: var(--muted); }
+
+  .note { border: 1px solid var(--line-soft); padding: 17px; margin-top: 16px; }
+  .note__h { margin: 0 0 5px; font-size: 14.5px; font-weight: 600; }
+  .note__s { margin: 0 0 13px; font-size: 13px; color: var(--muted); }
+
+  .out { margin-top: 30px; }
+  .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--muted); font-size: 13.5px; }
+  .lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+</style>

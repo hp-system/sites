@@ -1,0 +1,37 @@
+---
+// ΜΠΛΟΚ 3 — Επιλεγμένα ακίνητα. Έξι κάρτες σε πλέγμα.
+// Δουλειά του: να τον πάει στη σελίδα ακινήτου — εκεί γίνεται το 95% των
+// αιτημάτων (μετρήθηκε: 4.583 από 4.973 αφορούν συγκεκριμένο ακίνητο).
+// ⛔ Χωρίς carousel: δεν το γυρίζει κανείς και δεν το διαβάζουν οι μηχανές.
+import type { SiteProperty } from '../lib/api';
+import { t, type Lang } from '../lib/i18n';
+import PropertyCard from './PropertyCard.astro';
+
+import type { Viewer } from '../lib/gate';
+interface Props { items: SiteProperty[]; lang: Lang; total?: number; viewer: Viewer }
+const { items, lang, viewer } = Astro.props;
+---
+<section class="section" aria-labelledby="featured-h">
+  <div class="wrap">
+    {/* George, 28/7: έφυγαν ο υπότιτλος «Έξι από τα 527…» και ο σύνδεσμος
+        «Δείτε και τα 527». Δύο λόγοι, και οι δύο σωστοί: (α) το πλήθος του
+        καταλόγου δεν ενδιαφέρει τον αγοραστή, (β) οι εσωτερικοί σύνδεσμοι θα
+        σχεδιαστούν ενιαία και σωστά, όχι σκόρπιοι ανά μπλοκ. */}
+    <div class="shead">
+      <div>
+        <h2 id="featured-h" class="t-h2">{t(lang, 'featured.h2')}</h2>
+      </div>
+    </div>
+
+    <div class="grid">
+      {items.map((p, i) => <PropertyCard p={p} lang={lang} viewer={viewer} eager={i < 2} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; gap: 30px; }
+  @media (min-width: 760px) {
+    .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 26px; }
+  }
+</style>

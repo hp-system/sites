@@ -28,7 +28,7 @@ related:
   href: /en/contact
 toc: false
 old_url: /en/our-partners
-needs_content: true
+needs_content: false
 cards: []
 contact_card: false
 ---
@@ -38,6 +38,19 @@ One of our primary principles in Halkidiki Properties is the careful choice of o
 ## Partners we work with
 
 Our friends and partners! We are grateful for all the moments and experiences that we are living together.
+
+## Who our partners are
+
+They cover every stage of a home: building materials and insulation (Isomat, Knauf, Tecnocemento, Sidenor), windows, doors and aluminium (Rehau, Mouratidis aluminium constructions, Porta Impresa), heating, cooling and water (Thermogaz NIBE, Intelwater), kitchens, tiles and interiors (Aran Cucine, Porcelana, Steropal, COCO-MAT, m&f Flora fabrics and curtains, ArtAbout), and engineering and consulting (KE.PA.MACH. S.A., Alpha Plan Consultants, Tsoulfidis).
+
+## Why partners matter to our clients
+
+Buying a home in Halkidiki is often only the start: many of our clients renovate, furnish or build. Through our partners they get reliable materials, furniture, kitchens, fabrics and design without searching on their own, and our [construction team](/en/services/construction-services) coordinates the work on site, from the first order to the final delivery, so that owners who live abroad do not have to manage suppliers themselves.
+
+## Working with us
+
+We choose partners for their professionalism and the quality of their services, and we work with them on real projects such as [Villa Natalia](/en/articles/constructors-news/villla-natalia) in Sithonia and the homes in our [construction projects](/en/construction). If your company offers services or products for property owners in Halkidiki and shares the same standards, [contact us](/en/contact) — we are always glad to meet new partners.
+
 
 <div class="gallery logos">
 <img src="/pages/our-partners/0e77ec7a-1810144400.webp" alt="Steropal logo — partner of Halkidiki Properties" width="400" height="400" loading="lazy" decoding="async" />

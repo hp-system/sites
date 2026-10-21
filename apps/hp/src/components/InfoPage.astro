@@ -20,6 +20,7 @@ import { allProperties } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
+import { waHref, viberHref } from '../lib/contact';
 import { HERO_SHOTS } from '../lib/hero';
 import { company } from '../lib/company';
 import type { InfoPage } from '../lib/infopages';
@@ -127,6 +128,7 @@ if (d.faq.length) {
           <address class="ccard">
             <p><span class="t-label">Office</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
             <p><span class="t-label">Phone</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
+            <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
             <p><span class="t-label">E-mail</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
             <p><a href={mapUrl} rel="noopener" target="_blank">Get directions to our office on Google Maps</a></p>
           </address>
@@ -196,6 +198,7 @@ if (d.faq.length) {
           <a class="btn btn--onphoto" href={contact} data-ev="content:phone">Contact an adviser</a>
           <a class="btn btn--line" href={listUrl(lang)} data-ev="content:list">See properties for sale</a>
           <a class="phone" href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a>
+          <a class="phone" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp</a>
         </p>
       </div>
     </section>

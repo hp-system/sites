@@ -32,7 +32,7 @@ related:
   href: /en/contact
 toc: false
 old_url: /en/careers/bulgarian-speaker
-needs_content: true
+needs_content: false
 cards: []
 contact_card: false
 form:
@@ -61,4 +61,4 @@ You will handle the first communication with our Bulgarian clients and insert th
 - Full-time
 - Competitive salary – insurance coverage
 
-To apply, send us the form below; an adviser will reply and ask for your CV.
+To apply, send your CV by e-mail to [gtsigaras@halkidikiproperties.gr](mailto:gtsigaras@halkidikiproperties.gr) with "Bulgarian speaker" in the subject line, or send us the form below and we will reply.

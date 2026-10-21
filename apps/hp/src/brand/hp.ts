@@ -23,6 +23,9 @@ export const hp: Brand = {
     phoneText: '+30 2311 2412 24',
     phoneHref: 'tel:+302311241224',
     phoneE164: '+302311241224',
+    // WhatsApp / Viber mobile (George 21/10/2026). The live site links wa.me/0030…, which fails.
+    mobileText: '+30 698 834 5888',
+    whatsappE164: '+306988345888',
     email: 'info@halkidikiproperties.com',
   },
   web: {

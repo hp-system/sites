@@ -21,9 +21,9 @@ faq:
 - q: What are the costs - expenses of the buyer?
   a: 'In addition to the agreed price for the purchase, there are some additional costs that burden the buyer:
 
-    • VAT (real estate transfer tax) which amounts to 3% of the listed contract price.
+    • Transfer tax of 3.09 % on resale homes, on the price or the official value, whichever is higher. New builds carry 24 % VAT instead, suspended until 31 December 2026 (the 3.09 % transfer tax applies meanwhile).
 
-    • Transfer to the Mortgage Office which amounts to 0.475% on the listed contract price + 24% VAT
+    • Land registry fees of about 0.5 % of the price.
 
     • Lawyer''s fee
 
@@ -57,7 +57,7 @@ faq:
 
     • Termination Clause Registration Certificate'
 - q: What is the amount I have to pay for the extra costs?
-  a: The additional costs for the purchase of a property in Greece differ depending on the method of payment. A safe estimate is between 9% and 12% of the purchase price.
+  a: 'Under the 2026 rules a buyer pays about 6 % on top of the price: 3.09 % transfer tax, about 1 % notary and 1 % lawyer plus VAT, and about 0.5 % land-registry fees. Example: about €21,245 for a €350,000 resale home, before the agency commission. Our property cost calculator in the article on property tax in Greece for foreigners works out the figures for your own case.'
 - q: What is the down payment I have to pay?
   a: There is no fixed amount or percentage. Each market is different, depending on the situation or desire of the seller and buyer. As a company we suggest the down payment should not be small or large as long as there are no problems. An intermediate solution of about 10% of the market is ideal and safe between buyer and seller.
 - q: What is the amount of a deposit that I need to pay and I am secured about it?
@@ -101,6 +101,8 @@ faq:
 - q: Can you send me more photos for the property I am interested in?
   a: We do not have any other photos at this time. All photos of our properties are available and uploaded on our website.
 related:
+- label: Property tax in Greece for foreigners (2026) and cost calculator
+  href: /en/articles/business-news/taxes-foreigners-properties-greece
 - label: Terms of Services
   href: /en/terms-of-services
 - label: Privacy Policy

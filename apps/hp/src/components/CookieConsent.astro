@@ -17,7 +17,8 @@ import { brand } from '../brand/index';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const c = consentText(lang);
-const privacyHref = `${prefix(lang)}${brand.analytics.privacyPath}`;
+// The privacy policy exists in English only for now: /de/privacy-policy, /privacy-policy (el)… are 404.
+const privacyHref = `${prefix('en')}${brand.analytics.privacyPath}`;
 ---
 <div id="cc" class="cc" role="dialog" aria-modal="true" aria-labelledby="cc-t" aria-describedby="cc-b" hidden
      data-cookie={CONSENT_COOKIE} data-max-age={CONSENT_MAX_AGE}>
@@ -99,7 +100,7 @@ const privacyHref = `${prefix(lang)}${brand.analytics.privacyPath}`;
         const w = window.innerWidth;
         const device = w < 768 ? 'mobile' : w < 1024 ? 'tablet' : 'desktop';
         const lang = (document.documentElement.lang || 'en').slice(0, 2);
-        const body = new Blob([JSON.stringify({ choice, analytics, marketing, device, lang })], { type: 'application/json' });
+        const body = new Blob([JSON.stringify({ choice, analytics, marketing, device, lang })], { type: 'text/plain;charset=UTF-8' });
         navigator.sendBeacon?.('/api/consent-stat', body);
       } catch { /* never blocks the banner */ }
     };

@@ -28,7 +28,7 @@ import { PAGE_KEYS, pageExists, pageLangs, contentUrl } from '../lib/pages';
 import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { CATEGORIES, allArticles, articleUrl, categoryUrl, inCategory } from '../lib/articles';
-import { allInfoPages, infoLastmod, EN_MOVED } from '../lib/infopages';
+import { allInfoPages, infoLastmod } from '../lib/infopages';
 
 export const prerender = false;
 
@@ -73,13 +73,14 @@ const PAGES: Page[] = [
  */
 async function contentPages(): Promise<Page[]> {
   const info = await allInfoPages();
-  const paths = new Set(info.map((p) => p.data.path));
-  const old: Page[] = PAGE_KEYS.filter(pageExists).map((k) => {
-    const enTaken = paths.has(contentUrl(k, 'en')) || (EN_MOVED[k] ? paths.has(EN_MOVED[k]) : false);
-    const langs = pageLangs(k).filter((l) => !(l === 'en' && enTaken));
-    return { pathFor: (l: Lang) => contentUrl(k, l), langs, lastmod: BUILD_DAY };
-  }).filter((p) => p.langs.length > 0);
-  const own: Page[] = info.map((p) => ({ pathFor: () => p.data.path, langs: ['en'] as Lang[], lastmod: infoLastmod(p, BUILD_DAY) }));
+  const keys = PAGE_KEYS.filter(pageExists);
+  // contentUrl(k, 'en') already is the info page's URL where one took over (EN_URL, and the
+  // same-path pages contact/sell/services): the cluster keeps its English member, and that
+  // info page is not listed a second time on its own.
+  const covered = new Set(keys.map((k) => contentUrl(k, 'en')));
+  const old: Page[] = keys.map((k) => ({ pathFor: (l: Lang) => contentUrl(k, l), langs: pageLangs(k), lastmod: BUILD_DAY }));
+  const own: Page[] = info.filter((p) => !covered.has(p.data.path))
+    .map((p) => ({ pathFor: () => p.data.path, langs: ['en'] as Lang[], lastmod: infoLastmod(p, BUILD_DAY) }));
   return [...old, ...own];
 }
 

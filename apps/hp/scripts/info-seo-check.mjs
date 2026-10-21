@@ -40,7 +40,7 @@ export async function checkPage(path, opts = {}) {
   const canon = attr(html, /<link rel="canonical" href="([^"]+)"/);
   check(`${path} canonical = itself`, decodeURI(canon).endsWith(path), canon);
   const langs = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)"/g)].map((m) => m[1]);
-  check(`${path} hreflang en + x-default only`, langs.includes('en') && langs.includes('x-default') && langs.length === 2, langs.join(','));
+  check(`${path} hreflang has en + x-default`, langs.includes('en') && langs.includes('x-default'), langs.join(','));
   const og = attr(html, /<meta property="og:image" content="([^"]+)"/);
   check(`${path} og:image`, /^https?:\/\//.test(og), og || 'missing');
   check(`${path} twitter:image`, /<meta name="twitter:image" content="https?:/.test(html), 'twitter:image');

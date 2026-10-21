@@ -5,6 +5,7 @@
 // pages need no redirect. Page texts live in files — no CMS (George 20/10).
 // ═══════════════════════════════════════════════════════════════════════════
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { EN_URL } from './pages';
 
 export type InfoPage = CollectionEntry<'pages'>;
 
@@ -29,13 +30,7 @@ export const infoLastmod = (pg: InfoPage, fallback: string) => (pg.data.updated 
  * target page exists, so a move goes live together with its page.
  */
 export const EN_MOVED: Record<string, string> = {
-  about: '/en/about-us',
-  partners: '/en/our-partners',
-  'services/buyers': '/en/services/buyer-services',
-  'services/owners': '/en/services/seller-services',
-  'services/investors': '/en/services/investor-services',
-  'services/developers': '/en/services/construction-services',
-  projects: '/en/construction',
+  ...(EN_URL as Record<string, string>),
   // The old site had the same text twice; one URL keeps it (open question for George).
   'sell/work-with-us-exclusively': '/en/work-with-us-exclusively',
 };

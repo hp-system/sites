@@ -54,7 +54,7 @@ If you own land or plan to buy a [plot in Halkidiki](/en/property-for-sale/plots
 ## Our latest projects
 
 <div class="gallery projects">
-<figure><img src="/pages/construction/90957742-main.webp" alt="Villa Natalia in Sithonia at night, seen from above" width="500" height="533" loading="lazy" decoding="async" /><figcaption><strong>Villa Natalia</strong> · Sithonia</figcaption></figure>
+<figure><img src="/pages/construction/villa-natalia-7010-wm.jpg" alt="Villa Natalia in Sithonia at dusk: living room and pool" width="800" height="533" loading="lazy" decoding="async" /><figcaption><strong>Villa Natalia</strong> · Sithonia</figcaption></figure>
 <figure><img src="/pages/construction/97fdaa1c-main.webp" alt="Living room of a renovated apartment in Sithonia" width="500" height="533" loading="lazy" decoding="async" /><figcaption><strong>Renovated apartment</strong> · Sithonia</figcaption></figure>
 <figure><img src="/pages/construction/2e419fa8-main.webp" alt="Kalma Villa under construction in Nea Propontida" width="500" height="533" loading="lazy" decoding="async" /><figcaption><strong>Kalma Villa</strong> · Nea Propontida</figcaption></figure>
 <figure><img src="/pages/construction/8978d3f3-main.webp" alt="Renovated detached house in Sithonia" width="500" height="533" loading="lazy" decoding="async" /><figcaption><strong>Renovated detached house</strong> · Sithonia</figcaption></figure>

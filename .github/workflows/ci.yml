@@ -18,3 +18,10 @@ jobs:
       - run: pnpm run check
       - run: pnpm run build
       - run: pnpm run test
+  # The site is deployed from its own folder with its own lockfile (apps/hp/Dockerfile):
+  # build that exact image, so a stale apps/hp/pnpm-lock.yaml fails here, not on the server.
+  hp-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t hp-site-ci apps/hp

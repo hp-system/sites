@@ -28,6 +28,7 @@ import { HERO_SHOTS } from '../lib/hero';
 import { company } from '../lib/company';
 import type { InfoPage } from '../lib/infopages';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
+import { PAGE_KEYS, contentUrl, pageExists, pageLangs } from '../lib/pages';
 
 interface Props { page: InfoPage }
 const { page } = Astro.props;
@@ -38,7 +39,12 @@ const { Content, headings } = await render(page);
 const toc = d.toc ? headings.filter((h) => h.depth === 2 && h.text.trim()) : [];
 
 const url = d.path;
-const pathFor = (l: Lang) => (l === 'en' ? url : listUrl(l));
+// An info page that is the English version of an older content page (about, partners,
+// services, contact, sell…) declares that page's translations as its alternates, so every
+// member of the hreflang cluster (and the sitemap) lists the same set. Otherwise: English only.
+const key = PAGE_KEYS.find((k) => pageExists(k) && contentUrl(k, 'en') === url);
+const langs: Lang[] = key ? pageLangs(key) : ['en'];
+const pathFor = (l: Lang) => (key ? contentUrl(key, l) : l === 'en' ? url : listUrl(l));
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const abs = (p: string) => (p.startsWith('http') ? p : `${site}${p}`);
 const image = d.image || HERO_SHOTS[0]?.url || '';
@@ -118,7 +124,7 @@ if (d.faq.length) {
   });
 }
 ---
-<Base lang={lang} title={title} description={d.description} pathFor={pathFor} langs={['en']} jsonLd={jsonLd}
+<Base lang={lang} title={title} description={d.description} pathFor={pathFor} langs={langs} jsonLd={jsonLd}
       ogImage={image ? abs(image) : undefined} ogImageAlt={imageAlt}>
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />

@@ -8,7 +8,7 @@ old_url: /en/articles/buyers/greece-property-transfer-tax-non-eu-buyers-2027
 clean_url: /en/articles/buyers/greece-property-transfer-tax-non-eu-buyers-2027
 author: Theologos Vavdinoudis
 published: '2026-09-08T17:39:39+03:00'
-updated: '2026-10-08T16:29:54+03:00'
+updated: '2026-10-21T00:00:00+03:00'
 reading_time: 5'
 hero_image: /articles/greece-property-transfer-tax-non-eu-buyers-2027/1791466194.jpg
 og_image: /articles/greece-property-transfer-tax-non-eu-buyers-2027/1791466194.jpg
@@ -67,7 +67,13 @@ That is an additional €37,080 before considering any other acquisition expense
 
 For buyers looking at higher-value holiday homes and villas, the difference becomes even more significant.
 
-Taxable property valueCurrent effective tax 3.09%New effective tax 15.45%Difference€200,000€6,180€30,900€24,720€300,000€9,270€46,350€37,080€500,000€15,450€77,250€61,800€800,000€24,720€123,600€98,880€1,000,000€30,900€154,500€123,600
+| Taxable property value | Current effective tax 3.09% | New effective tax 15.45% | Difference |
+| --- | --- | --- | --- |
+| €200,000 | €6,180 | €30,900 | €24,720 |
+| €300,000 | €9,270 | €46,350 | €37,080 |
+| €500,000 | €15,450 | €77,250 | €61,800 |
+| €800,000 | €24,720 | €123,600 | €98,880 |
+| €1,000,000 | €30,900 | €154,500 | €123,600 |
 
 These examples illustrate transfer tax only. They do not represent the full cost of buying property in Greece.
 

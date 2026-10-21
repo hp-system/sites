@@ -61,6 +61,12 @@ export type Brand = {
     /** Privacy policy path, linked from the consent banner (language prefix added). */
     privacyPath: string;
   };
+  /**
+   * The person who takes editorial responsibility for the articles. EU AI Act art. 50(4):
+   * text on matters of public interest made with AI needs a label UNLESS a human reviews it
+   * and holds editorial responsibility — this name is that responsibility, shown on every article.
+   */
+  editorial: { name: string; role: string };
   /** Property id → rental page, for properties that are also let (button «rent it»). */
   rentals: Record<string, string>;
 };

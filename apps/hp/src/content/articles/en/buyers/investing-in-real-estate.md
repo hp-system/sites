@@ -8,7 +8,7 @@ old_url: /en/articles/buyers/investing-in-real-estate
 clean_url: /en/articles/buyers/investing-in-real-estate
 author: Theodora Kosmoglou
 published: '2020-10-22T00:00:00+03:00'
-updated: '2026-10-07T00:00:00+03:00'
+updated: '2026-10-21T00:00:00+03:00'
 reading_time: 8'
 hero_image: /articles/investing-in-real-estate/1608305847.jpeg
 og_image: /articles/investing-in-real-estate/1608305847.jpeg
@@ -50,6 +50,7 @@ Real estate protects savings from inflation, pays a rent and can be passed on to
 - **Two sources of return.** The value of a well-located property rises over time, and in the meantime it earns rent. Savings accounts rarely beat inflation.
 - **Priced in euro.** A property in Greece keeps its value in a strong currency, whatever happens to your home currency.
 - **Tangible and inheritable.** A house is an asset your children can use, let or sell.
+- **Spreads your risk.** A property in another market and another asset class balances savings, shares and a home in your own country.
 - **Retirement in the sun.** Many of our buyers let the house for ten summers and move in when they retire.
 
 ## Why Halkidiki rather than the islands
@@ -69,7 +70,7 @@ Real estate protects savings from inflation, pays a rent and can be passed on to
 [**from €100,000**plots and land](/en/properties?property_category=2)
 [**→**hotels and commercial](/en/properties?property_category=3)
 
-Three peninsulas, three markets. **Kassandra** has the sandy beaches, the resorts and the strongest rental demand. **Sithonia** is greener and quieter, with villas and plots with sea views. **Aristotelis** on the Athos side has the lowest prices per square metre and large plots. **Nea Propontida** is the year-round belt of Thessaloniki, where a home lets twelve months a year.
+Three peninsulas, three markets. **Kassandra** has the sandy beaches, the resorts and the strongest rental demand. **Sithonia** is greener and quieter, with villas and plots with sea views. **Aristotelis** on the Athos side has the lowest prices per square metre and large plots. In the inland villages, such as Arnaia, traditional stone houses are a different way in: [the villages worth knowing](/en/articles/all-news/hidden-gems-lesser-known-villages-in-halkidiki-worth-exploring). **Nea Propontida** is the year-round belt of Thessaloniki, where a home lets twelve months a year.
 
 ## Returns: what to expect, honestly
 
@@ -87,7 +88,7 @@ Seasonal letting of a well-located house near the beach typically brings a gross
 
 ## Golden Visa
 
-A single property of at least 120 m² bought for €400,000 or more in Halkidiki gives the buyer and family a five-year renewable residence permit, with no minimum stay. Conversions of commercial buildings and listed buildings qualify from €250,000. Around a fifth of our listings are above the threshold; [see them here](/en/properties?price_min_range=400000&price_max_range=10000000).
+A single property of at least 120 m² bought for €400,000 or more in Halkidiki gives the buyer and family a five-year renewable residence permit, with no minimum stay. Conversions of commercial buildings and listed buildings qualify from €250,000. The permit also lets you travel within the Schengen area. [See properties from €400,000](/en/properties?price_min_range=400000&price_max_range=10000000).
 
 ## How we work with investors
 
@@ -129,4 +130,4 @@ Send us a listing number; we return the cost of acquisition, the annual taxes an
 
 [Ask for the numbers](/en/contact) [Property for sale in Greece](/en/property-for-sale-in-greece)
 
-Halkidiki Properties, local agency since 2007. Market numbers update automatically from our database. Last updated 7 October 2026.
+Halkidiki Properties, local agency since 2007. Market numbers update automatically from our database. Last updated 21 October 2026.

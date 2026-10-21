@@ -1,0 +1,105 @@
+{
+ "_about": "English articles retired on 21/10/2026 as near-duplicates (issue #48): each was merged into the article that covers the same search intent and its file moved to apps/hp/archive/articles-merged-20261021/ (not built, not served). Map only, old URL (clean_url and, where different, the old site's old_url) → the kept article — no redirect engine yet (George 20/10/2026). clicks/impressions are the retired page's 12-month Search Console figures from its frontmatter.",
+ "status": 301,
+ "redirects": [
+  {
+   "from": "/en/articles/buyers/are-you-looking-to-buy-a-property-in-halkidiki-your-request-is-safe-with-us",
+   "lang": "en",
+   "to": "/en/articles/all-news/looking-to-buy-a-property-in-halkidiki-your-request-is-safe-with-us",
+   "clicks_12m": 0,
+   "impressions_12m": 3,
+   "reason": "Same text almost word for word; the kept copy has more impressions and links to the property list.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/buyers/are-you-looking-to-buy-a-property-in-halkidiki-your-request-is-safe-with-us.md"
+  },
+  {
+   "from": "/en/articles/buyers/viewing-a-property-at-halkidiki",
+   "lang": "en",
+   "to": "/en/articles/buyers/viewing-trip-day",
+   "clicks_12m": 0,
+   "impressions_12m": 11,
+   "reason": "Same intent (planning and doing a viewing trip); the kept article is longer and has the clicks. Its unique tips (8-10 homes, about 30 minutes each, shortlist of 2-3, look at the area in the evening) were merged.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/buyers/viewing-a-property-at-halkidiki.md"
+  },
+  {
+   "from": "/en/articles/all-news/buying-a-home-in-halkidiki-a-step-by-step-guide",
+   "lang": "en",
+   "to": "/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki",
+   "clicks_12m": 0,
+   "impressions_12m": 69,
+   "reason": "Same intent (step-by-step buying guide); the kept guide is the complete 2026 version with costs and documents. The note on listing furniture and fixtures in the pre-contract was merged.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/buying-a-home-in-halkidiki-a-step-by-step-guide.md"
+  },
+  {
+   "from": "/en/articles/all-news/buying-a-home-in-halkidiki:-a-step-by-step-guide",
+   "lang": "en",
+   "to": "/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki",
+   "clicks_12m": 0,
+   "impressions_12m": 69,
+   "reason": "Same intent (step-by-step buying guide); the kept guide is the complete 2026 version with costs and documents. The note on listing furniture and fixtures in the pre-contract was merged.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/buying-a-home-in-halkidiki-a-step-by-step-guide.md"
+  },
+  {
+   "from": "/en/articles/all-news/exploring-the-real-estate-trends-halkidiki-edition",
+   "lang": "en",
+   "to": "/en/articles/buyers/halkidiki-real-estate-market-trends-what-to-expect-in-the-coming-years",
+   "clicks_12m": 0,
+   "impressions_12m": 8,
+   "reason": "Same intent (Halkidiki market trends); the kept article has the impressions and clicks. Luxury, rentals, Golden Visa and infrastructure points merged.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/exploring-the-real-estate-trends-halkidiki-edition.md"
+  },
+  {
+   "from": "/en/articles/all-news/exploring-the-real-estate-trends:-halkidiki-edition",
+   "lang": "en",
+   "to": "/en/articles/buyers/halkidiki-real-estate-market-trends-what-to-expect-in-the-coming-years",
+   "clicks_12m": 0,
+   "impressions_12m": 8,
+   "reason": "Same intent (Halkidiki market trends); the kept article has the impressions and clicks. Luxury, rentals, Golden Visa and infrastructure points merged.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/exploring-the-real-estate-trends-halkidiki-edition.md"
+  },
+  {
+   "from": "/en/articles/all-news/the-future-of-halkidiki-real-estate",
+   "lang": "en",
+   "to": "/en/articles/buyers/halkidiki-real-estate-market-trends-what-to-expect-in-the-coming-years",
+   "clicks_12m": 8,
+   "impressions_12m": 415,
+   "reason": "Same intent (where the Halkidiki market is going); merged into the trends article (smart homes, diversification, short-term rentals).",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/the-future-of-halkidiki-real-estate.md"
+  },
+  {
+   "from": "/en/articles/all-news/investment-opportunities-in-halkidiki-real-estate-a-comprehensive-guide",
+   "lang": "en",
+   "to": "/en/articles/buyers/investing-in-real-estate",
+   "clicks_12m": 15,
+   "impressions_12m": 758,
+   "reason": "Same intent (investing in Halkidiki real estate); the kept article is the complete 2026 version with returns, taxes and Golden Visa. Schengen note and stone-house option merged.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/investment-opportunities-in-halkidiki-real-estate-a-comprehensive-guide.md"
+  },
+  {
+   "from": "/en/articles/all-news/investment-opportunities-in-halkidiki-real-estate:-a-comprehensive-guide",
+   "lang": "en",
+   "to": "/en/articles/buyers/investing-in-real-estate",
+   "clicks_12m": 15,
+   "impressions_12m": 758,
+   "reason": "Same intent (investing in Halkidiki real estate); the kept article is the complete 2026 version with returns, taxes and Golden Visa. Schengen note and stone-house option merged.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/investment-opportunities-in-halkidiki-real-estate-a-comprehensive-guide.md"
+  },
+  {
+   "from": "/en/articles/all-news/real-estate-is-a-good-investment",
+   "lang": "en",
+   "to": "/en/articles/buyers/investing-in-real-estate",
+   "clicks_12m": 0,
+   "impressions_12m": 69,
+   "reason": "Same intent (why real estate is a good investment); covered by the \"Why real estate at all\" section of the kept article. Diversification point merged; its non-Greek tax claims were not carried over.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/all-news/real-estate-is-a-good-investment.md"
+  },
+  {
+   "from": "/en/articles/buyers/housing-trends-in-greece",
+   "lang": "en",
+   "to": "/en/articles/buyers/exploring-the-key-trends-in-modern-greek-real-estate",
+   "clicks_12m": 1,
+   "impressions_12m": 869,
+   "reason": "Same intent (Greek housing/real estate trends); the kept article has more impressions and clicks. Cycle since 2017 and coast vs inland merged; unsourced city medians not carried over.",
+   "archived_file": "apps/hp/archive/articles-merged-20261021/buyers/housing-trends-in-greece.md"
+  }
+ ]
+}

@@ -48,6 +48,9 @@ export const hp: Brand = {
       'πολυγυρο': 'Πολύγυρος',             'polygyro': 'Πολύγυρος',
     },
   },
+  // George (21/10/2026, by click): AI labels only where the AI Act requires them; articles carry
+  // a named human reviewer with editorial responsibility instead (Commission guidelines §133–138).
+  editorial: { name: 'George Tsigaras', role: 'Founder' },
   // George (28/7): the top property also lets — «rent it» goes to villanatalia.eu.
   rentals: {
     '7010': 'https://www.villanatalia.eu/',

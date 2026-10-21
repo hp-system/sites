@@ -98,7 +98,7 @@ try {
     }
     const elh = await get('/', PROD_HOST);
     check('Greek: buttons and settings link translated', elh.includes('Αποδοχή όλων') && elh.includes('Απόρριψη όλων') && elh.includes('Ρυθμίσεις cookies'), 'el');
-    check('policy link says it is in English', elh.includes('Πολιτική απορρήτου (στα αγγλικά)'), 'el');
+    check('policy link opens the Greek policy (#94)', elh.includes(`href="${encodeURI('/πολιτικη-απορρητου')}"`), 'el');
   });
 } finally {
   stub.close?.();

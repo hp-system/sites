@@ -161,6 +161,11 @@ if (lang === 'en' && !isHome && !isLogin && !panelRoot && rest.length >= 1) {
   if (moved && (await findInfoPage(moved))) return Astro.redirect(moved + Astro.url.search, 301);
   info = await findInfoPage(`/en/${joined}`);
 }
+// #94: info pages in other languages live at their own full path (Greek without prefix).
+if (!info && lang !== 'en' && !isHome && !isLogin && !panelRoot && rest.length >= 1) {
+  const p = await findInfoPage(decodeURI(Astro.url.pathname));
+  if (p && p.data.lang === lang) info = p;
+}
 
 let pageKey: PageKey | null = null;
 if (!info && !isHome && !isLogin && !panelRoot && rest.length >= 1 && rest.length <= 2) {

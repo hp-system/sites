@@ -22,6 +22,12 @@ export async function findInfoPage(path: string): Promise<InfoPage | null> {
   return (await allInfoPages()).find((x) => x.data.path === p) ?? null;
 }
 
+/** The translations of a page (same `key`), its own language included; just itself without a key (#94). */
+export async function infoCluster(pg: InfoPage): Promise<InfoPage[]> {
+  if (!pg.data.key) return [pg];
+  return (await allInfoPages()).filter((x) => x.data.key === pg.data.key);
+}
+
 /** Day stamp for the sitemap: the page's own date, else the build day. */
 export const infoLastmod = (pg: InfoPage, fallback: string) => (pg.data.updated || fallback).slice(0, 10);
 

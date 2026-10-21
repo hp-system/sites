@@ -22,6 +22,7 @@ import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import CallBack from './CallBack.astro';
+import { privacyPath } from '../lib/legal';
 import type { SiteProperty } from '../lib/api';
 import { refOf, priceOf, priceVisible, pick } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf, placeOf } from '../lib/gate';
@@ -119,8 +120,7 @@ const muniName = muniList?.name[lang] || muni;
 
 // ── SEO ────────────────────────────────────────────────────────────────────
 const pathFor = (l: Lang) => propertyUrl(l, id);
-// The privacy policy exists in English only for now (as in CookieConsent).
-const privacyHref = `${prefix('en')}${brand.analytics.privacyPath}`;
+const privacyHref = privacyPath(lang);            // the policy in the page language (#94)
 // #88: as the old site — "Detached house for sale in Kassandra, Halkidiki, Greece | #7729" — per language.
 const title = muniOwn ? pui(lang, 'seoTitle', { t: sub, m: muniOwn, id }) : pui(lang, 'seoTitleNoM', { t: sub, id });
 // 🪤 ΤΟ ΙΔΙΟ STRING ΠΑΕΙ ΚΑΙ ΣΤΟ JSON-LD παρακάτω — άρα το κόψιμο πρέπει να είναι

@@ -43,8 +43,7 @@ export function consentHeadScript(gtmId: string | null): string {
 
 /**
  * Banner texts in all 9 languages (#91 — until then the banner was English everywhere).
- * Greek speaks in the singular. The privacy policy exists only in English for now, so the link
- * says so; translated policies need George's approval first.
+ * Greek speaks in the singular. The policy link opens the policy in the page language (#94).
  */
 export type ConsentText = {
   title: string;
@@ -82,7 +81,7 @@ const TEXT: Record<Lang, ConsentText> = {
   el: {
     title: 'Cookies',
     body: 'Χρησιμοποιούμε cookies για να βλέπουμε πώς χρησιμοποιείται το site και για να σου δείχνουμε σχετικές διαφημίσεις. Τα cookies στατιστικών και διαφήμισης μπαίνουν μόνο αν συμφωνήσεις.',
-    privacy: 'Πολιτική απορρήτου (στα αγγλικά)',
+    privacy: 'Πολιτική απορρήτου',
     accept: 'Αποδοχή όλων',
     reject: 'Απόρριψη όλων',
     settings: 'Ρυθμίσεις',
@@ -98,7 +97,7 @@ const TEXT: Record<Lang, ConsentText> = {
   bg: {
     title: 'Бисквитки',
     body: 'Използваме бисквитки, за да виждаме как се използва сайтът и да ви показваме подходящи реклами. Бисквитките за анализ и маркетинг се задават само ако се съгласите.',
-    privacy: 'Политика за поверителност (на английски)',
+    privacy: 'Политика за поверителност',
     accept: 'Приемам всички',
     reject: 'Отказвам всички',
     settings: 'Настройки',
@@ -114,7 +113,7 @@ const TEXT: Record<Lang, ConsentText> = {
   sr: {
     title: 'Kolačići',
     body: 'Koristimo kolačiće da bismo videli kako se sajt koristi i da bismo vam prikazivali relevantne oglase. Kolačići za analitiku i marketing postavljaju se samo ako se složite.',
-    privacy: 'Politika privatnosti (na engleskom)',
+    privacy: 'Politika privatnosti',
     accept: 'Prihvati sve',
     reject: 'Odbij sve',
     settings: 'Podešavanja',
@@ -130,7 +129,7 @@ const TEXT: Record<Lang, ConsentText> = {
   de: {
     title: 'Cookies',
     body: 'Wir verwenden Cookies, um zu sehen, wie die Website genutzt wird, und um Ihnen passende Werbung zu zeigen. Analyse- und Marketing-Cookies setzen wir nur mit Ihrer Zustimmung.',
-    privacy: 'Datenschutzerklärung (auf Englisch)',
+    privacy: 'Datenschutzerklärung',
     accept: 'Alle akzeptieren',
     reject: 'Alle ablehnen',
     settings: 'Einstellungen',
@@ -146,7 +145,7 @@ const TEXT: Record<Lang, ConsentText> = {
   ro: {
     title: 'Cookie-uri',
     body: 'Folosim cookie-uri pentru a vedea cum este folosit site-ul și pentru a vă arăta reclame relevante. Cookie-urile de analiză și marketing sunt setate doar dacă sunteți de acord.',
-    privacy: 'Politica de confidențialitate (în engleză)',
+    privacy: 'Politica de confidențialitate',
     accept: 'Accept toate',
     reject: 'Refuz toate',
     settings: 'Setări',
@@ -162,7 +161,7 @@ const TEXT: Record<Lang, ConsentText> = {
   tr: {
     title: 'Çerezler',
     body: 'Sitenin nasıl kullanıldığını görmek ve size ilgili reklamlar göstermek için çerez kullanıyoruz. Analiz ve pazarlama çerezleri yalnızca onay verirseniz kullanılır.',
-    privacy: 'Gizlilik politikası (İngilizce)',
+    privacy: 'Gizlilik politikası',
     accept: 'Tümünü kabul et',
     reject: 'Tümünü reddet',
     settings: 'Ayarlar',
@@ -178,7 +177,7 @@ const TEXT: Record<Lang, ConsentText> = {
   he: {
     title: 'עוגיות',
     body: 'אנו משתמשים בעוגיות כדי לראות איך משתמשים באתר וכדי להציג לכם פרסומות רלוונטיות. עוגיות סטטיסטיקה ושיווק נשמרות רק אם תסכימו.',
-    privacy: 'מדיניות פרטיות (באנגלית)',
+    privacy: 'מדיניות פרטיות',
     accept: 'לקבל הכול',
     reject: 'לדחות הכול',
     settings: 'הגדרות',
@@ -194,7 +193,7 @@ const TEXT: Record<Lang, ConsentText> = {
   ru: {
     title: 'Файлы cookie',
     body: 'Мы используем файлы cookie, чтобы видеть, как используется сайт, и показывать вам подходящую рекламу. Аналитические и маркетинговые cookie устанавливаются только с вашего согласия.',
-    privacy: 'Политика конфиденциальности (на английском)',
+    privacy: 'Политика конфиденциальности',
     accept: 'Принять все',
     reject: 'Отклонить все',
     settings: 'Настройки',

@@ -19,8 +19,8 @@ export const hp: Brand = {
   address: { street: 'Νέο Ρύσιο', city: 'Θεσσαλονίκη', postalCode: '57001', region: 'Θεσσαλονίκη', country: 'GR' },
   addressLatin: { street: 'Neo Rysio', city: 'Thessaloniki', country: 'Greece' },
   contact: {
-    // Format set by George (28/7): «+30 2311 2412 24».
-    phoneText: '+30 2311 2412 24',
+    // Format set by George (21/10/2026): «+30 2311 24.12.24» — everywhere the company phone appears.
+    phoneText: '+30 2311 24.12.24',
     phoneHref: 'tel:+302311241224',
     phoneE164: '+302311241224',
     // WhatsApp / Viber mobile (George 21/10/2026). The live site links wa.me/0030…, which fails.

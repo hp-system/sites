@@ -18,6 +18,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import { PHONE_TEXT, PHONE_HREF, PHONE_E164, EMAIL, WHATSAPP_E164 } from './contact';
 import { brand } from '../brand/index';
+import { formatCompanyPhone } from './phone';
 
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
@@ -82,7 +83,7 @@ function e164(display: string): string {
 
 export async function company(): Promise<Company> {
   const raw = await load();
-  const phone = pick(raw.phone, PHONE_TEXT);
+  const phone = formatCompanyPhone(pick(raw.phone, PHONE_TEXT));
   // Το href και το E164 ΠΑΡΑΓΟΝΤΑΙ από το κείμενο — αλλιώς, όταν ο George αλλάξει
   // τον αριθμό, η σελίδα θα έδειχνε τον νέο και θα καλούσε τον παλιό.
   const derived = e164(phone);

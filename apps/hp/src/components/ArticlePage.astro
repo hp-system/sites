@@ -77,6 +77,8 @@ const jsonLd: unknown[] = [
     // Name and role only — no author photo (George 20/10).
     ...(author ? { author: { '@type': 'Person', name: author.name, jobTitle: author.role,
       worksFor: { '@type': 'Organization', name: brand.name } } } : {}),
+    editor: { '@type': 'Person', name: brand.editorial.name, jobTitle: brand.editorial.role,
+      worksFor: { '@type': 'Organization', name: brand.name } },
     publisher: { '@type': 'Organization', name: brand.name },
   },
   {
@@ -124,6 +126,8 @@ if (a.has_calculator) {
         <span>{minutes} min read</span>
         {updated && <span>Updated {updated}</span>}
         {a.byline_note && <span>{a.byline_note}</span>}
+        {/* AI Act art. 50(4): a named human reviewer with editorial responsibility (#48). */}
+        <span class="art-ed">Reviewed by <b>{brand.editorial.name}</b> · {brand.editorial.role}</span>
       </p>
     </header>
 

@@ -190,9 +190,10 @@ export function priceOf(a: Attrs): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-/** Είναι ορατή η τιμή; 34 από τα 527 ακίνητα έχουν κρυφή τιμή. */
-export function priceVisible(a: Attrs): boolean {
-  return a?.price_public_visible !== false && priceOf(a) > 0;
+/** Είναι ορατή η τιμή; 34 από τα 527 ακίνητα έχουν κρυφή τιμή.
+ *  Ο Exclusive βλέπει και τις κρυφές (George 21/10/2026, q16) — μόνο όπου περνάμε `exclusive`. */
+export function priceVisible(a: Attrs, exclusive = false): boolean {
+  return (exclusive || a?.price_public_visible !== false) && priceOf(a) > 0;
 }
 
 /**

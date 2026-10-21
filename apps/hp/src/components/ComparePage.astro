@@ -48,7 +48,7 @@ type Row = { label: string; val: (p: SiteProperty) => string };
 const rows: Row[] = [
   { label: t(lang, 'cmp.price'), val: (x) => {
       const a = x.attributes ?? {};
-      return priceVisible(a) ? money(priceOf(a), lang) : t(lang, 'cmp.on_request');
+      return priceVisible(a, viewer.exclusive) ? money(priceOf(a), lang) : t(lang, 'cmp.on_request');
     } },
   { label: t(lang, 'cmp.area'), val: (x) => placeOf(x.attributes ?? {}, lang, viewer) || '—' },
   { label: t(lang, 'cmp.sqm'), val: (x) => {
@@ -75,7 +75,7 @@ const rows: Row[] = [
       const a = x.attributes ?? {};
       const n = Number(a.sqm ?? 0);
       const pr = priceOf(a);
-      return priceVisible(a) && n > 0 && pr > 0 ? money(Math.round(pr / n), lang) : '—';
+      return priceVisible(a, viewer.exclusive) && n > 0 && pr > 0 ? money(Math.round(pr / n), lang) : '—';
     } },
 ];
 ---

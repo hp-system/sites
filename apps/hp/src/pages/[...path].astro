@@ -243,6 +243,11 @@ if (!isHome && !isLogin && !isPanel && !info && !pageKey && !area && !article &&
 // Η ανακατεύθυνση ΠΡΕΠΕΙ να γίνει εδώ: μέσα σε component το `Astro.redirect()`
 // αγνοείται σιωπηλά και η σελίδα βγαίνει με 200.
 let me: Member | null = null;
+// Already signed in and opening the login page → where they were going, or the panel (#73).
+if (isLogin && memberToken && (await memberOf(memberToken))) {
+  const to = /^\/(?!\/)/.test(nextParam) ? nextParam : `${prefix(lang)}/panel`;
+  return Astro.redirect(to, 302);
+}
 if (isPanel) {
   me = await memberOf(memberToken);
   if (!me) {

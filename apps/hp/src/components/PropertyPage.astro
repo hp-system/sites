@@ -79,7 +79,7 @@ const hidden = gallery.filter((g) => !g.open).length;
 const lockAt = gallery.findIndex((g) => !g.open);   // πού κάθεται η προτροπή
 
 const price = priceOf(a);
-const priceOk = priceVisible(a);
+const priceOk = priceVisible(a, viewer.exclusive);
 const oldPrice = oldPriceOf(a);
 // Το επαγγελματικό γράφει το εμβαδόν στο `biz_sq_meters` — χωρίς αυτό, ξενοδοχείο χωρίς τ.μ.
 const sqmN = Number(a.sqm ?? 0) || bizSqmOf(a);

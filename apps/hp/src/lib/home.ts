@@ -54,7 +54,7 @@ function tally(items: SiteProperty[], key: (a: Attrs) => string | undefined): Pl
 
 export function buildHome(items: SiteProperty[], lang: Lang): HomeData {
   const A = items.map((p) => p.attributes ?? {});
-  const prices = A.filter(priceVisible).map(priceOf).filter((n) => n > 0);
+  const prices = A.filter((x) => priceVisible(x)).map(priceOf).filter((n) => n > 0);
 
   // ── Οι αποδείξεις: μετρημένες, όχι δηλωμένες ──────────────────────────
   const total = items.length;

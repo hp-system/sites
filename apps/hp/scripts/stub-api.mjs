@@ -64,6 +64,8 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
         x_private: { address: 'Odos Stub 7, 63077', videos: ['https://youtu.be/stubVID01'], virtual_tour: 'https://tour.example.com/10008',
           documents: [{ url: 'https://media.example.com/docs/10008-topographic.pdf', title: 'Topographic plan' }],
           price_history: [{ date: '2025-06-01', price: 480000 }, { date: '2026-03-15', price: 450000 }] } } : {}),
+      // Property 10009: hidden price — only Exclusive members see it (#73, q16).
+      ...(i === 9 ? { price_public_visible: false } : {}),
       // Property 10013: a hotel (#45) — facts for everyone, never its name or website.
       ...(i === 13 ? { category: '3', subcategory: 'hotel', sqm: undefined, biz_sq_meters: 1450, hotel_stars: 4,
         hotel_rooms: 32, hotel_beds: 70, hotel_dbl: 24, hotel_suite: 8, biz_condition: '4', plan_type: '1',

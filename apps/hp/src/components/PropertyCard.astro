@@ -17,6 +17,9 @@ import { coverOf, photosOf, marked, cardSrcSet, altOf } from '../lib/photos';
 import { money, sqm, seaLabel, factLine } from '../lib/format';
 import { t, propertyUrl, type Lang } from '../lib/i18n';
 import { placeOf, municipalityOf, type Viewer } from '../lib/gate';
+import { memberOf } from '../lib/member';
+import { prefix } from '../lib/i18n';
+import { pui } from '../lib/property';
 
 interface Props { p: SiteProperty; lang: Lang; viewer: Viewer; eager?: boolean }
 const { p, lang, viewer, eager = false } = Astro.props;
@@ -51,6 +54,11 @@ const shots = (cover ? [cover, ...rest] : rest).slice(0, 3);
 const more = Math.max(0, all.length - shots.length);
 const slides = shots.length + (more > 0 ? 1 : 0);
 const uid = `c${id}`;
+// Heart on every card (George 21/10/2026, q10). Member: a real toggle; guest: to sign-in and back.
+// The member call is cached per token (lib/member.ts), so a list of 24 cards asks the CRM once.
+const me = viewer.member ? await memberOf(Astro.cookies.get('member_token')?.value) : null;
+const saved = !!me?.favorites.some((f) => f.toLowerCase() === id.toLowerCase());
+const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathname + Astro.url.search)}`;
 ---
 <article class="card">
   {/* 🪤 Σχόλιο ΕΞΩ από το `{cond && ()}` — μέσα σπάει το build.
@@ -60,6 +68,17 @@ const uid = `c${id}`;
       Το σύρσιμο γίνεται με scroll-snap: δουλεύει ΧΩΡΙΣ JavaScript, με το
       δάχτυλο στο κινητό και με το trackpad στο desktop. */}
   <div class="ph" id={uid}>
+    {me ? (
+      <button class="heart" type="button" data-fav={id} aria-pressed={saved ? 'true' : 'false'}
+              aria-label={pui(lang, saved ? 'saved' : 'favorite')} data-on={pui(lang, 'saved')} data-off={pui(lang, 'favorite')}
+              data-ev="member:favorite_property">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
+      </button>
+    ) : (
+      <a class="heart" href={backTo} aria-label={pui(lang, 'favorite')} data-ev="member:favorite_property">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
+      </a>
+    )}
     <div class="rail">
       {shots.map((s, i) => (
         <a class="slide" href={href} tabindex={i === 0 ? undefined : -1} aria-hidden={i === 0 ? undefined : 'true'}>
@@ -100,7 +119,7 @@ const uid = `c${id}`;
   {/* ΣΕΙΡΑ 1 — τιμή αριστερά, θάλασσα δεξιά στην ίδια ευθεία. */}
   <p class="row1">
     <span class="price t-price">
-      {priceVisible(a) ? money(priceOf(a), lang) : (t(lang, 'card.price_request'))}
+      {priceVisible(a, viewer.exclusive) ? money(priceOf(a), lang) : (t(lang, 'card.price_request'))}
     </span>
     {sea && <span class="sea" data-sea={a.sea_access}>{sea}</span>}
   </p>
@@ -125,6 +144,12 @@ const uid = `c${id}`;
   .card { min-width: 0; }
 
   .ph { position: relative; overflow: hidden; background: var(--paper-2); }
+  .heart { position: absolute; top: 10px; right: 10px; z-index: 2; width: 36px; height: 36px; display: grid; place-items: center;
+           background: rgba(255,255,255,.92); color: var(--ink); border: 0; border-radius: 50%; cursor: pointer; padding: 0; }
+  .heart svg { width: 18px; height: 18px; }
+  .heart[aria-pressed='true'] svg { fill: currentColor; }
+  .heart[aria-busy='true'] { opacity: .6; }
+  .heart:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   .rail {
     display: grid; grid-auto-flow: column; grid-auto-columns: 100%;
     /* 🪤 ΕΛΕΓΕ ΜΟΝΟ `overflow-x: auto`. Το CSS τότε κάνει τον ΚΑΘΕΤΟ άξονα `auto`
@@ -200,6 +225,20 @@ const uid = `c${id}`;
 </style>
 
 <script>
+  // ── Heart on the cards (q10): one delegated listener for every card on the page.
+  document.addEventListener('click', async (e) => {
+    const b = (e.target as Element | null)?.closest?.('button.heart[data-fav]') as HTMLButtonElement | null;
+    if (!b || b.getAttribute('aria-busy') === 'true') return;
+    e.preventDefault();
+    b.setAttribute('aria-busy', 'true');
+    try {
+      const r = await fetch('/api/panel/favorite', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ref: b.dataset.fav }) });
+      const d = await r.json();
+      if (d?.ok) { b.setAttribute('aria-pressed', d.favorite ? 'true' : 'false'); b.setAttribute('aria-label', (d.favorite ? b.dataset.on : b.dataset.off) ?? ''); }
+    } catch { /* unchanged */ }
+    b.removeAttribute('aria-busy');
+  });
+
   // ── ΟΙ ΤΕΛΙΤΣΕΣ ΑΚΟΛΟΥΘΟΥΝ ΤΟ ΣΥΡΣΙΜΟ ───────────────────────────────────
   // Ο Astro μαζεύει τα script των components σε ΕΝΑ αρχείο που τρέχει ΜΙΑ φορά,
   // όσες κάρτες κι αν υπάρχουν στη σελίδα — γι' αυτό δένουμε με έναν βρόχο εδώ

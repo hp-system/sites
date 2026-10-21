@@ -32,6 +32,8 @@ faq:
   a: A free member sees the village or area, the map at village level and the secret portfolio. Exclusive access is granted by our office on request and adds the exact location, price history, videos, documents and the most discreet listings.
 ---
 
+<!-- widget: video lcJbuRY1zDY | Why register at Halkidiki Properties? -->
+
 ## What a free member gets
 
 - **The village or area of every property.** Visitors see only the municipality; members see where in it the property is.

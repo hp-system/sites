@@ -27,6 +27,8 @@ toc: false
 old_url: /en/why-register/owner
 ---
 
+<!-- widget: video FNnOjtkpciA | The Owner’s Panel | Halkidiki Properties -->
+
 ## What an owner member gets
 
 - **How your property performs.** See the visits to your property and how they change over time.

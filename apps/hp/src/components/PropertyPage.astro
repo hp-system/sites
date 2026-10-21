@@ -35,6 +35,7 @@ import { brand } from '../brand/index';
 import {
   descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
   energyOf, oldPriceOf, floorName, pui, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
+  isBusiness, homeFactsOf, businessFactsOf, bizSqmOf,
 } from '../lib/property';
 
 interface Props { lang: Lang; item: SiteProperty; all: SiteProperty[] }
@@ -75,7 +76,8 @@ const lockAt = gallery.findIndex((g) => !g.open);   // πού κάθεται η 
 const price = priceOf(a);
 const priceOk = priceVisible(a);
 const oldPrice = oldPriceOf(a);
-const sqmN = Number(a.sqm ?? 0);
+// Το επαγγελματικό γράφει το εμβαδόν στο `biz_sq_meters` — χωρίς αυτό, ξενοδοχείο χωρίς τ.μ.
+const sqmN = Number(a.sqm ?? 0) || bizSqmOf(a);
 const perSqm = priceOk && price > 0 && sqmN > 0 ? Math.round(price / sqmN) : null;
 
 const feats = featuresOf(a, lang);
@@ -112,7 +114,9 @@ const SITE_ORIGIN = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const abs = (x: string) => SITE_ORIGIN + encodeURI(x);
 
 const land = isLand(a);
-const landFacts = land ? landFactsOf(a, lang) : [];
+const biz = !land && isBusiness(a);
+// Τρία είδη, τρεις λίστες (#45): γη · επαγγελματικό/ξενοδοχείο · κατοικία.
+const facts = land ? landFactsOf(a, lang) : biz ? businessFactsOf(a, lang) : homeFactsOf(a, lang);
 
 const types = schemaTypesOf(a);
 const isAccommodation = types.length > 1;          // η γη μένει σκέτο Product
@@ -310,11 +314,12 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             {!land && energy && <div><b>{energy}</b><span>{pui(lang, 'energyL')}</span></div>}
           </div>
 
-          {landFacts.length > 0 && (
+          {facts.length > 0 && (
             /* Ό,τι ρωτάει πρώτο όποιος αγοράζει γη: χτίζεται; τι δρόμο έχει;
-               ρεύμα, νερό; Η ίδια σειρά με το σημερινό site. */
+               ρεύμα, νερό; Η ίδια σειρά με το σημερινό site. Για σπίτι: κατάσταση,
+               θέρμανση, στάθμευση· για ξενοδοχείο: αστέρια, δωμάτια, κλίνες (#45). */
             <dl class="lfacts">
-              {landFacts.map((f) => (
+              {facts.map((f) => (
                 <div class="lfact"><dt>{f.label}</dt><dd>{f.value}</dd></div>
               ))}
             </dl>

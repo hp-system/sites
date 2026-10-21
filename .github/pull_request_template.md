@@ -16,4 +16,3 @@ Closes #
 - [ ] Guests see no exact location or owner data; property photos watermarked
 - [ ] No secrets, `.env` values or personal data in code, config, screenshots or this PR
 - [ ] `ssot` change file: link —
-- [ ] Reviewer requested (not the author)

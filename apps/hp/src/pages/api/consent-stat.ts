@@ -22,15 +22,17 @@ const ENV = (process.env.SITE_ENV ?? '').trim().toLowerCase() === 'production' ?
 
 function limited(ip: string, now: number): boolean {
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  if (recent.length >= LIMIT) { hits.set(ip, recent); return true; }   // no growth while limited
   recent.push(now);
   hits.set(ip, recent);
   if (hits.size > 10_000) hits.clear();      // bounded memory; a reset only loosens the limit
-  return recent.length > LIMIT;
+  return false;
 }
 
 /** Coarse page group from a path — never the full URL. */
 export function pageGroup(path: string): string {
-  const seg = path.split('?')[0].split('/').filter(Boolean).map((s) => decodeURIComponent(s).toLowerCase());
+  const dec = (s: string) => { try { return decodeURIComponent(s); } catch { return s; } };   // a malformed Referer must not 500
+  const seg = path.split('?')[0].split('/').filter(Boolean).map((s) => dec(s).toLowerCase());
   const rest = seg.length && (LANGS as readonly string[]).includes(seg[0]) ? seg.slice(1) : seg;
   if (rest.length === 0) return 'home';
   if (rest[0] === 'articles') return 'article';
@@ -43,7 +45,7 @@ export function pageGroup(path: string): string {
 const sameOrigin = (request: Request, url: URL): boolean => {
   const origin = request.headers.get('origin');
   if (!origin) return true;                  // sendBeacon from the same page may omit it
-  try { return new URL(origin).host === requestHost(request, url); } catch { return false; }
+  try { return new URL(origin).hostname === requestHost(request, url); } catch { return false; }
 };
 
 export const POST: APIRoute = async ({ request, url, clientAddress }) => {

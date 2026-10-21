@@ -59,7 +59,7 @@ cards:
 - title: Construction projects
   href: /en/construction
   text: Villa Natalia in Sithonia, renovated homes and villas, and architectural designs.
-  image: /pages/services/90957742-main-card.webp
+  image: /pages/construction/villa-natalia-7010-wm.jpg
   image_alt: Villa Natalia in Sithonia at night, seen from above
   width: 800
   height: 500

@@ -8,7 +8,7 @@
 // 🔢 Prices only — never a count of properties (George 17/10/2026).
 // ═══════════════════════════════════════════════════════════════════════════
 import type { SiteProperty } from '../lib/api';
-import { priceOf, refOf } from '../lib/api';
+import { priceOf, priceVisible, refOf } from '../lib/api';
 import { money, sqm } from '../lib/format';
 import { muniKey } from '../lib/gate';
 import { listUrl, propertyUrl, type Lang } from '../lib/i18n';
@@ -31,6 +31,7 @@ const typeFrom = kind === 'greece-guide'
   ? TYPE_GUIDE.map((t) => ({ ...t, from: fromPrice(items, t.keep) })).filter((t) => t.from > 0)
   : [];
 const pre = kind === 'prepublished' && member ? items.filter((p) => isPrePublished(p.attributes ?? {})) : [];
+const priceText = (p: SiteProperty) => (priceVisible(p.attributes ?? {}) ? eur(priceOf(p.attributes ?? {})) : 'Price on request');
 ---
 {tables && (
   <section class="pw" aria-labelledby="pw-homes">
@@ -96,7 +97,7 @@ const pre = kind === 'prepublished' && member ? items.filter((p) => isPrePublish
     <h2 id="pw-pre">Properties before they reach the market</h2>
     {pre.length ? (
       <ul class="pw-pre">
-        {pre.map((p) => <li><a href={propertyUrl(lang, refOf(p))}>{p.title}</a> <span>{eur(priceOf(p.attributes ?? {}))}</span></li>)}
+        {pre.map((p) => <li><a href={propertyUrl(lang, refOf(p))}>{p.title}</a> <span>{priceText(p)}</span></li>)}
       </ul>
     ) : (
       <p class="pw-empty">{member

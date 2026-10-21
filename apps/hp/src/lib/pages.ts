@@ -72,8 +72,24 @@ export function pageExists(key: PageKey): boolean {
   return !!d && Object.keys(d).length > 0;
 }
 
+/**
+ * English URLs that moved to the old site's addresses (info pages, src/content/pages/en).
+ * The English version of these keys IS the info page: canonical, hreflang, fallback
+ * canonical and sitemap all point here, never at the 301 (`/en/about` → `/en/about-us`).
+ */
+export const EN_URL: Partial<Record<PageKey, string>> = {
+  about: '/en/about-us',
+  partners: '/en/our-partners',
+  'services/buyers': '/en/services/buyer-services',
+  'services/owners': '/en/services/seller-services',
+  'services/investors': '/en/services/investor-services',
+  'services/developers': '/en/services/construction-services',
+  projects: '/en/construction',
+};
+
 /** URL of a content page in a language — one rule for the router, the page head and the sitemap (B-16). */
 export function contentUrl(key: PageKey, l: Lang): string {
+  if (l === 'en' && EN_URL[key]) return EN_URL[key]!;
   return `${prefix(l)}/${key === 'projects' ? SLUG[l].projects : key}`;
 }
 

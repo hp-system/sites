@@ -1,5 +1,5 @@
 ---
-title: 'Villa Natalia, Vourvourou: Luxury Villa in Sithonia, Halkidiki | Halkidiki Properties'
+title: 'Villa Natalia: Luxury Villa in Sithonia, Halkidiki | Halkidiki Properties'
 description: Halkidiki Properties Constructions presents the most precious gem in Halkidiki, a villa different from everything you have seen.
 h1: Villa Natalia, by Halkidiki Properties Constructions
 category: constructors-news

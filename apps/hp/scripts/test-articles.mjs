@@ -4,6 +4,10 @@
 // ("46 Results" must not exist), pagination, /en/articles → 301 all-news; the tax article
 // carries the calculator with its default total €21,245; the 9 cleaned slugs answer and the old
 // ":" slugs are 404 until the 301 engine (their old URL stays in each file's `old_url`).
+// Issue #48 (21/10/2026): every author has a role in authors.ts (JSON-LD jobTitle is that role, not
+// the brand fallback); every article body has at least 600 words; the near-duplicates moved to
+// archive/articles-merged-20261021/ are not served (404) and not in the sitemap; every target in
+// src/content/redirects/articles.json is a live article and no source is one.
 // Starts the stub API (127.0.0.1:4339) and the BUILT site (127.0.0.1:4331). Exit 1 on any FAIL.
 // Usage (from apps/hp, after `pnpm build`): node scripts/test-articles.mjs
 import { spawn } from 'node:child_process';
@@ -21,11 +25,24 @@ const ROOT = new URL('../src/content/articles/en/', import.meta.url).pathname;
 const files = readdirSync(ROOT, { withFileTypes: true }).filter((d) => d.isDirectory())
   .flatMap((d) => readdirSync(join(ROOT, d.name)).filter((f) => f.endsWith('.md')).map((f) => join(ROOT, d.name, f)));
 const field = (fm, k) => (fm.match(new RegExp(`^${k}: *'?([^'\\n]*)'?$`, 'm')) ?? [])[1] ?? '';
+const words = (text) => text.split('\n---\n').slice(1).join('\n---\n').split(/\s+/).filter(Boolean).length;
 const arts = files.map((f) => {
-  const fm = readFileSync(f, 'utf8').split('\n---\n')[0];
-  return { cat: field(fm, 'category'), slug: field(fm, 'slug'), old: field(fm, 'old_url'),
-    faq: /^faq:\n- /m.test(fm), calc: /^has_calculator: true$/m.test(fm) };
+  const text = readFileSync(f, 'utf8');
+  const fm = text.split('\n---\n')[0];
+  return { cat: field(fm, 'category'), slug: field(fm, 'slug'), old: field(fm, 'old_url'), author: field(fm, 'author'),
+    words: words(text), faq: /^faq:\n- /m.test(fm), calc: /^has_calculator: true$/m.test(fm) };
 });
+const livePaths = new Set(arts.map((a) => `/en/articles/${a.cat}/${a.slug}`));
+
+// The retired near-duplicates (kept as files, never built: the content glob reads src/content only).
+const ARCH = new URL('../archive/articles-merged-20261021/', import.meta.url).pathname;
+const archived = readdirSync(ARCH, { withFileTypes: true }).filter((d) => d.isDirectory())
+  .flatMap((d) => readdirSync(join(ARCH, d.name)).filter((f) => f.endsWith('.md')).map((f) => join(ARCH, d.name, f)))
+  .map((f) => { const fm = readFileSync(f, 'utf8').split('\n---\n')[0]; return { clean: field(fm, 'clean_url'), old: field(fm, 'old_url') }; });
+const redirects = JSON.parse(readFileSync(new URL('../src/content/redirects/articles.json', import.meta.url), 'utf8')).redirects;
+// Roles: the keys of ROLES in authors.ts.
+const authorsTs = readFileSync(new URL('../src/content/articles/authors.ts', import.meta.url), 'utf8');
+const ROLE_NAMES = new Set([...(authorsTs.match(/ROLES[^{]*\{([\s\S]*?)\n\};/) ?? ['', ''])[1].matchAll(/'([^']+)':/g)].map((m) => m[1]));
 
 const stub = await startStub({ port: 4339, n: 120 });
 const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
@@ -37,7 +54,20 @@ const ld = (html) => [...html.matchAll(/<script type="application\/ld\+json">([\
   .flatMap((m) => { try { const j = JSON.parse(m[1]); return Array.isArray(j) ? j : [j]; } catch { return []; } });
 
 try {
-  check('articles found in the content folder', arts.length >= 40, `${arts.length} files`);
+  check('articles found in the content folder', arts.length >= 30, `${arts.length} files`);
+  for (const a of arts) {
+    check(`${a.slug} author has a role`, !a.author || ROLE_NAMES.has(a.author), `author "${a.author}"`);
+    check(`${a.slug} body ≥ 600 words`, a.words >= 600, `${a.words} words`);
+  }
+  check('archived near-duplicates found', archived.length >= 1, `${archived.length} files in archive/articles-merged-20261021`);
+  for (const r of redirects) {
+    check(`articles.json ${r.from}`, livePaths.has(r.to) && !livePaths.has(r.from), `→ ${r.to} (target live: ${livePaths.has(r.to)}, source not live: ${!livePaths.has(r.from)})`);
+  }
+  for (const x of archived) {
+    check(`archived ${x.clean} is mapped in articles.json`, redirects.some((r) => r.from === x.clean), 'redirect recorded');
+    const r = await fetch(SITE + encodeURI(x.clean), { redirect: 'manual' });
+    check(`archived ${x.clean} is not served`, r.status === 404, `status ${r.status}`);
+  }
   for (const a of arts) {
     const path = `/en/articles/${a.cat}/${a.slug}`;
     const r = await fetch(SITE + encodeURI(path));
@@ -47,7 +77,8 @@ try {
     const canon = ((html.match(/<link rel="canonical" href="([^"]+)"/) ?? [])[1] ?? '').endsWith(path);
     const j = ld(html);
     const art = j.find((x) => x['@type'] === 'Article');
-    const author = art && art.author && art.author.name && !art.author.image;
+    const author = art && art.author && art.author.name && !art.author.image
+      && art.author.jobTitle && art.author.jobTitle !== 'Halkidiki Properties';
     const faqOk = !a.faq || j.some((x) => x['@type'] === 'FAQPage');
     check(`${a.slug}`, ok200 && h1 && canon && author && faqOk,
       `status ${r.status}, H1 ${h1}, canonical ${canon}, author ${!!author}, faq ${faqOk}`);
@@ -60,8 +91,9 @@ try {
       check(`old slug ${a.old} is 404 for now`, o.status === 404, `status ${o.status} (301 engine comes later)`);
     }
   }
-  const cleaned = arts.filter((a) => a.old.includes(':')).length;
-  check('the cleaned slugs are the ":" ones', cleaned === 9, `${cleaned} articles had ":" in the old slug`);
+  // 9 old slugs had ":"; some of those articles are now archived (their old URL is in articles.json).
+  const cleaned = arts.filter((a) => a.old.includes(':')).length + archived.filter((x) => x.old.includes(':')).length;
+  check('the cleaned slugs are the ":" ones', cleaned === 9, `${cleaned} articles (live + archived) had ":" in the old slug`);
 
   const r0 = await fetch(SITE + '/en/articles', { redirect: 'manual' });
   check('/en/articles → 301 all-news', r0.status === 301 && (r0.headers.get('location') ?? '').endsWith('/en/articles/all-news'),
@@ -84,6 +116,23 @@ try {
   const bad = await fetch(`${SITE}/en/articles/nope`);
   check('unknown category is 404', bad.status === 404, `status ${bad.status}`);
 } finally {
-  site.kill(); stub.close?.();
+  site.kill();
+}
+
+// The sitemap exists only in production mode: every live article is listed, no archived one is.
+await sleep(400);
+const prod = spawn(process.execPath, ['dist/server/entry.mjs'], {
+  env: { ...process.env, HOST: '127.0.0.1', PORT: '4331', EALIDA_API: stub.base, SITE_ENV: 'production', PUBLIC_ORIGIN: 'https://hp.rewize.app' },
+});
+for (let i = 0; i < 40; i++) { try { await fetch(SITE + '/robots.txt'); break; } catch { await sleep(250); } }
+try {
+  const sm = await (await fetch(SITE + '/sitemap.xml')).text();
+  const locs = new Set([...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname));
+  const missing = [...livePaths].filter((p) => !locs.has(encodeURI(p)));
+  check('sitemap lists every live article', missing.length === 0, missing.length ? `missing ${missing.join(', ')}` : `${livePaths.size} articles`);
+  const leaked = archived.filter((x) => locs.has(encodeURI(x.clean)) || locs.has(encodeURI(x.old)));
+  check('sitemap lists no archived article', leaked.length === 0, leaked.length ? `found ${leaked.map((x) => x.clean).join(', ')}` : 'none');
+} finally {
+  prod.kill(); stub.close?.();
 }
 process.exit(fails ? 1 : 0);

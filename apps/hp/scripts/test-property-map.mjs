@@ -18,7 +18,7 @@ const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
 for (let i = 0; i < 40; i++) { try { await fetch(SITE + '/robots.txt'); break; } catch { await sleep(250); } }
 const get = async (tok) => (await fetch(SITE + '/en/property/10008', { headers: tok ? { cookie: `member_token=${tok}` } : {} })).text();
 
-const SECRET = [/40\.12/, /23\.65/, /Odos Stub/, /stubVID01/, /tour\.example\.com/, /10008-topographic/, /480,000|480\.000/];
+const SECRET = [/40\.22/, /23\.66/, /Odos Stub/, /stubVID01/, /tour\.example\.com/, /10008-topographic/, /480,000|480\.000/];
 try {
   const g = await get('');
   const leak = SECRET.filter((re) => re.test(g));
@@ -27,14 +27,14 @@ try {
 
   const m = await get('stub-token');
   check('member: map with a circle', /id="pmap"[^>]*data-r="2000"/.test(m) && !/data-exact="1"/.test(m), 'circle');
-  check('member: moved point rounded to 3 decimals', /data-lat="40\.131"/.test(m) && /data-lng="23\.649"/.test(m), (m.match(/data-lat="[^"]*" data-lng="[^"]*"/) || ['none'])[0]);
-  check('member: never the exact point', !/40\.1234|23\.6543/.test(m), 'absent');
+  check('member: moved point rounded to 3 decimals', /data-lat="40\.231"/.test(m) && /data-lng="23\.659"/.test(m), (m.match(/data-lat="[^"]*" data-lng="[^"]*"/) || ['none'])[0]);
+  check('member: never the exact point', !/40\.2234|23\.6643/.test(m), 'absent');
   check('member: no exclusive section', !m.includes('id="xcl-h"') && !/Odos Stub|stubVID01|topographic|480,000/.test(m), 'absent');
   check('member: caption says inside the circle', m.includes('The property is inside the circle.'), 'caption');
 
   const x = await get('stub-exclusive');
-  check('exclusive: exact point with pin', /data-lat="40\.123456"/.test(x) && /data-exact="1"/.test(x), 'exact');
-  check('exclusive: open-in-maps link', /google\.com\/maps\/search\/\?api=1&(?:amp;)?query=40\.123456,23\.654321/.test(x), 'link');
+  check('exclusive: exact point with pin', /data-lat="40\.223456"/.test(x) && /data-exact="1"/.test(x), 'exact');
+  check('exclusive: open-in-maps link', /google\.com\/maps\/search\/\?api=1&(?:amp;)?query=40\.223456,23\.664321/.test(x), 'link');
   check('exclusive: address', x.includes('Odos Stub 7, 63077'), 'address');
   check('exclusive: video embedded (no-cookie)', x.includes('https://www.youtube-nocookie.com/embed/stubVID01') && x.includes('https://tour.example.com/10008'), 'video + tour');
   check('exclusive: documents', x.includes('Topographic plan'), 'docs');

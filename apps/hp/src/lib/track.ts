@@ -24,6 +24,7 @@ export const EVENTS = {
   REGISTER_UNLOCK_PHOTOS: 'register:unlock_photos',   // σελίδα ακινήτου (gallery lock, was register:gallery)
   REGISTER_PROPERTY_BLOCK: 'register:property_block', // property page: "what this page does not show" (D-061)
   REGISTER_OFF_MARKET: 'register:off_market',         // το μπλοκ των 79
+  REGISTER_INFO: 'register:info',                     // members pages (why-register, vip, pre-published): Sign in / Register
   MEMBER_JOIN_FROM_LIST: 'member:join_from_list',
   MEMBER_FAVORITE: 'member:favorite_property',
   MEMBER_SAVE_SEARCH: 'member:save_search',

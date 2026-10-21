@@ -8,7 +8,7 @@ old_url: /en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki
 clean_url: /en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki
 author: Maria Tita
 published: '2023-12-12T00:00:00+02:00'
-updated: '2026-10-07T00:00:00+03:00'
+updated: '2026-10-21T00:00:00+03:00'
 reading_time: 9'
 hero_image: /articles/the-ultimate-guide-to-buying-property-in-halkidiki/1702376529.jpg
 og_image: /articles/the-ultimate-guide-to-buying-property-in-halkidiki/1702376529.jpg
@@ -61,7 +61,7 @@ Buying a home in Halkidiki takes **four to eight weeks** and costs **about 6 % o
 2. **Viewings (1–2 days on site, or online).** We group viewings by peninsula so you see 6–10 properties in a day. Ask to see the property at two different hours of the day and in the state it will be delivered.
 3. **Greek tax number, ΑΦΜ (1 day).** Issued at the tax office in Polygyros with your passport; we accompany you or arrange it by power of attorney. Without it nothing can be signed.
 4. **Lawyer and due diligence (1–2 weeks).** An independent lawyer checks the title at the land registry, encumbrances, building permits and the energy certificate. Expect about 1 % plus VAT. This step is where problems surface, so it comes before any payment.
-5. **Pre-contract and deposit (day 10–20).** A private or notarial pre-contract fixes the price and the delivery date; usually a 10 % deposit, held by the notary or paid to the seller. The property comes off the market.
+5. **Pre-contract and deposit (day 10–20).** A private or notarial pre-contract fixes the price and the delivery date; usually a 10 % deposit, held by the notary or paid to the seller. The property comes off the market. If furniture, appliances or fixtures are part of the deal, list them in the pre-contract so it is clear what stays in the house.
 6. **Transfer tax (before the deed).** 3.09 % of the price or the official value, whichever is higher, paid to the tax office by the buyer. New builds sold under the VAT suspension (until 31 December 2026) pay the same 3.09 % instead of 24 % VAT.
 7. **Notary and final deed (week 4–8).** Signed before a notary with both parties or their proxies; the balance is paid by bank transfer with proof of the origin of funds. Notary about 1 % plus VAT.
 8. **Land registry (1–2 weeks after the deed).** The deed is registered at the cadastre (about 0.5 %); from that moment the property is yours. Electricity, water and the annual ΕΝΦΙΑ tax are transferred to your name.
@@ -130,4 +130,4 @@ Tell us the budget, the area and the type; within 24 hours you receive propertie
 
 [Send a request](/en/contact) [Browse all properties](/en/properties)
 
-Halkidiki Properties, local agency since 2007, office in Nea Moudania. Last updated 7 October 2026.
+Halkidiki Properties, local agency since 2007, office in Nea Moudania. Last updated 21 October 2026.

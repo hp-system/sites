@@ -88,6 +88,12 @@ We may use your personal information to contact you with updates about our websi
 
 If you want to opt-out of receiving promotional content, you can follow the "unsubscribe" instructions provided with any promotional mail from us
 
+## 4.1 Use of artificial intelligence (AI)
+
+We use AI tools in parts of our work: to help write and translate property descriptions and articles, and to help our team draft replies. A member of our team reviews this content, and the articles carry the name of the person responsible for them. If you chat with an automated assistant of ours, it tells you so in its first message, and you can ask for a person at any time.
+
+When AI tools process personal data (for example the text of a message you sent us), the providers act as our processors under a data processing agreement, and the data is used only to serve your request. We do not use AI to take decisions about you that have legal or similarly significant effects. You can object to the use of your data for promotional profiling at any time (GDPR article 21) by writing to us.
+
 ## 5. Data Processing, Storage, and Retention Period
 
 The personal data we collect is stored and processed in Greece and Germany, in our cloud servers, or where we or our partners and third-party providers maintain facilities. We only transfer data within the jurisdiction that is subject to Data Protection laws reflecting our commitment to protect the privacy of our users.

@@ -14,6 +14,7 @@ import { join } from 'node:path';
 import { LANGS } from '../../lib/i18n';
 import { clientIpOf } from '../../lib/clientip';
 import { requestHost } from '../../lib/seo';
+import { originHeader } from '../../lib/origin';
 
 export const prerender = false;
 
@@ -60,10 +61,19 @@ export function pageGroup(path: string): string {
   return 'other';
 }
 
+// 🪤 Behind the Cloudflare tunnel the request reaches the container as `hp-site:4331` with no
+//    x-forwarded-host, so comparing the browser's Origin with requestHost() refused EVERY real
+//    beacon (403) from 21/10 until #79 — the store stayed empty. The public origin (PUBLIC_ORIGIN,
+//    via originHeader) and the Host header are the same site too.
 const sameOrigin = (request: Request, url: URL): boolean => {
   const origin = request.headers.get('origin');
   if (!origin) return true;                  // sendBeacon from the same page may omit it
-  try { return new URL(origin).hostname === requestHost(request, url); } catch { return false; }
+  let host = '';
+  try { host = new URL(origin).hostname; } catch { return false; }
+  const ours = new Set([requestHost(request, url), (request.headers.get('host') ?? '').replace(/:\d+$/, '').toLowerCase()]);
+  const pub = originHeader(request, url).origin;
+  if (pub) { try { ours.add(new URL(pub).hostname); } catch { /* ignore */ } }
+  return ours.has(host);
 };
 
 export const POST: APIRoute = async ({ request, url, clientAddress }) => {

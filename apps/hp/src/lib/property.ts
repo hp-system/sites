@@ -244,6 +244,8 @@ type PUI = {
   favorite: string; shareL: string; copied: string; lockChip: string;
   /** The favourite button once pressed (#59). */
   saved: string;
+  /** Luxury badge and the municipality block (#79, George 21/10/2026 after comparing #7729). */
+  luxury: string; aboutMuni: string; allInMuni: string; costs: string;
   /** Μονάδες. ⚠️ ΠΟΤΕ γραμμένες μέσα στο component — δες το σχόλιο στις αποστάσεις. */
   kmU: string; mU: string;
   /** Οι δύο μη-γράμμα ενεργειακές καταστάσεις — 220 από τα 527 ακίνητα. */
@@ -268,7 +270,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Ενεργειακή', perSqm: '/ τ.μ.',
     floorBase: 'Υπόγειο', floorGround: 'Ισόγειο', floorN: 'Όροφος {n}',
     roomsL: 'Δωμάτια', livingL: 'Καθιστικά', wcL: 'WC',
-    favorite: 'Αγαπημένο', saved: 'Αποθηκεύτηκε', shareL: 'Κοινοποίηση', copied: 'Αντιγράφηκε',
+    favorite: 'Αγαπημένο', saved: 'Αποθηκεύτηκε', luxury: 'Πολυτελές', aboutMuni: 'Για τον δήμο {m}', allInMuni: 'Όλα τα ακίνητα στον δήμο {m}', costs: 'Φόροι και έξοδα αγοράς: υπολογιστής', shareL: 'Κοινοποίηση', copied: 'Αντιγράφηκε',
     lockChip: 'ακριβής περιοχή με εγγραφή', kmU: 'χλμ', mU: 'μ.', energyPending: 'Σε έκδοση', energyExempt: 'Εξαιρείται',
     mapCircle: 'Το ακίνητο βρίσκεται μέσα στον κύκλο.', mapExact: 'Ακριβής θέση του ακινήτου.', mapOpen: 'Άνοιγμα στους χάρτες',
     exclH: 'Exclusive', videoL: 'Βίντεο', docsL: 'Έγγραφα και κατόψεις', priceHistL: 'Ιστορικό τιμής', addressL: 'Διεύθυνση' },
@@ -286,7 +288,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Energy', perSqm: '/ m²',
     floorBase: 'Basement', floorGround: 'Ground floor', floorN: 'Floor {n}',
     roomsL: 'Rooms', livingL: 'Living rooms', wcL: 'WC',
-    favorite: 'Favorite', saved: 'Saved', shareL: 'Share', copied: 'Copied', lockChip: 'exact area with sign-up',
+    favorite: 'Favorite', saved: 'Saved', luxury: 'Luxury', aboutMuni: 'About {m}', allInMuni: 'All properties in {m}', costs: 'Taxes and buying costs: calculator', shareL: 'Share', copied: 'Copied', lockChip: 'exact area with sign-up',
     kmU: 'km', mU: 'm', energyPending: 'Being issued', energyExempt: 'Exempt',
     mapCircle: 'The property is inside the circle.', mapExact: 'Exact location of the property.', mapOpen: 'Open in maps',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Documents and floor plans', priceHistL: 'Price history', addressL: 'Address' },
@@ -304,7 +306,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Енергиен клас', perSqm: '/ м²',
     floorBase: 'Сутерен', floorGround: 'Партер', floorN: 'Етаж {n}',
     roomsL: 'Стаи', livingL: 'Дневни', wcL: 'WC',
-    favorite: 'Любим', saved: 'Запазено', shareL: 'Сподели', copied: 'Копирано', lockChip: 'точен район с регистрация',
+    favorite: 'Любим', saved: 'Запазено', luxury: 'Лукс', aboutMuni: 'За община {m}', allInMuni: 'Всички имоти в {m}', costs: 'Данъци и разходи при покупка: калкулатор', shareL: 'Сподели', copied: 'Копирано', lockChip: 'точен район с регистрация',
     kmU: 'км', mU: 'м', energyPending: 'В процес на издаване', energyExempt: 'Освободен',
     mapCircle: 'Имотът се намира в кръга.', mapExact: 'Точно местоположение на имота.', mapOpen: 'Отвори в картите',
     exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документи и планове', priceHistL: 'История на цената', addressL: 'Адрес' },
@@ -322,7 +324,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Energetski', perSqm: '/ m²',
     floorBase: 'Suteren', floorGround: 'Prizemlje', floorN: 'Sprat {n}',
     roomsL: 'Sobe', livingL: 'Dnevne sobe', wcL: 'WC',
-    favorite: 'Omiljeno', saved: 'Sačuvano', shareL: 'Podeli', copied: 'Kopirano', lockChip: 'tačno područje uz registraciju',
+    favorite: 'Omiljeno', saved: 'Sačuvano', luxury: 'Luksuz', aboutMuni: 'O opštini {m}', allInMuni: 'Sve nekretnine u {m}', costs: 'Porezi i troškovi kupovine: kalkulator', shareL: 'Podeli', copied: 'Kopirano', lockChip: 'tačno područje uz registraciju',
     kmU: 'km', mU: 'm', energyPending: 'U izradi', energyExempt: 'Izuzeto',
     mapCircle: 'Nekretnina se nalazi unutar kruga.', mapExact: 'Tačna lokacija nekretnine.', mapOpen: 'Otvori u mapama',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumenti i planovi', priceHistL: 'Istorija cene', addressL: 'Adresa' },
@@ -340,7 +342,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Energieklasse', perSqm: '/ m²',
     floorBase: 'Untergeschoss', floorGround: 'Erdgeschoss', floorN: 'Etage {n}',
     roomsL: 'Zimmer', livingL: 'Wohnzimmer', wcL: 'WC',
-    favorite: 'Favorit', saved: 'Gespeichert', shareL: 'Teilen', copied: 'Kopiert', lockChip: 'genaue Gegend mit Anmeldung',
+    favorite: 'Favorit', saved: 'Gespeichert', luxury: 'Luxus', aboutMuni: 'Über {m}', allInMuni: 'Alle Immobilien in {m}', costs: 'Steuern und Kaufnebenkosten: Rechner', shareL: 'Teilen', copied: 'Kopiert', lockChip: 'genaue Gegend mit Anmeldung',
     kmU: 'km', mU: 'm', energyPending: 'In Ausstellung', energyExempt: 'Befreit',
     mapCircle: 'Die Immobilie liegt innerhalb des Kreises.', mapExact: 'Genaue Lage der Immobilie.', mapOpen: 'In Karten öffnen',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumente und Grundrisse', priceHistL: 'Preisverlauf', addressL: 'Adresse' },
@@ -358,7 +360,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Clasă energetică', perSqm: '/ m²',
     floorBase: 'Subsol', floorGround: 'Parter', floorN: 'Etaj {n}',
     roomsL: 'Camere', livingL: 'Camere de zi', wcL: 'WC',
-    favorite: 'Favorit', saved: 'Salvat', shareL: 'Distribuie', copied: 'Copiat', lockChip: 'zona exactă cu înregistrare',
+    favorite: 'Favorit', saved: 'Salvat', luxury: 'Lux', aboutMuni: 'Despre {m}', allInMuni: 'Toate proprietățile din {m}', costs: 'Taxe și costuri de cumpărare: calculator', shareL: 'Distribuie', copied: 'Copiat', lockChip: 'zona exactă cu înregistrare',
     kmU: 'km', mU: 'm', energyPending: 'În curs de emitere', energyExempt: 'Exceptat',
     mapCircle: 'Proprietatea se află în interiorul cercului.', mapExact: 'Locația exactă a proprietății.', mapOpen: 'Deschide în hărți',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Documente și planuri', priceHistL: 'Istoricul prețului', addressL: 'Adresă' },
@@ -376,7 +378,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Enerji sınıfı', perSqm: '/ m²',
     floorBase: 'Bodrum', floorGround: 'Zemin kat', floorN: 'Kat {n}',
     roomsL: 'Odalar', livingL: 'Oturma odası', wcL: 'WC',
-    favorite: 'Favori', saved: 'Kaydedildi', shareL: 'Paylaş', copied: 'Kopyalandı', lockChip: 'kayıtla tam bölge',
+    favorite: 'Favori', saved: 'Kaydedildi', luxury: 'Lüks', aboutMuni: '{m} hakkında', allInMuni: '{m} bölgesindeki tüm mülkler', costs: 'Vergiler ve alım masrafları: hesaplayıcı', shareL: 'Paylaş', copied: 'Kopyalandı', lockChip: 'kayıtla tam bölge',
     kmU: 'km', mU: 'm', energyPending: 'Düzenleniyor', energyExempt: 'Muaf',
     mapCircle: 'Mülk dairenin içinde yer alır.', mapExact: 'Mülkün tam konumu.', mapOpen: 'Haritada aç',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Belgeler ve kat planları', priceHistL: 'Fiyat geçmişi', addressL: 'Adres' },
@@ -394,7 +396,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'דירוג אנרגטי', perSqm: '/ מ״ר',
     floorBase: 'מרתף', floorGround: 'קומת קרקע', floorN: 'קומה {n}',
     roomsL: 'חדרים', livingL: 'סלונים', wcL: 'שירותים',
-    favorite: 'מועדף', saved: 'נשמר', shareL: 'שיתוף', copied: 'הועתק', lockChip: 'אזור מדויק בהרשמה',
+    favorite: 'מועדף', saved: 'נשמר', luxury: 'יוקרה', aboutMuni: 'על {m}', allInMuni: 'כל הנכסים ב{m}', costs: 'מסים ועלויות רכישה: מחשבון', shareL: 'שיתוף', copied: 'הועתק', lockChip: 'אזור מדויק בהרשמה',
     kmU: 'ק״מ', mU: 'מ׳', energyPending: 'בהנפקה', energyExempt: 'פטור',
     mapCircle: 'הנכס נמצא בתוך המעגל.', mapExact: 'המיקום המדויק של הנכס.', mapOpen: 'פתיחה במפות',
     exclH: 'Exclusive', videoL: 'וידאו', docsL: 'מסמכים ותוכניות', priceHistL: 'היסטוריית מחיר', addressL: 'כתובת' },
@@ -412,7 +414,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     energyL: 'Энергокласс', perSqm: '/ м²',
     floorBase: 'Подвал', floorGround: 'Первый этаж', floorN: 'Этаж {n}',
     roomsL: 'Комнаты', livingL: 'Гостиные', wcL: 'WC',
-    favorite: 'Избранное', saved: 'Сохранено', shareL: 'Поделиться', copied: 'Скопировано', lockChip: 'точный район после регистрации',
+    favorite: 'Избранное', saved: 'Сохранено', luxury: 'Люкс', aboutMuni: 'О {m}', allInMuni: 'Все объекты в {m}', costs: 'Налоги и расходы при покупке: калькулятор', shareL: 'Поделиться', copied: 'Скопировано', lockChip: 'точный район после регистрации',
     kmU: 'км', mU: 'м', energyPending: 'Оформляется', energyExempt: 'Освобождён',
     mapCircle: 'Объект находится внутри круга.', mapExact: 'Точное расположение объекта.', mapOpen: 'Открыть на карте',
     exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документы и планировки', priceHistL: 'История цены', addressL: 'Адрес' },

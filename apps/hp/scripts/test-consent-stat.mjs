@@ -55,6 +55,10 @@ try {
   let last = 0;
   for (let i = 0; i < 6; i++) last = (await post(ok, { 'x-forwarded-for': '192.0.2.55' })).status;
   check('rate limit → 429 after 5/min', last === 429, `last=${last}`);
+  // #79 — exactly what a browser sends: text/plain beacon WITH Origin, behind the tunnel
+  //   (Host = the container, no x-forwarded-host, PUBLIC_ORIGIN = the public site).
+  const real = await fetch(SITE + '/api/consent-stat', { method: 'POST', headers: { 'content-type': 'text/plain;charset=UTF-8', origin: 'https://hp.rewize.app', host: 'hp-site:4331', 'cf-ipcountry': 'DE' }, body: JSON.stringify(ok) });
+  check('browser beacon behind the tunnel → 204', real.status === 204, `got ${real.status}`);
   await sleep(300);
   const lines = log.split('\n').filter((l) => l.startsWith('consent_stat '));
   check('a consent_stat line is logged', lines.length >= 1, `${lines.length} lines`);

@@ -59,6 +59,29 @@ try {
   check('member: contact form prefilled', /name="name"[^>]*value="Stub User"/.test(ch) && /name="email"[^>]*value="stub@example.com"/.test(ch), 'values');
   const cg = await (await fetch(SITE + '/en/contact')).text();
   check('guest: contact form empty', !cg.includes('stub@example.com'), 'empty');
+
+  // #73 — hearts on cards, login redirect, no count in the closed collection, hidden prices for Exclusive.
+  const lg = await (await fetch(SITE + '/en/properties')).text();
+  check('guest: card heart leads to sign-in and back', /<a class="heart" href="\/en\/login\?next=%2Fen%2Fproperties"/.test(lg) && !/button class="heart"/.test(lg), 'link');
+  await post({ ref: '10010' });
+  const lm = await (await fetch(SITE + '/en/properties', { headers: M })).text();
+  check('member: card hearts are toggles, saved one pressed', /button class="heart"[^>]*data-fav="10010"[^>]*aria-pressed="true"/.test(lm) && /button class="heart"[^>]*data-fav="10011"[^>]*aria-pressed="false"/.test(lm), 'pressed');
+  await post({ ref: '10010' });
+  const rl = await fetch(SITE + '/en/login?next=%2Fen%2Fproperty%2F10008', { headers: M, redirect: 'manual' });
+  check('member opening /login → next', rl.status === 302 && rl.headers.get('location') === '/en/property/10008', `${rl.status} ${rl.headers.get('location')}`);
+  const rl2 = await fetch(SITE + '/en/login?next=https%3A%2F%2Fevil.example', { headers: M, redirect: 'manual' });
+  check('member opening /login with a foreign next → panel', rl2.headers.get('location') === '/en/panel', String(rl2.headers.get('location')));
+  const coll = await (await fetch(SITE + '/en/panel/collection', { headers: M })).text();
+  check('closed collection shows no count', !/\d+\s+propert(y|ies)<\/p>/.test(coll), 'no count');
+  const X = { cookie: 'member_token=stub-exclusive' };
+  const hx = await (await fetch(SITE + '/en/property/10009', { headers: X })).text();
+  const hm = await (await fetch(SITE + '/en/property/10009', { headers: M })).text();
+  check('hidden price: Exclusive sees it, member does not', /€109,000/.test(hx) && !/€109,000/.test(hm), 'exclusive only');
+  const { crmError } = await import('../src/lib/crmerror.ts');
+  check('CRM errors → codes', crmError(401, { message: 'Λάθος κωδικός. Απομένουν 2 προσπάθειες.' }, 'code_bad').left === 2
+    && crmError(401, { message: 'Ο λογαριασμός έχει ανασταλεί.' }, 'code_bad').code === 'suspended'
+    && crmError(429, { retryAfterSec: 90 }, 'code_bad').retryAfterSec === 90
+    && crmError(401, { message: 'Ο κωδικός δεν ισχύει πια. Ζήτησε νέον.' }, 'code_bad').code === 'expired', 'mapped');
 } finally {
   site.kill(); stub.server?.close?.();
 }

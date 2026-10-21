@@ -104,6 +104,8 @@ const JS_T = {
   e_closed: t(lang, 'auth.e.closed'),
   e_not_mobile: t(lang, 'auth.e.not_mobile'),
   e_too_many: raw('auth.e.too_many'),
+  e_suspended: t(lang, 'auth.e.suspended'),
+  e_code_left: raw('auth.e.code_left'),
   // B-15: texts for the error codes of /api/auth/verify and /api/auth/complete.
   e_need_email: t(lang, 'auth.e.need_email'),
   e_expired: t(lang, 'auth.e.expired'),
@@ -300,8 +302,8 @@ const JS_T = {
   const fail = (id: string, msg: string) => { const e = $(id); e.textContent = msg; e.hidden = false; };
   // B-15: a site error comes as `code` → translated text; a `message` is the CRM's own text.
   // The CRM writes its own messages in Greek: show them only on Greek pages, else our translation.
-  const said = (r: { code?: string; message?: string }, fallback: string) =>
-    (r?.code && (L as Record<string, string>)[`e_${r.code}`])
+  const said = (r: { code?: string; message?: string; left?: number; retryAfterSec?: number }, fallback: string) =>
+    (r?.code && (L as Record<string, string>)[`e_${r.code}`] && fill((L as Record<string, string>)[`e_${r.code}`], { n: r.left ?? r.retryAfterSec ?? 60 }))
     || (document.documentElement.lang.startsWith('el') ? r?.message : '') || fallback;
   const clear = (id: string) => { $(id).hidden = true; };
   const post = async (u: string, b: unknown) =>

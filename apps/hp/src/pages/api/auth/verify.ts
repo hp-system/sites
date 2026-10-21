@@ -18,6 +18,7 @@
 //     «Ο λογαριασμός έχει ανασταλεί.») — τα δείχνουμε ΑΥΤΟΥΣΙΑ. Είναι ο μόνος
 //    τρόπος να καταλάβει ο άνθρωπος τι έγινε· μια δική μας γενίκευση θα το έκρυβε.
 // ═══════════════════════════════════════════════════════════════════════════
+import { crmError } from '../../../lib/crmerror';
 import type { APIRoute } from 'astro';
 import { forwardIp } from '../../../lib/clientip';
 import { isHttps, originHeader } from '../../../lib/origin';
@@ -92,7 +93,7 @@ export const POST: APIRoute = async ({ request, cookies, url, clientAddress }) =
       return json({ ok: false, needEmail: true, code: 'need_email' });
     }
     if (!r.ok || !b?.token) {
-      return json({ ok: false, ...(typeof b?.message === 'string' ? { message: b.message } : { code: 'code_bad' }) });
+      return json({ ok: false, ...crmError(r.status, b, 'code_bad') });
     }
 
     cookies.set('member_token', String(b.token), {

@@ -76,9 +76,7 @@ const total = secret.length + ultra.length;
         </div>
       ) : (
         <>
-          <p class="say">{total === 1
-            ? t(lang, 'ui.one_prop')
-            : t(lang, 'pnl.n_props', { n: total })}</p>
+          {/* No count here either: "never property counts" (George 17/10; q14 21/10). */}
           <div class="grid">
             {[...ultra, ...secret].map((it, i) => (
               <PropertyCard p={it} lang={lang} viewer={viewer} eager={i < 2} />

@@ -14,6 +14,7 @@
 //    πραγματικός κάτοχος, στην επόμενη εγγραφή, θα έπεφτε στον λογαριασμό του άλλου.
 //    Ο κωδικός πάει στο **ΝΕΟ** στοιχείο, όχι στο παλιό.
 // ═══════════════════════════════════════════════════════════════════════════
+import { crmError } from '../../../lib/crmerror';
 import type { APIRoute } from 'astro';
 import { forwardIp } from '../../../lib/clientip';
 import { originHeader } from '../../../lib/origin';
@@ -76,7 +77,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
       signal: AbortSignal.timeout(12000),
     });
     const b = await r.json().catch(() => ({}));
-    if (!r.ok) return json({ ok: false, ...(typeof b?.message === 'string' ? { message: b.message } : { code: 'save' }) });
+    if (!r.ok) return json({ ok: false, ...crmError(r.status, b, 'save') });
     return json({
       ok: b?.ok !== false,
       message: typeof b?.message === 'string' ? b.message : undefined,

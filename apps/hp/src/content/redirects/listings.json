@@ -1,0 +1,15 @@
+{
+  "_about": "Old site English listing/category URLs (SEO export 20/10/2026) → the new English category or list pages (George 20/10/2026: keep a URL only if it is SEO-friendly and has value, else clean URL + 301). The island has no category of its own; it is land.",
+  "status": 301,
+  "redirects": [
+    { "from": "/en/properties-in-halkidiki-greece", "lang": "en", "to": "/en/properties", "clicks_12m": 7 },
+    { "from": "/en/properties-in-halkidiki-greece/land-halkidiki", "lang": "en", "to": "/en/property-for-sale/land", "clicks_12m": 30 },
+    { "from": "/en/properties-in-halkidiki-greece/apartment-for-sale-greece-halkidiki", "lang": "en", "to": "/en/property-for-sale/apartments", "clicks_12m": 3 },
+    { "from": "/en/properties-in-halkidiki-greece/house-halkidiki", "lang": "en", "to": "/en/property-for-sale/houses", "clicks_12m": 1 },
+    { "from": "/en/properties-in-halkidiki-greece/home-halkidiki", "lang": "en", "to": "/en/property-for-sale/houses", "clicks_12m": 0 },
+    { "from": "/en/properties-in-halkidiki-greece/halkidiki-villa", "lang": "en", "to": "/en/property-for-sale/villas", "clicks_12m": 0 },
+    { "from": "/en/properties-in-halkidiki-greece/halkidiki-hotels-for-sale", "lang": "en", "to": "/en/property-for-sale/hotels", "clicks_12m": 1 },
+    { "from": "/en/properties-in-halkidiki-greece/halkidiki-plots", "lang": "en", "to": "/en/property-for-sale/plots", "clicks_12m": 1 },
+    { "from": "/en/properties-in-halkidiki-greece/island-halkidiki", "lang": "en", "to": "/en/property-for-sale/land", "clicks_12m": 1 }
+  ]
+}

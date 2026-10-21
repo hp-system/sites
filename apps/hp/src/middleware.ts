@@ -27,6 +27,7 @@
 import type { MiddlewareHandler } from 'astro';
 import { isProd } from './lib/seo';
 import { originHeader } from './lib/origin';
+import { redirectFor } from './lib/redirects';
 
 // ── Same-origin check for form posts (B-24) ──────────────────────────────────
 // Astro's built-in check is switched off in astro.config.mjs (it compared against
@@ -53,6 +54,16 @@ function crossSiteForm(request: Request, url: URL): boolean {
 export const onRequest: MiddlewareHandler = async (ctx, next) => {
   if (crossSiteForm(ctx.request, ctx.url)) {
     return new Response(`Cross-site ${ctx.request.method} form submissions are forbidden`, { status: 403 });
+  }
+  // Old site URLs → their new page (#56). Only GET/HEAD; the target is encoded once here
+  // (raw Greek letters in a Location header give HTTP 500, see [...path].astro).
+  if (ctx.request.method === 'GET' || ctx.request.method === 'HEAD') {
+    const r = redirectFor(ctx.url.pathname);
+    if (r) {
+      const [path, hash] = r.to.split('#');
+      const loc = encodeURI(path) + ctx.url.search + (hash ? `#${encodeURIComponent(hash)}` : '');
+      return new Response(null, { status: r.status, headers: { location: loc, 'cache-control': r.status === 301 ? 'public, max-age=3600' : 'no-store' } });
+    }
   }
   const res = await next();
   if (!isProd(ctx.request, ctx.url)) {

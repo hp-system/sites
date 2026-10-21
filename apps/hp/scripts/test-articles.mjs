@@ -66,7 +66,9 @@ try {
   for (const x of archived) {
     check(`archived ${x.clean} is mapped in articles.json`, redirects.some((r) => r.from === x.clean), 'redirect recorded');
     const r = await fetch(SITE + encodeURI(x.clean), { redirect: 'manual' });
-    check(`archived ${x.clean} is not served`, r.status === 404, `status ${r.status}`);
+    // Since the 301 engine (#56) the old address moves permanently to the kept article; never a page.
+    const to = redirects.find((m) => m.from === x.clean)?.to;
+    check(`archived ${x.clean} is not served (301 to the kept article)`, r.status === 301 && decodeURIComponent(r.headers.get('location') ?? '') === to, `status ${r.status} ${r.headers.get('location') ?? ''}`);
   }
   for (const a of arts) {
     const path = `/en/articles/${a.cat}/${a.slug}`;
@@ -88,7 +90,8 @@ try {
     }
     if (a.old && a.old !== path && a.old.includes(':')) {
       const o = await fetch(SITE + a.old.replace(/:/g, '%3A'), { redirect: 'manual' });
-      check(`old slug ${a.old} is 404 for now`, o.status === 404, `status ${o.status} (301 engine comes later)`);
+      // The 301 engine (#56): the old ':' slug now moves permanently to the clean URL.
+      check(`old slug ${a.old} → 301 to ${path}`, o.status === 301 && decodeURIComponent(o.headers.get('location') ?? '') === path, `status ${o.status} ${o.headers.get('location') ?? ''}`);
     }
   }
   // 9 old slugs had ":"; some of those articles are now archived (their old URL is in articles.json).

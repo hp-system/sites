@@ -1,0 +1,124 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// LIVE DATA BLOCKS for the info pages, computed from the listings the site
+// already loads (lib/prices.ts):
+//   prices        — median €/m² by municipality and area (homes, land)
+//   greece-guide  — "from €" by property type and by municipality
+//   prepublished  — pre-published properties (members only; the CRM has no flag yet)
+// 🔢 Prices only — never a count of properties (George 17/10/2026).
+// ═══════════════════════════════════════════════════════════════════════════
+import type { SiteProperty } from '../lib/api';
+import { priceOf, refOf } from '../lib/api';
+import { money, sqm } from '../lib/format';
+import { muniKey } from '../lib/gate';
+import { listUrl, propertyUrl, type Lang } from '../lib/i18n';
+import { priceTables, fromPrice, TYPE_GUIDE, isPrePublished } from '../lib/prices';
+import { AREA_PAGES, areaUrl } from '../content/areas/en';
+import { brand } from '../brand/index';
+
+interface Props { kind: 'prices' | 'greece-guide' | 'prepublished'; items: SiteProperty[]; member: boolean }
+const { kind, items, member } = Astro.props;
+const lang: Lang = 'en';
+const eur = (n: number) => money(n, lang);
+
+const tables = kind === 'prices' ? priceTables(items, lang) : null;
+const munis = AREA_PAGES.filter((p) => p.kind === 'municipality');
+const muniFrom = kind === 'greece-guide'
+  ? munis.map((m) => ({ name: m.name, href: areaUrl(m.slug),
+      from: fromPrice(items, (a) => muniKey(a) === m.q.municipality) })).filter((m) => m.from > 0)
+  : [];
+const typeFrom = kind === 'greece-guide'
+  ? TYPE_GUIDE.map((t) => ({ ...t, from: fromPrice(items, t.keep) })).filter((t) => t.from > 0)
+  : [];
+const pre = kind === 'prepublished' && member ? items.filter((p) => isPrePublished(p.attributes ?? {})) : [];
+---
+{tables && (
+  <section class="pw" aria-labelledby="pw-homes">
+    <h2 id="pw-homes">Homes: median price per m² by area</h2>
+    {tables.homes.length ? (
+      <div class="pw-scroll">
+        <table>
+          <thead><tr><th scope="col">Municipality</th><th scope="col">Median €/m²</th><th scope="col">Middle half</th><th scope="col">Median price</th></tr></thead>
+          <tbody>
+            {tables.homes.map((r) => (
+              <tr><th scope="row">{r.name}</th><td>{eur(r.perSqm)}</td><td>{eur(r.low)}–{eur(r.high)}</td><td>{eur(r.typical)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : <p class="pw-empty">The price table is being updated.</p>}
+
+    {tables.homes.some((r) => r.areas.length) && (
+      <>
+        <h3>Homes: median €/m² by village and area</h3>
+        <div class="pw-areas">
+          {tables.homes.filter((r) => r.areas.length).map((r) => (
+            <div><p class="t-label">{r.name}</p>
+              <ul>{r.areas.map((a) => <li><span>{a.name}</span><span>{eur(a.perSqm)}</span></li>)}</ul></div>
+          ))}
+        </div>
+      </>
+    )}
+
+    <h2 id="pw-land">Land: median price per m² of plot</h2>
+    {tables.land.length ? (
+      <div class="pw-scroll">
+        <table>
+          <thead><tr><th scope="col">Municipality</th><th scope="col">Median €/m² of plot</th><th scope="col">Middle half</th><th scope="col">Median plot</th></tr></thead>
+          <tbody>
+            {tables.land.map((r) => (
+              <tr><th scope="row">{r.name}</th><td>{eur(r.perSqm)}</td><td>{eur(r.low)}–{eur(r.high)}</td><td>{sqm(r.typical, lang)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : <p class="pw-empty">The land price table is being updated.</p>}
+    <p class="pw-note">Asking prices of our own current listings, not sale prices — computed automatically and updated continuously. Homes with price and floor area; land with price and plot size. Free to quote with "Source: {brand.name}".</p>
+  </section>
+)}
+
+{kind === 'greece-guide' && (
+  <section class="pw" aria-labelledby="pw-types">
+    <h2 id="pw-types">What is for sale right now</h2>
+    <ul class="pw-guide">
+      {typeFrom.map((t) => <li><b>{t.label}</b><span>{t.text}</span><span class="pw-from">from {eur(t.from)}</span></li>)}
+    </ul>
+    <h2 id="pw-munis">Properties by municipality</h2>
+    <ul class="pw-guide">
+      {muniFrom.map((m) => <li><a href={m.href}><b>{m.name}</b></a><span class="pw-from">from {eur(m.from)}</span></li>)}
+    </ul>
+    <p class="pw-note">Prices update automatically from our listings. <a href={listUrl(lang)}>See all properties for sale in Halkidiki</a>.</p>
+  </section>
+)}
+
+{kind === 'prepublished' && (
+  <section class="pw" aria-labelledby="pw-pre">
+    <h2 id="pw-pre">Properties before they reach the market</h2>
+    {pre.length ? (
+      <ul class="pw-pre">
+        {pre.map((p) => <li><a href={propertyUrl(lang, refOf(p))}>{p.title}</a> <span>{eur(priceOf(p.attributes ?? {}))}</span></li>)}
+      </ul>
+    ) : (
+      <p class="pw-empty">{member
+        ? 'No pre-published properties right now. Leave your request below and you will be the first to know.'
+        : 'Pre-published properties are shown to registered members. Sign in or register for free, or leave your request below and we will tell you first.'}</p>
+    )}
+  </section>
+)}
+
+<style>
+  .pw { margin: var(--s6, 48px) 0 0; }
+  .pw h2 { margin-top: var(--s5, 32px); }
+  .pw-scroll { overflow-x: auto; }
+  .pw table { display: table; width: 100%; margin: 0; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .pw th, .pw td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line, #e5e3de); }
+  .pw thead th { font-size: 13px; font-weight: 600; color: var(--ink-2, #3c4247); }
+  .pw-areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px 32px; }
+  .pw-areas ul { list-style: none; padding: 0; margin: 6px 0 0; }
+  .pw-areas li { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--line, #e5e3de); font-variant-numeric: tabular-nums; }
+  .pw-guide { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .pw-guide li { display: grid; gap: 4px; border-top: 1px solid var(--ink, #0e1214); padding-top: 10px; }
+  .pw-from { font-size: 20px; font-variant-numeric: tabular-nums; }
+  .pw-note, .pw-empty { color: var(--ink-2, #3c4247); font-size: 15px; }
+  .pw-pre { list-style: none; padding: 0; }
+</style>

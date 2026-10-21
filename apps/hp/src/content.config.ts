@@ -39,7 +39,7 @@ const pages = defineCollection({
     description: z.string(),
     h1: z.string(),
     lead: z.string().default(''),
-    section: z.enum(['legal', 'sell', 'company', 'services']),
+    section: z.enum(['legal', 'sell', 'company', 'services', 'buy', 'members']),
     /** schema.org type of the page itself. */
     schema: z.enum(['WebPage', 'FAQPage', 'AboutPage', 'ContactPage', 'Service', 'CollectionPage']).default('WebPage'),
     /** Breadcrumb between home and the page (e.g. Sell, Services, About us). */
@@ -66,6 +66,10 @@ const pages = defineCollection({
     contact_card: z.boolean().default(false),
     /** Services described on the page (sections of a services page) → Service.hasOfferCatalog. */
     catalog: z.array(z.object({ name: z.string(), url: z.string() })).default([]),
+    /** Live data block rendered after the text: price tables, "from €" guide, pre-published list. */
+    widget: z.enum(['prices', 'greece-guide', 'prepublished']).optional(),
+    /** A call to action shown under the lead (e.g. Sign in / Register for the members pages). */
+    cta: z.object({ label: z.string(), href: z.string() }).optional(),
   }),
 });
 

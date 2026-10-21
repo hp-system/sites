@@ -16,6 +16,9 @@ import Header from './Header.astro';
 import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
 import InfoForm from './InfoForm.astro';
+import InfoWidget from './InfoWidget.astro';
+import { priceTables } from '../lib/prices';
+import type { SiteProperty } from '../lib/api';
 import { allProperties } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
@@ -53,8 +56,10 @@ const addr = brand.addressLatin ?? { street: brand.address.street, city: brand.a
 const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addr.street} ${brand.address.postalCode}, ${addr.city}`)}`;
 
 let munis: { name: string; key: string }[] = [];
+const memberToken = Astro.cookies.get('member_token')?.value;
+let items: SiteProperty[] = [];
 try {
-  const items = await allProperties(Astro.cookies.get('member_token')?.value);
+  items = await allProperties(memberToken);
   munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
     .slice(0, 4)
     .map((k) => {
@@ -96,6 +101,16 @@ if (d.schema === 'Service') {
     inLanguage: 'en', ...(d.schema === 'AboutPage' || d.schema === 'ContactPage' ? { mainEntity: org } : {}),
   });
 }
+if (d.widget === 'prices') {
+  const t = priceTables(items, lang);
+  jsonLd.push({
+    '@context': 'https://schema.org', '@type': 'Dataset', name: d.h1, description: d.description, url: abs(url),
+    creator: org, license: abs(url), isAccessibleForFree: true, spatialCoverage: brand.market.areaServed,
+    dateModified: new Date().toISOString().slice(0, 10),
+    variableMeasured: ['Median asking price per square metre (EUR)', 'Interquartile range (EUR per m²)'],
+    hasPart: t.homes.map((r) => ({ '@type': 'Dataset', name: `${r.name}: median €/m² ${r.perSqm}`, description: `Homes in ${r.name}, median asking price per m²` })),
+  });
+}
 if (d.faq.length) {
   jsonLd.push({
     '@context': 'https://schema.org', '@type': 'FAQPage',
@@ -117,6 +132,7 @@ if (d.faq.length) {
       </nav>
       <h1 class="t-display info-h1">{d.h1}</h1>
       {d.lead && <p class="info-lead">{d.lead}</p>}
+      {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
     </header>
 
     {d.image && (
@@ -140,6 +156,8 @@ if (d.faq.length) {
         )}
 
         <Content />
+
+        {d.widget && <InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} />}
 
         {d.cards.length > 0 && (
           <ul class="cards">
@@ -220,6 +238,7 @@ if (d.faq.length) {
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .info-lead { font-size: 19px; line-height: 1.6; color: var(--ink-2); max-width: 64ch; margin: 0; }
+  .info-cta-top { margin: var(--s4, 24px) 0 0; }
   .info-hero { margin: 0 auto; }
   .info-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; }
 

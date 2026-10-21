@@ -41,6 +41,11 @@ const MAX_ENTRIES = 500;                      // ένα ανά συνδεδεμ�
 const cache = new Map<string, { at: number; m: Member | null }>();
 const inflight = new Map<string, Promise<Member | null>>();
 
+/** After a write (favourite added/removed) the next read must come from the CRM. */
+export function forgetMember(token: string | undefined): void {
+  if (token) cache.delete(token);
+}
+
 function remember(token: string, m: Member | null) {
   cache.set(token, { at: Date.now(), m });
   if (cache.size > MAX_ENTRIES) {

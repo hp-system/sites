@@ -138,7 +138,7 @@ const JS_T = {
         <div id="fPhone" hidden>
           <label class="fl" for="ph">{t(lang, 'auth.phone_l')}</label>
           <div class="row">
-            <select class="fi fi--cc" id="cc" aria-label={t(lang, 'auth.country')}>
+            <select class="fi fi--cc" id="login-cc" aria-label={t(lang, 'auth.country')}>
               {COUNTRIES.map((x) => <option value={x.c} selected={x.c === defCode}>{x.f} {x.c}</option>)}
             </select>
             <input class="fi" id="ph" type="tel" inputmode="tel" autocomplete="tel-national"
@@ -299,8 +299,10 @@ const JS_T = {
   const show = (id: string) => steps.forEach((el) => (el.hidden = el.id !== id));
   const fail = (id: string, msg: string) => { const e = $(id); e.textContent = msg; e.hidden = false; };
   // B-15: a site error comes as `code` → translated text; a `message` is the CRM's own text.
+  // The CRM writes its own messages in Greek: show them only on Greek pages, else our translation.
   const said = (r: { code?: string; message?: string }, fallback: string) =>
-    (r?.code && (L as Record<string, string>)[`e_${r.code}`]) || r?.message || fallback;
+    (r?.code && (L as Record<string, string>)[`e_${r.code}`])
+    || (document.documentElement.lang.startsWith('el') ? r?.message : '') || fallback;
   const clear = (id: string) => { $(id).hidden = true; };
   const post = async (u: string, b: unknown) =>
     (await fetch(u, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) })).json().catch(() => ({}));
@@ -344,7 +346,7 @@ const JS_T = {
       if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)) return fail('e1', L.e_email);
       identifier = v;
     } else {
-      const cc = ($('cc') as HTMLSelectElement).value;
+      const cc = ($('login-cc') as HTMLSelectElement).value;
       const e = toE164(cc, ($('ph') as HTMLInputElement).value);
       // 🇬🇷 Ο έλεγχος γίνεται ΠΡΙΝ φύγει SMS: κάθε λάθος μήνυμα είναι και χρήμα
       //    και ένας πελάτης που περιμένει κάτι που δεν θα έρθει ποτέ.

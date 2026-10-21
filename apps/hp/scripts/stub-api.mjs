@@ -73,6 +73,7 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
   // A CRM record without any public id (B-26): must be invisible everywhere on the site.
   if (junk) items.push({ id: 'fce9d938-0000-4000-8000-000000000000', reference: '', title: '10', attributes: { category: '1', subcategory: '10' } });
   const captured = [];
+  const favs = new Set();   // #59: the member's favourites, toggled like the CRM does
   await assertSitePortFree();
 
   const server = createServer(async (req, res) => {
@@ -86,6 +87,11 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
       captured.push({ path: url.pathname, headers: req.headers, body });
       // A successful code check returns a member token, as the CRM does.
       if (url.pathname === '/api/site/member/verify-code') return send(200, { ok: true, token: 'stub-token', name: 'Stub', needs: [] });
+      if (url.pathname === '/api/site/member/favorite') {
+        const ref = String(body?.ref ?? '');
+        if (favs.has(ref)) favs.delete(ref); else favs.add(ref);
+        return send(200, { favorite: favs.has(ref), total: favs.size });
+      }
       return send(200, { ok: true });
     }
     if (url.pathname === '/__captured') return send(200, captured);
@@ -96,7 +102,7 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
       const tok = req.headers['x-member-token'];
       // `stub-exclusive` (#53): the level George grants by hand in the CRM.
       if (tok !== 'stub-token' && tok !== 'stub-noname' && tok !== 'stub-exclusive') return send(401, { message: 'no session' });
-      return send(200, { email: 'stub@example.com', name: tok === 'stub-token' ? 'Stub User' : '', phone: '', favorites: [], level: tok === 'stub-exclusive' ? 'exclusive' : 'member', blocked: false });
+      return send(200, { email: 'stub@example.com', name: tok === 'stub-token' ? 'Stub User' : '', phone: '', favorites: [...favs], level: tok === 'stub-exclusive' ? 'exclusive' : 'member', blocked: false });
     }
     if (url.pathname === '/api/site/properties') {
       const limit = Math.min(60, Number(url.searchParams.get('limit') ?? 60));

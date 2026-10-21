@@ -24,6 +24,7 @@ import PropertyCard from './PropertyCard.astro';
 import type { SiteProperty } from '../lib/api';
 import { refOf, priceOf, priceVisible, pick } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf, placeOf } from '../lib/gate';
+import { memberOf } from '../lib/member';
 import { coverOf, orderedPhotos, isPhotoOpen, blurSrc, marked, markedSrcSet, markedSrcSetSmall,
          altOf, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
 import { money, num, sqm as sqmFmt, seaLabel, clamp } from '../lib/format';
@@ -43,6 +44,8 @@ interface Props { lang: Lang; item: SiteProperty; all: SiteProperty[] }
 const { lang, item, all } = Astro.props;
 
 const viewer = await viewerOf(Astro.cookies);
+// Favourite state for a signed-in member (#59): from the same cached `/member/me` call.
+const meFav = viewer.member ? await memberOf(Astro.cookies.get('member_token')?.value) : null;
 const co = await company();
 const a = item.attributes ?? {};
 const id = refOf(item);
@@ -221,10 +224,19 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               196 αποθηκεύσεις / 282.790 προβολές, 43 στα 60 με τουλάχιστον μία.
               Είχε δίκιο. ⏭️ Οι πραγματικοί μετρητές έρχονται από το EALIDA (Φ2)·
               μέχρι τότε δεν τυπώνεται ΨΕΥΤΙΚΟΣ αριθμός — απλώς λείπει. */}
-          <a class="btn btn--fav" href={loginHref} data-ev="member:favorite_property">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
-            {pui(lang, 'favorite')}
-          </a>
+          {meFav ? (
+            /* Member: a real toggle (#59). Guest: the same look, but it leads to sign-up. */
+            <button class="btn btn--fav" id="fav" type="button" data-ref={id} aria-pressed={meFav.favorites.includes(id) ? 'true' : 'false'}
+                    data-on={pui(lang, 'saved')} data-off={pui(lang, 'favorite')} data-ev="member:favorite_property">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
+              <span>{pui(lang, meFav.favorites.includes(id) ? 'saved' : 'favorite')}</span>
+            </button>
+          ) : (
+            <a class="btn btn--fav" href={loginHref} data-ev="member:favorite_property">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
+              {pui(lang, 'favorite')}
+            </a>
+          )}
           <button class="btn" id="share" type="button" data-copied={pui(lang, 'copied')}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8 11l8-4M8 13l8 4"/></svg>
             {pui(lang, 'shareL')}
@@ -601,6 +613,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
          display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
   .btn svg { width: 13px; height: 13px; flex: none; }
   .btn--fav:hover, .btn:hover { border-color: var(--ink); }
+  .btn--fav[aria-pressed='true'] svg { fill: currentColor; }
+  .btn--fav[aria-busy='true'] { opacity: .6; }
   .btn--go { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
   /* ═══ ΓΚΑΛΕΡΙ ═══════════════════════════════════════════════════════════
@@ -815,6 +829,23 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 </style>
 
 <script>
+  // ── ΑΓΑΠΗΜΕΝΟ (#59): εναλλαγή χωρίς επαναφόρτωση· σε αποτυχία η κατάσταση μένει ως ήταν.
+  const fav = document.getElementById('fav') as HTMLButtonElement | null;
+  fav?.addEventListener('click', async () => {
+    if (fav.getAttribute('aria-busy') === 'true') return;
+    fav.setAttribute('aria-busy', 'true');
+    try {
+      const r = await fetch('/api/panel/favorite', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ref: fav.dataset.ref }) });
+      const d = await r.json();
+      if (d?.ok) {
+        fav.setAttribute('aria-pressed', d.favorite ? 'true' : 'false');
+        const s = fav.querySelector('span');
+        if (s) s.textContent = (d.favorite ? fav.dataset.on : fav.dataset.off) ?? '';
+      }
+    } catch { /* the state stays as it was */ }
+    fav.removeAttribute('aria-busy');
+  });
+
   // ── ΧΑΡΤΗΣ (#53): Leaflet + OpenStreetMap, φορτώνεται ΜΟΝΟ αν υπάρχει #pmap (δηλ. μέλος)
   //    και ΜΟΝΟ όταν πλησιάσει στην οθόνη. Ο επισκέπτης δεν κατεβάζει ούτε τη βιβλιοθήκη.
   const pm = document.getElementById('pmap');

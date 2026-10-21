@@ -172,7 +172,9 @@ const JS_T = {
         return;
       }
       // B-15: the endpoint answers with a `code`; its text is in the page language.
-      err.textContent = (b?.code && (L as Record<string, string>)[`e_${b.code}`]) || b?.message || L.e_fail;
+      // The CRM's own messages are Greek: only on Greek pages.
+      err.textContent = (b?.code && (L as Record<string, string>)[`e_${b.code}`])
+        || (document.documentElement.lang.startsWith('el') ? b?.message : '') || L.e_fail;
       err.hidden = false;
     } catch {
       err.textContent = L.e_offline;

@@ -78,7 +78,7 @@ const has = (k: string) => pageExists(k as any);
         <path d="M5.2 2.6h2.1l1.1 2.8-1.5 1.1a8.4 8.4 0 0 0 4.6 4.6l1.1-1.5 2.8 1.1v2.1a1.3 1.3 0 0 1-1.4 1.3A12.6 12.6 0 0 1 3.9 4A1.3 1.3 0 0 1 5.2 2.6Z"
               fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" />
       </svg>
-      <span class="tel__n num">{co.phone}</span>
+      <span class="tel__n num"><bdi dir="ltr">{co.phone}</bdi></span>
     </a>
     {/* Ο διακόπτης γλώσσας ζει εδώ στο desktop· στο κινητό είναι ΠΡΩΤΟΣ μέσα στο μενού. */}
     <span class="langslot"><LangSwitch lang={lang} tone={solid ? 'plain' : 'onphoto'} pathFor={pathFor} /></span>

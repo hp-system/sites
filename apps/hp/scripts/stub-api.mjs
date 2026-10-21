@@ -66,6 +66,10 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
           price_history: [{ date: '2025-06-01', price: 480000 }, { date: '2026-03-15', price: 450000 }] } } : {}),
       // Property 10012: a luxury house in Kassandra (variety) — badge + municipality block (#79).
       ...(i === 12 ? { luxury: true } : {}),
+      // Property 10015 (#88): floors, a Greek energy letter, CRM distance labels, a type the CRM has only in el/en/bg.
+      ...(i === 15 ? { energy_class: 'Δ', subcategory_i18n: { el: 'Μονοκατοικία', en: 'Detached house', bg: 'Самостоятелна къща' },
+        spaces: [{ level: 1, level_sqm: 60, rooms: 2 }, { level: 0, level_sqm: 80, living_rooms: 1 }],
+        distances: [{ poi_en: 'Drag Store', poi_el: 'Φαρμακείο', drive_km: 2 }, { poi_en: 'Airport', poi_el: 'Αεροδρόμιο', drive_km: 90 }] } : {}),
       // Property 10009: hidden price — only Exclusive members see it (#73, q16).
       ...(i === 9 ? { price_public_visible: false } : {}),
       // Property 10013: a hotel (#45) — facts for everyone, never its name or website.

@@ -76,6 +76,7 @@ const isHome = !!withPrefix && rest.length === 0;
 
 const facets: Facet[] = [];
 let notFound = !parts.length;
+let crmDown = false;
 
 // ── Η ΜΙΑ ΠΟΡΤΑ: /login · /en/login ──────────────────────────────────────
 // 🔑 ΙΔΙΑ ΛΕΞΗ ΣΕ ΟΛΕΣ ΤΙΣ ΓΛΩΣΣΕΣ, επίτηδες. Τα υπόλοιπα slug μεταφράζονται
@@ -134,7 +135,8 @@ if (maybeProp) {
     const want = rest[1].toLowerCase();
     property = allItems.find((p) => refOf(p).toLowerCase() === want) ?? null;
   } catch {
-    property = null;                       // το API έπεσε → 404, όχι άδεια σελίδα
+    property = null;                       // το API έπεσε → όχι άδεια σελίδα
+    crmDown = true;                        // #88: 503 + Retry-After, so Google retries instead of dropping the page
   }
   if (!property) notFound = true;
 }
@@ -274,6 +276,7 @@ if (pageKey && !content) notFound = true;
 //    να φαίνεται ωραία» — τότε όμως η Google ευρετηριάζει ανύπαρκτες σελίδες ως
 //    έγκυρες (soft 404). Φιλική σελίδα, αυστηρός κωδικός.
 if (notFound) Astro.response.status = 404;
+if (crmDown) { Astro.response.status = 503; Astro.response.headers.set('Retry-After', '120'); }
 ---
 {notFound ? <NotFoundPage lang={lang} />
   : info ? <InfoPageView page={info} />

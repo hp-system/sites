@@ -5,11 +5,14 @@
 // The script (once, in PropertyPage) posts every [data-cb] form to /api/callback.
 import { pui } from '../lib/property';
 import { DIAL, flag } from '../lib/callback';
-import type { Lang } from '../lib/i18n';
+import { prefix, type Lang } from '../lib/i18n';
+import { brand } from '../brand/index';
 
 interface Props { lang: Lang; id: string; k: 'd' | 'm'; phone?: string; tel: string; telHref: string; hidden?: boolean }
 const { lang, id, k, phone, tel, telHref, hidden } = Astro.props;
 const f = `cb-${k}`;
+const hurry = pui(lang, 'cbHurry').split('{t}');        // the number isolated, so Hebrew keeps it left-to-right
+const privacyHref = `${prefix('en')}${brand.analytics.privacyPath}`;
 ---
 <form class="cb" id={f} data-cb data-ev="lead:callback_submit" data-ev-defer novalidate hidden={hidden}
       data-e-short={pui(lang, 'cbErrShort')} data-e-gr={pui(lang, 'cbErrGr')} data-e-err={pui(lang, 'cbErr')}
@@ -36,11 +39,11 @@ const f = `cb-${k}`;
   </fieldset>
   <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
   <button type="submit" class="cb__go">{pui(lang, 'cbGo')}</button>
-  <p class="cb__fine">{pui(lang, 'cbFine')}</p>
+  <p class="cb__fine">{pui(lang, 'cbFine')} {pui(lang, 'privNote')} <a href={privacyHref}>{pui(lang, 'privLink')}</a></p>
   <div class="cb__done" hidden>
     <b>{pui(lang, 'cbDone')}</b>
     <span data-cb-to></span>
-    <a class="cb__hurry num" href={telHref} data-ev="call:property">{pui(lang, 'cbHurry', { t: tel })}</a>
+    <a class="cb__hurry num" href={telHref} data-ev="call:property">{hurry[0]}<bdi dir="ltr">{tel}</bdi>{hurry[1]}</a>
   </div>
 </form>
 
@@ -72,6 +75,7 @@ const f = `cb-${k}`;
   .hp { position: absolute; inset-inline-start: 0; top: 0; width: 1px; height: 1px;
     padding: 0; margin: 0; border: 0; opacity: 0; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
   .cb__fine { margin: 0; font-size: 11px; color: var(--faint); }
+  .cb__fine a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .cb__done { display: grid; gap: 4px; border-inline-start: 3px solid #2E7D4F; padding-inline-start: 12px; }
   .cb__done b { color: #2E7D4F; }
   .cb__hurry { font-size: 13px; color: var(--brand); }

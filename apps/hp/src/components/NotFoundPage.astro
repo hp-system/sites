@@ -45,7 +45,7 @@ const co = await company();
         <a class="way" href={p || '/'}>
           <span><b>{t(lang, 'nf.home')}</b><small>{t(lang, 'nf.home_s')}</small></span><i>›</i></a>
         <a class="way" href={co.phoneHref} data-ev="call:404">
-          <span><b>{t(lang, 'trust.cta')}</b><small>{co.phone}</small></span><i>›</i></a>
+          <span><b>{t(lang, 'trust.cta')}</b><small><bdi dir="ltr">{co.phone}</bdi></small></span><i>›</i></a>
       </div>
     </div>
   </main>

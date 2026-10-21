@@ -37,7 +37,7 @@ import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { brand } from '../brand/index';
 import {
   descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
-  energyOf, oldPriceOf, floorName, pui, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
+  energyOf, oldPriceOf, floorName, pui, subName, poiName, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
   isBusiness, homeFactsOf, businessFactsOf, bizSqmOf,
   CIRCLE_M, mapViewOf, videosOf, embedOf, documentsOf, priceHistoryOf, addressOf,
 } from '../lib/property';
@@ -54,9 +54,12 @@ const a = item.attributes ?? {};
 const id = refOf(item);
 
 // ── ΤΑΥΤΟΤΗΤΑ ──────────────────────────────────────────────────────────────
-const sub = pick(a.subcategory_i18n, lang) || String(a.subcategory ?? '');
-const place = placeOf(a, lang, viewer);          // δήμος σε επισκέπτη, περιοχή σε μέλος
+const sub = subName(a, lang);                     // #88: the site's own name where the CRM has none
 const muni = municipalityOf(a, lang);
+// #88: the municipality from the site's 9-language facets (the CRM gives ru the Bulgarian name)
+const muniOwn = FACETS.find((f) => f.q.municipality === muniKey(a))?.name[lang] || muni;
+const placeRaw = placeOf(a, lang, viewer);       // δήμος σε επισκέπτη, περιοχή σε μέλος
+const place = placeRaw === muni ? muniOwn : placeRaw;
 const heading = place ? `${sub} — ${place}` : sub;
 
 const cover = coverOf(a);
@@ -116,7 +119,10 @@ const muniName = muniList?.name[lang] || muni;
 
 // ── SEO ────────────────────────────────────────────────────────────────────
 const pathFor = (l: Lang) => propertyUrl(l, id);
-const title = `${heading} · #${id}`;
+// The privacy policy exists in English only for now (as in CookieConsent).
+const privacyHref = `${prefix('en')}${brand.analytics.privacyPath}`;
+// #88: as the old site — "Detached house for sale in Kassandra, Halkidiki, Greece | #7729" — per language.
+const title = muniOwn ? pui(lang, 'seoTitle', { t: sub, m: muniOwn, id }) : pui(lang, 'seoTitleNoM', { t: sub, id });
 // 🪤 ΤΟ ΙΔΙΟ STRING ΠΑΕΙ ΚΑΙ ΣΤΟ JSON-LD παρακάτω — άρα το κόψιμο πρέπει να είναι
 //    σωστό ΜΙΑ φορά, εδώ. Το σκέτο `.slice()` έκοβε στη μέση λέξης («…newly built co»).
 const metaDesc = clamp(desc || heading, 155);
@@ -381,7 +387,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             <div class="floors">
               {spaces.map((s) => (
                 <div class="fl">
-                  <b class="fl__h">{floorName(lang, s.level)}</b>
+                  <b class="fl__h">{floorName(lang, s.level + 1)}</b>
                   <dl>
                     {Number(s.level_sqm) > 0 && (<><dt>{pui(lang, 'sqmL')}</dt><dd class="num">{sqmFmt(Number(s.level_sqm), lang)}</dd></>)}
                     {Number(s.rooms) > 0 && (<><dt>{pui(lang, 'roomsL')}</dt><dd class="num">{s.rooms}</dd></>)}
@@ -468,7 +474,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                   🌍 Και η μονάδα ΔΕΝ γράφεται εδώ — ήταν «χλμ» καρφωτό, δηλαδή θα
                      έλεγε «105,8 χλμ» και στα γερμανικά. */}
               {dists.map((d) => {
-                const poi = lang === 'el' ? (d.poi_el || d.poi_en) : (d.poi_en || d.poi_el);
+                const poi = poiName(d, lang);
                 const km = Math.max(d.drive_km ?? 0, d.walk_km ?? 0);
                 return <li><span>{poi}</span><b class="num">{num(km, lang)} {pui(lang, 'kmU')}</b></li>;
               })}
@@ -543,7 +549,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             )}
             {/* «να σε καλέσουμε» next to the office phone (#82, placement B of the approved mockup) */}
             <p class="tel num">
-              <a href={co.phoneHref} data-ev="call:property">{pui(lang, 'or')} {co.phone}</a>
+              <a href={co.phoneHref} data-ev="call:property">{pui(lang, 'or')} <bdi dir="ltr">{co.phone}</bdi></a>
               {' · '}<button type="button" class="cb-open" aria-expanded="false" aria-controls="cb-d" data-ev="lead:callback_open">{pui(lang, 'callMe')}</button>
             </p>
             <CallBack lang={lang} id={id} k="d" phone={meFav?.phone} tel={co.phone} telHref={co.phoneHref} hidden />
@@ -563,6 +569,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               <button type="submit">{pui(lang, 'send')}</button>
               <p class="qf__ok" hidden>{pui(lang, 'sent')}</p>
               <p class="qf__fine">{pui(lang, 'answers')}</p>
+              <p class="qf__fine qf__priv">{pui(lang, 'privNote')} <a href={privacyHref}>{pui(lang, 'privLink')}</a></p>
             </form>
           </div>
         </aside>
@@ -606,13 +613,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         <button type="submit">{pui(lang, 'reqTour')}</button>
         <p class="tf__ok" hidden>{pui(lang, 'sent')}</p>
         <p class="qf__fine">{pui(lang, 'answers')}</p>
+        <p class="qf__fine qf__priv">{pui(lang, 'privNote')} <a href={privacyHref}>{pui(lang, 'privLink')}</a></p>
       </form>
     </dialog>
 
     {/* ═══ ΚΙΝΗΤΟ: ΤΟ «ΚΛΗΣΗ» — πάρε μας τώρα ή να σε καλέσουμε (#82) ═══ */}
     <dialog class="sheet" id="callsheet">
       <form method="dialog" class="sheet__x"><button aria-label="×">×</button></form>
-      <a class="sheet__now num" href={co.phoneHref} data-ev="call:property_bar"><span>{pui(lang, 'callNow')}</span><small>{co.phone}</small></a>
+      <a class="sheet__now num" href={co.phoneHref} data-ev="call:property_bar"><span>{pui(lang, 'callNow')}</span><small><bdi dir="ltr">{co.phone}</bdi></small></a>
       <span class="lab">{pui(lang, 'orWeCall')}</span>
       <CallBack lang={lang} id={id} k="m" phone={meFav?.phone} tel={co.phone} telHref={co.phoneHref} />
     </dialog>
@@ -836,6 +844,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     font-size: 11.5px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
     padding: 13px; cursor: pointer; }
   .qf__fine { margin: 0; font-size: 10.5px; color: var(--faint); }
+  .qf__priv a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .qf__ok, .tf__ok { margin: 0; font-size: 13px; color: var(--ink); }
   /* Η παγίδα-μέλι φεύγει από την ΟΘΟΝΗ αλλά όχι από το DOM — τα ρομπότ
      διαβάζουν HTML, δεν κοιτούν pixel. `display:none` το προσπερνούν πολλά. */
@@ -1090,7 +1099,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         if (!r.ok || !j.ok) throw new Error(j.code || 'bad');
         [...form.children].forEach((x) => { if (!x.classList.contains('cb__done')) (x as HTMLElement).hidden = true; });
         const done = form.querySelector('.cb__done') as HTMLElement;
-        (done.querySelector('[data-cb-to]') as HTMLElement).textContent = (form.dataset.to ?? '').replace('{p}', /^(\+|00)/.test(inp.value.trim()) ? c.e164 : `+${sel.value} ${inp.value.trim()}`);
+        (done.querySelector('[data-cb-to]') as HTMLElement).textContent = (form.dataset.to ?? '').replace('{p}', '\u2066' + (/^(\+|00)/.test(inp.value.trim()) ? c.e164 : `+${sel.value} ${inp.value.trim()}`) + '\u2069');
         done.hidden = false;
         const track = (window as unknown as { __track?: (n: string, x?: object) => void }).__track;
         track?.('lead:callback_submit', { ev_page: location.pathname, property_id: propertyId });

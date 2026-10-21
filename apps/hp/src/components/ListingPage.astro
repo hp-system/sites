@@ -16,11 +16,12 @@
 //    γυρίζει 3 αντί για 250. Δες τα σχόλια στο lib/listing.ts.
 // ═══════════════════════════════════════════════════════════════════════════
 import Base from '../layouts/Base.astro';
+import { subName } from '../lib/property';
 import Header from './Header.astro';
 import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
-import { allProperties, refOf, priceOf, priceVisible, pick } from '../lib/api';
+import { allProperties, refOf, priceOf, priceVisible } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
 import { prefix, propertyUrl, t, type Lang } from '../lib/i18n';
 import { num, seaLabel } from '../lib/format';
@@ -135,7 +136,7 @@ const activeCount = [
 //    καρτών, και αν ο τροφοδότης προσθέσει μετάφραση, εμφανίζεται μόνη της.
 const labelOf = (sub: string) => {
   const hit = items.find((p) => String(p.attributes?.subcategory ?? '').toLowerCase() === sub);
-  return pick(hit?.attributes?.subcategory_i18n, lang) || sub;
+  return hit ? subName(hit.attributes ?? {}, lang) : sub;   // #88: same names as the cards
 };
 const typeOpts = SUBTYPES.map((x) => ({ v: x.v, label: labelOf(x.v) }));
 const muniOpts = MUNIS.map((x) => ({

@@ -2,7 +2,10 @@
 // Starts the stub API (127.0.0.1:4339) and the BUILT site (127.0.0.1:4331), captures its stdout.
 // Usage (from apps/hp, after `pnpm build`): node scripts/test-consent-stat.mjs
 import { spawn } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, mkdtempSync, readdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { startStub } from './stub-api.mjs';
 
 const SITE = 'http://127.0.0.1:4331';
@@ -28,9 +31,10 @@ if (existsSync(repPath)) {
 } else check('report script exists', false);
 
 // 3 — the endpoint.
+const STORE = mkdtempSync(join(tmpdir(), 'consent-store-'));
 const stub = await startStub({ port: 4339, n: 20 });
 const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
-  env: { ...process.env, HOST: '127.0.0.1', PORT: '4331', EALIDA_API: stub.base, SITE_ENV: 'preview', PUBLIC_ORIGIN: 'https://hp.rewize.app' },
+  env: { ...process.env, HOST: '127.0.0.1', PORT: '4331', EALIDA_API: stub.base, SITE_ENV: 'preview', PUBLIC_ORIGIN: 'https://hp.rewize.app', CONSENT_STAT_DIR: STORE },
 });
 let log = '';
 site.stdout.on('data', (d) => (log += d)); site.stderr.on('data', (d) => (log += d));
@@ -57,6 +61,14 @@ try {
   const first = lines[0] ? JSON.parse(lines[0].slice(13)) : {};
   check('line has country, page group, env', first.country === 'GR' && first.page === 'article' && first.env === 'preview', JSON.stringify(first));
   check('no IP in any log line', !lines.some((l) => /203\.0\.113\.7|192\.0\.2\.55|198\.51\.100\./.test(l)));
+  // #52 — the persistent store: one file per month, the same lines, readable by the report.
+  const files = readdirSync(STORE);
+  check('store: one monthly file', files.length === 1 && /^consent-\d{4}-\d{2}\.jsonl$/.test(files[0]), files.join(','));
+  const stored = files[0] ? readFileSync(join(STORE, files[0]), 'utf8').split('\n').filter(Boolean) : [];
+  check('store: same count as the log', stored.length === lines.length, `${stored.length} vs ${lines.length}`);
+  check('store: no IP', !stored.some((l) => /203\.0\.113\.7|192\.0\.2\.55|198\.51\.100\./.test(l)));
+  const rep = execFileSync(process.execPath, ['scripts/consent-report.mjs', '--dir', STORE, '--env', 'all'], { encoding: 'utf8' });
+  check('report reads the store (--dir)', rep.includes(`Choices: ${stored.length}`), rep.split('\n')[0]);
 } finally {
   site.kill(); stub.close?.();
 }

@@ -4,7 +4,10 @@
 // Usage:
 //   docker logs hp-site 2>&1 | node scripts/consent-report.mjs [--from 2026-12-01] [--to 2026-12-31] [--env preview|production|all]
 //   node scripts/consent-report.mjs logs.txt --from 2026-12-01
-import { readFileSync } from 'node:fs';
+//   node scripts/consent-report.mjs --dir /data/consent-stats --from 2026-12-01   (persistent store, #52)
+//   on the box: docker exec hp-site-hp-site-1 node scripts/consent-report.mjs --dir /data/consent-stats
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 export function parse(text, { from = '', to = '9999', env = 'production' } = {}) {
   const rows = [];
@@ -13,6 +16,7 @@ export function parse(text, { from = '', to = '9999', env = 'production' } = {})
     if (i < 0) continue;
     let r;
     try { r = JSON.parse(line.slice(i + 13)); } catch { continue; }
+    if (!r || typeof r !== 'object') continue;
     if (env !== 'all' && r.env !== env) continue;
     if (r.day < from || r.day > to) continue;
     rows.push(r);
@@ -55,6 +59,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const opt = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
   const file = args.find((x, i) => !x.startsWith('--') && !(i > 0 && args[i - 1].startsWith('--')));
-  const text = file ? readFileSync(file, 'utf8') : readFileSync(0, 'utf8');
+  const dir = opt('--dir', '');
+  // The store keeps bare JSON lines; give them the same prefix as the log lines so one parser reads both.
+  const text = dir
+    ? readdirSync(dir).filter((f) => /^consent-\d{4}-\d{2}\.jsonl$/.test(f)).sort()
+      .flatMap((f) => readFileSync(join(dir, f), 'utf8').split('\n').filter(Boolean).map((l) => `consent_stat ${l}`)).join('\n')
+    : file ? readFileSync(file, 'utf8') : readFileSync(0, 'utf8');
   console.log(render(summarise(parse(text, { from: opt('--from', ''), to: opt('--to', '9999'), env: opt('--env', 'production') }))));
 }

@@ -4,7 +4,13 @@
 // from the Referer path and the environment — and write ONE JSON line to stdout, prefixed
 // `consent_stat`. No cookie, no id, no fingerprint; the IP is used only for the in-memory
 // rate limit below and is never logged. `scripts/consent-report.mjs` turns the lines into totals.
+//
+// Persistent store (#52): the same line is appended to `$CONSENT_STAT_DIR/consent-YYYY-MM.jsonl`
+// (a Docker volume in production), so the numbers survive a container restart or a new release —
+// container logs do not. A write error never fails the request: stdout still has the line.
 import type { APIRoute } from 'astro';
+import { appendFile, mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
 import { LANGS } from '../../lib/i18n';
 import { clientIpOf } from '../../lib/clientip';
 import { requestHost } from '../../lib/seo';
@@ -17,6 +23,18 @@ const MAX_BODY = 512;
 const LIMIT = 5;              // choices per IP per minute — a person clicks once
 const WINDOW_MS = 60_000;
 const hits = new Map<string, number[]>();   // IP → recent timestamps, memory only
+
+const STORE_DIR = (process.env.CONSENT_STAT_DIR ?? '').trim();
+
+async function store(line: object, day: string): Promise<void> {
+  if (!STORE_DIR) return;
+  try {
+    await mkdir(STORE_DIR, { recursive: true });
+    await appendFile(join(STORE_DIR, `consent-${day.slice(0, 7)}.jsonl`), JSON.stringify(line) + '\n');
+  } catch (e) {
+    console.error(`consent_stat store failed: ${(e as Error).message}`);
+  }
+}
 
 const ENV = (process.env.SITE_ENV ?? '').trim().toLowerCase() === 'production' ? 'production' : 'preview';
 
@@ -83,6 +101,7 @@ export const POST: APIRoute = async ({ request, url, clientAddress }) => {
     page: pageGroup(path),
   };
   console.log(`consent_stat ${JSON.stringify(line)}`);
+  await store(line, line.day);
   return new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
 };
 

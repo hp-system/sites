@@ -64,6 +64,8 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
         x_private: { address: 'Odos Stub 7, 63077', videos: ['https://youtu.be/stubVID01'], virtual_tour: 'https://tour.example.com/10008',
           documents: [{ url: 'https://media.example.com/docs/10008-topographic.pdf', title: 'Topographic plan' }],
           price_history: [{ date: '2025-06-01', price: 480000 }, { date: '2026-03-15', price: 450000 }] } } : {}),
+      // Property 10012: a luxury house in Kassandra (variety) — badge + municipality block (#79).
+      ...(i === 12 ? { luxury: true } : {}),
       // Property 10009: hidden price — only Exclusive members see it (#73, q16).
       ...(i === 9 ? { price_public_visible: false } : {}),
       // Property 10013: a hotel (#45) — facts for everyone, never its name or website.

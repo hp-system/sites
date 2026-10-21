@@ -50,6 +50,11 @@ COPY --from=build /app/node_modules ./node_modules
 #    Άρα η μεταφορά στο box ΔΕΝ κινδυνεύει να μπει κατά λάθος στη Google.
 ENV HOST=0.0.0.0
 ENV PORT=4331
+# Persistent anonymous consent counts (#52): docker-compose mounts a named volume here. The folder
+# exists in the image owned by `node`, so a new volume starts with the right owner.
+ENV CONSENT_STAT_DIR=/data/consent-stats
+RUN mkdir -p /data/consent-stats && chown -R node:node /data
+COPY --from=build /app/scripts/consent-report.mjs ./scripts/consent-report.mjs
 EXPOSE 4331
 USER node
 CMD ["node", "./dist/server/entry.mjs"]

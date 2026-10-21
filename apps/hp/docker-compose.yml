@@ -46,6 +46,9 @@ services:
       # B-10: font switch. Empty = Mont (licensed). `fallback` = the free font stack, an
       # emergency switch (src/lib/typeface.ts); the fallback files ship after Q-034.
       TYPEFACE: ""
+    # Anonymous cookie-choice counts survive restarts and releases (#52). Never holds personal data.
+    volumes:
+      - consent-stats:/data/consent-stats
     # ⚠️ ΚΑΜΙΑ ΔΗΜΟΣΙΑ ΘΥΡΑ. Η πρόσβαση γίνεται ΜΟΝΟ μέσω Cloudflare Tunnel:
     #    hp.rewize.app → http://hp-site:4331
 
@@ -62,3 +65,6 @@ networks:
   default:
     name: ealida_default
     external: true
+
+volumes:
+  consent-stats:

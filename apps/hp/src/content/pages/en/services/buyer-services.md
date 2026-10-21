@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Services
   path: /en/services
-image: ''
-image_alt: ''
+image: https://media.onsea.gr/properties/ums_4761/land-sea-view-halkidiki-2986326863_1920w.jpg
+image_alt: Turquoise bay and pine-covered coast in Halkidiki, Greece
 related:
 - label: Real estate services in Halkidiki
   href: /en/services

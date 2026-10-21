@@ -9,8 +9,8 @@ schema: CollectionPage
 parents:
 - name: Services
   path: /en/services
-image: ''
-image_alt: ''
+image: https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736545_1920w.jpg
+image_alt: Villa terrace and infinity pool overlooking the sea in Halkidiki
 related:
 - label: Real estate services in Halkidiki
   href: /en/services

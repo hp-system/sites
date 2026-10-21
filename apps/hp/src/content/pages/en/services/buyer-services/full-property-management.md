@@ -11,8 +11,8 @@ parents:
   path: /en/services
 - name: Buyer services
   path: /en/services/buyer-services
-image: ''
-image_alt: ''
+image: https://media.onsea.gr/properties/ums_4494/detached-house-garden-halkidiki-2980293835_1920w.jpg
+image_alt: Well-kept garden with palm trees around a house in Halkidiki
 related:
 - label: Real estate services in Halkidiki
   href: /en/services

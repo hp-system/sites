@@ -11,6 +11,7 @@
 //   no space in the page (no layout shift) and never hides the content from crawlers.
 // ═══════════════════════════════════════════════════════════════════════════
 import { brand } from '../brand/index';
+import type { Lang } from './i18n';
 import { SITE_MODE, PROD_HOSTS, requestHost } from './seo';
 
 export const CONSENT_COOKIE = brand.analytics.consentCookie;
@@ -40,8 +41,28 @@ export function consentHeadScript(gtmId: string | null): string {
   return defaults + gtm;
 }
 
-/** Banner texts. English first (build rule 20/10); other languages are added at the end. */
-const TEXT = {
+/**
+ * Banner texts in all 9 languages (#91 — until then the banner was English everywhere).
+ * Greek speaks in the singular. The privacy policy exists only in English for now, so the link
+ * says so; translated policies need George's approval first.
+ */
+export type ConsentText = {
+  title: string;
+  body: string;
+  privacy: string;
+  accept: string;
+  reject: string;
+  settings: string;
+  save: string;
+  analytics: string;
+  analyticsHint: string;
+  marketing: string;
+  marketingHint: string;
+  necessary: string;
+  necessaryHint: string;
+  footerLink: string;
+};
+const TEXT: Record<Lang, ConsentText> = {
   en: {
     title: 'Cookies',
     body: 'We use cookies to see how the site is used and to show you relevant ads. Analytics and marketing cookies are set only if you agree.',
@@ -58,8 +79,135 @@ const TEXT = {
     necessaryHint: 'Needed for the site to work. Always on.',
     footerLink: 'Cookie settings',
   },
-} as const;
-export type ConsentText = (typeof TEXT)['en'];
+  el: {
+    title: 'Cookies',
+    body: 'Χρησιμοποιούμε cookies για να βλέπουμε πώς χρησιμοποιείται το site και για να σου δείχνουμε σχετικές διαφημίσεις. Τα cookies στατιστικών και διαφήμισης μπαίνουν μόνο αν συμφωνήσεις.',
+    privacy: 'Πολιτική απορρήτου (στα αγγλικά)',
+    accept: 'Αποδοχή όλων',
+    reject: 'Απόρριψη όλων',
+    settings: 'Ρυθμίσεις',
+    save: 'Αποθήκευση επιλογών',
+    analytics: 'Στατιστικά',
+    analyticsHint: 'Ανώνυμα στατιστικά επισκέψεων που μας βοηθούν να βελτιώνουμε το site.',
+    marketing: 'Διαφήμιση',
+    marketingHint: 'Διαφημίσεις σχετικές με την αναζήτησή σου, σε άλλα sites.',
+    necessary: 'Απαραίτητα',
+    necessaryHint: 'Χρειάζονται για να λειτουργεί το site. Πάντα ενεργά.',
+    footerLink: 'Ρυθμίσεις cookies',
+  },
+  bg: {
+    title: 'Бисквитки',
+    body: 'Използваме бисквитки, за да виждаме как се използва сайтът и да ви показваме подходящи реклами. Бисквитките за анализ и маркетинг се задават само ако се съгласите.',
+    privacy: 'Политика за поверителност (на английски)',
+    accept: 'Приемам всички',
+    reject: 'Отказвам всички',
+    settings: 'Настройки',
+    save: 'Запази избора',
+    analytics: 'Анализ',
+    analyticsHint: 'Анонимна статистика за посещенията, която ни помага да подобряваме сайта.',
+    marketing: 'Маркетинг',
+    marketingHint: 'Реклами, свързани с търсенето ви, на други сайтове.',
+    necessary: 'Необходими',
+    necessaryHint: 'Нужни са за работата на сайта. Винаги включени.',
+    footerLink: 'Настройки за бисквитки',
+  },
+  sr: {
+    title: 'Kolačići',
+    body: 'Koristimo kolačiće da bismo videli kako se sajt koristi i da bismo vam prikazivali relevantne oglase. Kolačići za analitiku i marketing postavljaju se samo ako se složite.',
+    privacy: 'Politika privatnosti (na engleskom)',
+    accept: 'Prihvati sve',
+    reject: 'Odbij sve',
+    settings: 'Podešavanja',
+    save: 'Sačuvaj izbor',
+    analytics: 'Analitika',
+    analyticsHint: 'Anonimna statistika poseta koja nam pomaže da poboljšamo sajt.',
+    marketing: 'Marketing',
+    marketingHint: 'Oglasi u skladu sa vašom pretragom, na drugim sajtovima.',
+    necessary: 'Neophodni',
+    necessaryHint: 'Potrebni za rad sajta. Uvek uključeni.',
+    footerLink: 'Podešavanja kolačića',
+  },
+  de: {
+    title: 'Cookies',
+    body: 'Wir verwenden Cookies, um zu sehen, wie die Website genutzt wird, und um Ihnen passende Werbung zu zeigen. Analyse- und Marketing-Cookies setzen wir nur mit Ihrer Zustimmung.',
+    privacy: 'Datenschutzerklärung (auf Englisch)',
+    accept: 'Alle akzeptieren',
+    reject: 'Alle ablehnen',
+    settings: 'Einstellungen',
+    save: 'Auswahl speichern',
+    analytics: 'Analyse',
+    analyticsHint: 'Anonyme Besuchsstatistiken, mit denen wir die Website verbessern.',
+    marketing: 'Marketing',
+    marketingHint: 'Werbung passend zu Ihrer Suche, auf anderen Websites.',
+    necessary: 'Notwendig',
+    necessaryHint: 'Für den Betrieb der Website erforderlich. Immer aktiv.',
+    footerLink: 'Cookie-Einstellungen',
+  },
+  ro: {
+    title: 'Cookie-uri',
+    body: 'Folosim cookie-uri pentru a vedea cum este folosit site-ul și pentru a vă arăta reclame relevante. Cookie-urile de analiză și marketing sunt setate doar dacă sunteți de acord.',
+    privacy: 'Politica de confidențialitate (în engleză)',
+    accept: 'Accept toate',
+    reject: 'Refuz toate',
+    settings: 'Setări',
+    save: 'Salvează opțiunile',
+    analytics: 'Analiză',
+    analyticsHint: 'Statistici anonime despre vizite, care ne ajută să îmbunătățim site-ul.',
+    marketing: 'Marketing',
+    marketingHint: 'Reclame potrivite căutării dvs., pe alte site-uri.',
+    necessary: 'Necesare',
+    necessaryHint: 'Necesare pentru funcționarea site-ului. Mereu active.',
+    footerLink: 'Setări cookie-uri',
+  },
+  tr: {
+    title: 'Çerezler',
+    body: 'Sitenin nasıl kullanıldığını görmek ve size ilgili reklamlar göstermek için çerez kullanıyoruz. Analiz ve pazarlama çerezleri yalnızca onay verirseniz kullanılır.',
+    privacy: 'Gizlilik politikası (İngilizce)',
+    accept: 'Tümünü kabul et',
+    reject: 'Tümünü reddet',
+    settings: 'Ayarlar',
+    save: 'Seçimleri kaydet',
+    analytics: 'Analiz',
+    analyticsHint: 'Siteyi geliştirmemize yardımcı olan anonim ziyaret istatistikleri.',
+    marketing: 'Pazarlama',
+    marketingHint: 'Aramanıza uygun reklamlar, başka sitelerde.',
+    necessary: 'Gerekli',
+    necessaryHint: 'Sitenin çalışması için gerekli. Her zaman açık.',
+    footerLink: 'Çerez ayarları',
+  },
+  he: {
+    title: 'עוגיות',
+    body: 'אנו משתמשים בעוגיות כדי לראות איך משתמשים באתר וכדי להציג לכם פרסומות רלוונטיות. עוגיות סטטיסטיקה ושיווק נשמרות רק אם תסכימו.',
+    privacy: 'מדיניות פרטיות (באנגלית)',
+    accept: 'לקבל הכול',
+    reject: 'לדחות הכול',
+    settings: 'הגדרות',
+    save: 'לשמור את הבחירה',
+    analytics: 'סטטיסטיקה',
+    analyticsHint: 'סטטיסטיקת ביקורים אנונימית שעוזרת לנו לשפר את האתר.',
+    marketing: 'שיווק',
+    marketingHint: 'פרסומות שמתאימות לחיפוש שלכם, באתרים אחרים.',
+    necessary: 'הכרחיות',
+    necessaryHint: 'נדרשות כדי שהאתר יעבוד. תמיד פעילות.',
+    footerLink: 'הגדרות עוגיות',
+  },
+  ru: {
+    title: 'Файлы cookie',
+    body: 'Мы используем файлы cookie, чтобы видеть, как используется сайт, и показывать вам подходящую рекламу. Аналитические и маркетинговые cookie устанавливаются только с вашего согласия.',
+    privacy: 'Политика конфиденциальности (на английском)',
+    accept: 'Принять все',
+    reject: 'Отклонить все',
+    settings: 'Настройки',
+    save: 'Сохранить выбор',
+    analytics: 'Аналитика',
+    analyticsHint: 'Анонимная статистика посещений, которая помогает нам улучшать сайт.',
+    marketing: 'Маркетинг',
+    marketingHint: 'Реклама по вашему поиску на других сайтах.',
+    necessary: 'Необходимые',
+    necessaryHint: 'Нужны для работы сайта. Всегда включены.',
+    footerLink: 'Настройки cookie',
+  },
+};
 export function consentText(lang: string): ConsentText {
-  return (TEXT as Record<string, ConsentText>)[lang] ?? TEXT.en;
+  return TEXT[lang as Lang] ?? TEXT.en;
 }

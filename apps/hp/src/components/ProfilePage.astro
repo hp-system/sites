@@ -95,7 +95,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
       <div class="note">
         <p class="note__h">{t(lang, 'pf.chg_h')}</p>
         <p class="note__s">{t(lang, 'pf.chg_s')}</p>
-        <a class="btn" href={co.phoneHref}>{co.phone}</a>
+        <a class="btn" href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a>
       </div>
 
       <form method="post" action="/api/auth/logout" class="out">

@@ -191,8 +191,10 @@ const ENERGY_EXEMPT = '14';
 export function energyOf(a: Attrs, lang?: Lang): string | null {
   const raw = String((a as Record<string, unknown>).energy_class ?? '').trim();
   if (!raw || raw === '0') return null;
+  // Greek certificates use Α–Η; a foreign buyer reads A–G (the old English site: "D Class") (#88).
+  const out = (x: string) => (lang && lang !== 'el' ? x.replace(/[ΑΒΓΔΕΖΗ]/g, (c) => LATIN_CLASS[c]) : x);
 
-  if (ENERGY[raw]) return ENERGY[raw];
+  if (ENERGY[raw]) return out(ENERGY[raw]);
   if (raw === ENERGY_PENDING) return lang ? pui(lang, 'energyPending') : null;
   if (raw === ENERGY_EXEMPT) return lang ? pui(lang, 'energyExempt') : null;
 
@@ -204,9 +206,10 @@ export function energyOf(a: Attrs, lang?: Lang): string | null {
   }
   // Έτοιμη ετικέτα (A+, B, H…) — πέρασέ τη όπως είναι.
   const up = raw.toUpperCase();
-  if (/^[A-HΑ-Η]\+{0,3}$/.test(up)) return up;
+  if (/^[A-HΑ-Η]\+{0,3}$/.test(up)) return out(up);
   return null;
 }
+const LATIN_CLASS: Record<string, string> = { Α: 'A', Β: 'B', Γ: 'C', Δ: 'D', Ε: 'E', Ζ: 'F', Η: 'G' };
 
 /**
  * ΑΠΟΣΤΑΣΗ ΑΠΟ ΤΗ ΘΑΛΑΣΣΑ, σε λέξεις.
@@ -246,6 +249,10 @@ type PUI = {
   saved: string;
   /** Luxury badge and the municipality block (#79, George 21/10/2026 after comparing #7729). */
   luxury: string; aboutMuni: string; allInMuni: string; costs: string;
+  /** <title> as on the old site (#88): type, "for sale", municipality, Halkidiki, Greece, id. */
+  seoTitle: string; seoTitleNoM: string;
+  /** One line under every form (#88): what we do with the details, and the policy link. */
+  privNote: string; privLink: string;
   /** Call-me-back (#82, mockup approved by George 21/10/2026). Greek in the singular. */
   callMe: string; cbTitle: string; cbCountry: string; cbPhone: string; cbWhen: string;
   cbAsap: string; cbMorning: string; cbAfternoon: string; cbGo: string; cbFine: string;
@@ -277,6 +284,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Δωμάτια', livingL: 'Καθιστικά', wcL: 'WC',
     favorite: 'Αγαπημένο', saved: 'Αποθηκεύτηκε', luxury: 'Πολυτελές', aboutMuni: 'Για τον δήμο {m}', allInMuni: 'Όλα τα ακίνητα στον δήμο {m}', costs: 'Φόροι και έξοδα αγοράς: υπολογιστής', shareL: 'Κοινοποίηση', copied: 'Αντιγράφηκε',
     callMe: 'να σε καλέσουμε', cbTitle: 'Να σε καλέσουμε για το #{id}', cbCountry: 'Κωδικός χώρας', cbPhone: 'Κινητό', cbWhen: 'Πότε σε βολεύει;', cbAsap: 'Όσο πιο σύντομα', cbMorning: 'Πρωί', cbAfternoon: 'Απόγευμα', cbGo: 'Καλέστε με', cbFine: 'Καλούμε σε ώρες γραφείου. Ο αριθμός σου μένει μόνο σε εμάς.', cbErrShort: 'Ο αριθμός φαίνεται μικρός. Έλεγξέ τον και ξαναδοκίμασε.', cbErrGr: 'Ένας ελληνικός αριθμός έχει 10 ψηφία (το κινητό ξεκινά από 69).', cbErr: 'Δεν στάλθηκε. Δοκίμασε ξανά ή πάρε μας τηλέφωνο.', cbDone: 'Θα σε καλέσουμε σύντομα', cbDoneTo: 'Στο {p}, για το ακίνητο #{id}.', cbHurry: 'Αν βιάζεσαι: {t}', callNow: 'Πάρε μας τώρα', orWeCall: 'ή να σε καλέσουμε εμείς',
+    seoTitle: '{t} προς πώληση — {m}, Χαλκιδική | #{id}', seoTitleNoM: '{t} προς πώληση στη Χαλκιδική | #{id}', privNote: 'Τα στοιχεία σου τα χρησιμοποιούμε μόνο για να σου απαντήσουμε.', privLink: 'Πολιτική απορρήτου',
     lockChip: 'ακριβής περιοχή με εγγραφή', kmU: 'χλμ', mU: 'μ.', energyPending: 'Σε έκδοση', energyExempt: 'Εξαιρείται',
     mapCircle: 'Το ακίνητο βρίσκεται μέσα στον κύκλο.', mapExact: 'Ακριβής θέση του ακινήτου.', mapOpen: 'Άνοιγμα στους χάρτες',
     exclH: 'Exclusive', videoL: 'Βίντεο', docsL: 'Έγγραφα και κατόψεις', priceHistL: 'Ιστορικό τιμής', addressL: 'Διεύθυνση' },
@@ -296,6 +304,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Rooms', livingL: 'Living rooms', wcL: 'WC',
     favorite: 'Favorite', saved: 'Saved', luxury: 'Luxury', aboutMuni: 'About {m}', allInMuni: 'All properties in {m}', costs: 'Taxes and buying costs: calculator', shareL: 'Share', copied: 'Copied', lockChip: 'exact area with sign-up',
     callMe: 'we call you', cbTitle: 'We call you about #{id}', cbCountry: 'Country code', cbPhone: 'Mobile', cbWhen: 'When suits you?', cbAsap: 'As soon as possible', cbMorning: 'Morning', cbAfternoon: 'Afternoon', cbGo: 'Call me', cbFine: 'We call during office hours. Your number stays with us.', cbErrShort: 'The number looks too short. Check it and try again.', cbErrGr: 'A Greek number has 10 digits (mobiles start with 69).', cbErr: 'It did not go through. Try again, or call us.', cbDone: 'We will call you soon', cbDoneTo: 'On {p}, about property #{id}.', cbHurry: 'In a hurry: {t}', callNow: 'Call us now', orWeCall: 'or we call you',
+    seoTitle: '{t} for sale in {m}, Halkidiki, Greece | #{id}', seoTitleNoM: '{t} for sale in Halkidiki, Greece | #{id}', privNote: 'We use your details only to answer you.', privLink: 'Privacy policy',
     kmU: 'km', mU: 'm', energyPending: 'Being issued', energyExempt: 'Exempt',
     mapCircle: 'The property is inside the circle.', mapExact: 'Exact location of the property.', mapOpen: 'Open in maps',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Documents and floor plans', priceHistL: 'Price history', addressL: 'Address' },
@@ -315,6 +324,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Стаи', livingL: 'Дневни', wcL: 'WC',
     favorite: 'Любим', saved: 'Запазено', luxury: 'Лукс', aboutMuni: 'За община {m}', allInMuni: 'Всички имоти в {m}', costs: 'Данъци и разходи при покупка: калкулатор', shareL: 'Сподели', copied: 'Копирано', lockChip: 'точен район с регистрация',
     callMe: 'ние ще ви се обадим', cbTitle: 'Ще ви се обадим за #{id}', cbCountry: 'Код на държавата', cbPhone: 'Мобилен', cbWhen: 'Кога ви е удобно?', cbAsap: 'Възможно най-скоро', cbMorning: 'Сутрин', cbAfternoon: 'Следобед', cbGo: 'Обадете ми се', cbFine: 'Обаждаме се в работно време. Номерът ви остава само при нас.', cbErrShort: 'Номерът изглежда твърде кратък. Проверете го и опитайте отново.', cbErrGr: 'Гръцкият номер има 10 цифри (мобилните започват с 69).', cbErr: 'Не беше изпратено. Опитайте отново или ни се обадете.', cbDone: 'Ще ви се обадим скоро', cbDoneTo: 'На {p}, за имот #{id}.', cbHurry: 'Ако бързате: {t}', callNow: 'Обадете ни се сега', orWeCall: 'или ние ще ви се обадим',
+    seoTitle: '{t} за продажба в {m}, Халкидики, Гърция | #{id}', seoTitleNoM: '{t} за продажба в Халкидики, Гърция | #{id}', privNote: 'Използваме данните ви само за да ви отговорим.', privLink: 'Политика за поверителност',
     kmU: 'км', mU: 'м', energyPending: 'В процес на издаване', energyExempt: 'Освободен',
     mapCircle: 'Имотът се намира в кръга.', mapExact: 'Точно местоположение на имота.', mapOpen: 'Отвори в картите',
     exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документи и планове', priceHistL: 'История на цената', addressL: 'Адрес' },
@@ -334,6 +344,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Sobe', livingL: 'Dnevne sobe', wcL: 'WC',
     favorite: 'Omiljeno', saved: 'Sačuvano', luxury: 'Luksuz', aboutMuni: 'O opštini {m}', allInMuni: 'Sve nekretnine u {m}', costs: 'Porezi i troškovi kupovine: kalkulator', shareL: 'Podeli', copied: 'Kopirano', lockChip: 'tačno područje uz registraciju',
     callMe: 'mi vas zovemo', cbTitle: 'Zovemo vas u vezi sa #{id}', cbCountry: 'Pozivni broj države', cbPhone: 'Mobilni', cbWhen: 'Kada vam odgovara?', cbAsap: 'Što pre', cbMorning: 'Ujutru', cbAfternoon: 'Popodne', cbGo: 'Pozovite me', cbFine: 'Zovemo tokom radnog vremena. Vaš broj ostaje samo kod nas.', cbErrShort: 'Broj izgleda prekratko. Proverite ga i pokušajte ponovo.', cbErrGr: 'Grčki broj ima 10 cifara (mobilni počinju sa 69).', cbErr: 'Nije poslato. Pokušajte ponovo ili nas pozovite.', cbDone: 'Uskoro ćemo vas pozvati', cbDoneTo: 'Na {p}, u vezi sa nekretninom #{id}.', cbHurry: 'Ako žurite: {t}', callNow: 'Pozovite nas sada', orWeCall: 'ili mi zovemo vas',
+    seoTitle: '{t} na prodaju — {m}, Halkidiki, Grčka | #{id}', seoTitleNoM: '{t} na prodaju — Halkidiki, Grčka | #{id}', privNote: 'Vaše podatke koristimo samo da bismo vam odgovorili.', privLink: 'Politika privatnosti',
     kmU: 'km', mU: 'm', energyPending: 'U izradi', energyExempt: 'Izuzeto',
     mapCircle: 'Nekretnina se nalazi unutar kruga.', mapExact: 'Tačna lokacija nekretnine.', mapOpen: 'Otvori u mapama',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumenti i planovi', priceHistL: 'Istorija cene', addressL: 'Adresa' },
@@ -353,6 +364,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Zimmer', livingL: 'Wohnzimmer', wcL: 'WC',
     favorite: 'Favorit', saved: 'Gespeichert', luxury: 'Luxus', aboutMuni: 'Über {m}', allInMuni: 'Alle Immobilien in {m}', costs: 'Steuern und Kaufnebenkosten: Rechner', shareL: 'Teilen', copied: 'Kopiert', lockChip: 'genaue Gegend mit Anmeldung',
     callMe: 'wir rufen Sie an', cbTitle: 'Wir rufen Sie zu #{id} an', cbCountry: 'Ländervorwahl', cbPhone: 'Mobilnummer', cbWhen: 'Wann passt es Ihnen?', cbAsap: 'So bald wie möglich', cbMorning: 'Vormittags', cbAfternoon: 'Nachmittags', cbGo: 'Rufen Sie mich an', cbFine: 'Wir rufen zu Bürozeiten an. Ihre Nummer bleibt bei uns.', cbErrShort: 'Die Nummer scheint zu kurz. Bitte prüfen und erneut versuchen.', cbErrGr: 'Eine griechische Nummer hat 10 Ziffern (Mobilnummern beginnen mit 69).', cbErr: 'Nicht gesendet. Bitte erneut versuchen oder uns anrufen.', cbDone: 'Wir rufen Sie bald an', cbDoneTo: 'Unter {p}, zur Immobilie #{id}.', cbHurry: 'Eilig? {t}', callNow: 'Jetzt anrufen', orWeCall: 'oder wir rufen Sie an',
+    seoTitle: '{t} zu verkaufen in {m}, Chalkidiki, Griechenland | #{id}', seoTitleNoM: '{t} zu verkaufen auf Chalkidiki, Griechenland | #{id}', privNote: 'Wir verwenden Ihre Angaben nur, um Ihnen zu antworten.', privLink: 'Datenschutzerklärung',
     kmU: 'km', mU: 'm', energyPending: 'In Ausstellung', energyExempt: 'Befreit',
     mapCircle: 'Die Immobilie liegt innerhalb des Kreises.', mapExact: 'Genaue Lage der Immobilie.', mapOpen: 'In Karten öffnen',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumente und Grundrisse', priceHistL: 'Preisverlauf', addressL: 'Adresse' },
@@ -372,6 +384,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Camere', livingL: 'Camere de zi', wcL: 'WC',
     favorite: 'Favorit', saved: 'Salvat', luxury: 'Lux', aboutMuni: 'Despre {m}', allInMuni: 'Toate proprietățile din {m}', costs: 'Taxe și costuri de cumpărare: calculator', shareL: 'Distribuie', copied: 'Copiat', lockChip: 'zona exactă cu înregistrare',
     callMe: 'vă sunăm noi', cbTitle: 'Vă sunăm pentru #{id}', cbCountry: 'Prefixul țării', cbPhone: 'Mobil', cbWhen: 'Când vă convine?', cbAsap: 'Cât mai curând', cbMorning: 'Dimineața', cbAfternoon: 'După-amiaza', cbGo: 'Sunați-mă', cbFine: 'Sunăm în timpul programului. Numărul dvs. rămâne doar la noi.', cbErrShort: 'Numărul pare prea scurt. Verificați-l și încercați din nou.', cbErrGr: 'Un număr grecesc are 10 cifre (mobilele încep cu 69).', cbErr: 'Nu s-a trimis. Încercați din nou sau sunați-ne.', cbDone: 'Vă sunăm în curând', cbDoneTo: 'La {p}, pentru proprietatea #{id}.', cbHurry: 'Dacă vă grăbiți: {t}', callNow: 'Sunați-ne acum', orWeCall: 'sau vă sunăm noi',
+    seoTitle: '{t} de vânzare în {m}, Halkidiki, Grecia | #{id}', seoTitleNoM: '{t} de vânzare în Halkidiki, Grecia | #{id}', privNote: 'Folosim datele dvs. doar pentru a vă răspunde.', privLink: 'Politica de confidențialitate',
     kmU: 'km', mU: 'm', energyPending: 'În curs de emitere', energyExempt: 'Exceptat',
     mapCircle: 'Proprietatea se află în interiorul cercului.', mapExact: 'Locația exactă a proprietății.', mapOpen: 'Deschide în hărți',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Documente și planuri', priceHistL: 'Istoricul prețului', addressL: 'Adresă' },
@@ -391,6 +404,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Odalar', livingL: 'Oturma odası', wcL: 'WC',
     favorite: 'Favori', saved: 'Kaydedildi', luxury: 'Lüks', aboutMuni: '{m} hakkında', allInMuni: '{m} bölgesindeki tüm mülkler', costs: 'Vergiler ve alım masrafları: hesaplayıcı', shareL: 'Paylaş', copied: 'Kopyalandı', lockChip: 'kayıtla tam bölge',
     callMe: 'biz sizi arayalım', cbTitle: '#{id} için sizi arayalım', cbCountry: 'Ülke kodu', cbPhone: 'Cep telefonu', cbWhen: 'Ne zaman uygun?', cbAsap: 'En kısa sürede', cbMorning: 'Sabah', cbAfternoon: 'Öğleden sonra', cbGo: 'Beni arayın', cbFine: 'Mesai saatlerinde ararız. Numaranız yalnızca bizde kalır.', cbErrShort: 'Numara çok kısa görünüyor. Kontrol edip tekrar deneyin.', cbErrGr: 'Yunan numarası 10 hanelidir (cep numaraları 69 ile başlar).', cbErr: 'Gönderilemedi. Tekrar deneyin veya bizi arayın.', cbDone: 'Sizi yakında arayacağız', cbDoneTo: '{p} numarasından, #{id} numaralı mülk için.', cbHurry: 'Acele ediyorsanız: {t}', callNow: 'Bizi şimdi arayın', orWeCall: 'ya da biz sizi arayalım',
+    seoTitle: 'Satılık {t} — {m}, Halkidiki, Yunanistan | #{id}', seoTitleNoM: 'Satılık {t} — Halkidiki, Yunanistan | #{id}', privNote: 'Bilgilerinizi yalnızca size yanıt vermek için kullanırız.', privLink: 'Gizlilik politikası',
     kmU: 'km', mU: 'm', energyPending: 'Düzenleniyor', energyExempt: 'Muaf',
     mapCircle: 'Mülk dairenin içinde yer alır.', mapExact: 'Mülkün tam konumu.', mapOpen: 'Haritada aç',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Belgeler ve kat planları', priceHistL: 'Fiyat geçmişi', addressL: 'Adres' },
@@ -410,6 +424,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'חדרים', livingL: 'סלונים', wcL: 'שירותים',
     favorite: 'מועדף', saved: 'נשמר', luxury: 'יוקרה', aboutMuni: 'על {m}', allInMuni: 'כל הנכסים ב{m}', costs: 'מסים ועלויות רכישה: מחשבון', shareL: 'שיתוף', copied: 'הועתק', lockChip: 'אזור מדויק בהרשמה',
     callMe: 'אנחנו נתקשר אליכם', cbTitle: 'נתקשר אליכם לגבי #{id}', cbCountry: 'קידומת מדינה', cbPhone: 'נייד', cbWhen: 'מתי נוח לכם?', cbAsap: 'בהקדם האפשרי', cbMorning: 'בוקר', cbAfternoon: 'אחר הצהריים', cbGo: 'התקשרו אליי', cbFine: 'אנחנו מתקשרים בשעות המשרד. המספר שלכם נשאר רק אצלנו.', cbErrShort: 'המספר נראה קצר מדי. בדקו אותו ונסו שוב.', cbErrGr: 'למספר יווני יש 10 ספרות (ניידים מתחילים ב-69).', cbErr: 'לא נשלח. נסו שוב או התקשרו אלינו.', cbDone: 'נתקשר אליכם בקרוב', cbDoneTo: 'למספר {p}, לגבי נכס #{id}.', cbHurry: 'ממהרים? {t}', callNow: 'התקשרו אלינו עכשיו', orWeCall: 'או שאנחנו נתקשר אליכם',
+    seoTitle: '{t} למכירה ב{m}, חלקידיקי, יוון | #{id}', seoTitleNoM: '{t} למכירה בחלקידיקי, יוון | #{id}', privNote: 'אנו משתמשים בפרטים שלכם רק כדי לענות לכם.', privLink: 'מדיניות פרטיות',
     kmU: 'ק״מ', mU: 'מ׳', energyPending: 'בהנפקה', energyExempt: 'פטור',
     mapCircle: 'הנכס נמצא בתוך המעגל.', mapExact: 'המיקום המדויק של הנכס.', mapOpen: 'פתיחה במפות',
     exclH: 'Exclusive', videoL: 'וידאו', docsL: 'מסמכים ותוכניות', priceHistL: 'היסטוריית מחיר', addressL: 'כתובת' },
@@ -429,6 +444,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     roomsL: 'Комнаты', livingL: 'Гостиные', wcL: 'WC',
     favorite: 'Избранное', saved: 'Сохранено', luxury: 'Люкс', aboutMuni: 'О {m}', allInMuni: 'Все объекты в {m}', costs: 'Налоги и расходы при покупке: калькулятор', shareL: 'Поделиться', copied: 'Скопировано', lockChip: 'точный район после регистрации',
     callMe: 'мы вам перезвоним', cbTitle: 'Перезвоним вам по #{id}', cbCountry: 'Код страны', cbPhone: 'Мобильный', cbWhen: 'Когда вам удобно?', cbAsap: 'Как можно скорее', cbMorning: 'Утром', cbAfternoon: 'Днём', cbGo: 'Перезвоните мне', cbFine: 'Звоним в рабочее время. Ваш номер остаётся только у нас.', cbErrShort: 'Номер слишком короткий. Проверьте и попробуйте снова.', cbErrGr: 'Греческий номер состоит из 10 цифр (мобильные начинаются с 69).', cbErr: 'Не отправлено. Попробуйте снова или позвоните нам.', cbDone: 'Скоро вам перезвоним', cbDoneTo: 'На {p}, по объекту #{id}.', cbHurry: 'Если срочно: {t}', callNow: 'Позвоните нам сейчас', orWeCall: 'или мы вам перезвоним',
+    seoTitle: '{t} на продажу — {m}, Халкидики, Греция | #{id}', seoTitleNoM: '{t} на продажу — Халкидики, Греция | #{id}', privNote: 'Мы используем ваши данные только для ответа вам.', privLink: 'Политика конфиденциальности',
     kmU: 'км', mU: 'м', energyPending: 'Оформляется', energyExempt: 'Освобождён',
     mapCircle: 'Объект находится внутри круга.', mapExact: 'Точное расположение объекта.', mapOpen: 'Открыть на карте',
     exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документы и планировки', priceHistL: 'История цены', addressL: 'Адрес' },
@@ -440,7 +456,65 @@ export function pui(lang: Lang, k: keyof PUI, vars?: Record<string, string | num
   return s;
 }
 
-/** Όνομα ορόφου: 0 = υπόγειο, 1 = ισόγειο, 2+ = «Όροφος n-1». */
+/**
+ * The property type in the page language (#88). The CRM's own translation wins; where it has
+ * none (ru, he, ro, tr… today), the site's names below, never the Bulgarian or English stand-in
+ * that `pick` would give (ru showed «Самостоятелна къща», he showed English).
+ */
+const SUB_NAMES: Record<string, Record<Lang, string>> = {
+  'detached house': { el: 'Μονοκατοικία', en: 'Detached house', bg: 'Самостоятелна къща', sr: 'Samostalna kuća', de: 'Einfamilienhaus', ro: 'Casă individuală', tr: 'Müstakil ev', he: 'בית פרטי', ru: 'Отдельный дом' },
+  maisonette: { el: 'Μεζονέτα', en: 'Maisonette', bg: 'Мезонет', sr: 'Dupleks', de: 'Maisonette', ro: 'Duplex', tr: 'Dubleks', he: 'דופלקס', ru: 'Мезонет' },
+  apartment: { el: 'Διαμέρισμα', en: 'Apartment', bg: 'Апартамент', sr: 'Stan', de: 'Wohnung', ro: 'Apartament', tr: 'Daire', he: 'דירה', ru: 'Квартира' },
+  villa: { el: 'Βίλα', en: 'Villa', bg: 'Вила', sr: 'Vila', de: 'Villa', ro: 'Vilă', tr: 'Villa', he: 'וילה', ru: 'Вилла' },
+  field: { el: 'Αγροτεμάχιο', en: 'Field', bg: 'Нива', sr: 'Njiva', de: 'Ackerland', ro: 'Teren agricol', tr: 'Tarla', he: 'שטח חקלאי', ru: 'Сельхозучасток' },
+  plot: { el: 'Οικόπεδο', en: 'Plot', bg: 'Парцел', sr: 'Plac', de: 'Baugrundstück', ro: 'Teren intravilan', tr: 'Arsa', he: 'מגרש', ru: 'Участок под застройку' },
+  studio: { el: 'Στούντιο', en: 'Studio', bg: 'Студио', sr: 'Garsonjera', de: 'Studio', ro: 'Garsonieră', tr: 'Stüdyo daire', he: 'סטודיו', ru: 'Студия' },
+  penthouse: { el: 'Ρετιρέ', en: 'Penthouse', bg: 'Пентхаус', sr: 'Penthaus', de: 'Penthouse', ro: 'Penthouse', tr: 'Çatı katı daire', he: 'פנטהאוז', ru: 'Пентхаус' },
+  hotel: { el: 'Ξενοδοχείο', en: 'Hotel', bg: 'Хотел', sr: 'Hotel', de: 'Hotel', ro: 'Hotel', tr: 'Otel', he: 'מלון', ru: 'Отель' },
+  office: { el: 'Γραφείο', en: 'Office', bg: 'Офис', sr: 'Kancelarija', de: 'Büro', ro: 'Birou', tr: 'Ofis', he: 'משרד', ru: 'Офис' },
+  store: { el: 'Κατάστημα', en: 'Shop', bg: 'Магазин', sr: 'Lokal', de: 'Ladenlokal', ro: 'Spațiu comercial', tr: 'Dükkan', he: 'חנות', ru: 'Магазин' },
+};
+export function subName(a: Attrs, lang: Lang): string {
+  const v = (a as Record<string, unknown>).subcategory_i18n as Record<string, string> | undefined;
+  const own = v?.[lang];
+  if (typeof own === 'string' && own) return own;
+  const key = String((a as Record<string, unknown>).subcategory ?? '').toLowerCase().trim();
+  if (SUB_NAMES[key]?.[lang]) return SUB_NAMES[key][lang];
+  // unknown type: the same script-aware order as `pick` in lib/api (Cyrillic → bg, else en; Greek only in el)
+  const chain = lang === 'el' ? [v?.el, v?.en] : lang === 'bg' || lang === 'ru' ? [v?.bg, v?.en, v?.el] : [v?.en, v?.bg, v?.el];
+  return chain.find((x) => typeof x === 'string' && x) || key;
+}
+
+/**
+ * Distance labels (#88): the CRM sends eight known places in English (one as «Drag Store»); the
+ * site names them in every language. An unknown label keeps the CRM's own text.
+ */
+const POI: Record<string, Record<Lang, string>> = {
+  bank: { el: 'Τράπεζα', en: 'Bank', bg: 'Банка', sr: 'Banka', de: 'Bank', ro: 'Bancă', tr: 'Banka', he: 'בנק', ru: 'Банк' },
+  hospital: { el: 'Νοσοκομείο', en: 'Hospital', bg: 'Болница', sr: 'Bolnica', de: 'Krankenhaus', ro: 'Spital', tr: 'Hastane', he: 'בית חולים', ru: 'Больница' },
+  parking: { el: 'Πάρκινγκ', en: 'Parking', bg: 'Паркинг', sr: 'Parking', de: 'Parkplatz', ro: 'Parcare', tr: 'Otopark', he: 'חניה', ru: 'Парковка' },
+  pharmacy: { el: 'Φαρμακείο', en: 'Pharmacy', bg: 'Аптека', sr: 'Apoteka', de: 'Apotheke', ro: 'Farmacie', tr: 'Eczane', he: 'בית מרקחת', ru: 'Аптека' },
+  school: { el: 'Σχολείο', en: 'School', bg: 'Училище', sr: 'Škola', de: 'Schule', ro: 'Școală', tr: 'Okul', he: 'בית ספר', ru: 'Школа' },
+  supermarket: { el: 'Σούπερ μάρκετ', en: 'Supermarket', bg: 'Супермаркет', sr: 'Supermarket', de: 'Supermarkt', ro: 'Supermarket', tr: 'Süpermarket', he: 'סופרמרקט', ru: 'Супермаркет' },
+  airport: { el: 'Αεροδρόμιο', en: 'Airport', bg: 'Летище', sr: 'Aerodrom', de: 'Flughafen', ro: 'Aeroport', tr: 'Havalimanı', he: 'שדה תעופה', ru: 'Аэропорт' },
+  center: { el: 'Κέντρο περιοχής', en: 'Area centre', bg: 'Център на района', sr: 'Centar mesta', de: 'Ortszentrum', ro: 'Centrul localității', tr: 'Bölge merkezi', he: 'מרכז האזור', ru: 'Центр района' },
+};
+const POI_KEY: Record<string, string> = {
+  bank: 'bank', hospital: 'hospital', parking: 'parking', 'drag store': 'pharmacy', 'drug store': 'pharmacy',
+  drugstore: 'pharmacy', pharmacy: 'pharmacy', school: 'school', supermarket: 'supermarket', 'super market': 'supermarket',
+  airport: 'airport', 'area center': 'center', 'area centre': 'center', center: 'center',
+};
+export function poiName(d: Distance, lang: Lang): string {
+  const k = POI_KEY[String(d.poi_en ?? '').toLowerCase().trim()];
+  if (k) return POI[k][lang];
+  return lang === 'el' ? (d.poi_el || d.poi_en || '') : (d.poi_en || d.poi_el || '');
+}
+
+/**
+ * Όνομα ορόφου: 0 = υπόγειο, 1 = ισόγειο, 2+ = «Όροφος n-1».
+ * ⚠️ Τα δεδομένα (`floor`, `spaces[].level`) μετρούν 0 = ισόγειο, άρα καλείται με `+ 1`
+ * (#88: η ενότητα «Όροφοι» το ξεχνούσε και έγραφε «Υπόγειο» για το ισόγειο).
+ */
 export function floorName(lang: Lang, level: number): string {
   if (level <= 0) return pui(lang, 'floorBase');
   if (level === 1) return pui(lang, 'floorGround');

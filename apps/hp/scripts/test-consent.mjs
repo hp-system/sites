@@ -89,6 +89,16 @@ try {
     const prop = href ? await get(href, PROD_HOST) : '';
     check('inquiry form deferred', /id="qf"[^>]*data-ev-defer/.test(prop), href ?? 'no property page');
     check('viewing form deferred', /id="tf"[^>]*data-ev="lead:tour_submit"[^>]*data-ev-defer/.test(prop), 'tf');
+
+    // #91: the banner speaks the page language (it was English everywhere); Greek in the singular.
+    for (const [path, want] of [['/', 'μόνο αν συμφωνήσεις'], ['/de/', 'nur mit Ihrer Zustimmung'], ['/he/', 'רק אם תסכימו'],
+      ['/ru/', 'только с вашего согласия'], ['/en/', 'only if you agree']]) {
+      const h = await get(path, PROD_HOST);
+      check(`banner in ${path}`, h.includes(want), want);
+    }
+    const elh = await get('/', PROD_HOST);
+    check('Greek: buttons and settings link translated', elh.includes('Αποδοχή όλων') && elh.includes('Απόρριψη όλων') && elh.includes('Ρυθμίσεις cookies'), 'el');
+    check('policy link says it is in English', elh.includes('Πολιτική απορρήτου (στα αγγλικά)'), 'el');
   });
 } finally {
   stub.close?.();

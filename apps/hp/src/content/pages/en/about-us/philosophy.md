@@ -46,3 +46,5 @@ These people, over time, we have the honor of calling them good friends…
 It is insurmountable satisfaction offered by the image of people who dream, throughout their lives, of heavenly Greece to unlock the door of their own new home with a smile.
 
 <img src="/pages/about-us-philosophy/9916c9c1-aboutus-philosophy-banner.webp" alt="Beach chairs and umbrella by the sea in Greece" width="800" height="450" loading="lazy" decoding="async" />
+
+<!-- widget: video BnF39QUXjCE | Our Philosophy | Halkidiki Properties -->

@@ -1,6 +1,6 @@
 ---
 title: Digital Nomads - The Ultimate Guide for Halkidiki 2022
-description: Find anything you need to know about moving to Halkidiki as a Digital Nomad in 2022! Trends, news, tips and more
+description: 'Working remotely from Halkidiki as a digital nomad: why the peninsula suits remote work, how to get there and where to find a home by the sea to rent or buy.'
 h1: Digital Nomads - The Ultimate Halkidiki Guide 2022
 category: business-news
 slug: digital-nomads-the-ultimate-halkidiki-guide-2022

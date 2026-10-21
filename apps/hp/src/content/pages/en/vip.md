@@ -31,6 +31,8 @@ form:
   message: true
 ---
 
+<!-- widget: video VHyRa_g-M3A | Halkidiki Properties | Members with priority access -->
+
 ## What Exclusive access gives you
 
 - **The most discreet listings.** Properties whose owners share them only with Exclusive members — on top of the secret portfolio that every member sees.

@@ -32,6 +32,17 @@ const arts = files.map((f) => {
   return { cat: field(fm, 'category'), slug: field(fm, 'slug'), old: field(fm, 'old_url'), author: field(fm, 'author'),
     words: words(text), faq: /^faq:\n- /m.test(fm), calc: /^has_calculator: true$/m.test(fm) };
 });
+// Full-SEO rule (George 20/10/2026): title ≤ 60 characters, description 140–160 (#66).
+{
+  // Own reader: `field()` stops at an apostrophe, which would cut a quoted description short.
+  const get = (fm, k) => ((fm.match(new RegExp(`^${k}:[ \\t]*(.*)$`, 'm')) ?? [])[1] ?? '').trim();
+  const unq = (v) => { const q = v[0]; return (q === "'" || q === '"') && v.endsWith(q) ? v.slice(1, -1).replace(/''/g, "'") : v; };
+  const bad = files.map((f) => readFileSync(f, 'utf8')).map((t) => {
+    const fm = t.split('\n---\n')[0];
+    return { t: unq(get(fm, 'title')), d: unq(get(fm, 'description')), s: get(fm, 'slug') };
+  }).filter((x) => x.t.length > 60 || x.d.length < 140 || x.d.length > 160);
+  check('every article: title ≤ 60, description 140–160', bad.length === 0, bad.map((x) => `${x.s} (${x.t.length}/${x.d.length})`).join(', ') || 'all');
+}
 const livePaths = new Set(arts.map((a) => `/en/articles/${a.cat}/${a.slug}`));
 
 // The retired near-duplicates (kept as files, never built: the content glob reads src/content only).

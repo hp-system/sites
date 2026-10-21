@@ -35,6 +35,8 @@ contact_card: false
 
 One of our primary principles in Halkidiki Properties is the careful choice of our partners, driven by their professionalism and high-quality services. We believe that the only way to produce the desired results is through proper collaboration, and we are very proud of them.
 
+<!-- widget: video Z6n9wPcgEm4 | Our Partners | Halkidiki Properties -->
+
 ## Partners we work with
 
 Our friends and partners! We are grateful for all the moments and experiences that we are living together.

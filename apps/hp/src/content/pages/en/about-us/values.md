@@ -37,6 +37,8 @@ contact_card: false
 
 As our team grows, it becomes increasingly important to identify and describe the core values that guide what we do. Our core values develop and define our culture, our brand, our business strategies and who we are as professionals in today's corporate world. Our goal is to continually live our lives on a daily basis with these values and encourage both our teammates and our clients to be accountable to us for these values.
 
+<!-- widget: video aBn0M24Lm4E | Our Values | Halkidiki Properties -->
+
 In addition to our core values, our mission statement more clearly defines our true purpose as an organization and further enhances our team culture. We are united in the consistent observance of our core values and the execution of our professions in direct alignment with our mission statement. We are committed to providing world-class services and top know-how to our customers. We are passionate about providing extra value that others simply will not. The fanatical integrity and consistently impressive results will be the signature of our service. Our collaborative spirit and our desire to grow will help us achieve the goals we set. We will make the families we serve feel special, creating ambitious fans and helping them really win. We will succeed because we will not let our customers fail.
 
 - **We love** our country and its beauties, but we love the Greek way of life more. Living in Greece changes you as a person.

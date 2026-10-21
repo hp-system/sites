@@ -1,0 +1,74 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// CONTACT FORM for the info pages (contact, sell, appointment, careers…).
+// Posts to the existing /api/inquiry — no new backend. The page's `source` is put
+// in front of the message, so the office sees where the request came from.
+// Same anti-spam as the property form: a hidden honeypot field and a 3-second timer.
+// ═══════════════════════════════════════════════════════════════════════════
+interface Props { source: string; title?: string; message?: boolean; terms: string; privacy: string }
+const { source, title = 'Send us a message', message = true, terms, privacy } = Astro.props;
+const id = `f-${source.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+<section class="iform" aria-labelledby={`${id}-h`}>
+  <h2 id={`${id}-h`}>{title}</h2>
+  <form class="iform__f" data-source={source} novalidate>
+    <label>Name<input name="name" autocomplete="name" required maxlength="120" /></label>
+    <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200" /></label>
+    <label>Phone<input name="phone" type="tel" autocomplete="tel" maxlength="40" /></label>
+    {message && <label class="wide">Message<textarea name="message" rows="5" maxlength="1900"></textarea></label>}
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <p class="wide consent">
+      By sending this form you accept the <a href={terms}>Terms of Services</a> and the <a href={privacy}>Privacy Policy</a>.
+    </p>
+    <p class="wide"><button class="btn" type="submit" data-ev="lead:form_submit">Send</button></p>
+    <p class="wide iform__msg" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('.iform__f').forEach((f) => {
+    const opened = Date.now();
+    const msg = f.querySelector<HTMLElement>('.iform__msg')!;
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const d = new FormData(f);
+      const name = String(d.get('name') ?? '').trim();
+      const email = String(d.get('email') ?? '').trim();
+      if (!name || !/.+@.+\..+/.test(email)) { msg.textContent = 'Please write your name and a valid email.'; return; }
+      const btn = f.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/inquiry', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            name, email, phone: String(d.get('phone') ?? ''),
+            message: `[${f.dataset.source}] ${String(d.get('message') ?? '')}`.trim(),
+            website: String(d.get('website') ?? ''), t: opened, lang: 'en',
+          }),
+        });
+        if (!r.ok) throw new Error(String(r.status));
+        f.reset();
+        msg.textContent = 'Thank you — an adviser will reply soon.';
+      } catch {
+        msg.textContent = 'Sending failed. Please call us or try again in a minute.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  .iform { border-top: 1px solid var(--ink); padding-top: var(--s4); margin-top: var(--s7); max-width: 68ch; }
+  .iform h2 { font-size: clamp(22px, 3.4vw, 28px); font-weight: 400; color: var(--ink); margin: 0 0 var(--s4); }
+  .iform__f { display: grid; gap: 14px 16px; }
+  @media (min-width: 640px) { .iform__f { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .iform__f label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+  .iform__f input, .iform__f textarea { font: inherit; font-size: 16px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: 10px; width: 100%; min-width: 0; border-radius: 0; }
+  .iform__f .wide { grid-column: 1 / -1; margin: 0; }
+  .consent { font-size: 13px; color: var(--muted); }
+  .consent a { color: var(--ink); }
+  .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; padding: 0; }
+  .iform__msg { font-size: 14px; color: var(--ink); min-height: 1.4em; }
+</style>

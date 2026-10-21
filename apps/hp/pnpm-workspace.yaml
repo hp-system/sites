@@ -1,0 +1,25 @@
+# 🪤 ΞΑΝΑΧΤΥΠΗΣΕ 6/8, ΜΕ ΑΛΛΟ ΟΝΟΜΑ. Το pnpm 11 δεν διαβάζει πια ούτε το
+#    `pnpm.onlyBuiltDependencies` του package.json ούτε (μόνο) το από κάτω· θέλει
+#    `allowBuilds` με **boolean**. Εδώ είχε μείνει ξανά το ΚΕΙΜΕΝΟ της οδηγίας
+#    («set this to true or false») ως τιμή, οπότε κάθε `pnpm build` στον Mac
+#    σταματούσε με `ERR_PNPM_IGNORED_BUILDS` πριν καν ξεκινήσει το Astro.
+#    Στο Docker δεν φαινόταν: εκεί τρέχει `pnpm install --ignore-scripts`.
+allowBuilds:
+  esbuild: true
+  sharp: true
+# 🪤 ΑΥΤΟ ΤΟ ΑΡΧΕΙΟ ΗΤΑΝ ΑΣΥΜΠΛΗΡΩΤΟ ΚΑΙ ΔΕΝ ΦΑΙΝΟΤΑΝ (διορθώθηκε 29/7).
+#
+# Έγραφε κυριολεκτικά `esbuild: set this to true or false` — δηλαδή το ΚΕΙΜΕΝΟ
+# της οδηγίας αντί για τιμή. Στον Mac δεν χτυπούσε ποτέ, επειδή τα `node_modules`
+# ήταν ήδη εγκατεστημένα και το `pnpm install` δεν ξαναέτρεχε τα build scripts.
+#
+# Φάνηκε μόνο στο **πρώτο καθαρό build** (Docker, στο box), όπου το pnpm σταμάτησε
+# με `ERR_PNPM_IGNORED_BUILDS` και το image δεν χτίστηκε καθόλου.
+#
+# Και τα δύο πακέτα χρειάζονται εγκατάσταση με native βήμα:
+#   · esbuild → το χρησιμοποιεί το Vite/Astro στο build
+#   · sharp   → το ζητά το Astro ακόμη κι όταν δεν επεξεργαζόμαστε εικόνες τοπικά
+#               (οι δικές μας έρχονται έτοιμες από το media.onsea.gr)
+onlyBuiltDependencies:
+  - esbuild
+  - sharp

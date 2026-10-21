@@ -1,0 +1,114 @@
+---
+// ΜΠΛΟΚ 11 — Υποσέλιδο. Πλοήγηση και νομιμότητα.
+// Η δομή των τριών στηλών του σημερινού site είναι σωστή — αλλάζει η μορφή.
+import Logo from './Logo.astro';
+import { t, listUrl, prefix, type Lang } from '../lib/i18n';
+// 🏢 Τηλέφωνο, email, επωνυμία, ΓΕΜΗ και έτος έναρξης έρχονται από το CMS —
+//    με τις σημερινές τιμές ως δίχτυ. Δες lib/company.ts.
+import { company } from '../lib/company';
+// 🔎 ΟΙ ΘΕΜΑΤΙΚΟΙ ΣΥΝΔΕΣΜΟΙ SEO ΖΟΥΝ ΕΔΩ (George, 30/7: «αν είναι για SEO,
+//    τράβα και βάλ' τα στο footer»). Ήταν σειρά από κουμπάκια κάτω από τη
+//    σελιδοποίηση της λίστας — «φαίνονται πάρα πολύ άσχημα». Στο υποσέλιδο
+//    κερδίζουν κιόλας: είναι σε ΚΑΘΕ σελίδα, όχι μόνο στη λίστα, και δείχνουν
+//    στα ΚΑΘΑΡΑ URLs των θεματικών (`/ακινητα/κασσανδρα`), όχι σε παραμέτρους
+//    `?municipality=` που η μηχανή αγνοεί.
+import { FACETS, facetUrl } from '../lib/listing';
+import { pageExists } from '../lib/pages';
+import { brand } from '../brand/index';
+import { EN_MOVED } from '../lib/infopages';
+interface Props { lang: Lang; munis?: { name: string; key?: string }[] }
+const { lang } = Astro.props;
+const p = prefix(lang);
+// English: the old site's URL /en/about-us (the info page); other languages keep /about.
+const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
+// Same for services and projects: English links the old site's URLs (no redirect hop).
+const moved = (k: string) => (lang === 'en' && EN_MOVED[k]) || `${p}/${k}`;
+const co = await company();
+// Δήμοι πρώτα, μετά οι συλλογές — ό,τι δείχνει και η αρχική.
+const seoLinks = FACETS.map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
+
+// 🛡️ ΔΙΧΤΥ: ΔΕΝ ΔΕΙΧΝΟΥΜΕ ΣΥΝΔΕΣΜΟ ΓΙΑ ΣΕΛΙΔΑ ΠΟΥ ΔΕΝ ΥΠΑΡΧΕΙ.
+//    Έτσι γεννήθηκαν οι 124 νεκροί σύνδεσμοι: τα μενού γράφτηκαν πριν τις σελίδες και
+//    κανείς δεν ξαναπέρασε. Τώρα η ύπαρξη κρίνεται από το `lib/pages.ts` — αν λείπει
+//    το κείμενο, λείπει και ο σύνδεσμος. Δεν μπορεί να ξανασυμβεί σιωπηλά.
+const has = (k: string) => pageExists(k as any);
+import { consentText } from '../lib/consent';
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="fbrand">
+        {/* ΤΟ ΠΡΑΓΜΑΤΙΚΟ ΣΗΜΑ. Εδώ ήταν ζωγραφισμένο ένα γενικό σπιτάκι με στέγη —
+            διαφορετικό λογότυπο από την κεφαλίδα, στην ΙΔΙΑ σελίδα. */}
+        <a class="brand" href={p || '/'} aria-label={brand.name}>
+          <Logo variant="mono" size="md" />
+        </a>
+        {/* Τρεις γραμμές, μία πληροφορία η καθεμία (George, 28/7). Πριν, η
+            διεύθυνση και το τηλέφωνο μοιράζονταν γραμμή χωρισμένα με τελεία και
+            έσπαγαν σε τυχαίο σημείο ανάλογα με το πλάτος. */}
+        <p class="fbrand__addr">
+          <span class="fbrand__hq">{t(lang, 'foot.addr')} <i>· {t(lang, 'foot.hq')}</i></span>
+          <a class="num" href={co.phoneHref} data-ev="call:footer">{co.phone}</a>
+          <a href={`mailto:${co.email}`}>{co.email}</a>
+        </p>
+      </div>
+
+      <nav aria-label={t(lang, 'foot.properties')}>
+        <h2 class="fcol__h">{t(lang, 'foot.properties')}</h2>
+        {seoLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
+        <a href={listUrl(lang)}>{t(lang, 'foot.properties')} →</a>
+      </nav>
+
+      <nav aria-label={t(lang, 'foot.services')}>
+        <h2 class="fcol__h">{t(lang, 'foot.services')}</h2>
+        {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')}</a>}
+        {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')}</a>}
+        {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')}</a>}
+        {has('services/developers') && <a href={moved('services/developers')}>{t(lang, 'foot.builders')}</a>}
+      </nav>
+
+      <nav aria-label={t(lang, 'foot.company')}>
+        <h2 class="fcol__h">{t(lang, 'foot.company')}</h2>
+        {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
+        {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
+        {has('projects') && <a href={moved('projects')}>{t(lang, 'foot.projects')}</a>}
+        {has('contact') && <a href={`${p}/contact`}>{t(lang, 'foot.contact')}</a>}
+      </nav>
+    </div>
+
+    {/* 🪤 ΤΟ ΤΡΕΧΟΝ ΕΤΟΣ ΗΤΑΝ ΚΑΡΦΩΤΟ (`const year = 2026`). Την 1η Ιανουαρίου
+        το υποσέλιδο θα έγραφε περασμένη χρονιά σε ΚΑΘΕ σελίδα και στις 9 γλώσσες,
+        και δεν θα το πρόσεχε κανείς για μήνες. Τώρα υπολογίζεται ανά αίτημα.
+        Το έτος ΕΝΑΡΞΗΣ, η επωνυμία και το ΓΕΜΗ έρχονται από το CMS. */}
+    <p class="fbot">© {co.foundedYear}–{co.year} {co.legalName} · {t(lang, 'foot.reg')} {co.gemi}
+      · <button type="button" class="fcookie" data-cookie-settings>{consentText(lang).footerLink}</button></p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--paper-2); padding: var(--s7) 0 var(--s6); border-top: 1px solid var(--line); }
+  .fcols { display: grid; gap: var(--s5); }
+  .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 15px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink);
+  }
+  .brand svg { width: 24px; height: 24px; flex: none; }
+  /* Κάθε στοιχείο επικοινωνίας σε δική του γραμμή — δεν σπάει σε τυχαίο σημείο. */
+  .fbrand__addr {
+    margin: var(--s3) 0 0; color: var(--muted); font-size: 14px; max-width: 34ch; line-height: 1.7;
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+  .fbrand__hq i { font-style: normal; color: var(--faint); }
+  .fcol__h {
+    font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 var(--s2);
+  }
+  .fcols nav a { display: block; padding: 5px 0; font-size: 14px; color: var(--ink-2); min-height: 30px; }
+  .fcols nav a:hover { color: var(--ink); }
+  .fbot {
+    margin: var(--s6) 0 0; padding-top: var(--s4); border-top: 1px solid var(--line);
+    font-size: 11.5px; color: var(--faint);
+  }
+  .fcookie { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+  @media (min-width: 760px) { .fcols { grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--s6); } }
+</style>

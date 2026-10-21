@@ -1,0 +1,850 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// Η ΚΑΡΤΕΛΑ ΑΚΙΝΗΤΟΥ — Πρόταση Β, εγκεκριμένη από τον George (30/7).
+//
+// 📐 Η ΔΟΜΗ ΒΓΗΚΕ ΑΠΟ ΤΗΝ ΚΡΙΣΗ ΤΟΥ, ΟΧΙ ΑΠΟ ΓΟΥΣΤΟ:
+//   «πουλάμε ακριβά ακίνητα… το κλειδί είναι οι μεγάλες φωτογραφίες»
+//   → η γκαλερί πιάνει ΟΛΟ το πλάτος· το περιεχόμενο σπάει σε στήλες ΜΕΤΑ.
+//
+// 📊 ΚΑΙ ΑΠΟ ΤΑ ΔΕΔΟΜΕΝΑ (logs 10 ημερών + μετρητές ζωής 60 ακινήτων):
+//   ✂️ βιντεοκλήση 0 κρατήσεις · callback 3 · καμπανάκι τιμής 2 → ΕΞΩ
+//   ✅ why-register 3.074 · 196 saves/282.790 views (43 στα 60 ακίνητα) → ΜΕΣΑ
+//
+// 🛡️ Ο ΚΑΝΟΝΑΣ ΤΟΥ GATE ΕΙΝΑΙ ΑΥΣΤΗΡΟΤΕΡΟΣ ΕΔΩ ΑΠΟ ΠΑΝΤΟΥ. Το API δίνει
+//    `lat`/`lng`/`address`/`area`. ΤΙΠΟΤΑ από αυτά δεν μπαίνει στη σελίδα για μη
+//    συνδεδεμένο — ούτε στο JSON-LD, ούτε σε alt, ούτε σε σχόλιο. Ο χάρτης δεν
+//    «θολώνει» συντεταγμένες: **δεν τις τυπώνει καθόλου**. Θόλωμα με CSS είναι
+//    διακόσμηση — ό,τι υπάρχει στο HTML το διαβάζει ο καθένας.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import MobileMenu from './MobileMenu.astro';
+import Footer from './Footer.astro';
+import PropertyCard from './PropertyCard.astro';
+import type { SiteProperty } from '../lib/api';
+import { refOf, priceOf, priceVisible, pick } from '../lib/api';
+import { viewerOf, muniKey, municipalityOf, placeOf } from '../lib/gate';
+import { coverOf, orderedPhotos, isPhotoOpen, blurSrc, marked, markedSrcSet, markedSrcSetSmall,
+         altOf, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
+import { money, num, sqm as sqmFmt, seaLabel, clamp } from '../lib/format';
+import { prefix, propertyUrl, listUrl, t, type Lang } from '../lib/i18n';
+import { rentalUrl } from '../lib/contact';
+import { company } from '../lib/company';
+import { ui, facetUrl, FACETS } from '../lib/listing';
+import { brand } from '../brand/index';
+import {
+  descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
+  energyOf, oldPriceOf, floorName, pui, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
+} from '../lib/property';
+
+interface Props { lang: Lang; item: SiteProperty; all: SiteProperty[] }
+const { lang, item, all } = Astro.props;
+
+const viewer = await viewerOf(Astro.cookies);
+const co = await company();
+const a = item.attributes ?? {};
+const id = refOf(item);
+
+// ── ΤΑΥΤΟΤΗΤΑ ──────────────────────────────────────────────────────────────
+const sub = pick(a.subcategory_i18n, lang) || String(a.subcategory ?? '');
+const place = placeOf(a, lang, viewer);          // δήμος σε επισκέπτη, περιοχή σε μέλος
+const muni = municipalityOf(a, lang);
+const heading = place ? `${sub} — ${place}` : sub;
+
+const cover = coverOf(a);
+const ordered = orderedPhotos(a);
+
+// 🔒 ΠΟΙΕΣ ΦΩΤΟΓΡΑΦΙΕΣ ΒΛΕΠΕΙ ΠΟΙΟΣ — ΑΛΛΑΞΕ 6/8.
+//
+//    ΠΡΙΝ: ο επισκέπτης έπαιρνε τις 4 πρώτες και οι υπόλοιπες **δεν υπήρχαν** στη
+//    σελίδα· ένα πλακίδιο έλεγε «έχετε άλλες 13».
+//    ΤΩΡΑ (George 6/8): «Οι υπόλοιπες θα φαίνονται blurred όπως τώρα στο website
+//    μας» — άρα εμφανίζονται ΟΛΕΣ, οι κλειδωμένες κατεστραμμένες.
+//    Και: «θα κάνουμε επιλογή εμείς ανοιχτές και κλειστές στο photo review» —
+//    γι' αυτό η κρίση είναι **ανά φωτογραφία** (`isPhotoOpen`), όχι πλήθος.
+//    Μέχρι να υπάρξει το πεδίο, το `isPhotoOpen` κρατά τη ρύθμιση των 4.
+//
+// 🔴 ΤΟ ΚΡΙΣΙΜΟ: η κλειδωμένη ΔΕΝ είναι η κανονική φωτογραφία με εφέ θολώματος.
+//    Είναι άλλο αρχείο, 24 pixel, από τον διακομιστή μας. Δες `lib/blur.ts` —
+//    ως τις 6/8 σερβίραμε την πραγματική 800άρα και τη θολώναμε με CSS, δηλαδή
+//    ο πηγαίος κώδικας έδινε τη διεύθυνσή της σε όποιον κοίταζε.
+const gallery = ordered.map((p, i) => ({ p, i, open: viewer.member || isPhotoOpen(p, i) }));
+const hidden = gallery.filter((g) => !g.open).length;
+const lockAt = gallery.findIndex((g) => !g.open);   // πού κάθεται η προτροπή
+
+const price = priceOf(a);
+const priceOk = priceVisible(a);
+const oldPrice = oldPriceOf(a);
+const sqmN = Number(a.sqm ?? 0);
+const perSqm = priceOk && price > 0 && sqmN > 0 ? Math.round(price / sqmN) : null;
+
+const feats = featuresOf(a, lang);
+const spaces = spacesOf(a);
+const dists = distancesOf(a);
+const energy = energyOf(a, lang);
+const desc = descriptionOf(a, lang);
+const sea = seaLabel(a.sea_access, lang);
+const rental = rentalUrl(id);
+
+// ── ΠΑΡΟΜΟΙΑ: ίδιος δήμος, ίδιο είδος, κοντινή τιμή. Χωρίς το ίδιο το ακίνητο.
+const myMuni = muniKey(a);
+const similar = all
+  .filter((p) => refOf(p) !== id)
+  .filter((p) => muniKey(p.attributes ?? {}) === myMuni)
+  .filter((p) => String(p.attributes?.subcategory ?? '') === String(a.subcategory ?? ''))
+  .sort((x, y) => Math.abs(priceOf(x.attributes ?? {}) - price) - Math.abs(priceOf(y.attributes ?? {}) - price))
+  .slice(0, 3);
+
+// ── SEO ────────────────────────────────────────────────────────────────────
+const pathFor = (l: Lang) => propertyUrl(l, id);
+const title = `${heading} · #${id}`;
+// 🪤 ΤΟ ΙΔΙΟ STRING ΠΑΕΙ ΚΑΙ ΣΤΟ JSON-LD παρακάτω — άρα το κόψιμο πρέπει να είναι
+//    σωστό ΜΙΑ φορά, εδώ. Το σκέτο `.slice()` έκοβε στη μέση λέξης («…newly built co»).
+const metaDesc = clamp(desc || heading, 155);
+const share = shareImage(cover);
+const here = pathFor(lang);
+
+// 🛡️ ΤΟ JSON-LD ΔΕΝ ΚΟΥΒΑΛΑ ΘΕΣΗ. Το schema.org δέχεται `geo` και `address` —
+//    και ακριβώς γι' αυτό είναι το πιο εύκολο σημείο να διαρρεύσει η τοποθεσία
+//    χωρίς να το προσέξει κανείς: δεν φαίνεται στη σελίδα, αλλά είναι στο HTML.
+//    Δηλώνουμε ΜΟΝΟ τον δήμο, που είναι έτσι κι αλλιώς δημόσιος.
+const SITE_ORIGIN = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const abs = (x: string) => SITE_ORIGIN + encodeURI(x);
+
+const land = isLand(a);
+const landFacts = land ? landFactsOf(a, lang) : [];
+
+const types = schemaTypesOf(a);
+const isAccommodation = types.length > 1;          // η γη μένει σκέτο Product
+
+// 🍞 ΤΟ BREADCRUMB ΕΛΕΙΠΕ ΕΝΤΕΛΩΣ από τα δομημένα δεδομένα, ενώ υπάρχει **ορατό**
+//    στη σελίδα. Είναι αυτό που δίνει στη Google τη γραμμή διαδρομής κάτω από τον
+//    τίτλο αντί για γυμνή διεύθυνση. Το τελευταίο σκαλί ΔΕΝ έχει `item`: είναι η
+//    σελίδα στην οποία ήδη στέκεσαι.
+const muniFacet = FACETS.find((f) => f.q.municipality === myMuni);
+const crumbs: { name: string; url?: string }[] = [
+  { name: brand.name, url: prefix(lang) || '/' },
+  { name: ui(lang, 'all'), url: listUrl(lang) },
+  ...(muniFacet ? [{ name: muniFacet.name[lang], url: facetUrl(lang, muniFacet.key) }] : []),
+  { name: `#${id}` },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({
+      '@type': 'ListItem', position: i + 1, name: c.name,
+      ...(c.url ? { item: abs(c.url) } : {}),
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': types,
+    '@id': `${abs(here)}#listing`,
+    name: title,
+    description: metaDesc,
+    url: abs(here),
+    sku: id,
+    ...(share ? { image: share } : {}),
+    address: { '@type': 'PostalAddress', addressRegion: muni, addressCountry: brand.address.country },
+    ...(sqmN > 0
+      ? (isAccommodation
+        ? { floorSize: { '@type': 'QuantitativeValue', value: sqmN, unitCode: 'MTK' } }
+        : { additionalProperty: { '@type': 'PropertyValue', name: 'Plot area', value: sqmN, unitCode: 'MTK' } })
+      : {}),
+    ...(isAccommodation && Number(a.bedrooms) > 0
+      ? { numberOfBedrooms: Number(a.bedrooms), numberOfRooms: Number(a.bedrooms) }
+      : {}),
+    ...(priceOk && price > 0 ? {
+      offers: {
+        '@type': 'Offer', price, priceCurrency: brand.market.currency,
+        availability: 'https://schema.org/InStock', url: abs(here),
+        seller: { '@type': 'RealEstateAgent', name: brand.name },
+      },
+    } : {}),
+  },
+];
+
+const munis = [...new Set(all.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))].slice(0, 4)
+  .map((k) => {
+    const src = all.find((p) => muniKey(p.attributes ?? {}) === k);
+    return { name: municipalityOf(src?.attributes ?? {}, lang) || k, key: k };
+  });
+
+const loginHref = `${prefix(lang)}/login?next=${encodeURIComponent(here)}`;
+// Το WhatsApp ανοίγει με έτοιμο μήνυμα — ο agent ξέρει αμέσως για ποιο μιλάμε.
+const waText = encodeURIComponent(pui(lang, 'interest', { id }));
+// 📱 Ξεχωριστός αριθμός WhatsApp όταν δηλωθεί· αλλιώς το σταθερό.
+const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}`;
+---
+<Base lang={lang} title={title} description={metaDesc} pathFor={pathFor} jsonLd={jsonLd}
+      ogImage={share} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={altOf(cover, lang, heading)}>
+  <Header lang={lang} solid pathFor={pathFor} />
+  <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={all.length} />
+
+  <main id="main" class="prop">
+    <div class="wrap">
+      <nav class="crumb" aria-label="breadcrumb">
+        <a href={prefix(lang) || '/'}>{brand.name}</a>
+        <span aria-hidden="true">·</span>
+        <a href={listUrl(lang)}>{ui(lang, 'all')}</a>
+        <span aria-hidden="true">·</span>
+        <span>#{id}</span>
+      </nav>
+
+      <div class="tt">
+        <div class="tt__l">
+          <h1 class="t-h2 tt__h">{heading}</h1>
+          {/* Ο κλειδωμένος τόπος δηλώνεται ΡΗΤΑ — ο επισκέπτης πρέπει να ξέρει
+              ότι υπάρχει κάτι πιο συγκεκριμένο, αλλιώς νομίζει ότι αυτό είναι όλο. */}
+          {!viewer.member && (
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{pui(lang, 'lockChip')}</span>
+          )}
+        </div>
+        <div class="tt__r">
+          {/* 📊 ΟΙ ΠΡΟΒΟΛΕΣ ΜΕΝΟΥΝ, ΟΙ ΑΠΟΘΗΚΕΥΣΕΙΣ ΕΠΕΣΤΡΕΨΑΝ.
+              Είχα προτείνει να κοπεί ο μετρητής αποθηκεύσεων· ο George διαφώνησε
+              και ζήτησε 3 μήνες δεδομένα. Δεν υπάρχουν (ο διακομιστής κρατά 10
+              μέρες), οπότε μετρήθηκαν οι ΜΕΤΡΗΤΕΣ ΖΩΗΣ σε 60 ακίνητα:
+              196 αποθηκεύσεις / 282.790 προβολές, 43 στα 60 με τουλάχιστον μία.
+              Είχε δίκιο. ⏭️ Οι πραγματικοί μετρητές έρχονται από το EALIDA (Φ2)·
+              μέχρι τότε δεν τυπώνεται ΨΕΥΤΙΚΟΣ αριθμός — απλώς λείπει. */}
+          <a class="btn btn--fav" href={loginHref} data-ev="member:favorite_property">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
+            {pui(lang, 'favorite')}
+          </a>
+          <button class="btn" id="share" type="button" data-copied={pui(lang, 'copied')}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8 11l8-4M8 13l8 4"/></svg>
+            {pui(lang, 'shareL')}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {/* ═══ ΓΚΑΛΕΡΙ — ΟΛΟ ΤΟ ΠΛΑΤΟΣ ═══════════════════════════════════════
+        DESKTOP: μία μεγάλη + τέσσερα πλακίδια.
+        ΚΙΝΗΤΟ: **ΜΙΑ φωτογραφία που σύρεται** — ρητή οδηγία George (30/7):
+        «στο κινητό θα φαίνεται μόνο μια φωτογραφία και θα κάνει swap και όχι
+        πολλές». Ίδιο HTML, άλλη διάταξη: σε στενή οθόνη η ίδια σειρά γίνεται
+        ράγα με scroll-snap. Καμία διπλή απόδοση, καμία δεύτερη γκαλερί. */}
+    {/* 🪤 ΤΟ `sizes` ΕΛΕΓΕ 60vw/20vw ΕΝΩ ΤΑ ΠΛΑΚΙΔΙΑ ΕΙΝΑΙ 592/296px.
+        Το πλέγμα είναι `2fr 1fr 1fr` μέσα σε στήλη 1.200: μεγάλο 592, μικρά 296.
+        Το 20vw σε οθόνη 1280 δίνει 256 — δηλαδή δήλωνα στον browser ΜΙΚΡΟΤΕΡΗ
+        ανάγκη από την πραγματική, και πάνω από 1280 η απόκλιση μεγαλώνει επειδή
+        η στήλη ΔΕΝ μεγαλώνει (κόβεται στα 1.200) ενώ το vw συνεχίζει.
+        Τώρα δηλώνονται τα πραγματικά pixel — «το κλειδί είναι οι μεγάλες
+        φωτογραφίες» (George), και αυτό αρχίζει από το να ζητάμε το σωστό αρχείο. */}
+    <div class="galwrap">
+      <div class="gal" id="gal">
+        {gallery.map(({ p, i, open }) => (
+          <a class:list={['cell', !open && 'cell--locked']} href={loginHref}
+             data-ev={open ? 'property:photo_open' : 'register:unlock_photos'}
+             aria-label={open ? altOf(p, lang, heading) : pui(lang, 'morePhotos', { n: hidden })}>
+            {open ? (
+              <img src={marked(p.url, i === 0 ? 1920 : 800)} srcset={markedSrcSet(p.url)}
+                   sizes={i === 0
+                     ? '(min-width: 1280px) 592px, (min-width: 900px) calc(50vw - 48px), 100vw'
+                     : '(min-width: 1280px) 296px, (min-width: 900px) calc(25vw - 24px), 100vw'}
+                   alt={i === 0 ? altOf(p, lang, heading) : ''} width="800" height="533"
+                   loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+            ) : (
+              /* 24 pixel από τον δικό μας διακομιστή. Καμία διεύθυνση της
+                 πραγματικής φωτογραφίας δεν γράφεται στη σελίδα. Χωρίς srcset:
+                 δεν υπάρχει δεύτερο μέγεθος να ζητηθεί, ούτε λόγος να υπάρξει. */
+              <img src={blurSrc(id, i)} alt="" width="800" height="533"
+                   loading="lazy" decoding="async" aria-hidden="true" />
+            )}
+            {i === lockAt && (
+              /* Η προτροπή κάθεται πάνω στην ΠΡΩΤΗ κλειδωμένη — δηλαδή ακριβώς
+                 εκεί που κόβεται η δωρεάν θέα, όχι σε ξεχωριστό πλακίδιο. */
+              <span class="lockover">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+                <b>{pui(lang, 'morePhotos', { n: hidden })}</b>
+                <em>{pui(lang, 'freeReg')}</em>
+              </span>
+            )}
+            {!open && i !== lockAt && (
+              /* 🪤 ΧΩΡΙΣ ΑΥΤΟ, οι υπόλοιπες κλειδωμένες είναι σκέτες θολούρες.
+                 Στο κινητό ο επισκέπτης σέρνει και βλέπει 12 θαμπές εικόνες χωρίς
+                 καμία εξήγηση — διαβάζεται ως **χαλασμένη σελίδα**, όχι ως
+                 κλείδωμα, και η θολή φωτογραφία χάνει τη μόνη δουλειά που έχει:
+                 να δείχνει ότι υπάρχει κάτι από κάτω. Μια κλειδαριά αρκεί. */
+              <span class="lockmark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+              </span>
+            )}
+          </a>
+        ))}
+      </div>
+      {/* Οι τελίτσες φαίνονται ΜΟΝΟ στο κινητό, όπου η γκαλερί είναι ράγα.
+          🪤 ΔΙΚΟ ΤΟΥΣ ΟΝΟΜΑ, ΟΧΙ ΣΚΕΤΟ `.dots`. Οι κάρτες «παρόμοια ακίνητα»
+             στο κάτω μέρος έχουν κι εκείνες `.dots i` — το script έπιανε ΚΑΙ
+             αυτές: μετρούσε 17 τελίτσες αντί για 5, και θα κουνούσε το σημάδι
+             σε ξένες κάρτες σπάζοντας το δικό τους. Το CSS δεν το έδειξε
+             (ο Astro το απομονώνει), το JavaScript όμως ΔΕΝ απομονώνεται. */}
+      <span class="dots" id="galdots" aria-hidden="true">
+        {Array.from({ length: gallery.length }).map((_, i) => (
+          <i data-on={i === 0 ? '' : undefined}></i>
+        ))}
+      </span>
+    </div>
+
+    <div class="wrap">
+      <div class="cols">
+        <div class="main">
+          {/* ΓΡΑΜΜΗ ΒΑΣΙΚΩΝ — χωρίς έτος (George: «δεν με ενδιαφέρει»). */}
+          <div class="strip">
+            {sqmN > 0 && <div><b class="num">{sqmFmt(sqmN, lang)}</b><span>{pui(lang, 'sqmL')}</span></div>}
+            {/* 🪤 ΥΠΝΟΔΩΜΑΤΙΑ ΣΕ ΧΩΡΑΦΙ. Η γη είναι το **40%** του καταλόγου (207 από 517)
+                και έδειχνε τα ίδια κουτιά με μια βίλα. Όπου η βάση είχε τυχαία τιμή,
+                ο επισκέπτης διάβαζε «2 υπνοδωμάτια» σε αγροτεμάχιο. */}
+            {!land && Number(a.bedrooms) > 0 && <div><b class="num">{a.bedrooms}</b><span>{pui(lang, 'bedsL')}</span></div>}
+            {!land && Number(a.bathrooms) > 0 && <div><b class="num">{a.bathrooms}{Number(a.wc) > 0 ? ' + WC' : ''}</b><span>{pui(lang, 'bathsL')}</span></div>}
+            {/* Ο ΑΡΙΘΜΟΣ, ΟΧΙ Ο ΧΑΡΑΚΤΗΡΙΣΜΟΣ. Έγραφε «Μπροστά στη θάλασσα» με
+                ετικέτα «Από θάλασσα» — η ίδια πληροφορία δύο φορές, και μάλιστα
+                η αόριστη εκδοχή της. Το «14 μ.» δεν το αμφισβητεί κανείς.
+                Ο χαρακτηρισμός μένει ως εφεδρεία όταν λείπει η μέτρηση. */}
+            {(seaDistanceText(a, lang, num) ?? sea) && (
+              <div><b class="num">{seaDistanceText(a, lang, num) ?? sea}</b><span>{pui(lang, 'seaL')}</span></div>
+            )}
+            {!land && energy && <div><b>{energy}</b><span>{pui(lang, 'energyL')}</span></div>}
+          </div>
+
+          {landFacts.length > 0 && (
+            /* Ό,τι ρωτάει πρώτο όποιος αγοράζει γη: χτίζεται; τι δρόμο έχει;
+               ρεύμα, νερό; Η ίδια σειρά με το σημερινό site. */
+            <dl class="lfacts">
+              {landFacts.map((f) => (
+                <div class="lfact"><dt>{f.label}</dt><dd>{f.value}</dd></div>
+              ))}
+            </dl>
+          )}
+
+          {desc && (<>
+            <h2 class="sec">{pui(lang, 'desc')}</h2>
+            <p class="desc">{desc}</p>
+          </>)}
+
+          {feats.length > 0 && (<>
+            <h2 class="sec">{pui(lang, 'feats')}</h2>
+            <ul class="feats">
+              {feats.map((f) => (
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d={featureIcon(f)} /></svg>
+                  <span>{f.label}</span>
+                </li>
+              ))}
+            </ul>
+          </>)}
+
+          {spaces.length > 0 && (<>
+            <h2 class="sec">{pui(lang, 'floors')}</h2>
+            <div class="floors">
+              {spaces.map((s) => (
+                <div class="fl">
+                  <b class="fl__h">{floorName(lang, s.level)}</b>
+                  <dl>
+                    {Number(s.level_sqm) > 0 && (<><dt>{pui(lang, 'sqmL')}</dt><dd class="num">{sqmFmt(Number(s.level_sqm), lang)}</dd></>)}
+                    {Number(s.rooms) > 0 && (<><dt>{pui(lang, 'roomsL')}</dt><dd class="num">{s.rooms}</dd></>)}
+                    {Number(s.living_rooms) > 0 && (<><dt>{pui(lang, 'livingL')}</dt><dd class="num">{s.living_rooms}</dd></>)}
+                    {Number(s.bathrooms) > 0 && (<><dt>{pui(lang, 'bathsL')}</dt><dd class="num">{s.bathrooms}</dd></>)}
+                    {Number(s.wc) > 0 && (<><dt>{pui(lang, 'wcL')}</dt><dd class="num">{s.wc}</dd></>)}
+                  </dl>
+                </div>
+              ))}
+            </div>
+          </>)}
+
+          {/* ═══ ΤΟΠΟΘΕΣΙΑ — ΤΟ ΔΕΥΤΕΡΟ ΣΠΡΩΞΙΜΟ ══════════════════════════
+              🛡️ ΚΑΜΙΑ ΣΥΝΤΕΤΑΓΜΕΝΗ ΣΤΟ HTML. Δεν υπάρχει χάρτης που «θολώνει»:
+              υπάρχει πλαίσιο που ΔΕΝ περιέχει τη θέση. Οι αποστάσεις όμως
+              φαίνονται — δίνουν αξία χωρίς να προδίδουν το σημείο. */}
+          <h2 class="sec">{pui(lang, 'location')}</h2>
+          {viewer.member ? (
+            <p class="place">{place}{muni && place !== muni ? ` · ${muni}` : ''}</p>
+          ) : (
+            <div class="maplock">
+              <span class="maplock__bg" aria-hidden="true"></span>
+              <span class="maplock__in">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+                <b>{pui(lang, 'unlockH')}</b>
+                <em>{pui(lang, 'unlockP')}</em>
+                <a class="btn btn--go" href={loginHref} data-ev="register:unlock_area">{pui(lang, 'freeReg')}</a>
+              </span>
+            </div>
+          )}
+
+          {dists.length > 0 && (
+            <ul class="dists">
+              {/* 🪤 ΕΓΡΑΦΑ «ΠΕΡΠΑΤΗΜΑ» ΚΑΙ ΕΒΓΑΙΝΕ «ΑΕΡΟΔΡΟΜΙΟ 105,8 ΧΛΜ ΠΕΡΠΑΤΗΜΑ».
+                  Ο τροφοδότης βάζει την απόσταση στο πεδίο `walk_km` ΠΑΝΤΑ, και το
+                  `drive_km` μένει 0 όταν δεν το μέτρησε. Το διάβασα ως «0 οδικώς
+                  σημαίνει ότι πάει με τα πόδια» — που είναι λάθος: σημαίνει «δεν
+                  ξέρω». Ίδιο και σε τράπεζα 12,7 χλμ, νοσοκομείο 8,8 χλμ.
+                  Η ένδειξη τρόπου ΕΦΥΓΕ: δεν την ξέρουμε, δεν προσθέτει τίποτα, και
+                  όταν βγαίνει λάθος υπονομεύει ΟΛΑ τα υπόλοιπα νούμερα της σελίδας.
+                  🌍 Και η μονάδα ΔΕΝ γράφεται εδώ — ήταν «χλμ» καρφωτό, δηλαδή θα
+                     έλεγε «105,8 χλμ» και στα γερμανικά. */}
+              {dists.map((d) => {
+                const poi = lang === 'el' ? (d.poi_el || d.poi_en) : (d.poi_en || d.poi_el);
+                const km = Math.max(d.drive_km ?? 0, d.walk_km ?? 0);
+                return <li><span>{poi}</span><b class="num">{num(km, lang)} {pui(lang, 'kmU')}</b></li>;
+              })}
+            </ul>
+          )}
+
+          {/* ═══ ΤΡΙΤΟ ΣΠΡΩΞΙΜΟ ═══ */}
+          {!viewer.member && (
+            <div class="full">
+              <span class="full__i" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+              </span>
+              <div>
+                <b class="t-h3 full__h">{ui(lang, 'joinH')}</b>
+                <ul class="full__l">
+                  <li>{ui(lang, 'joinB1')}</li><li>{ui(lang, 'joinB2')}</li><li>{ui(lang, 'joinB3')}</li>
+                </ul>
+              </div>
+              <a class="full__b" href={loginHref} data-ev="register:property_block">{ui(lang, 'joinCta')}</a>
+            </div>
+          )}
+
+          {similar.length > 0 && (<>
+            <h2 class="sec">{pui(lang, 'similar')}</h2>
+            <ul class="sim">
+              {similar.map((p) => <li><PropertyCard p={p} lang={lang} viewer={viewer} /></li>)}
+            </ul>
+          </>)}
+        </div>
+
+        {/* ═══ Η ΚΑΡΤΑ ΕΝΕΡΓΕΙΩΝ ══════════════════════════════════════════
+            ΤΡΕΙΣ ενέργειες, όχι δύο — ο George κράτησε ρητά τη φόρμα:
+            «φοβάμαι πραγματικά να αφαιρέσω τελείως το request form».
+            Η σειρά ΔΕΝ είναι οριστική: κάθε κουμπί έχει δικό του `data-ev`,
+            μετράμε 2-3 μήνες και μετά αποφασίζουμε τι πάει πρώτο. */}
+        <aside class="side">
+          <div class="card">
+            {priceOk && price > 0 ? (<>
+              {oldPrice && <span class="old num">{money(oldPrice, lang)}</span>}
+              <p class="price num t-price">{money(price, lang)}</p>
+              {perSqm && <p class="per num">{money(perSqm, lang)} {pui(lang, 'perSqm')}</p>}
+            </>) : (
+              <p class="price t-h3">{t(lang, 'card.price_request')}</p>
+            )}
+
+            <button class="cta" type="button" data-tour data-ev="lead:tour_open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+              {pui(lang, 'reqTour')}
+            </button>
+            <a class="cta cta--wa" href={waHref} target="_blank" rel="noopener" data-ev="lead:whatsapp">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1.1-1.4-1.1-2.7 0-1.3.7-1.9.9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.7 1 .9 1.8 1.1 2.1 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.2.1.4.2.4.3 0 .1 0 .7-.2 1.2Z"/></svg>
+              WhatsApp
+            </a>
+            {rental && (
+              <a class="cta cta--sec" href={rental} target="_blank" rel="noopener" data-ev="lead:rent_it">
+                {t(lang, 'week.rent')}
+              </a>
+            )}
+            <a class="tel num" href={co.phoneHref} data-ev="call:property">{pui(lang, 'or')} {co.phone}</a>
+
+            {/* Η ΑΠΛΗ ΦΟΡΜΑ — τέσσερα πεδία, χωρίς βήματα, πάντα ορατή. */}
+            <form class="qf" id="qf" data-ev="lead:form_submit" data-ev-defer>
+              <span class="qf__h lab">{pui(lang, 'reqInfo')}</span>
+              <label class="sr-only" for="qf-n">{pui(lang, 'fName')}</label>
+              <input id="qf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} />
+              <label class="sr-only" for="qf-p">{pui(lang, 'fPhone')}</label>
+              <input id="qf-p" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder={pui(lang, 'fPhone')} />
+              <label class="sr-only" for="qf-e">{pui(lang, 'fEmail')}</label>
+              <input id="qf-e" name="email" type="email" required maxlength="200" autocomplete="email" placeholder={pui(lang, 'fEmail')} />
+              <p class="qf__int">{pui(lang, 'interest', { id })}</p>
+              {/* 🛡️ Παγίδα-μέλι: κρυφό για άνθρωπο, ορατό για ρομπότ. Δες api/inquiry.ts */}
+              <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <button type="submit">{pui(lang, 'send')}</button>
+              <p class="qf__ok" hidden>{pui(lang, 'sent')}</p>
+              <p class="qf__fine">{pui(lang, 'answers')}</p>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    {/* ═══ ΚΙΝΗΤΟ: Η ΜΠΑΡΑ ΠΟΥ ΔΕΝ ΦΕΥΓΕΙ ΠΟΤΕ (μοτίβο Compass) ═══ */}
+    <div class="bar" aria-label={pui(lang, 'reqTour')}>
+      <button class="bar__go" type="button" data-tour data-ev="lead:tour_open_bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        {pui(lang, 'reqTour')}
+      </button>
+      <a class="bar__i" href={waHref} target="_blank" rel="noopener" data-ev="lead:whatsapp_bar">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z"/></svg>WhatsApp
+      </a>
+      <a class="bar__i" href={co.phoneHref} data-ev="call:property_bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 3h3l2 5-2.5 1.5a11 11 0 0 0 5 5L15 12l5 2v3a2 2 0 0 1-2 2A15 15 0 0 1 4 5a2 2 0 0 1 2-2Z"/></svg>{pui(lang, 'call')}
+      </a>
+    </div>
+
+    {/* ═══ ΤΟ ΠΑΡΑΘΥΡΟ ΤΗΣ ΕΠΙΣΚΕΨΗΣ — δύο βήματα, χωρίς λογαριασμό ═══
+        `<dialog>` και όχι δικό μας παράθυρο: το κλείσιμο με Esc, η παγίδα
+        πληκτρολογίου και το «πίσω» τα δίνει ο browser σωστά, δωρεάν. */}
+    <dialog class="modal" id="tour">
+      <form method="dialog" class="modal__x"><button aria-label="×">×</button></form>
+      <b class="modal__h t-h3">{pui(lang, 'reqTour')} — #{id}</b>
+      <p class="modal__s">{pui(lang, 'whenSuits')}</p>
+      <form class="tf" id="tf" data-ev="lead:tour_submit" data-ev-defer>
+        <div class="when" role="group">
+          <label><input type="radio" name="when" value="sat" checked /><span data-day="0"></span></label>
+          <label><input type="radio" name="when" value="sun" /><span data-day="1"></span></label>
+          <label><input type="radio" name="when" value="other" /><span>{pui(lang, 'otherDay')}</span></label>
+          <label><input type="radio" name="when" value="video" /><span>{pui(lang, 'videocall')}</span></label>
+        </div>
+        <label class="sr-only" for="tf-n">{pui(lang, 'fName')}</label>
+        <input id="tf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} />
+        <label class="sr-only" for="tf-c">{pui(lang, 'tourContact')}</label>
+        <input id="tf-c" name="contact" required maxlength="200" placeholder={pui(lang, 'tourContact')} />
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button type="submit">{pui(lang, 'reqTour')}</button>
+        <p class="tf__ok" hidden>{pui(lang, 'sent')}</p>
+        <p class="qf__fine">{pui(lang, 'answers')}</p>
+      </form>
+    </dialog>
+  </main>
+
+  <Footer lang={lang} munis={munis} />
+</Base>
+
+<style>
+  /* ── ΤΑ ΣΤΟΙΧΕΙΑ ΤΗΣ ΓΗΣ ─────────────────────────────────────────────── */
+  .lfacts { margin: 0 0 var(--s5); border-top: 1px solid var(--line-soft);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .lfact { display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
+           padding: 11px 0; border-bottom: 1px solid var(--line-soft); min-width: 0; }
+  .lfact dt { font-size: 12.5px; color: var(--faint); flex: none; }
+  .lfact dd { margin: 0; font-size: 14.5px; text-align: right; min-width: 0;
+              overflow-wrap: anywhere; }
+  /* Δύο στήλες θέλουν κενό ανάμεσα, αλλιώς οι τιμές της αριστερής ακουμπούν
+     τις ετικέτες της δεξιάς. */
+  @media (min-width: 700px) { .lfacts { column-gap: var(--s5); } }
+
+  .prop { padding-block: var(--s5) 0; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gut); }
+  .crumb { font-size: 13px; color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .crumb a { color: var(--ink-2); text-decoration: none; }
+  .crumb a:hover { text-decoration: underline; }
+
+  .tt { display: flex; align-items: flex-start; justify-content: space-between;
+        gap: var(--s4); flex-wrap: wrap; margin: var(--s3) 0 var(--s4); }
+  .tt__h { margin: 0; }
+  .tt__l { min-width: 0; }
+  .tt__r { display: flex; gap: var(--s2); flex: none; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; margin-top: 7px;
+          border: 1px solid var(--line); padding: 4px 10px; font-size: 11.5px; color: var(--ink-2); }
+  .chip svg { width: 12px; height: 12px; flex: none; }
+
+  .btn { appearance: none; border: 1px solid var(--line); background: none; color: var(--ink);
+         font: inherit; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;
+         padding: 0 14px; height: 44px; box-sizing: border-box; cursor: pointer; text-decoration: none;
+         display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .btn svg { width: 13px; height: 13px; flex: none; }
+  .btn--fav:hover, .btn:hover { border-color: var(--ink); }
+  .btn--go { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ═══ ΓΚΑΛΕΡΙ ═══════════════════════════════════════════════════════════
+     ΚΙΝΗΤΟ ΠΡΩΤΑ: ΜΙΑ φωτογραφία, σύρσιμο (ρητή οδηγία George 30/7).
+     🪤 Το `scroll-snap` θέλει `overflow-y: hidden` ΡΗΤΑ — αλλιώς το iOS κάνει
+        και τον κάθετο άξονα κυλιόμενο και η φωτό γλιστράει μέσα στο πλαίσιο
+        (το πληρώσαμε στις κάρτες της λίστας). */
+  .galwrap { position: relative; margin: 0 0 var(--s5); }
+  .gal {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 100%;
+    overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .gal::-webkit-scrollbar { display: none; }
+  .cell { position: relative; display: block; aspect-ratio: 3 / 2; overflow: hidden;
+          background: var(--paper-2); scroll-snap-align: start; scroll-snap-stop: always; }
+  .cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Η εικόνα είναι ΗΔΗ κατεστραμμένη (24px). Το `blur` εδώ είναι μόνο για να
+     μη φαίνονται τετραγωνάκια στη μεγέθυνση — καλλωπισμός, όχι κλείδωμα. */
+  .cell--locked img { filter: blur(7px) saturate(.92); transform: scale(1.06); }
+  .lockmark { position: absolute; inset: 0; display: grid; place-content: center;
+              color: #fff; background: rgba(10,14,16,.24); }
+  .lockmark svg { width: 26px; height: 26px; opacity: .85;
+                  filter: drop-shadow(0 1px 3px rgba(0,0,0,.45)); }
+  .lockover { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px;
+              text-align: center; color: #fff; background: rgba(10,14,16,.46); padding: 14px; }
+  .lockover svg { width: 24px; height: 24px; margin: 0 auto; }
+  .lockover b { font-size: 15px; font-weight: 600; text-wrap: balance; }
+  .lockover em { font-style: normal; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+                 border: 1px solid rgba(255,255,255,.75); padding: 8px 13px; margin: 2px auto 0; }
+
+  .dots { position: absolute; inset: auto 0 12px 0; display: flex; gap: 6px;
+          justify-content: center; pointer-events: none; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.55);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.2); transition: background .18s ease; }
+  .dots i[data-on] { background: #fff; }
+
+  @media (min-width: 900px) {
+    /* DESKTOP: μία μεγάλη αριστερά, τέσσερα πλακίδια δεξιά. Η ίδια σειρά
+       στοιχείων — αλλάζει μόνο η διάταξη, ώστε να μην υπάρχει δεύτερη γκαλερί
+       στο HTML (διπλό κατέβασμα εικόνων και διπλή συντήρηση). */
+    .galwrap { padding-inline: var(--gut); max-width: var(--max); margin-inline: auto; }
+    .gal {
+      grid-auto-flow: row; grid-template-columns: 2fr 1fr 1fr; grid-auto-rows: 1fr;
+      gap: 8px; overflow: visible; scroll-snap-type: none; height: 520px;
+    }
+    .cell { aspect-ratio: auto; }
+    .cell:first-child { grid-row: span 2; }
+    /* 🪤 ΠΕΝΤΕ ΠΛΑΚΙΔΙΑ, ΟΧΙ ΟΣΑ ΤΥΧΕΙ. Το πλέγμα είναι `2fr 1fr 1fr` μέσα σε
+       ύψος 520px: με 17 φωτογραφίες θα έφτιαχνε έξι σειρές στριμωγμένες στο ίδιο
+       ύψος — δηλαδή λωρίδες 60 pixel. Δεν φαινόταν ως τώρα επειδή ο επισκέπτης
+       έπαιρνε ακριβώς 4+1· θα έσπαγε την ΠΡΩΤΗ μέρα που θα έμπαινε μέλος.
+       Στο κινητό η ίδια σειρά είναι ράγα και τις θέλουμε ΟΛΕΣ — γι' αυτό το
+       κόψιμο ζει μόνο εδώ. */
+    .cell:nth-child(n + 6) { display: none; }
+    .dots { display: none; }
+  }
+
+  /* ═══ ΔΥΟ ΣΤΗΛΕΣ ΜΕΤΑ ΤΙΣ ΦΩΤΟΓΡΑΦΙΕΣ ═══ */
+  .cols { display: grid; gap: var(--s5); padding-bottom: var(--s7); }
+  @media (min-width: 900px) {
+    .cols { grid-template-columns: minmax(0,1fr) 300px; gap: var(--s6); align-items: start; }
+  }
+  .main { min-width: 0; }
+
+  .strip { display: flex; flex-wrap: wrap; border: 1px solid var(--line-soft); }
+  .strip div { flex: 1 1 auto; padding: 12px 16px; border-inline-end: 1px solid var(--line-soft); min-width: 92px; }
+  .strip div:last-child { border-inline-end: 0; }
+  .strip b { display: block; font-size: 15.5px; font-weight: 600; }
+  .strip span { font-size: 10px; letter-spacing: .11em; text-transform: uppercase; color: var(--faint); }
+
+  .sec { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint);
+         margin: var(--s6) 0 var(--s3); font-weight: 600; }
+  .desc { margin: 0; font-size: 15px; color: var(--ink-2); max-width: 70ch; white-space: pre-line; }
+
+  /* Χαρακτηριστικά με εικονίδια — «αισθητικά πολύ γλυκό» (George). */
+  .feats { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px var(--s4);
+           grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+  .feats li { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--ink-2); }
+  .feats svg { width: 19px; height: 19px; flex: none; color: var(--ink); }
+
+  .floors { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+  .fl { border: 1px solid var(--line-soft); padding: 14px 16px; }
+  .fl__h { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+  .fl dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 13px; }
+  .fl dt { color: var(--muted); }
+  .fl dd { margin: 0; text-align: end; }
+
+  .place { margin: 0; font-size: 15px; color: var(--ink-2); }
+  .maplock { position: relative; height: 240px; overflow: hidden; }
+  .maplock__bg { position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, transparent 47%, rgba(0,0,0,.06) 47% 51%, transparent 51%),
+      linear-gradient(0deg, transparent 62%, rgba(0,0,0,.06) 62% 66%, transparent 66%),
+      linear-gradient(38deg, transparent 29%, rgba(0,0,0,.04) 29% 32%, transparent 32%),
+      var(--paper-2);
+    filter: blur(1.5px); }
+  .maplock__in { position: absolute; inset: 0; display: grid; place-content: center; gap: 9px;
+                 text-align: center; padding: 16px; }
+  .maplock__in svg { width: 25px; height: 25px; margin: 0 auto; color: var(--ink); }
+  .maplock__in b { font-size: 16px; font-weight: 600; }
+  .maplock__in em { font-style: normal; font-size: 13px; color: var(--muted); max-width: 42ch; }
+  .maplock__in .btn { margin: 4px auto 0; }
+
+  .dists { list-style: none; margin: var(--s4) 0 0; padding: 0; display: grid; gap: 10px var(--s4);
+           grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); font-size: 13.5px; }
+  .dists li { display: flex; align-items: baseline; gap: 8px; border-bottom: 1px solid var(--line-soft); padding-bottom: 7px; }
+  .dists span { color: var(--ink-2); flex: 1 1 auto; min-width: 0; }
+  .dists b { font-weight: 600; }
+  .dists em { font-style: normal; font-size: 11px; color: var(--faint); }
+
+  .full { background: var(--ink); color: var(--paper); padding: var(--s5);
+          display: grid; gap: var(--s3); align-items: center; margin-top: var(--s6); }
+  @media (min-width: 700px) { .full { grid-template-columns: auto 1fr auto; gap: var(--s4); } }
+  .full__i { display: grid; place-items: center; width: 44px; height: 44px;
+             border: 1px solid rgba(255,255,255,.28); }
+  .full__i svg { width: 22px; height: 22px; }
+  .full__h { margin: 0; color: var(--paper); display: block; }
+  .full__l { margin: 6px 0 0; padding: 0; list-style: none; display: flex; gap: var(--s4);
+             flex-wrap: wrap; font-size: 13px; color: rgba(255,255,255,.82); }
+  .full__l li::before { content: '· '; opacity: .6; }
+  .full__b { background: var(--paper); color: var(--ink); padding: 13px 24px; font-size: 11.5px;
+             letter-spacing: .09em; text-transform: uppercase; text-decoration: none; white-space: nowrap;
+             justify-self: start; }
+  .full__b:hover { background: transparent; color: var(--paper); box-shadow: inset 0 0 0 1px var(--paper); }
+
+  .sim { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4);
+         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
+  /* ═══ Η ΚΑΡΤΑ ΕΝΕΡΓΕΙΩΝ ═══ */
+  .card { border: 1px solid var(--line); padding: var(--s4); background: var(--paper); }
+  @media (min-width: 900px) { .card { position: sticky; top: var(--s3); } }
+  .old { font-size: 13px; color: var(--faint); text-decoration: line-through; }
+  .price { margin: 0; }
+  .per { margin: 2px 0 var(--s3); font-size: 12px; color: var(--muted); }
+  .cta { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+         box-sizing: border-box; padding: 13px; margin-bottom: 7px; cursor: pointer;
+         border: 1px solid var(--ink); background: var(--ink); color: var(--paper);
+         font: inherit; font-size: 11.5px; font-weight: 600; letter-spacing: .09em;
+         text-transform: uppercase; text-decoration: none; }
+  .cta svg { width: 15px; height: 15px; flex: none; }
+  .cta:hover { opacity: .88; }
+  .cta--wa { background: none; color: #1faa53; border-color: #1faa53; }
+  .cta--sec { background: none; color: var(--ink); }
+  .tel { display: block; text-align: center; font-size: 13px; color: var(--ink-2); margin-top: 9px; }
+
+  .qf { border-top: 1px solid var(--line-soft); margin-top: var(--s4); padding-top: var(--s3);
+        display: grid; gap: 7px; }
+  .qf__h { display: block; }
+  .lab { font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
+  .qf input, .tf input { border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    font: inherit; font-size: 16px; padding: 0 11px; height: 44px; box-sizing: border-box; width: 100%; }
+  .qf input:focus-visible, .tf input:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .qf__int { margin: 0; font-size: 12px; color: var(--muted); background: var(--paper-2);
+             border: 1px dashed var(--line); padding: 9px 11px; }
+  .qf button, .tf button { border: 0; background: var(--ink); color: var(--paper); font: inherit;
+    font-size: 11.5px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+    padding: 13px; cursor: pointer; }
+  .qf__fine { margin: 0; font-size: 10.5px; color: var(--faint); }
+  .qf__ok, .tf__ok { margin: 0; font-size: 13px; color: var(--ink); }
+  /* Η παγίδα-μέλι φεύγει από την ΟΘΟΝΗ αλλά όχι από το DOM — τα ρομπότ
+     διαβάζουν HTML, δεν κοιτούν pixel. `display:none` το προσπερνούν πολλά. */
+  /* B-23: no physical offset — `left: -9999px` widened every RTL (he) page to ~11,000 px.
+     Clipped to 1 px in place; the selector matches `.qf input` so its padding/border cannot win. */
+  .hp, .qf .hp, .tf .hp { position: absolute; inset-inline-start: 0; top: 0; width: 1px; height: 1px;
+    padding: 0; margin: 0; border: 0; opacity: 0; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
+
+  /* ═══ ΚΙΝΗΤΗ ΜΠΑΡΑ ═══ */
+  .bar { position: fixed; inset: auto 0 0 0; z-index: 30; display: flex;
+         background: var(--paper); border-top: 1px solid var(--line);
+         box-shadow: 0 -8px 30px rgba(10,14,16,.10);
+         padding-bottom: env(safe-area-inset-bottom); }
+  .bar__go, .bar__i { flex: 1; display: grid; place-items: center; gap: 3px; padding: 9px 6px;
+    font: inherit; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase;
+    border: 0; border-inline-end: 1px solid var(--line-soft); background: none;
+    color: var(--ink); text-decoration: none; cursor: pointer; min-height: 56px; }
+  .bar__i:last-child { border-inline-end: 0; }
+  .bar__go { flex: 1.5; background: var(--ink); color: var(--paper); }
+  .bar svg { width: 17px; height: 17px; }
+  .bar__i[href^='https://wa.me'] { color: #1faa53; }
+  @media (min-width: 900px) { .bar { display: none; } }
+  /* Χώρος ώστε η μπάρα να μην κρύβει το τέλος της σελίδας. */
+  @media (max-width: 899px) { .prop { padding-bottom: 60px; } }
+
+  /* ═══ ΠΑΡΑΘΥΡΟ ΕΠΙΣΚΕΨΗΣ ═══ */
+  .modal { border: 1px solid var(--line); padding: var(--s5); max-width: 380px; width: calc(100% - 2 * var(--gut));
+           background: var(--paper); color: var(--ink); box-shadow: 0 24px 70px rgba(10,14,16,.22); }
+  .modal::backdrop { background: rgba(10,14,16,.45); }
+  .modal__x { display: flex; justify-content: flex-end; margin: calc(-1 * var(--s3)) calc(-1 * var(--s3)) 0 0; }
+  .modal__x button { border: 0; background: none; font-size: 22px; line-height: 1; cursor: pointer;
+                     color: var(--muted); padding: 4px 8px; }
+  .modal__h { display: block; margin: 0; }
+  .modal__s { margin: 4px 0 var(--s3); font-size: 13px; color: var(--muted); }
+  .tf { display: grid; gap: 8px; }
+  .when { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 2px; }
+  .when label { cursor: pointer; }
+  .when input { position: absolute; opacity: 0; pointer-events: none; }
+  .when span { display: inline-block; border: 1px solid var(--line); padding: 8px 13px; font-size: 12.5px; }
+  .when input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .when input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+</style>
+
+<script>
+  // ── ΟΙ ΤΕΛΙΤΣΕΣ ΤΗΣ ΓΚΑΛΕΡΙ (μόνο στο κινητό, όπου είναι ράγα) ──────────
+  // Άμεσο, ΟΧΙ μέσω requestAnimationFrame: το rAF δεν τρέχει σε καρτέλα που
+  // δεν ζωγραφίζεται, οπότε η ενημέρωση έμενε στην ουρά — το πληρώσαμε στις
+  // κάρτες της λίστας σήμερα το πρωί.
+  const gal = document.getElementById('gal');
+  const dots = Array.from(document.getElementById('galdots')?.children ?? []) as HTMLElement[];
+  if (gal && dots.length > 1) {
+    let last = -1;
+    const sync = () => {
+      const w = gal.clientWidth;
+      if (!w) return;
+      // `Math.abs`: σε RTL (εβραϊκά) το scrollLeft είναι αρνητικό.
+      const i = Math.min(dots.length - 1, Math.round(Math.abs(gal.scrollLeft) / w));
+      if (i === last) return;
+      last = i;
+      dots.forEach((d, n) => d.toggleAttribute('data-on', n === i));
+    };
+    gal.addEventListener('scroll', sync, { passive: true });
+    sync();
+  }
+
+  // ── ΚΟΙΝΟΠΟΙΗΣΗ: το φύλλο του κινητού αν υπάρχει, αλλιώς αντιγραφή ──────
+  const sh = document.getElementById('share');
+  sh?.addEventListener('click', async () => {
+    const url = location.href, title = document.title;
+    try {
+      if (navigator.share) { await navigator.share({ title, url }); return; }
+      await navigator.clipboard.writeText(url);
+      const old = sh.textContent;
+      sh.textContent = sh.getAttribute('data-copied') || 'OK';
+      setTimeout(() => { sh.textContent = old; }, 1600);
+    } catch { /* ο χρήστης ακύρωσε — καμία ενέργεια */ }
+  });
+
+  // ── ΤΟ ΠΑΡΑΘΥΡΟ ΤΗΣ ΕΠΙΣΚΕΨΗΣ ──────────────────────────────────────────
+  const dlg = document.getElementById('tour') as HTMLDialogElement | null;
+  document.querySelectorAll('[data-tour]').forEach((b) => {
+    b.addEventListener('click', () => dlg?.showModal());
+  });
+
+  // Τα δύο πρώτα κουμπιά δείχνουν ΠΡΑΓΜΑΤΙΚΕΣ ημερομηνίες — το επόμενο
+  // Σάββατο και Κυριακή. Γράφονται στον browser γιατί ο διακομιστής θα τις
+  // «έψηνε» στη σελίδα και μια αποθηκευμένη σελίδα θα έδειχνε περασμένη μέρα.
+  const lang = document.documentElement.lang || 'el';
+  const now = new Date();
+  document.querySelectorAll<HTMLElement>('[data-day]').forEach((el) => {
+    const want = el.dataset.day === '0' ? 6 : 0;           // 6 = Σάββατο, 0 = Κυριακή
+    const d = new Date(now);
+    d.setDate(now.getDate() + ((want - now.getDay() + 7) % 7 || 7));
+    el.textContent = d.toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'numeric' });
+  });
+
+  // ── ΟΙ ΔΥΟ ΦΟΡΜΕΣ → /api/inquiry ────────────────────────────────────────
+  // Μία διαδρομή για τα δύο: η επίσκεψη είναι αίτημα με «πότε» μέσα στο μήνυμα.
+  // Έτσι ο George τα βλέπει και τα δύο στο ίδιο σημείο του CRM, με ξεχωριστή
+  // σήμανση για να μετρηθεί ποιο δουλεύει (data-ev στα κουμπιά).
+  const opened = Date.now();
+  const propertyId = location.pathname.split('/').filter(Boolean).pop() || '';
+
+  const wire = (form: HTMLFormElement | null, okSel: string, extra: () => string) => {
+    if (!form) return;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type=submit]') as HTMLButtonElement | null;
+      const fd = new FormData(form);
+      const body = {
+        name: String(fd.get('name') ?? ''),
+        email: String(fd.get('email') ?? fd.get('contact') ?? ''),
+        phone: String(fd.get('phone') ?? ''),
+        message: extra(),
+        website: String(fd.get('website') ?? ''),
+        propertyId, lang, t: opened,
+      };
+      // Το πεδίο επαφής της επίσκεψης δέχεται ή email ή τηλέφωνο.
+      if (!/.+@.+\..+/.test(body.email)) { body.phone = body.email; body.email = `${propertyId}@lead.local`; }
+      if (btn) btn.disabled = true;
+      try {
+        const r = await fetch('/api/inquiry', {
+          method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
+        });
+        if (!r.ok) throw new Error('bad');
+        form.querySelectorAll('input, button').forEach((x) => ((x as HTMLInputElement).hidden = true));
+        const ok = form.querySelector(okSel) as HTMLElement | null;
+        if (ok) ok.hidden = false;
+        // The lead counts only now — after the server accepted it (Q-013), never on click.
+        const ev = form.getAttribute('data-ev');
+        const track = (window as unknown as { __track?: (n: string, x?: object) => void }).__track;
+        if (ev && track) track(ev, { ev_page: location.pathname, property_id: propertyId });
+      } catch {
+        if (btn) { btn.disabled = false; }
+      }
+    });
+  };
+  wire(document.getElementById('qf') as HTMLFormElement, '.qf__ok', () => '');
+  wire(document.getElementById('tf') as HTMLFormElement, '.tf__ok', () => {
+    const w = (document.querySelector('input[name=when]:checked') as HTMLInputElement | null)?.value ?? '';
+    const label = document.querySelector('input[name=when]:checked + span')?.textContent?.trim() ?? w;
+    return `TOUR: ${label}`;
+  });
+</script>

@@ -1,0 +1,252 @@
+---
+// Η ΚΑΡΤΑ ΑΚΙΝΗΤΟΥ — το πιο σημαντικό κομμάτι της σελίδας.
+//
+// ΤΡΕΙΣ ΣΕΙΡΕΣ, ΟΧΙ ΤΕΣΣΕΡΙΣ (George, 30/7): τιμή+θάλασσα · τίτλος · στοιχεία.
+// Η απόσταση από τη θάλασσα πήγε **δίπλα στην τιμή, δεξιά** — δεν υπάρχει σε όλα
+// τα ακίνητα και λειτουργεί ως σήμα, όχι ως γραμμή δεδομένων. Κερδίζουμε μία
+// σειρά ανά κάρτα, δηλαδή πιο πυκνή λίστα χωρίς να χαθεί πληροφορία.
+//
+// 📊 ΓΙΑΤΙ Η ΠΥΚΝΟΤΗΤΑ ΕΧΕΙ ΣΗΜΑΣΙΑ: μετρήθηκε στα luxury sites (29/7) ότι αυτό
+//    που τα ξεχωρίζει ΔΕΝ είναι μεγαλύτερες φωτογραφίες — είναι **λιγότερα πεδία
+//    ανά κάρτα**. Christie's 6 πεδία · Knight Frank 8 · xe.gr 10 · Grekodom 11.
+//
+// Υδατογράφημα: ΝΑΙ σε κάθε μέγεθος — είναι φωτογραφία ακινήτου (κανόνας 29/7).
+import type { SiteProperty } from '../lib/api';
+import { priceOf, priceVisible, pick, refOf } from '../lib/api';
+import { coverOf, photosOf, marked, cardSrcSet, altOf } from '../lib/photos';
+import { money, sqm, seaLabel, factLine } from '../lib/format';
+import { t, propertyUrl, type Lang } from '../lib/i18n';
+import { placeOf, municipalityOf, type Viewer } from '../lib/gate';
+
+interface Props { p: SiteProperty; lang: Lang; viewer: Viewer; eager?: boolean }
+const { p, lang, viewer, eager = false } = Astro.props;
+
+const a = p.attributes ?? {};
+const id = refOf(p);
+const cover = coverOf(a);
+const sub = pick(a.subcategory_i18n, lang) || a.subcategory || '';
+// ⚠️ Η ΠΕΡΙΟΧΗ ΔΕΝ ΕΜΦΑΝΙΖΕΤΑΙ σε μη συνδεδεμένους. Ο δήμος ναι.
+// Ο κανόνας ζει στο lib/gate.ts — μην τον παρακάμψεις εδώ.
+const place = placeOf(a, lang, viewer);
+const muni = municipalityOf(a, lang);
+const sea = seaLabel(a.sea_access, lang);
+
+const title = place ? `${sub} — ${place}` : sub;
+const facts = factLine([
+  a.sqm ? sqm(Number(a.sqm), lang) : null,
+  a.bedrooms ? `${a.bedrooms} ${t(lang, 'card.bed')}` : null,
+  a.bathrooms ? `${a.bathrooms} ${t(lang, 'card.bath')}` : null,
+  `ID ${id}`,
+]);
+const href = propertyUrl(lang, id);
+
+// 📸 ΤΡΕΙΣ ΦΩΤΟΓΡΑΦΙΕΣ ΜΕ ΣΥΡΣΙΜΟ, ΚΑΙ ΜΕΤΑ ΠΡΟΤΡΟΠΗ (George, 30/7).
+//    Το εξώφυλλο πρώτο, μετά δύο ακόμα, και τελευταίο ΔΕΝ είναι φωτογραφία αλλά
+//    κάρτα «δες τις υπόλοιπες» — έτσι το σύρσιμο **τελειώνει σε κλικ** αντί να
+//    σβήνει. Μετρήθηκε: 525 από τα 526 ακίνητα έχουν 3+ φωτογραφίες, άρα το
+//    μοτίβο δεν αδειάζει σχεδόν ποτέ.
+const all = photosOf(a);
+const rest = cover ? all.filter((x) => x.url !== cover.url) : all;
+const shots = (cover ? [cover, ...rest] : rest).slice(0, 3);
+const more = Math.max(0, all.length - shots.length);
+const slides = shots.length + (more > 0 ? 1 : 0);
+const uid = `c${id}`;
+---
+<article class="card">
+  {/* 🪤 Σχόλιο ΕΞΩ από το `{cond && ()}` — μέσα σπάει το build.
+      ΤΟ `sizes` ΕΛΕΓΕ 33vw ΕΝΩ Η ΚΑΡΤΑ ΕΙΝΑΙ 26,6vw: 3 στήλες μέσα στο `.wrap`
+      δίνουν 383px, όχι 33% της οθόνης. Με το φουσκωμένο νούμερο ο browser
+      διάλεγε `_800w` εκεί που αρκούσε το `_400w` — 1.079 KB έναντι 300 KB.
+      Το σύρσιμο γίνεται με scroll-snap: δουλεύει ΧΩΡΙΣ JavaScript, με το
+      δάχτυλο στο κινητό και με το trackpad στο desktop. */}
+  <div class="ph" id={uid}>
+    <div class="rail">
+      {shots.map((s, i) => (
+        <a class="slide" href={href} tabindex={i === 0 ? undefined : -1} aria-hidden={i === 0 ? undefined : 'true'}>
+          {/* 🔴 ΤΟ ΜΕΓΑΛΥΤΕΡΟ ΒΑΡΟΣ ΤΟΥ SITE ΗΤΑΝ ΕΙΚΟΝΕΣ ΠΟΥ ΔΕΝ ΕΒΛΕΠΕ ΚΑΝΕΙΣ.
+              Μετρήθηκε σε πραγματικό φυλλομετρητή στη λίστα: **69 εικόνες κατέβηκαν,
+              οι 46 ήταν κρυφές** — 6,59 MB από τα 9,89 MB, δηλαδή **το 67%**. Κάθε
+              κάρτα φτιάχνει ράγα τριών φωτογραφιών και φαίνεται μόνο η πρώτη· οι άλλες
+              δύο μόνο αν σύρεις ΑΥΤΗ την κάρτα. Το `loading="lazy"` ΔΕΝ τις σταματά:
+              μόλις η κάρτα μπει κάθετα στην οθόνη, φορτώνουν και οι τρεις.
+              ⚠️ Με `?per=48` γίνονταν 144 εικόνες ≈ 20 MB σε μία σελίδα.
+              ✅ Μηδέν κόστος στην αναζήτηση: οι 2η/3η έχουν ήδη `alt=''`.
+              Κατεβαίνουν πλέον με το πρώτο άγγιγμα της ράγας — δες το script πιο κάτω. */}
+          <img src={i === 0 ? marked(s.url, 800) : undefined}
+               srcset={i === 0 ? cardSrcSet(s.url) : undefined}
+               data-src={i === 0 ? undefined : marked(s.url, 800)}
+               data-srcset={i === 0 ? undefined : cardSrcSet(s.url)}
+               sizes="(min-width: 1360px) 383px, (min-width: 760px) calc((100vw - 132px) / 3), calc(100vw - 40px)"
+               alt={i === 0 ? altOf(s, lang, title) : ''} width="800" height="533"
+               loading={eager && i === 0 ? 'eager' : 'lazy'} decoding="async" />
+        </a>
+      ))}
+      {more > 0 && (
+        <a class="slide slide--more" href={href} data-ev="property:card_more">
+          <span class="more__n">+{more}</span>
+          <span class="more__t">{t(lang, 'card.seeall')}</span>
+        </a>
+      )}
+    </div>
+    {slides > 1 && (
+      /* Η πρώτη είναι αναμμένη από τον διακομιστή — ώστε να δείχνει σωστά
+         πριν προλάβει να τρέξει οτιδήποτε, και να δουλεύει χωρίς JavaScript. */
+      <span class="dots" aria-hidden="true">
+        {Array.from({ length: slides }).map((_, i) => <i data-on={i === 0 ? '' : undefined}></i>)}
+      </span>
+    )}
+  </div>
+
+  {/* ΣΕΙΡΑ 1 — τιμή αριστερά, θάλασσα δεξιά στην ίδια ευθεία. */}
+  <p class="row1">
+    <span class="price t-price">
+      {priceVisible(a) ? money(priceOf(a), lang) : (t(lang, 'card.price_request'))}
+    </span>
+    {sea && <span class="sea" data-sea={a.sea_access}>{sea}</span>}
+  </p>
+
+  {/* ΣΕΙΡΑ 2 — τίτλος. */}
+  <h3 class="title t-h3"><a href={href} data-ev="property:card_click">{title}</a></h3>
+
+  {/* ΣΕΙΡΑ 3 — στοιχεία, και ο δήμος στην ίδια γραμμή για τα μέλη. */}
+  <p class="facts t-data">
+    <span>{facts}</span>
+    {viewer.member && muni && <span class="muni">· {muni}</span>}
+  </p>
+</article>
+
+<style>
+  /* 🛡️ ΧΩΡΙΣ JAVASCRIPT ΒΛΕΠΕΙ ΜΙΑ ΦΩΤΟΓΡΑΦΙΑ, ΟΧΙ ΤΡΙΑ ΚΕΝΑ ΚΟΥΤΙΑ.
+     Οι θέσεις 2-3 δεν έχουν `src` μέχρι να τις ζητήσει ο επισκέπτης· αν έμεναν
+     ορατές, θα ήταν λευκά ορθογώνια. Εμφανίζονται μαζί με το ξύπνημα. */
+  .rail > .slide:not(:first-child) { display: none; }
+  .ph[data-woke] .rail > .slide { display: block; }
+
+  .card { min-width: 0; }
+
+  .ph { position: relative; overflow: hidden; background: var(--paper-2); }
+  .rail {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 100%;
+    /* 🪤 ΕΛΕΓΕ ΜΟΝΟ `overflow-x: auto`. Το CSS τότε κάνει τον ΚΑΘΕΤΟ άξονα `auto`
+       κι αυτός, οπότε η ράγα γίνεται και κάθετος κύλινδρος: με διαφορά ενός
+       υπο-εικονοστοιχείου στο ύψος, η φωτό ΓΛΙΣΤΡΑΕΙ πάνω-κάτω μέσα στο πλαίσιο
+       στο iOS Safari. Ο George το φωτογράφισε 30/07. Δηλώνουμε ρητά `hidden`. */
+    overflow-x: auto; overflow-y: hidden;
+    overscroll-behavior-x: contain;   /* το σύρσιμο δεν «φεύγει» στη σελίδα */
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; -ms-overflow-style: none;
+    aspect-ratio: 3 / 2;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+  /* `start` + `stop: always` = η ράγα ΔΕΝ σταματά ανάμεσα σε δύο φωτό (ήταν
+     `center` χωρίς stop → φαινόταν λωρίδα της διπλανής). */
+  .slide {
+    scroll-snap-align: start; scroll-snap-stop: always;
+    position: relative; display: block; height: 100%;
+  }
+  /* Απόλυτη τοποθέτηση: καμία στρογγυλοποίηση δεν αφήνει κενό στο πλαίσιο. */
+  .slide img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease;
+  }
+  /* Η μία από τις δύο επιτρεπόμενες κινήσεις — μόνο στο εξώφυλλο. */
+  .card:hover .slide:first-child img { transform: scale(1.03); }
+
+  /* Το τελευταίο «διαφανάκι» δεν είναι φωτογραφία: είναι η προτροπή να μπει μέσα. */
+  .slide--more {
+    display: grid; place-content: center; gap: 6px; text-align: center;
+    background: var(--ink); color: var(--paper); text-decoration: none;
+  }
+  .more__n { font-size: 26px; font-weight: 300; letter-spacing: -.02em; }
+  .more__t { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+
+  .dots {
+    position: absolute; inset: auto 0 9px 0; display: flex; gap: 5px;
+    justify-content: center; pointer-events: none;
+  }
+  .dots i {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(255,255,255,.55); box-shadow: 0 0 0 1px rgba(0,0,0,.18);
+    transition: background .18s ease;
+  }
+  /* 🪤 ΗΤΑΝ `:first-child` — ΓΙ' ΑΥΤΟ ΔΕΝ ΑΛΛΑΖΕ ΠΟΤΕ.
+     «Όταν κάνω swipe δεν αλλάζουν οι τελίτσες, μένει στην πρώτη» (George, 30/7).
+     Ήταν ΣΤΑΘΕΡΟΣ κανόνας CSS: «η πρώτη είναι λευκή», τελεία. Το σύρσιμο γίνεται
+     με scroll-snap, που είναι καθαρό CSS και δεν ειδοποιεί κανέναν — άρα δεν
+     υπήρχε τίποτα να μετακινήσει το λευκό. Τώρα το σημάδι είναι γνώρισμα
+     (`data-on`) που το μετακινεί το script παρακάτω. */
+  .dots i[data-on] { background: #fff; }
+
+  /* ── ΣΕΙΡΑ 1 ────────────────────────────────────────────────────────────── */
+  .row1 {
+    margin: 12px 0 0; display: flex; align-items: baseline; gap: 10px;
+  }
+  .price { flex: 1 1 auto; min-width: 0; }
+  .sea {
+    flex: 0 0 auto; border: 1px solid var(--line); padding: 2px 7px;
+    font-size: 10.5px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-2); white-space: nowrap;
+  }
+  /* 🌊 Η ΠΡΩΤΗ ΓΡΑΜΜΗ ΤΟΝΙΖΕΤΑΙ — «κάτι πολύ αχνό» (George, 28/7).
+     Ένα ήσυχο γέμισμα και σκουρότερο γράμμα· ΚΑΝΕΝΑ χρώμα, ο κανόνας της
+     παλέτας μένει ανέπαφος. Είναι το χαρακτηριστικό που κοστίζει +79% το τ.μ. */
+  .sea[data-sea='front'] {
+    background: var(--paper-2); border-color: transparent; color: var(--ink);
+  }
+
+  .title { margin: 5px 0 0; }
+  .facts { margin: 5px 0 0; display: flex; flex-wrap: wrap; gap: 5px; align-items: baseline; }
+  .muni { color: var(--faint); }
+</style>
+
+<script>
+  // ── ΟΙ ΤΕΛΙΤΣΕΣ ΑΚΟΛΟΥΘΟΥΝ ΤΟ ΣΥΡΣΙΜΟ ───────────────────────────────────
+  // Ο Astro μαζεύει τα script των components σε ΕΝΑ αρχείο που τρέχει ΜΙΑ φορά,
+  // όσες κάρτες κι αν υπάρχουν στη σελίδα — γι' αυτό δένουμε με έναν βρόχο εδώ
+  // αντί για ένα script ανά κάρτα.
+  document.querySelectorAll<HTMLElement>('.ph').forEach((ph) => {
+    const rail = ph.querySelector<HTMLElement>('.rail');
+    if (!rail) return;
+
+    // 🖼️ ΞΥΠΝΗΜΑ ΤΩΝ ΚΡΥΦΩΝ. Μία φορά, με το πρώτο σημάδι ενδιαφέροντος για ΑΥΤΗ
+    //    την κάρτα. Τα `once: true` + `passive: true` σημαίνουν μηδέν κόστος μετά.
+    const wake = () => {
+      ph.dataset.woke = '1';
+      rail.querySelectorAll('img[data-src]').forEach((img) => {
+        const el = img as HTMLImageElement;
+        if (el.dataset.srcset) el.srcset = el.dataset.srcset;
+        if (el.dataset.src) el.src = el.dataset.src;
+        delete el.dataset.src; delete el.dataset.srcset;
+      });
+    };
+    for (const ev of ['pointerdown', 'touchstart', 'mouseenter', 'focusin', 'scroll'] as const) {
+      rail.addEventListener(ev, wake, { once: true, passive: true });
+    }
+    const dots = ph.querySelectorAll<HTMLElement>('.dots i');
+    if (!rail || dots.length < 2) return;
+
+    // 🪤 ΕΙΧΑ ΒΑΛΕΙ `requestAnimationFrame` ΓΙΑ ΟΙΚΟΝΟΜΙΑ — ΚΑΙ ΗΤΑΝ ΛΑΘΟΣ.
+    //    Το rAF ΔΕΝ τρέχει όταν η καρτέλα δεν ζωγραφίζεται (κρυφή, σε άλλο
+    //    παράθυρο, ή σε αυτοματοποιημένο έλεγχο). Με αυτό, η ενημέρωση έμενε
+    //    στην ουρά για πάντα και οι τελίτσες έδειχναν λάθος φωτογραφία μόλις η
+    //    καρτέλα ξαναγινόταν ορατή — δηλαδή ακριβώς το σφάλμα που διορθώναμε,
+    //    σε άλλη συνθήκη. Επίσης το έκανε ΑΝΕΛΕΓΚΤΟ: η μέτρηση έδειχνε «δεν
+    //    δουλεύει» ενώ η λογική ήταν σωστή.
+    //    Η οικονομία δεν άξιζε τίποτα: μία διαίρεση και ως τέσσερις εναλλαγές
+    //    γνωρίσματος. Άμεσο, με φρένο στο «δεν άλλαξε τίποτα».
+    let last = -1;
+    const sync = () => {
+      const w = rail.clientWidth;
+      if (!w) return;
+      // 🪤 `Math.abs`: στα εβραϊκά η σελίδα διαβάζεται ανάποδα και το `scrollLeft`
+      //    γίνεται ΑΡΝΗΤΙΚΟ. Χωρίς αυτό, το σημάδι θα κολλούσε στην πρώτη τελίτσα
+      //    ακριβώς όπως πριν — αλλά μόνο σε μία γλώσσα, δηλαδή θα μας ξέφευγε.
+      const i = Math.min(dots.length - 1, Math.round(Math.abs(rail.scrollLeft) / w));
+      if (i === last) return;
+      last = i;
+      dots.forEach((d, n) => d.toggleAttribute('data-on', n === i));
+    };
+    rail.addEventListener('scroll', sync, { passive: true });
+    sync();
+  });
+</script>

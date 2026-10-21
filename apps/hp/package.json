@@ -1,0 +1,33 @@
+{
+  "name": "@ealida/hp-site",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@12.11.2",
+  "description": "halkidikiproperties.com — νέο site από το μηδέν (Astro 5 SSR). Χτίζεται ΕΞΩ από το ~/EALIDA/build ώστε να μην το πιάνει το autodeploy μέχρι να είναι έτοιμο.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 4330 --host",
+    "build": "node scripts/check-i18n.mjs && node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/check-events.mjs && astro build",
+    "preview": "astro preview --port 4330 --host",
+    "check": "astro check",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:events": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/check-events.mjs",
+    "test": "node scripts/test-filter-params.mjs && node scripts/test-no-counts.mjs && node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/test-brand.mjs && node scripts/test-area-pages.mjs && node scripts/test-articles.mjs && node scripts/test-consent.mjs && node scripts/test-legal-pages.mjs && node scripts/test-sell-company-pages.mjs && node scripts/test-services-pages.mjs && node scripts/test-morning-fixes.mjs && node scripts/test-service-heroes.mjs && node scripts/test-consent-stat.mjs && node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/test-phone-format.mjs && node scripts/test-remaining-pages.mjs && node scripts/test-e05-data.mjs && node scripts/test-e05-i18n.mjs && node scripts/test-e05-security.mjs && node scripts/test-e05-small.mjs && node scripts/test-e05-seo.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.0.0",
+    "astro": "^5.1.0",
+    "sharp": "^0.35.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.11",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
+}

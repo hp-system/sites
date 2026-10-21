@@ -1,0 +1,108 @@
+// Local stand-in for the CRM site API, for acceptance tests of the site (M1, E-05).
+// Serves N synthetic properties and records every POST so a test can check what the site sent.
+// Usage: node scripts/stub-api.mjs [port=4339] [n=1200]   → base URL http://127.0.0.1:<port>/api
+// Not a contract: only the fields the site reads for list/count/sitemap/forms.
+import { createServer } from 'node:http';
+
+/**
+ * Safety: the acceptance tests start their OWN site on 127.0.0.1:4331 against this stub and send
+ * form POSTs to it. If anything already answers on that port (e.g. a local build wired to the
+ * real CRM through the SSH tunnel), those POSTs would reach real data — so refuse to start.
+ * (2026-10-13: a test reached a real-data server this way; it crashed before any POST.)
+ */
+export async function assertSitePortFree(port = 4331) {
+  // Bind test, not a request: a busy but slow server would time out and look "free".
+  const busy = await new Promise((resolve) => {
+    const probe = createServer();
+    probe.once('error', () => resolve(true));
+    probe.listen(port, '127.0.0.1', () => probe.close(() => resolve(false)));
+  });
+  if (busy) {
+    console.error(`🔴 Port ${port} is in use — another server runs there (maybe wired to the real CRM). Stop it first; tests will not run.`);
+    process.exit(3);
+  }
+}
+
+export async function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} }, junk = false, variety = false } = {}) {
+  // Pools cycle through "private pool" (3), "no pool" (2) and nothing: 1/3 really have a pool.
+  const items = Array.from({ length: n }, (_, i) => ({
+    id: `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
+    reference: i % 50 === 0 ? `HP-${9000 + i}` : null,
+    title: `Stub property ${i}`,
+    createdAt: '2026-10-01T00:00:00Z',
+    updatedAt: '2026-10-02T00:00:00Z',
+    attributes: {
+      onsea_id: i % 50 === 0 ? undefined : String(10000 + i),
+      category: 'residential',
+      subcategory: 'detached_house',
+      public_price: 100000 + i * 1000,
+      price_public_visible: true,
+      bedrooms: 1 + (i % 5),
+      sqm: 50 + (i % 200),
+      pools: [['3'], ['2'], []][i % 3],
+      // Property 10001 carries hostile text, as a CRM editor could type it (B-07 JSON-LD test).
+      ...(i === 1 ? { description_en: 'Sea view </script><script>window.__pwned=1</script> & more' } : {}),
+      // Properties 10003…10009 feed the home valuation benchmarks (≥ 5 per area, category residency).
+      ...(i >= 3 && i <= 9 ? { category: 'residency', area: 'Stubville', sqm: 100 + i } : {}),
+      // Property 10002 is land with every land fact set (B-25 labels in all languages).
+      ...(i === 2 ? { category: 'land', subcategory: 'plot', buildable_type: '1', plan_type: '3', road_access: 'dirt',
+        electricity: true, water: false, drilling: true, orientation: '9' } : {}),
+      // `variety`: kinds, municipalities and sea distance cycle, so filters can be told apart.
+      ...(variety && i > 9 ? {
+        category: i % 4 === 0 ? 'land' : 'residency',
+        subcategory: i % 4 === 0 ? 'plot' : ['detached house', 'maisonette', 'apartment'][i % 3],
+        municipality: ['Κασσάνδρα', 'Σιθωνία', 'Αριστοτέλης', 'Νέα Προποντίδα'][i % 4],
+        sea_access: ['front', 'walking', 'nearby'][i % 3],
+        // A village per municipality: members-only on cards, so the area pages must never print it there.
+        area: ['Pefkochori', 'Nikiti', 'Ierissos', 'Nea Kallikratia'][i % 4],
+      } : {}),
+    },
+  }));
+  // A CRM record without any public id (B-26): must be invisible everywhere on the site.
+  if (junk) items.push({ id: 'fce9d938-0000-4000-8000-000000000000', reference: '', title: '10', attributes: { category: '1', subcategory: '10' } });
+  const captured = [];
+  await assertSitePortFree();
+
+  const server = createServer(async (req, res) => {
+    const url = new URL(req.url, `http://127.0.0.1:${port}`);
+    const send = (code, body) => { res.writeHead(code, { 'content-type': 'application/json' }); res.end(JSON.stringify(body)); };
+    if (req.method === 'POST') {
+      let raw = '';
+      for await (const c of req) raw += c;
+      let body = null;
+      try { body = JSON.parse(raw); } catch { /* keep null */ }
+      captured.push({ path: url.pathname, headers: req.headers, body });
+      // A successful code check returns a member token, as the CRM does.
+      if (url.pathname === '/api/site/member/verify-code') return send(200, { ok: true, token: 'stub-token', name: 'Stub', needs: [] });
+      return send(200, { ok: true });
+    }
+    if (url.pathname === '/__captured') return send(200, captured);
+    // CMS texts/images (lib/content.ts); a test passes its own `content`.
+    if (url.pathname === '/api/site/content') return send(200, content);
+    // Members: `stub-token` has a name, `stub-noname` has none (header falls back to its label).
+    if (url.pathname === '/api/site/member/me') {
+      const tok = req.headers['x-member-token'];
+      if (tok !== 'stub-token' && tok !== 'stub-noname') return send(401, { message: 'no session' });
+      return send(200, { email: 'stub@example.com', name: tok === 'stub-token' ? 'Stub User' : '', phone: '', favorites: [], level: 'member', blocked: false });
+    }
+    if (url.pathname === '/api/site/properties') {
+      const limit = Math.min(60, Number(url.searchParams.get('limit') ?? 60));
+      const page = Math.max(1, Number(url.searchParams.get('page') ?? 1));
+      return send(200, { total: items.length, page, limit, items: items.slice((page - 1) * limit, page * limit) });
+    }
+    const m = url.pathname.match(/^\/api\/site\/property\/(.+)$/);
+    if (m) {
+      const id = decodeURIComponent(m[1]);
+      const p = items.find((x) => x.attributes.onsea_id === id || x.reference === id || x.id === id);
+      return p ? send(200, p) : send(404, { message: 'not found' });
+    }
+    return send(404, { message: 'stub: not implemented', path: url.pathname });
+  });
+  return await new Promise((resolve) => server.listen(port, '127.0.0.1', () => resolve({ server, items, captured, base: `http://127.0.0.1:${port}/api` })));
+}
+
+if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}` || import.meta.url === `file://${process.argv[1]}`) {
+  const port = Number(process.argv[2] ?? 4339), n = Number(process.argv[3] ?? 1200);
+  const { base } = await startStub({ port, n });
+  console.log(`stub API ${base} with ${n} properties`);
+}

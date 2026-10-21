@@ -1,0 +1,139 @@
+---
+// ΜΠΛΟΚ 4 — Το ακίνητο της εβδομάδας. Ένα ακίνητο, full-bleed.
+//
+// Εδώ κατέληξε η επιλογή «Α» του hero, μετά την παρατήρηση του George:
+// «το hero property πρέπει να υπάρχει αλλά όχι σαν κάτι που βλέπει μόλις μπει».
+// Σε αυτή τη θέση δεν είναι το πρόσωπο της εταιρείας — είναι στιγμή επίδειξης.
+//
+// 🔒 ΥΔΑΤΟΓΡΑΦΗΜΕΝΗ (George, 5/8) — ήταν «καμία υδατογράφηση: μεγάλη φωτογραφία»
+//    (30/7: «είναι υπερβολή»). Ανατράπηκε επειδή αυτή είναι η **ακριβότερη
+//    φωτογραφία της αρχικής**: το μεγαλύτερο, καθαρό αρχείο του καλύτερου
+//    ακινήτου — δηλαδή ακριβώς ό,τι θα έπαιρνε κάποιος πρώτο.
+// 🛡️ Μπαίνει ΜΟΝΟ ακίνητο που περνά το heroReady() — αλλιώς δεν εμφανίζεται καθόλου.
+import type { SiteProperty } from '../lib/api';
+import { priceOf, priceVisible, pick, refOf } from '../lib/api';
+import { coverOf, marked, markedSrcSet, markedSrcSetSmall, focalStyle, altOf } from '../lib/photos';
+import { money, sqm, seaLabel, factLine } from '../lib/format';
+import { t, propertyUrl, type Lang } from '../lib/i18n';
+import { placeOf, municipalityOf, type Viewer } from '../lib/gate';
+import { rentalUrl } from '../lib/contact';
+
+// Η ετικέτα («Το ακίνητο της εβδομάδας») είναι ΠΡΟΑΙΡΕΤΙΚΗ και θα έρχεται από το CMS:
+// ο George μπορεί να τη θέλει «του μήνα», ή τίποτα, και να προβάλλει ό,τι θέλει.
+interface Props { p: SiteProperty; lang: Lang; viewer: Viewer; eyebrow?: string | null }
+const { p, lang, viewer, eyebrow = null } = Astro.props;
+
+const a = p.attributes ?? {};
+const id = refOf(p);
+const cover = coverOf(a);
+const sub = pick(a.subcategory_i18n, lang) || a.subcategory || '';
+const place = placeOf(a, lang, viewer);   // περιοχή μόνο σε μέλη — δες lib/gate.ts
+const muni = municipalityOf(a, lang);
+const sea = seaLabel(a.sea_access, lang);
+const title = place ? `${sub} — ${place}` : sub;
+
+// Η θάλασσα βγήκε από τη σειρά των στοιχείων και έγινε σήμα, όπως στις κάρτες
+// (George: «και εκεί που λέει seafront, πάλι με την ίδια λογική, σε ένα πλαίσιο»).
+const facts = factLine([
+  viewer.member ? muni : null,
+  a.sqm ? sqm(Number(a.sqm), lang) : null,
+  a.bedrooms ? `${a.bedrooms} ${t(lang, 'feat.bedrooms')}` : null,
+  `ID ${id}`,
+]);
+
+// Υπάρχει το ίδιο ακίνητο και προς ενοικίαση; Τότε και δεύτερο κουμπί.
+const rent = rentalUrl(id);
+---
+<section class="feature" style={focalStyle(cover)} aria-labelledby="week-h">
+  {/* ⚪ ΚΑΘΑΡΗ — ΕΞΑΙΡΕΣΗ ΑΠΟ ΤΟΝ ΚΑΝΟΝΑ, ΜΕ ΡΗΤΗ ΑΠΟΦΑΣΗ (George, 30/7).
+      Ιστορικό, γιατί άλλαξε δύο φορές και θα ξαναρωτηθεί:
+        · ως 29/7  → καθαρή, από λάθος (ο κανόνας ήταν γραμμένος ανάποδα)
+        · 29/7     → υδατογραφημένη «στα ακίνητα προστασία παντού, ειδικά στις μεγάλες»
+        · 30/7     → **ΚΑΘΑΡΗ ΞΑΝΑ**, αφού ο George είδε το αποτέλεσμα: «εδώ δεν
+                      χρειάζεται watermark, είναι υπερβολή».
+      ΓΙΑΤΙ ΣΤΕΚΕΙ: το σήμα καλύπτει **9,6% της εικόνας** στο κέντρο (μετρήθηκε
+      29/7). Σε μικρή κάρτα περνάει απαρατήρητο· σε full-bleed φωτογραφία
+      ακινήτου **12.000.000 €** κυριαρχεί και υποβαθμίζει ακριβώς το ακίνητο που
+      θέλουμε να εντυπωσιάσει. Η θέση αυτή ΠΟΥΛΑΕΙ — δεν είναι κατάλογος.
+      ⚠️ Η ΕΞΑΙΡΕΣΗ ΕΙΝΑΙ ΜΟΝΟ ΕΔΩ. Κάρτες, πλακίδια και γκαλερί μένουν
+         υδατογραφημένα· δες τον κανόνα στο lib/photos.ts.
+      srcset: στα 390px αλλιώς κατέβαινε το πλήρες 1920×1280 για πλάτος 390.
+      🪤 Το σχόλιο ΜΕΝΕΙ ΕΞΩ από το `{cover && (…)}`: μέσα στην παρένθεση δύο
+      αδέλφια (σχόλιο + στοιχείο) δεν είναι έγκυρη έκφραση και το build σκάει. */}
+  <div class="feature__bg">
+    {cover && (
+      <picture>
+        <source media="(max-width: 759px)" srcset={markedSrcSetSmall(cover.url)} sizes="100vw" />
+        <img src={marked(cover.url, 1920)} alt={altOf(cover, lang, title)}
+             srcset={markedSrcSet(cover.url)}
+             sizes="100vw"
+             width="1920" height="1280" loading="lazy" decoding="async" />
+      </picture>
+    )}
+  </div>
+  <div class="scrim scrim--bottom"></div>
+
+  <div class="feature__copy">
+    {eyebrow && <p class="t-label feature__eyebrow">{eyebrow}</p>}
+    {/* Η ΤΙΜΗ ΠΡΩΤΗ — ίδιος κανόνας με την κάρτα. Όσο καθόταν κάτω από τον τίτλο,
+        το ακίνητο των 12 εκατ. έδειχνε την τιμή του πιο αδύναμα από μια κάρτα
+        των 470.000: η μεγαλύτερη θέση της σελίδας με τη μικρότερη ιεραρχία. */}
+    {priceVisible(a) && <p class="t-price feature__price">{money(priceOf(a), lang)}</p>}
+    <h2 id="week-h" class="t-h2 feature__title">{title}</h2>
+    <p class="feature__facts">
+      {sea && <span class="feature__sea" data-sea={a.sea_access}>{sea}</span>}
+      <span>{facts}</span>
+    </p>
+    <p class="feature__acts">
+      <a class="btn btn--onphoto" href={propertyUrl(lang, id)} data-ev="property:feature_click">{t(lang, 'week.cta')}</a>
+      {/* Δεύτερο κουμπί ΜΟΝΟ όσο το ακίνητο ενοικιάζεται κιόλας — δες lib/contact.ts.
+          Βγάζει τον επισκέπτη εκτός site, γι' αυτό είναι δευτερεύον και δηλωμένο. */}
+      {rent && (
+        <a class="btn btn--onphoto btn--ghost" href={rent} target="_blank" rel="noopener"
+           data-ev="property:feature_rent">{t(lang, 'week.rent')}</a>
+      )}
+    </p>
+  </div>
+</section>
+
+<style>
+  .feature {
+    position: relative; min-height: 78svh;
+    display: flex; align-items: flex-end; overflow: hidden;
+  }
+  .feature__bg { position: absolute; inset: 0; background: var(--paper-2); }
+  .feature__bg img {
+    width: 100%; height: 100%; object-fit: cover;
+    object-position: var(--focal, 50% 50%);
+  }
+  .feature__copy { position: relative; width: 100%; color: #fff; padding: 0 var(--gut) var(--s6); }
+  .feature__eyebrow { color: rgba(255,255,255,.72); }
+  /* Ένα σκαλί πάνω από την κάρτα (26px): είναι το μεγαλύτερο ακίνητο της σελίδας. */
+  .feature__price { margin: var(--s3) 0 0; font-size: clamp(30px, 6vw, 40px); line-height: 1.04; }
+  /* ΤΡΕΙΣ ΣΕΙΡΕΣ ΣΥΝΟΛΟ: τιμή · τίτλος · στοιχεία (George, 28/7).
+     Ο τίτλος είχε `max-width: 17ch` και το «detached house — Σιθωνία» έσπαγε σε
+     δύο γραμμές, χαλώντας τη στοίχιση με τις κάρτες από πάνω. */
+  .feature__title {
+    color: #fff; margin: var(--s2) 0 0; max-width: 34ch;
+    font-size: clamp(19px, 3.4vw, 25px);   /* υπότιτλος της τιμής, όχι αντίπαλός της */
+    text-wrap: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .feature__facts {
+    margin: var(--s2) 0 var(--s5); font-size: 13px; color: rgba(255,255,255,.86);
+    font-variant-numeric: lining-nums tabular-nums;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  }
+  /* Το ίδιο σήμα με την κάρτα, στην παλέτα της φωτογραφίας. */
+  .feature__sea {
+    flex: none; border: 1px solid rgba(255,255,255,.42); padding: 2px 7px;
+    font-size: 10.5px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .feature__sea[data-sea='front'] { background: rgba(255,255,255,.16); border-color: transparent; color: #fff; }
+
+  .feature__acts { display: flex; flex-wrap: wrap; gap: var(--s3); margin: 0; }
+  @media (min-width: 760px) {
+    .feature { min-height: 80vh; }
+    .feature__copy { max-width: var(--max); margin: 0 auto; padding-bottom: var(--s7); }
+  }
+</style>

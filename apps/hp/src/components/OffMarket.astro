@@ -1,0 +1,104 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// ΜΠΛΟΚ 5 — ΕΚΤΟΣ ΔΗΜΟΣΙΕΥΣΗΣ.
+//
+// Η ΙΣΤΟΡΙΑ ΤΟΥ (για να μην ξαναγίνει ο κύκλος):
+//  · v1 «Ιδιωτική συλλογή» με κλειδωμένες κάρτες → ο George: «δεν μου αρέσει που
+//    έχει αγροτεμάχια και κενές παύλες και τιμές από κάτω». Σωστά.
+//  · v2 «Χάρτης ζωνών» με κωδικούς Ζ-01 → ο George: «δεν βλέπω κάποιο value για
+//    τον πελάτη». Επίσης σωστά: ήταν γρίφος χωρίς κλειδί, φτιαγμένος για ΕΜΑΣ.
+//  · v3 (αυτό): κανένας γρίφος, καμία κάρτα, καμία παύλα. Ένας αληθινός αριθμός
+//    και μία υπηρεσία.
+//
+//  · v4 (28/7, George): **ΚΑΝΕΝΑΣ ΑΡΙΘΜΟΣ.** «Κανένας άνθρωπος δεν χρειάζεται να
+//    ξέρει πόσα είναι τα ακίνητα αυτά. Οι πελάτες μπορούν να μπουν και να τα δουν
+//    αν ενδιαφέρονται.» Στη θέση του 79 μπήκε επίθετο. Έφυγαν επίσης η γραμμή
+//    «Όχι δικό μας μυστικό — δική τους επιλογή» («σαν πολύ απολογητικό μου
+//    φαίνεται»), η υπόσχεση «απαντάμε την ίδια μέρα» («δεν το κάνουμε»), το
+//    «ανοίγουν την ίδια στιγμή» («δεν καταλαβαίνει ο πελάτης») και το πλήθος
+//    μελών («δεν ενδιαφέρει τον πελάτη πόσοι άλλοι έχουν μπει»).
+//
+// ΚΑΙ Ο ΚΑΝΟΝΑΣ ΠΟΥ ΒΓΗΚΕ ΑΠΟ ΤΗ ΣΥΖΗΤΗΣΗ:
+//   Δεν ζητάμε εγγραφή για να ΔΕΙ. Ζητάμε να μας ΠΕΙ τι ψάχνει.
+//   Η εγγραφή είναι η συνέπεια, όχι το διόδιο. Το ξεκλείδωμα περιοχής/φωτογραφιών
+//   μένει εκεί που δουλεύει χρόνια: στη ΣΕΛΙΔΑ ΤΟΥ ΑΚΙΝΗΤΟΥ.
+// ═══════════════════════════════════════════════════════════════════════════
+import { t, prefix, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; count: number }
+const { lang, count } = Astro.props;
+
+// Ο παλιός φρουρός ήταν «κάτω από 6 δεν αντέχει να είναι ήρωας ο αριθμός».
+// Αριθμός δεν υπάρχει πια — μένει μόνο ο έλεγχος αλήθειας: αν δεν έχουμε ούτε
+// ένα τέτοιο ακίνητο, το μπλοκ θα έλεγε ψέματα.
+if (count < 1) return null;
+---
+<section class="off" aria-labelledby="off-h">
+  <div class="wrap">
+    <div class="off__grid">
+      <div>
+        {/* 🔒 Η ΚΛΕΙΔΑΡΙΑ (George, 28/7). Δεν είναι διακόσμηση: είναι το μόνο
+            σύμβολο που λέει «υπάρχει κάτι από πίσω» πριν διαβαστεί λέξη. */}
+        <span class="off__lock" aria-hidden="true">
+          <svg viewBox="0 0 24 30">
+            <path d="M6 13V8.5a6 6 0 0 1 12 0V13" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <rect x="2.5" y="13" width="19" height="15" rx="0" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <circle cx="12" cy="19.5" r="1.6" fill="currentColor" />
+            <path d="M12 21v3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </span>
+        {/* ⚠️ ΞΕΧΩΡΙΣΤΟ ΚΛΕΙΔΙ ΑΠΟ ΤΟ `off.brand`: εκείνο τροφοδοτεί ΚΑΙ το κουμπί
+            («Πάρτε πρόσβαση στο {b}»). Αν γραφόταν το ένα πάνω στο άλλο, το κουμπί
+            θα έλεγε «...στο Ξεκλειδώστε το Secret Portfolio». */}
+        <p class="t-label off__eyebrow">{t(lang, 'off.eyebrow')}</p>
+        <h2 id="off-h" class="off__h">
+          <b class="off__adj">{t(lang, 'off.h2a')}</b> {t(lang, 'off.h2b')}
+        </h2>
+      </div>
+
+      <div class="off__act">
+        <p class="off__ask">{t(lang, 'off.ask2')}</p>
+        <a class="btn" href={`${prefix(lang)}/request`} data-ev="register:off_market">
+          {t(lang, 'off.access', { b: t(lang, 'off.brand') })}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .off {
+    background: var(--ink-deep); color: #fff;
+    padding: var(--s7) 0;
+  }
+  .off__grid { display: grid; gap: var(--s6); }
+  .off__eyebrow { color: rgba(255,255,255,.62); letter-spacing: .22em; }
+  .off__lock { display: block; color: rgba(255,255,255,.5); margin-bottom: var(--s4); }
+  .off__lock svg { width: 26px; height: 32px; }
+
+  /* Ο τίτλος είναι ΜΙΑ φράση, σε ένα μέγεθος. Όσο ήταν αριθμός, ήθελε δική του
+     κλίμακα (72px) — μια λέξη στα 72px θα φώναζε, και ακριβώς αυτό δεν θέλουμε. */
+  .off__h {
+    margin: var(--s3) 0 0; font-weight: 300; letter-spacing: -.016em;
+    font-size: clamp(26px, 5vw, 40px); line-height: 1.14; color: #fff; max-width: 20ch;
+  }
+  /* Το επίθετο κρατά μόνο το βάρος — καμία αλλαγή μεγέθους, κανένα χρώμα. */
+  .off__adj { font-weight: 600; }
+
+  .off__act { align-self: end; }
+  .off__ask { margin: 0 0 var(--s4); font-size: 15px; color: rgba(255,255,255,.86); max-width: 40ch; }
+  .off__act .btn { background: #fff; color: var(--ink-deep); border-color: #fff; }
+  .off__fine { margin: var(--s3) 0 0; font-size: 11.5px; color: rgba(255,255,255,.42); }
+
+  .off__seller {
+    margin: var(--s6) 0 0; padding-top: var(--s4);
+    border-top: 1px solid rgba(255,255,255,.14);
+    font-size: 13.5px; color: rgba(255,255,255,.55);
+  }
+  .off__seller a { border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 1px; color: rgba(255,255,255,.86); }
+
+  @media (min-width: 760px) {
+    .off { padding: 74px 0; }
+    .off__grid { grid-template-columns: 1.3fr 1fr; gap: var(--s8); align-items: end; }
+  }
+</style>

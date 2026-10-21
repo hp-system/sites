@@ -1,0 +1,56 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ΤΑ ΣΤΟΙΧΕΙΑ ΕΠΙΚΟΙΝΩΝΙΑΣ — ΜΙΑ πηγή, τρία σημεία.
+//
+// Πριν από αυτό το αρχείο ο ίδιος αριθμός γραφόταν με ΤΡΕΙΣ διαφορετικούς
+// τρόπους στην ίδια σελίδα:
+//   · κεφαλίδα   «2311 241224»            (χωρίς καν κωδικό χώρας)
+//   · υποσέλιδο  «(+30) 2311 24.12.24»
+//   · μενού      «(+30) 2311 24.12.24»
+// Σε site που απευθύνεται σε πέντε ξένες αγορές, τηλέφωνο χωρίς κωδικό χώρας
+// δεν καλείται· και τρεις γραφές του ίδιου αριθμού διαβάζονται ως τρεις αριθμοί.
+//
+// Μορφή που όρισε ο George (21/10/2026): «+30 2311 24.12.24» (παλιότερα 28/7: «+30 2311 2412 24»).
+// ⏭️ Φ2: έρχεται από τις ρυθμίσεις του site στο EALIDA, όχι από εδώ.
+// ═══════════════════════════════════════════════════════════════════════════
+
+import { brand } from '../brand/index';
+
+/** Ό,τι βλέπει ο επισκέπτης. Ίδιο σε κεφαλίδα, μενού, υποσέλιδο. */
+export const PHONE_TEXT = brand.contact.phoneText;
+
+/** Ό,τι καλεί το τηλέφωνο. Χωρίς κενά — κάποιες συσκευές σκοντάφτουν σε αυτά. */
+export const PHONE_HREF = brand.contact.phoneHref;
+
+/** Η μορφή που θέλει το schema.org (E.164). */
+export const PHONE_E164 = brand.contact.phoneE164;
+
+export const EMAIL = brand.contact.email;
+
+/** WhatsApp / Viber mobile — calls keep the landline above. */
+export const MOBILE_TEXT = brand.contact.mobileText;
+export const WHATSAPP_E164 = brand.contact.whatsappE164;
+/** wa.me wants the number without "+" and without "00". */
+export function waHref(text?: string, e164: string = WHATSAPP_E164): string {
+  const n = e164.replace(/\D/g, '');
+  return `https://wa.me/${n}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+}
+export function viberHref(e164: string = WHATSAPP_E164): string {
+  return `viber://chat?number=${encodeURIComponent('+' + e164.replace(/\D/g, ''))}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ΑΚΙΝΗΤΑ ΠΟΥ ΕΝΟΙΚΙΑΖΟΝΤΑΙ ΚΙΟΛΑΣ
+//
+// George (28/7): «επειδή το συγκεκριμένο θα το αφήσουμε ως το κορυφαίο μας
+// ακίνητο, εκεί θέλω να έχει και ένα κουμπί rent it δίπλα στο view property
+// που να τον πηγαίνει στη σελίδα της villanatalia.eu».
+//
+// ⚠️ ΓΙΑΤΙ ΧΑΡΤΗΣ ΚΑΙ ΟΧΙ ΣΤΑΘΕΡΑ ΣΤΟ COMPONENT: το ακίνητο της μεγάλης θέσης
+//    αλλάζει (θα το γυρίζει το CMS). Καρφωμένο κουμπί «ενοικίαση» θα εμφανιζόταν
+//    πάνω σε ΑΛΛΟ ακίνητο και θα έστελνε τον επισκέπτη σε ξένη βίλα.
+//    Εδώ το κουμπί υπάρχει ΜΟΝΟ αν ο κωδικός είναι μέσα στον χάρτη.
+// ⏭️ Φ2: γίνεται πεδίο `rental_url` στο EALIDA και ο χάρτης σβήνει.
+// ═══════════════════════════════════════════════════════════════════════════
+export const RENTALS: Record<string, string> = brand.rentals;
+
+export const rentalUrl = (id: string): string | null => RENTALS[String(id)] ?? null;

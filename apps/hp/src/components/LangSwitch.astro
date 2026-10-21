@@ -1,0 +1,131 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// Ο ΔΙΑΚΟΠΤΗΣ ΓΛΩΣΣΑΣ.
+//
+// 🪤 ΤΙ ΥΠΗΡΧΕ ΠΡΙΝ: ένα <span> που έγραφε «EL / EN / DE». Κανένα <a>, κανένα
+//    <button>, μηδέν listener — καθαρή διακόσμηση. Στο κινητό κρυβόταν και το
+//    μισό κείμενο, οπότε έμενε σκέτο «EL» σαν ετικέτα. Και τα βουλγαρικά, που
+//    είναι το 28,1% της κίνησης και 2.101 μέλη, δεν αναφέρονταν καν.
+//
+// ΚΑΝΟΝΑΣ: εμφανίζονται ΜΟΝΟ οι γλώσσες με πλήρη κείμενα (`PUBLISHED`).
+// Καμία γλώσσα δεν διαφημίζεται πριν υπάρχει.
+//
+// Χωρίς JavaScript: το <details> ανοίγει και κλείνει μόνο του, δουλεύει με
+// πληκτρολόγιο από τον browser, και επιβιώνει αν πέσει κάθε script της σελίδας.
+// ═══════════════════════════════════════════════════════════════════════════
+import { PUBLISHED, LANG_NAME, prefix, SLUG, type Lang } from '../lib/i18n';
+import { PAGE_KEYS } from '../lib/pages';
+
+interface Props {
+  lang: Lang; path?: string; tone?: 'onphoto' | 'plain'; block?: boolean;
+  /** Η ΙΔΙΑ σελίδα σε άλλη γλώσσα, όταν το slug μεταφράζεται (λίστα, ακίνητο, έργα). */
+  pathFor?: (l: Lang) => string;
+}
+const { lang, path, tone = 'plain', block = false, pathFor } = Astro.props;
+
+// ═══ ΓΙΑΤΙ ΑΥΤΟ ΤΟ ΚΟΜΜΑΤΙ ΕΙΝΑΙ ΤΟΣΟ ΠΡΟΣΕΚΤΙΚΟ ═══════════════════════════
+// 🔴 ΜΕΧΡΙ ΣΗΜΕΡΑ Ο ΔΙΑΚΟΠΤΗΣ ΣΕ ΠΕΤΑΓΕ ΣΤΗΝ ΑΡΧΙΚΗ. Το `path` είχε προεπιλογή '/'
+//    και **κανένα** από τα δύο σημεία που τον καλούν (Header, MobileMenu) δεν του
+//    έλεγε πού βρίσκεσαι. Διάβαζες ένα ακίνητο, άλλαζες γλώσσα, και ξεκινούσες από
+//    την αρχή. Σε site με 9 γλώσσες, αυτό είναι ο πιο ακριβός χαμένος επισκέπτης:
+//    ήταν ήδη μέσα στο προϊόν.
+//
+// 🪤 ΓΙΑΤΙ ΔΕΝ ΑΡΚΕΙ «ΑΛΛΑΞΕ ΤΟ ΠΡΟΘΕΜΑ». Τα slug **μεταφράζονται**: `/ακινητα` είναι
+//    `/en/properties`, `/bg/Имоти`, `/tr/emlak`. Σκέτη αλλαγή προθέματος θα έδινε
+//    `/en/ακινητα` → 404. Χειρότερο από την αρχική: ο επισκέπτης νομίζει ότι η γλώσσα
+//    του δεν υποστηρίζεται.
+//
+// ⇒ ΤΡΙΑ ΕΠΙΠΕΔΑ, ΜΕ ΤΗ ΣΕΙΡΑ:
+//    1. `pathFor` από τη σελίδα — η μόνη που ξέρει το μεταφρασμένο slug. Πάντα σωστό.
+//    2. Λευκή λίστα διαδρομών που **δεν** μεταφράζονται (login, panel, οι σελίδες
+//       του μενού): αλλάζουμε μόνο το πρόθεμα, με ασφάλεια.
+//    3. Ό,τι δεν αναγνωρίζεται → αρχική, όπως πριν. Ποτέ μαντεψιά που βγάζει 404.
+const here = Astro.url.pathname;
+const bare = here.replace(new RegExp(`^${prefix(lang)}/?`), '').replace(/\/+$/, '');
+
+const SAFE = new Set<string>([
+  'login', 'panel', 'panel/favorites', 'panel/profile', 'panel/collection',
+  'panel/compare', 'panel/submit',
+  ...PAGE_KEYS.filter((k) => k !== 'projects'),   // τα «Έργα» ΜΕΤΑΦΡΑΖΟΝΤΑΙ
+]);
+
+function hrefFor(l: Lang): string {
+  if (pathFor) return pathFor(l);
+  if (path) return `${prefix(l)}${path === '/' ? '' : path}` || '/';
+  if (!bare) return prefix(l) || '/';
+  if (SAFE.has(decodeURIComponent(bare).toLowerCase())) return `${prefix(l)}/${bare}`;
+  // Τα «Έργα» τα ξέρουμε: έχουν δικό τους slug ανά γλώσσα.
+  if (decodeURIComponent(bare).toLowerCase() === SLUG[lang].projects.toLowerCase()) {
+    return `${prefix(l)}/${SLUG[l].projects}`;
+  }
+  return prefix(l) || '/';
+}
+const href = hrefFor;
+const label = ({ el: 'Γλώσσα', en: 'Language', bg: 'Език', sr: 'Jezik', de: 'Sprache', ro: 'Limbă', tr: 'Dil', he: 'שפה', ru: 'Язык' } satisfies Record<Lang, string>)[lang];
+---
+<details class:list={['lsw', tone === 'onphoto' && 'lsw--onphoto', block && 'lsw--block']}>
+  <summary aria-label={label}>
+    <span class="lsw__now">{lang.toUpperCase()}</span>
+    <span class="lsw__name">{LANG_NAME[lang]}</span>
+    <svg class="lsw__caret" viewBox="0 0 10 6" aria-hidden="true">
+      <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3" />
+    </svg>
+  </summary>
+  <ul class="lsw__list">
+    {PUBLISHED.map((l) => (
+      <li>
+        <a href={href(l)} hreflang={l} lang={l}
+           aria-current={l === lang ? 'true' : undefined}>
+          <b>{l.toUpperCase()}</b><span>{LANG_NAME[l]}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</details>
+
+<style>
+  .lsw { position: relative; }
+  .lsw > summary {
+    display: inline-flex; align-items: center; gap: 7px;
+    list-style: none; cursor: pointer; min-height: 44px; min-width: 44px; justify-content: center;
+    font-size: 11px; font-weight: 600; letter-spacing: .16em; color: var(--muted);
+  }
+  .lsw > summary::-webkit-details-marker { display: none; }
+  .lsw > summary:hover { color: var(--ink); }
+  .lsw > summary:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+  .lsw__name { display: none; }
+  .lsw__caret { width: 9px; height: 6px; flex: none; transition: transform .18s ease; }
+  .lsw[open] .lsw__caret { transform: rotate(180deg); }
+
+  .lsw__list {
+    position: absolute; inset-inline-end: 0; top: calc(100% + 6px); z-index: 40;
+    margin: 0; padding: var(--s1) 0; list-style: none; min-width: 168px;
+    background: var(--paper); border: 1px solid var(--line);
+    box-shadow: 0 18px 44px rgba(0,0,0,.16);
+  }
+  .lsw__list a {
+    display: flex; align-items: center; gap: var(--s3);
+    padding: 10px 16px; min-height: 44px; color: var(--ink-2);
+  }
+  .lsw__list a:hover { background: var(--paper-2); color: var(--ink); }
+  .lsw__list a[aria-current] { color: var(--ink); }
+  .lsw__list b { font-size: 10.5px; font-weight: 600; letter-spacing: .14em; color: var(--faint); min-width: 22px; }
+  .lsw__list a[aria-current] b { color: var(--ink); }
+  .lsw__list span { font-size: 14px; }
+
+  /* Πάνω σε φωτογραφία (κεφαλίδα του hero). */
+  .lsw--onphoto > summary { color: rgba(255,255,255,.78); }
+  .lsw--onphoto > summary:hover { color: #fff; }
+
+  /* Μέσα στο μενού του κινητού: ανοίγει σε ροή, όχι αιωρούμενο. */
+  .lsw--block { width: 100%; }
+  .lsw--block > summary { width: 100%; justify-content: space-between; font-size: 12px; }
+  .lsw--block .lsw__now { display: none; }
+  .lsw--block .lsw__name { display: inline; letter-spacing: 0; font-size: 15px; font-weight: 400; }
+  .lsw--block .lsw__list {
+    position: static; min-width: 0; box-shadow: none; border-left: 0; border-right: 0; border-bottom: 0;
+  }
+  .lsw--block .lsw__list a { padding-inline: 0; }
+
+  @media (min-width: 760px) { .lsw:not(.lsw--block) > summary { font-size: 11.5px; } }
+</style>

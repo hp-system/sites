@@ -1,0 +1,6 @@
+# Review requests (enforced only with GitHub Team — ssot/ENGINEERING.md §11).
+# Any team member other than the author may approve; merging into main is the release manager's (Sergei).
+/apps/hp/        @geotsigaras-sys @serhioprog
+/apps/rewize/    @gstavrakisrw @tvavdinoudis-cmyk
+/packages/kit/   @serhioprog
+/.github/        @serhioprog

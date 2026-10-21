@@ -7,6 +7,8 @@ section: legal
 schema: WebPage
 faq: []
 related:
+- label: Collaboration Order for Agents
+  href: /en/collaboration-order
 - label: Privacy Policy
   href: /en/privacy-policy
 - label: 'Buying property in Greece: FAQ'

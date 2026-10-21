@@ -7,6 +7,10 @@ section: legal
 schema: WebPage
 faq: []
 related:
+- label: Property Assignment Order
+  href: /en/assignment-order
+- label: Property Indication Order
+  href: /en/indication-order
 - label: Terms of Services
   href: /en/terms-of-services
 - label: Privacy Policy

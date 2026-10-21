@@ -90,6 +90,7 @@ const has = (k: string) => pageExists(k as any);
       <li>{has('sell') && <a href={`${p}/sell`}>{t(lang, 'nav.sell')}</a>}</li>
       <li>{has('services') && <a href={`${p}/services`}>{t(lang, 'nav.services')}</a>}</li>
       <li>{has('about') && <a href={aboutHref}>{t(lang, 'nav.company')}</a>}</li>
+      <li><a href="/en/articles/all-news">{t(lang, 'nav.blog')}</a></li>
       <li>{has('contact') && <a href={`${p}/contact`}>{t(lang, 'foot.contact')}</a>}</li>
     </ul>
 

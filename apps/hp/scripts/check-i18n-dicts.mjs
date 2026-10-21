@@ -18,7 +18,7 @@ register(new URL('./ts-hooks.mjs', import.meta.url));
 const lib = (f) => import(new URL(`../src/lib/${f}`, import.meta.url));
 const { T, LANGS, SLUG } = await lib('i18n.ts');
 const { LIST_UI, FACETS } = await lib('listing.ts');
-const { PROP_UI, LAND_TEXT } = await lib('property.ts');
+const { PROP_UI, LAND_TEXT, BUILDING_TEXT } = await lib('property.ts');
 const { CONTENT } = await lib('pages-content.ts');
 
 const SCRIPTS = { Greek: /[Ͱ-Ͽἀ-῿]/, Cyrillic: /[Ѐ-ӿ]/, Hebrew: /[֐-׿]/ };
@@ -70,6 +70,7 @@ for (const lang of LANGS) {
 }
 
 for (const [name, table] of Object.entries(LAND_TEXT)) byLangTable(`LAND_TEXT.${name}`, table);
+for (const [name, table] of Object.entries(BUILDING_TEXT)) byLangTable(`BUILDING_TEXT.${name}`, table);
 
 const walk = (page, lang, v, path) => {
   if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(page, lang, x, `${path}.${k}`);
@@ -83,7 +84,7 @@ for (const [page, byLang] of Object.entries(CONTENT)) {
   }
 }
 
-const dicts = ['T', 'LIST_UI', 'PROP_UI', 'SLUG', 'FACETS', ...Object.keys(LAND_TEXT).map((n) => `LAND_TEXT.${n}`), 'CONTENT'];
+const dicts = ['T', 'LIST_UI', 'PROP_UI', 'SLUG', 'FACETS', ...Object.keys(LAND_TEXT).map((n) => `LAND_TEXT.${n}`), ...Object.keys(BUILDING_TEXT).map((n) => `BUILDING_TEXT.${n}`), 'CONTENT'];
 if (!problems.length) {
   console.log(`✅ i18n values: ${dicts.length} dictionaries × ${LANGS.length} languages — no gap, no empty text, no foreign alphabet.`);
   process.exit(0);

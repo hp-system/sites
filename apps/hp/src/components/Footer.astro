@@ -13,7 +13,7 @@ import { company } from '../lib/company';
 //    στα ΚΑΘΑΡΑ URLs των θεματικών (`/ακινητα/κασσανδρα`), όχι σε παραμέτρους
 //    `?municipality=` που η μηχανή αγνοεί.
 import { FACETS, facetUrl } from '../lib/listing';
-import { pageExists } from '../lib/pages';
+import { pageExists, contentUrl, type PageKey } from '../lib/pages';
 import { brand } from '../brand/index';
 import { EN_MOVED } from '../lib/infopages';
 interface Props { lang: Lang; munis?: { name: string; key?: string }[] }
@@ -22,7 +22,8 @@ const p = prefix(lang);
 // English: the old site's URL /en/about-us (the info page); other languages keep /about.
 const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
 // Same for services and projects: English links the old site's URLs (no redirect hop).
-const moved = (k: string) => (lang === 'en' && EN_MOVED[k]) || `${p}/${k}`;
+// Other languages: the translated projects slug (/εργα, /proiecte…) — linking `/projects` was a 301 hop (#69).
+const moved = (k: string) => (lang === 'en' && EN_MOVED[k]) || contentUrl(k as PageKey, lang);
 const co = await company();
 // Δήμοι πρώτα, μετά οι συλλογές — ό,τι δείχνει και η αρχική.
 const seoLinks = FACETS.map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
@@ -65,6 +66,15 @@ import { consentText } from '../lib/consent';
         {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')}</a>}
         {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')}</a>}
         {has('services/developers') && <a href={moved('services/developers')}>{t(lang, 'foot.builders')}</a>}
+      </nav>
+
+      {/* Guides, as on the live site (#69): its three most-read articles + the hub. English-only for now. */}
+      <nav aria-label={t(lang, 'foot.guides')}>
+        <h2 class="fcol__h">{t(lang, 'foot.guides')}</h2>
+        <a href="/en/articles/all-news/homes-for-sale-in-halkidiki-greece">{t(lang, 'foot.g_houses')}</a>
+        <a href="/en/articles/business-news/taxes-foreigners-properties-greece">{t(lang, 'foot.g_tax')}</a>
+        <a href="/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki">{t(lang, 'foot.g_buy')}</a>
+        <a href="/en/articles/all-news">{t(lang, 'foot.all_articles')} →</a>
       </nav>
 
       <nav aria-label={t(lang, 'foot.company')}>
@@ -110,5 +120,5 @@ import { consentText } from '../lib/consent';
     font-size: 11.5px; color: var(--faint);
   }
   .fcookie { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
-  @media (min-width: 760px) { .fcols { grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--s6); } }
+  @media (min-width: 760px) { .fcols { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: var(--s6); } }
 </style>

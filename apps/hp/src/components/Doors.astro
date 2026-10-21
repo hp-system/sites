@@ -15,6 +15,7 @@
 // motivation αυτό για έναν owner». Τώρα μιλά για ΑΓΟΡΑΣΤΕΣ: ότι ο κατάλληλος
 // μπορεί να είναι ήδη στο πελατολόγιό μας. Οι υπηρεσίες ζουν πίσω από το CTA.
 import { t, listUrl, prefix, type Lang } from '../lib/i18n';
+import { contentUrl } from '../lib/pages';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -36,7 +37,7 @@ const p = prefix(lang);
       <div class="door">
         <h2 class="t-h2 door__h">{t(lang, 'doors.partner')}</h2>
         <p>{t(lang, 'doors.partner.p')}</p>
-        <a class="shead__link" href={`${p}/partners`}>{t(lang, 'doors.partner.cta')}</a>
+        <a class="shead__link" href={contentUrl('partners', lang)}>{t(lang, 'doors.partner.cta')}</a>
       </div>
     </div>
   </div>

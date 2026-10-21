@@ -246,6 +246,10 @@ type PUI = {
   kmU: string; mU: string;
   /** Οι δύο μη-γράμμα ενεργειακές καταστάσεις — 220 από τα 527 ακίνητα. */
   energyPending: string; energyExempt: string;
+  /** Χάρτης ανά επίπεδο (#53): μέλος = κύκλος γύρω από το χωριό · exclusive = ακριβές σημείο. */
+  mapCircle: string; mapExact: string; mapOpen: string;
+  /** Μόνο για exclusive (#53). */
+  exclH: string; videoL: string; docsL: string; priceHistL: string; addressL: string;
 };
 export const PROP_UI: Record<Lang, PUI> = {
   el: { desc: 'Περιγραφή', feats: 'Χαρακτηριστικά', floors: 'Όροφοι', location: 'Τοποθεσία',
@@ -263,7 +267,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Υπόγειο', floorGround: 'Ισόγειο', floorN: 'Όροφος {n}',
     roomsL: 'Δωμάτια', livingL: 'Καθιστικά', wcL: 'WC',
     favorite: 'Αγαπημένο', shareL: 'Κοινοποίηση', copied: 'Αντιγράφηκε',
-    lockChip: 'ακριβής περιοχή με εγγραφή', kmU: 'χλμ', mU: 'μ.', energyPending: 'Σε έκδοση', energyExempt: 'Εξαιρείται' },
+    lockChip: 'ακριβής περιοχή με εγγραφή', kmU: 'χλμ', mU: 'μ.', energyPending: 'Σε έκδοση', energyExempt: 'Εξαιρείται',
+    mapCircle: 'Το ακίνητο βρίσκεται μέσα στον κύκλο.', mapExact: 'Ακριβής θέση του ακινήτου.', mapOpen: 'Άνοιγμα στους χάρτες',
+    exclH: 'Exclusive', videoL: 'Βίντεο', docsL: 'Έγγραφα και κατόψεις', priceHistL: 'Ιστορικό τιμής', addressL: 'Διεύθυνση' },
   en: { desc: 'Description', feats: 'Features', floors: 'Floors', location: 'Location',
     distances: 'Distances', similar: 'Similar properties', reqTour: 'Request a tour',
     reqInfo: 'Request info', send: 'Send', call: 'Call', or: 'or',
@@ -279,7 +285,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Basement', floorGround: 'Ground floor', floorN: 'Floor {n}',
     roomsL: 'Rooms', livingL: 'Living rooms', wcL: 'WC',
     favorite: 'Favorite', shareL: 'Share', copied: 'Copied', lockChip: 'exact area with sign-up',
-    kmU: 'km', mU: 'm', energyPending: 'Being issued', energyExempt: 'Exempt' },
+    kmU: 'km', mU: 'm', energyPending: 'Being issued', energyExempt: 'Exempt',
+    mapCircle: 'The property is inside the circle.', mapExact: 'Exact location of the property.', mapOpen: 'Open in maps',
+    exclH: 'Exclusive', videoL: 'Video', docsL: 'Documents and floor plans', priceHistL: 'Price history', addressL: 'Address' },
   bg: { desc: 'Описание', feats: 'Характеристики', floors: 'Етажи', location: 'Локация',
     distances: 'Разстояния', similar: 'Подобни имоти', reqTour: 'Заявете оглед',
     reqInfo: 'Поискайте информация', send: 'Изпрати', call: 'Обаждане', or: 'или',
@@ -295,7 +303,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Сутерен', floorGround: 'Партер', floorN: 'Етаж {n}',
     roomsL: 'Стаи', livingL: 'Дневни', wcL: 'WC',
     favorite: 'Любим', shareL: 'Сподели', copied: 'Копирано', lockChip: 'точен район с регистрация',
-    kmU: 'км', mU: 'м', energyPending: 'В процес на издаване', energyExempt: 'Освободен' },
+    kmU: 'км', mU: 'м', energyPending: 'В процес на издаване', energyExempt: 'Освободен',
+    mapCircle: 'Имотът се намира в кръга.', mapExact: 'Точно местоположение на имота.', mapOpen: 'Отвори в картите',
+    exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документи и планове', priceHistL: 'История на цената', addressL: 'Адрес' },
   sr: { desc: 'Opis', feats: 'Karakteristike', floors: 'Spratovi', location: 'Lokacija',
     distances: 'Udaljenosti', similar: 'Slične nekretnine', reqTour: 'Zatražite obilazak',
     reqInfo: 'Zatražite informacije', send: 'Pošalji', call: 'Poziv', or: 'ili',
@@ -311,7 +321,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Suteren', floorGround: 'Prizemlje', floorN: 'Sprat {n}',
     roomsL: 'Sobe', livingL: 'Dnevne sobe', wcL: 'WC',
     favorite: 'Omiljeno', shareL: 'Podeli', copied: 'Kopirano', lockChip: 'tačno područje uz registraciju',
-    kmU: 'km', mU: 'm', energyPending: 'U izradi', energyExempt: 'Izuzeto' },
+    kmU: 'km', mU: 'm', energyPending: 'U izradi', energyExempt: 'Izuzeto',
+    mapCircle: 'Nekretnina se nalazi unutar kruga.', mapExact: 'Tačna lokacija nekretnine.', mapOpen: 'Otvori u mapama',
+    exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumenti i planovi', priceHistL: 'Istorija cene', addressL: 'Adresa' },
   de: { desc: 'Beschreibung', feats: 'Ausstattung', floors: 'Etagen', location: 'Lage',
     distances: 'Entfernungen', similar: 'Ähnliche Immobilien', reqTour: 'Besichtigung anfragen',
     reqInfo: 'Informationen anfragen', send: 'Senden', call: 'Anruf', or: 'oder',
@@ -327,7 +339,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Untergeschoss', floorGround: 'Erdgeschoss', floorN: 'Etage {n}',
     roomsL: 'Zimmer', livingL: 'Wohnzimmer', wcL: 'WC',
     favorite: 'Favorit', shareL: 'Teilen', copied: 'Kopiert', lockChip: 'genaue Gegend mit Anmeldung',
-    kmU: 'km', mU: 'm', energyPending: 'In Ausstellung', energyExempt: 'Befreit' },
+    kmU: 'km', mU: 'm', energyPending: 'In Ausstellung', energyExempt: 'Befreit',
+    mapCircle: 'Die Immobilie liegt innerhalb des Kreises.', mapExact: 'Genaue Lage der Immobilie.', mapOpen: 'In Karten öffnen',
+    exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumente und Grundrisse', priceHistL: 'Preisverlauf', addressL: 'Adresse' },
   ro: { desc: 'Descriere', feats: 'Caracteristici', floors: 'Etaje', location: 'Locație',
     distances: 'Distanțe', similar: 'Proprietăți similare', reqTour: 'Solicitați o vizită',
     reqInfo: 'Solicitați informații', send: 'Trimite', call: 'Apel', or: 'sau',
@@ -343,7 +357,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Subsol', floorGround: 'Parter', floorN: 'Etaj {n}',
     roomsL: 'Camere', livingL: 'Camere de zi', wcL: 'WC',
     favorite: 'Favorit', shareL: 'Distribuie', copied: 'Copiat', lockChip: 'zona exactă cu înregistrare',
-    kmU: 'km', mU: 'm', energyPending: 'În curs de emitere', energyExempt: 'Exceptat' },
+    kmU: 'km', mU: 'm', energyPending: 'În curs de emitere', energyExempt: 'Exceptat',
+    mapCircle: 'Proprietatea se află în interiorul cercului.', mapExact: 'Locația exactă a proprietății.', mapOpen: 'Deschide în hărți',
+    exclH: 'Exclusive', videoL: 'Video', docsL: 'Documente și planuri', priceHistL: 'Istoricul prețului', addressL: 'Adresă' },
   tr: { desc: 'Açıklama', feats: 'Özellikler', floors: 'Katlar', location: 'Konum',
     distances: 'Mesafeler', similar: 'Benzer mülkler', reqTour: 'Ziyaret talep edin',
     reqInfo: 'Bilgi isteyin', send: 'Gönder', call: 'Ara', or: 'veya',
@@ -359,7 +375,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Bodrum', floorGround: 'Zemin kat', floorN: 'Kat {n}',
     roomsL: 'Odalar', livingL: 'Oturma odası', wcL: 'WC',
     favorite: 'Favori', shareL: 'Paylaş', copied: 'Kopyalandı', lockChip: 'kayıtla tam bölge',
-    kmU: 'km', mU: 'm', energyPending: 'Düzenleniyor', energyExempt: 'Muaf' },
+    kmU: 'km', mU: 'm', energyPending: 'Düzenleniyor', energyExempt: 'Muaf',
+    mapCircle: 'Mülk dairenin içinde yer alır.', mapExact: 'Mülkün tam konumu.', mapOpen: 'Haritada aç',
+    exclH: 'Exclusive', videoL: 'Video', docsL: 'Belgeler ve kat planları', priceHistL: 'Fiyat geçmişi', addressL: 'Adres' },
   he: { desc: 'תיאור', feats: 'מאפיינים', floors: 'קומות', location: 'מיקום',
     distances: 'מרחקים', similar: 'נכסים דומים', reqTour: 'בקשו סיור',
     reqInfo: 'בקשו מידע', send: 'שליחה', call: 'שיחה', or: 'או',
@@ -375,7 +393,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'מרתף', floorGround: 'קומת קרקע', floorN: 'קומה {n}',
     roomsL: 'חדרים', livingL: 'סלונים', wcL: 'שירותים',
     favorite: 'מועדף', shareL: 'שיתוף', copied: 'הועתק', lockChip: 'אזור מדויק בהרשמה',
-    kmU: 'ק״מ', mU: 'מ׳', energyPending: 'בהנפקה', energyExempt: 'פטור' },
+    kmU: 'ק״מ', mU: 'מ׳', energyPending: 'בהנפקה', energyExempt: 'פטור',
+    mapCircle: 'הנכס נמצא בתוך המעגל.', mapExact: 'המיקום המדויק של הנכס.', mapOpen: 'פתיחה במפות',
+    exclH: 'Exclusive', videoL: 'וידאו', docsL: 'מסמכים ותוכניות', priceHistL: 'היסטוריית מחיר', addressL: 'כתובת' },
   ru: { desc: 'Описание', feats: 'Характеристики', floors: 'Этажи', location: 'Расположение',
     distances: 'Расстояния', similar: 'Похожие объекты', reqTour: 'Запросить просмотр',
     reqInfo: 'Запросить информацию', send: 'Отправить', call: 'Звонок', or: 'или',
@@ -391,7 +411,9 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Подвал', floorGround: 'Первый этаж', floorN: 'Этаж {n}',
     roomsL: 'Комнаты', livingL: 'Гостиные', wcL: 'WC',
     favorite: 'Избранное', shareL: 'Поделиться', copied: 'Скопировано', lockChip: 'точный район после регистрации',
-    kmU: 'км', mU: 'м', energyPending: 'Оформляется', energyExempt: 'Освобождён' },
+    kmU: 'км', mU: 'м', energyPending: 'Оформляется', energyExempt: 'Освобождён',
+    mapCircle: 'Объект находится внутри круга.', mapExact: 'Точное расположение объекта.', mapOpen: 'Открыть на карте',
+    exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документы и планировки', priceHistL: 'История цены', addressL: 'Адрес' },
 };
 
 export function pui(lang: Lang, k: keyof PUI, vars?: Record<string, string | number>): string {
@@ -779,4 +801,86 @@ export function businessFactsOf(a: Attrs, lang: string): Fact[] {
 /** Εμβαδόν για το επαγγελματικό: το EALIDA το γράφει σε `biz_sq_meters`, όχι `sqm`. */
 export function bizSqmOf(a: Attrs): number {
   return posInt((a as Record<string, unknown>).biz_sq_meters);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ΧΑΡΤΗΣ ΚΑΙ EXCLUSIVE (#53, George 21/10/2026: «Κύκλος γύρω από το χωριό»).
+//
+// 🛡️ ΤΙ ΕΡΧΕΤΑΙ ΑΠΟ ΤΟ CRM ΑΝΑ ΕΠΙΠΕΔΟ: για μη-exclusive το `lat`/`lng` είναι ήδη
+//    ΜΕΤΑΚΙΝΗΜΕΝΟ έως 1,4 χλμ (`location_precision: 'approx'`)· για exclusive είναι
+//    το ακριβές (`'exact'`). Ο κύκλος των 2 χλμ γύρω από το μετακινημένο σημείο
+//    περιέχει ΠΑΝΤΑ το πραγματικό, χωρίς να το δείχνει.
+//    ⛔ Ο ΕΠΙΣΚΕΠΤΗΣ ΔΕΝ ΠΑΙΡΝΕΙ ΤΙΠΟΤΑ: η σελίδα δεν καλεί αυτές τις συναρτήσεις γι' αυτόν.
+// ═══════════════════════════════════════════════════════════════════════════
+export const CIRCLE_M = 2000;
+
+export type MapView = { lat: number; lng: number; exact: boolean };
+export function mapViewOf(a: Attrs, exclusive: boolean): MapView | null {
+  const r = a as Record<string, unknown>;
+  const lat = Number(r.lat), lng = Number(r.lng);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return null;
+  // Ακριβές ΜΟΝΟ αν και το επίπεδο και το CRM το λένε — ποτέ από το ένα μόνο.
+  const exact = exclusive && String(r.location_precision ?? '') === 'exact';
+  // Στρογγυλεμένο στο μέλος: τα δεκαδικά του μετακινημένου σημείου δεν χρειάζονται.
+  const round = (n: number) => (exact ? n : Math.round(n * 1000) / 1000);
+  return { lat: round(lat), lng: round(lng), exact };
+}
+
+export type Link = { url: string; label: string };
+const httpUrl = (v: unknown): string => {
+  const s = String(v ?? '').trim();
+  return /^https:\/\//i.test(s) ? s : '';
+};
+/** Βίντεο / εικονική περιήγηση — δέχεται string, πίνακα string, ή αντικείμενα {url,title}. */
+export function videosOf(a: Attrs): Link[] {
+  const r = a as Record<string, unknown>;
+  const out: Link[] = [];
+  for (const k of ['video', 'videos', 'virtual_tour']) {
+    const v = r[k];
+    for (const x of Array.isArray(v) ? v : [v]) {
+      const url = httpUrl(typeof x === 'object' && x ? (x as Record<string, unknown>).url : x);
+      const label = typeof x === 'object' && x ? String((x as Record<string, unknown>).title ?? (x as Record<string, unknown>).name ?? '') : '';
+      if (url && !out.some((o) => o.url === url)) out.push({ url, label });
+    }
+  }
+  return out;
+}
+/** YouTube/Vimeo → διεύθυνση ενσωμάτωσης· αλλιώς κενό (δείχνεται ως σύνδεσμος). */
+export function embedOf(url: string): string {
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]{6,})/i);
+  if (yt) return `https://www.youtube-nocookie.com/embed/${yt[1]}`;
+  const vm = url.match(/vimeo\.com\/(\d+)/i);
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+  return '';
+}
+/** Έγγραφα και κατόψεις — ίδια ανοχή σχήματος. */
+export function documentsOf(a: Attrs): Link[] {
+  const r = a as Record<string, unknown>;
+  const out: Link[] = [];
+  for (const k of ['documents', 'floor_plans']) {
+    const v = r[k];
+    for (const x of Array.isArray(v) ? v : [v]) {
+      const o = typeof x === 'object' && x ? (x as Record<string, unknown>) : {};
+      const url = httpUrl(typeof x === 'object' && x ? o.url ?? o.href : x);
+      if (!url) continue;
+      const label = String(o.title ?? o.name ?? '').trim() || decodeURIComponent(url.split('/').pop() ?? '').replace(/\?.*$/, '');
+      if (!out.some((d) => d.url === url)) out.push({ url, label });
+    }
+  }
+  return out;
+}
+/** Ιστορικό τιμής: [{date|at|changed_at, price|value|amount}] → ταξινομημένο, νεότερο πρώτο. */
+export function priceHistoryOf(a: Attrs): { date: string; price: number }[] {
+  const v = (a as Record<string, unknown>).price_history;
+  if (!Array.isArray(v)) return [];
+  return v.map((x) => {
+    const o = (typeof x === 'object' && x ? x : {}) as Record<string, unknown>;
+    return { date: String(o.date ?? o.at ?? o.changed_at ?? '').slice(0, 10), price: Number(o.price ?? o.value ?? o.amount ?? 0) };
+  }).filter((h) => /^\d{4}-\d{2}-\d{2}$/.test(h.date) && h.price > 0)
+    .sort((x, y) => y.date.localeCompare(x.date));
+}
+export function addressOf(a: Attrs): string {
+  const r = a as Record<string, unknown>;
+  const street = [r.street, r.street_number].map((x) => String(x ?? '').trim()).filter(Boolean).join(' ');
+  return String(r.address ?? '').trim() || [street, String(r.postal_code ?? '').trim()].filter(Boolean).join(', ');
 }

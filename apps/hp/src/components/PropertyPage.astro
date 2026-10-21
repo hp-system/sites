@@ -36,6 +36,7 @@ import {
   descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
   energyOf, oldPriceOf, floorName, pui, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
   isBusiness, homeFactsOf, businessFactsOf, bizSqmOf,
+  CIRCLE_M, mapViewOf, videosOf, embedOf, documentsOf, priceHistoryOf, addressOf,
 } from '../lib/property';
 
 interface Props { lang: Lang; item: SiteProperty; all: SiteProperty[] }
@@ -115,6 +116,13 @@ const abs = (x: string) => SITE_ORIGIN + encodeURI(x);
 
 const land = isLand(a);
 const biz = !land && isBusiness(a);
+// ── ΧΑΡΤΗΣ ΚΑΙ EXCLUSIVE (#53) — ΜΟΝΟ για μέλη· ο επισκέπτης δεν παίρνει ούτε αριθμό.
+const mapView = viewer.member ? mapViewOf(a, viewer.exclusive) : null;
+const xVideos = viewer.exclusive ? videosOf(a) : [];
+const xDocs = viewer.exclusive ? documentsOf(a) : [];
+const xHistory = viewer.exclusive ? priceHistoryOf(a) : [];
+const xAddress = viewer.exclusive ? addressOf(a) : '';
+const hasExclusive = xVideos.length + xDocs.length + xHistory.length > 0 || !!xAddress;
 // Τρία είδη, τρεις λίστες (#45): γη · επαγγελματικό/ξενοδοχείο · κατοικία.
 const facts = land ? landFactsOf(a, lang) : biz ? businessFactsOf(a, lang) : homeFactsOf(a, lang);
 
@@ -365,9 +373,25 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               υπάρχει πλαίσιο που ΔΕΝ περιέχει τη θέση. Οι αποστάσεις όμως
               φαίνονται — δίνουν αξία χωρίς να προδίδουν το σημείο. */}
           <h2 class="sec">{pui(lang, 'location')}</h2>
-          {viewer.member ? (
+          {viewer.member ? (<>
             <p class="place">{place}{muni && place !== muni ? ` · ${muni}` : ''}</p>
-          ) : (
+            {mapView && (
+              /* Μέλος: κύκλος 2 χλμ γύρω από το ΜΕΤΑΚΙΝΗΜΕΝΟ σημείο του CRM — ποτέ πινέζα.
+                 Exclusive: πινέζα στο ακριβές σημείο. Ο χάρτης φορτώνει μόνο αν ανοίξει η ενότητα. */
+              <figure class="pmap">
+                <div class="pmap__map" id="pmap" data-lat={mapView.lat} data-lng={mapView.lng}
+                     data-exact={mapView.exact ? '1' : ''} data-r={CIRCLE_M}
+                     role="img" aria-label={pui(lang, mapView.exact ? 'mapExact' : 'mapCircle')}></div>
+                <figcaption class="pmap__cap">
+                  <span>{pui(lang, mapView.exact ? 'mapExact' : 'mapCircle')}</span>
+                  {mapView.exact && (
+                    <a href={`https://www.google.com/maps/search/?api=1&query=${mapView.lat},${mapView.lng}`}
+                       target="_blank" rel="noopener" data-ev="property:map_open">{pui(lang, 'mapOpen')}</a>
+                  )}
+                </figcaption>
+              </figure>
+            )}
+          </>) : (
             <div class="maplock">
               <span class="maplock__bg" aria-hidden="true"></span>
               <span class="maplock__in">
@@ -377,6 +401,33 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                 <a class="btn btn--go" href={loginHref} data-ev="register:unlock_area">{pui(lang, 'freeReg')}</a>
               </span>
             </div>
+          )}
+
+          {hasExclusive && (
+            /* ═══ EXCLUSIVE (#53) — ΜΟΝΟ με έγκριση George από το EALIDA ═══
+               Το CRM στέλνει αυτά τα πεδία ΜΟΝΟ στο επίπεδο exclusive· ο έλεγχος εδώ
+               είναι δεύτερη ζώνη, όχι η μόνη. */
+            <section class="xcl" aria-labelledby="xcl-h">
+              <h2 class="sec" id="xcl-h">{pui(lang, 'exclH')}</h2>
+              {xAddress && (<p class="xcl__addr"><b>{pui(lang, 'addressL')}</b> {xAddress}</p>)}
+              {xVideos.length > 0 && (<>
+                <h3 class="xcl__h">{pui(lang, 'videoL')}</h3>
+                {xVideos.map((v) => embedOf(v.url) ? (
+                  <div class="xcl__vid"><iframe src={embedOf(v.url)} title={v.label || pui(lang, 'videoL')} loading="lazy"
+                    allow="fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+                ) : (
+                  <p><a href={v.url} target="_blank" rel="noopener">{v.label || pui(lang, 'videoL')}</a></p>
+                ))}
+              </>)}
+              {xDocs.length > 0 && (<>
+                <h3 class="xcl__h">{pui(lang, 'docsL')}</h3>
+                <ul class="xcl__docs">{xDocs.map((d) => <li><a href={d.url} target="_blank" rel="noopener">{d.label}</a></li>)}</ul>
+              </>)}
+              {xHistory.length > 0 && (<>
+                <h3 class="xcl__h">{pui(lang, 'priceHistL')}</h3>
+                <dl class="lfacts">{xHistory.map((h) => <div class="lfact"><dt class="num">{h.date}</dt><dd class="num">{money(h.price, lang)}</dd></div>)}</dl>
+              </>)}
+            </section>
           )}
 
           {dists.length > 0 && (
@@ -639,6 +690,17 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .fl dd { margin: 0; text-align: end; }
 
   .place { margin: 0; font-size: 15px; color: var(--ink-2); }
+  .pmap { margin: 12px 0 0; }
+  .pmap__map { height: 300px; background: var(--line); }
+  .pmap__cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .pmap__cap a { color: var(--ink); text-decoration: underline; }
+  .xcl { margin-top: 8px; }
+  .xcl__h { font-size: 15px; font-weight: 600; margin: 18px 0 8px; }
+  .xcl__addr { margin: 0; font-size: 15px; }
+  .xcl__vid { position: relative; aspect-ratio: 16 / 9; }
+  .xcl__vid iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .xcl__docs { margin: 0; padding-left: 18px; }
+  .xcl__docs a { color: var(--ink); }
   .maplock { position: relative; height: 240px; overflow: hidden; }
   .maplock__bg { position: absolute; inset: 0;
     background:
@@ -753,6 +815,36 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 </style>
 
 <script>
+  // ── ΧΑΡΤΗΣ (#53): Leaflet + OpenStreetMap, φορτώνεται ΜΟΝΟ αν υπάρχει #pmap (δηλ. μέλος)
+  //    και ΜΟΝΟ όταν πλησιάσει στην οθόνη. Ο επισκέπτης δεν κατεβάζει ούτε τη βιβλιοθήκη.
+  const pm = document.getElementById('pmap');
+  if (pm) {
+    const LEAF = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/';
+    const start = () => {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet'; css.href = LEAF + 'leaflet.min.css';
+      document.head.appendChild(css);
+      const js = document.createElement('script');
+      js.src = LEAF + 'leaflet.min.js';
+      js.onload = () => {
+        const L = (window as unknown as { L: any }).L;
+        const lat = Number(pm.dataset.lat), lng = Number(pm.dataset.lng);
+        const exact = pm.dataset.exact === '1';
+        const map = L.map(pm, { scrollWheelZoom: false }).setView([lat, lng], exact ? 15 : 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: exact ? 18 : 14, attribution: '&copy; OpenStreetMap',
+        }).addTo(map);
+        if (exact) L.circleMarker([lat, lng], { radius: 8, color: '#0d1114', weight: 2, fillOpacity: .9 }).addTo(map);
+        else L.circle([lat, lng], { radius: Number(pm.dataset.r), color: '#0d1114', weight: 1.5, fillOpacity: .12 }).addTo(map);
+      };
+      document.head.appendChild(js);
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '300px' });
+      io.observe(pm);
+    } else start();
+  }
+
   // ── ΟΙ ΤΕΛΙΤΣΕΣ ΤΗΣ ΓΚΑΛΕΡΙ (μόνο στο κινητό, όπου είναι ράγα) ──────────
   // Άμεσο, ΟΧΙ μέσω requestAnimationFrame: το rAF δεν τρέχει σε καρτέλα που
   // δεν ζωγραφίζεται, οπότε η ενημέρωση έμενε στην ουρά — το πληρώσαμε στις

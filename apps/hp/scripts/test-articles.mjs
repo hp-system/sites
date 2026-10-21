@@ -66,7 +66,9 @@ try {
   for (const x of archived) {
     check(`archived ${x.clean} is mapped in articles.json`, redirects.some((r) => r.from === x.clean), 'redirect recorded');
     const r = await fetch(SITE + encodeURI(x.clean), { redirect: 'manual' });
-    check(`archived ${x.clean} is not served`, r.status === 404, `status ${r.status}`);
+    // Since the 301 engine (#56) the old address moves permanently to the kept article; never a page.
+    const to = redirects.find((m) => m.from === x.clean)?.to;
+    check(`archived ${x.clean} is not served (301 to the kept article)`, r.status === 301 && decodeURIComponent(r.headers.get('location') ?? '') === to, `status ${r.status} ${r.headers.get('location') ?? ''}`);
   }
   for (const a of arts) {
     const path = `/en/articles/${a.cat}/${a.slug}`;

@@ -1,6 +1,6 @@
 ---
-title: 'Villa Natalia: Luxury Villa in Sithonia, Halkidiki | Halkidiki Properties'
-description: Halkidiki Properties Constructions presents the most precious gem in Halkidiki, a villa different from everything you have seen.
+title: 'Villa Natalia: Luxury Villa in Sithonia, Halkidiki'
+description: 'Villa Natalia in Sithonia, Halkidiki: a luxury villa designed and built by Halkidiki Properties Constructions, different from anything you have seen.'
 h1: Villa Natalia, by Halkidiki Properties Constructions
 category: constructors-news
 slug: villla-natalia

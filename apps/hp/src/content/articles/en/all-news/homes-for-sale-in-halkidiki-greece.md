@@ -1,6 +1,6 @@
 ---
 title: 'Houses for Sale in Halkidiki, Greece (2026): Prices & Areas'
-description: 'Homes for sale in Halkidiki from €100,000: Kassandra, Sithonia, Aristotelis, Nea Propontida. Prices by area, how to buy, taxes and costs.'
+description: 'Homes for sale in Halkidiki from €100,000 in Kassandra, Sithonia, Aristotelis and Nea Propontida: prices by area, how to buy, the taxes and the full costs.'
 h1: 'Houses for sale in Halkidiki, Greece: prices, areas and how to buy (2026)'
 category: all-news
 slug: homes-for-sale-in-halkidiki-greece

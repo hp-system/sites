@@ -66,6 +66,8 @@ export const onRequest: MiddlewareHandler = async (ctx, next) => {
     }
   }
   const res = await next();
+  // The login page opens inside our own sign-in popup (q05); no other site may frame it (clickjacking).
+  if (/(^|\/)login\/?$/.test(ctx.url.pathname)) res.headers.set('Content-Security-Policy', "frame-ancestors 'self'");
   if (!isProd(ctx.request, ctx.url)) {
     res.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet');
   }

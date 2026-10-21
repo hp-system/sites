@@ -48,6 +48,8 @@ const co = await company();
 //    `/login?next=https://κακό.gr` θα έστελνε τον μόλις συνδεδεμένο πελάτη — με το
 //    εισιτήριό του φρέσκο — σε ξένη σελίδα. Κλασική ανοιχτή ανακατεύθυνση.
 const safeNext = /^\/(?!\/)/.test(next) ? next : `${prefix(lang)}/`;
+// Inside the sign-in popup (q05): no header. Only our own pages may frame it — set in middleware.ts.
+const embed = Astro.url.searchParams.get('embed') === '1';
 
 const COUNTRIES = [
   { c: '+30',  n: t(lang, 'auth.c.gr'), f: '🇬🇷', l: 'el' },
@@ -114,12 +116,12 @@ const JS_T = {
 };
 ---
 
-<Base lang={lang} title={t(lang, 'auth.meta_title')} noindex
+<Base lang={lang} title={t(lang, 'auth.meta_title')} noindex embed={embed}
       description={t(lang, 'auth.meta_desc')}>
-  <Header lang={lang} solid />
+  {!embed && <Header lang={lang} solid />}
 
   <main id="main" class="auth">
-    <div class="box" data-next={safeNext} data-def={defCode} data-i18n={JSON.stringify(JS_T)}>
+    <div class="box" data-embed={embed ? '1' : ''} data-next={safeNext} data-def={defCode} data-i18n={JSON.stringify(JS_T)}>
       <p class="t-label">{brand.name}</p>
       <h1 class="t-h2 auth__h">{t(lang, 'auth.h1')}</h1>
       <p class="say">{t(lang, 'auth.sub')}</p>
@@ -255,6 +257,7 @@ const JS_T = {
 </Base>
 
 <style>
+  :global(body.embed) .auth { min-height: 0; padding-top: var(--s5); }
   .auth { min-height: 70vh; display: grid; place-items: start center; padding: var(--s6) var(--gut) var(--s9); }
   .box { width: 100%; max-width: 420px; }
   .auth__h { margin: 10px 0 6px; }
@@ -505,9 +508,27 @@ const JS_T = {
     finish();
   });
 
+  // In the popup the parent page takes over (same origin only); alone, we navigate as before.
+  const EMBED = box.dataset.embed === '1' && window.parent !== window;
+  const done = (href: string) => {
+    if (EMBED) { window.parent.postMessage({ type: 'hp-login', next: new URL(href, location.href).pathname + new URL(href, location.href).search }, location.origin); return; }
+    location.href = href;
+  };
+  // Tell the popup how tall the current step is, so it fits without empty space or scrolling.
+  if (EMBED && 'ResizeObserver' in window) {
+    const tell = () => window.parent.postMessage({ type: 'hp-login-h', h: Math.ceil(document.documentElement.scrollHeight) }, location.origin);
+    new ResizeObserver(tell).observe(document.body); tell();
+  }
+  if (EMBED) document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((a) => {
+    // "Not now" and "Continue" close the popup; other links (terms, phone) open outside it.
+    if (a.closest('.box') && (a.id === 'go' || a.getAttribute('href') === box.dataset.next)) {
+      a.addEventListener('click', (e) => { e.preventDefault(); done(a.href); });
+    } else if (!a.href.startsWith('tel:')) a.target = '_blank';
+  });
+
   function finish() {
     show('s5');
-    setTimeout(() => { location.href = ($('go') as HTMLAnchorElement).href; }, 1100);
+    setTimeout(() => done(($('go') as HTMLAnchorElement).href), 1100);
   }
 
   // ── Ο ΚΩΔΙΚΟΣ ΠΑΝΩ ΑΠΟ ΤΟ ΠΛΗΚΤΡΟΛΟΓΙΟ ────────────────────────────────

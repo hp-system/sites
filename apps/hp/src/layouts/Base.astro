@@ -15,6 +15,7 @@ import { isProd } from '../lib/seo';
 import { TRACK_SNIPPET } from '../lib/track';
 import { analyticsOn, consentHeadScript } from '../lib/consent';
 import CookieConsent from '../components/CookieConsent.astro';
+import LoginDialog from '../components/LoginDialog.astro';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import { brand } from '../brand/index';
@@ -40,11 +41,13 @@ interface Props {
   /** B-16: canonical points to this language's URL (a fallback page → its English original). */
   canonicalLang?: Lang;
   jsonLd?: unknown[];
+  /** The login page inside the sign-in popup (q05): no cookie banner, no second dialog. */
+  embed?: boolean;
 }
 const {
   lang, title, description, path = '/',
   ogImage, ogImageW, ogImageH, ogImageAlt, pathFor, noindex = false, jsonLd = [],
-  langs, canonicalLang,
+  langs, canonicalLang, embed = false,
 } = Astro.props;
 
 // 🌍 Το `og:locale` θέλει μορφή γλώσσα_ΧΩΡΑ («el_GR»), όχι σκέτο «el» — αλλιώς
@@ -183,10 +186,11 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
     <script type="application/ld+json" set:html={JSON.stringify(b).replace(/</g, '\\u003c')} />
   ))}
 </head>
-<body>
-  <a class="sr-only" href="#main">{t(lang, 'a11y.skip')}</a>
+<body class:list={[embed && 'embed']}>
+  {!embed && <a class="sr-only" href="#main">{t(lang, 'a11y.skip')}</a>}
   <slot />
-  <CookieConsent lang={lang} />
+  {!embed && <CookieConsent lang={lang} />}
+  {!embed && <LoginDialog lang={lang} />}
   {/* Σήμανση: ένα listener για όλη τη σελίδα, χωρίς βιβλιοθήκη. Δες lib/track.ts. */}
   <script is:inline set:html={TRACK_SNIPPET} />
 </body>

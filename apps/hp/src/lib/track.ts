@@ -39,6 +39,8 @@ export const EVENTS = {
   FEATURE_CLICK: 'property:feature_click',
   FEATURE_RENT: 'property:feature_rent',
   PHOTO_OPEN: 'property:photo_open',
+  /** Exclusive member opens the exact location in a maps app (#53). */
+  MAP_OPEN: 'property:map_open',
 
   // Πρόθεση πωλητή — ο ακριβότερος lead
   VALUATION_REPORT: 'seller:valuation_report',

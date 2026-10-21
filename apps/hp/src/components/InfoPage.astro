@@ -40,6 +40,9 @@ const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const abs = (p: string) => (p.startsWith('http') ? p : `${site}${p}`);
 const image = d.image || HERO_SHOTS[0]?.url || '';
 const imageAlt = d.image_alt || (d.image ? d.h1 : HERO_SHOTS[0]?.alt.en ?? d.h1);
+// Our watermarked media come in _800w and _1920w (3:2): a hero from there gets a srcset.
+const heroSrcset = /_1920w\.jpg$/.test(d.image)
+  ? `${d.image.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${d.image} 1920w` : '';
 const title = `${d.title} | ${brand.name}`;
 const contact = '/en/contact';
 const terms = '/en/terms-of-services';
@@ -118,7 +121,9 @@ if (d.faq.length) {
 
     {d.image && (
       <figure class="wrap info-hero">
-        <img src={d.image} alt={imageAlt} width="1200" height="600" fetchpriority="high" decoding="async" />
+        {heroSrcset
+          ? <img src={d.image} srcset={heroSrcset} sizes="(max-width: 1280px) 100vw, 1280px" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" />
+          : <img src={d.image} alt={imageAlt} width="1200" height="600" fetchpriority="high" decoding="async" />}
       </figure>
     )}
 

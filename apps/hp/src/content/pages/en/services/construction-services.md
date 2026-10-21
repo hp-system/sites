@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Services
   path: /en/services
-image: ''
-image_alt: ''
+image: https://media.onsea.gr/properties/ums_7985/detached-house-facade-halkidiki-2982420238_1920w.jpg
+image_alt: Modern stone house with a wooden deck and pool in Halkidiki
 related:
 - label: Real estate services in Halkidiki
   href: /en/services

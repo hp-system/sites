@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Services
   path: /en/services
-image: ''
-image_alt: ''
+image: https://media.onsea.gr/properties/ums_8535/land-beach-view-halkidiki-2973826451_1920w.jpg
+image_alt: Sandy beach and land with sea view in Halkidiki, Greece
 related:
 - label: Real estate services in Halkidiki
   href: /en/services

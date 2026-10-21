@@ -9,8 +9,8 @@ schema: Service
 parents:
 - name: Services
   path: /en/services
-image: ''
-image_alt: ''
+image: https://media.onsea.gr/properties/ums_4494/detached-house-aerial-halkidiki-2980294460_1920w.jpg
+image_alt: Aerial view of a seafront house with a large garden in Halkidiki
 related:
 - label: Real estate services in Halkidiki
   href: /en/services

@@ -101,4 +101,6 @@ The best staging cannot sell an overpriced house. Before you list, look at what 
 
 Selling your home involves more than just sticking a sign on the lawn: it takes effort, time, energy, money and creativity to pull off successfully. Follow these simple tips to make sure your house looks its best for potential buyers. With these steps in mind, you'll be able to show potential buyers how great their future life could be if they decide to purchase this property.
 
+<!-- widget: video 4_BhuM0PImg | Home Decorating Tips to Impress Buyers -->
+
 When you are ready, [see how we sell](/en/sell) or [add your property](/en/add-your-property), and we will arrange the photos, the video and the viewings with you. Good luck!

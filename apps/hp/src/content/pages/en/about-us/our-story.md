@@ -37,6 +37,8 @@ contact_card: false
 
 The idea of developing a real estate company, in which customers will enjoy a high level of services, begins at a time when technology is making its first timid steps in the industry. From Thessaloniki, in a small office, with great passion and vision, the creation of basic infrastructure begins. The company gets equipped and organized in the field of technology, as it develops internal software that brings together the entire operation of its services. Our first page HalkidikiProperties.com makes its appearance and concerns the sale of real estate with a complete presentation and analysis, as it aims at the most complete information of its customers. Our smart systems evolve rapidly and already apply SEO, Social & Internet Marketing techniques in several languages, while at the same time our real estate base is growing.
 
+<!-- widget: video MhOQuMDk5i8 | Halkidiki Properties | Our Story -->
+
 ## 2011-2014
 
 We are moving to the new headquarters of our company in the center of Thessaloniki and now we have a large portfolio of unique properties. For the first time the company enters the construction sector, as it undertakes the study and completion of private projects with great success and consistency. Our new websites attract a large international audience and our company becomes a real estate transaction hub. At the same time we develop a wide network of partners. We are perfecting our systems and we offer for the first time in Greece complete advertising and promotion real estate solutions, through an automated advertising network on websites worldwide. We focus on holiday homes in Northern Greece, while at the same time we are expanding in the market of Thessaloniki.

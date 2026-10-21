@@ -179,7 +179,7 @@ export const CONTENT: Partial<Record<PageKey, Partial<Record<Lang, PageContent>>
           kind: 'text',
           p: [
             `Νέο Ρύσιο, Τ.Κ.: 57001, Θεσσαλονίκη, Ελλάδα`,
-            `T (+30) 2311 24.12.24`,
+            `T +30 2311 24.12.24`,
             `E info@halkidikiproperties.com`,
           ],
         },
@@ -206,7 +206,7 @@ export const CONTENT: Partial<Record<PageKey, Partial<Record<Lang, PageContent>>
           p: [
             `Find a realtor and let him guide you to your new home.`,
             `Neo Rysio, P.C.: 57001 Thessaloniki, Greece`,
-            `T (+30) 2311 24.12.24`,
+            `T +30 2311 24.12.24`,
             `E info@halkidikiproperties.com`,
           ],
         },

@@ -13,12 +13,13 @@
 import { consentText, CONSENT_COOKIE, CONSENT_MAX_AGE } from '../lib/consent';
 import { prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
+import { privacyPath } from '../lib/legal';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const c = consentText(lang);
-// The privacy policy exists in English only for now: /de/privacy-policy, /privacy-policy (el)… are 404.
-const privacyHref = `${prefix('en')}${brand.analytics.privacyPath}`;
+// The policy in the page language (#94).
+const privacyHref = privacyPath(lang);
 ---
 <div id="cc" class="cc" role="dialog" aria-modal="true" aria-labelledby="cc-t" aria-describedby="cc-b" hidden
      data-cookie={CONSENT_COOKIE} data-max-age={CONSENT_MAX_AGE}>

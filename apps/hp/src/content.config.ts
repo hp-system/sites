@@ -34,6 +34,10 @@ const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: z.object({
     path: z.string(),
+    /** Page language (#94); English unless the file says otherwise. */
+    lang: z.enum(['el', 'en', 'bg', 'sr', 'de', 'ro', 'tr', 'he', 'ru']).default('en'),
+    /** Same `key` = translations of one page: hreflang cluster + sitemap alternates (#94). */
+    key: z.string().default(''),
     /** Title without the brand — the brand is appended from the brand config. */
     title: z.string(),
     description: z.string(),

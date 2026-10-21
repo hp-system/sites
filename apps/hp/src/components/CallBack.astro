@@ -1,0 +1,78 @@
+---
+// «Να σε καλέσουμε» (#82) — the mockup George approved 21/10/2026 (GxAd7csAWSzviLSgvQJ2Zc):
+// country code + mobile, when it suits, one button. Rendered twice on the property page:
+// `d` opens next to the office phone in the card, `m` sits in the mobile Call sheet.
+// The script (once, in PropertyPage) posts every [data-cb] form to /api/callback.
+import { pui } from '../lib/property';
+import { DIAL, flag } from '../lib/callback';
+import type { Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; id: string; k: 'd' | 'm'; phone?: string; tel: string; telHref: string; hidden?: boolean }
+const { lang, id, k, phone, tel, telHref, hidden } = Astro.props;
+const f = `cb-${k}`;
+---
+<form class="cb" id={f} data-cb data-ev="lead:callback_submit" data-ev-defer novalidate hidden={hidden}
+      data-e-short={pui(lang, 'cbErrShort')} data-e-gr={pui(lang, 'cbErrGr')} data-e-err={pui(lang, 'cbErr')}
+      data-to={pui(lang, 'cbDoneTo', { id })}>
+  <div class="cb__h">
+    <b>{pui(lang, 'cbTitle', { id })}</b>
+    {k === 'd' && <button type="button" class="cb__x" data-cb-close aria-label="×">×</button>}
+  </div>
+  <div class="cb__ph">
+    <label class="sr-only" for={`${f}-c`}>{pui(lang, 'cbCountry')}</label>
+    <select id={`${f}-c`} name="code">
+      {DIAL.map((d) => <option value={d.code} data-cc={d.cc}>{flag(d.cc)} +{d.code}</option>)}
+    </select>
+    <label class="sr-only" for={`${f}-p`}>{pui(lang, 'cbPhone')}</label>
+    <input id={`${f}-p`} name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24"
+           placeholder={pui(lang, 'cbPhone')} value={phone || undefined} />
+  </div>
+  <p class="cb__err" role="alert" hidden></p>
+  <fieldset class="cb__when">
+    <legend>{pui(lang, 'cbWhen')}</legend>
+    <label><input type="radio" name="when" value="asap" checked /><span>{pui(lang, 'cbAsap')}</span></label>
+    <label><input type="radio" name="when" value="morning" /><span>{pui(lang, 'cbMorning')}</span></label>
+    <label><input type="radio" name="when" value="afternoon" /><span>{pui(lang, 'cbAfternoon')}</span></label>
+  </fieldset>
+  <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <button type="submit" class="cb__go">{pui(lang, 'cbGo')}</button>
+  <p class="cb__fine">{pui(lang, 'cbFine')}</p>
+  <div class="cb__done" hidden>
+    <b>{pui(lang, 'cbDone')}</b>
+    <span data-cb-to></span>
+    <a class="cb__hurry num" href={telHref} data-ev="call:property">{pui(lang, 'cbHurry', { t: tel })}</a>
+  </div>
+</form>
+
+<style>
+  .cb { border: 1px solid var(--ink); padding: 14px; display: grid; gap: 10px; margin: 10px 0 4px;
+        background: var(--paper); text-align: start; }
+  .cb[hidden], .cb [hidden] { display: none !important; }   /* the parts' own display would win over [hidden] */
+  .cb__h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .cb__h b { font-size: 14px; }
+  .cb__x { border: 0; background: none; font-size: 20px; line-height: 1; color: var(--faint); cursor: pointer;
+           min-width: 32px; min-height: 32px; }
+  .cb__ph { display: grid; grid-template-columns: 96px 1fr; gap: 6px; }
+  .cb__ph select, .cb__ph input { font: inherit; font-size: 16px; padding: 10px; border: 1px solid var(--line);
+           background: var(--paper); color: var(--ink); min-width: 0; border-radius: 0; }
+  .cb__ph input[aria-invalid='true'] { border-color: #B3261E; box-shadow: inset 0 0 0 1px #B3261E; }
+  .cb__err { margin: -4px 0 0; color: #B3261E; font-size: 12.5px; }
+  .cb__when { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .cb__when legend { width: 100%; margin-bottom: 6px; padding: 0; font-size: 10.5px; letter-spacing: .13em;
+                     text-transform: uppercase; color: var(--faint); font-weight: 600; }
+  .cb__when label { position: relative; }
+  .cb__when input { position: absolute; opacity: 0; inset: 0; }
+  .cb__when span { display: block; border: 1px solid var(--line); padding: 7px 10px; font-size: 13px; cursor: pointer; }
+  .cb__when input:checked + span { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .cb__when input:focus-visible + span { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .cb__go { padding: 12px; border: 0; background: var(--brand); color: #fff; font: inherit; font-size: 11.5px;
+            font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; }
+  .cb__go:disabled { opacity: .6; }
+  .cb { position: relative; }
+  .hp { position: absolute; inset-inline-start: 0; top: 0; width: 1px; height: 1px;
+    padding: 0; margin: 0; border: 0; opacity: 0; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
+  .cb__fine { margin: 0; font-size: 11px; color: var(--faint); }
+  .cb__done { display: grid; gap: 4px; border-inline-start: 3px solid #2E7D4F; padding-inline-start: 12px; }
+  .cb__done b { color: #2E7D4F; }
+  .cb__hurry { font-size: 13px; color: var(--brand); }
+</style>

@@ -61,6 +61,10 @@ export const EVENTS = {
   LEAD_WHATSAPP_CONTENT: 'lead:whatsapp_content',     // WhatsApp on content, area and article pages
   LEAD_VIBER: 'lead:viber',
   LEAD_RENT_IT: 'lead:rent_it',
+  // Call-me-back (#82): open next to the phone (desktop), the bar's Call sheet (mobile), sent after 200
+  LEAD_CALLBACK_OPEN: 'lead:callback_open',
+  LEAD_CALLSHEET_OPEN: 'lead:callsheet_open',
+  LEAD_CALLBACK_SUBMIT: 'lead:callback_submit',
 
   // ΕΠΙΚΟΙΝΩΝΙΑ — η υψηλότερη πρόθεση σε όλη τη σελίδα.
   // Ξεχωριστό όνομα ΑΝΑ ΣΗΜΕΙΟ: αν όλα λέγονταν «κλικ στο τηλέφωνο», δεν θα
@@ -107,6 +111,7 @@ export const EVENT_NAMES: string[] = Object.values(EVENTS);
 export const GA_NAMES: Record<string, string> = {
   'lead:form_submit': 'property_inquiry',
   'lead:tour_submit': 'viewing_request',
+  'lead:callback_submit': 'callback_request',
   'lead:whatsapp': 'click_to_whatsapp',
   'lead:whatsapp_bar': 'click_to_whatsapp',
   'lead:whatsapp_content': 'click_to_whatsapp',

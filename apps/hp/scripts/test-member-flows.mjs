@@ -77,6 +77,35 @@ try {
   const hx = await (await fetch(SITE + '/en/property/10009', { headers: X })).text();
   const hm = await (await fetch(SITE + '/en/property/10009', { headers: M })).text();
   check('hidden price: Exclusive sees it, member does not', /€109,000/.test(hx) && !/€109,000/.test(hm), 'exclusive only');
+  // #74 — panel tabs, request + Exclusive request through the CRM, compare inside favourites, logout scopes.
+  const pb = await (await fetch(SITE + '/en/panel', { headers: M })).text();
+  check('panel: tabs I buy / I sell, buy open', /aria-current="page"[^>]*>I buy</.test(pb) && pb.includes('href="/en/panel?tab=sell"') && !pb.includes('?tab=coop'), 'tabs');
+  check('panel: request + Exclusive rows, no compare row', pb.includes('href="/en/panel/request"') && pb.includes('href="/en/panel/exclusive"') && !pb.includes('href="/en/panel/compare"'), 'rows');
+  const ps = await (await fetch(SITE + '/en/panel?tab=sell', { headers: M })).text();
+  check('panel sell tab: my properties + send a property', ps.includes('My properties') && ps.includes('href="/en/panel/submit"'), 'sell');
+  const before = (await (await fetch(stub.base.replace('/api', '') + '/__captured')).json()).length;
+  const rq = (b) => fetch(SITE + '/api/panel/request', { method: 'POST', headers: { ...M, 'content-type': 'application/json', origin: SITE }, body: JSON.stringify(b) }).then((r) => r.json());
+  const r1 = await rq({ type: 'request', kind: 'home', where: 'Sithonia', maxPrice: '450,000', lang: 'en' });
+  const r2 = await rq({ type: 'exclusive', note: 'Seafront villa', lang: 'en' });
+  const r3 = await rq({ type: 'request', kind: 'castle' });
+  const cap = (await (await fetch(stub.base.replace('/api', '') + '/__captured')).json()).slice(before).filter((c) => c.path === '/api/site/inquiry');
+  check('request → CRM inquiry with member data', r1.ok && cap.some((c) => c.body?.message === '[Request] kind=home; where=Sithonia; max=€450,000' && c.body?.email === 'stub@example.com'), JSON.stringify(cap.map((c) => c.body?.message)));
+  check('Exclusive request → CRM inquiry', r2.ok && cap.some((c) => c.body?.message === '[Exclusive request] Seafront villa'), 'sent');
+  check('bad kind refused', r3.ok === false && r3.code === 'kind', JSON.stringify(r3));
+  const rg = await fetch(SITE + '/api/panel/request', { method: 'POST', headers: { 'content-type': 'application/json', origin: SITE }, body: '{}' }).then((r) => r.json());
+  check('guest request refused', rg.code === 'expired', JSON.stringify(rg));
+  const rpage = await (await fetch(SITE + '/en/panel/request', { headers: M })).text();
+  check('request page: one screen, no contact fields', rpage.includes('name="kind"') && rpage.includes('name="maxPrice"') && !rpage.includes('name="email"'), 'form');
+  await post({ ref: '10010' }); await post({ ref: '10011' });
+  const fv = await (await fetch(SITE + '/en/panel/favorites', { headers: M })).text();
+  check('favourites: Compare button with 2+ saved', fv.includes('href="/en/panel/compare"'), 'button');
+  await post({ ref: '10010' }); await post({ ref: '10011' });
+  const capBefore = (await (await fetch(stub.base.replace('/api', '') + '/__captured')).json()).length;
+  const lo1 = await fetch(SITE + '/api/auth/logout', { method: 'POST', headers: { ...M, origin: SITE, 'content-type': 'application/x-www-form-urlencoded' }, body: '', redirect: 'manual' });
+  const lo2 = await fetch(SITE + '/api/auth/logout', { method: 'POST', headers: { ...M, origin: SITE, 'content-type': 'application/x-www-form-urlencoded' }, body: 'scope=all', redirect: 'manual' });
+  const caps = (await (await fetch(stub.base.replace('/api', '') + '/__captured')).json()).slice(capBefore).filter((c) => c.path === '/api/site/member/logout');
+  check('sign out: this device does not call the CRM, everywhere does', lo1.status === 303 && lo2.status === 303 && caps.length === 1, `${caps.length} CRM logout(s)`);
+
   const { crmError } = await import('../src/lib/crmerror.ts');
   check('CRM errors → codes', crmError(401, { message: 'Λάθος κωδικός. Απομένουν 2 προσπάθειες.' }, 'code_bad').left === 2
     && crmError(401, { message: 'Ο λογαριασμός έχει ανασταλεί.' }, 'code_bad').code === 'suspended'

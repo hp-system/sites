@@ -20,8 +20,12 @@ const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://loca
 
 export const POST: APIRoute = async ({ request, url, cookies, redirect, clientAddress }) => {
   const token = cookies.get('member_token')?.value;
+  // George 21/10/2026 (q23): "Sign out" = only this device (the cookie goes); "Sign out everywhere"
+  // (form field scope=all, from the panel/profile) also tells the CRM to end every session.
+  let everywhere = false;
+  try { everywhere = (await request.clone().formData()).get('scope') === 'all'; } catch { /* not a form */ }
 
-  if (token) {
+  if (token && everywhere) {
     try {
       await fetch(`${API}/site/member/logout`, {
         method: 'POST',

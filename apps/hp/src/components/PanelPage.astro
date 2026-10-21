@@ -43,6 +43,8 @@ const isAgent = me.level === 'agent';
 const isExclusive = me.level === 'exclusive';
 const first = (me.name || '').trim().split(/\s+/)[0] || '';
 const favN = me.favorites.length;
+const q = Astro.url.searchParams.get('tab');
+const tab: 'buy' | 'sell' | 'coop' = q === 'sell' ? 'sell' : q === 'coop' && isAgent ? 'coop' : 'buy';
 
 const badge = isExclusive ? t(lang, 'lvl.exclusive') : isAgent ? t(lang, 'lvl.agent') : t(lang, 'lvl.member');
 
@@ -63,67 +65,63 @@ const favLabel = favN === 1 ? t(lang, 'ui.one_prop') : t(lang, 'pnl.n_props', { 
         <span class:list={['badge', isExclusive && 'badge--gold', isAgent && 'badge--muted']}>{badge}</span>
       </div>
 
-      {isAgent ? (
-        /* ── Ο ΜΕΣΙΤΗΣ: άλλο προϊόν, όχι άδειος πίνακας ──────────────────
-           George 6/8: «θα εγγράφεται κανονικά, αλλά δεν θα βλέπει τίποτε
-           περισσότερο από ότι ένας μη εγγεγραμμένος». Το τηρούμε — αλλά αν του
-           δείχναμε κενό, θα το καταλάβαινε σε δέκα δευτερόλεπτα. Εδώ παίρνει
-           συνεργασία· ο «Μεσίτης Συνεργάτης» ανοίγει με ένα κλικ από το CRM. */
-        <>
-          <p class="say">{t(lang, 'pnl.ag_say')}</p>
-          <div class="rows">
-            <a class="row" href={co.phoneHref}><span>{t(lang, 'pnl.ag_how')}<small>{t(lang, 'pnl.ag_how_s')}</small></span><i>›</i></a>
-            <a class="row" href={co.phoneHref}><span>{t(lang, 'pnl.ag_talk')}<small>{co.phone}</small></span><i>›</i></a>
-          </div>
-          <div class="ask">
-            <p class="ask__h">{t(lang, 'pnl.ag_ask_h')}</p>
-            <p class="ask__s">{t(lang, 'pnl.ag_ask_s')}</p>
-            <a class="btn btn--ghost" href={co.phoneHref}>{t(lang, 'pnl.ag_cta')}</a>
-          </div>
-        </>
-      ) : (
-        <>
-          <div class="tiles">
-            <a class="tile" href={`${p}/panel/favorites`}>
-              <b class="num">{favN}</b><span>{t(lang, 'pnl.fav')}</span></a>
-            <a class="tile" href={listUrl(lang)}>
-              <b class="num">—</b><span>{t(lang, 'pnl.searches')}</span></a>
-          </div>
+      {/* ── Tabs «I buy · I sell (· Cooperation)» (George 21/10/2026, q09). The agent also gets the
+             buyer panel (q21). The tab is a plain link (?tab=), so it works without JavaScript. ── */}
+      <nav class="tabs" aria-label={t(lang, 'pnl.title')}>
+        <a href={`${p}/panel`} aria-current={tab === 'buy' ? 'page' : undefined}>{t(lang, 'pnl.tab_buy')}</a>
+        <a href={`${p}/panel?tab=sell`} aria-current={tab === 'sell' ? 'page' : undefined}>{t(lang, 'pnl.tab_sell')}</a>
+        {isAgent && <a href={`${p}/panel?tab=coop`} aria-current={tab === 'coop' ? 'page' : undefined}>{t(lang, 'pnl.tab_coop')}</a>}
+      </nav>
 
-          <div class="rows">
-            <a class="row" href={`${p}/panel/favorites`}>
-              <span>{t(lang, 'pnl.fav')}<small>{favN ? favLabel : t(lang, 'pnl.fav_none')}</small></span><i>›</i></a>
-            <a class="row" href={listUrl(lang)}>
-              <span>{t(lang, 'pnl.my_searches')}<small>{t(lang, 'pnl.searches_s')}</small></span><i>›</i></a>
-            <a class="row" href={`${p}/panel/compare`}>
-              <span>{t(lang, 'pnl.compare')}<small>{favN >= 2 ? t(lang, 'pnl.compare_s') : t(lang, 'pnl.compare_need')}</small></span><i>›</i></a>
+      {tab === 'buy' && (<>
+        <div class="rows">
+          <a class="row" href={`${p}/panel/favorites`}>
+            <span>{t(lang, 'pnl.fav')}<small>{favN ? favLabel : t(lang, 'pnl.fav_none')}</small></span><i>›</i></a>
+          <a class="row" href={listUrl(lang)}>
+            <span>{t(lang, 'pnl.my_searches')}<small>{t(lang, 'pnl.searches_s')}</small></span><i>›</i></a>
+          <a class="row" href={`${p}/panel/request`}>
+            <span>{t(lang, 'pnl.req')}<small>{t(lang, 'pnl.req_s')}</small></span><i>›</i></a>
+          {!isAgent && (
             <a class="row" href={`${p}/panel/collection`}>
               <span>{t(lang, 'pnl.collection')}<small>{t(lang, 'pnl.collection_s')}</small></span><i>›</i></a>
-            <a class="row" href={`${p}/panel/submit`}>
-              <span>{t(lang, 'pnl.submit')}<small>{t(lang, 'pnl.submit_s')}</small></span><i>›</i></a>
-            <a class="row" href={`${p}/panel/profile`}>
-              <span>{t(lang, 'pnl.profile')}<small>{me.email}{me.phone ? ` · ${me.phone}` : ''}</small></span><i>›</i></a>
+          )}
+          <a class="row" href={`${p}/panel/profile`}>
+            <span>{t(lang, 'pnl.profile')}<small>{me.email}{me.phone ? ` · ${me.phone}` : ''}</small></span><i>›</i></a>
+        </div>
+        {isExclusive ? (
+          <div class="ask">
+            <p class="ask__h">{t(lang, 'pnl.have_h')}</p>
+            <p class="ask__s">{t(lang, 'pnl.have_s')}</p>
+            <a class="btn btn--ghost" href={co.phoneHref}>{t(lang, 'pnl.have_cta')}</a>
           </div>
+        ) : !isAgent && (
+          /* Exclusive is a request George answers (q15): it now lands in EALIDA, not only a phone link. */
+          <div class="ask ask--deep">
+            <p class="ask__h">{t(lang, 'pnl.up_h')}</p>
+            <p class="ask__s">{t(lang, 'pnl.up_s')}</p>
+            <a class="btn btn--onphoto" href={`${p}/panel/exclusive`}>{t(lang, 'pnl.up_cta')}</a>
+          </div>
+        )}
+      </>)}
 
-          {!isExclusive && (
-            /* Η αναβάθμιση είναι ΑΙΤΗΜΑ, όχι αγορά — όπως ακριβώς και στο σημερινό
-               site («Ένας σύμβουλος θα επικοινωνήσει μαζί σας σύντομα»). */
-            <div class="ask ask--deep">
-              <p class="ask__h">{t(lang, 'pnl.up_h')}</p>
-              <p class="ask__s">{t(lang, 'pnl.up_s')}</p>
-              <a class="btn btn--onphoto" href={co.phoneHref}>{t(lang, 'pnl.up_cta')}</a>
-            </div>
-          )}
-
-          {isExclusive && (
-            <div class="ask">
-              <p class="ask__h">{t(lang, 'pnl.have_h')}</p>
-              <p class="ask__s">{t(lang, 'pnl.have_s')}</p>
-              <a class="btn btn--ghost" href={co.phoneHref}>{t(lang, 'pnl.have_cta')}</a>
-            </div>
-          )}
-        </>
+      {tab === 'sell' && (
+        <div class="rows">
+          <div class="row row--static">
+            <span>{t(lang, 'pnl.myprops')}<small>{t(lang, 'pnl.myprops_none')}</small></span></div>
+          <div class="row row--static">
+            <span>{t(lang, 'pnl.stats')}<small>{t(lang, 'pnl.stats_soon')}</small></span></div>
+          <a class="row" href={`${p}/panel/submit`}>
+            <span>{t(lang, 'pnl.submit')}<small>{t(lang, 'pnl.submit_s')}</small></span><i>›</i></a>
+        </div>
       )}
+
+      {tab === 'coop' && isAgent && (<>
+        <p class="say">{t(lang, 'pnl.ag_say')}</p>
+        <div class="rows">
+          <a class="row" href="/en/collaboration-order"><span>{t(lang, 'pnl.coop_order')}</span><i>›</i></a>
+          <a class="row" href={co.phoneHref}><span>{t(lang, 'pnl.ag_talk')}<small>{co.phone}</small></span><i>›</i></a>
+        </div>
+      </>)}
 
       {/* «Προσωπικός Σύμβουλος» — υπάρχει στο rewize, λείπει από το HP.
           Για το exclusive είναι το μισό προϊόν. */}
@@ -138,6 +136,12 @@ const favLabel = favN === 1 ? t(lang, 'ui.one_prop') : t(lang, 'pnl.n_props', { 
 
       <form method="post" action="/api/auth/logout" class="out">
         <button class="lnk" type="submit">{t(lang, 'pnl.logout')}</button>
+        <span class="tiny">{t(lang, 'pnl.logout_here_s')}</span>
+      </form>
+      <form method="post" action="/api/auth/logout" class="out out--all">
+        <input type="hidden" name="scope" value="all" />
+        <button class="lnk" type="submit">{t(lang, 'pnl.logout_all')}</button>
+        <span class="tiny">{t(lang, 'pnl.logout_all_s')}</span>
       </form>
     </div>
   </main>
@@ -184,7 +188,13 @@ const favLabel = favN === 1 ? t(lang, 'ui.one_prop') : t(lang, 'pnl.n_props', { 
   .adv__b { min-height: 38px; padding: 0 14px; }
   .tiny { margin: 0; font-size: 11px; color: var(--faint); }
 
-  .out { margin-top: 30px; }
+  .out { margin-top: 30px; display: grid; gap: 2px; }
+  .out--all { margin-top: 14px; }
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin: 0 0 18px; overflow-x: auto; }
+  .tabs a { padding: 10px 16px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint);
+            border-bottom: 2px solid transparent; white-space: nowrap; }
+  .tabs a[aria-current='page'] { color: var(--ink); border-color: var(--ink); font-weight: 600; }
+  .row--static { color: var(--ink-2); }
   .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--muted); font-size: 13.5px; }
   .lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 </style>

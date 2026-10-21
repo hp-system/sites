@@ -28,6 +28,10 @@ export const EVENTS = {
   MEMBER_JOIN_FROM_LIST: 'member:join_from_list',
   MEMBER_FAVORITE: 'member:favorite_property',
   MEMBER_SAVE_SEARCH: 'member:save_search',
+  /** The member asks for Exclusive access from the panel (q15, #74). */
+  MEMBER_EXCLUSIVE_REQUEST: 'member:exclusive_request',
+  /** The one-screen request "tell us what you look for" (q12, #74). */
+  LEAD_REQUEST: 'lead:request_submit',
   PANEL_HEADER: 'panel:header',
   PANEL_MENU: 'panel:menu',
 

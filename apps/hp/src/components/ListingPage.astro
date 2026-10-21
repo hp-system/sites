@@ -22,7 +22,7 @@ import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import { allProperties, refOf, priceOf, priceVisible, pick } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
-import { prefix, propertyUrl, type Lang } from '../lib/i18n';
+import { prefix, propertyUrl, t, type Lang } from '../lib/i18n';
 import { num, seaLabel } from '../lib/format';
 import { brand } from '../brand/index';
 import {
@@ -316,6 +316,12 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
         <p class="t-h3">{q.id ? ui(lang, 'idNone') : ui(lang, 'none')}</p>
         {!q.id && <p>{ui(lang, 'noneHint')}</p>}
         <a class="btn" href={facetUrl(lang)}>{ui(lang, 'all')}</a>
+        {/* Nothing matches → "tell us what you look for" (q12, George 21/10/2026). Guests sign in first. */}
+        {!q.id && (
+          <a class="btn btn--ghost" data-ev="lead:request_submit"
+             href={viewer.member ? `${prefix(lang)}/panel/request` : `${prefix(lang)}/login?next=${encodeURIComponent(`${prefix(lang)}/panel/request`)}`}>
+            {t(lang, 'pnl.req')}</a>
+        )}
       </div>
     ) : (
       <>

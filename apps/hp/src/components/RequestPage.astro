@@ -1,0 +1,98 @@
+---
+// "Tell us what you look for" (q12) and "Ask for Exclusive access" (q15), George 21/10/2026.
+// One screen each. The member is known from the token; the form never asks for contact details.
+// Both post to /api/panel/request (→ CRM requests until EALIDA has its own endpoints).
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { prefix, t, type Lang } from '../lib/i18n';
+import type { Member } from '../lib/member';
+import { FACETS } from '../lib/listing';
+
+interface Props { lang: Lang; me: Member; kind: 'request' | 'exclusive' }
+const { lang, me, kind } = Astro.props;
+const p = prefix(lang);
+const isEx = kind === 'exclusive';
+const MUNIS = FACETS.filter((f) => f.q.municipality).map((f) => f.name[lang]);
+const KINDS: [string, string][] = [['home', t(lang, 'req.k_home')], ['apartment', t(lang, 'req.k_apartment')], ['land', t(lang, 'req.k_land')], ['business', t(lang, 'req.k_business')]];
+const JS_T = { sent: t(lang, isEx ? 'ex.sent' : 'req.sent'), need_email: t(lang, 'req.need_email'), fail: t(lang, 'sb.e.fail'), expired: t(lang, 'auth.e.expired') };
+const title = t(lang, isEx ? 'ex.h1' : 'req.h1');
+---
+<Base lang={lang} title={title} noindex description={t(lang, isEx ? 'ex.sub' : 'req.sub')}>
+  <Header lang={lang} solid />
+  <main id="main" class="rq">
+    <div class="wrap">
+      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
+        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{title}</b>
+      </nav>
+      <h1 class="t-h2 rq__h">{title}</h1>
+      <p class="rq__s">{t(lang, isEx ? 'ex.sub' : 'req.sub')}</p>
+      {isEx && me.level === 'exclusive' ? (
+        <p class="rq__done">{t(lang, 'pnl.have_s')}</p>
+      ) : (
+        <form id="rq" novalidate data-type={kind} data-lang={lang} data-i18n={JSON.stringify(JS_T)}>
+          {isEx ? (
+            <label class="fld"><span>{t(lang, 'ex.note')}</span><textarea name="note" id="rq-note" rows="3" maxlength="600"></textarea></label>
+          ) : (<>
+            <fieldset class="fld"><legend>{t(lang, 'req.what')}</legend>
+              <div class="opts">{KINDS.map(([v, l], i) => (
+                <label class="opt"><input type="radio" name="kind" id={`rq-k-${v}`} value={v} checked={i === 0} /><span>{l}</span></label>
+              ))}</div>
+            </fieldset>
+            <div class="two">
+              <label class="fld"><span>{t(lang, 'req.where')}</span>
+                <select name="where" id="rq-where"><option value="">{t(lang, 'req.where_any')}</option>{MUNIS.map((m) => <option value={m}>{m}</option>)}</select></label>
+              <label class="fld"><span>{t(lang, 'req.upto')}</span><input name="maxPrice" id="rq-max" inputmode="numeric" maxlength="12" placeholder="450,000" /></label>
+            </div>
+          </>)}
+          <p><button class="btn" type="submit" data-ev={isEx ? 'member:exclusive_request' : 'lead:request_submit'}>{t(lang, isEx ? 'ex.cta' : 'req.send')}</button></p>
+          <p class="msg" role="status" aria-live="polite"></p>
+        </form>
+      )}
+    </div>
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .rq { padding: var(--s6) 0 var(--s9); }
+  .rq .wrap { max-width: 620px; }
+  .crumb { font-size: 13px; color: var(--faint); display: flex; gap: 8px; }
+  .rq__h { margin: 14px 0 6px; }
+  .rq__s, .rq__done { color: var(--ink-2); margin: 0 0 22px; font-size: 15px; }
+  form { display: grid; gap: 18px; }
+  .fld { display: grid; gap: 6px; border: 0; padding: 0; margin: 0; }
+  .fld > span, .fld legend { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0; }
+  .fld input, .fld select, .fld textarea { font: inherit; font-size: 16px; border: 1px solid var(--line); padding: 11px 12px; background: var(--paper); color: var(--ink); }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { position: relative; }
+  .opt input { position: absolute; opacity: 0; }
+  .opt span { display: inline-block; border: 1px solid var(--line); padding: 9px 14px; font-size: 14px; cursor: pointer; }
+  .opt input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .opt input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
+  .msg { margin: 0; font-size: 14px; color: var(--ink-2); min-height: 1.2em; }
+</style>
+
+<script>
+  const f = document.getElementById('rq') as HTMLFormElement | null;
+  if (f) {
+    const T = JSON.parse(f.dataset.i18n || '{}');
+    const msg = f.querySelector('.msg') as HTMLElement;
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const d = new FormData(f);
+      const btn = f.querySelector('button[type=submit]') as HTMLButtonElement;
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/panel/request', { method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ type: f.dataset.type, lang: f.dataset.lang, kind: d.get('kind'), where: d.get('where'), maxPrice: d.get('maxPrice'), note: d.get('note') }) });
+        const j = await r.json();
+        if (j.ok) { msg.textContent = T.sent; f.querySelectorAll('input,select,textarea,button').forEach((x) => ((x as HTMLInputElement).disabled = true)); return; }
+        msg.textContent = j.code === 'need_email' ? T.need_email : j.code === 'expired' ? T.expired : T.fail;
+      } catch { msg.textContent = T.fail; }
+      btn.disabled = false;
+    });
+  }
+</script>

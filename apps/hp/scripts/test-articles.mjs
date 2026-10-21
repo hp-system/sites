@@ -90,7 +90,8 @@ try {
     }
     if (a.old && a.old !== path && a.old.includes(':')) {
       const o = await fetch(SITE + a.old.replace(/:/g, '%3A'), { redirect: 'manual' });
-      check(`old slug ${a.old} is 404 for now`, o.status === 404, `status ${o.status} (301 engine comes later)`);
+      // The 301 engine (#56): the old ':' slug now moves permanently to the clean URL.
+      check(`old slug ${a.old} → 301 to ${path}`, o.status === 301 && decodeURIComponent(o.headers.get('location') ?? '') === path, `status ${o.status} ${o.headers.get('location') ?? ''}`);
     }
   }
   // 9 old slugs had ":"; some of those articles are now archived (their old URL is in articles.json).

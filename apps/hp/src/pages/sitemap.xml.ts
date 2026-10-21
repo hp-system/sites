@@ -79,8 +79,17 @@ async function contentPages(): Promise<Page[]> {
   // info page is not listed a second time on its own.
   const covered = new Set(keys.map((k) => contentUrl(k, 'en')));
   const old: Page[] = keys.map((k) => ({ pathFor: (l: Lang) => contentUrl(k, l), langs: pageLangs(k), lastmod: BUILD_DAY }));
-  const own: Page[] = info.filter((p) => !covered.has(p.data.path))
-    .map((p) => ({ pathFor: () => p.data.path, langs: ['en'] as Lang[], lastmod: infoLastmod(p, BUILD_DAY) }));
+  // #94: translations of one info page (same `key`) are one entry with their alternates.
+  const own: Page[] = [];
+  const done = new Set<string>();
+  for (const p of info.filter((x) => !covered.has(x.data.path))) {
+    if (p.data.key && done.has(p.data.key)) continue;
+    if (p.data.key) done.add(p.data.key);
+    const group = p.data.key ? info.filter((x) => x.data.key === p.data.key) : [p];
+    // raw paths, as every other entry: the sitemap encodes them once on output
+    const at = new Map(group.map((x) => [x.data.lang as Lang, x.data.path]));
+    own.push({ pathFor: (l: Lang) => at.get(l) ?? p.data.path, langs: [...at.keys()], lastmod: infoLastmod(p, BUILD_DAY) });
+  }
   return [...old, ...own];
 }
 

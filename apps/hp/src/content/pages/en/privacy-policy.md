@@ -1,5 +1,7 @@
 ---
 path: /en/privacy-policy
+lang: en
+key: privacy-policy
 title: Privacy Policy
 description: 'How Halkidiki Properties collects, uses and protects your personal data under the GDPR: cookies, contact forms, how long data is kept and your rights as a user.'
 h1: Privacy Policy

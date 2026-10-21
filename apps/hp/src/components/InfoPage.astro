@@ -26,14 +26,49 @@ import { brand } from '../brand/index';
 import { waHref, viberHref } from '../lib/contact';
 import { HERO_SHOTS } from '../lib/hero';
 import { company } from '../lib/company';
-import type { InfoPage } from '../lib/infopages';
+import { infoCluster, type InfoPage } from '../lib/infopages';
+import { FACETS, facetUrl } from '../lib/listing';
+import { privacyPath } from '../lib/legal';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { PAGE_KEYS, contentUrl, pageExists, pageLangs } from '../lib/pages';
 
 interface Props { page: InfoPage }
 const { page } = Astro.props;
 const d = page.data;
-const lang: Lang = 'en';
+const lang: Lang = d.lang;                        // #94: info pages may be in any of the 9 languages
+
+// Page chrome in the page language (#94). Greek in the singular.
+const UI: Record<Lang, { onPage: string; related: string; forSale: string; forSaleIn: string; ctaH: string; ctaP: string;
+  adviser: string; seeAll: string; faq: string; side: string }> = {
+  en: { onPage: 'On this page', related: 'Related', forSale: 'Property for sale in Halkidiki', forSaleIn: 'Property for sale in {m}',
+    ctaH: 'Questions about buying or selling in Halkidiki?', ctaP: 'Tell us what you are looking for. An adviser replies with a shortlist and can book a viewing in person or by video call.',
+    adviser: 'Contact an adviser', seeAll: 'See properties for sale', faq: 'Frequently asked questions', side: 'Related pages' },
+  el: { onPage: 'Σε αυτή τη σελίδα', related: 'Σχετικά', forSale: 'Ακίνητα προς πώληση στη Χαλκιδική', forSaleIn: 'Ακίνητα προς πώληση — {m}',
+    ctaH: 'Ερωτήσεις για αγορά ή πώληση στη Χαλκιδική;', ctaP: 'Πες μας τι ψάχνεις. Ένας σύμβουλος σου στέλνει επιλογές και κλείνει επίσκεψη, από κοντά ή με βιντεοκλήση.',
+    adviser: 'Μίλα με σύμβουλο', seeAll: 'Δες τα ακίνητα', faq: 'Συχνές ερωτήσεις', side: 'Σχετικές σελίδες' },
+  bg: { onPage: 'На тази страница', related: 'Свързани', forSale: 'Имоти за продажба в Халкидики', forSaleIn: 'Имоти за продажба — {m}',
+    ctaH: 'Въпроси за покупка или продажба в Халкидики?', ctaP: 'Кажете ни какво търсите. Консултант ще ви изпрати подбор и ще уговори оглед на място или по видео.',
+    adviser: 'Свържете се с консултант', seeAll: 'Вижте имотите', faq: 'Често задавани въпроси', side: 'Свързани страници' },
+  sr: { onPage: 'Na ovoj stranici', related: 'Povezano', forSale: 'Nekretnine na prodaju na Halkidikiju', forSaleIn: 'Nekretnine na prodaju — {m}',
+    ctaH: 'Pitanja o kupovini ili prodaji na Halkidikiju?', ctaP: 'Recite nam šta tražite. Savetnik vam šalje izbor i zakazuje razgledanje uživo ili video-pozivom.',
+    adviser: 'Kontaktirajte savetnika', seeAll: 'Pogledajte nekretnine', faq: 'Česta pitanja', side: 'Povezane stranice' },
+  de: { onPage: 'Auf dieser Seite', related: 'Verwandte Seiten', forSale: 'Immobilien zum Verkauf auf Chalkidiki', forSaleIn: 'Immobilien zum Verkauf — {m}',
+    ctaH: 'Fragen zu Kauf oder Verkauf auf Chalkidiki?', ctaP: 'Sagen Sie uns, was Sie suchen. Ein Berater schickt Ihnen eine Auswahl und vereinbart eine Besichtigung vor Ort oder per Videoanruf.',
+    adviser: 'Berater kontaktieren', seeAll: 'Immobilien ansehen', faq: 'Häufige Fragen', side: 'Verwandte Seiten' },
+  ro: { onPage: 'Pe această pagină', related: 'Legate', forSale: 'Proprietăți de vânzare în Halkidiki', forSaleIn: 'Proprietăți de vânzare — {m}',
+    ctaH: 'Întrebări despre cumpărare sau vânzare în Halkidiki?', ctaP: 'Spuneți-ne ce căutați. Un consultant vă trimite o selecție și programează o vizionare, la fața locului sau prin apel video.',
+    adviser: 'Contactați un consultant', seeAll: 'Vedeți proprietățile', faq: 'Întrebări frecvente', side: 'Pagini legate' },
+  tr: { onPage: 'Bu sayfada', related: 'İlgili', forSale: "Halkidiki'de satılık mülkler", forSaleIn: 'Satılık mülkler — {m}',
+    ctaH: "Halkidiki'de alım veya satım hakkında sorularınız mı var?", ctaP: 'Ne aradığınızı bize söyleyin. Bir danışman size seçenekler gönderir ve yerinde ya da görüntülü görüşmeyle gezi ayarlar.',
+    adviser: 'Danışmanla iletişime geçin', seeAll: 'Mülkleri görün', faq: 'Sık sorulan sorular', side: 'İlgili sayfalar' },
+  he: { onPage: 'בעמוד זה', related: 'קשור', forSale: 'נכסים למכירה בחלקידיקי', forSaleIn: 'נכסים למכירה — {m}',
+    ctaH: 'שאלות על קנייה או מכירה בחלקידיקי?', ctaP: 'ספרו לנו מה אתם מחפשים. יועץ ישלח לכם מבחר ויתאם סיור, במקום או בשיחת וידאו.',
+    adviser: 'פנו ליועץ', seeAll: 'לנכסים למכירה', faq: 'שאלות נפוצות', side: 'עמודים קשורים' },
+  ru: { onPage: 'На этой странице', related: 'Похожее', forSale: 'Недвижимость на продажу в Халкидиках', forSaleIn: 'Недвижимость на продажу — {m}',
+    ctaH: 'Вопросы о покупке или продаже в Халкидиках?', ctaP: 'Расскажите, что вы ищете. Консультант пришлёт подборку и договорится о просмотре на месте или по видеосвязи.',
+    adviser: 'Связаться с консультантом', seeAll: 'Смотреть объекты', faq: 'Частые вопросы', side: 'Похожие страницы' },
+};
+const ui = UI[lang];
 
 const { Content, headings } = await render(page);
 const toc = d.toc ? headings.filter((h) => h.depth === 2 && h.text.trim()) : [];
@@ -43,8 +78,11 @@ const url = d.path;
 // services, contact, sell…) declares that page's translations as its alternates, so every
 // member of the hreflang cluster (and the sitemap) lists the same set. Otherwise: English only.
 const key = PAGE_KEYS.find((k) => pageExists(k) && contentUrl(k, 'en') === url);
-const langs: Lang[] = key ? pageLangs(key) : ['en'];
-const pathFor = (l: Lang) => (key ? contentUrl(key, l) : l === 'en' ? url : listUrl(l));
+// #94: translations of the same info page (`key` in the files) form their own cluster.
+const cluster = await infoCluster(page);
+const own = new Map(cluster.map((p) => [p.data.lang as Lang, p.data.path]));   // raw: Base encodes once
+const langs: Lang[] = key ? pageLangs(key) : [...own.keys()];
+const pathFor = (l: Lang) => (key ? contentUrl(key, l) : own.get(l) ?? listUrl(l));
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const abs = (p: string) => (p.startsWith('http') ? p : `${site}${p}`);
 const image = d.image || HERO_SHOTS[0]?.url || '';
@@ -53,10 +91,13 @@ const imageAlt = d.image_alt || (d.image ? d.h1 : HERO_SHOTS[0]?.alt.en ?? d.h1)
 const heroSrcset = /_1920w\.jpg$/.test(d.image)
   ? `${d.image.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${d.image} 1920w` : '';
 const title = `${d.title} | ${brand.name}`;
-const contact = '/en/contact';
+const contact = pageExists('contact') && pageLangs('contact').includes(lang) ? contentUrl('contact', lang) : '/en/contact';
 const terms = '/en/terms-of-services';
-const privacy = '/en/privacy-policy';
-const areas = AREA_PAGES.filter((p) => p.kind === 'municipality');
+const privacy = privacyPath(lang);
+// Area links: the English area guides on English pages, the municipality lists elsewhere.
+const muniLinks = lang === 'en'
+  ? AREA_PAGES.filter((p) => p.kind === 'municipality').map((p) => ({ href: areaUrl(p.slug), name: p.name }))
+  : FACETS.filter((f) => f.q.municipality && Object.keys(f.q).length === 1).map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
 const co = await company();
 const addr = brand.addressLatin ?? { street: brand.address.street, city: brand.address.city, country: brand.address.country };
 const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addr.street} ${brand.address.postalCode}, ${addr.city}`)}`;
@@ -104,7 +145,7 @@ if (d.schema === 'Service') {
 } else if (d.schema !== 'FAQPage') {
   jsonLd.push({
     '@context': 'https://schema.org', '@type': d.schema, name: d.h1, description: d.description, url: abs(url),
-    inLanguage: 'en', ...(d.schema === 'AboutPage' || d.schema === 'ContactPage' ? { mainEntity: org } : {}),
+    inLanguage: lang, ...(d.schema === 'AboutPage' || d.schema === 'ContactPage' ? { mainEntity: org } : {}),
   });
 }
 if (d.widget === 'prices') {
@@ -178,7 +219,7 @@ if (d.faq.length) {
         )}
 
         {d.faq.length > 0 && (
-          <section class="faq" aria-label="Frequently asked questions">
+          <section class="faq" aria-label={ui.faq}>
             {d.faq.map((f, i) => (
               <details open={i === 0}><summary><h2 class="faq-q">{f.q}</h2></summary><p>{f.a}</p></details>
             ))}
@@ -188,22 +229,22 @@ if (d.faq.length) {
         {d.form && <InfoForm source={d.form.source} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy} />}
       </article>
 
-      <aside class="info-side" aria-label="Related pages">
+      <aside class="info-side" aria-label={ui.side}>
         {toc.length > 1 && (
           <nav class="side-box">
-            <p class="t-label">On this page</p>
+            <p class="t-label">{ui.onPage}</p>
             <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
           </nav>
         )}
         {d.related.length > 0 && (
           <div class="side-box">
-            <p class="t-label">Related</p>
+            <p class="t-label">{ui.related}</p>
             <ul>{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
           </div>
         )}
         <div class="side-box">
-          <p class="t-label">Property for sale in Halkidiki</p>
-          <ul>{areas.map((p) => <li><a href={areaUrl(p.slug)}>Property for sale in {p.name}</a></li>)}</ul>
+          <p class="t-label">{ui.forSale}</p>
+          <ul>{muniLinks.map((p) => <li><a href={p.href}>{ui.forSaleIn.replace('{m}', p.name)}</a></li>)}</ul>
         </div>
       </aside>
     </div>
@@ -211,22 +252,22 @@ if (d.faq.length) {
     {d.related.length > 0 && (
       <section class="info-band">
         <div class="wrap">
-          <p class="t-label">Related</p>
+          <p class="t-label">{ui.related}</p>
           <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
-          <p class="t-label info-areas-l">Property for sale in Halkidiki</p>
-          <ul class="links">{areas.map((p) => <li><a href={areaUrl(p.slug)}>Property for sale in {p.name}</a></li>)}</ul>
+          <p class="t-label info-areas-l">{ui.forSale}</p>
+          <ul class="links">{muniLinks.map((p) => <li><a href={p.href}>{ui.forSaleIn.replace('{m}', p.name)}</a></li>)}</ul>
         </div>
       </section>
     )}
 
     <section class="info-cta">
       <div class="wrap">
-        <h2 class="t-h2">Questions about buying or selling in Halkidiki?</h2>
-        <p>Tell us what you are looking for. An adviser replies with a shortlist and can book a viewing in person or by video call.</p>
+        <h2 class="t-h2">{ui.ctaH}</h2>
+        <p>{ui.ctaP}</p>
         <p class="row">
-          <a class="btn btn--onphoto" href={contact} data-ev="content:phone">Contact an adviser</a>
-          <a class="btn btn--line" href={listUrl(lang)} data-ev="content:list">See properties for sale</a>
-          <a class="phone" href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a>
+          <a class="btn btn--onphoto" href={contact} data-ev="content:phone">{ui.adviser}</a>
+          <a class="btn btn--line" href={listUrl(lang)} data-ev="content:list">{ui.seeAll}</a>
+          <a class="phone" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
           <a class="phone" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp</a>
         </p>
       </div>

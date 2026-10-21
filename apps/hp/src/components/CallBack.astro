@@ -5,14 +5,14 @@
 // The script (once, in PropertyPage) posts every [data-cb] form to /api/callback.
 import { pui } from '../lib/property';
 import { DIAL, flag } from '../lib/callback';
-import { prefix, type Lang } from '../lib/i18n';
-import { brand } from '../brand/index';
+import type { Lang } from '../lib/i18n';
+import { privacyPath } from '../lib/legal';
 
 interface Props { lang: Lang; id: string; k: 'd' | 'm'; phone?: string; tel: string; telHref: string; hidden?: boolean }
 const { lang, id, k, phone, tel, telHref, hidden } = Astro.props;
 const f = `cb-${k}`;
 const hurry = pui(lang, 'cbHurry').split('{t}');        // the number isolated, so Hebrew keeps it left-to-right
-const privacyHref = `${prefix('en')}${brand.analytics.privacyPath}`;
+const privacyHref = privacyPath(lang);            // the policy in the page language (#94)
 ---
 <form class="cb" id={f} data-cb data-ev="lead:callback_submit" data-ev-defer novalidate hidden={hidden}
       data-e-short={pui(lang, 'cbErrShort')} data-e-gr={pui(lang, 'cbErrGr')} data-e-err={pui(lang, 'cbErr')}

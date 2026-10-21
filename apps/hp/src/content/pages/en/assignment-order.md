@@ -7,6 +7,10 @@ section: legal
 schema: WebPage
 faq: []
 related:
+- label: Property Indication Order
+  href: /en/indication-order
+- label: Collaboration Order for Agents
+  href: /en/collaboration-order
 - label: Terms of Services
   href: /en/terms-of-services
 - label: Privacy Policy

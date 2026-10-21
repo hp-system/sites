@@ -64,6 +64,8 @@ const has = (k: string) => pageExists(k as any);
     {has('sell') && <a href={`${p}/sell`}>{t(lang, 'nav.sell')}</a>}
     {has('services') && <a href={`${p}/services`}>{t(lang, 'nav.services')}</a>}
     {has('about') && <a href={aboutHref}>{t(lang, 'nav.company')}</a>}
+    {/* Blog, as on the live site (#69). Articles are English-only for now → the English hub. */}
+    <a href="/en/articles/all-news">{t(lang, 'nav.blog')}</a>
   </nav>
 
   <div class="navright">

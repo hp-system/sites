@@ -116,6 +116,7 @@ export const T: Record<Lang, Dict> = {
   el: {
     'nav.properties': 'Ακίνητα', 'nav.halkidiki': 'Χαλκιδική', 'nav.sell': 'Πουλήστε',
     'nav.services': 'Υπηρεσίες', 'nav.company': 'Η εταιρεία', 'nav.login': 'Σύνδεση',
+    'nav.blog': 'Άρθρα', 'foot.guides': 'Οδηγοί', 'foot.g_houses': 'Σπίτια προς πώληση στη Χαλκιδική', 'foot.g_tax': 'Υπολογιστής φόρων & εξόδων', 'foot.g_buy': 'Πώς αγοράζω ακίνητο στη Χαλκιδική', 'foot.all_articles': 'Όλα τα άρθρα',
     'hero.h1': 'Ακίνητα στη Χαλκιδική',
     'hero.sub': 'Μοναδικές συλλογές σε κάθε γωνιά της Χαλκιδικής.',
     'search.what': 'Τι ψάχνετε', 'search.what.all': 'Όλα τα είδη',
@@ -161,6 +162,7 @@ export const T: Record<Lang, Dict> = {
   en: {
     'nav.properties': 'Properties', 'nav.halkidiki': 'Halkidiki', 'nav.sell': 'Sell',
     'nav.services': 'Services', 'nav.company': 'Company', 'nav.login': 'Sign in',
+    'nav.blog': 'Blog', 'foot.guides': 'Guides', 'foot.g_houses': 'Houses for sale in Halkidiki', 'foot.g_tax': 'Property tax & costs calculator', 'foot.g_buy': 'How to buy property in Halkidiki', 'foot.all_articles': 'All articles',
     'hero.h1': 'Property in Greece — Halkidiki',
     'hero.sub': 'Singular collections in every corner of Halkidiki.',
     'search.what': 'What', 'search.what.all': 'All types',
@@ -206,6 +208,7 @@ export const T: Record<Lang, Dict> = {
   bg: {
     'nav.properties': 'Имоти', 'nav.halkidiki': 'Халкидики', 'nav.sell': 'Продайте',
     'nav.services': 'Услуги', 'nav.company': 'Компанията', 'nav.login': 'Вход',
+    'nav.blog': 'Блог', 'foot.guides': 'Наръчници', 'foot.g_houses': 'Къщи за продажба в Халкидики', 'foot.g_tax': 'Калкулатор на данъци и разходи', 'foot.g_buy': 'Как да купя имот в Халкидики', 'foot.all_articles': 'Всички статии',
     'hero.h1': 'Имоти в Гърция — Халкидики',
     'hero.sub': 'Уникални колекции във всеки кът на Халкидики.',
     'search.what': 'Какво търсите', 'search.what.all': 'Всички видове',
@@ -251,6 +254,7 @@ export const T: Record<Lang, Dict> = {
   sr: {
     'nav.properties': 'Nekretnine', 'nav.halkidiki': 'Halkidiki', 'nav.sell': 'Prodajte',
     'nav.services': 'Usluge', 'nav.company': 'Kompanija', 'nav.login': 'Prijava',
+    'nav.blog': 'Blog', 'foot.guides': 'Vodiči', 'foot.g_houses': 'Kuće na prodaju na Halkidikiju', 'foot.g_tax': 'Kalkulator poreza i troškova', 'foot.g_buy': 'Kako kupiti nekretninu na Halkidikiju', 'foot.all_articles': 'Svi članci',
     'hero.h1': 'Nekretnine u Grčkoj — Halkidiki',
     'hero.sub': 'Jedinstvene kolekcije u svakom kutku Halkidikija.',
     'search.what': 'Šta tražite', 'search.what.all': 'Sve vrste',
@@ -296,6 +300,7 @@ export const T: Record<Lang, Dict> = {
   de: {
     'nav.properties': 'Immobilien', 'nav.halkidiki': 'Chalkidiki', 'nav.sell': 'Verkaufen',
     'nav.services': 'Leistungen', 'nav.company': 'Unternehmen', 'nav.login': 'Anmelden',
+    'nav.blog': 'Blog', 'foot.guides': 'Ratgeber', 'foot.g_houses': 'Häuser zum Verkauf auf Chalkidiki', 'foot.g_tax': 'Rechner für Steuern & Kosten', 'foot.g_buy': 'So kaufen Sie eine Immobilie auf Chalkidiki', 'foot.all_articles': 'Alle Artikel',
     'hero.h1': 'Immobilien in Griechenland — Chalkidiki',
     'hero.sub': 'Einzigartige Kollektionen in jedem Winkel Chalkidikis.',
     'search.what': 'Was suchen Sie', 'search.what.all': 'Alle Arten',
@@ -341,6 +346,7 @@ export const T: Record<Lang, Dict> = {
   ro: {
     'nav.properties': 'Proprietăți', 'nav.halkidiki': 'Halkidiki', 'nav.sell': 'Vindeți',
     'nav.services': 'Servicii', 'nav.company': 'Compania', 'nav.login': 'Autentificare',
+    'nav.blog': 'Blog', 'foot.guides': 'Ghiduri', 'foot.g_houses': 'Case de vânzare în Halkidiki', 'foot.g_tax': 'Calculator de taxe și costuri', 'foot.g_buy': 'Cum cumpăr o proprietate în Halkidiki', 'foot.all_articles': 'Toate articolele',
     'hero.h1': 'Proprietăți în Grecia — Halkidiki',
     'hero.sub': 'Colecții unice în fiecare colț al Halkidiki.',
     'search.what': 'Ce căutați', 'search.what.all': 'Toate tipurile',
@@ -389,6 +395,7 @@ export const T: Record<Lang, Dict> = {
     'nav.sell': 'Satışa verin',
     'nav.services': 'Hizmetler',
     'nav.company': 'Kurumsal',
+    'nav.blog': 'Blog', 'foot.guides': 'Rehberler', 'foot.g_houses': "Halkidiki'de satılık evler", 'foot.g_tax': 'Vergi ve masraf hesaplayıcı', 'foot.g_buy': "Halkidiki'de nasıl mülk alınır", 'foot.all_articles': 'Tüm yazılar',
     'nav.login': 'Giriş',
     'hero.h1': 'Yunanistan\'da gayrimenkul — Halkidiki',
     'hero.sub': 'Halkidiki\'nin her köşesinde eşsiz koleksiyonlar.',
@@ -462,6 +469,7 @@ export const T: Record<Lang, Dict> = {
     'nav.sell': 'מכירת נכס',
     'nav.services': 'שירותים',
     'nav.company': 'החברה',
+    'nav.blog': 'בלוג', 'foot.guides': 'מדריכים', 'foot.g_houses': 'בתים למכירה בחלקידיקי', 'foot.g_tax': 'מחשבון מסים ועלויות', 'foot.g_buy': 'איך קונים נכס בחלקידיקי', 'foot.all_articles': 'כל המאמרים',
     'nav.login': 'כניסה',
     'hero.h1': 'נכסים ביוון — חלקידיקי',
     'hero.sub': 'אוספים ייחודיים בכל פינה של חלקידיקי.',
@@ -535,6 +543,7 @@ export const T: Record<Lang, Dict> = {
     'nav.sell': 'Продать',
     'nav.services': 'Услуги',
     'nav.company': 'О компании',
+    'nav.blog': 'Блог', 'foot.guides': 'Гиды', 'foot.g_houses': 'Дома на продажу в Халкидиках', 'foot.g_tax': 'Калькулятор налогов и расходов', 'foot.g_buy': 'Как купить недвижимость в Халкидиках', 'foot.all_articles': 'Все статьи',
     'nav.login': 'Вход',
     'hero.h1': 'Недвижимость в Греции — Халкидики',
     'hero.sub': 'Особые коллекции в каждом уголке Халкидики.',

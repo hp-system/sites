@@ -49,7 +49,7 @@ import { consentText } from '../lib/consent';
             έσπαγαν σε τυχαίο σημείο ανάλογα με το πλάτος. */}
         <p class="fbrand__addr">
           <span class="fbrand__hq">{t(lang, 'foot.addr')} <i>· {t(lang, 'foot.hq')}</i></span>
-          <a class="num" href={co.phoneHref} data-ev="call:footer">{co.phone}</a>
+          <a class="num" href={co.phoneHref} data-ev="call:footer"><bdi dir="ltr">{co.phone}</bdi></a>
           <a href={`mailto:${co.email}`}>{co.email}</a>
         </p>
       </div>

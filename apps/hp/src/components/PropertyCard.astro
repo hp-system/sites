@@ -12,14 +12,14 @@
 //
 // Υδατογράφημα: ΝΑΙ σε κάθε μέγεθος — είναι φωτογραφία ακινήτου (κανόνας 29/7).
 import type { SiteProperty } from '../lib/api';
-import { priceOf, priceVisible, pick, refOf } from '../lib/api';
+import { priceOf, priceVisible, refOf } from '../lib/api';
 import { coverOf, photosOf, marked, cardSrcSet, altOf } from '../lib/photos';
 import { money, sqm, seaLabel, factLine } from '../lib/format';
 import { t, propertyUrl, type Lang } from '../lib/i18n';
 import { placeOf, municipalityOf, type Viewer } from '../lib/gate';
 import { memberOf } from '../lib/member';
 import { prefix } from '../lib/i18n';
-import { pui } from '../lib/property';
+import { pui, subName } from '../lib/property';
 
 interface Props { p: SiteProperty; lang: Lang; viewer: Viewer; eager?: boolean }
 const { p, lang, viewer, eager = false } = Astro.props;
@@ -27,7 +27,7 @@ const { p, lang, viewer, eager = false } = Astro.props;
 const a = p.attributes ?? {};
 const id = refOf(p);
 const cover = coverOf(a);
-const sub = pick(a.subcategory_i18n, lang) || a.subcategory || '';
+const sub = subName(a, lang);                    // #88: the site's own name where the CRM has none
 // ⚠️ Η ΠΕΡΙΟΧΗ ΔΕΝ ΕΜΦΑΝΙΖΕΤΑΙ σε μη συνδεδεμένους. Ο δήμος ναι.
 // Ο κανόνας ζει στο lib/gate.ts — μην τον παρακάμψεις εδώ.
 const place = placeOf(a, lang, viewer);

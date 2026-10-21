@@ -11,7 +11,8 @@
 //    ακινήτου — δηλαδή ακριβώς ό,τι θα έπαιρνε κάποιος πρώτο.
 // 🛡️ Μπαίνει ΜΟΝΟ ακίνητο που περνά το heroReady() — αλλιώς δεν εμφανίζεται καθόλου.
 import type { SiteProperty } from '../lib/api';
-import { priceOf, priceVisible, pick, refOf } from '../lib/api';
+import { subName } from '../lib/property';
+import { priceOf, priceVisible, refOf } from '../lib/api';
 import { coverOf, marked, markedSrcSet, markedSrcSetSmall, focalStyle, altOf } from '../lib/photos';
 import { money, sqm, seaLabel, factLine } from '../lib/format';
 import { t, propertyUrl, type Lang } from '../lib/i18n';
@@ -26,7 +27,7 @@ const { p, lang, viewer, eyebrow = null } = Astro.props;
 const a = p.attributes ?? {};
 const id = refOf(p);
 const cover = coverOf(a);
-const sub = pick(a.subcategory_i18n, lang) || a.subcategory || '';
+const sub = subName(a, lang);                    // #88: the site's own name where the CRM has none
 const place = placeOf(a, lang, viewer);   // περιοχή μόνο σε μέλη — δες lib/gate.ts
 const muni = municipalityOf(a, lang);
 const sea = seaLabel(a.sea_access, lang);

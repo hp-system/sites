@@ -29,6 +29,7 @@ import NotFoundPage from '../components/NotFoundPage.astro';
 import CollectionPage from '../components/CollectionPage.astro';
 import ComparePage from '../components/ComparePage.astro';
 import SubmitPage from '../components/SubmitPage.astro';
+import RequestPage from '../components/RequestPage.astro';
 import ContentPage from '../components/ContentPage.astro';
 import AreaPage from '../components/AreaPage.astro';
 import { areaPage, type AreaPage as AreaContent } from '../content/areas/en';
@@ -94,7 +95,7 @@ const isLogin = !isHome && rest.length === 1 && rest[0].toLowerCase() === 'login
 // 🛡️ ΛΕΥΚΗ ΛΙΣΤΑ, ΟΧΙ «ό,τι αρχίζει με panel». Χωρίς αυτήν, το `/panel/οτιδήποτε`
 //    θα έδινε τον πίνακα σε άπειρες διευθύνσεις — διπλότυπα για τη Google και
 //    ψέμα για τον επισκέπτη.
-const PANEL_PAGES = ['', 'favorites', 'profile', 'collection', 'compare', 'submit'] as const;
+const PANEL_PAGES = ['', 'favorites', 'profile', 'collection', 'compare', 'submit', 'request', 'exclusive'] as const;
 const panelRoot = !isHome && rest.length >= 1 && rest[0].toLowerCase() === 'panel';
 const panelSeg = panelRoot ? (rest[1] ?? '').toLowerCase() : '';
 const isPanel = panelRoot && rest.length <= 2 && (PANEL_PAGES as readonly string[]).includes(panelSeg);
@@ -285,6 +286,7 @@ if (notFound) Astro.response.status = 404;
   : isPanel && me && panelSeg === 'collection' ? <CollectionPage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'compare' ? <ComparePage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'submit' ? <SubmitPage lang={lang} me={me} />
+  : isPanel && me && (panelSeg === 'request' || panelSeg === 'exclusive') ? <RequestPage lang={lang} me={me} kind={panelSeg} />
   : isPanel && me ? <PanelPage lang={lang} me={me} />
   : area ? <AreaPage page={area} />
   : article ? <ArticlePage article={article} />

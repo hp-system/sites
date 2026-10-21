@@ -28,7 +28,7 @@ related:
   href: /en/contact
 toc: false
 old_url: /en/construction
-needs_content: true
+needs_content: false
 cards: []
 contact_card: false
 catalog: []
@@ -39,6 +39,17 @@ form:
 ---
 
 We don’t use words, we prefer to act. Our projects are our stories, and every one of our achievements is a word that writes our history.
+
+## Build with us
+
+From the first study to the keys, our engineers and architects cover every stage of a construction project in Halkidiki and Thessaloniki: architectural and structural studies, building licences, excavation and foundations, energy-efficient and bioclimatic design, swimming pools, renewable energy systems, landscaping, and supervision with live video reporting for owners who live abroad. The full list is on our [construction services](/en/services/construction-services) page.
+
+Our best-known project is [Villa Natalia](/en/articles/constructors-news/villla-natalia) in Sithonia, a bioclimatic villa with a geothermal system that our team studied and built. Alongside new homes, we renovate apartments and detached houses and design homes for plots that our clients buy through us.
+
+## Have a plot or an idea?
+
+If you own land or plan to buy a [plot in Halkidiki](/en/property-for-sale/plots), tell us what you would like to build. We check what the plot allows, prepare a first estimate of cost and time, and guide you through the licences.
+
 
 ## Our latest projects
 

@@ -21,6 +21,7 @@ import { muniKey, municipalityOf } from '../lib/gate';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { contentUrl, pageExists } from '../lib/pages';
 import { brand } from '../brand/index';
+import { waHref } from '../lib/contact';
 import {
   articleUrl, articlesRoot, categoryName, categoryUrl, relatedTo, readingMinutes, dateText,
   excerptOf, type Article,
@@ -206,6 +207,7 @@ if (a.has_calculator) {
           <a class="btn btn--onphoto" href={contact} data-ev="article:book_viewing">Book a viewing</a>
           <a class="btn btn--line" href={contact} data-ev="article:adviser">Talk to an adviser</a>
           <a class="phone" href={brand.contact.phoneHref} data-ev="article:call">{brand.contact.phoneText}</a>
+          <a class="phone" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp</a>
         </p>
       </div>
     </section>

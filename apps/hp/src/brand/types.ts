@@ -28,8 +28,12 @@ export type Brand = {
     phoneText: string;
     /** What the phone dials. */
     phoneHref: string;
-    /** schema.org / WhatsApp form. */
+    /** schema.org form of the landline. */
     phoneE164: string;
+    /** Mobile for WhatsApp and Viber, as the visitor reads it. */
+    mobileText: string;
+    /** The same mobile in E.164 (wa.me / viber links). */
+    whatsappE164: string;
     email: string;
   };
   web: {

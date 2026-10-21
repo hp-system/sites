@@ -64,7 +64,7 @@ Halkidiki Properties constructions, the expertise on ports and marinas designs.
 
 <h2 id="hellenic-republic-assets-development-fund-hradf-tenders">HRADF tenders: the Hellenic Republic Assets Development Fund</h2>
 
-At **Halkidiki Properties**, we are proud to be one of the few privileged administrators of the complete portfolio of properties owned by the Hellenic Republic, through HRADF (Hellenic Republic Assets Development Fund). As such, we are authorized to officially represent any interested investor in the entire process of gathering, managing, and submitting the necessary documents related to the **HRADF's** tenders.
+The Hellenic Republic Assets Development Fund (HRADF) sells and leases state-owned property through public tenders. At **Halkidiki Properties** we support interested investors through the process of gathering, managing and submitting the documents required for **HRADF's** tenders.
 
 Our expertise in managing and developing properties makes us a valuable partner to those interested in participating in HRADF's tenders. We have a deep understanding of the legal and administrative procedures involved in the tender process and can guide investors through each step, from the initial inquiry to the final acquisition.
 

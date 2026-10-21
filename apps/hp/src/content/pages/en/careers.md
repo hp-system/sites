@@ -28,7 +28,7 @@ related:
   href: /en/contact
 toc: false
 old_url: /en/careers
-needs_content: true
+needs_content: false
 cards:
 - title: Bulgarian-speaking customer support agent
   href: /en/careers/bulgarian-speaker
@@ -41,5 +41,20 @@ contact_card: false
 ---
 
 Halkidiki Properties is a group of people who are all committed to one another and their clients. We work together, always motivated by the desire for success, which we share with each other — in remote as well as on-site jobs.
+
+## Working at Halkidiki Properties
+
+We sell and build homes in Halkidiki for clients from many countries, so our team works in several languages and with modern tools: our own systems for properties and requests, video calls with clients abroad, and automated communication that keeps every client informed. Depending on the role, you work at our office next to Thessaloniki airport or remotely.
+
+We look for people who care about clients, communicate clearly and enjoy learning — in sales, customer support, marketing, engineering and administration. Prior experience in real estate helps, but it is not always required.
+
+## How to apply
+
+Send your CV by e-mail to [gtsigaras@halkidikiproperties.gr](mailto:gtsigaras@halkidikiproperties.gr), with the position in the subject line, or use the form on the page of each open position.
+
+We value people who take ownership of their work and treat every client as they would like to be treated themselves. New colleagues learn our systems and the property market of Halkidiki next to experienced advisers.
+
+If no open position fits you today, send your CV anyway and tell us what you would like to do. We keep it and contact you when a suitable role opens.
+
 
 ## Open positions

@@ -24,7 +24,7 @@ related:
   href: /en/contact
 toc: false
 old_url: /en/sell/advertise-your-property-worldwide
-needs_content: true
+needs_content: false
 cards: []
 contact_card: false
 ---
@@ -54,5 +54,13 @@ Indicatively, we mention the following collaborators who, with their collaborati
 **China:** Juwai
 
 **Globally:** Domaza, Green Acres
+
+## What this means for you as a seller
+
+Buyers of property in Halkidiki come from all over Europe and beyond, and each country searches on its own portals. Instead of placing a single advert in Greece, your property appears where these buyers already look — in their language, with the same photos and description, and updated automatically when the price or the details change.
+
+Every enquiry from these portals comes to our advisers, who speak with the buyer, check the request and arrange the viewing. You do not need to answer calls from abroad or translate messages.
+
+Before the advert goes out, we prepare the listing properly: [professional photography and videos](/en/services/seller-services), a clear description, the energy certificate (PEA) where the law requires it, and the documents a buyer asks for. Your property keeps one up-to-date presentation everywhere, so buyers abroad see the same price and the same information as buyers in Greece. Read more about [assigning your property to us](/en/sell/assign-to-halkidiki-real-estate) or [contact an adviser](/en/contact).
 
 <img src="/pages/sell-advertise-your-property-worldwide/29a40cde-1623745992.webp" alt="Property advertised on real estate portals worldwide" width="400" height="300" loading="lazy" decoding="async" />

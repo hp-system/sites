@@ -51,6 +51,8 @@ export const EVENTS = {
   LEAD_TOUR_OPEN_BAR: 'lead:tour_open_bar',
   LEAD_WHATSAPP: 'lead:whatsapp',
   LEAD_WHATSAPP_BAR: 'lead:whatsapp_bar',
+  LEAD_WHATSAPP_CONTENT: 'lead:whatsapp_content',     // WhatsApp on content, area and article pages
+  LEAD_VIBER: 'lead:viber',
   LEAD_RENT_IT: 'lead:rent_it',
 
   // ΕΠΙΚΟΙΝΩΝΙΑ — η υψηλότερη πρόθεση σε όλη τη σελίδα.
@@ -100,6 +102,8 @@ export const GA_NAMES: Record<string, string> = {
   'lead:tour_submit': 'viewing_request',
   'lead:whatsapp': 'click_to_whatsapp',
   'lead:whatsapp_bar': 'click_to_whatsapp',
+  'lead:whatsapp_content': 'click_to_whatsapp',
+  'lead:viber': 'click_to_viber',
   'call:header': 'click_to_call',
   'call:menu': 'click_to_call',
   'call:footer': 'click_to_call',

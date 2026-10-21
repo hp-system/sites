@@ -22,7 +22,7 @@ Welcome to HalkidikiProperties.com
 
 This website is owned by the company "GREEK PROPERTIES SINGLE MEMBER P.C." (hereafter referred to as "the Company" or "we"), trading as "Halkidiki Properties", registered seat Plot 526, Neo Rysio, Thermi 57001, Greece, Tax Identification Number 801541781 and G.E.MI. No. 158806004000.
 
-Protecting your privacy is important to us. It is Halkidiki Properties' policy to respect your privacy regarding any information we may collect from you on our website, www.HalkidikiProperties.com, and on other websites, we own and operate like HalkidikiProperties.ru or GreekProperties.gr
+Protecting your privacy is important to us. It is Halkidiki Properties' policy to respect your privacy regarding any information we may collect from you on our website, www.HalkidikiProperties.com
 
 Browsing and using the Web page requires and entails the explicit and clear acceptance and consent of the users of these Terms of Privacy. The use of our website by users requires full understanding and acceptance of the terms and conditions described below.
 

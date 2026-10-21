@@ -26,6 +26,18 @@ export const PHONE_E164 = brand.contact.phoneE164;
 
 export const EMAIL = brand.contact.email;
 
+/** WhatsApp / Viber mobile — calls keep the landline above. */
+export const MOBILE_TEXT = brand.contact.mobileText;
+export const WHATSAPP_E164 = brand.contact.whatsappE164;
+/** wa.me wants the number without "+" and without "00". */
+export function waHref(text?: string, e164: string = WHATSAPP_E164): string {
+  const n = e164.replace(/\D/g, '');
+  return `https://wa.me/${n}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+}
+export function viberHref(e164: string = WHATSAPP_E164): string {
+  return `viber://chat?number=${encodeURIComponent('+' + e164.replace(/\D/g, ''))}`;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // ΑΚΙΝΗΤΑ ΠΟΥ ΕΝΟΙΚΙΑΖΟΝΤΑΙ ΚΙΟΛΑΣ
 //

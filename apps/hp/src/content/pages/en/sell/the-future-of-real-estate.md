@@ -26,7 +26,7 @@ related:
   href: /en/contact
 toc: false
 old_url: /en/sell/the-future-of-real-estate
-needs_content: true
+needs_content: false
 cards: []
 contact_card: false
 ---
@@ -46,5 +46,13 @@ AI, Image recognition, IoT, dedicated Social Media marketing, Data analytics, Da
 We create automated communication that keeps every customer consistently informed.
 
 So we can deal with the most important things in this world.
+
+## What this means for your property
+
+When your property enters our system, we match it with the requests of registered buyers looking for that area, type and budget, and the right buyers are informed automatically. Every new request is compared with the properties we already have, so a buyer who signs up after your property is published still hears about it.
+
+Our advisers then do what technology cannot: they talk with each buyer, answer questions, arrange viewings in person or by [video call](/en/book-an-online-appointment), and negotiate for you.
+
+This way your property reaches buyers who are actively searching, rather than waiting to be found, and you hear from us as soon as a serious buyer shows interest. Read how we [advertise your property worldwide](/en/sell/advertise-your-property-worldwide) and how you [receive real visits from real buyers](/en/sell/real-time-visits), or [contact an adviser](/en/contact).
 
 <img src="/pages/sell-the-future-of-real-estate/49ed2b3f-1623746026.webp" alt="Network of buyer profiles: technology that matches properties with buyers" width="400" height="300" loading="lazy" decoding="async" />

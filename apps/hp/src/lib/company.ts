@@ -16,7 +16,7 @@
 //    ⛔ ΜΗΝ αφαιρέσεις τις σταθερές από το contact.ts «για καθαριότητα» πριν
 //       συμπληρωθούν ΟΛΑ. Είναι το μόνο που κρατά το τηλέφωνο στη σελίδα.
 // ═══════════════════════════════════════════════════════════════════════════
-import { PHONE_TEXT, PHONE_HREF, PHONE_E164, EMAIL } from './contact';
+import { PHONE_TEXT, PHONE_HREF, PHONE_E164, EMAIL, WHATSAPP_E164 } from './contact';
 import { brand } from '../brand/index';
 
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
@@ -95,7 +95,7 @@ export async function company(): Promise<Company> {
   const wa = e164(pick(raw.whatsapp, ''));
   return {
     phone,
-    whatsappE164: wa || derived || PHONE_E164,
+    whatsappE164: wa || WHATSAPP_E164 || derived || PHONE_E164,
     phoneHref: derived ? `tel:${derived}` : PHONE_HREF,
     phoneE164: derived || PHONE_E164,
     email: pick(raw.email, EMAIL),

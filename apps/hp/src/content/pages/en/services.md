@@ -26,7 +26,7 @@ related:
   href: /en/contact
 toc: false
 old_url: /en/services
-needs_content: true
+needs_content: false
 cards:
 - title: Buyer services
   href: /en/services/buyer-services
@@ -68,3 +68,16 @@ catalog: []
 ---
 
 Whatever you need around a property in Halkidiki — buying, selling, investing or building — one team covers it, with engineers, lawyers, accountants and advisers who work together.
+
+## One team for the whole property
+
+A property in Halkidiki touches many professions: the search and the viewings, the legal and technical checks, taxes and contracts, advertising when you sell, and design, licences and construction when you build or renovate. At Halkidiki Properties these services work together in one office next to Thessaloniki airport, so you deal with one adviser instead of many separate professionals.
+
+## Which service do you need?
+
+- **[Buyer services](/en/services/buyer-services):** viewing trips and selection of properties, negotiation, appraisals, legal and accounting checks, company set-up, translations and [full property management](/en/services/buyer-services/full-property-management) after the purchase.
+- **[Seller services](/en/services/seller-services):** professional photography, aerial photos and videos, 360° views, energy certificates (PEA) and advertising packages on property portals worldwide.
+- **[Investor services](/en/services/investor-services):** support in HRADF tenders for state-owned property, hotel design and construction, and the design of ports and marinas.
+- **[Construction services](/en/services/construction-services):** studies, building licences, bioclimatic homes, swimming pools, renewable energy systems, renovations and a construction guarantee. See our [construction projects](/en/construction).
+
+Not sure where to start? [Talk to an adviser](/en/contact) and tell us what you need.

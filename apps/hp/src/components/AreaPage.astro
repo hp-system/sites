@@ -27,6 +27,7 @@ import { money } from '../lib/format';
 import { matches, runQuery, paramsOf, type Query } from '../lib/listing';
 import { contentUrl, pageExists } from '../lib/pages';
 import { brand } from '../brand/index';
+import { waHref } from '../lib/contact';
 import { AREA_PAGES, areaUrl, type AreaPage } from '../content/areas/en';
 
 interface Props { page: AreaPage }
@@ -219,6 +220,7 @@ if (cards.length) {
           <a class="btn btn--onphoto" href={contact} data-ev="area:book_viewing">Book a viewing</a>
           <a class="btn btn--line" href={contact} data-ev="area:adviser">Talk to an adviser</a>
           <a class="a-phone" href={brand.contact.phoneHref} data-ev="area:call">{brand.contact.phoneText}</a>
+          <a class="a-phone" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp</a>
         </p>
       </div>
     </section>

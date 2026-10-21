@@ -5,16 +5,20 @@
 // in front of the message, so the office sees where the request came from.
 // Same anti-spam as the property form: a hidden honeypot field and a 3-second timer.
 // ═══════════════════════════════════════════════════════════════════════════
+import { memberOf } from '../lib/member';
 interface Props { source: string; title?: string; message?: boolean; terms: string; privacy: string }
 const { source, title = 'Send us a message', message = true, terms, privacy } = Astro.props;
+// A signed-in member sees their own details already filled in (#64). Guests: empty fields.
+const me = await memberOf(Astro.cookies.get('member_token')?.value);
+const mine = me && !me.blocked ? me : null;
 const id = `f-${source.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 ---
 <section class="iform" aria-labelledby={`${id}-h`}>
   <h2 id={`${id}-h`}>{title}</h2>
   <form class="iform__f" data-source={source} novalidate>
-    <label>Name<input name="name" autocomplete="name" required maxlength="120" /></label>
-    <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200" /></label>
-    <label>Phone<input name="phone" type="tel" autocomplete="tel" maxlength="40" /></label>
+    <label>Name<input name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></label>
+    <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200" value={mine?.email || undefined} /></label>
+    <label>Phone<input name="phone" type="tel" autocomplete="tel" maxlength="40" value={mine?.phone || undefined} /></label>
     {message && <label class="wide">Message<textarea name="message" rows="5" maxlength="1900"></textarea></label>}
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
     <p class="wide consent">

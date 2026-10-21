@@ -44,7 +44,8 @@ interface Props { lang: Lang; item: SiteProperty; all: SiteProperty[] }
 const { lang, item, all } = Astro.props;
 
 const viewer = await viewerOf(Astro.cookies);
-// Favourite state for a signed-in member (#59): from the same cached `/member/me` call.
+// Favourite state for a signed-in member (#59) and the forms' prefill (#64): from the same
+// cached `/member/me` call. Only the member's own details, only on their own request.
 const meFav = viewer.member ? await memberOf(Astro.cookies.get('member_token')?.value) : null;
 const co = await company();
 const a = item.attributes ?? {};
@@ -519,11 +520,11 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             <form class="qf" id="qf" data-ev="lead:form_submit" data-ev-defer>
               <span class="qf__h lab">{pui(lang, 'reqInfo')}</span>
               <label class="sr-only" for="qf-n">{pui(lang, 'fName')}</label>
-              <input id="qf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} />
+              <input id="qf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} value={meFav?.name || undefined} />
               <label class="sr-only" for="qf-p">{pui(lang, 'fPhone')}</label>
-              <input id="qf-p" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder={pui(lang, 'fPhone')} />
+              <input id="qf-p" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder={pui(lang, 'fPhone')} value={meFav?.phone || undefined} />
               <label class="sr-only" for="qf-e">{pui(lang, 'fEmail')}</label>
-              <input id="qf-e" name="email" type="email" required maxlength="200" autocomplete="email" placeholder={pui(lang, 'fEmail')} />
+              <input id="qf-e" name="email" type="email" required maxlength="200" autocomplete="email" placeholder={pui(lang, 'fEmail')} value={meFav?.email || undefined} />
               <p class="qf__int">{pui(lang, 'interest', { id })}</p>
               {/* 🛡️ Παγίδα-μέλι: κρυφό για άνθρωπο, ορατό για ρομπότ. Δες api/inquiry.ts */}
               <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -567,7 +568,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         <label class="sr-only" for="tf-n">{pui(lang, 'fName')}</label>
         <input id="tf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} />
         <label class="sr-only" for="tf-c">{pui(lang, 'tourContact')}</label>
-        <input id="tf-c" name="contact" required maxlength="200" placeholder={pui(lang, 'tourContact')} />
+        <input id="tf-c" name="contact" required maxlength="200" placeholder={pui(lang, 'tourContact')} value={meFav?.phone || meFav?.email || undefined} />
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <button type="submit">{pui(lang, 'reqTour')}</button>
         <p class="tf__ok" hidden>{pui(lang, 'sent')}</p>

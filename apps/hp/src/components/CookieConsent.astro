@@ -93,11 +93,21 @@ const privacyHref = `${prefix(lang)}${brand.analytics.privacyPath}`;
       ((window as unknown as { dataLayer?: unknown[] }).dataLayer ||= []).push({ event: 'consent_update', analytics, marketing });
       close();
     };
+    // Anonymous count of the choice (no cookie, no id) — pages/api/consent-stat.ts.
+    const count = (choice: 'accept' | 'reject' | 'custom', analytics: boolean, marketing: boolean) => {
+      try {
+        const w = window.innerWidth;
+        const device = w < 768 ? 'mobile' : w < 1024 ? 'tablet' : 'desktop';
+        const lang = (document.documentElement.lang || 'en').slice(0, 2);
+        const body = new Blob([JSON.stringify({ choice, analytics, marketing, device, lang })], { type: 'application/json' });
+        navigator.sendBeacon?.('/api/consent-stat', body);
+      } catch { /* never blocks the banner */ }
+    };
 
-    btn('accept').addEventListener('click', () => choose(true, true));
-    btn('reject').addEventListener('click', () => choose(false, false));
+    btn('accept').addEventListener('click', () => { choose(true, true); count('accept', true, true); });
+    btn('reject').addEventListener('click', () => { choose(false, false); count('reject', false, false); });
     btn('settings').addEventListener('click', () => { showSettings(true); a.focus(); });
-    btn('save').addEventListener('click', () => choose(a.checked, m.checked));
+    btn('save').addEventListener('click', () => { const an = a.checked, mk = m.checked; choose(an, mk); count('custom', an, mk); });
 
     box.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && !set.hidden) { showSettings(false); btn('settings').focus(); return; }

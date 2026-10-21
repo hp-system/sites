@@ -145,6 +145,8 @@ We use cookies to collect information about you and your activity on our entire 
 
 ## 8.2 Cookie policy
 
+We count the choices made in our cookie banner (accept, reject or custom settings) anonymously, by country and device type only; this count uses no cookie and stores no personal data.
+
 We use cookies to improve your www.halkidikiproperties.com experience. This cookie policy is part of Halkidiki Properties' privacy policy and covers the use of cookies between your device and our website. We also provide basic information on third-party services that we may use, which may also use cookies as part of their service, although they are not covered by our policy.
 
 If you don't want to accept cookies from us, you should instruct your browser to reject cookies from www.halkidikiproperties.com, understanding that we may not be able to provide you some of your desired content and services.

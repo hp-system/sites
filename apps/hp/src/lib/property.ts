@@ -246,6 +246,11 @@ type PUI = {
   saved: string;
   /** Luxury badge and the municipality block (#79, George 21/10/2026 after comparing #7729). */
   luxury: string; aboutMuni: string; allInMuni: string; costs: string;
+  /** Call-me-back (#82, mockup approved by George 21/10/2026). Greek in the singular. */
+  callMe: string; cbTitle: string; cbCountry: string; cbPhone: string; cbWhen: string;
+  cbAsap: string; cbMorning: string; cbAfternoon: string; cbGo: string; cbFine: string;
+  cbErrShort: string; cbErrGr: string; cbErr: string; cbDone: string; cbDoneTo: string;
+  cbHurry: string; callNow: string; orWeCall: string;
   /** Μονάδες. ⚠️ ΠΟΤΕ γραμμένες μέσα στο component — δες το σχόλιο στις αποστάσεις. */
   kmU: string; mU: string;
   /** Οι δύο μη-γράμμα ενεργειακές καταστάσεις — 220 από τα 527 ακίνητα. */
@@ -271,6 +276,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Υπόγειο', floorGround: 'Ισόγειο', floorN: 'Όροφος {n}',
     roomsL: 'Δωμάτια', livingL: 'Καθιστικά', wcL: 'WC',
     favorite: 'Αγαπημένο', saved: 'Αποθηκεύτηκε', luxury: 'Πολυτελές', aboutMuni: 'Για τον δήμο {m}', allInMuni: 'Όλα τα ακίνητα στον δήμο {m}', costs: 'Φόροι και έξοδα αγοράς: υπολογιστής', shareL: 'Κοινοποίηση', copied: 'Αντιγράφηκε',
+    callMe: 'να σε καλέσουμε', cbTitle: 'Να σε καλέσουμε για το #{id}', cbCountry: 'Κωδικός χώρας', cbPhone: 'Κινητό', cbWhen: 'Πότε σε βολεύει;', cbAsap: 'Όσο πιο σύντομα', cbMorning: 'Πρωί', cbAfternoon: 'Απόγευμα', cbGo: 'Καλέστε με', cbFine: 'Καλούμε σε ώρες γραφείου. Ο αριθμός σου μένει μόνο σε εμάς.', cbErrShort: 'Ο αριθμός φαίνεται μικρός. Έλεγξέ τον και ξαναδοκίμασε.', cbErrGr: 'Ένας ελληνικός αριθμός έχει 10 ψηφία (το κινητό ξεκινά από 69).', cbErr: 'Δεν στάλθηκε. Δοκίμασε ξανά ή πάρε μας τηλέφωνο.', cbDone: 'Θα σε καλέσουμε σύντομα', cbDoneTo: 'Στο {p}, για το ακίνητο #{id}.', cbHurry: 'Αν βιάζεσαι: {t}', callNow: 'Πάρε μας τώρα', orWeCall: 'ή να σε καλέσουμε εμείς',
     lockChip: 'ακριβής περιοχή με εγγραφή', kmU: 'χλμ', mU: 'μ.', energyPending: 'Σε έκδοση', energyExempt: 'Εξαιρείται',
     mapCircle: 'Το ακίνητο βρίσκεται μέσα στον κύκλο.', mapExact: 'Ακριβής θέση του ακινήτου.', mapOpen: 'Άνοιγμα στους χάρτες',
     exclH: 'Exclusive', videoL: 'Βίντεο', docsL: 'Έγγραφα και κατόψεις', priceHistL: 'Ιστορικό τιμής', addressL: 'Διεύθυνση' },
@@ -289,6 +295,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Basement', floorGround: 'Ground floor', floorN: 'Floor {n}',
     roomsL: 'Rooms', livingL: 'Living rooms', wcL: 'WC',
     favorite: 'Favorite', saved: 'Saved', luxury: 'Luxury', aboutMuni: 'About {m}', allInMuni: 'All properties in {m}', costs: 'Taxes and buying costs: calculator', shareL: 'Share', copied: 'Copied', lockChip: 'exact area with sign-up',
+    callMe: 'we call you', cbTitle: 'We call you about #{id}', cbCountry: 'Country code', cbPhone: 'Mobile', cbWhen: 'When suits you?', cbAsap: 'As soon as possible', cbMorning: 'Morning', cbAfternoon: 'Afternoon', cbGo: 'Call me', cbFine: 'We call during office hours. Your number stays with us.', cbErrShort: 'The number looks too short. Check it and try again.', cbErrGr: 'A Greek number has 10 digits (mobiles start with 69).', cbErr: 'It did not go through. Try again, or call us.', cbDone: 'We will call you soon', cbDoneTo: 'On {p}, about property #{id}.', cbHurry: 'In a hurry: {t}', callNow: 'Call us now', orWeCall: 'or we call you',
     kmU: 'km', mU: 'm', energyPending: 'Being issued', energyExempt: 'Exempt',
     mapCircle: 'The property is inside the circle.', mapExact: 'Exact location of the property.', mapOpen: 'Open in maps',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Documents and floor plans', priceHistL: 'Price history', addressL: 'Address' },
@@ -307,6 +314,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Сутерен', floorGround: 'Партер', floorN: 'Етаж {n}',
     roomsL: 'Стаи', livingL: 'Дневни', wcL: 'WC',
     favorite: 'Любим', saved: 'Запазено', luxury: 'Лукс', aboutMuni: 'За община {m}', allInMuni: 'Всички имоти в {m}', costs: 'Данъци и разходи при покупка: калкулатор', shareL: 'Сподели', copied: 'Копирано', lockChip: 'точен район с регистрация',
+    callMe: 'ние ще ви се обадим', cbTitle: 'Ще ви се обадим за #{id}', cbCountry: 'Код на държавата', cbPhone: 'Мобилен', cbWhen: 'Кога ви е удобно?', cbAsap: 'Възможно най-скоро', cbMorning: 'Сутрин', cbAfternoon: 'Следобед', cbGo: 'Обадете ми се', cbFine: 'Обаждаме се в работно време. Номерът ви остава само при нас.', cbErrShort: 'Номерът изглежда твърде кратък. Проверете го и опитайте отново.', cbErrGr: 'Гръцкият номер има 10 цифри (мобилните започват с 69).', cbErr: 'Не беше изпратено. Опитайте отново или ни се обадете.', cbDone: 'Ще ви се обадим скоро', cbDoneTo: 'На {p}, за имот #{id}.', cbHurry: 'Ако бързате: {t}', callNow: 'Обадете ни се сега', orWeCall: 'или ние ще ви се обадим',
     kmU: 'км', mU: 'м', energyPending: 'В процес на издаване', energyExempt: 'Освободен',
     mapCircle: 'Имотът се намира в кръга.', mapExact: 'Точно местоположение на имота.', mapOpen: 'Отвори в картите',
     exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документи и планове', priceHistL: 'История на цената', addressL: 'Адрес' },
@@ -325,6 +333,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Suteren', floorGround: 'Prizemlje', floorN: 'Sprat {n}',
     roomsL: 'Sobe', livingL: 'Dnevne sobe', wcL: 'WC',
     favorite: 'Omiljeno', saved: 'Sačuvano', luxury: 'Luksuz', aboutMuni: 'O opštini {m}', allInMuni: 'Sve nekretnine u {m}', costs: 'Porezi i troškovi kupovine: kalkulator', shareL: 'Podeli', copied: 'Kopirano', lockChip: 'tačno područje uz registraciju',
+    callMe: 'mi vas zovemo', cbTitle: 'Zovemo vas u vezi sa #{id}', cbCountry: 'Pozivni broj države', cbPhone: 'Mobilni', cbWhen: 'Kada vam odgovara?', cbAsap: 'Što pre', cbMorning: 'Ujutru', cbAfternoon: 'Popodne', cbGo: 'Pozovite me', cbFine: 'Zovemo tokom radnog vremena. Vaš broj ostaje samo kod nas.', cbErrShort: 'Broj izgleda prekratko. Proverite ga i pokušajte ponovo.', cbErrGr: 'Grčki broj ima 10 cifara (mobilni počinju sa 69).', cbErr: 'Nije poslato. Pokušajte ponovo ili nas pozovite.', cbDone: 'Uskoro ćemo vas pozvati', cbDoneTo: 'Na {p}, u vezi sa nekretninom #{id}.', cbHurry: 'Ako žurite: {t}', callNow: 'Pozovite nas sada', orWeCall: 'ili mi zovemo vas',
     kmU: 'km', mU: 'm', energyPending: 'U izradi', energyExempt: 'Izuzeto',
     mapCircle: 'Nekretnina se nalazi unutar kruga.', mapExact: 'Tačna lokacija nekretnine.', mapOpen: 'Otvori u mapama',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumenti i planovi', priceHistL: 'Istorija cene', addressL: 'Adresa' },
@@ -343,6 +352,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Untergeschoss', floorGround: 'Erdgeschoss', floorN: 'Etage {n}',
     roomsL: 'Zimmer', livingL: 'Wohnzimmer', wcL: 'WC',
     favorite: 'Favorit', saved: 'Gespeichert', luxury: 'Luxus', aboutMuni: 'Über {m}', allInMuni: 'Alle Immobilien in {m}', costs: 'Steuern und Kaufnebenkosten: Rechner', shareL: 'Teilen', copied: 'Kopiert', lockChip: 'genaue Gegend mit Anmeldung',
+    callMe: 'wir rufen Sie an', cbTitle: 'Wir rufen Sie zu #{id} an', cbCountry: 'Ländervorwahl', cbPhone: 'Mobilnummer', cbWhen: 'Wann passt es Ihnen?', cbAsap: 'So bald wie möglich', cbMorning: 'Vormittags', cbAfternoon: 'Nachmittags', cbGo: 'Rufen Sie mich an', cbFine: 'Wir rufen zu Bürozeiten an. Ihre Nummer bleibt bei uns.', cbErrShort: 'Die Nummer scheint zu kurz. Bitte prüfen und erneut versuchen.', cbErrGr: 'Eine griechische Nummer hat 10 Ziffern (Mobilnummern beginnen mit 69).', cbErr: 'Nicht gesendet. Bitte erneut versuchen oder uns anrufen.', cbDone: 'Wir rufen Sie bald an', cbDoneTo: 'Unter {p}, zur Immobilie #{id}.', cbHurry: 'Eilig? {t}', callNow: 'Jetzt anrufen', orWeCall: 'oder wir rufen Sie an',
     kmU: 'km', mU: 'm', energyPending: 'In Ausstellung', energyExempt: 'Befreit',
     mapCircle: 'Die Immobilie liegt innerhalb des Kreises.', mapExact: 'Genaue Lage der Immobilie.', mapOpen: 'In Karten öffnen',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Dokumente und Grundrisse', priceHistL: 'Preisverlauf', addressL: 'Adresse' },
@@ -361,6 +371,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Subsol', floorGround: 'Parter', floorN: 'Etaj {n}',
     roomsL: 'Camere', livingL: 'Camere de zi', wcL: 'WC',
     favorite: 'Favorit', saved: 'Salvat', luxury: 'Lux', aboutMuni: 'Despre {m}', allInMuni: 'Toate proprietățile din {m}', costs: 'Taxe și costuri de cumpărare: calculator', shareL: 'Distribuie', copied: 'Copiat', lockChip: 'zona exactă cu înregistrare',
+    callMe: 'vă sunăm noi', cbTitle: 'Vă sunăm pentru #{id}', cbCountry: 'Prefixul țării', cbPhone: 'Mobil', cbWhen: 'Când vă convine?', cbAsap: 'Cât mai curând', cbMorning: 'Dimineața', cbAfternoon: 'După-amiaza', cbGo: 'Sunați-mă', cbFine: 'Sunăm în timpul programului. Numărul dvs. rămâne doar la noi.', cbErrShort: 'Numărul pare prea scurt. Verificați-l și încercați din nou.', cbErrGr: 'Un număr grecesc are 10 cifre (mobilele încep cu 69).', cbErr: 'Nu s-a trimis. Încercați din nou sau sunați-ne.', cbDone: 'Vă sunăm în curând', cbDoneTo: 'La {p}, pentru proprietatea #{id}.', cbHurry: 'Dacă vă grăbiți: {t}', callNow: 'Sunați-ne acum', orWeCall: 'sau vă sunăm noi',
     kmU: 'km', mU: 'm', energyPending: 'În curs de emitere', energyExempt: 'Exceptat',
     mapCircle: 'Proprietatea se află în interiorul cercului.', mapExact: 'Locația exactă a proprietății.', mapOpen: 'Deschide în hărți',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Documente și planuri', priceHistL: 'Istoricul prețului', addressL: 'Adresă' },
@@ -379,6 +390,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Bodrum', floorGround: 'Zemin kat', floorN: 'Kat {n}',
     roomsL: 'Odalar', livingL: 'Oturma odası', wcL: 'WC',
     favorite: 'Favori', saved: 'Kaydedildi', luxury: 'Lüks', aboutMuni: '{m} hakkında', allInMuni: '{m} bölgesindeki tüm mülkler', costs: 'Vergiler ve alım masrafları: hesaplayıcı', shareL: 'Paylaş', copied: 'Kopyalandı', lockChip: 'kayıtla tam bölge',
+    callMe: 'biz sizi arayalım', cbTitle: '#{id} için sizi arayalım', cbCountry: 'Ülke kodu', cbPhone: 'Cep telefonu', cbWhen: 'Ne zaman uygun?', cbAsap: 'En kısa sürede', cbMorning: 'Sabah', cbAfternoon: 'Öğleden sonra', cbGo: 'Beni arayın', cbFine: 'Mesai saatlerinde ararız. Numaranız yalnızca bizde kalır.', cbErrShort: 'Numara çok kısa görünüyor. Kontrol edip tekrar deneyin.', cbErrGr: 'Yunan numarası 10 hanelidir (cep numaraları 69 ile başlar).', cbErr: 'Gönderilemedi. Tekrar deneyin veya bizi arayın.', cbDone: 'Sizi yakında arayacağız', cbDoneTo: '{p} numarasından, #{id} numaralı mülk için.', cbHurry: 'Acele ediyorsanız: {t}', callNow: 'Bizi şimdi arayın', orWeCall: 'ya da biz sizi arayalım',
     kmU: 'km', mU: 'm', energyPending: 'Düzenleniyor', energyExempt: 'Muaf',
     mapCircle: 'Mülk dairenin içinde yer alır.', mapExact: 'Mülkün tam konumu.', mapOpen: 'Haritada aç',
     exclH: 'Exclusive', videoL: 'Video', docsL: 'Belgeler ve kat planları', priceHistL: 'Fiyat geçmişi', addressL: 'Adres' },
@@ -397,6 +409,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'מרתף', floorGround: 'קומת קרקע', floorN: 'קומה {n}',
     roomsL: 'חדרים', livingL: 'סלונים', wcL: 'שירותים',
     favorite: 'מועדף', saved: 'נשמר', luxury: 'יוקרה', aboutMuni: 'על {m}', allInMuni: 'כל הנכסים ב{m}', costs: 'מסים ועלויות רכישה: מחשבון', shareL: 'שיתוף', copied: 'הועתק', lockChip: 'אזור מדויק בהרשמה',
+    callMe: 'אנחנו נתקשר אליכם', cbTitle: 'נתקשר אליכם לגבי #{id}', cbCountry: 'קידומת מדינה', cbPhone: 'נייד', cbWhen: 'מתי נוח לכם?', cbAsap: 'בהקדם האפשרי', cbMorning: 'בוקר', cbAfternoon: 'אחר הצהריים', cbGo: 'התקשרו אליי', cbFine: 'אנחנו מתקשרים בשעות המשרד. המספר שלכם נשאר רק אצלנו.', cbErrShort: 'המספר נראה קצר מדי. בדקו אותו ונסו שוב.', cbErrGr: 'למספר יווני יש 10 ספרות (ניידים מתחילים ב-69).', cbErr: 'לא נשלח. נסו שוב או התקשרו אלינו.', cbDone: 'נתקשר אליכם בקרוב', cbDoneTo: 'למספר {p}, לגבי נכס #{id}.', cbHurry: 'ממהרים? {t}', callNow: 'התקשרו אלינו עכשיו', orWeCall: 'או שאנחנו נתקשר אליכם',
     kmU: 'ק״מ', mU: 'מ׳', energyPending: 'בהנפקה', energyExempt: 'פטור',
     mapCircle: 'הנכס נמצא בתוך המעגל.', mapExact: 'המיקום המדויק של הנכס.', mapOpen: 'פתיחה במפות',
     exclH: 'Exclusive', videoL: 'וידאו', docsL: 'מסמכים ותוכניות', priceHistL: 'היסטוריית מחיר', addressL: 'כתובת' },
@@ -415,6 +428,7 @@ export const PROP_UI: Record<Lang, PUI> = {
     floorBase: 'Подвал', floorGround: 'Первый этаж', floorN: 'Этаж {n}',
     roomsL: 'Комнаты', livingL: 'Гостиные', wcL: 'WC',
     favorite: 'Избранное', saved: 'Сохранено', luxury: 'Люкс', aboutMuni: 'О {m}', allInMuni: 'Все объекты в {m}', costs: 'Налоги и расходы при покупке: калькулятор', shareL: 'Поделиться', copied: 'Скопировано', lockChip: 'точный район после регистрации',
+    callMe: 'мы вам перезвоним', cbTitle: 'Перезвоним вам по #{id}', cbCountry: 'Код страны', cbPhone: 'Мобильный', cbWhen: 'Когда вам удобно?', cbAsap: 'Как можно скорее', cbMorning: 'Утром', cbAfternoon: 'Днём', cbGo: 'Перезвоните мне', cbFine: 'Звоним в рабочее время. Ваш номер остаётся только у нас.', cbErrShort: 'Номер слишком короткий. Проверьте и попробуйте снова.', cbErrGr: 'Греческий номер состоит из 10 цифр (мобильные начинаются с 69).', cbErr: 'Не отправлено. Попробуйте снова или позвоните нам.', cbDone: 'Скоро вам перезвоним', cbDoneTo: 'На {p}, по объекту #{id}.', cbHurry: 'Если срочно: {t}', callNow: 'Позвоните нам сейчас', orWeCall: 'или мы вам перезвоним',
     kmU: 'км', mU: 'м', energyPending: 'Оформляется', energyExempt: 'Освобождён',
     mapCircle: 'Объект находится внутри круга.', mapExact: 'Точное расположение объекта.', mapOpen: 'Открыть на карте',
     exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документы и планировки', priceHistL: 'История цены', addressL: 'Адрес' },

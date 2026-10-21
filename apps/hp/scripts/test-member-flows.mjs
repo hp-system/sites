@@ -47,6 +47,18 @@ try {
   check('guest POST → expired, nothing saved', c.ok === false && c.code === 'expired', JSON.stringify(c));
   const d = await post({ ref: '<script>' });
   check('bad ref rejected', d.ok === false && d.code === 'ref', JSON.stringify(d));
+
+  // #64 — a signed-in member's forms come filled with their own details; a guest's never.
+  const mp = await fetch(SITE + '/en/property/10008', { headers: M });
+  const mh = await mp.text();
+  check('member: request form prefilled (name, email)', /id="qf-n"[^>]*value="Stub User"/.test(mh) && /id="qf-e"[^>]*value="stub@example.com"/.test(mh), 'values');
+  check('member page is private (no shared cache)', /private|no-store/.test(mp.headers.get('cache-control') ?? ''), mp.headers.get('cache-control') ?? 'none');
+  const gh = await (await fetch(SITE + '/en/property/10008')).text();
+  check('guest: forms empty', !/id="qf-[nep]"[^>]*value=/.test(gh) && !gh.includes('stub@example.com'), 'empty');
+  const ch = await (await fetch(SITE + '/en/contact', { headers: M })).text();
+  check('member: contact form prefilled', /name="name"[^>]*value="Stub User"/.test(ch) && /name="email"[^>]*value="stub@example.com"/.test(ch), 'values');
+  const cg = await (await fetch(SITE + '/en/contact')).text();
+  check('guest: contact form empty', !cg.includes('stub@example.com'), 'empty');
 } finally {
   site.kill(); stub.server?.close?.();
 }

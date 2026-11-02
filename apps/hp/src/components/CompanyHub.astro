@@ -1,0 +1,380 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// COMPANY PAGE — DESKTOP REDESIGN, WAVE 1 (#107, package 7 of 7; design «CompanyBlocks»
+// approved by George 2026-11-02). Rendered by InfoPage.astro inside the `look: wave1`
+// company page (/en/about-us), after the shared hero; phones (< 1024px) never see it and keep
+// George's layout.
+//
+//   facts (one line) · «Our company's core values» (dark band, one value at a time, dashes)
+//   · «Our people» · «Our story» (years accordion, the picture follows) · partners (logos
+//   float by) · two doors (careers · contact)
+//
+// 📄 George's texts, verbatim, read from his own pages in the same language (English
+//    fallback): the values and «Our people» from /about-us/values, the years from
+//    /about-us/our-story (the first sentence of each period), the partners' line and
+//    logos from /our-partners, the careers card from this page. Only the facts, the
+//    door buttons and «All our partners» are new design texts (co.* keys, 9 languages).
+// SEO: every value, period, logo and door is in the HTML; switching only shows / hides.
+// 🔒 Photos: George's existing page pictures; the property photo (Villa Natalia) is watermarked.
+// ═══════════════════════════════════════════════════════════════════════════
+import { brand } from '../brand/index';
+import { findInfoPage, type InfoPage } from '../lib/infopages';
+import { prefix, t, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; page: InfoPage; contact: string }
+const { lang, page, contact } = Astro.props;
+const tt = (k: string, v?: Record<string, string | number>) => t(lang, k, v);
+const d = page.data;
+
+// A page below this one, in this language if it exists, else the English one.
+const sub = async (slug: string) => (await findInfoPage(`${prefix(lang)}/${slug}`)) ?? (await findInfoPage(`/en/${slug}`));
+const valuesPg = await sub('about-us/values');
+const storyPg = await sub('about-us/our-story');
+const partnersPg = await sub('our-partners');
+const careersPg = await sub('careers');
+
+// Markdown → plain text (links keep their words, emphasis marks go).
+const plain = (s: string) => s.replace(/<!--[\s\S]*?-->/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*\*|__/g, '').replace(/\s+/g, ' ').trim();
+const sentences = (s: string) => s.split(/(?<=[.!?])\s+(?=[A-ZΑ-ΩА-Я"«“])/);
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const linkTo = (href: string) => d.related.find((r) => r.href === href)?.label;
+
+// ── values: the bold words name the value, its sentence says it (George's /about-us/values) ──
+// The design shows eight of George's fourteen, in his order.
+const SHOWN = ['we love', 'a deep knowledge', "we believe in people's passion", 'interests of our customers', 'relationships', 'we connect',
+  'we offer only quality services', 'a single group of people who work together'];
+const vBody = valuesPg?.body ?? '';
+const valuesH2 = (vBody.match(/^##\s+(.+)$/m)?.[1] ?? '').trim();
+const allValues = [...vBody.matchAll(/^- (.+)$/gm)].map((m) => {
+  const raw = m[1];
+  const a = (raw.match(/\*\*(.+?)\*\*/)?.[1] ?? '').replace(/[.\s]+$/, '').trim();
+  const line = sentences(plain(raw)).find((s) => s.toLowerCase().includes(a.toLowerCase())) ?? plain(raw);
+  return { a: cap(a), b: line };
+}).filter((v) => v.a);
+const picked = allValues.filter((v) => SHOWN.includes(v.a.toLowerCase()));
+const values = picked.length ? picked : allValues.slice(0, 8);
+
+// ── «Our people» (the H3 of the values page): the first sentence, then George's closing line ──
+const people = vBody.match(/^###\s+(.+)\n+([\s\S]*?)(?=\n#|\n<img|(?![\s\S]))/m);
+const peopleH = people?.[1].trim() ?? '';
+const peopleParas = (people?.[2] ?? '').split(/\n\s*\n/).map(plain).filter(Boolean);
+const peopleP = peopleParas[0] ? sentences(peopleParas[0])[0] : '';
+const peopleQ = peopleParas.length > 1 ? peopleParas[peopleParas.length - 1] : '';
+
+// ── «Our story»: each period's first sentence; the last period is open at the start ──
+// Pictures: George's own (the office, advisers, the technology card) and the watermarked Villa Natalia photo.
+const ERA_IMG = [
+  { src: '/pages/sell/37818ed8-1623745980-card.webp', alt: 'Buyer looking at a property for sale on a tablet' },
+  { src: '/pages/services/01596b1d-1624545055-card.webp', alt: 'Advisers showing a villa in Halkidiki to a couple of buyers' },
+  { src: '/pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp', alt: 'Offices of Halkidiki Properties, the story since 2007' },
+  { src: '/pages/construction/villa-natalia-7010-wm.jpg', alt: 'Villa Natalia in Sithonia at dusk: living room and pool' },
+  { src: '/pages/sell/49ed2b3f-1623746026-card.webp', alt: 'Network of buyer profiles: technology that matches properties with buyers' },
+];
+const sBody = storyPg?.body ?? '';
+const eras = [...sBody.matchAll(/^##\s+(.+)\n+([\s\S]*?)(?=\n##\s|(?![\s\S]))/gm)].map((m, i) => {
+  const [y, k = ''] = m[1].split(/:\s*/);
+  const para = m[2].split(/\n\s*\n/).map(plain).find((p) => p && !p.startsWith('<')) ?? '';
+  return { y: y.trim().replace(/(\d)-(\d)/, '$1–$2'), k: cap(k.trim()), t: sentences(para)[0] ?? '', img: ERA_IMG[i % ERA_IMG.length] };
+});
+const open = eras.length - 1;
+
+// ── partners: George's first line and every logo of /our-partners ──
+const pBody = partnersPg?.body ?? '';
+const partnersH2 = (pBody.match(/^##\s+(.+)$/m)?.[1] ?? '').trim();
+const partnersP = sentences(plain(pBody.split(/\n\s*\n/).find((p) => p.trim() && !p.trim().startsWith('<')) ?? ''))[0] ?? '';
+const logos = [...pBody.matchAll(/<img src="([^"]+)" alt="([^"]+)"/g)].map((m) => ({ src: m[1], alt: m[2] }));
+
+// ── doors: careers (George's card on this page) and contact ──
+const careersCard = d.cards.find((c) => c.href === careersPg?.data.path);
+const DOORS = [
+  careersPg && { href: careersPg.data.path, h: careersCard?.title || careersPg.data.h1, p: careersCard?.text || careersPg.data.description, cta: tt('co.careers_cta') },
+  { href: contact, h: linkTo(contact) || tt('co.contact'), p: tt('co.contact_p', { phone: brand.contact.phoneText }), cta: tt('co.contact_cta', { brand: brand.name }) },
+].filter(Boolean) as { href: string; h: string; p: string; cta: string }[];
+
+const FACTS = [
+  { b: tt('co.f1'), s: tt('co.f1_s') }, { b: tt('co.f2'), s: '' }, { b: tt('co.f3'), s: '' }, { b: tt('co.f4'), s: tt('co.f4_s') },
+];
+const valuesL = valuesPg ? linkTo(valuesPg.data.path) || valuesPg.data.h1 : '';
+const storyL = storyPg ? linkTo(storyPg.data.path) || storyPg.data.h1 : '';
+const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h1 : '';
+---
+<div class="w1-d co" data-lang={lang}>
+  <section class="wrap co-facts" aria-label={tt('nav.company')}>
+    {FACTS.map((f) => <p class="co-fct"><b>{f.b}</b>{f.s && <span>{f.s}</span>}</p>)}
+  </section>
+
+  {values.length > 0 && (
+    <section class="co-vals" id="coVals" aria-labelledby="coValsH">
+      <div class="wrap co-g2">
+        <div>
+          <p class="co-lbl co-lbl--dk">{valuesL}</p>
+          <h2 class="co-zh" id="coValsH">{valuesH2 || valuesL}</h2>
+          {valuesPg && <p class="co-more"><a class="co-lnkd" href={valuesPg.data.path}>{valuesL} <span aria-hidden="true">›</span></a></p>}
+        </div>
+        <div class="co-vals__r">
+          <div class="co-stack" aria-live="off">
+            {values.map((v, i) => (
+              <p class:list={['co-sx', { on: i === 0 }]} aria-hidden={i === 0 ? 'false' : 'true'}><b>{v.a}</b><span>{v.b}</span></p>
+            ))}
+          </div>
+          <div class="co-bars" role="group" aria-label={valuesL}>
+            {values.map((v, i) => (
+              <button type="button" class:list={['co-bar', { on: i === 0 }]} aria-label={v.a} aria-pressed={i === 0 ? 'true' : 'false'}><span></span></button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {peopleH && (
+    <section class="co-ppl" aria-labelledby="coPplH">
+      <div class="wrap co-g2 co-g2--mid">
+        <div>
+          <p class="co-lbl">{peopleH}</p>
+          <h2 class="co-zh" id="coPplH">{peopleH}</h2>
+          {peopleP && <p class="co-ppl__p">{peopleP}</p>}
+        </div>
+        {peopleQ && <p class="co-ppl__q">{peopleQ}</p>}
+      </div>
+    </section>
+  )}
+
+  {eras.length > 0 && storyPg && (
+    <section class="co-story" aria-labelledby="coStoryH">
+      <div class="wrap co-story__in">
+        <div>
+          <p class="co-lbl">{tt('co.f1')}</p>
+          <h2 class="co-story__h" id="coStoryH">{storyPg.data.h1}</h2>
+          <div class="co-acclist" id="coAcc">
+            {eras.map((e, i) => (
+              <div class="co-acc">
+                <h3 class="co-acc__h">
+                  <button type="button" class="co-acb" id={`coEraB${i}`} aria-expanded={i === open ? 'true' : 'false'} aria-controls={`coEra${i}`} data-i={i}>
+                    <span class="co-act">{e.y}</span>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 9l7 7 7-7"></path></svg>
+                  </button>
+                </h3>
+                <div class:list={['co-accw', { on: i === open }]} id={`coEra${i}`} role="region" aria-labelledby={`coEraB${i}`}>
+                  <div><p class="co-acp">{e.k && <span class="co-ack">{e.k}</span>}{e.t}</p></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="co-more"><a class="lnkg" href={storyPg.data.path}>{storyL} <span aria-hidden="true">›</span></a></p>
+        </div>
+        <div class="co-accimg">
+          {eras.map((e, i) => (
+            <img class:list={{ on: i === open }} src={e.img.src} alt={e.img.alt} width="800" height="500" loading="lazy" decoding="async" data-i={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {partnersPg && logos.length > 0 && (
+    <section class="co-prt" aria-labelledby="coPrtH">
+      <div class="wrap">
+        <div class="co-prt__hd">
+          <div>
+            <p class="co-lbl">{partnersL}</p>
+            <h2 class="co-prt__h" id="coPrtH">{partnersH2 || partnersPg.data.h1}</h2>
+            {partnersP && <p class="co-prt__p">{partnersP}</p>}
+          </div>
+          <a class="co-prt__all" href={partnersPg.data.path}>{tt('co.all_partners')} <span aria-hidden="true">›</span></a>
+        </div>
+        <div class="co-mq">
+          <div class="co-mqt">
+            {logos.map((l) => <img src={l.src} alt={l.alt} width="120" height="84" loading="lazy" decoding="async" />)}
+            {logos.map((l) => <img src={l.src} alt={l.alt} aria-hidden="true" width="120" height="84" loading="lazy" decoding="async" />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="co-doors-s">
+    <div class="wrap">
+      <div class="co-doors" id="coDoors">
+        {DOORS.map((x, i) => (
+          <a class:list={['co-door', { on: i === 0 }]} href={x.href}>
+            <span><b>{x.h}</b><span class="co-dp">{x.p}</span></span>
+            <span class="co-dl"><span>{x.cta}</span><span aria-hidden="true" class="co-ar">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  @media (min-width: 1024px) {
+    .co { display: block; }
+    .co-lbl { margin: 0; font-size: 10.5px; font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+    .co-lbl--dk { color: rgba(255,255,255,.55); }
+    .co-more { margin: 16px 0 0; font-size: 14px; }
+    .co-lnkd { color: rgba(255,255,255,.62); text-decoration: none; transition: color .15s ease; }
+    .co-lnkd:hover { color: #fff; }
+
+    /* ── facts: George's words, one line ── */
+    .co-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-top: 4px; padding-bottom: 48px; }
+    .co-fct { margin: 0; padding: 0 24px; border-left: 1px solid var(--line); }
+    .co-fct:first-child { border-left: 0; padding-left: 0; }
+    .co-fct b { display: block; font-size: 24px; font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: var(--ink); }
+    .co-fct span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+
+    /* ── two halves of the same height: the values (dark) and our people ── */
+    .co-vals, .co-ppl { min-height: 270px; padding: 24px 0; box-sizing: border-box; display: flex; align-items: center; }
+    .co-vals > .wrap, .co-ppl > .wrap { width: 100%; }
+    .co-vals { background: var(--ink-deep); color: #fff; }
+    .co-g2 { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: 56px; align-items: start; }
+    .co-g2--mid { align-items: center; }
+    .co-zh { margin: 14px 0 0; font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; color: inherit; }
+    .co-ppl .co-zh { color: var(--ink); }
+    .co-vals__r { padding-top: 29px; }
+    .co-stack { display: grid; }
+    .co-sx { grid-area: 1 / 1; margin: 0; opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; }
+    .co-sx.on { opacity: 1; transform: none; }
+    .co-sx.gone { transform: translateY(-14px); }
+    .co-sx b { display: block; font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
+    .co-sx span { display: block; margin-top: 14px; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,.72); max-width: 56ch; }
+    /* the values' dashes: the chosen one long, the others short marks; the change slides */
+    .co-bars { display: flex; gap: 6px; margin-top: 22px; }
+    .co-bar { all: unset; cursor: pointer; padding: 10px 0; }
+    .co-bar span { display: block; width: 6px; height: 2px; background: rgba(255,255,255,.25);
+      transition: width .35s cubic-bezier(.4,0,.2,1), transform .25s ease-out, background .2s ease; }
+    .co-bar.on span { width: 22px; background: #fff; }
+    .co-bars:hover .co-bar span { transform: scaleY(4); }
+    /* the heading on one line from 1280px, as the design; a long value title wraps (never wider than its column) */
+    @media (min-width: 1280px) { .co-zh { white-space: nowrap; } }
+    .co-bar:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .co-ppl__p { margin: 18px 0 0; font-size: 15px; line-height: 1.65; color: var(--muted); max-width: 48ch; }
+    .co-ppl__q { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.2; letter-spacing: -.016em; color: var(--ink); }
+
+    /* ── our story: the years, one open; the picture on the right follows ── */
+    .co-story { background: var(--paper-2); padding: 44px 0; }
+    .co-story__in { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 72px; align-items: center; }
+    .co-story__h { margin: 10px 0 18px; font-size: 36px; font-weight: 300; letter-spacing: -.02em; line-height: 1.2; color: var(--ink); }
+    .co-acclist { height: 380px; }
+    .co-acc { border-bottom: 1px solid var(--line); }
+    .co-acc__h { margin: 0; font: inherit; }
+    .co-acb { all: unset; cursor: pointer; box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 0; color: var(--ink); }
+    .co-act { font-size: 22px; font-weight: 300; letter-spacing: -.012em; line-height: 1.2; }
+    .co-acb:hover .co-act { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+    .co-acb svg { flex: none; width: 18px; height: 18px; color: var(--muted); transition: transform .4s ease; }
+    .co-acb[aria-expanded='true'] svg { transform: rotate(180deg); }
+    .co-acb:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .co-accw { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden;
+      transition: grid-template-rows .5s cubic-bezier(.4,0,.2,1), opacity .35s ease, visibility 0s linear .5s; }
+    .co-accw.on { grid-template-rows: 1fr; opacity: 1; visibility: visible; transition: grid-template-rows .5s cubic-bezier(.4,0,.2,1), opacity .35s ease; }
+    .co-accw > div { overflow: hidden; min-height: 0; }
+    .co-acp { margin: 0; padding: 0 36px 18px 0; font-size: 15.5px; line-height: 1.6; color: var(--ink-2); }
+    .co-ack { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .co-accimg { display: grid; overflow: hidden; }
+    .co-accimg img { grid-area: 1 / 1; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; display: block; opacity: 0; transition: opacity .5s ease; }
+    .co-accimg img.on { opacity: 1; }
+
+    /* ── partners: the logos float by, held under the pointer ── */
+    .co-prt { padding: 32px 0 30px; }
+    .co-prt__hd { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 14px; }
+    .co-prt__h { margin: 6px 0 0; font-size: 28px; font-weight: 300; letter-spacing: -.016em; line-height: 1.2; color: var(--ink); }
+    .co-prt__p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--muted); }
+    .co-prt__all { flex: none; font-size: 14px; color: var(--muted); text-decoration: none; transition: color .15s ease; }
+    .co-prt__all:hover { color: var(--ink); }
+    .co-mq { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+    .co-mqt { display: flex; align-items: center; gap: 12px; width: max-content; animation: co-mq 60s linear infinite; }
+    .co-mq:hover .co-mqt { animation-play-state: paused; }
+    .co-mqt img { height: 84px; width: 120px; object-fit: contain; display: block; filter: grayscale(1); opacity: .75; transition: filter .25s ease, opacity .25s ease; }
+    .co-mqt img:hover { filter: none; opacity: 1; }
+
+    /* ── two doors: the hovered one grows and turns dark; the row's height is fixed (280px) ── */
+    .co-doors-s { background: var(--paper-2); padding: 40px 0 48px; }
+    .co-doors { display: flex; gap: 12px; height: 280px; }
+    .co-door { flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; box-sizing: border-box;
+      padding: 32px 34px 28px; background: var(--paper); color: var(--ink); text-decoration: none; overflow: hidden;
+      transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease; }
+    .co-door.on { flex-grow: 1.6; background: var(--ink-deep); color: #fff; }
+    .co-door b { display: block; font-size: 24px; font-weight: 300; line-height: 1.15; letter-spacing: -.016em; white-space: nowrap; transition: font-size .4s ease; }
+    .co-door.on b { font-size: 32px; }
+    .co-dp { display: block; margin-top: 12px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 40ch; transition: color .35s ease; }
+    .co-door.on .co-dp { color: rgba(255,255,255,.78); }
+    .co-dl { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }
+    .co-ar { font-size: 16px; letter-spacing: 0; transition: transform .3s ease; }
+    .co-door.on .co-ar { transform: translateX(6px); }
+    .co-door:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    :global([dir='rtl']) .co-door.on .co-ar { transform: translateX(-6px) scaleX(-1); }
+    :global([dir='rtl']) .co-ar { transform: scaleX(-1); }
+  }
+  @keyframes co-mq { to { transform: translateX(-50%); } }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .co-mqt { animation: none; }
+    .co-sx, .co-bar span, .co-accw, .co-accimg img, .co-door, .co-door b, .co-dp, .co-ar, .co-acb svg { transition: none; }
+  }
+</style>
+
+<script>
+  // ── Company page, desktop (#107) ─────────────────────────────────────────
+  const desk = window.matchMedia('(min-width: 1024px)');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const root = document.querySelector<HTMLElement>('.co');
+  if (root) {
+    // ── values: one at a time, the next every 3.5 s; held under the pointer; a dash shows its value ──
+    const band = document.getElementById('coVals');
+    const vals = Array.from(root.querySelectorAll<HTMLElement>('.co-sx'));
+    const bars = Array.from(root.querySelectorAll<HTMLButtonElement>('.co-bar'));
+    let vi = 0;
+    let t0 = Date.now();
+    let hold = false;
+    const show = (i: number) => {
+      const prev = vi;
+      vi = (i + vals.length) % vals.length;
+      vals.forEach((v, k) => {
+        v.classList.toggle('on', k === vi);
+        v.classList.toggle('gone', k === prev && k !== vi);
+        v.setAttribute('aria-hidden', String(k !== vi));
+      });
+      bars.forEach((b, k) => { b.classList.toggle('on', k === vi); b.setAttribute('aria-pressed', String(k === vi)); });
+    };
+    bars.forEach((b, i) => b.addEventListener('click', () => { t0 = Date.now(); show(i); }));
+    band?.addEventListener('mouseenter', () => { hold = true; });
+    band?.addEventListener('mouseleave', () => { hold = false; t0 = Date.now(); });
+    band?.addEventListener('focusin', () => { hold = true; });
+    band?.addEventListener('focusout', () => { hold = false; t0 = Date.now(); });
+    if (vals.length > 1) {
+      window.setInterval(() => {
+        if (!desk.matches || still.matches || document.hidden || hold || Date.now() - t0 < 3500) return;
+        t0 = Date.now();
+        show(vi + 1);
+      }, 250);
+    }
+
+    // ── our story: one period open; its picture follows ──
+    const accBtns = Array.from(root.querySelectorAll<HTMLButtonElement>('.co-acb'));
+    const accImgs = Array.from(root.querySelectorAll<HTMLImageElement>('.co-accimg img'));
+    // The list keeps one height whichever period is open (the design: 380px): George's full
+    // sentences can be longer than the design's sample, so it is the tallest period's height.
+    const list = document.getElementById('coAcc');
+    const fit = () => {
+      if (!list || !desk.matches) return;
+      const heads = accBtns.reduce((s, b) => s + (b.closest('.co-acc')?.querySelector('.co-acc__h')?.getBoundingClientRect().height ?? 0) + 1, 0);
+      const tallest = Math.max(0, ...Array.from(list.querySelectorAll<HTMLElement>('.co-acp')).map((p) => p.scrollHeight));
+      list.style.height = `${Math.max(380, Math.ceil(heads + tallest))}px`;
+    };
+    fit();
+    window.addEventListener('resize', fit, { passive: true });
+    document.fonts?.ready.then(fit);
+    accBtns.forEach((b, i) => b.addEventListener('click', () => {
+      accBtns.forEach((x, k) => {
+        x.setAttribute('aria-expanded', String(k === i));
+        document.getElementById(x.getAttribute('aria-controls') ?? '')?.classList.toggle('on', k === i);
+      });
+      accImgs.forEach((im, k) => im.classList.toggle('on', k === i));
+    }));
+
+    // ── doors: the hovered / focused one opens up; leaving the row brings back the first ──
+    const doors = Array.from(root.querySelectorAll<HTMLElement>('.co-door'));
+    const door = (i: number) => doors.forEach((x, k) => x.classList.toggle('on', k === i));
+    doors.forEach((x, i) => { x.addEventListener('mouseenter', () => door(i)); x.addEventListener('focus', () => door(i)); });
+    document.getElementById('coDoors')?.addEventListener('mouseleave', () => door(0));
+  }
+</script>

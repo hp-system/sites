@@ -374,6 +374,10 @@ const meta = {
 
     /* Collections + by area: together one screen, half each; Collections on beige */
     #main .hz { height: 50vh; min-height: 340px; box-sizing: border-box; padding: 28px 0; display: flex; }
+    /* Sergei 02/11 (live): on tall screens the tiles grew taller than in the approved mockup.
+       Cap them at the mockup's shape (1440 × 900: tiles ≈ 291 × 306, a touch taller than square):
+       Both sections = 56 px padding + 88 px heading + tile, as in the mockup (the area tiles give 38 px to the link row). */
+    #main .hz { --hz-tile: calc((min(var(--max), 100vw) - 2 * var(--gut) - 36px) / 4 * 1.05); max-height: calc(var(--hz-tile) + 144px); }
     #main .hz > .wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; width: 100%; }
     #main .hz .hz-head { margin: 0 0 16px; flex: none; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
     #main .hz .h-rail, #main .hz .atiles { flex: 1; min-height: 0; }

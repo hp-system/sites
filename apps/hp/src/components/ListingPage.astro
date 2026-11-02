@@ -1657,7 +1657,10 @@ const tilePhoto = (() => {
         const u = new URL(a.href, location.href);
         if (u.origin !== location.origin || !same(decodeURI(u.pathname), decodeURI(home)) || u.search) return;
         const top = document.querySelector<HTMLElement>('.ltop')?.getBoundingClientRect();
-        localStorage.setItem('hpFromList', JSON.stringify({ t: Date.now(), h: top && top.bottom > 0 ? Math.round(top.bottom) : 242 }));
+        // the photo the strip shows now (already in the browser's cache): the home page starts with it
+        const bg = getComputedStyle(document.querySelector<HTMLElement>('.ltop') ?? document.body).backgroundImage;
+        const img = /^url\(["']?(https?:[^"')]+)/.exec(bg)?.[1] ?? '';
+        localStorage.setItem('hpFromList', JSON.stringify({ t: Date.now(), h: top && top.bottom > 0 ? Math.round(top.bottom) : 242, img }));
       } catch { /* storage off */ }
     }, true);
   }

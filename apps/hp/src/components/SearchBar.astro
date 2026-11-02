@@ -414,6 +414,7 @@ import { ui } from '../lib/listing';
   .sghost__c--n { flex: none; padding: 0 18px; font-size: 13px; }
   .sghost__c--id { width: 170px; justify-content: flex-start; }
   .sghost__map { flex: none; width: 64px; display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--gold-dk-text); }
-  @keyframes h-ghost { 0%, 15% { opacity: 1; } 55%, 100% { opacity: 0; } }
-  @keyframes h-bar { 0%, 15% { opacity: 0; } 55%, 100% { opacity: 1; } }
+  /* mirrored timing of the home → list move (there 15–55 %, here 45–85 %) */
+  @keyframes h-ghost { 0%, 45% { opacity: 1; } 85%, 100% { opacity: 0; } }
+  @keyframes h-bar { 0%, 45% { opacity: 0; } 85%, 100% { opacity: 1; } }
 </style>

@@ -184,8 +184,9 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
 <script>
   const dlg = document.getElementById('filter-sheet') as HTMLDialogElement | null;
   const opener = document.querySelector<HTMLAnchorElement>('[data-ev="search:filters_open"]');
-  if (dlg && opener) {
-    opener.addEventListener('click', (e) => {
+  // The window also works without the home opener (the list page opens it from «More filters»).
+  if (dlg) {
+    opener?.addEventListener('click', (e) => {
       e.preventDefault();
       dlg.showModal();
       document.documentElement.style.overflow = 'hidden';

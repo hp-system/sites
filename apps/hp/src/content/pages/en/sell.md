@@ -12,14 +12,28 @@ image_alt: ''
 related:
 - label: Exclusive assignment of your property
   href: /en/work-with-us-exclusively
+  text: Our premium clientele and every extra sales service.
+  image: /pages/sell/5e8abf29-outer-image-exclusivity-card.webp
 - label: Add your property for sale
   href: /en/add-your-property
+  text: Send us the essentials — an adviser calls you.
+  image: /pages/sell/5382f593-1634546117-card.webp
 - label: Advertise on portals worldwide
   href: /en/sell/advertise-your-property-worldwide
+  text: Synchronised to portals in many countries and languages.
+  image: /pages/sell/29a40cde-1623745992-card.webp
 - label: Assignment order terms
   href: /en/assignment-order
+  text: What you sign when you assign your property to us.
+  image: /pages/add-your-property/fa96a485-last-img-min.webp
+  image_alt: Owner statistics of Halkidiki Properties on a laptop
+  button: Read the terms
 - label: Contact an adviser
   href: /en/contact
+  text: "{phone} · WhatsApp"
+  image: /pages/book-an-online-appointment/3b79d72c-live-video.webp
+  image_alt: Adviser of Halkidiki Properties on a call with an owner
+  button: Contact an adviser
 toc: false
 old_url: /en/sell
 needs_content: false
@@ -81,6 +95,9 @@ cards:
   width: 800
   height: 500
 contact_card: false
+look: wave1
+desk_image: https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736545_1920w.jpg
+desk_image_alt: Villa terrace and infinity pool overlooking the sea in Halkidiki
 form:
   source: Sell
   title: Tell us about your property

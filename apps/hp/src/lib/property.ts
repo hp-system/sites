@@ -234,7 +234,7 @@ export function oldPriceOf(a: Attrs): number | null {
 }
 
 // ── ΤΑ ΚΕΙΜΕΝΑ ΤΗΣ ΚΑΡΤΕΛΑΣ — πλήρη και στις 9, αλλιώς δεν χτίζει (Record) ──
-type PUI = {
+type PUIBase = {
   desc: string; feats: string; floors: string; location: string; distances: string;
   similar: string; reqTour: string; reqInfo: string; send: string; call: string;
   or: string; unlockH: string; unlockP: string; freeReg: string;
@@ -267,7 +267,7 @@ type PUI = {
   /** Μόνο για exclusive (#53). */
   exclH: string; videoL: string; docsL: string; priceHistL: string; addressL: string;
 };
-export const PROP_UI: Record<Lang, PUI> = {
+const PROP_UI_BASE: Record<Lang, PUIBase> = {
   el: { desc: 'Περιγραφή', feats: 'Χαρακτηριστικά', floors: 'Όροφοι', location: 'Τοποθεσία',
     distances: 'Αποστάσεις', similar: 'Παρόμοια ακίνητα', reqTour: 'Ζήτα επίσκεψη',
     reqInfo: 'Ζήτα πληροφορίες', send: 'Αποστολή', call: 'Κλήση', or: 'ή',
@@ -449,6 +449,70 @@ export const PROP_UI: Record<Lang, PUI> = {
     mapCircle: 'Объект находится внутри круга.', mapExact: 'Точное расположение объекта.', mapOpen: 'Открыть на карте',
     exclH: 'Exclusive', videoL: 'Видео', docsL: 'Документы и планировки', priceHistL: 'История цены', addressL: 'Адрес' },
 };
+
+/**
+ * Property page desktop redesign + all-photos popup (#103, design approved by George 2026-11-02).
+ * New texts of the design only; George's existing texts above are reused as they are.
+ * Greek in the singular.
+ */
+type PUI103 = {
+  detailsH: string; allFeats: string; fewerFeats: string; photosN: string; allPhotos: string;
+  beachAccess: string; seaView: string; fFirst: string; fSurname: string; dialSearch: string; dialNone: string;
+  msgL: string; nearby: string; nearbyN: string; closeList: string; freeAcct: string;
+  pricesIn: string; medSqm: string; medPrice: string; midHalf: string; landLine: string; allPrices: string;
+  viewProps: string; aboutArea: string;
+};
+const PROP_UI_103: Record<Lang, PUI103> = {
+  el: { detailsH: 'Στοιχεία', allFeats: 'Όλα τα {n} χαρακτηριστικά', fewerFeats: 'Λιγότερα', photosN: '{n} φωτογραφίες', allPhotos: 'Όλες οι φωτογραφίες',
+    beachAccess: 'Αποκλειστική πρόσβαση στην παραλία', seaView: 'Θέα θάλασσα', fFirst: 'Όνομα', fSurname: 'Επώνυμο', dialSearch: 'Αναζήτησε χώρα ή κωδικό', dialNone: 'Κανένα αποτέλεσμα',
+    msgL: 'Μήνυμα', nearby: 'Κοντά', nearbyN: 'Κοντά · {n} σημεία', closeList: 'Κλείσε τη λίστα', freeAcct: 'Δωρεάν λογαριασμός',
+    pricesIn: 'Τιμές — {m}', medSqm: 'Διάμεση €/τ.μ. · κατοικίες', medPrice: 'Διάμεση τιμή', midHalf: 'Μεσαίο μισό {lo}–{hi} /τ.μ.', landLine: 'Γη {v}/τ.μ., διάμεσο οικόπεδο {p}', allPrices: 'Όλες οι τιμές',
+    viewProps: 'Δες τα ακίνητα', aboutArea: 'Για την περιοχή' },
+  en: { detailsH: 'Details', allFeats: 'All {n} features', fewerFeats: 'Show fewer', photosN: '{n} photos', allPhotos: 'All photos',
+    beachAccess: 'Exclusive access to the beach', seaView: 'Sea view', fFirst: 'Name', fSurname: 'Surname', dialSearch: 'Search country or code', dialNone: 'No match',
+    msgL: 'Message', nearby: 'Nearby', nearbyN: 'Nearby · {n} places', closeList: 'Close the list', freeAcct: 'Free account',
+    pricesIn: 'Prices in {m}', medSqm: 'Median €/m² · homes', medPrice: 'Median price', midHalf: 'Middle half {lo}–{hi} /m²', landLine: 'Land {v}/m², median plot {p}', allPrices: 'All prices',
+    viewProps: 'View properties', aboutArea: 'About the area' },
+  bg: { detailsH: 'Подробности', allFeats: 'Всички {n} характеристики', fewerFeats: 'По-малко', photosN: '{n} снимки', allPhotos: 'Всички снимки',
+    beachAccess: 'Изключителен достъп до плажа', seaView: 'Изглед към морето', fFirst: 'Име', fSurname: 'Фамилия', dialSearch: 'Търсене на държава или код', dialNone: 'Няма съвпадение',
+    msgL: 'Съобщение', nearby: 'Наблизо', nearbyN: 'Наблизо · {n} места', closeList: 'Затвори списъка', freeAcct: 'Безплатен акаунт',
+    pricesIn: 'Цени в {m}', medSqm: 'Медиана €/м² · жилища', medPrice: 'Медианна цена', midHalf: 'Средната половина {lo}–{hi} /м²', landLine: 'Земя {v}/м², медианен парцел {p}', allPrices: 'Всички цени',
+    viewProps: 'Виж имотите', aboutArea: 'За района' },
+  sr: { detailsH: 'Detalji', allFeats: 'Svih {n} karakteristika', fewerFeats: 'Prikaži manje', photosN: '{n} fotografija', allPhotos: 'Sve fotografije',
+    beachAccess: 'Ekskluzivan pristup plaži', seaView: 'Pogled na more', fFirst: 'Ime', fSurname: 'Prezime', dialSearch: 'Pretraži zemlju ili pozivni broj', dialNone: 'Nema rezultata',
+    msgL: 'Poruka', nearby: 'U blizini', nearbyN: 'U blizini · {n} mesta', closeList: 'Zatvori listu', freeAcct: 'Besplatan nalog',
+    pricesIn: 'Cene u {m}', medSqm: 'Medijana €/m² · kuće', medPrice: 'Medijana cene', midHalf: 'Srednja polovina {lo}–{hi} /m²', landLine: 'Zemljište {v}/m², medijana placa {p}', allPrices: 'Sve cene',
+    viewProps: 'Pogledaj nekretnine', aboutArea: 'O oblasti' },
+  de: { detailsH: 'Details', allFeats: 'Alle {n} Merkmale', fewerFeats: 'Weniger anzeigen', photosN: '{n} Fotos', allPhotos: 'Alle Fotos',
+    beachAccess: 'Exklusiver Zugang zum Strand', seaView: 'Meerblick', fFirst: 'Vorname', fSurname: 'Nachname', dialSearch: 'Land oder Vorwahl suchen', dialNone: 'Kein Treffer',
+    msgL: 'Nachricht', nearby: 'In der Nähe', nearbyN: 'In der Nähe · {n} Orte', closeList: 'Liste schließen', freeAcct: 'Kostenloses Konto',
+    pricesIn: 'Preise in {m}', medSqm: 'Median €/m² · Häuser', medPrice: 'Medianpreis', midHalf: 'Mittlere Hälfte {lo}–{hi} /m²', landLine: 'Grundstücke {v}/m², Median-Grundstück {p}', allPrices: 'Alle Preise',
+    viewProps: 'Immobilien ansehen', aboutArea: 'Über die Gegend' },
+  ro: { detailsH: 'Detalii', allFeats: 'Toate cele {n} caracteristici', fewerFeats: 'Arată mai puține', photosN: '{n} fotografii', allPhotos: 'Toate fotografiile',
+    beachAccess: 'Acces exclusiv la plajă', seaView: 'Vedere la mare', fFirst: 'Prenume', fSurname: 'Nume', dialSearch: 'Caută țara sau prefixul', dialNone: 'Niciun rezultat',
+    msgL: 'Mesaj', nearby: 'În apropiere', nearbyN: 'În apropiere · {n} locuri', closeList: 'Închide lista', freeAcct: 'Cont gratuit',
+    pricesIn: 'Prețuri în {m}', medSqm: 'Mediana €/m² · locuințe', medPrice: 'Prețul median', midHalf: 'Jumătatea de mijloc {lo}–{hi} /m²', landLine: 'Teren {v}/m², lot median {p}', allPrices: 'Toate prețurile',
+    viewProps: 'Vezi proprietățile', aboutArea: 'Despre zonă' },
+  tr: { detailsH: 'Ayrıntılar', allFeats: 'Tüm {n} özellik', fewerFeats: 'Daha az göster', photosN: '{n} fotoğraf', allPhotos: 'Tüm fotoğraflar',
+    beachAccess: 'Plaja özel erişim', seaView: 'Deniz manzarası', fFirst: 'Ad', fSurname: 'Soyad', dialSearch: 'Ülke veya kod ara', dialNone: 'Sonuç yok',
+    msgL: 'Mesaj', nearby: 'Yakında', nearbyN: 'Yakında · {n} yer', closeList: 'Listeyi kapat', freeAcct: 'Ücretsiz hesap',
+    pricesIn: '{m} fiyatları', medSqm: 'Medyan €/m² · konutlar', medPrice: 'Medyan fiyat', midHalf: 'Orta yarı {lo}–{hi} /m²', landLine: 'Arsa {v}/m², medyan parsel {p}', allPrices: 'Tüm fiyatlar',
+    viewProps: 'İlanları gör', aboutArea: 'Bölge hakkında' },
+  he: { detailsH: 'פרטים', allFeats: 'כל {n} המאפיינים', fewerFeats: 'הצג פחות', photosN: '{n} תמונות', allPhotos: 'כל התמונות',
+    beachAccess: 'גישה בלעדית לחוף', seaView: 'נוף לים', fFirst: 'שם פרטי', fSurname: 'שם משפחה', dialSearch: 'חיפוש מדינה או קידומת', dialNone: 'אין התאמה',
+    msgL: 'הודעה', nearby: 'בסביבה', nearbyN: 'בסביבה · {n} מקומות', closeList: 'סגירת הרשימה', freeAcct: 'חשבון חינם',
+    pricesIn: 'מחירים — {m}', medSqm: 'חציון €/מ״ר · בתים', medPrice: 'מחיר חציוני', midHalf: 'החצי האמצעי {lo}–{hi} /מ״ר', landLine: 'קרקע {v}/מ״ר, מגרש חציוני {p}', allPrices: 'כל המחירים',
+    viewProps: 'לצפייה בנכסים', aboutArea: 'על האזור' },
+  ru: { detailsH: 'Подробности', allFeats: 'Все характеристики ({n})', fewerFeats: 'Показать меньше', photosN: 'Фото: {n}', allPhotos: 'Все фото',
+    beachAccess: 'Эксклюзивный доступ к пляжу', seaView: 'Вид на море', fFirst: 'Имя', fSurname: 'Фамилия', dialSearch: 'Поиск страны или кода', dialNone: 'Ничего не найдено',
+    msgL: 'Сообщение', nearby: 'Рядом', nearbyN: 'Рядом · мест: {n}', closeList: 'Закрыть список', freeAcct: 'Бесплатный аккаунт',
+    pricesIn: 'Цены: {m}', medSqm: 'Медиана €/м² · жильё', medPrice: 'Медианная цена', midHalf: 'Средняя половина {lo}–{hi} /м²', landLine: 'Земля {v}/м², медианный участок {p}', allPrices: 'Все цены',
+    viewProps: 'Смотреть объекты', aboutArea: 'О районе' },
+};
+type PUI = PUIBase & PUI103;
+export const PROP_UI = Object.fromEntries(
+  (Object.keys(PROP_UI_BASE) as Lang[]).map((l) => [l, { ...PROP_UI_BASE[l], ...PROP_UI_103[l] }]),
+) as Record<Lang, PUI>;
 
 export function pui(lang: Lang, k: keyof PUI, vars?: Record<string, string | number>): string {
   let s = (PROP_UI[lang] ?? PROP_UI.el)[k];

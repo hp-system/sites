@@ -28,12 +28,14 @@ import { refOf, priceOf, priceVisible, pick } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf, placeOf } from '../lib/gate';
 import { memberOf } from '../lib/member';
 import { coverOf, orderedPhotos, isPhotoOpen, blurSrc, marked, markedSrcSet, markedSrcSetSmall,
-         altOf, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
+         altOf, shareImage, SHARE_W, SHARE_H, heroReady } from '../lib/photos';
+import { priceTables } from '../lib/prices';
+import { DIAL, flag } from '../lib/callback';
 import { money, num, sqm as sqmFmt, seaLabel, clamp } from '../lib/format';
 import { prefix, propertyUrl, listUrl, t, type Lang } from '../lib/i18n';
 import { rentalUrl } from '../lib/contact';
 import { company } from '../lib/company';
-import { ui, facetUrl, FACETS } from '../lib/listing';
+import { ui, facetUrl, FACETS, PAIRS, catKey } from '../lib/listing';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { brand } from '../brand/index';
 import {
@@ -206,6 +208,82 @@ const munis = [...new Set(all.map((p) => muniKey(p.attributes ?? {})).filter(Boo
   });
 
 const loginHref = `${prefix(lang)}/login?next=${encodeURIComponent(here)}`;
+
+// ═══ DESKTOP REDESIGN (#103, approved by George 2026-11-02) ═══════════════════
+// Everything below feeds elements that show only at ≥1024px; phones keep George's layout.
+// 🔒 Same gate as the rest of the page: guests get the municipality only, never the area.
+
+// Highlight chips — only what the data says. The sea chip is George's sea label
+// (front / walking / nearby). «Exclusive access to the beach» and «Sea view» need a feature
+// that says so; the CRM sends none today (checked 2026-11-02 on all 525 listings).
+const featText = feats.map((f) => `${f.slug ?? ''} ${f.label}`.toLowerCase()).join(' | ');
+const highlights = [
+  ...(sea ? [{ k: 'sea', label: sea }] : []),
+  ...(/exclusive access to the beach|αποκλειστικ\S* πρόσβαση/.test(featText) ? [{ k: 'beach', label: pui(lang, 'beachAccess') }] : []),
+  ...(/\bsea[ _-]?view\b|θέα (στη |προς τη )?θάλασσα/.test(featText) ? [{ k: 'view', label: pui(lang, 'seaView') }] : []),
+];
+const FEAT_SHOWN = 11;                       // «All N features» after 11, the button is the 12th cell
+const featsMore = feats.length > FEAT_SHOWN + 1;
+
+// Photo order for the popup is the gallery's (`gallery`) — same index → same blurred file.
+const nPhotos = gallery.length;
+
+// Country-code picker: George's DIAL list; the names in the page language from the runtime.
+const regionName = (() => {
+  try { const d = new Intl.DisplayNames([lang], { type: 'region' }); return (cc: string) => d.of(cc) ?? cc; }
+  catch { return (cc: string) => cc; }
+})();
+const dial = DIAL.map((d) => ({ ...d, name: regionName(d.cc), flag: flag(d.cc) }));
+
+// Price guide of the municipality (George's live guide, lib/prices.ts — the same numbers as
+// /en/halkidiki-property-prices). Municipalities only: the guide's area rows stay off this page.
+const guide = priceTables(all, lang);
+const gHome = guide.homes.find((r) => r.key === myMuni);
+const gLand = guide.land.find((r) => r.key === myMuni);
+const gMax = Math.max(1, ...guide.homes.map((r) => r.perSqm));
+const gMonth = new Date().toLocaleDateString(lang, { month: 'long', year: 'numeric' });
+const pricesHref = '/en/halkidiki-property-prices';
+
+// One photo per tile: the best cover of a listing that matches (watermarked, never this one).
+const usedPh = new Set<string>([item.id]);
+const pickPhoto = (keep: (x: SiteProperty) => boolean) => {
+  const pool = all.filter((p) => !usedPh.has(p.id) && keep(p));
+  const hit = pool.filter((p) => heroReady(p.attributes) && priceVisible(p.attributes ?? {}))
+    .sort((x, y) => priceOf(y.attributes ?? {}) - priceOf(x.attributes ?? {}))[0] ?? pool[0];
+  if (hit) usedPh.add(hit.id);
+  return hit ? coverOf(hit.attributes ?? {}) : null;
+};
+const inMuni = (k: string) => (p: SiteProperty) => muniKey(p.attributes ?? {}) === k;
+// About band photo: a seafront/view cover from the same municipality.
+const bandPhoto = myMuni ? pickPhoto((p) => inMuni(myMuni)(p) && (p.attributes?.sea_access === 'front')) ?? pickPhoto(inMuni(myMuni)) : null;
+
+// Area zone («Property for sale in Halkidiki»): links that are not elsewhere on the page —
+// the municipality's two topic pages, the other municipalities, homes / land, Greece.
+type ZoneCard = { t: string; href: string; photo: ReturnType<typeof coverOf>; about?: string };
+const zone: ZoneCard[] = [];
+for (const [m, k] of PAIRS) {
+  if (muniFacet && m === muniFacet.key) {
+    const f = FACETS.find((x) => x.key === k);
+    const q = f?.q ?? {};
+    const photo = pickPhoto((p) => inMuni(myMuni)(p) && (q.luxury ? p.attributes?.luxury === true : p.attributes?.sea_access === 'front'));
+    if (f && photo) zone.push({ t: `${f.name[lang]} — ${muniFacet.name[lang]}`, href: facetUrl(lang, m, k), photo });
+  }
+}
+for (const f of FACETS.filter((x) => x.q.municipality && x.q.municipality !== myMuni)) {
+  const ap = AREA_PAGES.find((x) => x.kind === 'municipality' && x.q.municipality === f.q.municipality);
+  const photo = pickPhoto(inMuni(f.q.municipality as string));
+  if (photo) zone.push({ t: f.name[lang], href: facetUrl(lang, f.key), photo, about: lang === 'en' && ap ? areaUrl(ap.slug) : undefined });
+}
+for (const k of ['homes', 'land']) {
+  const f = FACETS.find((x) => x.key === k);
+  const photo = f && pickPhoto((p) => catKey(p.attributes ?? {}) === f.q.category);
+  if (f && photo) zone.push({ t: f.name[lang], href: facetUrl(lang, k), photo });
+}
+{
+  const photo = pickPhoto(() => true);
+  if (photo) zone.push({ t: t(lang, 'home.greece'), href: '/en/property-for-sale-in-greece', photo });
+}
+const zonePages = Math.max(1, Math.ceil(zone.length / 3));
 // Το WhatsApp ανοίγει με έτοιμο μήνυμα — ο agent ξέρει αμέσως για ποιο μιλάμε.
 const waText = encodeURIComponent(pui(lang, 'interest', { id }));
 // 📱 Ξεχωριστός αριθμός WhatsApp όταν δηλωθεί· αλλιώς το σταθερό.
@@ -223,7 +301,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         <span aria-hidden="true">·</span>
         <a href={listUrl(lang)}>{ui(lang, 'all')}</a>
         <span aria-hidden="true">·</span>
-        <span>#{id}</span>
+        {/* #103 (SEO): the municipality level, as in the BreadcrumbList JSON-LD. */}
+        {muniFacet && (<><a href={facetUrl(lang, muniFacet.key)}>{muniFacet.name[lang]}</a><span aria-hidden="true">·</span></>)}
+        <span aria-current="page">#{id}</span>
       </nav>
 
       <div class="tt">
@@ -233,7 +313,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
           {/* Ο κλειδωμένος τόπος δηλώνεται ΡΗΤΑ — ο επισκέπτης πρέπει να ξέρει
               ότι υπάρχει κάτι πιο συγκεκριμένο, αλλιώς νομίζει ότι αυτό είναι όλο. */}
           {!viewer.member && (
-            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{pui(lang, 'lockChip')}</span>
+            <a class="chip p-gild" href={loginHref} data-ev="register:unlock_area"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{pui(lang, 'lockChip')}</a>
           )}
         </div>
         <div class="tt__r">
@@ -281,14 +361,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     <div class="galwrap">
       <div class="gal" id="gal">
         {gallery.map(({ p, i, open }) => (
-          <a class:list={['cell', !open && 'cell--locked']} href={loginHref}
+          <a class:list={['cell', !open && 'cell--locked']} href={loginHref} data-gi={i}
              data-ev={open ? 'property:photo_open' : 'register:unlock_photos'}
              aria-label={open ? altOf(p, lang, heading) : pui(lang, 'morePhotos', { n: hidden })}>
             {open ? (
               <img src={marked(p.url, i === 0 ? 1920 : 800)} srcset={markedSrcSet(p.url)}
                    sizes={i === 0
-                     ? '(min-width: 1280px) 592px, (min-width: 900px) calc(50vw - 48px), 100vw'
-                     : '(min-width: 1280px) 296px, (min-width: 900px) calc(25vw - 24px), 100vw'}
+                     ? '(min-width: 1024px) 50vw, (min-width: 900px) calc(50vw - 48px), 100vw'
+                     : '(min-width: 1024px) 25vw, (min-width: 900px) calc(25vw - 24px), 100vw'}
                    alt={i === 0 ? altOf(p, lang, heading) : ''} width="800" height="533"
                    loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
             ) : (
@@ -304,7 +384,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               <span class="lockover">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
                 <b>{pui(lang, 'morePhotos', { n: hidden })}</b>
-                <em>{pui(lang, 'freeReg')}</em>
+                <em data-reg>{pui(lang, 'freeReg')}</em>
               </span>
             )}
             {!open && i !== lockAt && (
@@ -337,6 +417,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
       <div class="cols">
         <div class="main">
           {/* ΓΡΑΜΜΗ ΒΑΣΙΚΩΝ — χωρίς έτος (George: «δεν με ενδιαφέρει»). */}
+          {/* #103: H2 «Details» for search engines (hidden on screen) + the highlight chips (desktop). */}
+          <h2 class="sr-only">{pui(lang, 'detailsH')}</h2>
+          <div class="hl">
+            {highlights.map((h) => (
+              <span class="hl__c">
+                {h.k === 'sea' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 12c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 17c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg>}
+                {h.k === 'beach' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 0 1 18 0z"/><path d="M12 11v10"/><path d="M2 21h20"/></svg>}
+                {h.k === 'view' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg>}
+                {h.label}
+              </span>
+            ))}
+          </div>
           <div class="strip">
             {sqmN > 0 && <div><b class="num">{sqmFmt(sqmN, lang)}</b><span>{pui(lang, 'sqmL')}</span></div>}
             {/* 🪤 ΥΠΝΟΔΩΜΑΤΙΑ ΣΕ ΧΩΡΑΦΙ. Η γη είναι το **40%** του καταλόγου (207 από 517)
@@ -372,13 +464,22 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
           {feats.length > 0 && (<>
             <h2 class="sec">{pui(lang, 'feats')}</h2>
-            <ul class="feats">
+            <ul class:list={['feats', featsMore && 'feats--more']} id="feats">
               {feats.map((f) => (
                 <li>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d={featureIcon(f)} /></svg>
                   <span>{f.label}</span>
                 </li>
               ))}
+              {featsMore && (
+                <li class="feats__all">
+                  <button type="button" class="fall" aria-controls="feats" aria-expanded="false"
+                          data-more={pui(lang, 'allFeats', { n: feats.length })} data-less={pui(lang, 'fewerFeats')}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4zM8 12h8M12 8v8"/></svg>
+                    <span>{pui(lang, 'allFeats', { n: feats.length })}</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </>)}
 
@@ -405,35 +506,70 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               υπάρχει πλαίσιο που ΔΕΝ περιέχει τη θέση. Οι αποστάσεις όμως
               φαίνονται — δίνουν αξία χωρίς να προδίδουν το σημείο. */}
           <h2 class="sec">{pui(lang, 'location')}</h2>
-          {viewer.member ? (<>
-            <p class="place">{place}{muni && place !== muni ? ` · ${muni}` : ''}</p>
-            {mapView && (
-              /* Μέλος: κύκλος 2 χλμ γύρω από το ΜΕΤΑΚΙΝΗΜΕΝΟ σημείο του CRM — ποτέ πινέζα.
-                 Exclusive: πινέζα στο ακριβές σημείο. Ο χάρτης φορτώνει μόνο αν ανοίξει η ενότητα. */
-              <figure class="pmap">
-                <div class="pmap__map" id="pmap" data-lat={mapView.lat} data-lng={mapView.lng}
-                     data-exact={mapView.exact ? '1' : ''} data-r={CIRCLE_M}
-                     role="img" aria-label={pui(lang, mapView.exact ? 'mapExact' : 'mapCircle')}></div>
-                <figcaption class="pmap__cap">
-                  <span>{pui(lang, mapView.exact ? 'mapExact' : 'mapCircle')}</span>
-                  {mapView.exact && (
-                    <a href={`https://www.google.com/maps/search/?api=1&query=${mapView.lat},${mapView.lng}`}
-                       target="_blank" rel="noopener" data-ev="property:map_open">{pui(lang, 'mapOpen')}</a>
-                  )}
-                </figcaption>
-              </figure>
+          {viewer.member && <p class="place">{place}{muni && place !== muni ? ` · ${muni}` : ''}</p>}
+          {/* #103: map (members) or the lock (guests) with the distances as a «Nearby» panel on desktop.
+              Every distance is in the HTML at load; the panel only shows/hides them. */}
+          <div class:list={['loc', dists.length > 0 && 'loc--near', viewer.member && !mapView && 'loc--nomap']} id="loc">
+            {viewer.member ? (<>
+              {mapView && (
+                /* Μέλος: κύκλος 2 χλμ γύρω από το ΜΕΤΑΚΙΝΗΜΕΝΟ σημείο του CRM — ποτέ πινέζα.
+                   Exclusive: πινέζα στο ακριβές σημείο. Ο χάρτης φορτώνει μόνο αν ανοίξει η ενότητα. */
+                <figure class="pmap">
+                  <div class="pmap__map" id="pmap" data-lat={mapView.lat} data-lng={mapView.lng}
+                       data-exact={mapView.exact ? '1' : ''} data-r={CIRCLE_M}
+                       role="img" aria-label={pui(lang, mapView.exact ? 'mapExact' : 'mapCircle')}></div>
+                  <figcaption class="pmap__cap">
+                    <span>{pui(lang, mapView.exact ? 'mapExact' : 'mapCircle')}</span>
+                    {mapView.exact && (
+                      <a href={`https://www.google.com/maps/search/?api=1&query=${mapView.lat},${mapView.lng}`}
+                         target="_blank" rel="noopener" data-ev="property:map_open">{pui(lang, 'mapOpen')}</a>
+                    )}
+                  </figcaption>
+                </figure>
+              )}
+            </>) : (
+              <div class="maplock">
+                <span class="maplock__bg" aria-hidden="true"></span>
+                <span class="maplock__in">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+                  <b>{pui(lang, 'unlockH')}</b>
+                  <em>{pui(lang, 'unlockP')}</em>
+                  <a class="btn btn--go p-gild" href={loginHref} data-ev="register:unlock_area">{pui(lang, 'freeReg')}</a>
+                </span>
+              </div>
             )}
-          </>) : (
-            <div class="maplock">
-              <span class="maplock__bg" aria-hidden="true"></span>
-              <span class="maplock__in">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
-                <b>{pui(lang, 'unlockH')}</b>
-                <em>{pui(lang, 'unlockP')}</em>
-                <a class="btn btn--go" href={loginHref} data-ev="register:unlock_area">{pui(lang, 'freeReg')}</a>
-              </span>
-            </div>
-          )}
+
+            {dists.length > 0 && (<>
+              <div class="near" id="near">
+                <div class="near__h">
+                  <span>{pui(lang, 'nearby')}</span>
+                  <button type="button" class="near__x" data-near aria-controls="near" aria-expanded="true" aria-label={pui(lang, 'closeList')}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+                  </button>
+                </div>
+                <ul class="dists">
+                  {/* 🪤 ΕΓΡΑΦΑ «ΠΕΡΠΑΤΗΜΑ» ΚΑΙ ΕΒΓΑΙΝΕ «ΑΕΡΟΔΡΟΜΙΟ 105,8 ΧΛΜ ΠΕΡΠΑΤΗΜΑ».
+                      Ο τροφοδότης βάζει την απόσταση στο πεδίο `walk_km` ΠΑΝΤΑ, και το
+                      `drive_km` μένει 0 όταν δεν το μέτρησε. Το διάβασα ως «0 οδικώς
+                      σημαίνει ότι πάει με τα πόδια» — που είναι λάθος: σημαίνει «δεν
+                      ξέρω». Ίδιο και σε τράπεζα 12,7 χλμ, νοσοκομείο 8,8 χλμ.
+                      Η ένδειξη τρόπου ΕΦΥΓΕ: δεν την ξέρουμε, δεν προσθέτει τίποτα, και
+                      όταν βγαίνει λάθος υπονομεύει ΟΛΑ τα υπόλοιπα νούμερα της σελίδας.
+                      🌍 Και η μονάδα ΔΕΝ γράφεται εδώ — ήταν «χλμ» καρφωτό, δηλαδή θα
+                         έλεγε «105,8 χλμ» και στα γερμανικά. */}
+                  {dists.map((d) => {
+                    const poi = poiName(d, lang);
+                    const km = Math.max(d.drive_km ?? 0, d.walk_km ?? 0);
+                    return <li><span>{poi}</span><b class="num">{num(km, lang)} {pui(lang, 'kmU')}</b></li>;
+                  })}
+                </ul>
+              </div>
+              <button type="button" class="near__open" data-near aria-controls="near" aria-expanded="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                <span>{pui(lang, 'nearbyN', { n: dists.length })} ›</span>
+              </button>
+            </>)}
+          </div>
 
           {hasExclusive && (
             /* ═══ EXCLUSIVE (#53) — ΜΟΝΟ με έγκριση George από το EALIDA ═══
@@ -462,61 +598,114 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             </section>
           )}
 
-          {dists.length > 0 && (
-            <ul class="dists">
-              {/* 🪤 ΕΓΡΑΦΑ «ΠΕΡΠΑΤΗΜΑ» ΚΑΙ ΕΒΓΑΙΝΕ «ΑΕΡΟΔΡΟΜΙΟ 105,8 ΧΛΜ ΠΕΡΠΑΤΗΜΑ».
-                  Ο τροφοδότης βάζει την απόσταση στο πεδίο `walk_km` ΠΑΝΤΑ, και το
-                  `drive_km` μένει 0 όταν δεν το μέτρησε. Το διάβασα ως «0 οδικώς
-                  σημαίνει ότι πάει με τα πόδια» — που είναι λάθος: σημαίνει «δεν
-                  ξέρω». Ίδιο και σε τράπεζα 12,7 χλμ, νοσοκομείο 8,8 χλμ.
-                  Η ένδειξη τρόπου ΕΦΥΓΕ: δεν την ξέρουμε, δεν προσθέτει τίποτα, και
-                  όταν βγαίνει λάθος υπονομεύει ΟΛΑ τα υπόλοιπα νούμερα της σελίδας.
-                  🌍 Και η μονάδα ΔΕΝ γράφεται εδώ — ήταν «χλμ» καρφωτό, δηλαδή θα
-                     έλεγε «105,8 χλμ» και στα γερμανικά. */}
-              {dists.map((d) => {
-                const poi = poiName(d, lang);
-                const km = Math.max(d.drive_km ?? 0, d.walk_km ?? 0);
-                return <li><span>{poi}</span><b class="num">{num(km, lang)} {pui(lang, 'kmU')}</b></li>;
-              })}
-            </ul>
-          )}
-
           {(muniArea || muniList) && muniName && (
             /* About the municipality, with links (as on the live page). The text exists in English
                only for now; other languages get the links until the translations come. */
-            <section class="muni" aria-labelledby="muni-h">
-              <h2 class="sec" id="muni-h">{pui(lang, 'aboutMuni', { m: muniName })}</h2>
-              {lang === 'en' && muniArea && <p class="muni__p">{muniArea.intro}</p>}
-              <ul class="muni__l">
-                {lang === 'en' && muniArea && <li><a href={areaUrl(muniArea.slug)}>{muniArea.h1}</a></li>}
-                {muniList && <li><a href={facetUrl(lang, muniList.key)}>{pui(lang, 'allInMuni', { m: muniName })}</a></li>}
-                <li><a href="/en/articles/business-news/taxes-foreigners-properties-greece">{pui(lang, 'costs')}</a></li>
-              </ul>
+            <section class="muni" aria-labelledby="muni-h" id="band">
+              {/* #103 desktop: the area photo runs edge to edge behind two glass cards («window»: the
+                  photo stays still, the page scrolls over it). Loaded by the script only on desktop
+                  and only when the band comes near — phones never download it. */}
+              {bandPhoto && (
+                <div class="band__win" aria-hidden="true"><div class="band__ph">
+                  <img data-src={marked(bandPhoto.url, 1920)} alt={altOf(bandPhoto, lang, t(lang, 'home.area_alt', { name: muniName }))} decoding="async" />
+                </div></div>
+              )}
+              <div class="band__cards" id="bandCards">
+                <div class="muni__card">
+                  <div>
+                    <h2 class="sec" id="muni-h">{pui(lang, 'aboutMuni', { m: muniName })}</h2>
+                    {lang === 'en' && muniArea && <p class="muni__p">{muniArea.intro}</p>}
+                  </div>
+                  <ul class="muni__l">
+                    {lang === 'en' && muniArea && <li><a href={areaUrl(muniArea.slug)}>{muniArea.h1}</a></li>}
+                    {muniList && <li class="muni__go"><a href={facetUrl(lang, muniList.key)}>{pui(lang, 'allInMuni', { m: muniName })}</a></li>}
+                    <li><a href="/en/articles/business-news/taxes-foreigners-properties-greece">{pui(lang, 'costs')}</a></li>
+                  </ul>
+                </div>
+                {gHome && (
+                  /* George's live price guide (lib/prices.ts), municipality level only. */
+                  <div class="muni__pr">
+                    <h3 class="pr__h">{pui(lang, 'pricesIn', { m: muniName })} <span>· {gMonth}</span></h3>
+                    <div class="pr__big">
+                      <div><b class="num">{money(gHome.perSqm, lang)}</b><span>{pui(lang, 'medSqm')}</span></div>
+                      <div><b class="num">{money(gHome.typical, lang)}</b><span>{pui(lang, 'medPrice')}</span></div>
+                    </div>
+                    <p class="pr__line">
+                      {pui(lang, 'midHalf', { lo: money(gHome.low, lang), hi: num(gHome.high, lang) })}
+                      {gLand && <> · {pui(lang, 'landLine', { v: money(gLand.perSqm, lang), p: sqmFmt(gLand.typical, lang) })}</>}
+                    </p>
+                    <div class="pr__bars">
+                      {guide.homes.map((r) => (
+                        <div class:list={['pr__bar', r.key === myMuni && 'pr__bar--on']}>
+                          <span>{FACETS.find((f) => f.q.municipality === r.key)?.name[lang] ?? r.name}</span>
+                          <i style={`--w:${Math.round((r.perSqm / gMax) * 100)}%`}></i>
+                          <span class="num">{money(r.perSqm, lang)}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <a class="pr__all" href={pricesHref}>{pui(lang, 'allPrices')} <span aria-hidden="true">→</span></a>
+                  </div>
+                )}
+              </div>
             </section>
           )}
 
           {/* ═══ ΤΡΙΤΟ ΣΠΡΩΞΙΜΟ ═══ */}
           {!viewer.member && (
-            <div class="full">
+            <div class="full" id="full">
+              <svg class="full__lock" id="fullLock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="11"/><path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/><circle cx="12" cy="15.4" r="1.3"/><path d="M12 16.7v2.1"/></svg>
               <span class="full__i" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10.5" width="16" height="10.5" rx="1"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
               </span>
               <div>
+                <span class="full__k">{pui(lang, 'freeAcct')}</span>
                 <b class="t-h3 full__h">{ui(lang, 'joinH')}</b>
                 <ul class="full__l">
                   <li>{ui(lang, 'joinB1')}</li><li>{ui(lang, 'joinB2')}</li><li>{ui(lang, 'joinB3')}</li>
                 </ul>
               </div>
-              <a class="full__b" href={loginHref} data-ev="register:property_block">{ui(lang, 'joinCta')}</a>
+              <a class="full__b p-gild p-gild--dk" href={loginHref} data-ev="register:property_block">{ui(lang, 'joinCta')}</a>
             </div>
           )}
 
           {similar.length > 0 && (<>
             <h2 class="sec">{pui(lang, 'similar')}</h2>
             <ul class="sim">
-              {similar.map((p) => <li><PropertyCard p={p} lang={lang} viewer={viewer} /></li>)}
+              {similar.map((p) => <li><PropertyCard p={p} lang={lang} viewer={viewer} plain /></li>)}
             </ul>
           </>)}
+
+          {zone.length > 0 && (
+            /* #103 desktop: «Property for sale in Halkidiki» — links not elsewhere on the page,
+               three cards at a time, a page every 5 s. Not a heading (headings stay as they were). */
+            <section class="zone" id="zone" aria-label={ui(lang, 'all')}>
+              <div class="zone__h">
+                <p class="zone__t">{ui(lang, 'all')}</p>
+                {zonePages > 1 && (
+                  <div class="rdash" role="group" aria-label={t(lang, 'home.pages')}>
+                    {Array.from({ length: zonePages }).map((_, k) => (
+                      <button type="button" class:list={[k === 0 && 'on']} data-zp={k} aria-label={t(lang, 'home.page', { n: k + 1 })} aria-current={k === 0 ? 'true' : 'false'}><span></span></button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div class="zone__rail"><div class="zone__track" id="zoneTrack">
+                {zone.map((c) => (
+                  <div class="pc">
+                    <a class="pci" href={c.href} tabindex="-1" aria-hidden="true">
+                      {c.photo && <img src={marked(c.photo.url, 800)} srcset={markedSrcSetSmall(c.photo.url)} sizes="300px"
+                                       alt={altOf(c.photo, lang, c.t)} width="800" height="533" loading="lazy" decoding="async" />}
+                    </a>
+                    <a class="pct" href={c.href}>{c.t}</a>
+                    <span class="pca">
+                      <a class="pcb" href={c.href}>{pui(lang, 'viewProps')}</a>
+                      {c.about && <a class="pcl" href={c.about}>{pui(lang, 'aboutArea')} ›</a>}
+                    </span>
+                  </div>
+                ))}
+              </div></div>
+            </section>
+          )}
         </div>
 
         {/* ═══ Η ΚΑΡΤΑ ΕΝΕΡΓΕΙΩΝ ══════════════════════════════════════════
@@ -524,15 +713,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             «φοβάμαι πραγματικά να αφαιρέσω τελείως το request form».
             Η σειρά ΔΕΝ είναι οριστική: κάθε κουμπί έχει δικό του `data-ev`,
             μετράμε 2-3 μήνες και μετά αποφασίζουμε τι πάει πρώτο. */}
-        <aside class="side">
+        <aside class="side" id="side">
           <div class="card">
-            {priceOk && price > 0 ? (<>
-              {oldPrice && <span class="old num">{money(oldPrice, lang)}</span>}
-              <p class="price num t-price">{money(price, lang)}</p>
-              {perSqm && <p class="per num">{money(perSqm, lang)} {pui(lang, 'perSqm')}</p>}
-            </>) : (
-              <p class="price t-h3">{t(lang, 'card.price_request')}</p>
-            )}
+            {/* #103 desktop: one line, level with the highlight chips. */}
+            <div class="pbp">
+              {priceOk && price > 0 ? (<>
+                {oldPrice && <span class="old num">{money(oldPrice, lang)}</span>}
+                <p class="price num t-price">{money(price, lang)}</p>
+                {perSqm && <p class="per num">{money(perSqm, lang)} {pui(lang, 'perSqm')}</p>}
+              </>) : (
+                <p class="price t-h3">{t(lang, 'card.price_request')}</p>
+              )}
+            </div>
 
             <button class="cta" type="button" data-tour data-ev="lead:tour_open">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
@@ -559,11 +751,38 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               <span class="qf__h lab">{pui(lang, 'reqInfo')}</span>
               <label class="sr-only" for="qf-n">{pui(lang, 'fName')}</label>
               <input id="qf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} value={meFav?.name || undefined} />
+              {/* #103 desktop: name and surname apart (sent together as `name`); phones keep the one field. */}
+              <input class="qf__d" id="qf-f" name="first" maxlength="60" autocomplete="given-name" placeholder={pui(lang, 'fFirst')} aria-label={pui(lang, 'fFirst')}
+                     value={meFav?.name ? meFav.name.split(' ')[0] : undefined} />
+              <input class="qf__d" id="qf-l" name="last" maxlength="60" autocomplete="family-name" placeholder={pui(lang, 'fSurname')} aria-label={pui(lang, 'fSurname')}
+                     value={meFav?.name && meFav.name.includes(' ') ? meFav.name.slice(meFav.name.indexOf(' ') + 1) : undefined} />
               <label class="sr-only" for="qf-p">{pui(lang, 'fPhone')}</label>
-              <input id="qf-p" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder={pui(lang, 'fPhone')} value={meFav?.phone || undefined} />
+              <div class="qf__ph" id="qf-ph">
+                {/* #103 desktop: country code with search (George's DIAL list). */}
+                <button type="button" class="dial" id="dialBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="dialPop" aria-label={pui(lang, 'cbCountry')}>
+                  <span id="dialL">🇬🇷 +30</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+                </button>
+                <input id="qf-p" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder={pui(lang, 'fPhone')} value={meFav?.phone || undefined} />
+                <div class="dial__pop" id="dialPop" hidden>
+                  <div class="dial__s">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                    <input type="search" id="dialQ" placeholder={pui(lang, 'dialSearch')} aria-label={pui(lang, 'dialSearch')} autocomplete="off" />
+                  </div>
+                  <div class="dial__l" role="listbox" aria-label={pui(lang, 'cbCountry')}>
+                    {dial.map((d) => (
+                      <button type="button" role="option" aria-selected="false" data-cc={d.cc} data-code={d.code} data-q={`${d.name} ${d.cc} ${d.code}`.toLowerCase()}>
+                        <span class="dial__f">{d.flag}</span><span class="dial__n">{d.name}</span><span class="dial__c num"><bdi dir="ltr">+{d.code}</bdi></span>
+                      </button>
+                    ))}
+                    <p class="dial__none" hidden>{pui(lang, 'dialNone')}</p>
+                  </div>
+                </div>
+              </div>
               <label class="sr-only" for="qf-e">{pui(lang, 'fEmail')}</label>
               <input id="qf-e" name="email" type="email" required maxlength="200" autocomplete="email" placeholder={pui(lang, 'fEmail')} value={meFav?.email || undefined} />
               <p class="qf__int">{pui(lang, 'interest', { id })}</p>
+              <textarea class="qf__d qf__msg" id="qf-m" name="message" rows="3" maxlength="2000" aria-label={pui(lang, 'msgL')}>{pui(lang, 'interest', { id }) + '. '}</textarea>
               {/* 🛡️ Παγίδα-μέλι: κρυφό για άνθρωπο, ορατό για ρομπότ. Δες api/inquiry.ts */}
               <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
               <button type="submit">{pui(lang, 'send')}</button>
@@ -616,6 +835,56 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         <p class="qf__fine qf__priv">{pui(lang, 'privNote')} <a href={privacyHref}>{pui(lang, 'privLink')}</a></p>
       </form>
     </dialog>
+
+    {/* ═══ ALL PHOTOS (#103, desktop) ═══════════════════════════════════════
+        Opens from the gallery. Rendered at load, hidden; its images are lazy, so nothing
+        downloads until it opens. 🔒 Same rule as the gallery: a locked photo is the 24-pixel
+        file from our server (`blurSrc`) — the real photo's address is never in the page.
+        Guest: every tile is a sign-in link (George's login dialog opens over the popup).
+        Member: a tile opens the photo larger inside the popup. */}
+    <dialog class="gpop" id="gpop" aria-label={pui(lang, 'allPhotos')}>
+      <div class="gpop__bar">
+        <span class="gpop__t">{heading} <span>· {pui(lang, 'photosN', { n: nPhotos })}</span></span>
+        <button type="button" class="gpop__x" data-gpop-x aria-label={t(lang, 'ui.close')}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+        </button>
+      </div>
+      <div class="gpop__grid">
+        {gallery.map(({ p, i, open }) => {
+          const label = pui(lang, 'photoOf', { a: i + 1, b: nPhotos });
+          const img = open
+            ? <img src={marked(p.url, 800)} srcset={markedSrcSetSmall(p.url)} sizes="300px" alt={altOf(p, lang, heading)}
+                   width="800" height="533" loading="lazy" decoding="async" />
+            : <img class="gpop__bl" src={blurSrc(id, i)} alt="" width="800" height="533" loading="lazy" decoding="async" />;
+          return viewer.member ? (
+            <button type="button" class="gpop__ph" data-big={open ? marked(p.url, 1920) : undefined} aria-label={label}>{img}</button>
+          ) : (
+            <a class="gpop__ph" href={loginHref} aria-label={open ? label : pui(lang, 'morePhotos', { n: hidden })}
+               data-ev={open ? 'property:photo_open' : 'register:unlock_photos'}>
+              {img}
+              {!open && (
+                <span class="gpop__lk" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                </span>
+              )}
+            </a>
+          );
+        })}
+      </div>
+      {viewer.member && (
+        <div class="gpop__big" id="gbig" hidden>
+          <img alt="" />
+          <button type="button" class="gpop__x gpop__bx" data-gbig-x aria-label={t(lang, 'ui.close')}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+          </button>
+        </div>
+      )}
+    </dialog>
+
+    {/* Back to top (#103, as on home and the list). */}
+    <button type="button" id="toTop" class="p-totop" aria-label={t(lang, 'home.top')}>
+      <svg width="14" height="16" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M7 15V2M1.5 7.5L7 2l5.5 5.5"/></svg>
+    </button>
 
     {/* ═══ ΚΙΝΗΤΟ: ΤΟ «ΚΛΗΣΗ» — πάρε μας τώρα ή να σε καλέσουμε (#82) ═══ */}
     <dialog class="sheet" id="callsheet">
@@ -899,6 +1168,337 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .sheet__now { border: 1px solid var(--ink); padding: 13px 12px; display: flex; justify-content: space-between;
                 align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 15px; }
   .sheet__now small { color: var(--muted); font-size: 13px; }
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     #103 — DESKTOP REDESIGN of the property page (approved by George 2026-11-02).
+     Everything new is hidden below 1024px; phones keep George's layout above.
+     ═══════════════════════════════════════════════════════════════════════ */
+  .chip { text-decoration: none; }
+  .hl, .feats .feats__all, .near__h, .near__open, .band__win, .muni__pr, .full__lock, .full__k, .zone,
+  .qf__d, .dial, .dial__pop, .p-totop { display: none; }
+  .qf__ph { display: contents; }
+  .gpop:not([open]) { display: none; }
+
+  @media (min-width: 1024px) {
+    .prop { padding-top: 0; overflow-x: clip; }
+
+    /* ── title block ── */
+    .crumb { padding-top: 28px; gap: 6px; }
+    .crumb a { color: var(--muted); }
+    .tt { align-items: flex-end; margin: 12px 0 16px; }
+    .tt__l { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 10px; }
+    .tt__h { flex: 1 0 100%; font-size: 36px; font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
+    .lux { margin: 0; vertical-align: 0; padding: 5px 9px; }
+    .chip { margin: 0 0 0 6px; padding: 4px 8px; gap: 6px; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+    .chip svg { width: 11px; height: 11px; }
+    .tt__r { align-self: flex-end; gap: 8px; }
+    .tt__r .btn { height: auto; min-height: 0; padding: 4px 8px; gap: 6px; font-size: 10.5px; letter-spacing: .14em; font-weight: 500; line-height: 1.6;
+                  border-color: rgba(14,18,20,.30); background: var(--paper); transition: background .2s ease, border-color .2s ease; }
+    .tt__r .btn svg { width: 11px; height: 11px; transition: transform .25s ease; }
+    .tt__r .btn:hover { opacity: 1; background: var(--paper-2); border-color: var(--ink); }
+    .tt__r .btn:hover svg { transform: scale(1.12); }
+    .tt__r .btn--fav svg * { transition: stroke .2s ease, fill .25s ease; }
+    .tt__r .btn--fav:hover svg { color: var(--gold-soft); fill: var(--gold-soft); }
+
+    /* ── gallery: edge to edge, rows grow with the width so the photos keep their shape ── */
+    .galwrap { max-width: none; padding-inline: 0; margin: 0; }
+    .gal { height: auto; grid-auto-rows: auto; grid-template-rows: repeat(2, calc((100vw - 16px) / 4 * .79)); }
+    .gal:not(:has(.cell)) { display: none; }
+    .cell img { transition: transform .45s ease; }
+    .cell:not(.cell--locked) { cursor: zoom-in; }
+    .cell:not(.cell--locked):hover img { transform: scale(1.02); }
+    .cell--locked:has(.lockover) { cursor: pointer; }
+    .lockover { gap: 12px; }
+    .lockover em { border: 1px solid var(--gold-dk);
+      border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
+      color: var(--gold-dk-text); transition: color .9s ease-in-out; }
+    .lockover em:hover { color: var(--gold-dk-hover); }
+
+    /* ── two columns: content + sticky price box (the box = the last gallery column) ── */
+    .cols { grid-template-columns: minmax(0, 1fr) calc((100% - 16px) / 4); gap: 8px; padding: 16px 0 0; align-items: start; }
+    .main { display: flex; flex-direction: column; padding-inline-end: 24px; align-self: stretch; }
+    .main > * { flex: none; }
+
+    /* highlights + facts: fixed heights, so the price box lines up (chips 40 · facts 77) */
+    .hl { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; margin-bottom: 10px; }
+    .hl__c { display: inline-flex; align-items: center; gap: 8px; height: 40px; box-sizing: border-box; padding: 7px 12px;
+             border: 1px solid var(--line); font-size: 13.5px; font-weight: 600; }
+    .hl__c svg { width: 18px; height: 18px; flex: none; }
+    .strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); border: 0;
+             border-top: 1px solid var(--line); border-inline-end: 1px solid var(--line); }
+    .strip div { min-width: 0; height: 77px; box-sizing: border-box; padding: 14px 6px; border: 0;
+                 border-inline-start: 1px solid var(--line); border-bottom: 1px solid var(--line);
+                 display: flex; flex-direction: column-reverse; align-items: center; justify-content: center; gap: 6px; text-align: center; }
+    .strip div:last-child { border-inline-end: 0; }
+    .strip span { white-space: nowrap; font-weight: 400; }
+    .strip b { line-height: 1.25; }
+    .lfacts { margin: 16px 0 0; }
+
+    .sec { color: var(--ink); background: var(--paper-2); height: 40px; box-sizing: border-box; line-height: 22px;
+           padding: 9px 16px; margin: 32px 0 12px; }
+    .desc { line-height: 1.6; max-width: none; }
+
+    .feats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 32px; }
+    .feats svg { width: 22px; height: 22px; }
+    .feats--more:not(.feats--all) li:nth-child(n + 12):not(.feats__all) { display: none; }
+    .feats .feats__all { display: flex; }
+    .fall { appearance: none; display: flex; gap: 10px; align-items: center; background: none; border: 0; padding: 0; margin: 0;
+            font: inherit; font-size: 14px; color: var(--muted); cursor: pointer; text-align: start; transition: color .15s ease; }
+    .fall svg { color: currentColor; }
+    .fall span { text-decoration: underline; text-underline-offset: 4px; }
+    .fall:hover { color: var(--ink); font-weight: 600; }
+    .fall:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+    .floors { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-inline-start: 0; }
+    .fl { border: 0; border-inline-start: 1px solid var(--line); padding: 18px 16px; text-align: center; }
+    .fl__h { margin-bottom: 10px; }
+
+    /* ── location: map / lock with the «Nearby» panel ── */
+    .place { margin: 0 0 8px; }
+    .loc { position: relative; height: 380px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); }
+    .loc--nomap { height: auto; overflow: visible; border: 0; }
+    .loc .maplock { height: 100%; }
+    .loc .maplock__in { transition: padding .25s ease; }
+    .loc--near.is-open .maplock__in { padding-inline-end: 324px; }
+    .loc .pmap { margin: 0; height: 100%; }
+    .loc .pmap__map { height: 100%; }
+    .loc .pmap__cap { position: absolute; inset-inline-start: 12px; bottom: 12px; z-index: 500; margin: 0; background: var(--paper);
+                      border: 1px solid var(--line); padding: 8px 12px; color: var(--ink-2); gap: 12px; }
+    .near { position: absolute; top: 0; bottom: 0; inset-inline-end: 0; width: 300px; z-index: 600; background: var(--paper);
+            border-inline-start: 1px solid var(--line); display: flex; flex-direction: column; transform: translateX(101%); transition: transform .25s ease; }
+    :global([dir='rtl']) .near { transform: translateX(-101%); }
+    .loc--near.is-open .near { transform: none; }
+    .loc--nomap .near { position: static; width: auto; transform: none; border: 1px solid var(--line); }
+    .near__h { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 8px 18px; border-bottom: 1px solid var(--line);
+               font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+    .loc--nomap .near__h { display: none; }
+    .near__x { appearance: none; width: 28px; height: 28px; display: grid; place-items: center; background: none; border: 0; cursor: pointer; padding: 0; color: var(--ink); }
+    .near__x svg { width: 11px; height: 11px; }
+    .near .dists { flex: 1; overflow-y: auto; margin: 0; padding: 2px 18px; display: block; }
+    .near .dists li { padding: 7px 0; border-bottom: 1px solid var(--line-soft); align-items: center; gap: 10px; line-height: 1.3; }
+    .near .dists li:last-child { border-bottom: 0; }
+    .near .dists span { color: var(--muted); }
+    .near__open { position: absolute; inset-inline-end: 12px; bottom: 12px; z-index: 600; display: none; gap: 8px; align-items: center; height: 36px;
+                  padding: 0 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 13px;
+                  font-weight: 600; cursor: pointer; }
+    .near__open svg { width: 16px; height: 16px; }
+    .loc--near:not(.is-open):not(.loc--nomap) .near__open { display: flex; }
+    .near__x:focus-visible, .near__open:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+    /* ── About <municipality>: the photo band edge to edge, two glass cards, attached to Location ── */
+    .muni { position: relative; min-height: 390px; margin-top: 0; }
+    .band__win { display: block; position: absolute; top: 0; bottom: 0; left: -100vw; right: -100vw; overflow: hidden; background: var(--paper-2); }
+    .band__ph { position: absolute; inset: 0; clip-path: inset(0); }
+    .band__ph img { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; display: block; opacity: 0; transition: opacity .4s ease; }
+    .band__ph img.on { opacity: 1; }
+    .band__cards { position: relative; display: flex; gap: 24px; align-items: stretch; will-change: transform; }
+    .muni__card, .muni__pr {
+      position: relative; min-width: 0; box-sizing: border-box;
+      background: linear-gradient(160deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.64) 45%, rgba(255,255,255,.72) 100%);
+      -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+      box-shadow: 0 10px 30px rgba(10,30,40,.16);
+    }
+    .muni__card { flex: 54 1 0; padding: 18px 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+    .muni .sec { background: none; height: auto; padding: 0; margin: 0 0 8px; font-size: 24px; font-weight: 300; line-height: 1.14;
+                 letter-spacing: -.016em; text-transform: none; }
+    .muni__p { margin: 0; font-size: 14px; line-height: 1.6; max-width: none; }
+    .muni__l { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13.5px; }
+    .muni__l a { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+    .muni__l a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+    .muni__go { order: -1; flex: 1 0 100%; }
+    .muni__go a { display: flex; align-items: center; justify-content: center; height: 38px; background: var(--ink); color: var(--paper);
+                  font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600; transition: background .2s ease; }
+    .muni__go a:hover { background: var(--ink-hover); color: var(--paper); text-decoration: none; }
+    .muni__pr { display: flex; flex: 46 1 0; padding: 16px 22px; flex-direction: column; gap: 9px; }
+    .pr__h { margin: 0; font-size: 24px; font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
+    .pr__h span { font-size: 14px; color: var(--muted); }
+    .pr__big { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pr__big div { display: flex; flex-direction: column; gap: 2px; }
+    .pr__big b { font-size: 26px; font-weight: 600; line-height: 1.05; letter-spacing: -.012em; }
+    .pr__big span, .pr__line { font-size: 13.5px; color: var(--muted); }
+    .pr__line { margin: 0; color: var(--ink-2); font-size: 14px; }
+    .pr__bars { display: flex; flex-direction: column; gap: 3px; padding-top: 8px; border-top: 1px solid rgba(14,18,20,.10); }
+    .pr__bar { display: grid; grid-template-columns: 124px 1fr 72px; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+    .pr__bar i { display: block; height: 6px; width: var(--w); background: rgba(14,18,20,.16); }
+    .pr__bar span:last-child { text-align: end; }
+    .pr__bar--on { color: var(--ink); font-weight: 600; }
+    .pr__bar--on i { background: var(--ink); }
+    .pr__all { margin-top: auto; align-self: flex-end; font-size: 13.5px; color: var(--ink); white-space: nowrap; }
+    :global([dir='rtl']) .pr__all span { display: inline-block; transform: scaleX(-1); }
+
+    /* ── Free account: black, flush under the band, big faint lock ── */
+    .full { position: relative; overflow: hidden; margin-top: 0; background: var(--ink-deep); padding: 26px 28px;
+            grid-template-columns: 1fr auto; gap: 0 28px; align-items: center; }
+    .full > div { display: contents; }
+    .full__i { display: none; }
+    .full__lock { display: block; position: absolute; inset-inline-end: 218px; top: 0; width: 100px; height: 100px; opacity: .07;
+                  color: var(--paper); pointer-events: none; will-change: transform; }
+    .full__k { display: block; grid-column: 1; margin-bottom: 8px; font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+               font-weight: 600; color: rgba(255,255,255,.62); position: relative; }
+    .full__h { grid-column: 1; font-size: 26px; font-weight: 300; line-height: 1.2; letter-spacing: -.012em; position: relative; }
+    .full__b { grid-column: 2; grid-row: 1 / 3; position: relative; display: inline-flex; align-items: center; height: 46px; padding: 0 22px;
+               font-weight: 600; justify-self: end; }
+    .full__l { grid-column: 1 / -1; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12);
+               display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 20px; font-size: 13.5px; position: relative; }
+
+    /* ── similar: three columns, the hover of the cards on home and the list ── */
+    .sim { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 20px; }
+    .sim :global(.title) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sim :global(.card:hover .title a) { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    .sim :global(.card img) { transition: transform .4s ease; }
+    .sim :global(.card:hover img) { transform: scale(1.03); }
+    .sim :global(.heart) { background: var(--paper); transition: background .2s ease; }
+    .sim :global(.heart svg) { width: 16px; height: 16px; transition: transform .25s ease, color .2s ease, fill .25s ease; }
+    .sim :global(.card:hover .heart svg), .sim :global(.heart:hover svg) { transform: scale(1.12); color: var(--gold-soft); }
+    .sim :global(.heart:hover svg) { fill: var(--gold-soft); }
+
+    /* ── area zone on beige, edge to edge, fills the column to the price box ── */
+    .zone { display: block; position: relative; background: var(--paper-2); padding: 20px 24px 16px; margin-top: 40px; flex: 1 0 auto;
+            box-shadow: 0 0 0 100vmax var(--paper-2); clip-path: inset(0 -100vmax); }
+    .zone__h { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }
+    .zone__t { margin: 0; font-size: 24px; font-weight: 300; letter-spacing: -.014em; }
+    .rdash { display: flex; gap: 6px; flex: none; }
+    .rdash button { all: unset; cursor: pointer; padding: 10px 0; }
+    .rdash button span { display: block; width: 6px; height: 2px; background: rgba(14,18,20,.2);
+                         transition: width .35s cubic-bezier(.4,0,.2,1), transform .25s ease-out, background .2s ease; }
+    .rdash button.on span { width: 22px; background: var(--ink); }
+    .rdash:hover button span { transform: scaleY(4); }
+    .rdash button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .zone__rail { width: 100%; overflow: hidden; }
+    .zone__track { display: flex; gap: 16px; transition: transform .55s cubic-bezier(.4,0,.2,1); }
+    .pc { flex: none; width: calc((100% - 32px) / 3); display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .pci { display: block; width: 100%; height: 160px; overflow: hidden; background: var(--paper); }
+    .pci img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+    .pc:hover .pci img { transform: scale(1.03); }
+    .pct { display: flex; align-items: flex-start; justify-content: center; color: var(--ink); text-decoration: none; margin: 14px 0 0;
+           min-height: 45px; font-size: 18px; font-weight: 600; line-height: 1.25; letter-spacing: -.012em; max-width: 280px; }
+    .pca { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: auto; padding-top: 10px; }
+    .pcb { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; background: var(--paper); color: var(--ink);
+           border: 1px solid var(--line); font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+           text-decoration: none; white-space: nowrap; transition: border-color .15s ease; }
+    .pcb:hover { border-color: var(--ink); }
+    .pcl { font-size: 13px; color: var(--ink); text-decoration: none; white-space: nowrap; }
+    .pcl:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── the price box: frosted glass, sticky, lands on the bottom of the area zone ── */
+    .side { position: sticky; top: 12px; align-self: start; z-index: 6; transition: top .25s ease; }
+    .card { position: relative; top: auto; border: 1px solid var(--line); padding: 7px 18px 28px; display: flex; flex-direction: column; gap: 14px;
+            background: linear-gradient(160deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.64) 45%, rgba(255,255,255,.72) 100%);
+            -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%); }
+    .pbp { display: flex; align-items: baseline; gap: 10px; height: 26px; white-space: nowrap; }
+    .pbp .price { font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: -.012em; }
+    .pbp .price.t-h3 { font-size: 20px; }
+    .pbp .per { margin: 0; }
+    .pbp .old { order: 3; font-size: 12px; }
+    .cta { height: 40px; padding: 0 12px; margin: 0; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+    .card > .cta[data-tour] { margin-top: 2px; }
+    .cta:hover { opacity: 1; background: var(--paper-2); color: var(--ink); border-color: var(--ink); }
+    .cta svg { transition: transform .25s ease; }
+    .cta:hover svg { transform: scale(1.12); }
+    .cta--wa { border-color: transparent; align-self: center; width: auto; height: auto; padding: 6px 14px; margin: -6px 0; }
+    .cta--wa:hover { background: var(--paper-2); color: #1faa53; border-color: #1faa53; }
+    .tel { margin: -4px 0 0; }
+    .qf { border-top: 0; margin: 0; padding: 0; gap: 10px; }
+    .qf input, .qf__msg { height: 38px; padding: 0 11px; }
+    .qf #qf-n, .qf__int { display: none; }
+    .qf__d { display: block; }
+    .qf__msg { width: 100%; box-sizing: border-box; height: auto; min-height: 72px; padding: 8px 11px; border: 1px solid var(--line); background: var(--paper);
+               color: var(--ink); font: inherit; font-size: 14px; line-height: 1.5; resize: vertical; }
+    .qf__msg:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+    .qf__ph { position: relative; display: flex; height: 38px; border: 1px solid var(--line); background: var(--paper); box-sizing: border-box; }
+    .qf__ph #qf-p { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; }
+    .qf .dial { display: flex; flex: none; width: 88px; height: 100%; align-items: center; justify-content: space-between; gap: 4px; padding: 0 8px;
+            background: transparent; border: 0; border-inline-end: 1px solid var(--line); font: inherit; font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); cursor: pointer; }
+    .qf .dial svg { width: 10px; height: 10px; flex: none; }
+    .qf .dial:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .dial__pop:not([hidden]) { display: block; position: absolute; left: -1px; right: -1px; top: calc(100% + 4px); z-index: 40; background: var(--paper);
+                               border: 1px solid rgba(14,18,20,.16); box-shadow: 0 12px 28px rgba(10,14,16,.14); }
+    .dial__s { display: flex; align-items: center; gap: 8px; padding: 0 10px; height: 38px; border-bottom: 1px solid rgba(14,18,20,.10); }
+    .dial__s svg { width: 15px; height: 15px; color: var(--muted); flex: none; }
+    .qf .dial__s input { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0; outline: none; font-size: 14px; background: transparent; }
+    .dial__l { max-height: 228px; overflow-y: auto; }
+    .dial__l button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--paper); border: 0;
+                      font: inherit; font-size: 13.5px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); text-align: start; cursor: pointer; }
+    .dial__l button:hover, .dial__l button[aria-selected='true'] { background: var(--paper-2); }
+    .dial__f { width: 22px; }
+    .dial__n { flex: 1; }
+    .dial__c { color: var(--muted); }
+    .dial__none { margin: 0; padding: 10px; font-size: 13px; color: var(--muted); }
+    .qf button[type='submit'] { background: var(--paper); color: var(--ink); border: 1px solid transparent;
+                                transition: background .2s ease, border-color .2s ease; }
+    .qf button[type='submit']:hover { background: var(--paper-2); border-color: var(--ink); }
+    .qf__fine { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+    /* ── all photos ── */
+    .gpop[open] { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+                  background: var(--paper); color: var(--ink); display: flex; flex-direction: column; animation: gpin .3s ease both; }
+    .gpop::backdrop { background: var(--paper); }
+    .gpop__bar { flex: none; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px 0 40px;
+                 border-bottom: 1px solid var(--line-soft); }
+    .gpop__t { font-size: 15px; font-weight: 600; }
+    .gpop__t span { font-weight: 400; color: var(--muted); }
+    .gpop__x { appearance: none; width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; cursor: pointer;
+               color: var(--ink); transition: background .15s ease; padding: 0; }
+    .gpop__x svg { width: 20px; height: 20px; }
+    .gpop__x:hover { background: var(--paper-2); }
+    .gpop__x:focus-visible, .gpop__ph:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .gpop__grid { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+                  grid-auto-rows: max-content; align-content: start; gap: 8px; padding: 24px 40px 40px; max-width: 1280px; width: 100%;
+                  margin: 0 auto; box-sizing: border-box; }
+    /* 4:3 tiles by padding — aspect-ratio collapsed inside the scrolling grid */
+    .gpop__ph { all: unset; cursor: pointer; position: relative; display: block; width: 100%; height: 0; padding-top: 75%; overflow: hidden;
+                background: var(--paper-2); align-self: start; box-sizing: border-box; }
+    .gpop__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+    .gpop__ph:hover img { transform: scale(1.03); }
+    .gpop__ph img.gpop__bl { filter: blur(9px) saturate(.92); transform: scale(1.08); }
+    .gpop__ph:hover img.gpop__bl { transform: scale(1.1); }
+    .gpop__lk { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; background: rgba(10,14,16,.28); }
+    .gpop__lk svg { width: 20px; height: 20px; }
+    .gpop__big:not([hidden]) { position: absolute; inset: 64px 0 0; display: flex; align-items: center; justify-content: center; background: var(--paper); padding: 24px; }
+    .gpop__big img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .gpop__bx { position: absolute; top: 12px; inset-inline-end: 24px; }
+
+    /* ── back to top ── */
+    .p-totop {
+      all: unset; box-sizing: border-box; position: fixed; right: 24px; bottom: 24px; z-index: 70;
+      width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+      background: var(--paper); border: 1px solid rgba(14,18,20,.16); color: var(--ink); cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,.10); opacity: 0; transform: translateY(12px); pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease, background .2s ease, border-color .2s ease;
+    }
+    .p-totop.on { opacity: 1; transform: none; pointer-events: auto; }
+    .p-totop:hover { background: var(--paper-2); border-color: var(--ink); }
+    .p-totop svg { transition: transform .25s ease; }
+    .p-totop:hover svg { transform: translateY(-3px); }
+    .p-totop:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    :global([dir='rtl']) .p-totop { right: auto; left: 24px; }
+
+    /* gilded edge (same accent as home and the list) */
+    .p-gild { background: transparent; border: 1px solid var(--gold);
+      border-image: conic-gradient(from var(--gilda), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
+      color: var(--gold-lo); transition: color .9s ease-in-out; }
+    .p-gild:hover { color: var(--gold); }
+    .p-gild:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
+    .p-gild--dk { border-color: var(--gold-dk);
+      border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
+      color: var(--gold-dk-text); }
+    .p-gild--dk:hover { color: var(--gold-dk-hover); background: transparent; box-shadow: none; }
+  }
+  @keyframes gpin { from { opacity: 0; } to { opacity: 1; } }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .near, .zone__track, .p-totop, .p-totop svg, .cell img, .gpop__ph img, .band__ph img { transition: none; }
+    .gpop[open] { animation: none; }
+  }
+</style>
+
+<style is:global>
+  /* #103: the gilded edge turns once on entering its box (same accent as home and the list). */
+  @property --gilda { syntax: '<angle>'; inherits: false; initial-value: 315deg; }
+  @keyframes p-gturn { from { --gilda: 315deg; } to { --gilda: 675deg; } }
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .p-gild.grun, .lockover em.grun { animation: p-gturn 1.1s ease-in-out 1; }
+  }
+  @media (min-width: 1024px) { .qf__ph[hidden] { display: none !important; } }
 </style>
 
 <script>
@@ -1026,6 +1626,13 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
       // Το πεδίο επαφής της επίσκεψης δέχεται ή email ή τηλέφωνο. A phone gets its own address
       // (one per number, #82): with `<property>@lead.local` the CRM attached every later visitor
       // on the same property to the first one and dropped their phone. The phone also goes in the message.
+      // #103 desktop: name + surname, the dialling code in front of the number, the message.
+      if (form.id === 'qf' && desk.matches) {
+        body.name = `${String(fd.get('first') ?? '').trim()} ${String(fd.get('last') ?? '').trim()}`.trim();
+        const ph = body.phone.trim();
+        if (ph) body.phone = /^(\+|00)/.test(ph) ? ph : `+${dialCode} ${ph}`;
+        body.message = String(fd.get('message') ?? '').trim();
+      }
       if (!/.+@.+\..+/.test(body.email)) {
         body.phone = body.email;
         const digits = body.phone.replace(/\D/g, '');
@@ -1038,7 +1645,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
           method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
         });
         if (!r.ok) throw new Error('bad');
-        form.querySelectorAll('input, button').forEach((x) => ((x as HTMLInputElement).hidden = true));
+        form.querySelectorAll('input, button, textarea, .qf__ph').forEach((x) => ((x as HTMLInputElement).hidden = true));
         const ok = form.querySelector(okSel) as HTMLElement | null;
         if (ok) ok.hidden = false;
         // The lead counts only now — after the server accepted it (Q-013), never on click.
@@ -1114,5 +1721,210 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     const w = (document.querySelector('input[name=when]:checked') as HTMLInputElement | null)?.value ?? '';
     const label = document.querySelector('input[name=when]:checked + span')?.textContent?.trim() ?? w;
     return `TOUR: ${label}`;
+  });
+
+  // ═══ #103 DESKTOP (≥1024px) — the property page redesign approved by George 2026-11-02 ═══
+  // Phones keep George's behaviour: every handler below checks `desk` first.
+  const desk = window.matchMedia('(min-width: 1024px)');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // ── All photos: a click on a gallery photo (or on the «N more photos» tile outside its
+  //    button) opens the popup. The «Free registration» button keeps its sign-in link.
+  const gpop = document.getElementById('gpop') as HTMLDialogElement | null;
+  const gbig = document.getElementById('gbig');
+  const openPop = () => {
+    if (!gpop || gpop.open || typeof gpop.showModal !== 'function') return false;
+    gpop.showModal();
+    document.documentElement.style.overflow = 'hidden';
+    return true;
+  };
+  gpop?.addEventListener('close', () => {
+    document.documentElement.style.overflow = '';
+    if (gbig) gbig.hidden = true;
+    if (location.hash === '#photos') history.replaceState(null, '', location.pathname + location.search);
+  });
+  gpop?.querySelector('[data-gpop-x]')?.addEventListener('click', () => gpop.close());
+  document.getElementById('gal')?.addEventListener('click', (e) => {
+    if (!desk.matches || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const tg = e.target as Element;
+    const cell = tg.closest('.cell');
+    if (!cell || tg.closest('[data-reg]')) return;          // the button: George's sign-in link
+    if (openPop()) e.preventDefault();
+  });
+  // Member: a tile opens the photo larger inside the popup (watermarked 1920 px).
+  if (gpop && gbig) {
+    const img = gbig.querySelector('img') as HTMLImageElement;
+    gpop.querySelectorAll<HTMLElement>('[data-big]').forEach((b) => b.addEventListener('click', () => {
+      img.src = b.dataset.big ?? ''; img.alt = b.querySelector('img')?.alt ?? '';
+      gbig.hidden = false;
+    }));
+    gbig.querySelector('[data-gbig-x]')?.addEventListener('click', () => { gbig.hidden = true; });
+    // Esc: the large photo first, then the popup.
+    gpop.addEventListener('cancel', (e) => { if (!gbig.hidden) { e.preventDefault(); gbig.hidden = true; } });
+  }
+  if (location.hash === '#photos' && desk.matches) openPop();
+
+  // ── «All N features»: every feature is already in the HTML; this only shows/hides them.
+  document.querySelectorAll<HTMLButtonElement>('.fall').forEach((b) => b.addEventListener('click', () => {
+    const ul = document.getElementById('feats');
+    const all = !ul?.classList.contains('feats--all');
+    ul?.classList.toggle('feats--all', all);
+    b.setAttribute('aria-expanded', String(all));
+    const s = b.querySelector('span'); if (s) s.textContent = (all ? b.dataset.less : b.dataset.more) ?? '';
+    b.querySelector('path')?.setAttribute('d', all ? 'M4 4h16v16H4zM8 12h8' : 'M4 4h16v16H4zM8 12h8M12 8v8');
+  }));
+
+  // ── «Nearby» panel over the map / lock: open at load, × closes, the pill reopens.
+  const loc = document.getElementById('loc');
+  if (loc?.classList.contains('loc--near')) {
+    const set = (o: boolean) => {
+      loc.classList.toggle('is-open', o);
+      loc.querySelectorAll('[data-near]').forEach((x) => x.setAttribute('aria-expanded', String(o)));
+    };
+    set(true);
+    loc.querySelectorAll('[data-near]').forEach((x) => x.addEventListener('click', () => set(!loc.classList.contains('is-open'))));
+  }
+
+  // ── Country code with search (George's DIAL list). First guess: browser region, else the language.
+  const dBtn = document.getElementById('dialBtn');
+  const dPop = document.getElementById('dialPop');
+  const dQ = document.getElementById('dialQ') as HTMLInputElement | null;
+  const dL = document.getElementById('dialL');
+  let dialCode = '30';
+  if (dBtn && dPop && dQ && dL) {
+    const opts = Array.from(dPop.querySelectorAll<HTMLButtonElement>('[data-cc]'));
+    const none = dPop.querySelector('.dial__none') as HTMLElement | null;
+    const pick = (cc: string) => {
+      const o = opts.find((x) => x.dataset.cc === cc) ?? opts[0];
+      if (!o) return;
+      opts.forEach((x) => x.setAttribute('aria-selected', String(x === o)));
+      dialCode = o.dataset.code ?? '30';
+      dL.textContent = `${o.querySelector('.dial__f')?.textContent ?? ''} +${dialCode}`;
+    };
+    pick(guess);
+    const show = (o: boolean) => {
+      dPop.hidden = !o; dBtn.setAttribute('aria-expanded', String(o));
+      if (o) { dQ.value = ''; filter(); dQ.focus(); }
+    };
+    const filter = () => {
+      const q = dQ.value.trim().toLowerCase().replace(/^\+/, '');
+      let n = 0;
+      opts.forEach((x) => {
+        const hit = !q || (x.dataset.q ?? '').includes(q) || (x.dataset.code ?? '').startsWith(q);
+        x.hidden = !hit; if (hit) n++;
+      });
+      if (none) none.hidden = n > 0;
+    };
+    dBtn.addEventListener('click', () => show(dPop.hidden));
+    dQ.addEventListener('input', filter);
+    opts.forEach((x) => x.addEventListener('click', () => { pick(x.dataset.cc ?? ''); show(false); (document.getElementById('qf-p') as HTMLInputElement | null)?.focus(); }));
+    document.addEventListener('click', (e) => { if (!dPop.hidden && !(e.target as Element).closest('#qf-ph')) show(false); });
+    dPop.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); show(false); dBtn.focus(); } });
+  }
+
+  // ── The form: on desktop «Name» + «Surname» are required, George's one field on phones.
+  const qfN = document.getElementById('qf-n') as HTMLInputElement | null;
+  const qfF = document.getElementById('qf-f') as HTMLInputElement | null;
+  const syncReq = () => { if (qfN) qfN.required = !desk.matches; if (qfF) qfF.required = desk.matches; };
+  syncReq(); desk.addEventListener?.('change', syncReq);
+
+  // ── About band: the photo loads only near the screen, only on desktop; the glass cards and
+  //    the big lock drift down while the band crosses the screen.
+  const band = document.getElementById('band');
+  const bandImg = band?.querySelector<HTMLImageElement>('img[data-src]');
+  if (band && bandImg && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => {
+      if (!desk.matches || !es.some((x) => x.isIntersecting)) return;
+      io.disconnect();
+      bandImg.addEventListener('load', () => bandImg.classList.add('on'), { once: true });
+      bandImg.src = bandImg.dataset.src ?? '';
+    }, { rootMargin: '600px 0px' });
+    io.observe(band);
+  }
+  const cards = document.getElementById('bandCards');
+  const lock = document.getElementById('fullLock');
+  const drift = () => {
+    if (!desk.matches || still.matches) { if (cards) cards.style.transform = ''; if (lock) lock.style.transform = ''; return; }
+    const vh = window.innerHeight;
+    if (band && cards) {
+      const r = band.getBoundingClientRect();
+      const need = cards.offsetHeight + 48;
+      if (band.clientHeight < need) band.style.minHeight = need + 'px';
+      const p = Math.min(1, Math.max(0, (vh - r.height - r.top) / Math.max(1, vh - r.height - 96)));
+      cards.style.transform = `translateY(${(p * Math.max(0, band.clientHeight - cards.offsetHeight)).toFixed(1)}px)`;
+    }
+    if (lock?.parentElement) {
+      const lr = lock.parentElement.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (vh - lr.height - lr.top) / Math.max(1, vh - lr.height - 96)));
+      lock.style.transform = `translateY(${(p * Math.max(0, lock.parentElement.clientHeight - 100)).toFixed(1)}px)`;
+    }
+  };
+
+  // ── Area zone: a page of three every 5 s (paused under the pointer); the last page is full.
+  const track = document.getElementById('zoneTrack');
+  const zoneEl = document.getElementById('zone');
+  const zdots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-zp]'));
+  if (track && zoneEl && zdots.length > 1) {
+    const n = track.children.length;
+    let page = 0, at = Date.now(), hold = false;
+    const go = (k: number) => {
+      page = (k + zdots.length) % zdots.length; at = Date.now();
+      const first = Math.min(Math.max(0, n - 3), page * 3);
+      const sign = document.documentElement.dir === 'rtl' ? 1 : -1;
+      track.style.transform = `translateX(calc(${sign * first} * ((100% - 32px) / 3 + 16px)))`;
+      zdots.forEach((d, i) => { d.classList.toggle('on', i === page); d.setAttribute('aria-current', String(i === page)); });
+    };
+    zdots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+    zoneEl.addEventListener('mouseenter', () => { hold = true; });
+    zoneEl.addEventListener('mouseleave', () => { hold = false; at = Date.now(); });
+    zoneEl.addEventListener('focusin', () => { hold = true; });
+    zoneEl.addEventListener('focusout', () => { hold = false; at = Date.now(); });
+    if (!still.matches) setInterval(() => { if (!hold && !document.hidden && desk.matches && Date.now() - at >= 5000) go(page + 1); }, 250);
+  }
+
+  // ── The price box lands on the bottom line of the area zone at the end of the page: over the
+  //    last stretch it slides down by the gap that would be left. The real scroller is found
+  //    (page or a scrolling parent); the shift is capped so a wrong measure never hides the box.
+  const side = document.getElementById('side');
+  let dockS = 0, dockRaf = 0;
+  const dock = () => {
+    if (dockRaf) return;
+    dockRaf = requestAnimationFrame(() => {
+      dockRaf = 0;
+      if (!side) return;
+      if (!desk.matches) { if (dockS) { dockS = 0; side.style.transform = ''; } return; }
+      let se: Element | null = side.parentElement;
+      while (se && se !== document.body && !(/(auto|scroll)/.test(getComputedStyle(se).overflowY) && se.scrollHeight > se.clientHeight + 1)) se = se.parentElement;
+      const root = document.scrollingElement || document.documentElement;
+      if (!se || se === document.body) se = root;
+      const viewH = se === root ? window.innerHeight : se.clientHeight;
+      const g = side.parentElement as HTMLElement;
+      const ar = side.getBoundingClientRect(), gr = g.getBoundingClientRect();
+      const left = Math.max(0, se.scrollHeight - (se.scrollTop + viewH));
+      const gapEnd = (gr.bottom + left) - (ar.bottom - dockS);
+      const stuck = Math.abs((ar.top - dockS) - (parseFloat(getComputedStyle(side).top) || 0)) < 1.5;
+      const s = stuck && gapEnd > 0 && gapEnd < 160 ? Math.min(gapEnd, Math.max(0, gapEnd - left)) : 0;
+      if (Math.abs(s - dockS) > 0.5) { dockS = s; side.style.transform = s ? `translateY(${s}px)` : ''; }
+    });
+  };
+
+  // ── Back to top, after one screen.
+  const top = document.getElementById('toTop');
+  top?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: still.matches ? 'auto' : 'smooth' }));
+  const onScroll = () => {
+    top?.classList.toggle('on', desk.matches && window.scrollY > window.innerHeight * 0.8);
+    drift(); dock();
+  };
+  document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  // ── Gilded edges turn once when the pointer enters their box.
+  document.querySelectorAll<HTMLElement>('.p-gild, .lockover em').forEach((g) => {
+    const run = () => {
+      if (!desk.matches || still.matches) return;
+      g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun');
+    };
+    (g.closest('.tt, .cell, .full') ?? g.parentElement)?.addEventListener('mouseenter', run);
   });
 </script>

@@ -71,6 +71,10 @@ cards:
   width: 0
   height: 0
 contact_card: false
+# Desktop redesign, wave 1 (#107, approved by George 2026-11-02): CompanyHub on desktop, George's layout on phones.
+look: wave1
+desk_image: /pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp
+desk_image_alt: Offices of Halkidiki Properties, the story since 2007
 ---
 
 With the largest property database of Halkidiki in our hands, combined with the multiannual experience and knowledge of our personnel, Halkidiki Properties manages to respond to any client’s desires. The unique promotion of properties and the application of brand-new artificial intelligence technologies in each procedure leads to the fastest and most accurate matching between buyers and properties. In terms of investment opportunities, our specialised department has undertaken and successfully completed numerous significant projects, making our company the most reliable for investors.

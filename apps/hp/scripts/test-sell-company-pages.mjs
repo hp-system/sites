@@ -64,6 +64,19 @@ try {
   const about = pages['/en/about-us'] ?? '';
   const kids = ['/en/about-us/values', '/en/about-us/our-story', '/en/about-us/philosophy', '/en/about-us/company-social-responsibility', '/en/our-partners', '/en/careers'];
   check('/en/about-us links its pages', kids.every((s) => about.includes(`href="${s}"`)), 'cards');
+  // #107 desktop redesign, wave 1 (approved by George 2026-11-02): every block in the HTML, George's texts,
+  // George's / watermarked pictures only, one H1; phones keep George's page (its classes stay).
+  check('/en/about-us wave 1 company layout', about.includes('class="info w1 w1-co"') && about.includes('class="w1-d co"'), 'main.w1-co');
+  check('/en/about-us one H1', (about.match(/<h1[\s>]/g) ?? []).length === 1, 'h1');
+  check('/en/about-us values: 8 of George\'s, all in the HTML', (about.match(/class="co-sx/g) ?? []).length === 8 && about.includes('Human relationships mean everything to us.'), 'values');
+  check('/en/about-us people + quote', about.includes('They are the people who make the companies and not the other way around.'), 'people');
+  check('/en/about-us story: 5 periods, last open', (about.match(/class="co-acb"/g) ?? []).length === 5 && about.includes('The journey begins') && /id="coEraB4"[^>]*aria-expanded="true"|aria-expanded="true"[^>]*id="coEraB4"/.test(about), 'story');
+  check('/en/about-us partner logos named', (about.match(/<img src="\/pages\/our-partners\/[^"]+" alt="[^"]+ logo/g) ?? []).length >= 15, 'logos');
+  check('/en/about-us doors: careers + contact', /class="co-door[^"]*" href="\/en\/careers"/.test(about) && /class="co-door[^"]*" href="\/en\/contact"/.test(about), 'doors');
+  check('/en/about-us H2s of the blocks', ["Our company&#39;s core values", '>Our people<', '>Our story<', '>Partners we work with<'].every((s) => about.includes(s)), 'h2');
+  check('/en/about-us no prototype images', !about.includes('/_blob/'), 'no /_blob/');
+  check('/en/about-us Villa Natalia photo watermarked', about.includes('/pages/construction/villa-natalia-7010-wm.jpg'), 'wm');
+  check('/en/about-us phones: George\'s text and cards kept', about.includes('making our company the most reliable for investors') && about.includes('info-grid w1-m'), 'w1-m');
   check('/en/careers links the job', (pages['/en/careers'] ?? '').includes('href="/en/careers/bulgarian-speaker"'), 'job card');
 
   // Contact: the brand's address (Neo Rysio), phone and e-mail; ContactPage carries the organisation.

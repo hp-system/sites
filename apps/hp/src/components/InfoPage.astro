@@ -37,6 +37,7 @@ import PageCard from './PageCard.astro';
 import WaLink from './WaLink.astro';
 import { areaCards } from '../lib/areacards';
 import ServicesHub, { type Role } from './ServicesHub.astro';
+import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
 
 interface Props { page: InfoPage }
@@ -130,7 +131,7 @@ try {
 // markup draws it, the desktop-only pieces are hidden there and load nothing.
 const w1 = d.look === 'wave1';
 // The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
-const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services' };
+const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services', company: 'nav.company' };
 const short = NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
 const HOW_KEY: Partial<Record<typeof d.section, string>> = { sell: 'info.sell_how' };
 const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
@@ -161,6 +162,16 @@ if (hub) {
   }
 }
 // The FAQ block of the hub: George's FAQ page in the same language (English: /en/faq).
+// ── COMPANY PAGE, desktop (#107, approved by George 2026-11-02) ────────────────
+// A `wave1` page of the company section = the company page: the hero (George's H1, the first
+// sentence of his text, «Contact us», phone, WhatsApp, the office photo), then CompanyHub (facts,
+// values, people, story, partners, doors) and the area row. Phones keep George's layout below.
+const coHub = w1 && d.section === 'company';
+const coLead = coHub ? (page.body ?? '').trim().split(/(?<=[.!?])\s+/)[0] ?? '' : '';
+const coContact = coHub ? d.related.find((r) => r.href === contact)?.label || t(lang, 'co.contact') : '';
+// «About Halkidiki Properties»: the brand name on its own line on desktop, as the design draws it.
+const h1Pre = coHub && d.h1.endsWith(brand.name) && d.h1.length > brand.name.length ? d.h1.slice(0, -brand.name.length) : '';
+const hubLike = hub || coHub;
 const faqPage = hub ? (await findInfoPage(`${prefix(lang)}/faq`))?.data ?? null : null;
 
 // ── STRUCTURED DATA ───────────────────────────────────────────────────────
@@ -216,8 +227,8 @@ if (d.faq.length) {
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
 
-  <main id="main" class:list={['info', { w1, 'w1-svc': hub }]}>
-  {w1 && !hub ? (
+  <main id="main" class:list={['info', { w1, 'w1-svc': hub, 'w1-co': coHub }]}>
+  {w1 && !hubLike ? (
   <>
     <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
@@ -343,6 +354,34 @@ if (d.faq.length) {
   </>
   ) : (
   <>
+    {coHub ? (
+    /* #107 Company: George's breadcrumb and H1 on every screen; lead, buttons and photo on desktop only. */
+    <header class="wrap info-top w1-top">
+      <div class="w1-top__txt">
+        <nav class="crumb" aria-label="breadcrumb">
+          {crumbs.slice(0, -1).map((c, i) => (
+            <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+          ))}
+          <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
+        </nav>
+        <h1 class="t-display info-h1">{h1Pre ? <>{h1Pre}<br class="w1-d" />{brand.name}</> : d.h1}</h1>
+        {d.lead && <p class="info-lead">{d.lead}</p>}
+        {coLead && <p class="info-lead w1-d">{coLead}</p>}
+        <p class="w1-acts w1-d">
+          <a class="btn" href={contact} data-ev="content:phone">{coContact}</a>
+          <a class="lnkg" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+          <WaLink />
+        </p>
+      </div>
+      {deskImg && (
+        <picture class="w1-top__img w1-d">
+          <source media="(min-width: 1024px)" srcset={deskSet} sizes="(min-width: 1280px) 584px, 46vw" />
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={d.desk_image_alt || d.h1}
+               width="1200" height="900" fetchpriority="high" decoding="async" />
+        </picture>
+      )}
+    </header>
+    ) : (
     <header class="wrap info-top">
       <nav class="crumb" aria-label="breadcrumb">
         {crumbs.slice(0, -1).map((c, i) => (
@@ -354,6 +393,23 @@ if (d.faq.length) {
       {d.lead && <p class="info-lead">{d.lead}</p>}
       {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
     </header>
+    )}
+
+    {/* #107 Company page, desktop only (phones keep everything below). */}
+    {coHub && <CompanyHub lang={lang} page={page} contact={contact} />}
+    {coHub && areas.length > 0 && (
+      <section class="w1-more w1-d" aria-label={ui.side}>
+        <div class="wrap w1-more__blk">
+          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
+          <div class="ir-rail" id="w1Area" data-irail data-gap="20">
+            {areas.map((a) => (
+              <PageCard href={a.href} title={a.name} button={ui.seeAll} img={a.img} srcset={a.srcset} alt={a.alt}
+                        link={a.guide ? { href: a.guide, label: t(lang, 'info.about_area') } : undefined} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
 
     {/* #106 Services hub, desktop only (phones keep everything below). */}
     {hub && <ServicesHub lang={lang} roles={roles} faq={faqPage ? { h: faqPage.h1, href: faqPage.path, items: faqPage.faq } : null}
@@ -367,7 +423,7 @@ if (d.faq.length) {
       </figure>
     )}
 
-    <div class:list={['wrap info-grid', { 'w1-m': hub }]}>
+    <div class:list={['wrap info-grid', { 'w1-m': hubLike }]}>
       <article class="prose">
         {d.contact_card && (
           <address class="ccard">
@@ -427,7 +483,7 @@ if (d.faq.length) {
     </div>
 
     {d.related.length > 0 && (
-      <section class:list={['info-band', { 'w1-m': hub }]}>
+      <section class:list={['info-band', { 'w1-m': hubLike }]}>
         <div class="wrap">
           <p class="t-label">{ui.related}</p>
           <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
@@ -437,7 +493,7 @@ if (d.faq.length) {
       </section>
     )}
 
-    <section class:list={['info-cta', { 'w1-m': hub }]}>
+    <section class:list={['info-cta', { 'w1-m': hubLike }]}>
       <div class="wrap">
         <h2 class="t-h2">{ui.ctaH}</h2>
         <p>{ui.ctaP}</p>
@@ -580,6 +636,8 @@ if (d.faq.length) {
 
     .w1-more { background: var(--paper-2); padding: 56px 0 64px; }
     .w1-more__blk + .w1-more__blk { margin-top: 40px; }
+    /* #107 Company: a white band between the doors and the area row, as the design draws it */
+    .w1-co .w1-more { margin-top: 88px; }
 
     .w1-dir { display: block !important; background: var(--paper-2); padding: 22px 0 0; font-size: 12px; }
     .w1-dir__in { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--line); color: var(--muted); }

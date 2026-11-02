@@ -53,7 +53,13 @@ const pages = defineCollection({
     faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
     /** A contact form posting to /api/inquiry; `source` prefixes the message. */
     form: z.object({ source: z.string(), title: z.string().default(''), message: z.boolean().default(true) }).optional(),
-    related: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
+    /** Related pages. On a `look: wave1` page they are cards on desktop (#105): an optional
+     *  picture, a short line and the button label (default: «Learn more»). */
+    related: z.array(z.object({
+      label: z.string(), href: z.string(),
+      text: z.string().default(''), image: z.string().default(''), image_alt: z.string().default(''),
+      button: z.string().default(''),
+    })).default([]),
     toc: z.boolean().default(false),
     updated: z.string().default(''),
     /** Where the page lived on the old site (same URL in most cases). */
@@ -74,6 +80,13 @@ const pages = defineCollection({
     widget: z.enum(['prices', 'greece-guide', 'prepublished']).optional(),
     /** A call to action shown under the lead (e.g. Sign in / Register for the members pages). */
     cta: z.object({ label: z.string(), href: z.string() }).optional(),
+    /** Desktop redesign, wave 1 (#105, approved by George 2026-11-02): the info-page base shared by
+     *  Sell, Services and Company — hero with a photo, cards as a carousel, the dark form, Related and
+     *  area carousels. Phones keep George's layout. Pages without it are unchanged. */
+    look: z.enum(['wave1']).optional(),
+    /** Desktop hero photo of a `wave1` page — a watermarked `_1920w.jpg` of ours (+ `_800w`). */
+    desk_image: z.string().default(''),
+    desk_image_alt: z.string().default(''),
   }),
 });
 

@@ -42,6 +42,25 @@ try {
   const sell = pages['/en/sell'] ?? '';
   const subs = [...SELL, ...SELL_FORM.filter((p) => p.startsWith('/en/sell/')), '/en/work-with-us-exclusively'];
   check('/en/sell links its 8 pages', subs.every((s) => sell.includes(`href="${s}"`)), subs.filter((s) => !sell.includes(`href="${s}"`)).join(',') || 'all');
+  // #105 desktop redesign, wave 1 (approved by George 2026-11-02): the Sell page only.
+  check('/en/sell wave 1 layout', sell.includes('class="info w1"'), 'main.w1');
+  const hero = sell.match(/<picture class="w1-top__img[\s\S]*?<\/picture>/)?.[0] ?? '';
+  check('/en/sell desktop hero: watermarked 800w + 1920w', hero.includes('_800w.jpg 800w') && hero.includes('_1920w.jpg 1920w') && hero.includes('media="(min-width: 1024px)"'), hero ? 'picture' : 'missing');
+  check('/en/sell desktop hero: phones load nothing', /<img src="data:image\/gif/.test(hero), 'placeholder img');
+  const rail = sell.match(/<ul class="cards ir-rail"[\s\S]*?<\/ul>/)?.[0] ?? '';
+  check('/en/sell all 8 cards in the row HTML', (rail.match(/<li/g) ?? []).length === 8, `${(rail.match(/<li/g) ?? []).length} cards`);
+  check('/en/sell row dashes (3 pages)', (sell.match(/data-irail-dash="w1Cards"[\s\S]*?<\/div>/)?.[0].match(/<button/g) ?? []).length === 3, 'dashes');
+  const rel = sell.match(/id="w1Rel"[\s\S]*?<\/section>/)?.[0] ?? '';
+  check('/en/sell Related row: 5 cards with links', (rel.match(/class="pc"/g) ?? []).length === 5 && rel.includes('href="/en/assignment-order"'), 'related');
+  // The area row needs listings with photos per municipality (checked on live data, #105); with the stub it may be absent.
+  const area = rel.includes('id="w1Area"');
+  check('/en/sell area row (when listed): municipality guides + H2', !area || (/>Property for sale in Halkidiki<\/h2>/.test(rel) && /href="\/en\/property-for-sale\/(kassandra|sithonia|aristotelis|nea-propontida|polygyros)"/.test(rel)), area ? 'about the area' : 'no area cards in the stub');
+  check('/en/sell area photos watermarked', [...rel.matchAll(/<img [^>]*src="(https?:[^"]+)"/g)].every((m) => /_(400|800|1920)w\./.test(m[1])), 'marked');
+  check('/en/sell dark form: wave 1, picker, consent', /class="iform iform--w1"/.test(sell) && /data-w1/.test(sell) && sell.includes('data-cc="GR"') && sell.includes('name="first"') && sell.includes('name="last"'), 'form');
+  check('/en/sell H2 «Get to know how we sell.» + Related', sell.includes('Get to know how we sell.') && />Related<\/h2>/.test(sell), 'h2');
+  check('/en/sell back to top', sell.includes('id="w1Top"'), 'button');
+  check('/en/contact keeps the old layout', !(pages['/en/contact'] ?? '').includes('class="info w1"') && !(pages['/en/contact'] ?? '').includes('class="iform iform--w1"'), 'unchanged');
+
   const about = pages['/en/about-us'] ?? '';
   const kids = ['/en/about-us/values', '/en/about-us/our-story', '/en/about-us/philosophy', '/en/about-us/company-social-responsibility', '/en/our-partners', '/en/careers'];
   check('/en/about-us links its pages', kids.every((s) => about.includes(`href="${s}"`)), 'cards');

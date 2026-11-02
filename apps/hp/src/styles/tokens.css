@@ -48,6 +48,7 @@
   --gold-soft:    #C8B48C;   /* card heart on hover */
   --paper-3:      #E9E6DF;   /* empty tile on the beige band */
   --ink-hover:    #2A3034;   /* dark button on hover */
+  --wa-green:     #1faa53;   /* WhatsApp link (property page #103, info pages #105) */
 
   /* ── Αποστάσεις — μία κλίμακα, καμία τιμή εκτός ──────────────────────── */
   --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;

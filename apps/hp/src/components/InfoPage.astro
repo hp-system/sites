@@ -31,6 +31,12 @@ import { FACETS, facetUrl } from '../lib/listing';
 import { privacyPath } from '../lib/legal';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { PAGE_KEYS, contentUrl, pageExists, pageLangs } from '../lib/pages';
+import InfoKit from './InfoKit.astro';
+import RailDash from './RailDash.astro';
+import PageCard from './PageCard.astro';
+import WaLink from './WaLink.astro';
+import { areaCards } from '../lib/areacards';
+import { t } from '../lib/i18n';
 
 interface Props { page: InfoPage }
 const { page } = Astro.props;
@@ -117,6 +123,23 @@ try {
   munis = [];
 }
 
+// ── DESKTOP REDESIGN, WAVE 1 (#105, approved by George 2026-11-02) ──────────
+// `look: wave1` in the page file: hero with a photo, the cards as a row, the dark form band,
+// «Related» and area rows (InfoKit.astro). Phones (< 1024px) keep George's layout: the same
+// markup draws it, the desktop-only pieces are hidden there and load nothing.
+const w1 = d.look === 'wave1';
+// The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
+const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell' };
+const short = NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
+const HOW_KEY: Partial<Record<typeof d.section, string>> = { sell: 'info.sell_how' };
+const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
+const deskImg = d.desk_image;
+const deskSet = /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
+const relCards = w1 ? d.related.map((r) => ({
+  ...r, text: r.text.replaceAll('{phone}', brand.contact.phoneText), button: r.button || t(lang, 'info.more'),
+})) : [];
+const areas = w1 ? areaCards(items, lang) : [];
+
 // ── STRUCTURED DATA ───────────────────────────────────────────────────────
 const org = {
   '@type': 'RealEstateAgent', name: brand.name, url: `${site}${prefix(lang) || '/'}`,
@@ -170,6 +193,139 @@ if (d.faq.length) {
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
 
+  {w1 ? (
+  <main id="main" class="info w1">
+    <header class="wrap info-top w1-top">
+      <div class="w1-top__txt">
+        <nav class="crumb" aria-label="breadcrumb">
+          {crumbs.slice(0, -1).map((c, i) => (
+            <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+          ))}
+          <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
+        </nav>
+        <h1 class="t-display info-h1">{d.h1}</h1>
+        {d.lead && <p class="info-lead">{d.lead}</p>}
+        {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
+        {d.form && (
+          <p class="w1-acts w1-d">
+            <a class="btn" href="#form" data-ev="content:sell">{d.form.title || ui.adviser}</a>
+            <a class="lnkg" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+            <WaLink />
+          </p>
+        )}
+      </div>
+      {deskImg && (
+        /* Desktop only: phones get a 1-pixel placeholder and never download the photo. */
+        <picture class="w1-top__img w1-d">
+          <source media="(min-width: 1024px)" srcset={deskSet} sizes="(min-width: 1280px) 584px, 46vw" />
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={d.desk_image_alt || d.h1}
+               width="1920" height="1280" fetchpriority="high" decoding="async" />
+        </picture>
+      )}
+    </header>
+
+    <section class="w1-how" aria-labelledby={howH2 ? 'w1-how-h' : undefined}>
+      <div class="wrap">
+        <div class="w1-how__head">
+          {howH2 && <h2 id="w1-how-h" class="w1-h2 w1-d">{howH2}</h2>}
+          <div class="prose w1-how__p"><Content /></div>
+          {d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
+        </div>
+        {d.widget && <div class="prose"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} /></div>}
+        {d.cards.length > 0 && (
+          <div class="prose w1-how__cards">
+            <ul class="cards ir-rail" id="w1Cards" data-irail data-gap="20">
+              {d.cards.map((c, i) => (
+                <li>
+                  {c.image && <img src={c.image} alt={c.image_alt || c.title} width={c.width || 800} height={c.height || 500} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />}
+                  <h2><a href={c.href}>{c.title}</a></h2>
+                  <p>{c.text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {d.faq.length > 0 && (
+          <div class="prose">
+            <section class="faq" aria-label={ui.faq}>
+              {d.faq.map((f, i) => (
+                <details open={i === 0}><summary><h2 class="faq-q">{f.q}</h2></summary><p>{f.a}</p></details>
+              ))}
+            </section>
+          </div>
+        )}
+      </div>
+    </section>
+
+    {d.form && (
+      <section class="w1-form" id="form">
+        <div class="wrap"><div class="prose w1-form__in">
+          <InfoForm source={d.form.source} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+                    look="wave1" lang={lang} eyebrow={short} />
+        </div></div>
+      </section>
+    )}
+
+    {/* Desktop: «Related» and «Property for sale in Halkidiki» as rows of cards (every card in the HTML). */}
+    <section class="w1-more w1-d" aria-label={ui.side}>
+      {relCards.length > 0 && (
+        <div class="wrap w1-more__blk">
+          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{ui.related}</h2><RailDash for="w1Rel" count={relCards.length} lang={lang} /></div>
+          <div class="ir-rail" id="w1Rel" data-irail data-gap="20">
+            {relCards.map((r) => (
+              <PageCard href={r.href} title={r.label} text={r.text} button={r.button} img={r.image || undefined} alt={r.image_alt || r.label} />
+            ))}
+          </div>
+        </div>
+      )}
+      {areas.length > 0 && (
+        <div class="wrap w1-more__blk">
+          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
+          <div class="ir-rail" id="w1Area" data-irail data-gap="20">
+            {areas.map((a) => (
+              <PageCard href={a.href} title={a.name} button={ui.seeAll} img={a.img} srcset={a.srcset} alt={a.alt}
+                        link={a.guide ? { href: a.guide, label: t(lang, 'info.about_area') } : undefined} />
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+
+    {/* Phones: George's link band and closing call to action. */}
+    {d.related.length > 0 && (
+      <section class="info-band w1-m">
+        <div class="wrap">
+          <p class="t-label">{ui.related}</p>
+          <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
+          <p class="t-label info-areas-l">{ui.forSale}</p>
+          <ul class="links">{muniLinks.map((p) => <li><a href={p.href}>{ui.forSaleIn.replace('{m}', p.name)}</a></li>)}</ul>
+        </div>
+      </section>
+    )}
+
+    <section class="info-cta w1-m">
+      <div class="wrap">
+        <h2 class="t-h2">{ui.ctaH}</h2>
+        <p>{ui.ctaP}</p>
+        <p class="row">
+          <a class="btn btn--onphoto" href={contact} data-ev="content:phone">{ui.adviser}</a>
+          <a class="btn btn--line" href={listUrl(lang)} data-ev="content:list">{ui.seeAll}</a>
+          <a class="phone" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+          <a class="phone" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp</a>
+        </p>
+      </div>
+    </section>
+
+    {/* Desktop: the breadcrumb again above the footer (mockup «dir» bar). */}
+    <nav class="w1-dir w1-d" aria-label="breadcrumb">
+      <div class="wrap w1-dir__in">
+        <a href={prefix(lang) || '/'} aria-label={brand.name}>{brand.name}</a>
+        {d.parents.map((c) => <><span aria-hidden="true">›</span><a href={c.path}>{c.name}</a></>)}
+        <span aria-hidden="true">›</span><span aria-current="page">{short}</span>
+      </div>
+    </nav>
+  </main>
+  ) : (
   <main id="main" class="info">
     <header class="wrap info-top">
       <nav class="crumb" aria-label="breadcrumb">
@@ -273,8 +429,10 @@ if (d.faq.length) {
       </div>
     </section>
   </main>
+  )}
 
   <Footer lang={lang} munis={munis} />
+  {w1 && <InfoKit lang={lang} />}
 </Base>
 
 <style>
@@ -353,4 +511,49 @@ if (d.faq.length) {
   .row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin: var(--s5) 0 0; }
   .btn--line { background: transparent; color: #fff; border-color: #fff; }
   .phone { color: #fff; font-variant-numeric: tabular-nums; }
+  /* ── look: wave1 (#105). Phones: the same spacing as George's grid above. ── */
+  .w1-how { padding-top: var(--s5); }
+  .w1-how__head .prose :global(p:last-child) { margin-bottom: var(--s4); }
+  .w1-form { padding-bottom: var(--s7); }
+  @media (min-width: 1024px) {
+    .w1-top { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; padding-top: 40px; padding-bottom: 56px; }
+    .w1-top .info-h1 { margin: 18px 0; font-size: 52px; font-weight: 300; line-height: 1.06; letter-spacing: -.021em; max-width: 12em; }
+    .w1-top .info-lead { max-width: 46ch; }
+    .w1-acts { display: flex !important; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 28px 0 0; font-size: 14px; }
+    .w1-top__img { display: block !important; overflow: hidden; }
+    .w1-top__img img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 70%; display: block; }
+
+    .w1-how { background: var(--paper-2); padding: 56px 0 48px; }
+    .w1-how__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 28px; }
+    .w1-how__head .ir-dash { align-self: flex-start; margin-top: 10px; }
+    .w1 .w1-how__p { max-width: 52ch; font-size: 15px; line-height: 1.6; color: var(--muted); }
+    .w1-how__head .prose :global(p:last-child) { margin: 0; }
+    .w1 .w1-how__cards { max-width: none; }
+    .w1 .w1-how__cards .cards { margin: 0; gap: 20px; display: flex; }
+    .w1 .w1-how__cards .cards li { height: 540px; display: flex; flex-direction: column; position: relative; background: var(--paper); overflow: hidden;
+                                    transition: box-shadow .25s ease; }
+    .w1 .w1-how__cards .cards li:hover { box-shadow: 0 18px 40px rgba(11,14,16,.12); }
+    .w1 .w1-how__cards .cards h2 { order: 1; margin: 0; padding: 28px 28px 0; font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: -.012em; }
+    .w1 .w1-how__cards .cards h2 a { color: var(--ink); text-decoration: none; }
+    .w1 .w1-how__cards .cards h2 a::after { content: ''; position: absolute; inset: 0; }
+    .w1 .w1-how__cards .cards li:hover h2 a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    .w1 .w1-how__cards .cards p { order: 2; margin: 10px 0 0; padding: 0 28px; font-size: 15px; line-height: 1.55; color: var(--muted); }
+    .w1 .w1-how__cards .cards img { order: 3; margin: auto 0 0; width: 100%; height: 260px; aspect-ratio: auto; object-fit: cover; flex: none; transition: transform .45s ease; }
+    .w1 .w1-how__cards .cards li:hover img { transform: scale(1.03); }
+
+    .w1-form { background: var(--ink-deep); color: #fff; padding: 64px 0; scroll-margin-top: 24px; }
+    .w1 .w1-form__in { max-width: none; color: #fff; }
+    .w1-form__in :global(.iform) { margin-top: 0; }
+
+    .w1-more { background: var(--paper-2); padding: 56px 0 64px; }
+    .w1-more__blk + .w1-more__blk { margin-top: 40px; }
+
+    .w1-dir { display: block !important; background: var(--paper-2); padding: 22px 0 0; font-size: 12px; }
+    .w1-dir__in { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--line); color: var(--muted); }
+    .w1-dir__in a { color: var(--muted); text-decoration: none; }
+    .w1-dir__in a:hover { color: var(--ink); }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .w1 .w1-how__cards .cards li, .w1 .w1-how__cards .cards img { transition: none; }
+  }
 </style>

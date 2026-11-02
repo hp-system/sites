@@ -1,0 +1,22 @@
+---
+// A centred page card of the desktop «Related» and «Property for sale in Halkidiki» rows
+// (info pages wave 1, #105; Services and Company reuse it): picture, title, an optional line,
+// a white button and an optional grey link. Styles: InfoKit.astro (`.pc*`).
+interface Props {
+  href: string; title: string; text?: string; button: string;
+  img?: string; srcset?: string; alt: string; link?: { href: string; label: string };
+}
+const { href, title, text = '', button, img = '', srcset, alt, link } = Astro.props;
+---
+<div class="pc">
+  <a class="pc__i" href={href} tabindex="-1" aria-hidden="true">
+    {img && <img src={img} srcset={srcset} sizes={srcset ? '(min-width: 1280px) 387px, calc((100vw - 120px) / 3)' : undefined}
+                 alt={alt} width="800" height="500" loading="lazy" decoding="async" />}
+  </a>
+  <h3 class="pc__t">{title}</h3>
+  {text && <p class="pc__p">{text}</p>}
+  <p class="pc__a">
+    <a class="pc__b" href={href}>{button}</a>
+    {link && <a class="pc__l" href={link.href}>{link.label} <span aria-hidden="true">›</span></a>}
+  </p>
+</div>

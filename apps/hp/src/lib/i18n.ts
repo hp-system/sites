@@ -625,6 +625,8 @@ export const T: Record<Lang, Dict> = {
 // ═══════════════════════════════════════════════════════════════════════════
 const U: Record<Lang, Dict> = {
   el: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Θέλεις να αποθηκεύσεις αυτή την αναζήτηση;', 'list.yes': 'Ναι', 'list.no': 'Όχι', 'list.clear_all': 'Καθαρισμός όλων', 'list.beds_tag': '{n}+ υπνοδωμάτια', 'list.size': 'Εμβαδόν', 'list.size_tag': 'Εμβαδόν {v}', 'list.price': 'Τιμή', 'list.from': 'Από {v}', 'list.upto': 'Έως {v}', 'list.remove': 'Αφαίρεση: {v}',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'Νέα ακίνητα στη Χαλκιδική', 'home.coll_sub': 'Έτοιμες αναζητήσεις και κάθε τύπος ακινήτου.', 'coll.houses': 'Μονοκατοικίες', 'coll.hotels': 'Ξενοδοχεία & επαγγελματικά', 'home.area_h2': 'Ακίνητα προς πώληση στη Χαλκιδική ανά περιοχή', 'home.area_sub': 'Ελεγμένες αγγελίες με δικές μας φωτογραφίες · από {price}', 'home.from': 'από {price}', 'home.area_alt': 'Ακίνητα προς πώληση — {name}, Χαλκιδική', 'home.greece': 'Ακίνητα προς πώληση στην Ελλάδα', 'ab.h2_we': 'Τα υπόλοιπα τα κάνουμε εμείς για σένα.', 'home.pages': 'Σελίδες', 'home.page': 'Σελίδα {n}', 'home.why': 'Γιατί εμείς', 'home.top': 'Επιστροφή στην αρχή',
     'coll.top': 'Πάνω από ένα εκατομμύριο',
@@ -1002,6 +1004,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Ξεκίνα από την αρχή',
   },
   en: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Do you want to save this search?', 'list.yes': 'Yes', 'list.no': 'No', 'list.clear_all': 'Clear all', 'list.beds_tag': '{n}+ bedrooms', 'list.size': 'Size', 'list.size_tag': 'Size {v}', 'list.price': 'Price', 'list.from': 'From {v}', 'list.upto': 'Up to {v}', 'list.remove': 'Remove {v}',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'New properties in Halkidiki', 'home.coll_sub': 'Ready-made searches and every type of property.', 'coll.houses': 'Houses', 'coll.hotels': 'Hotels & commercial', 'home.area_h2': 'Property for sale in Halkidiki by area', 'home.area_sub': 'Verified listings with our own photos · from {price}', 'home.from': 'from {price}', 'home.area_alt': 'Property for sale in {name}, Halkidiki', 'home.greece': 'Property for sale in Greece', 'ab.h2_we': 'We do the rest for you.', 'home.pages': 'Pages', 'home.page': 'Page {n}', 'home.why': 'Why us', 'home.top': 'Back to top',
     'coll.top': 'Above one million',
@@ -1370,6 +1374,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Start from the beginning',
   },
   bg: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Искате ли да запазите това търсене?', 'list.yes': 'Да', 'list.no': 'Не', 'list.clear_all': 'Изчисти всички', 'list.beds_tag': '{n}+ спални', 'list.size': 'Площ', 'list.size_tag': 'Площ {v}', 'list.price': 'Цена', 'list.from': 'От {v}', 'list.upto': 'До {v}', 'list.remove': 'Премахни {v}',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'Нови имоти в Халкидики', 'home.coll_sub': 'Готови търсения и всеки вид имот.', 'coll.houses': 'Къщи', 'coll.hotels': 'Хотели и търговски имоти', 'home.area_h2': 'Имоти за продажба в Халкидики по райони', 'home.area_sub': 'Проверени обяви с наши собствени снимки · от {price}', 'home.from': 'от {price}', 'home.area_alt': 'Имоти за продажба — {name}, Халкидики', 'home.greece': 'Имоти за продажба в Гърция', 'ab.h2_we': 'Останалото го правим ние вместо вас.', 'home.pages': 'Страници', 'home.page': 'Страница {n}', 'home.why': 'Защо ние', 'home.top': 'Към началото',
     'coll.top': 'Над един милион',
@@ -1738,6 +1744,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Започнете отначало',
   },
   sr: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Želite li da sačuvate ovu pretragu?', 'list.yes': 'Da', 'list.no': 'Ne', 'list.clear_all': 'Obriši sve', 'list.beds_tag': '{n}+ spavaće sobe', 'list.size': 'Površina', 'list.size_tag': 'Površina {v}', 'list.price': 'Cena', 'list.from': 'Od {v}', 'list.upto': 'Do {v}', 'list.remove': 'Ukloni {v}',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'Nove nekretnine na Halkidikiju', 'home.coll_sub': 'Gotove pretrage i svaka vrsta nekretnine.', 'coll.houses': 'Kuće', 'coll.hotels': 'Hoteli i poslovni prostori', 'home.area_h2': 'Nekretnine na prodaju na Halkidikiju po oblastima', 'home.area_sub': 'Provereni oglasi sa našim fotografijama · od {price}', 'home.from': 'od {price}', 'home.area_alt': 'Nekretnine na prodaju — {name}, Halkidiki', 'home.greece': 'Nekretnine na prodaju u Grčkoj', 'ab.h2_we': 'Ostalo radimo mi umesto vas.', 'home.pages': 'Stranice', 'home.page': 'Stranica {n}', 'home.why': 'Zašto mi', 'home.top': 'Nazad na vrh',
     'coll.top': 'Preko milion evra',
@@ -2106,6 +2114,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Krenite iz početka',
   },
   de: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Möchten Sie diese Suche speichern?', 'list.yes': 'Ja', 'list.no': 'Nein', 'list.clear_all': 'Alle zurücksetzen', 'list.beds_tag': '{n}+ Schlafzimmer', 'list.size': 'Größe', 'list.size_tag': 'Größe {v}', 'list.price': 'Preis', 'list.from': 'Ab {v}', 'list.upto': 'Bis {v}', 'list.remove': '{v} entfernen',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'Neue Immobilien auf Chalkidiki', 'home.coll_sub': 'Fertige Suchen und jede Art von Immobilie.', 'coll.houses': 'Häuser', 'coll.hotels': 'Hotels & Gewerbe', 'home.area_h2': 'Immobilien zum Verkauf auf Chalkidiki nach Region', 'home.area_sub': 'Geprüfte Angebote mit eigenen Fotos · ab {price}', 'home.from': 'ab {price}', 'home.area_alt': 'Immobilien zum Verkauf — {name}, Chalkidiki', 'home.greece': 'Immobilien zum Verkauf in Griechenland', 'ab.h2_we': 'Den Rest erledigen wir für Sie.', 'home.pages': 'Seiten', 'home.page': 'Seite {n}', 'home.why': 'Warum wir', 'home.top': 'Nach oben',
     'coll.top': 'Über eine Million',
@@ -2474,6 +2484,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Von vorn beginnen',
   },
   ro: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Doriți să salvați această căutare?', 'list.yes': 'Da', 'list.no': 'Nu', 'list.clear_all': 'Șterge tot', 'list.beds_tag': '{n}+ dormitoare', 'list.size': 'Suprafață', 'list.size_tag': 'Suprafață {v}', 'list.price': 'Preț', 'list.from': 'De la {v}', 'list.upto': 'Până la {v}', 'list.remove': 'Elimină {v}',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'Proprietăți noi în Halkidiki', 'home.coll_sub': 'Căutări gata făcute și orice tip de proprietate.', 'coll.houses': 'Case', 'coll.hotels': 'Hoteluri și spații comerciale', 'home.area_h2': 'Proprietăți de vânzare în Halkidiki, pe zone', 'home.area_sub': 'Anunțuri verificate, cu fotografiile noastre · de la {price}', 'home.from': 'de la {price}', 'home.area_alt': 'Proprietăți de vânzare — {name}, Halkidiki', 'home.greece': 'Proprietăți de vânzare în Grecia', 'ab.h2_we': 'Restul îl facem noi pentru dumneavoastră.', 'home.pages': 'Pagini', 'home.page': 'Pagina {n}', 'home.why': 'De ce noi', 'home.top': 'Înapoi sus',
     'coll.top': 'Peste un milion',
@@ -2842,6 +2854,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Începeți de la început',
   },
   tr: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Bu aramayı kaydetmek ister misiniz?', 'list.yes': 'Evet', 'list.no': 'Hayır', 'list.clear_all': 'Tümünü temizle', 'list.beds_tag': '{n}+ yatak odası', 'list.size': 'Alan', 'list.size_tag': 'Alan {v}', 'list.price': 'Fiyat', 'list.from': 'En az {v}', 'list.upto': 'En fazla {v}', 'list.remove': '{v} kaldır',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'Halkidiki\'de yeni gayrimenkuller', 'home.coll_sub': 'Hazır aramalar ve her türden gayrimenkul.', 'coll.houses': 'Evler', 'coll.hotels': 'Oteller ve ticari mülkler', 'home.area_h2': 'Bölgelere göre Halkidiki\'de satılık gayrimenkuller', 'home.area_sub': 'Kendi fotoğraflarımızla doğrulanmış ilanlar · başlangıç {price}', 'home.from': 'başlangıç {price}', 'home.area_alt': 'Satılık gayrimenkuller — {name}, Halkidiki', 'home.greece': 'Yunanistan\'da satılık gayrimenkuller', 'ab.h2_we': 'Gerisini sizin için biz yaparız.', 'home.pages': 'Sayfalar', 'home.page': 'Sayfa {n}', 'home.why': 'Neden biz', 'home.top': 'Başa dön',
     'coll.top': 'Bir milyonun üzerinde',
@@ -3211,6 +3225,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Baştan başlayın',
   },
   he: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'לשמור את החיפוש הזה?', 'list.yes': 'כן', 'list.no': 'לא', 'list.clear_all': 'ניקוי הכול', 'list.beds_tag': '{n}+ חדרי שינה', 'list.size': 'שטח', 'list.size_tag': 'שטח {v}', 'list.price': 'מחיר', 'list.from': 'מ־{v}', 'list.upto': 'עד {v}', 'list.remove': 'הסרת {v}',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'נכסים חדשים בחלקידיקי', 'home.coll_sub': 'חיפושים מוכנים וכל סוגי הנכסים.', 'coll.houses': 'בתים', 'coll.hotels': 'מלונות ונכסים מסחריים', 'home.area_h2': 'נכסים למכירה בחלקידיקי לפי אזור', 'home.area_sub': 'מודעות מאומתות עם תמונות משלנו · החל מ-{price}', 'home.from': 'החל מ-{price}', 'home.area_alt': 'נכסים למכירה — {name}, חלקידיקי', 'home.greece': 'נכסים למכירה ביוון', 'ab.h2_we': 'את השאר אנחנו עושים בשבילכם.', 'home.pages': 'עמודים', 'home.page': 'עמוד {n}', 'home.why': 'למה אנחנו', 'home.top': 'חזרה למעלה',
     'coll.top': 'מעל מיליון',
@@ -3580,6 +3596,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'התחילו מההתחלה',
   },
   ru: {
+    // Property list desktop redesign (#102), approved by George 2026-11-02.
+    'list.save_q': 'Хотите сохранить этот поиск?', 'list.yes': 'Да', 'list.no': 'Нет', 'list.clear_all': 'Сбросить всё', 'list.beds_tag': '{n}+ спальни', 'list.size': 'Площадь', 'list.size_tag': 'Площадь {v}', 'list.price': 'Цена', 'list.from': 'От {v}', 'list.upto': 'До {v}', 'list.remove': 'Убрать {v}',
     // Home desktop redesign (#101), approved by George 2026-11-02.
     'home.new_h2': 'Новые объекты на Халкидики', 'home.coll_sub': 'Готовые подборки и любой тип недвижимости.', 'coll.houses': 'Дома', 'coll.hotels': 'Отели и коммерческая недвижимость', 'home.area_h2': 'Недвижимость на продажу на Халкидики по районам', 'home.area_sub': 'Проверенные объявления с нашими фотографиями · от {price}', 'home.from': 'от {price}', 'home.area_alt': 'Недвижимость на продажу — {name}, Халкидики', 'home.greece': 'Недвижимость на продажу в Греции', 'ab.h2_we': 'Остальное мы делаем за Вас.', 'home.pages': 'Страницы', 'home.page': 'Страница {n}', 'home.why': 'Почему мы', 'home.top': 'Наверх',
     'coll.top': 'Свыше миллиона',

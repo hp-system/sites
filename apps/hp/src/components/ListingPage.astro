@@ -24,7 +24,10 @@ import PropertyCard from './PropertyCard.astro';
 import { allProperties, refOf, priceOf, priceVisible } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
 import { prefix, propertyUrl, t, type Lang } from '../lib/i18n';
-import { num, seaLabel } from '../lib/format';
+import { num, seaLabel, money, sqm } from '../lib/format';
+import { cmsImage } from '../lib/content';
+import { heroShot } from '../lib/hero';
+import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
@@ -151,14 +154,116 @@ const lockedBy = (k: keyof Query) => facets.some((f) => f.q[k] !== undefined);
 const here = `${pathFor(lang)}${paramsOf(q)}`;
 
 // Άλλα θέματα για γρήγορη μετάβαση — μόνο όσα δεν είναι ήδη ενεργά.
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DESKTOP REDESIGN (#102, approved by George 2026-11-02). Everything below is
+// shown only at ≥1024px; phones keep George's layout above, untouched.
+// The design's interactions are mapped onto the REAL list: every filter is a
+// URL parameter, applied by a GET form (works without JavaScript); removing a
+// filter or a page change is a real link; canonical / noindex rules unchanged.
+// ═══════════════════════════════════════════════════════════════════════════
+// Top strip: the end of the home photo (the same chosen landscape, CMS first).
+// A landscape, not a property → clean is allowed (see Hero.astro). It is a CSS
+// background inside a ≥1024px rule, so phones never download it.
+const cmsHero = await cmsImage('hero.main').catch(() => null);
+const shot = heroShot();
+const heroUrl = cmsHero?.url || shot?.url || '';
+const heroBg = heroUrl ? `--lhero:url("${clean(heroUrl)}")` : undefined;
+
+// The parameters of this URL (never the facet ones — those live in the path).
+const here2 = (drop: string[] = []) => {
+  const sp2 = new URLSearchParams(paramsOf({ ...fromUrl, page: undefined }).slice(1));
+  for (const k of drop) sp2.delete(k);
+  return sp2;
+};
+/** Hidden inputs that carry the other filters along with one cell's form. */
+const keepFields = (drop: string[]) => [...here2([...drop, 'id', 'page']).entries()];
+/** This page without some parameters — the link of a tag. */
+const without = (drop: string[]) => {
+  const s = here2([...drop, 'page']).toString();
+  return `${pathFor(lang)}${s ? `?${s}` : ''}`;
+};
+
+// The cells of the row. A cell whose value the address already fixes (a facet
+// page, e.g. «Kassandra») is not repeated — same rule as George's form.
+type Opt = { v: string; label: string };
+const catLabel: Record<string, string> = {
+  residency: t(lang, 'cat.homes'), land: t(lang, 'cat.land'), business: t(lang, 'cat.commercial'),
+};
+const typeLabel = (v: string) => typeOpts.find((o) => o.v === v)?.label ?? (v === 'hotel' ? t(lang, 'kinds.hotels') : v);
+const cells: { key: string; label: string; on: boolean; opts?: Opt[]; cur?: string;
+               range?: { lo: string; hi: string; loV?: number; hiV?: number; loL: string; hiL: string; step: number } }[] = [];
+if (!lockedBy('municipality')) cells.push({ key: 'muni', label: ui(lang, 'muni'), on: !!fromUrl.municipality, opts: muniOpts, cur: fromUrl.municipality });
+if (!lockedBy('subcategory') && !lockedBy('category')) cells.push({ key: 'type', label: ui(lang, 'type'), on: !!fromUrl.subcategory, opts: typeOpts, cur: fromUrl.subcategory });
+cells.push({ key: 'price', label: t(lang, 'list.price'), on: !!(fromUrl.priceMin || fromUrl.priceMax),
+  range: { lo: 'price_min', hi: 'price_max', loV: fromUrl.priceMin, hiV: fromUrl.priceMax, loL: ui(lang, 'priceFrom'), hiL: ui(lang, 'priceTo'), step: 10000 } });
+cells.push({ key: 'beds', label: ui(lang, 'beds'), on: !!fromUrl.beds,
+  opts: [1, 2, 3, 4, 5].map((n) => ({ v: String(n), label: `${n}+` })), cur: fromUrl.beds ? String(fromUrl.beds) : undefined });
+if (!lockedBy('sea')) cells.push({ key: 'sea', label: ui(lang, 'seaLabel'), on: !!fromUrl.sea, opts: seaOpts, cur: fromUrl.sea });
+cells.push({ key: 'size', label: t(lang, 'list.size'), on: !!(fromUrl.sqmMin || fromUrl.sqmMax),
+  range: { lo: 'sqm_min', hi: 'sqm_max', loV: fromUrl.sqmMin, hiV: fromUrl.sqmMax, loL: ui(lang, 'areaFrom'), hiL: ui(lang, 'areaTo'), step: 10 } });
+// URL keys that belong to a cell (long aliases included, so a form never sends both).
+const cellKeys: Record<string, string[]> = {
+  muni: ['muni', 'municipality'], type: ['type', 'subcategory'], beds: ['beds', 'bedrooms'],
+  sea: ['sea', 'sea_access'], price: ['price_min', 'price_max'], size: ['sqm_min', 'sqm_max'],
+};
+
+// «More filters» = George's full filter form (#fbar). Its number counts what the
+// row does not show: the kind (Homes / Land / Commercial) and «with a pool».
+const moreN = (fromUrl.category ? 1 : 0) + (fromUrl.pool ? 1 : 0);
+
+// Tags: one per chosen value; each removes itself; the × clears everything incl. sort.
+const span = (lo: number | undefined, hi: number | undefined, f: (n: number) => string) =>
+  lo && hi ? `${f(lo)} – ${f(hi)}` : lo ? t(lang, 'list.from', { v: f(lo) }) : t(lang, 'list.upto', { v: f(hi ?? 0) });
+const tags: { text: string; href: string }[] = [];
+if (fromUrl.id) tags.push({ text: `${ui(lang, 'idPh')} ${fromUrl.id}`, href: without(['id']) });
+if (fromUrl.category) tags.push({ text: catLabel[fromUrl.category] ?? fromUrl.category, href: without(['category']) });
+if (fromUrl.subcategory) tags.push({ text: typeLabel(fromUrl.subcategory), href: without(cellKeys.type) });
+if (fromUrl.municipality) tags.push({ text: muniOpts.find((o) => o.v === fromUrl.municipality)?.label ?? fromUrl.municipality, href: without(cellKeys.muni) });
+if (fromUrl.priceMin || fromUrl.priceMax) tags.push({ text: span(fromUrl.priceMin, fromUrl.priceMax, (n) => money(n, lang)), href: without(cellKeys.price) });
+if (fromUrl.beds) tags.push({ text: t(lang, 'list.beds_tag', { n: fromUrl.beds }), href: without(cellKeys.beds) });
+if (fromUrl.sea) tags.push({ text: seaLabel(fromUrl.sea, lang) || fromUrl.sea, href: without(cellKeys.sea) });
+if (fromUrl.sqmMin || fromUrl.sqmMax) tags.push({ text: t(lang, 'list.size_tag', { v: span(fromUrl.sqmMin, fromUrl.sqmMax, (n) => sqm(n, lang)) }), href: without(cellKeys.size) });
+if (fromUrl.pool) tags.push({ text: t(lang, 'coll.pool'), href: without(['pool']) });
+const sorted = !!fromUrl.sort && fromUrl.sort !== SORT_DEFAULT;
+if (sorted) tags.push({ text: `${ui(lang, 'sort')}: ${sortLabel[fromUrl.sort!]}`, href: without(['sort']) });
+
+// «Do you want to save this search?» — only for guests with a real filter. YES is
+// the existing «save search» door (sign-in, then back with the query); NO hides
+// it. Members have no saved-search call on the site yet, so they do not see it.
+const filtered = activeCount > 0 || !!fromUrl.category || !!fromUrl.pool;
+const showSave = !viewer.member && filtered && !fromUrl.id;
+const saveHref = `${prefix(lang)}/login?next=${encodeURIComponent(here)}&save=1`;
+
+// Pager numbers: 1 … n-1 n n+1 … last (as the design).
+const pgList = (() => {
+  const L = res.pages, c = res.page;
+  if (L <= 7) return Array.from({ length: L }, (_, i) => i + 1);
+  if (c <= 4) return [1, 2, 3, 4, 5, 0, L];
+  if (c >= L - 3) return [1, 0, L - 4, L - 3, L - 2, L - 1, L];
+  return [1, 0, c - 1, c, c + 1, 0, L];
+})();
+
+// The free-account tile: a blurred, WATERMARKED photo of a card on this page.
+const tilePhoto = (() => {
+  const p = res.items[Math.min(6, res.items.length - 1)];
+  const c = p ? coverOf(p.attributes ?? {}) : null;
+  return c ? marked(c.url, 400) : '';
+})();
 ---
 <Base lang={lang} title={title} description={desc} pathFor={pathFor} noindex={noindex} jsonLd={jsonLd}>
   {/* 🔴 `solid` — ΑΛΛΙΩΣ Η ΚΕΦΑΛΙΔΑ ΕΙΝΑΙ ΛΕΥΚΗ ΠΑΝΩ ΣΕ ΛΕΥΚΟ.
       Δες το σχόλιο στην κορυφή του Header.astro: εδώ δεν υπάρχει φωτογραφία. */}
-  <Header lang={lang} solid pathFor={pathFor} />
+  {/* #102 desktop: the header floats on the top strip (white on the photo);
+      phones keep the solid bar — the wrapper only changes ≥1024px. */}
+  <div class="lhead"><Header lang={lang} solid pathFor={pathFor} /></div>
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={res.total} />
 
-  <main id="main" class="wrap list">
+  <main id="main" class="list-main">
+  {/* #102 desktop: the top as on the home page — the end of the home photo with
+      the breadcrumb and the H1 on it. On phones this box is just George's column. */}
+  <div class="ltop" style={heroBg}>
+  <div class="wrap ltop__in">
     {/* 🪤 ΕΠΑΝΕΛΑΜΒΑΝΕ ΤΟΝ ΤΙΤΛΟ. Στη γυμνή λίστα έγραφε «Halkidiki Properties ·
         Ακίνητα προς πώληση στη Χαλκιδική» και ΑΜΕΣΩΣ από κάτω ο H1 έλεγε το ίδιο
         ακριβώς — δύο φορές η ίδια φράση, η μία σε αχνό γκρι. Τώρα το τελευταίο
@@ -185,6 +290,111 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
       <h1 class={isThemed ? 't-display head__h' : 't-h2 head__h'}>{heading}</h1>
       {apiDown && <p class="count t-data">—</p>}
     </div>
+  </div>
+  </div>
+
+  {/* ── #102 DESKTOP FILTER ROW — where the home search bar sits: half on the
+      photo, the page width. Hidden on phones (George's tools below stay). Each
+      cell is its own GET form carrying the other filters as hidden fields, so it
+      works without JavaScript and never sends a parameter twice. No property
+      count anywhere (George 17/10) — the design's «✓ 516» cell is left out. ── */}
+  <div class="lbarwrap" data-lbar>
+    <div class="lbar">
+      <div class="lrow">
+        <div class="lrow__f">
+          {cells.map((c) => (
+            <details class:list={['lc', c.on && 'lc--on', c.range && 'lc--rng']} data-lc>
+              <summary class="lc__s">
+                <span class="lc__t">{c.label}</span>
+                <svg class="lc__chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+              </summary>
+              <div class="lc__m">
+                <form method="get" action={pathFor(lang)}>
+                  {keepFields(cellKeys[c.key]).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
+                  {c.opts && c.opts.map((o) => o.v === c.cur ? (
+                    <a class="lopt" href={without(cellKeys[c.key])} aria-current="true">
+                      <span class="lopt__b" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12.5l5 5L20 6.5" /></svg></span>{o.label}
+                    </a>
+                  ) : (
+                    <button class="lopt" type="submit" name={c.key} value={o.v}>
+                      <span class="lopt__b" aria-hidden="true"></span>{o.label}
+                    </button>
+                  ))}
+                  {c.range && (
+                    <div class="lrng">
+                      <label><span class="lrng__l">{c.range.loL}</span>
+                        <input type="number" name={c.range.lo} min="0" step={c.range.step} inputmode="numeric" value={c.range.loV ?? ''} /></label>
+                      <label><span class="lrng__l">{c.range.hiL}</span>
+                        <input type="number" name={c.range.hi} min="0" step={c.range.step} inputmode="numeric" value={c.range.hiV ?? ''} /></label>
+                      <button class="lrng__go" type="submit">{ui(lang, 'apply')}</button>
+                    </div>
+                  )}
+                </form>
+                {c.on && <div class="lc__f"><a href={without(cellKeys[c.key])}>{ui(lang, 'clear')}</a></div>}
+              </div>
+            </details>
+          ))}
+          <button type="button" class:list={['lc', 'lc--more', moreN > 0 && 'lc--on']} data-ftog aria-controls="fbar" aria-expanded="false">
+            <svg class="lc__ico" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5h12M4.5 8h7M6.8 11.5h2.4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" /></svg>
+            <span class="lc__t">{t(lang, 'search.filters')}</span>
+            {moreN > 0 && <span class="lc__n">{moreN}</span>}
+          </button>
+        </div>
+        <form class="lc lc--id" method="get" action={pathFor(lang)} role="search">
+          <label class="lc__idl">
+            <svg class="lc__ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
+            <span class="sr-only">{ui(lang, 'idLabel')}</span>
+            <input class="lc__idin" name="id" type="text" inputmode="numeric" maxlength="6" autocomplete="off"
+                   value={q.id ?? ''} placeholder={ui(lang, 'idPh')} />
+          </label>
+        </form>
+        <details class:list={['lc', 'lc--sort', sorted && 'lc--on']} data-lc>
+          <summary class="lc__s">
+            <span class="lc__t">{ui(lang, 'sort')}</span>
+            <svg class="lc__chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          </summary>
+          <div class="lc__m lc__m--end">
+            {SORTS.map((s) => (
+              <a class="lopt lopt--tick" href={sortUrl(s)} aria-current={s === cur ? 'true' : undefined}>
+                {sortLabel[s]}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" /></svg>
+              </a>
+            ))}
+          </div>
+        </details>
+      </div>
+
+      {/* the save question slides out under the bar, inside the same box */}
+      {showSave && (
+        <div class="lsave lslide" data-lsave>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2zM10 21h4" /></svg>
+          <span class="lsave__q">{t(lang, 'list.save_q')}</span>
+          <button type="button" class="lsave__no" data-lsave-no>{t(lang, 'list.no')}</button>
+          <a class="lsave__yes l-gild" href={saveHref} data-ev="member:save_search">{t(lang, 'list.yes')}</a>
+        </div>
+      )}
+
+      {/* the chosen filters as tags: each removes itself; × clears all, sort included */}
+      {tags.length > 0 && (
+        <div class="ltags lslide">
+          <div class="ltags__l">
+            {tags.map((g) => (
+              <a class="ltag" href={g.href} aria-label={t(lang, 'list.remove', { v: g.text })}>
+                <span>{g.text}</span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+              </a>
+            ))}
+          </div>
+          <a class="lclr" href={pathFor(lang)} aria-label={t(lang, 'list.clear_all')}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+            <span class="lclr__tip" aria-hidden="true">{t(lang, 'list.clear_all')}</span>
+          </a>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div class="wrap list">
 
     {/* ΔΥΟ ΟΜΑΔΕΣ, ΟΧΙ ΠΕΝΤΕ ΣΚΟΡΠΙΑ ΣΤΟΙΧΕΙΑ (George, 30/7):
           ΑΡΙΣΤΕΡΑ  = ΕΝΕΡΓΕΙΕΣ  → φίλτρα · αποθήκευση · κωδικός
@@ -304,6 +514,10 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
         </select>
       </label>
       {q.sort && q.sort !== 'new' && <input type="hidden" name="sort" value={q.sort} />}
+      {/* #102: the kind and «with a pool» have no field here — carried along so
+          applying this form does not silently drop them. */}
+      {fromUrl.category && !lockedBy('category') && <input type="hidden" name="category" value={fromUrl.category} />}
+      {fromUrl.pool && <input type="hidden" name="pool" value="1" />}
       <button class="btn btn--go" type="submit">{ui(lang, 'apply')}</button>
       {activeCount > 0 && <a class="btn btn--clear" href={pathFor(lang)}>{ui(lang, 'clear')}</a>}
     </form>
@@ -331,7 +545,10 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
             <>
               <li><PropertyCard p={p} lang={lang} viewer={viewer} eager={i < 3} /></li>
               {showJoin && i === JOIN_AFTER - 1 && (
-                <li class="join">
+                <li class="join acct">
+                  {/* #102 desktop: the free-account tile — a blurred, watermarked photo
+                      behind, lifts on hover. George's texts unchanged. */}
+                  {tilePhoto && <img class="join__bg" src={tilePhoto} alt="" aria-hidden="true" loading="lazy" decoding="async" width="400" height="267" />}
                   {/* 🔐 ΟΣΟ ΨΗΛΟ ΟΣΟ ΜΙΑ ΚΑΡΤΑ, ΟΧΙ ΛΩΡΙΔΑ (George, 30/7).
                       Στέκεται μέσα στη ροή των αποτελεσμάτων, στη θέση όπου ο
                       επισκέπτης έχει ήδη δει τρία ακίνητα και ξέρει τι χάνει —
@@ -345,11 +562,11 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
                   </span>
                   <b class="join__h t-h3">{ui(lang, 'joinH')}</b>
                   <ul class="join__list">
-                    <li>{ui(lang, 'joinB1')}</li>
-                    <li>{ui(lang, 'joinB2')}</li>
-                    <li>{ui(lang, 'joinB3')}</li>
+                    <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21ZM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" /></svg><span>{ui(lang, 'joinB1')}</span></li>
+                    <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v13H3zM8 6l1.5-2h5L16 6M12 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" /></svg><span>{ui(lang, 'joinB2')}</span></li>
+                    <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2ZM10 21h4" /></svg><span>{ui(lang, 'joinB3')}</span></li>
                   </ul>
-                  <a class="join__b" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`}
+                  <a class="join__b l-gild" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`}
                      data-ev="member:join_from_list">
                     {ui(lang, 'joinCta')}
                   </a>
@@ -366,6 +583,43 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
             {res.page < res.pages && <a class="btn" href={pageUrl(res.page + 1)} rel="next">{ui(lang, 'next')}</a>}
           </nav>
         )}
+
+        {/* #102 desktop pager: real links (SEO), grey numbers, the current one
+            bold with a dash; the side marks stretch into an arrow on hover.
+            «Per page» on the right, opening downward. No «Showing x of N» — no
+            property counts in public text (George 17/10). */}
+        <nav class="lpg" aria-label={t(lang, 'home.pages')}>
+          <span class="lpg__side"></span>
+          <div class="lpg__c">
+            {res.pages > 1 && (
+              <>
+                {res.page > 1
+                  ? <a class="pgw" href={pageUrl(res.page - 1)} aria-label={ui(lang, 'prev')}><i class="pgd"></i><svg class="pga pga--l" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 1L1 6l5 5" /></svg></a>
+                  : <span class="pgw" aria-disabled="true"><i class="pgd"></i></span>}
+                <span class="lpg__nums">
+                  {pgList.map((n) => n === 0
+                    ? <span class="pgn pgg" aria-hidden="true">…</span>
+                    : n === res.page
+                      ? <span class="pgn" aria-current="page">{n}</span>
+                      : <a class="pgn" href={pageUrl(n)} aria-label={t(lang, 'home.page', { n })}>{n}</a>)}
+                </span>
+                {res.page < res.pages
+                  ? <a class="pgw" href={pageUrl(res.page + 1)} aria-label={ui(lang, 'next')}><i class="pgd"></i><svg class="pga pga--r" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M1 1l5 5-5 5" /></svg></a>
+                  : <span class="pgw" aria-disabled="true"><i class="pgd"></i></span>}
+              </>
+            )}
+          </div>
+          <details class="lpg__side lpp" data-lc>
+            <summary class="ppb">{ui(lang, 'perPage')}: <b>{per}</b>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></summary>
+            <div class="lpp__m">
+              {PER_PAGE_OPTIONS.map((n) => (
+                <a class="ppo" href={perUrl(n)} aria-current={n === per ? 'true' : undefined}>{n}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></a>
+              ))}
+            </div>
+          </details>
+        </nav>
       </>
     )}
 
@@ -374,13 +628,23 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
         θέλω εκεί, φαίνονται πάρα πολύ άσχημα» (George, 30/7). Μετακόμισαν στο
         υποσέλιδο (Footer.astro), που έτσι κι αλλιώς είναι σε ΚΑΘΕ σελίδα — άρα
         το SEO κερδίζει, όχι μόνο δεν χάνει. */}
+  </div>
   </main>
+
+  {/* #102 desktop: back to top — a square that appears after the first screen. */}
+  <button type="button" id="toTop" class="l-totop" aria-label={t(lang, 'home.top')}>
+    <svg width="14" height="16" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="square" aria-hidden="true"><path d="M7 15V2M1.5 7.5L7 2l5.5 5.5"></path></svg>
+  </button>
 
   <Footer lang={lang} munis={munis} />
 </Base>
 
 <style>
-  .list { padding-block: var(--s5) var(--s7); }
+  /* #102: the column is split in two boxes (top strip · results); phones see the
+     same paddings as before — top on the first box, bottom on the second. */
+  .ltop__in { padding-top: var(--s5); }
+  .list { padding-block: 0 var(--s7); }
   /* 🪤 ΗΤΑΝ ΣΧΕΔΟΝ ΑΟΡΑΤΟ — «σαν σβησμένα με σβηστήρα» (George, 30/7).
      12px σε `--faint` πάνω σε λευκό δίνει 5,13:1: περνά το πρότυπο, αλλά σε
      ΜΙΚΡΟ μέγεθος και κεφαλαία διαβάζεται σαν ξεθωριασμένο. Το ανέβασα σε
@@ -580,22 +844,372 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
   .empty { margin: var(--s6) 0; text-align: center; display: grid; gap: var(--s3); justify-items: center; }
   .pager { display: flex; gap: var(--s3); align-items: center; justify-content: center; margin: var(--s6) 0 0; }
 
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     #102 PROPERTY LIST — DESKTOP REDESIGN (approved by George 2026-11-02).
+     Everything new is hidden below 1024px; phones keep George's layout.
+     ═══════════════════════════════════════════════════════════════════════ */
+  .lbarwrap, .lpg, .l-totop, .join__bg, .join__ic { display: none; }
+
+  @media (min-width: 1024px) {
+    /* ── top strip: the end of the home photo, header + breadcrumb + H1 on it ── */
+    .lhead { position: absolute; top: 0; left: 0; right: 0; z-index: 20; }
+    .lhead :global(.site-header--solid) { background: transparent; border-bottom: 0; color: #fff; }
+    .lhead :global(.lsw > summary) { color: rgba(255,255,255,.78); }
+    .lhead :global(.lsw > summary:hover) { color: #fff; }
+    .ltop {
+      position: relative; height: 242px; display: flex; align-items: flex-end; color: #fff;
+      background-color: var(--paper-2); background-image: var(--lhero, none);
+      background-size: cover; background-position: 50% 100%;
+    }
+    .ltop::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(180deg, rgba(10,14,16,.42) 0%, rgba(10,14,16,0) 34%,
+                                  rgba(10,14,16,0) 46%, rgba(10,14,16,.5) 100%);
+    }
+    .ltop__in { position: relative; width: 100%; padding-top: 0; padding-bottom: 52px; }
+    .ltop .crumb, .ltop .crumb a { color: rgba(255,255,255,.88); }
+    .ltop .head { margin-top: 6px; }
+    .ltop .head__h {
+      font-size: 36px; font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: #fff; max-width: none;
+    }
+    .ltop .count { color: rgba(255,255,255,.88); }
+
+    /* George's phone tools and pager give way to the row and the new pager */
+    .tools, .pager { display: none; }
+
+    /* ── the filter row: half on the photo, the page width ── */
+    .lbarwrap {
+      display: block; position: relative; z-index: 30;
+      max-width: var(--max); margin: -33px auto 0; padding: 0 var(--gut); box-sizing: border-box;
+    }
+    .lbar { background: var(--paper); border: 1px solid var(--line); box-shadow: 0 14px 44px rgba(0,0,0,.16); }
+    .lrow { display: flex; height: 63px; align-items: stretch; }
+    .lrow__f { display: flex; flex: 1 1 auto; min-width: 0; }
+    .lc { position: relative; flex: 1 1 0; min-width: 0; border-inline-start: 1px solid var(--line); }
+    .lrow__f > .lc:first-child { border-inline-start: 0; }
+    .lc__s, .lc--more {
+      list-style: none; height: 63px; box-sizing: border-box; padding: 0 8px; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;
+      cursor: pointer; color: var(--muted); font: inherit; font-size: 15px;
+      transition: color .15s ease, background .15s ease;
+    }
+    .lc__s::-webkit-details-marker { display: none; }
+    .lc__t { overflow: hidden; text-overflow: ellipsis; }
+    .lc__chev, .lc__ico { flex: none; color: var(--faint); transition: color .15s ease, transform .2s ease; }
+    .lc:hover > .lc__s, .lc--more:hover, .lc:hover .lc__chev, .lc--more:hover .lc__ico { color: var(--ink); }
+    .lc[open] > .lc__s { background: var(--paper-2); }
+    .lc[open] .lc__chev { transform: rotate(180deg); }
+    /* a cell with a value: beige, bold, ink */
+    .lc--on > .lc__s, .lc--more.lc--on { background: var(--paper-2); color: var(--ink); font-size: 14px; font-weight: 600; }
+    .lc--on .lc__chev { color: var(--ink); }
+    .lc__n { font-size: 13px; font-weight: 400; color: var(--muted); }
+    .lc--more {
+      appearance: none; border: 0; border-inline-start: 1px solid var(--line); background: none;
+      font-size: 13px; gap: 8px; min-height: 0;
+    }
+    .lc--more[aria-expanded='true'] { background: var(--paper-2); }
+
+    /* the menu of a cell, opening downward */
+    .lc__m {
+      position: absolute; top: 64px; inset-inline-start: -1px; z-index: 40; min-width: calc(100% + 2px); width: max-content;
+      box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); padding: 8px 0 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,.10);
+    }
+    .lc__m > form { padding-bottom: 8px; }
+    .lc__m--end { inset-inline-start: auto; inset-inline-end: -1px; min-width: 220px; padding: 6px 0; }
+    .lopt {
+      all: unset; box-sizing: border-box; cursor: pointer; width: 100%;
+      display: flex; align-items: center; gap: 12px; padding: 9px 16px; font-size: 14px; color: var(--ink);
+    }
+    .lopt:hover { background: var(--paper-2); }
+    .lopt:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+    .lopt__b {
+      flex: none; width: 18px; height: 18px; box-sizing: border-box; border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center; background: var(--paper); color: var(--paper);
+    }
+    .lopt[aria-current] .lopt__b { background: var(--ink); border-color: var(--ink); }
+    .lopt--tick { justify-content: space-between; gap: 24px; }
+    .lopt--tick svg { visibility: hidden; }
+    .lopt--tick[aria-current] { font-weight: 600; }
+    .lopt--tick[aria-current] svg { visibility: visible; }
+    .lc--rng .lc__m { width: 360px; }
+    .lrng { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; padding: 8px 18px 6px; }
+    .lrng label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .lrng__l {
+      font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--faint); font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .lrng input {
+      height: 40px; min-height: 40px; border: 1px solid var(--line); padding: 0 10px; font: inherit; font-size: 14px;
+      color: var(--ink); background: var(--paper); min-width: 0; width: 100%; box-sizing: border-box;
+    }
+    .lrng input:focus { border-color: var(--ink); outline: none; }
+    .lrng__go {
+      height: 40px; min-height: 40px; border: 0; background: var(--ink); color: var(--paper); padding: 0 14px; cursor: pointer;
+      font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .lrng__go:hover { background: var(--ink-hover); }
+    .lc__f { padding: 10px 16px; border-top: 1px solid var(--line-soft); }
+    .lc__f a { font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+    .lc__f a:hover { color: var(--ink); }
+
+    /* ID and Sort */
+    .lc--id { flex: none; width: 170px; display: flex; }
+    .lc__idl { flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 18px; cursor: text; min-width: 0; }
+    .lc__idin {
+      border: 0; padding: 0; background: none; outline: none; font: inherit; font-size: 14px; color: var(--ink);
+      min-width: 0; width: 100%; min-height: 0;
+    }
+    .lc__idin::placeholder { color: var(--faint); transition: color .15s ease; }
+    .lc--id:hover .lc__idin::placeholder, .lc--id:hover .lc__ico { color: var(--ink); }
+    .lc--sort { flex: none; }
+    .lc--sort > .lc__s { padding: 0 16px; gap: 10px; font-size: 13px; }
+    .lc--sort.lc--on > .lc__s { font-size: 14px; }
+
+    /* under the row, inside the box: the save question, then the tags — sliding down */
+    @keyframes lslide { from { max-height: 0; opacity: 0; } to { max-height: 160px; opacity: 1; } }
+    .lslide { overflow: hidden; animation: lslide .35s ease both; }
+    .lsave {
+      display: flex; align-items: center; gap: 16px; padding: 10px 16px 10px 22px;
+      background: var(--paper-2); border-top: 1px solid var(--line-soft);
+    }
+    .lsave[hidden] { display: none; }
+    .lsave > svg { flex: none; color: var(--ink); }
+    .lsave__q { flex: 1; font-size: 14.5px; }
+    .lsave__no, .lsave__yes {
+      box-sizing: border-box; height: 34px; min-height: 34px; padding: 0 18px; display: inline-flex; align-items: center;
+      font: inherit; font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+    }
+    .lsave__no { border: 1px solid var(--line); background: var(--paper); color: var(--ink); transition: background .2s ease, border-color .2s ease; }
+    .lsave__no:hover { background: var(--paper-2); border-color: rgba(14,18,20,.35); }
+    /* gilded YES on the light ground */
+    .lsave__yes {
+      background: transparent; color: var(--gold-lo); border: 1px solid var(--gold);
+      border-image: conic-gradient(from var(--gilda), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
+      transition: color .9s ease-in-out;
+    }
+    .lsave__yes:hover, .lsave__yes:focus-visible { color: var(--gold); }
+    .lsave__yes:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
+
+    .ltags { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 22px; border-top: 1px solid var(--line-soft); }
+    .ltags__l { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
+    .ltag {
+      display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px 0 12px; box-sizing: border-box;
+      background: var(--paper-2); border: 1px solid var(--paper-2); font-size: 13px; color: var(--ink);
+      white-space: nowrap; text-decoration: none; transition: border-color .15s ease;
+    }
+    .ltag svg { color: var(--faint); }
+    .ltag:hover { border-color: var(--ink); }
+    .ltag:hover svg { color: var(--ink); }
+    .lclr {
+      position: relative; flex: none; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: color .15s ease;
+    }
+    .lclr:hover { color: var(--ink); }
+    .lclr__tip {
+      display: none; position: absolute; top: 50%; inset-inline-end: 40px; transform: translateY(-50%);
+      background: var(--ink); color: var(--paper); font-size: 12px; line-height: 1; padding: 6px 9px; white-space: nowrap; z-index: 50;
+    }
+    .lclr:hover .lclr__tip, .lclr:focus-visible .lclr__tip { display: block; }
+
+    /* results column: the design's 32px under the box */
+    .list { padding-top: 32px; }
+    /* «More filters» opens George's full form, as a panel at the top of the results */
+    .fbar { margin: 0 0 32px; padding: var(--s4) 22px; border: 1px solid var(--line); background: var(--paper); }
+
+    /* ── results: four columns, the design's rhythm ── */
+    .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 20px; margin-top: 0; }
+    .grid :global(.row1) { align-items: center; gap: 12px; }
+    .grid :global(.price) { font-size: 20px; line-height: 1.2; }
+    .grid :global(.sea) { padding: 4px 8px; letter-spacing: .12em; }
+    .grid :global(.title) { margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .grid :global(.facts) { margin-top: 4px; }
+    .grid :global(.card:hover .title a) { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    /* heart: white circle; on card hover a beige outline a touch bigger; filled beige only on the heart */
+    .grid :global(.heart) { background: var(--paper); transition: background .2s ease; }
+    .grid :global(.heart svg) { width: 16px; height: 16px; transition: transform .25s ease, color .2s ease, fill .25s ease; }
+    .grid :global(.card:hover .heart svg), .grid :global(.heart:hover svg) { transform: scale(1.12); color: var(--gold-soft); }
+    .grid :global(.heart:hover svg) { fill: var(--gold-soft); }
+
+    /* the free-account tile: second row, first cell (as the design); photo behind */
+    .join {
+      grid-row: 2; grid-column: 1; position: relative; overflow: hidden; background: var(--ink-deep);
+      padding: 20px; gap: 14px; align-content: space-between; justify-items: stretch;
+    }
+    .join__bg {
+      display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      filter: blur(7px) saturate(.92); transform: scale(1.08);
+    }
+    .join::before { content: ''; position: absolute; inset: 0; background: rgba(10,14,16,.46); z-index: 0; }
+    .join > :not(.join__bg) { position: relative; z-index: 1; }
+    .join__lock { display: none; }
+    .join__h { font-size: 16px; font-weight: 600; line-height: 1.32; }
+    .join__list { gap: 8px; font-size: 12.5px; line-height: 1.4; }
+    .join__list li { grid-template-columns: 18px 1fr; gap: 9px; }
+    .join__list li::before { content: none; }
+    .join__ic { display: block; color: #fff; }
+    .join__b {
+      margin-top: 0; height: 40px; padding: 0 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+      font-size: 11.5px; letter-spacing: .09em; font-weight: 600; background: transparent; color: var(--gold-dk-text);
+      border: 1px solid var(--gold-dk);
+      border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
+      transition: color .9s ease-in-out;
+    }
+    .join__b:hover, .join__b:focus-visible { background: transparent; color: var(--gold-dk-hover); }
+    .join__b:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
+    .acct { transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s ease; }
+    .acct:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(10,14,16,.28), 0 4px 10px rgba(10,14,16,.12); }
+
+    /* ── pager ── */
+    .lpg {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line);
+    }
+    .lpg__side { flex: 1 1 0; display: flex; }
+    .lpg__c { display: flex; gap: 4px; align-items: center; }
+    .lpg__nums { display: flex; align-items: center; gap: 2px; margin: 0 18px; }
+    .pgn {
+      position: relative; min-width: 34px; height: 40px; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--faint); font-variant-numeric: tabular-nums; text-decoration: none; transition: color .2s ease;
+    }
+    .pgn::after {
+      content: ''; position: absolute; left: 50%; bottom: 6px; width: 16px; height: 2px; margin-left: -8px;
+      background: var(--ink); transform: scaleX(0); transition: transform .25s ease, background .2s ease;
+    }
+    a.pgn:hover { color: var(--ink); }
+    a.pgn:hover::after { transform: scaleX(1); background: rgba(14,18,20,.25); }
+    .pgn[aria-current='page'] { color: var(--ink); font-weight: 600; }
+    .pgn[aria-current='page']::after { transform: scaleX(1); width: 22px; margin-left: -11px; background: var(--ink); }
+    .pgg::after { display: none; }
+    .pgw { position: relative; width: 40px; height: 40px; display: inline-block; color: var(--ink); }
+    .pgd {
+      position: absolute; top: 50%; width: 6px; height: 2px; margin-top: -1px; background: rgba(14,18,20,.25);
+      transition: width .35s cubic-bezier(.4,0,.2,1), background .25s ease;
+    }
+    .lpg__c > .pgw:first-child .pgd { inset-inline-end: 17px; }
+    .lpg__c > .pgw:last-child .pgd { inset-inline-start: 17px; }
+    .pga { position: absolute; top: 50%; margin-top: -6px; opacity: 0; transition: opacity .2s ease .12s; }
+    .pga--l { left: 3px; }
+    .pga--r { right: 3px; }
+    [dir='rtl'] .pga { transform: scaleX(-1); }
+    [dir='rtl'] .pga--l { left: auto; right: 3px; }
+    [dir='rtl'] .pga--r { right: auto; left: 3px; }
+    a.pgw:hover .pgd, a.pgw:focus-visible .pgd { width: 20px; background: var(--ink); }
+    a.pgw:hover .pga, a.pgw:focus-visible .pga { opacity: 1; }
+    .pgw[aria-disabled='true'] .pgd { background: rgba(14,18,20,.12); }
+    .lpp { justify-content: flex-end; position: relative; }
+    .ppb { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); }
+    .ppb::-webkit-details-marker { display: none; }
+    .ppb b { font-weight: 600; color: var(--ink); }
+    .ppb svg { color: var(--ink); transition: transform .2s ease; }
+    .lpp[open] .ppb svg { transform: rotate(180deg); }
+    .ppb:hover { color: var(--ink); }
+    .lpp__m {
+      position: absolute; inset-inline-end: 0; top: 30px; z-index: 20; min-width: 120px; background: var(--paper);
+      border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,.10); padding: 6px 0;
+    }
+    .ppo {
+      box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 20px;
+      padding: 8px 14px; font-size: 14px; color: var(--ink); text-decoration: none;
+    }
+    .ppo svg { visibility: hidden; }
+    .ppo[aria-current] { font-weight: 600; }
+    .ppo[aria-current] svg { visibility: visible; }
+    .ppo:hover { background: var(--paper-2); }
+
+    /* ── back to top ── */
+    .l-totop {
+      all: unset; box-sizing: border-box; position: fixed; right: 24px; bottom: 24px; z-index: 70;
+      width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+      background: var(--paper); border: 1px solid rgba(14,18,20,.16); color: var(--ink); cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,.10); opacity: 0; transform: translateY(12px); pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease, background .2s ease, border-color .2s ease;
+    }
+    .l-totop.on { opacity: 1; transform: none; pointer-events: auto; }
+    .l-totop:hover { background: var(--paper-2); border-color: var(--ink); }
+    .l-totop svg { transition: transform .25s ease; }
+    .l-totop:hover svg { transform: translateY(-3px); }
+    .l-totop:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    [dir='rtl'] .l-totop { right: auto; left: 24px; }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .lslide { animation: none; }
+    .acct, .l-totop, .l-totop svg { transition: none; }
+    .acct:hover { transform: none; }
+  }
+</style>
+
+<style is:global>
+  /* #102: the gilded edge turns once on entering its box (same as the home page). */
+  @property --gilda { syntax: '<angle>'; inherits: false; initial-value: 315deg; }
+  @keyframes l-gturn { from { --gilda: 315deg; } to { --gilda: 675deg; } }
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .l-gild.grun { animation: l-gturn 1.1s ease-in-out 1; }
+  }
 </style>
 
 <script>
   // Τα φίλτρα ανοίγουν/κλείνουν. Η φόρμα δουλεύει και χωρίς αυτό — απλά μένει ανοιχτή.
+  // #102: the desktop «More filters» cell ([data-ftog]) opens the same form; on
+  // desktop it does not open by itself (the row already shows every value).
+  const desk = window.matchMedia('(min-width: 1024px)');
   const t = document.getElementById('ftog');
   const b = document.getElementById('fbar');
-  if (t && b) {
+  const togs = [t, ...Array.from(document.querySelectorAll<HTMLElement>('[data-ftog]'))].filter(Boolean) as HTMLElement[];
+  if (b && togs.length) {
+    const set = (open: boolean) => {
+      (b as HTMLElement).hidden = !open;
+      togs.forEach((x) => x.setAttribute('aria-expanded', String(open)));
+    };
     // Αν ο επισκέπτης έχει ήδη ενεργό φίλτρο, ανοίγουν από μόνα τους.
     const active = b.querySelectorAll('input[type=number]');
     let any = false;
     active.forEach((i) => { if ((i as HTMLInputElement).value) any = true; });
-    if (any) { (b as HTMLElement).hidden = false; t.setAttribute('aria-expanded', 'true'); }
-    t.addEventListener('click', () => {
-      const open = t.getAttribute('aria-expanded') === 'true';
-      t.setAttribute('aria-expanded', String(!open));
-      (b as HTMLElement).hidden = open;
-    });
+    if (any && !desk.matches) set(true);
+    togs.forEach((x) => x.addEventListener('click', () => set((b as HTMLElement).hidden)));
   }
+
+  // ── #102 desktop: one menu open at a time; a click outside or Esc closes it.
+  const menus = Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-lc]'));
+  menus.forEach((d) => d.addEventListener('toggle', () => {
+    if (!d.open) return;
+    menus.forEach((o) => { if (o !== d) o.open = false; });
+    d.querySelector<HTMLInputElement>('input[type=number]')?.focus();
+  }));
+  document.addEventListener('click', (e) => {
+    const el = e.target as Node;
+    menus.forEach((d) => { if (d.open && !d.contains(el)) d.open = false; });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    menus.forEach((d) => { if (d.open) { d.open = false; d.querySelector('summary')?.focus(); } });
+  });
+
+  // ── «No» hides the save question for this search (this tab only).
+  const save = document.querySelector<HTMLElement>('[data-lsave]');
+  const sk = `hp-nosave:${location.pathname}${location.search}`;
+  try { if (save && sessionStorage.getItem(sk)) save.hidden = true; } catch { /* storage off */ }
+  document.querySelector('[data-lsave-no]')?.addEventListener('click', () => {
+    if (save) save.hidden = true;
+    try { sessionStorage.setItem(sk, '1'); } catch { /* storage off */ }
+  });
+
+  // ── Gilded buttons: the gradient turns once on entering their box.
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll<HTMLElement>('.l-gild').forEach((g) => {
+    const run = () => {
+      if (!desk.matches || still.matches) return;
+      g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun');
+    };
+    (g.closest('.lsave, .join') ?? g.parentElement)?.addEventListener('mouseenter', run);
+  });
+
+  // ── Back to top: after one screen.
+  const top = document.getElementById('toTop');
+  const onScroll = () => top?.classList.toggle('on', window.scrollY > window.innerHeight * 0.8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: still.matches ? 'auto' : 'smooth' }));
 </script>

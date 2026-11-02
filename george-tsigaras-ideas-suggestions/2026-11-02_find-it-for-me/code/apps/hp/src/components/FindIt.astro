@@ -1,0 +1,77 @@
+---
+// «Βρες μου το ακίνητο» — home section, DESIGN PROTOTYPE (local only, 01/11/2026).
+// After the collections, before construction. A still image, never a live map on the home page,
+// and never our own listings on it (George rejected a coverage map three times, 28/7).
+// Greek only in the prototype; the real component takes its texts from the 9-language dictionary.
+interface Props { variant?: 'a' | 'b'; excl?: boolean; lang?: string }
+const { variant = 'a', lang = 'el' } = Astro.props;
+const en = lang === 'en';
+const cta = en ? 'Show it to us on the map' : variant === 'b' ? 'Βρες μου αυτό το ακίνητο' : 'Δείξε μας το στον χάρτη';
+// English mockup copy (02/11/2026), from the approved Greek text A.
+const EN = { h: 'Which property do you want?', p: 'We know Halkidiki property by property. Show us on the map the one you like, and we will help you make it yours.',
+  steps: [['Show it', 'Tap it on the map.'], ['We locate it', 'Through our database and the market.'], ['We help you', 'To see it and make it yours.']],
+  label: 'Find it for me', how: 'How it works', src: 'Data source: Ν.Π.Δ.Δ. ΕΛΛΗΝΙΚΟ ΚΤΗΜΑΤΟΛΟΓΙΟ' };
+// Copy options for George (01/11): vaguer, «we know the whole market», never «even if not for sale».
+const COPY = {
+  a: { h: 'Ποιο ακίνητο θέλεις;', p: 'Γνωρίζουμε τη Χαλκιδική ακίνητο προς ακίνητο. Δείξε μας στον χάρτη αυτό που σου αρέσει και σε βοηθάμε να το αποκτήσεις.',
+       steps: [['Δείξε το', 'Πάτα πάνω του στον χάρτη.'], ['Το εντοπίζουμε', 'Μέσα από τη βάση μας και την αγορά.'], ['Σε βοηθάμε', 'Να το δεις και να το αποκτήσεις.']] },
+  b: { h: 'Δείξε μας το. Εμείς ξέρουμε το υπόλοιπο.', p: 'Η αγορά της Χαλκιδικής είναι μεγαλύτερη από όσα βλέπεις στις αγγελίες. Διάλεξε στον χάρτη το ακίνητο που θέλεις και άφησέ μας τη διαδρομή ως τα κλειδιά.',
+       steps: [['Δείξε το', 'Πάτα πάνω του στον χάρτη.'], ['Το εντοπίζουμε', 'Διακριτικά, μέσα από το δίκτυό μας.'], ['Σε βοηθάμε', 'Να το αποκτήσεις.']] },
+  c: { h: 'Οποιοδήποτε ακίνητο στη Χαλκιδική.', p: 'Δείξε μας στον χάρτη ποιο θέλεις και άφησε το υπόλοιπο σε εμάς.', steps: [] as string[][] },
+} as const;
+const tq = Astro.url.searchParams.get('t');
+const c = en ? EN : COPY[(tq === 'b' || tq === 'c') ? tq : 'a'];
+---
+<section class="fi" aria-labelledby="fi-h">
+  <div class="wrap fi__in">
+    <div class="fi__txt">
+      <p class="t-label">{en ? EN.label : 'Βρες μου το ακίνητο'}</p>
+      <h2 id="fi-h" class="t-h2 fi__h">{c.h}</h2>
+      <p class="t-body fi__p">{c.p}</p>
+      {c.steps.length > 0 && (
+        <ol class="fi__steps">
+          {c.steps.map(([b, t]) => <li><b>{b}</b><span>{t}</span></li>)}
+        </ol>
+      )}
+      <p class="fi__acts">
+        <a class="btn" href={en ? '/design/vres-mou/map?lang=en' : '/design/vres-mou/map'}>{cta}</a>
+        <a class="fi__how" href="#how">{en ? EN.how : 'Πώς δουλεύει'}</a>
+      </p>
+    </div>
+    <figure class="fi__pic">
+      <img src="/design/afytos-home.jpg" alt={en ? 'Satellite view of Afytos with the plot boundaries and a pin on one plot' : 'Δορυφορική εικόνα της Αφύτου με τα όρια των οικοπέδων και μια πινέζα πάνω σε ένα οικόπεδο'} width="840" height="630" loading="lazy" decoding="async" />
+            <span class="fi__src">{en ? EN.src : 'Πηγή δεδομένων: Ν.Π.Δ.Δ. ΕΛΛΗΝΙΚΟ ΚΤΗΜΑΤΟΛΟΓΙΟ'}</span>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .fi { background: var(--paper-2); padding: var(--s7) 0; }
+  .fi__in { display: grid; gap: var(--s6); }
+  .fi__h { margin: var(--s2) 0 0; max-width: 15ch; }
+  .fi__p { margin: var(--s4) 0 0; color: var(--ink-2); max-width: 44ch; }
+  .fi__steps { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: 1px;
+               background: var(--line); border: 1px solid var(--line); counter-reset: s; }
+  .fi__steps li { background: var(--paper); padding: var(--s3) var(--s4); display: grid;
+                  grid-template-columns: 28px 1fr; column-gap: 8px; counter-increment: s; }
+  .fi__steps li::before { content: counter(s); grid-row: span 2; font-weight: 300; font-size: 22px; line-height: 1; color: var(--faint); }
+  .fi__steps b { font-size: 14px; font-weight: 600; }
+  .fi__steps span { font-size: 13px; color: var(--muted); }
+  .fi__acts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s4); margin: var(--s5) 0 0; }
+  .fi__how { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink);
+             text-decoration: underline; text-underline-offset: 4px; }
+  .fi__ex { margin: var(--s3) 0 0; }
+  .fi__pic { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 3; background: #23404f; }
+  .fi__pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .fi__pin { position: absolute; left: 57%; top: 47%; width: 26px; height: 26px; margin: -26px 0 0 -13px;
+             background: #fff; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+             box-shadow: 0 0 0 6px rgba(255,255,255,.28), 0 4px 14px rgba(0,0,0,.45); }
+  .fi__pin::after { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: var(--ink); }
+  .fi__src { position: absolute; right: 0; bottom: 0; background: rgba(255,255,255,.88); font-size: 10px; padding: 3px 7px; color: var(--ink-2); }
+  .fi__cap { position: absolute; left: var(--s4); bottom: var(--s4); background: var(--paper); padding: 10px 12px;
+             font-size: 13px; display: grid; gap: 2px; max-width: 70%; }
+  @media (min-width: 900px) {
+    .fi { padding: 84px 0; }
+    .fi__in { grid-template-columns: 1fr 1.05fr; gap: var(--s8); align-items: center; }
+  }
+</style>

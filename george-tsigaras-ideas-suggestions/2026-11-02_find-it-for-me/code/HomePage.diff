@@ -1,0 +1,22 @@
+diff --git a/apps/hp/src/components/HomePage.astro b/apps/hp/src/components/HomePage.astro
+index 359557a..e5f2353 100644
+--- a/apps/hp/src/components/HomePage.astro
++++ b/apps/hp/src/components/HomePage.astro
+@@ -11,6 +11,7 @@ import FeaturedGrid from './FeaturedGrid.astro';
+ import FeatureProperty from './FeatureProperty.astro';
+ import OffMarket from './OffMarket.astro';
+ import Collections from './Collections.astro';
++import FindIt from './FindIt.astro';
+ import Construction from './Construction.astro';
+ import Valuation from './Valuation.astro';
+ import Doors from './Doors.astro';
+@@ -230,6 +231,9 @@ const meta = {
+     {/* 7 συλλογές — μένουν ακριβώς ως έχουν (George: «μια χαρά είναι»). */}
+     <Collections items={collections} lang={lang} />
+ 
++    {/* DESIGN PROTOTYPE (local only): «Βρες μου το ακίνητο», after the middle of the page. */}
++    <FindIt lang={lang} variant={Astro.url.searchParams.get('v') === 'b' ? 'b' : 'a'} excl={viewer.exclusive} />
++
+     {/* 7b ΜΕΛΕΤΗ & ΚΑΤΑΣΚΕΥΗ — μπαίνει ΑΜΕΣΩΣ μετά τις συλλογές επίτηδες:
+         η μία από τις τέσσερις είναι «Γη & οικόπεδα» (207 από τα 527), και η
+         επόμενη σκέψη του επισκέπτη είναι «και μετά τι;». Εδώ είναι η απάντηση. */}

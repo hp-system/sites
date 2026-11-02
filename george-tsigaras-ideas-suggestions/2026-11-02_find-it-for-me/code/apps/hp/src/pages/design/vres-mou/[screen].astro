@@ -1,0 +1,291 @@
+---
+// «Βρες μου το ακίνητο» — DESIGN PROTOTYPE pages (local only, never merged; 01/11/2026).
+// /design/vres-mou/map · mandate · done · mine   (visitor from the cookie: guest | member | exclusive)
+// George 01/11: real Κτηματολόγιο parcels only (open data, data.gov.gr, CC BY), no sun, no other
+// shapes, no «what you like» step, no adviser assignment shown to the customer.
+// The satellite base is only for the mockup images; the live page uses the site's own map.
+// 02/11: English copy via ?lang=en (for Sergei), and the customer details block on the mandate.
+import Base from '../../../layouts/Base.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { viewerOf } from '../../../lib/gate';
+
+export const prerender = false;
+const screen = Astro.params.screen ?? 'map';
+const viewer = await viewerOf(Astro.cookies);
+const who = viewer.exclusive ? 'exclusive' : viewer.member ? 'member' : 'guest';
+const pinned = Astro.url.searchParams.get('pin') !== '0';
+// George 01/11: brake, up to 3 open requests at a time (until we answer).
+const full = Astro.url.searchParams.get('full') === '1';
+const lang = Astro.url.searchParams.get('lang') === 'en' ? 'en' : 'el';
+const q = lang === 'en' ? '?lang=en' : '';
+const T = {
+  el: {
+    t_map: 'Βρες μου το ακίνητο', t_mandate: 'Η εντολή', t_done: 'Το αναλάβαμε', label: 'Βρες μου το ακίνητο',
+    h_empty: 'Δείξε μας το ακίνητο', h_pin: 'Αυτό είναι;', search_sr: 'Χωριό ή περιοχή', search_ph: 'Χωριό ή περιοχή, π.χ. Άφυτος',
+    how: ['Βρες το χωριό.', 'Ζούμαρε μέχρι να φανούν τα όρια των οικοπέδων.', 'Πάτα πάνω στο ακίνητο: σπίτι, οικόπεδο, χωράφι ή κτίριο.'],
+    note1: 'Στον χάρτη δεν φαίνονται τα δικά μας ακίνητα. Είναι για να μας δείξεις εσύ τι σου αρέσει.', note2: 'Μπορείς να μας δείξεις έως 3 ακίνητα.',
+    place: 'Άφυτος, Κασσάνδρα', area0: 'Γεωτεμάχιο από το Κτηματολόγιο', other: 'Αν δεν είναι αυτό, πάτα σε άλλο οικόπεδο.',
+    guest: 'Για να το στείλεις, μπες με το email ή το κινητό σου. Το σημείο θα σε περιμένει εδώ.', guest_btn: 'Είσοδος και συνέχεια',
+    guest_note: 'Δεν έχεις λογαριασμό; Φτιάχνεται με έναν κωδικό, χωρίς κωδικό πρόσβασης.',
+    full_b: 'Έχεις ήδη 3 ακίνητα σε εξέλιξη.', full_s: 'Θα σου απαντήσουμε πρώτα σε αυτά. Μόλις απαντήσουμε σε ένα, μπορείς να μας δείξεις το επόμενο.',
+    yes: 'Ναι, αυτό είναι', another: 'Άλλο σημείο', official: 'Δες το στον επίσημο χάρτη του Κτηματολογίου ↗',
+    src: 'Πηγή δεδομένων: Ν.Π.Δ.Δ. ΕΛΛΗΝΙΚΟ ΚΤΗΜΑΤΟΛΟΓΙΟ · όρια ενδεικτικά', crumb: 'Διαδρομή',
+    m_intro: 'Για να το αναλάβουμε για λογαριασμό σου, χρειαζόμαστε την εντολή σου. Είναι αποκλειστική για αυτό το ακίνητο.',
+    d_h: 'Τα στοιχεία σου', d_note: 'Τα συμπληρώσαμε από τον λογαριασμό σου. Ο νόμος ζητά όλα τα παρακάτω για να ισχύει η εντολή.',
+    f_name: 'Ονοματεπώνυμο', f_vat: 'ΑΦΜ', f_vat_ph: 'Χωρίς ελληνικό ΑΦΜ; Αρ. φορολ. + χώρα', f_addr: 'Διεύθυνση κατοικίας', f_mob: 'Κινητό', f_mail: 'Email',
+    s_prop: 'Ακίνητο', s_prop_v: 'Άφυτος, Κασσάνδρα · το γεωτεμάχιο που έδειξες', s_dur: 'Διάρκεια', s_fee: 'Αμοιβή', s_due: 'Πότε οφείλεται',
+    tbd_law: 'ορίζεται από τον δικηγόρο', tbd_g: 'απόφαση του George',
+    read: 'Διάβασε όλη την εντολή', ok: 'Διάβασα και δέχομαι την εντολή.', sign: 'Υπογραφή και αποστολή',
+    sign_note: 'Η υπογραφή γίνεται από τον λογαριασμό σου. Αντίγραφο έρχεται στο email σου.',
+    done_s: 'Το ακίνητο στην Άφυτο είναι στα χέρια μας. Θα σου απαντήσουμε εμείς, στο email και στο τηλέφωνό σου.',
+    done_note: 'Αντίγραφο της εντολής σού έχει ήδη σταλεί στο email.', back: 'Συνέχισε στα ακίνητα',
+  },
+  en: {
+    t_map: 'Find it for me', t_mandate: 'The mandate', t_done: 'We have taken it on', label: 'Find it for me',
+    h_empty: 'Show us the property', h_pin: 'Is this the one?', search_sr: 'Village or area', search_ph: 'Village or area, e.g. Afytos',
+    how: ['Find the village.', 'Zoom in until the plot boundaries appear.', 'Tap the property: a house, a plot, a field or a building.'],
+    note1: 'Our own listings are not shown on this map. It is for you to show us what you like.', note2: 'You can show us up to 3 properties.',
+    place: 'Afytos, Kassandra', area0: 'Parcel from the Hellenic Cadastre', other: 'If this is not it, tap another plot.',
+    guest: 'To send it, sign in with your email or mobile. Your pin will be waiting here.', guest_btn: 'Sign in and continue',
+    guest_note: 'No account yet? It takes one code, no password.',
+    full_b: 'You already have 3 properties in progress.', full_s: 'We will answer those first. As soon as we answer one, you can show us the next.',
+    yes: 'Yes, this is it', another: 'Another spot', official: 'See it on the official Cadastre map ↗',
+    src: 'Data source: Ν.Π.Δ.Δ. ΕΛΛΗΝΙΚΟ ΚΤΗΜΑΤΟΛΟΓΙΟ · boundaries indicative', crumb: 'Breadcrumb',
+    m_intro: 'To take this on for you, we need your mandate. It is exclusive to this property.',
+    d_h: 'Your details', d_note: 'We filled these in from your account. The law needs all of them for the mandate to be valid.',
+    f_name: 'Full name', f_vat: 'Tax number (ΑΦΜ)', f_vat_ph: 'No Greek ΑΦΜ? Tax no. + country', f_addr: 'Home address', f_mob: 'Mobile', f_mail: 'Email',
+    s_prop: 'Property', s_prop_v: 'Afytos, Kassandra · the parcel you showed us', s_dur: 'Duration', s_fee: 'Fee', s_due: 'When it is due',
+    tbd_law: 'set by the lawyer', tbd_g: 'George to decide',
+    read: 'Read the full mandate', ok: 'I have read and accept the mandate.', sign: 'Sign and send',
+    sign_note: 'You sign from your account. A copy is sent to your email.',
+    done_s: 'The property in Afytos is in our hands. We will get back to you, by email and by phone.',
+    done_note: 'A copy of your mandate has already been sent to your email.', back: 'Back to properties',
+  },
+}[lang];
+const titles: Record<string, string> = {
+  map: T.t_map, mandate: T.t_mandate, done: T.t_done, mine: 'Βρες μου · τα αιτήματά μου',
+};
+// Mockup sample of a member's details (not a real person).
+const ME = { name: 'Anna Schmidt', addr: 'Lindenstraße 12, 10969 Berlin', mob: '+49 151 2345 6789', mail: 'anna.schmidt@example.com' };
+---
+<Base lang={lang} title={titles[screen] ?? 'Βρες μου'} noindex description="Πρωτότυπο σχεδιασμού">
+  <Header lang={lang} solid />
+
+  {screen === 'map' && (
+    <main id="main" class="fm">
+      <aside class="fm__panel">
+        <p class="t-label">{T.label}</p>
+        <h1 class="t-h2 fm__h">{pinned ? T.h_pin : T.h_empty}</h1>
+        {!pinned ? (<>
+          <label class="fm__search"><span class="sr-only">{T.search_sr}</span><input value="" placeholder={T.search_ph} /></label>
+          <ol class="fm__how">
+            {T.how.map((s) => <li>{s}</li>)}
+          </ol>
+          <p class="t-data">{T.note1}</p>
+          <p class="t-data">{T.note2}</p>
+        </>) : (<>
+          <p class="fm__where"><b>{T.place}</b><span class="t-data" id="fm-area">{T.area0}</span><span class="t-data">{T.other}</span></p>
+          {who === 'guest' ? (<>
+            <p class="t-body fm__p">{T.guest}</p>
+            <p class="fm__acts"><a class="btn" href="#">{T.guest_btn}</a></p>
+            <p class="t-data">{T.guest_note}</p>
+          </>) : full ? (
+            <div class="fm__full">
+              <b>{T.full_b}</b>
+              <span>{T.full_s}</span>
+            </div>
+          ) : (
+            <p class="fm__acts"><a class="btn" href={`/design/vres-mou/mandate${q}`}>{T.yes}</a><a class="btn btn--ghost" href={`?pin=0${q ? '&lang=en' : ''}`}>{T.another}</a></p>
+          )}
+          <p class="t-data"><a class="fm__off" href="#">{T.official}</a></p>
+        </>)}
+      </aside>
+      <div class="fm__map" id="fm-map" data-pinned={pinned ? '1' : '0'} data-lang={lang}>
+        <p class="fm__src">{T.src}</p>
+      </div>
+    </main>
+  )}
+
+  {(screen === 'mandate' || screen === 'done') && (
+    <main id="main" class="rq">
+      <div class="wrap">
+        <nav class="crumb" aria-label={T.crumb}><a href={`/design/vres-mou/map${q}`}>{T.t_map}</a><span aria-hidden="true">›</span><b>{T.place}</b></nav>
+        <h1 class="t-h2 rq__h">{titles[screen]}</h1>
+
+        {screen === 'mandate' && (
+          <div class="rq__f">
+            <p class="rq__s">{T.m_intro}</p>
+            <fieldset class="me">
+              <legend class="me__h">{T.d_h}</legend>
+              <p class="t-data me__n">{T.d_note}</p>
+              <label class="me__f"><span>{T.f_name}</span><input value={ME.name} /></label>
+              <label class="me__f me__f--need"><span>{T.f_vat}</span><input value="" placeholder={T.f_vat_ph} /></label>
+              <label class="me__f"><span>{T.f_addr}</span><input value={ME.addr} /></label>
+              <label class="me__f"><span>{T.f_mob}</span><input value={ME.mob} /></label>
+              <label class="me__f"><span>{T.f_mail}</span><input value={ME.mail} /></label>
+            </fieldset>
+            <dl class="sum">
+              <div><dt>{T.s_prop}</dt><dd>{T.s_prop_v}</dd></div>
+              <div><dt>{T.s_dur}</dt><dd class="tbd">{T.tbd_law}</dd></div>
+              <div><dt>{T.s_fee}</dt><dd class="tbd">{T.tbd_g}</dd></div>
+              <div><dt>{T.s_due}</dt><dd class="tbd">{T.tbd_law}</dd></div>
+            </dl>
+            <p><a class="lnk" href="#">{T.read}</a></p>
+            <label class="ok"><input type="checkbox" /><span>{T.ok}</span></label>
+            <p><a class="btn" href={`/design/vres-mou/done${q}`}>{T.sign}</a></p>
+            <p class="t-data">{T.sign_note}</p>
+          </div>
+        )}
+
+        {screen === 'done' && (
+          <div class="rq__f">
+            <p class="rq__s">{T.done_s}</p>
+            <p class="t-data">{T.done_note}</p>
+            <p><a class="btn btn--ghost" href={lang === 'en' ? '/en' : '/'}>{T.back}</a></p>
+          </div>
+        )}
+      </div>
+    </main>
+  )}
+
+  {screen === 'mine' && (
+    <main id="main" class="rq">
+      <div class="wrap">
+        <nav class="crumb" aria-label="Διαδρομή"><a href="/panel">Η σελίδα μου</a><span aria-hidden="true">›</span><b>Βρες μου</b></nav>
+        <h1 class="t-h2 rq__h">Βρες μου</h1>
+        <p class="rq__s">Τα ακίνητα που μας έδειξες. Σου γράφουμε σε κάθε αλλαγή.</p>
+        <ul class="reqs">
+          <li class="rc">
+            <div class="rc__top"><span class="t-label">Άφυτος · 03/11</span><span class="pill">Σε εξέλιξη</span></div>
+            <b class="rc__h">Μονοκατοικία με θέα</b>
+            <ol class="tl">
+              <li class="y">Το στείλαμε</li><li class="y">Ελέγξαμε το ακίνητο</li>
+              <li class="n">Το εντοπίζουμε<small>έως 17/11</small></li><li>Η απάντηση</li>
+            </ol>
+          </li>
+          <li class="rc rc--good">
+            <div class="rc__top"><span class="t-label">Νέος Μαρμαράς · 12/10</span><span class="pill pill--good">Διαθέσιμο</span></div>
+            <b class="rc__h">Οικόπεδο πάνω από το λιμάνι</b>
+            <p class="rc__p">Μπορεί να γίνει δικό σου. Σου στείλαμε τα πρώτα στοιχεία στο email.</p>
+            <p><a class="btn" href="#">Κλείσε επίσκεψη</a></p>
+          </li>
+          <li class="rc">
+            <div class="rc__top"><span class="t-label">Ουρανούπολη · 20/09</span><span class="pill pill--mute">Όχι τώρα</span></div>
+            <b class="rc__h">Πέτρινο σπίτι στο λιμάνι</b>
+            <p class="rc__p">Αυτή τη στιγμή δεν είναι διαθέσιμο. Αν αλλάξει, θα το μάθεις πρώτος.</p>
+          </li>
+        </ul>
+        <p><a class="btn btn--ghost" href="/design/vres-mou/map">Δείξε μας κι άλλο ακίνητο</a></p>
+      </div>
+    </main>
+  )}
+
+  <Footer lang={lang} />
+</Base>
+
+<script>
+  // Mockup map: satellite base (images only) + the real Κτηματολόγιο parcels of Afytos (open data).
+  const el = document.getElementById('fm-map');
+  if (el) {
+    const LEAF = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/';
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = LEAF + 'leaflet.min.css'; document.head.appendChild(css);
+    const js = document.createElement('script'); js.src = LEAF + 'leaflet.min.js';
+    js.onload = async () => {
+      const L = (window as any).L;
+      const gj = await (await fetch('/design/afytos-parcels.geojson')).json();
+      const pinned = el.dataset.pinned === '1';
+      const pick = gj.features.find((f: any) => f.properties.pick);
+      const c = pick?.properties.center ?? [23.4381, 40.0983];
+      const map = L.map(el, { zoomControl: true, attributionControl: false }).setView([c[1], c[0]], 18);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
+      L.geoJSON(gj, {
+        style: (f: any) => (pinned && f.properties.pick
+          ? { color: '#FFD65A', weight: 3, fillColor: '#FFD65A', fillOpacity: .22 }
+          : { color: '#FFFFFF', weight: 1, opacity: .85, fillOpacity: 0 }),
+      }).addTo(map);
+      if (pinned && pick) {
+        const icon = L.divIcon({ className: '', html: '<span class="fm__pin"></span>', iconSize: [0, 0] });
+        L.marker([c[1], c[0]], { icon }).addTo(map);
+        const a = document.getElementById('fm-area');
+        if (a) a.textContent = el.dataset.lang === 'en'
+          ? `Parcel of about ${Math.round(pick.properties.area).toLocaleString('en-GB')} m² (indicative, from the Cadastre)`
+          : `Γεωτεμάχιο περίπου ${Math.round(pick.properties.area).toLocaleString('el-GR')} τ.μ. (ενδεικτικά, από το Κτηματολόγιο)`;
+      }
+      map.whenReady(() => setTimeout(() => { (window as any).__mapReady = true; }, 1500));
+    };
+    document.head.appendChild(js);
+  }
+</script>
+
+<style>
+  /* ── map page ── */
+  .fm { display: grid; grid-template-rows: auto 1fr; }
+  .fm__panel { padding: var(--s5) var(--gut); display: grid; gap: var(--s3); align-content: start; background: var(--paper); }
+  .fm__h { margin: 0; }
+  .fm__search input { width: 100%; font: inherit; font-size: 16px; border: 1px solid var(--line); padding: 12px 13px; }
+  .fm__how { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14.5px; color: var(--ink-2); }
+  .fm__where { margin: 0; display: grid; gap: 2px; }
+  .fm__where b { font-size: 17px; font-weight: 400; }
+  .fm__p { margin: 0; color: var(--ink-2); }
+  .fm__acts { display: flex; flex-wrap: wrap; gap: var(--s3); margin: 0; }
+  .fm__full { border: 1px solid var(--line); background: var(--paper-2); padding: 14px 16px; display: grid; gap: 4px; }
+  .fm__full b { font-weight: 600; font-size: 15px; }
+  .fm__full span { font-size: 14px; color: var(--ink-2); }
+  .fm__off { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; }
+  .fm__map { position: relative; min-height: 48vh; background: #23404f; }
+  .fm__src { position: absolute; right: 0; bottom: 0; z-index: 500; margin: 0; background: rgba(255,255,255,.88); font-size: 10.5px; padding: 4px 8px; color: var(--ink-2); }
+  :global(.fm__pin) { position: absolute; width: 30px; height: 30px; left: -15px; top: -30px;
+             background: #fff; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+             box-shadow: 0 0 0 7px rgba(255,255,255,.28), 0 4px 14px rgba(0,0,0,.45); }
+  :global(.fm__pin::after) { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: var(--ink); }
+  @media (min-width: 900px) {
+    .fm { grid-template-rows: none; grid-template-columns: 400px 1fr; height: calc(100vh - 88px); min-height: 560px; }
+    .fm__panel { padding: var(--s6) var(--s6); border-right: 1px solid var(--line); }
+    .fm__map { min-height: 0; }
+  }
+  @media (max-width: 899px) { .fm__panel { order: 2; border-top: 1px solid var(--line); } .fm__map { order: 1; } }
+
+  /* ── mandate / done (same pattern as RequestPage) ── */
+  .me { border: 1px solid var(--line); margin: 0; padding: 14px 16px 16px; display: grid; gap: 10px; }
+  .me__h { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0 6px; }
+  .me__n { margin: 0; }
+  .me__f { display: grid; gap: 4px; font-size: 13px; color: var(--ink-2); }
+  .me__f input { font: inherit; font-size: 16px; border: 1px solid var(--line); padding: 10px 12px; color: var(--ink); background: var(--paper); }
+  .me__f--need input { border-color: var(--ink); }
+  .rq { padding: var(--s6) 0 var(--s9); }
+  .rq .wrap { max-width: 620px; }
+  .crumb { font-size: 13px; color: var(--faint); display: flex; gap: 8px; flex-wrap: wrap; }
+  .crumb a { color: inherit; }
+  .rq__h { margin: 14px 0 6px; }
+  .rq__s { color: var(--ink-2); margin: 0 0 6px; font-size: 15px; }
+  .rq__f { display: grid; gap: 18px; margin-top: 18px; }
+  .sum { margin: 0; border-top: 1px solid var(--line); }
+  .sum div { display: grid; grid-template-columns: 140px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
+  .sum dt { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
+  .sum dd { margin: 0; font-size: 15px; }
+  .sum .tbd { color: #9A6200; background: #FFF6E2; padding: 0 6px; justify-self: start; font-size: 13.5px; }
+  .lnk { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
+  .ok { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
+  .ok input { width: 18px; height: 18px; margin-top: 3px; }
+  .next { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); counter-reset: s; }
+  .next li { background: var(--paper); padding: 12px 14px; display: grid; grid-template-columns: 28px 1fr; counter-increment: s; }
+  .next li::before { content: counter(s); grid-row: span 2; font-weight: 300; font-size: 20px; color: var(--faint); }
+  .next b { font-size: 14px; font-weight: 600; } .next span { font-size: 13px; color: var(--muted); }
+
+  /* ── my requests ── */
+  .reqs { list-style: none; margin: 18px 0 22px; padding: 0; display: grid; gap: 14px; }
+  .rc { border: 1px solid var(--line); padding: 16px 18px; display: grid; gap: 6px; }
+  .rc__top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .rc__h { font-size: 17px; font-weight: 400; }
+  .rc__p { margin: 0; color: var(--ink-2); font-size: 14.5px; }
+  .pill { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; border: 1px solid var(--ink); padding: 4px 8px; }
+  .pill--good { background: var(--ink); color: var(--paper); }
+  .pill--mute { border-color: var(--line); color: var(--faint); }
+  .tl { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
+  .tl li { position: relative; padding-left: 22px; font-size: 14px; color: var(--faint); }
+  .tl li::before { content: ''; position: absolute; left: 0; top: 5px; width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--line); }
+  .tl .y { color: var(--ink-2); } .tl .y::before { background: var(--ink); border-color: var(--ink); }
+  .tl .n { color: var(--ink); font-weight: 600; } .tl .n::before { border: 2px solid var(--ink); }
+  .tl small { display: block; font-weight: 400; color: var(--faint); font-size: 12.5px; }
+</style>

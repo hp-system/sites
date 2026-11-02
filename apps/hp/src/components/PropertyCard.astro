@@ -21,8 +21,10 @@ import { memberOf } from '../lib/member';
 import { prefix } from '../lib/i18n';
 import { pui, subName } from '../lib/property';
 
-interface Props { p: SiteProperty; lang: Lang; viewer: Viewer; eager?: boolean }
-const { p, lang, viewer, eager = false } = Astro.props;
+// `plain` (#103, property page «Similar»): the title as plain text, not six identical H3s.
+interface Props { p: SiteProperty; lang: Lang; viewer: Viewer; eager?: boolean; plain?: boolean }
+const { p, lang, viewer, eager = false, plain = false } = Astro.props;
+const TitleTag = plain ? 'p' : 'h3';
 
 const a = p.attributes ?? {};
 const id = refOf(p);
@@ -126,7 +128,7 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
   </p>
 
   {/* ΣΕΙΡΑ 2 — τίτλος. */}
-  <h3 class="title t-h3"><a href={href} data-ev="property:card_click">{title}</a></h3>
+  <TitleTag class="title t-h3"><a href={href} data-ev="property:card_click">{title}</a></TitleTag>
 
   {/* ΣΕΙΡΑ 3 — στοιχεία, και ο δήμος στην ίδια γραμμή για τα μέλη. */}
   <p class="facts t-data">

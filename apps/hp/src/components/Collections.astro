@@ -24,17 +24,29 @@ import { num } from '../lib/format';
 export type Collection = { key: string; title: string; sub: string; href: string; photo: Photo | null };
 interface Props { items: Collection[]; lang: Lang }
 const { items, lang } = Astro.props;
+const pages = Math.ceil(items.length / 4);
 ---
-<section class="section" aria-labelledby="coll-h">
+<section class="section hz hz--beige colls-sec" aria-labelledby="coll-h">
   <div class="wrap">
-    <div class="shead">
+    {/* #101 (George 2026-11-02): eight tiles — the four ready-made searches and every
+        type of property — in a row of four that turns a page every 5 s on desktop
+        (dashes top right). Every tile is in the HTML. Phone: the row is swiped. */}
+    <div class="shead hz-head">
       <div>
         <h2 id="coll-h" class="t-h2">{t(lang, 'coll.h2')}</h2>
-        <p>{t(lang, 'coll.sub')}</p>
+        <p>{t(lang, 'home.coll_sub')}</p>
       </div>
+      {pages > 1 && (
+        <div class="h-dash" role="group" aria-label={t(lang, 'home.pages')} data-dash-for="railCl">
+          {Array.from({ length: pages }).map((_, i) => (
+            <button type="button" class={i === 0 ? 'on' : undefined} aria-pressed={i === 0 ? 'true' : 'false'}
+                    aria-label={t(lang, 'home.page', { n: i + 1 })} data-page={i}><span></span></button>
+          ))}
+        </div>
+      )}
     </div>
 
-    <ul class="colls">
+    <ul class="colls h-rail" id="railCl" data-hrail data-gap="12">
       {items.map((c) => (
         <li>
           <a class="coll" href={c.href}>
@@ -49,10 +61,11 @@ const { items, lang } = Astro.props;
                 170px σε πλακίδιο 353px ⇒ **θολές εικόνες σε κάθε κινητό**. Και το
                 `srcset` έφτανε ως 1920w — μισό megabyte για ένα πλακίδιο.
                 (Ναι, ξαναπάτησα την παγίδα του σχολίου δύο γραμμές πιο πάνω.) */}
+            {/* #101: desktop tiles are ¼ of the column, phone ~80% (swiped row). */}
             {c.photo && (
               <img src={marked(c.photo.url, 800)} alt={altOf(c.photo, lang, c.title)}
                    srcset={markedSrcSetSmall(c.photo.url)}
-                   sizes="(min-width: 760px) calc((100vw - 132px) / 4), calc(100vw - 40px)"
+                   sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 4), 80vw"
                    width="800" height="533" loading="lazy" decoding="async" />
             )}
             <span class="coll__t">
@@ -77,5 +90,36 @@ const { items, lang } = Astro.props;
   }
   .coll__t b { display: block; font-size: 21px; font-weight: 300; }
   .coll__t span { font-size: 11.5px; opacity: .82; letter-spacing: .06em; }
-  @media (min-width: 760px) { .colls { grid-template-columns: repeat(4, 1fr); } }
+  .hz-head .h-dash { display: none; }
+
+  /* Phone / tablet: eight tiles do not stack — the row is swiped, as the cards' photos. */
+  @media (max-width: 1023px) {
+    .colls {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+      overscroll-behavior-x: contain; margin: 0 calc(-1 * var(--gut)); padding: 0 var(--gut);
+      scroll-padding: 0 var(--gut);
+    }
+    .colls::-webkit-scrollbar { display: none; }
+    .colls > li { flex: none; width: 80%; scroll-snap-align: start; }
+  }
+  @media (min-width: 760px) and (max-width: 1023px) { .colls > li { width: calc((100% - 24px) / 2.4); } }
+
+  /* ── #101 desktop ─────────────────────────────────────────────────────── */
+  @media (min-width: 1024px) {
+    .hz-head { display: flex; justify-content: space-between; align-items: flex-end; }
+    .hz-head .h-dash { display: flex; }
+    .colls {
+      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      scrollbar-width: none; overscroll-behavior-x: contain;
+    }
+    .colls::-webkit-scrollbar { display: none; }
+    .colls > li { flex: none; width: calc((100% - 36px) / 4); scroll-snap-align: start; }
+    .coll { aspect-ratio: auto; height: 100%; background: var(--paper-3); }
+    /* captions float above the photo: soft lifted shadow + a taller dark fade */
+    .coll__t { padding-top: 56px; background: linear-gradient(0deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,0) 100%); }
+    .coll__t b { text-shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 22px rgba(0,0,0,.55); transition: transform .35s ease; }
+    .coll__t span { opacity: .95; text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.5); }
+    .coll:hover .coll__t b { transform: translateY(-2px); }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .colls { scroll-behavior: auto; } }
 </style>

@@ -137,4 +137,17 @@ const rent = rentalUrl(id);
     .feature { min-height: 80vh; }
     .feature__copy { max-width: var(--max); margin: 0 auto; padding-bottom: var(--s7); }
   }
+  /* #101 desktop: a «window» — the photo stays still and the page scrolls over it.
+     `clip-path` makes the band the frame of a fixed image (no effect on iOS Safari,
+     which just scrolls — and phones keep the layout above anyway). */
+  @media (min-width: 1024px) {
+    .feature { min-height: 720px; }
+    .feature__bg { clip-path: inset(0); }
+    .feature__bg img { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; }
+    .feature__sea, .feature__sea[data-sea] { border: 0; background: rgba(255,255,255,.16); color: #fff; }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .feature__bg { clip-path: none; }
+    .feature__bg img { position: static; width: 100%; height: 100%; }
+  }
 </style>

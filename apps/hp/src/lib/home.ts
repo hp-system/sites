@@ -3,7 +3,7 @@
 // Το index.astro μένει λεπτό· εδώ ζει η παραγωγή.
 // ═══════════════════════════════════════════════════════════════════════════
 import type { SiteProperty, Attrs } from './api';
-import { priceOf, priceVisible, pick } from './api';
+import { priceOf, priceVisible, pick, refOf } from './api';
 import { coverOf, heroReady } from './photos';
 import { municipalityOf, muniKey , isSecretFlag } from './gate';
 import type { Lang } from './i18n';
@@ -23,6 +23,8 @@ export type HomeData = {
   minPrice: number;
   maxPrice: number;
   featured: SiteProperty[];
+  /** The six newest (by listing ID) — «New properties in Halkidiki» (#101). */
+  newest: SiteProperty[];
   week: SiteProperty | null;
   locked: SiteProperty[];
   lockedCount: number;
@@ -150,6 +152,23 @@ export function buildHome(items: SiteProperty[], lang: Lang): HomeData {
   // Εμφάνιση κατά τιμή, ώστε το μάτι να διαβάζει κλίμακα και όχι τυχαιότητα.
   featured.sort((a, b) => priceOf(a.attributes) - priceOf(b.attributes));
 
+  // ── NEW PROPERTIES (desktop redesign #101, George 2026-11-02) ──────────
+  // The heading says «New properties», so the six must really be the newest: the
+  // listing ID (onsea_id) is given in order, while `createdAt` is the import date
+  // (the same day for all). Same safeguards as the six above: ready photo and
+  // visible price, never the big property below, no land (it has its own
+  // collection), no two «twins» of one complex.
+  const newest: SiteProperty[] = [];
+  const newTwin = new Set<string>();
+  for (const p of [...ready]
+    .filter((p) => p.id !== week?.id && p.attributes?.category !== 'land')
+    .sort((x, y) => (Number(refOf(y)) || 0) - (Number(refOf(x)) || 0))) {
+    if (newest.length === 6) break;
+    if (newTwin.has(twin(p))) continue;
+    newTwin.add(twin(p));
+    newest.push(p);
+  }
+
   // ── Η ιδιωτική συλλογή ─────────────────────────────────────────────────
   // Ό,τι είναι secret portfolio ή έχει κρυφή τιμή: το δείχνουμε ΧΩΡΙΣ φωτό και τιμή.
   // 🪤 ΟΧΙ `=== true`: η τιμή είναι κάποτε το κείμενο «on» (HTML checkbox) και το
@@ -196,7 +215,7 @@ export function buildHome(items: SiteProperty[], lang: Lang): HomeData {
     landCount: A.filter((a) => a.category === 'land').length,
     minPrice: prices.length ? Math.min(...prices) : 0,
     maxPrice: prices.length ? Math.max(...prices) : 0,
-    featured, week, locked, lockedCount: hidden.length,
+    featured, newest, week, locked, lockedCount: hidden.length,
     munis, restCount: rest, areas, benchmarks, comparables, seafrontPremium,
     heroPhoto,
     heroAlt: shot?.alt[lang] ?? shot?.alt.en ?? '',

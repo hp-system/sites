@@ -34,6 +34,20 @@
         και ως δακτύλιος εστίασης πληκτρολογίου. Πουθενά αλλού. */
   --brand:     #036DAC;
   --brand-2:   #A5CF4E;   /* μόνο μέσα στο λογότυπο */
+  /* ── Gilded accent (home desktop redesign #101, approved by George 2026-11-02) ──
+     Only for the gilded-edge buttons and the hover of the card heart. Not text colour
+     for body copy, never a background. Light ground: --gold*; dark ground: --gold-dk*. */
+  --gold-hi:      #D9BC84;
+  --gold:         #A8834A;
+  --gold-lo:      #7A5A2E;
+  --gold-dk-hi:   #F3E2BA;
+  --gold-dk:      #C2A06A;
+  --gold-dk-lo:   #8C6A35;
+  --gold-dk-text: #D2B47C;
+  --gold-dk-hover:#EAD3A0;
+  --gold-soft:    #C8B48C;   /* card heart on hover */
+  --paper-3:      #E9E6DF;   /* empty tile on the beige band */
+  --ink-hover:    #2A3034;   /* dark button on hover */
 
   /* ── Αποστάσεις — μία κλίμακα, καμία τιμή εκτός ──────────────────────── */
   --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;

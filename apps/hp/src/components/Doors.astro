@@ -20,25 +20,33 @@ import { contentUrl } from '../lib/pages';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const p = prefix(lang);
+// Data, not markup (#101): the three doors in one loop, same links and words as before.
+const DOORS = [
+  { k: 'buy', href: listUrl(lang) },
+  { k: 'sell', href: `${p}/sell` },
+  { k: 'partner', href: contentUrl('partners', lang) },
+];
 ---
-<section class="section" aria-label={t(lang, 'doors.eyebrow')}>
+<section class="section doors-sec" aria-label={t(lang, 'doors.eyebrow')}>
   <div class="wrap">
-    <div class="doors">
-      <div class="door">
-        <h2 class="t-h2 door__h">{t(lang, 'doors.buy')}</h2>
-        <p>{t(lang, 'doors.buy.p')}</p>
-        <a class="shead__link" href={listUrl(lang)}>{t(lang, 'doors.buy.cta')}</a>
-      </div>
-      <div class="door">
-        <h2 class="t-h2 door__h">{t(lang, 'doors.sell')}</h2>
-        <p>{t(lang, 'doors.sell.p')}</p>
-        <a class="shead__link" href={`${p}/sell`}>{t(lang, 'doors.sell.cta')}</a>
-      </div>
-      <div class="door">
-        <h2 class="t-h2 door__h">{t(lang, 'doors.partner')}</h2>
-        <p>{t(lang, 'doors.partner.p')}</p>
-        <a class="shead__link" href={contentUrl('partners', lang)}>{t(lang, 'doors.partner.cta')}</a>
-      </div>
+    {/* #101 desktop (George 2026-11-02): on the beige band; the door under the pointer
+        grows and turns dark, the first one is open at rest. The whole door is a
+        click target, but the LINK stays the CTA words (stretched link) — the anchor
+        text search engines read does not change. */}
+    <p class="t-label doors__lbl" aria-hidden="true">{t(lang, 'doors.eyebrow')}</p>
+    <div class="doors" data-doors>
+      {DOORS.map((d, i) => (
+        <div class:list={['door', i === 0 && 'on']}>
+          <div>
+            <h2 class="t-h2 door__h">{t(lang, `doors.${d.k}`)}</h2>
+            <p>{t(lang, `doors.${d.k}.p`)}</p>
+          </div>
+          <span class="dl">
+            <a class="shead__link door__a" href={d.href}>{t(lang, `doors.${d.k}.cta`)}</a>
+            <span class="ar" aria-hidden="true">→</span>
+          </span>
+        </div>
+      ))}
     </div>
   </div>
 </section>
@@ -48,8 +56,39 @@ const p = prefix(lang);
   .door { background: var(--paper); padding: var(--s5) var(--s4); }
   .door__h { font-size: clamp(21px, 4vw, 26px); }
   .door p { margin: var(--s2) 0 var(--s4); color: var(--muted); font-size: 14px; }
+  .doors__lbl, .ar { display: none; }
   @media (min-width: 760px) {
     .doors { grid-template-columns: repeat(3, 1fr); }
     .door { padding: var(--s6) var(--s5); }
+  }
+
+  /* ── #101 desktop ─────────────────────────────────────────────────────── */
+  @media (min-width: 1024px) {
+    .doors-sec { background: var(--paper-2); padding: 28px 0 44px; }
+    .doors__lbl { display: block; margin: 0 0 18px; }
+    .doors { display: flex; gap: 12px; background: none; border: 0; }
+    .door {
+      position: relative; flex: 1 1 0; min-width: 0; min-height: 250px;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
+      padding: 32px 34px 28px; background: var(--paper); color: var(--ink); overflow: hidden;
+      transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease;
+    }
+    .door.on { flex-grow: 1.6; background: var(--ink-deep); color: #fff; }
+    .door__h { font-size: 24px; line-height: 1.15; transition: font-size .4s ease; }
+    .door.on .door__h { font-size: 32px; }
+    .door p { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 40ch; transition: color .35s ease; }
+    .door.on p { color: rgba(255,255,255,.78); }
+    .dl {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap;
+    }
+    .door__a { margin: 0; padding: 0; min-height: 0; border: 0; color: inherit; }
+    .door__a::after { content: ''; position: absolute; inset: 0; }
+    .door__a:focus-visible { outline: 0; }
+    .door:has(.door__a:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .ar { display: inline; font-size: 16px; letter-spacing: 0; transition: transform .3s ease; }
+    .door.on .ar { transform: translateX(6px); }
+    :global([dir='rtl']) .ar { transform: scaleX(-1); }
+    :global([dir='rtl']) .door.on .ar { transform: translateX(-6px) scaleX(-1); }
   }
 </style>

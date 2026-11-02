@@ -414,7 +414,16 @@ const meta = {
       if (!desk.matches || !href || !listPath) return;
       try {
         const u = new URL(href, location.href);
-        if (u.origin === location.origin && decodeURI(u.pathname).startsWith(decodeURI(listPath))) localStorage.setItem('hpFromHome', String(Date.now()));
+        if (!(u.origin === location.origin && decodeURI(u.pathname).startsWith(decodeURI(listPath)))) return;
+        // the list starts from this exact frame: the hero's height on screen, its photo and focal point
+        const hero = document.querySelector<HTMLElement>('.hero');
+        const img = hero?.querySelector<HTMLImageElement>('.hero__bg img');
+        const r = hero?.getBoundingClientRect();
+        const n: Record<string, unknown> = { t: Date.now() };
+        if (r && img && r.top > -40 && r.bottom > 0) {
+          n.h = Math.round(r.bottom); n.img = img.currentSrc || img.src; n.pos = getComputedStyle(img).objectPosition;
+        }
+        localStorage.setItem('hpFromHome', JSON.stringify(n));
       } catch { /* storage off */ }
     };
     document.addEventListener('click', (e) => note((e.target as Element | null)?.closest?.('a[href]')?.getAttribute('href') ?? null), true);

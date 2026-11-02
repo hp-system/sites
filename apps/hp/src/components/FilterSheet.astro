@@ -54,6 +54,16 @@ const FAMILY: Record<string, 'homes' | 'land' | 'hotel'> = {
 // value = ΚΛΕΙΔΙ (ελληνική ονομαστική) · label = πώς γράφεται στη γλώσσα της σελίδας.
 const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
                                     ...munis.map((m) => [m.key ?? m.name, m.name] as [string, string])];
+
+// ── Desktop (≥1024px) window as the approved mockup (Sergei 02/11) ─────────────
+// The sliders are only an enhancement of the two fields (no `name`: never sent).
+// Scales from the mockup: price 0 → 10,000,000+, built area 0 → 1,000 m²+.
+// Land: the plot is a different world (300–268,000 m²), so its own scale.
+const steps = (...runs: [number, number, number][]) =>
+  runs.flatMap(([from, to, by]) => Array.from({ length: Math.floor((to - from) / by) + 1 }, (_, i) => from + i * by));
+const PRICE_STEPS = steps([0, 1000000, 25000], [1100000, 3000000, 100000], [3500000, 10000000, 500000]);
+const SQM_STEPS = steps([0, 300, 10], [325, 1000, 25]);
+const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
 ---
 <dialog class="fs" id="filter-sheet" aria-label={t(lang, 'ui.filters')}>
   <form class="fs__form" action={listUrl(lang)} method="get" data-ev="search:submit"
@@ -66,19 +76,20 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
     </div>
 
     <div class="fs__body">
-      <fieldset class="fs__g fs__g--wide">
+      <fieldset class="fs__g fs__g--wide fs__a-kind">
         <legend class="fs__l">{t(lang, 'f.kind')}</legend>
         <div class="chips">
           {KINDS.map(([v, n], i) => (
             <label class="chip">
               <input type="radio" name="subcategory" value={v} checked={i === 0} />
-              <span>{n}</span>
+              {/* desktop says «All types» as the mockup (George's search-bar text); phones keep «Any» */}
+              <span>{i === 0 ? <><span class="fs-mob">{n}</span><span class="fs-desk">{t(lang, 'search.what.all')}</span></> : n}</span>
             </label>
           ))}
         </div>
       </fieldset>
 
-      <fieldset class="fs__g fs__g--wide">
+      <fieldset class="fs__g fs__g--wide fs__a-muni">
         <legend class="fs__l">{t(lang, 'f.muni')}</legend>
         <div class="chips">
           {MUNIS.map(([v, n], i) => (
@@ -90,18 +101,25 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
         </div>
       </fieldset>
 
-      <div class="fs__pair">
+      <div class="fs__pair fs__a-price" data-range data-steps={JSON.stringify(PRICE_STEPS)} data-unit="eur">
+        <span class="fs__h fs-desk" aria-hidden="true">{t(lang, 'list.price')}</span>
         <label class="fs__f">
           <span class="fs__l">{t(lang, 'f.price_from')}</span>
           <input type="number" name="price_min" inputmode="numeric" placeholder="—" step="10000" min="0" />
         </label>
+        <span class="fs__dash fs-desk" aria-hidden="true">–</span>
         <label class="fs__f">
           <span class="fs__l">{t(lang, 'f.price_to')}</span>
           <input type="number" name="price_max" inputmode="numeric" placeholder="—" step="10000" min="0" />
         </label>
+        <div class="fs__rng fs-desk">
+          <i class="fs__track" aria-hidden="true"></i><i class="fs__fill" aria-hidden="true"></i>
+          <input type="range" min="0" max={PRICE_STEPS.length - 1} step="1" value="0" data-lo tabindex="-1" aria-hidden="true" />
+          <input type="range" min="0" max={PRICE_STEPS.length - 1} step="1" value={PRICE_STEPS.length - 1} data-hi tabindex="-1" aria-hidden="true" />
+        </div>
       </div>
 
-      <fieldset class="fs__g fs__g--wide">
+      <fieldset class="fs__g fs__g--wide fs__a-sea">
         <legend class="fs__l">{t(lang, 'f.sea')}</legend>
         <div class="chips">
           {SEA.map(([v, n], i) => (
@@ -116,7 +134,7 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
       {/* ── ΥΠΝΟΔΩΜΑΤΙΑ — μόνο για κατοικίες ──────────────────────────────
           Μετρήθηκε στη βάση: γη 217/217 και ξενοδοχεία 36/36 έχουν ΜΗΔΕΝ
           υπνοδωμάτια. Το φίλτρο εκεί δεν ήταν απλώς άσχετο — γύριζε πάντα 0. */}
-      <fieldset class="fs__g fs__g--wide" data-only="homes">
+      <fieldset class="fs__g fs__g--wide fs__a-beds" data-only="homes">
         <legend class="fs__l">{t(lang, 'f.beds')}</legend>
         <div class="chips">
           {BEDS.map(([v, n], i) => (
@@ -131,7 +149,7 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
       {/* ── ΔΩΜΑΤΙΑ — μόνο για ξενοδοχεία ────────────────────────────────
           Το `hotel_rooms` είναι γεμάτο και στα 36 (τιμές 1-26+). Τα αστέρια
           ΔΕΝ μπαίνουν: 21 από τα 36 γράφουν «1», δηλαδή προεπιλογή, όχι μέτρηση. */}
-      <fieldset class="fs__g fs__g--wide" data-only="hotel" hidden>
+      <fieldset class="fs__g fs__g--wide fs__a-rooms" data-only="hotel" hidden>
         <legend class="fs__l">{t(lang, 'f.rooms')}</legend>
         <div class="chips">
           {ROOMS.map(([v, n], i) => (
@@ -145,19 +163,43 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
 
       {/* Η ετικέτα αλλάζει: για γη τα τετραγωνικά ΕΙΝΑΙ το οικόπεδο (επαληθεύτηκε
           — το `sqm` της γης ταυτίζεται με το `land_usage` ως τη δεύτερη δεκαδική). */}
-      <div class="fs__pair"
+      <div class="fs__pair fs__a-sqm" data-range data-steps={JSON.stringify(SQM_STEPS)} data-unit="sqm"
+           data-steps-built={JSON.stringify(SQM_STEPS)} data-steps-land={JSON.stringify(PLOT_STEPS)}
            data-sqm-built={t(lang, 'f.sqm_built')} data-sqm-land={t(lang, 'f.sqm_land')}>
+        <span class="fs__h fs-desk" aria-hidden="true" data-sqm-label>{t(lang, 'f.sqm_built')}</span>
         <label class="fs__f">
           <span class="fs__l"><span data-sqm-label>{t(lang, 'f.sqm_built')}</span> ·
             {t(lang, 'f.sqm_from').replace(/^[^\s]+\s*/, '')}</span>
           <input type="number" name="sqm_min" inputmode="numeric" placeholder="—" min="0" />
         </label>
+        <span class="fs__dash fs-desk" aria-hidden="true">–</span>
         <label class="fs__f">
           <span class="fs__l"><span data-sqm-label>{t(lang, 'f.sqm_built')}</span> ·
             {t(lang, 'f.sqm_to').replace(/^[^\s]+\s*/, '')}</span>
           <input type="number" name="sqm_max" inputmode="numeric" placeholder="—" min="0" />
         </label>
+        <div class="fs__rng fs-desk">
+          <i class="fs__track" aria-hidden="true"></i><i class="fs__fill" aria-hidden="true"></i>
+          <input type="range" min="0" max={SQM_STEPS.length - 1} step="1" value="0" data-lo tabindex="-1" aria-hidden="true" />
+          <input type="range" min="0" max={SQM_STEPS.length - 1} step="1" value={SQM_STEPS.length - 1} data-hi tabindex="-1" aria-hidden="true" />
+        </div>
       </div>
+
+      {/* ── FEATURES (desktop, as the mockup) — ONLY what the list really filters.
+          Pool → `pool=1`: lib/listing.ts `hasPool()` (codes 3–6, never «2 = no pool»),
+          and the same rule in pages/api/count.ts (B-04). The reason it left this window
+          (28/7: `?pool=1` to the API gave 0) no longer holds — it is filtered locally now.
+          The mockup's Sea view / Garden / Parking / Lift / Furnished and the whole
+          Bathrooms group are NOT here: no URL parameter filters on them. */}
+      <fieldset class="fs__g fs__g--wide fs__a-feat fs-desk">
+        <legend class="fs__l">{t(lang, 'f.features')}</legend>
+        <div class="chips">
+          <label class="chip">
+            <input type="checkbox" name="pool" value="1" />
+            <span>{t(lang, 'coll.pool')}</span>
+          </label>
+        </div>
+      </fieldset>
 
       {/* ⛔ ΕΔΩ ΗΤΑΝ ΤΟ «ΜΟΝΟ ΜΕ ΠΙΣΙΝΑ» — ΑΦΑΙΡΕΘΗΚΕ (George, 28/7).
           ⚠️ ΠΡΟΣΟΧΗ ΣΤΗ ΔΙΑΚΡΙΣΗ, ΓΙΑΤΙ ΕΙΝΑΙ ΔΥΟ ΔΙΑΦΟΡΕΤΙΚΑ ΠΡΑΓΜΑΤΑ:
@@ -184,8 +226,9 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
 <script>
   const dlg = document.getElementById('filter-sheet') as HTMLDialogElement | null;
   const opener = document.querySelector<HTMLAnchorElement>('[data-ev="search:filters_open"]');
-  if (dlg && opener) {
-    opener.addEventListener('click', (e) => {
+  // The window also works without the home opener (the list page opens it from «More filters»).
+  if (dlg) {
+    opener?.addEventListener('click', (e) => {
       e.preventDefault();
       dlg.showModal();
       document.documentElement.style.overflow = 'hidden';
@@ -256,8 +299,74 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
       clearTimeout(timer);
       timer = window.setTimeout(refresh, instant ? 0 : 250);
     });
-    form.addEventListener('reset', () => { setTimeout(() => { applyKind(); refresh(); }, 0); });
+    form.addEventListener('reset', () => { setTimeout(() => { applyKind(); syncRanges(); refresh(); }, 0); });
+
+    // ── Desktop (≥1024px): the mockup's two boxes + a dual slider per range ──
+    // The two number fields stay the form (GET, works without JS); the sliders
+    // have no `name` and only write into the fields. An end of the scale = empty
+    // field = no limit, as the server reads it (`num()` ignores empty / 0).
+    const desk = window.matchMedia('(min-width: 1024px)');
+    const nf = new Intl.NumberFormat(document.documentElement.lang || 'en');
+    type Rng = { el: HTMLElement; lo: HTMLInputElement; hi: HTMLInputElement; min: HTMLInputElement; max: HTMLInputElement; steps: number[] };
+    const ranges: Rng[] = [...form.querySelectorAll<HTMLElement>('[data-range]')].map((el) => {
+      const [min, max] = [...el.querySelectorAll<HTMLInputElement>('input[type=number]')];
+      return { el, min, max, lo: el.querySelector('[data-lo]')!, hi: el.querySelector('[data-hi]')!,
+               steps: JSON.parse(el.dataset.steps || '[0]') };
+    });
+    const near = (st: number[], v: number) => st.reduce((b, s, i) => (Math.abs(s - v) < Math.abs(st[b] - v) ? i : b), 0);
+    const show = (r: Rng, v: number) => (r.el.dataset.unit === 'eur' ? `€${nf.format(v)}` : `${nf.format(v)} m²`);
+    function paint(r: Rng) {
+      const last = r.steps.length - 1, a = Number(r.lo.value), b = Number(r.hi.value);
+      r.el.style.setProperty('--lo', String(a / last));
+      r.el.style.setProperty('--hi', String(b / last));
+    }
+    function syncRange(r: Rng) {
+      const last = r.steps.length - 1;
+      [r.lo.max, r.hi.max] = [String(last), String(last)];
+      const a = Number(r.min.value) || 0, b = Number(r.max.value) || 0;
+      r.lo.value = String(a ? near(r.steps, a) : 0);
+      r.hi.value = String(b ? Math.max(near(r.steps, b), Number(r.lo.value)) : last);
+      const on = desk.matches;
+      r.min.placeholder = on ? show(r, r.steps[0]) : '—';
+      r.max.placeholder = on ? `${show(r, r.steps[last])}+` : '—';
+      paint(r);
+    }
+    function syncRanges() { ranges.forEach(syncRange); }
+    ranges.forEach((r) => {
+      const slide = (which: 'lo' | 'hi') => {
+        const last = r.steps.length - 1;
+        let a = Number(r.lo.value), b = Number(r.hi.value);
+        if (a > b) { if (which === 'lo') r.lo.value = String(a = b); else r.hi.value = String(b = a); }
+        r.min.value = a > 0 ? String(r.steps[a]) : '';
+        r.max.value = b < last ? String(r.steps[b]) : '';
+        paint(r);
+        (which === 'lo' ? r.min : r.max).dispatchEvent(new Event('input', { bubbles: true }));
+      };
+      r.lo.addEventListener('input', (e) => { e.stopPropagation(); slide('lo'); });
+      r.hi.addEventListener('input', (e) => { e.stopPropagation(); slide('hi'); });
+      [r.min, r.max].forEach((f) => f.addEventListener('change', () => syncRange(r)));
+    });
+    // Land ↔ homes: the size slider changes scale (plot vs built area).
+    const sqmPair = ranges.find((r) => r.el.dataset.stepsLand);
+    const rescale = () => {
+      if (!sqmPair) return;
+      const kind = form.querySelector<HTMLInputElement>('input[name=subcategory]:checked')?.value ?? '';
+      const land = family[kind] === 'land';
+      sqmPair.steps = JSON.parse((land ? sqmPair.el.dataset.stepsLand : sqmPair.el.dataset.stepsBuilt) || '[0]');
+      syncRange(sqmPair);
+    };
+    form.addEventListener('input', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el?.name === 'subcategory') rescale();
+      else if (el?.type === 'number') { const r = ranges.find((x) => x.min === el || x.max === el); if (r) { syncRange(r); } }
+    });
+    // The list page pre-fills the form from the URL and fires `change`.
+    form.addEventListener('change', (e) => { if (e.target === form) { applyKind(); rescale(); syncRanges(); refresh(); } });
+    form.addEventListener('reset', () => { setTimeout(rescale, 0); });
+    desk.addEventListener('change', syncRanges);
     applyKind();
+    rescale();
+    syncRanges();
   }
 </script>
 
@@ -306,12 +415,12 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
     position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer;
     appearance: none; width: 100%; height: 100%;
   }
-  .chip span {
+  .chip > span {
     display: flex; align-items: center; min-height: 40px; padding: 0 14px;
     border: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2);
     transition: border-color .14s ease, color .14s ease;
   }
-  .chip:hover span { border-color: var(--ink-2); color: var(--ink); }
+  .chip:hover > span { border-color: var(--ink-2); color: var(--ink); }
   .chip input:checked + span {
     background: var(--ink); border-color: var(--ink); color: var(--paper); font-weight: 600;
   }
@@ -322,7 +431,7 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
     background: transparent; border-color: var(--ink); color: var(--ink);
   }
   .chip input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .chip--solo span { padding: 0 16px; }
+  .chip--solo > span { padding: 0 16px; }
 
   .fs__foot {
     display: flex; align-items: center; gap: var(--s3);
@@ -349,5 +458,97 @@ const MUNIS: [string, string][] = [['', t(lang, 'ui.all_halkidiki')],
     }
     .fs__body { padding: var(--s5); }
     .fs__foot { padding: var(--s4) var(--s5); }
+  }
+
+  /* ── Desktop ≥1024px: the approved mockup's «Filters» window (Sergei 02/11) ──
+     Wide window, two columns with a thin line between them, a beige bar over every
+     group, plain-text options (the chosen one: a thin ink frame), Price / Built area
+     as two boxes + a dual slider, «Clear» link left and the black button right.
+     Below 1024px nothing here applies: phones keep George's sheet as it was. */
+  .fs-desk { display: none; }
+  @media (min-width: 1024px) {
+    .fs-mob { display: none; }
+    span.fs-desk { display: inline; }
+    .fs {
+      width: calc(100% - 48px); max-width: 920px; max-height: 86vh;
+    }
+    .fs__bar { padding: 12px 28px; }
+    .fs__body {
+      padding: 18px 28px 20px; gap: 18px 24px;
+      grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+      grid-template-areas: 'kind . muni' 'beds . rooms' 'sea . feat' 'price . sqm';
+    }
+    .fs__body::before { content: ''; grid-column: 2; grid-row: 1 / -1; background: var(--line); }
+    .fs__a-kind { grid-area: kind; }   .fs__a-muni { grid-area: muni; }
+    .fs__a-beds { grid-area: beds; }   .fs__a-rooms { grid-area: rooms; }
+    .fs__a-sea { grid-area: sea; }     .fs__a-feat { grid-area: feat; display: block; }
+    .fs__a-price { grid-area: price; } .fs__a-sqm { grid-area: sqm; }
+
+    /* the beige bar over every group */
+    .fs__g > .fs__l, .fs .fs__h {
+      display: block; box-sizing: border-box; width: 100%; float: none;
+      margin: 0 0 10px; padding: 7px 12px; background: var(--paper-2);
+      font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink); font-weight: 600; line-height: 1.4;
+    }
+
+    /* options as plain text; the chosen one framed in ink, never filled */
+    .chips { margin-top: 0; }
+    .chip > span {
+      min-height: 36px; padding: 0 12px; border-color: transparent;
+      font-size: 13px; line-height: 1.2; color: var(--ink-2);
+    }
+    .chip:hover > span { border-color: var(--ink-2); color: var(--ink); }
+    .chip input:checked + span,
+    .chip input[value='']:checked + span {
+      background: var(--paper); border-color: var(--ink); color: var(--ink); font-weight: 400;
+    }
+
+    /* Price / Built area: bar · [from] – [to] · slider */
+    .fs__pair {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0 8px; align-items: center;
+    }
+    .fs__pair > .fs__h { grid-column: 1 / -1; }
+    .fs__pair .fs__f {
+      display: flex; align-items: center; box-sizing: border-box; height: 38px; padding: 0 10px; min-width: 0;
+    }
+    .fs__pair .fs__f > .fs__l {
+      position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+      clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    .fs__pair .fs__f input { margin: 0; font-size: 14px; min-height: 0; -moz-appearance: textfield; }
+    .fs__pair .fs__f input::-webkit-outer-spin-button,
+    .fs__pair .fs__f input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .fs__pair .fs__f input::placeholder { color: var(--ink); opacity: 1; }
+    .fs__pair .fs__f:focus-within { border-color: var(--ink); }
+    .fs__dash { color: var(--faint); }
+    .fs__rng { display: block; grid-column: 1 / -1; position: relative; height: 24px; margin-top: 10px; }
+    .fs__track, .fs__fill { position: absolute; top: 11px; height: 2px; }
+    .fs__track { inset-inline: 9px; background: var(--line); }
+    .fs__fill {
+      background: var(--ink);
+      inset-inline-start: calc(9px + (100% - 18px) * var(--lo, 0));
+      inset-inline-end: calc(9px + (100% - 18px) * (1 - var(--hi, 1)));
+    }
+    .fs__rng input {
+      position: absolute; inset: 0; width: 100%; height: 24px; margin: 0; background: none;
+      pointer-events: none; -webkit-appearance: none; appearance: none;
+    }
+    .fs__rng input::-webkit-slider-runnable-track { background: none; }
+    .fs__rng input::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; pointer-events: auto; cursor: pointer;
+      width: 18px; height: 18px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink);
+    }
+    .fs__rng input::-moz-range-thumb {
+      pointer-events: auto; cursor: pointer; box-sizing: border-box;
+      width: 18px; height: 18px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink);
+    }
+
+    .fs__foot { padding: 10px 28px 12px; gap: 12px; }
+    .fs__reset {
+      padding: 0; min-height: 0; font-size: 13.5px; color: var(--ink-2);
+      text-decoration: underline; text-underline-offset: 3px;
+    }
+    .fs__go { flex: none; margin-inline-start: auto; min-height: 44px; padding: 0 22px; font-size: 11px; letter-spacing: .16em; }
   }
 </style>

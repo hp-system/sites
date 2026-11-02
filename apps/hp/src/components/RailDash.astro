@@ -1,0 +1,18 @@
+---
+// Page dashes of a desktop carousel row (info pages wave 1, #105 — same look as the home rows
+// #101): short square marks, the active one long; the change slides; hovering the group makes
+// them taller — no colour change. `for` = the id of the row (`[data-irail]`, lib/rail.ts).
+// Hidden below 1024px (phones keep George's layout). Styles: InfoKit.astro.
+import { t, type Lang } from '../lib/i18n';
+interface Props { for: string; count: number; per?: number; lang: Lang }
+const { for: rail, count, per = 3, lang } = Astro.props;
+const pages = Math.max(1, Math.ceil(count / per));
+---
+{pages > 1 && (
+  <div class="ir-dash" role="group" aria-label={t(lang, 'home.pages')} data-irail-dash={rail}>
+    {Array.from({ length: pages }).map((_, i) => (
+      <button type="button" class={i === 0 ? 'on' : undefined} aria-pressed={i === 0 ? 'true' : 'false'}
+              aria-label={t(lang, 'home.page', { n: i + 1 })}><span></span></button>
+    ))}
+  </div>
+)}

@@ -1,0 +1,25 @@
+---
+// WhatsApp link as on the property page (#103): green, chat icon, small caps; on hover a beige
+// plate with a green edge (on dark grounds a faint white plate). Info pages wave 1 (#105) —
+// Sell now, Services and Company next. Opens the company WhatsApp (lib/contact).
+import { waHref } from '../lib/contact';
+interface Props { dark?: boolean }
+const { dark = false } = Astro.props;
+---
+<a class:list={['wab', { 'wab--dk': dark }]} href={waHref()} target="_blank" rel="noopener" data-ev="lead:whatsapp_content">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1.1-1.4-1.1-2.7 0-1.3.7-1.9.9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.7 1 .9 1.8 1.1 2.1 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.2.1.4.2.4.3 0 .1 0 .7-.2 1.2Z"/></svg>WhatsApp
+</a>
+
+<style>
+  .wab { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; margin: -6px 0; border: 1px solid transparent;
+         color: var(--wa-green); font-size: 11.5px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; text-decoration: none;
+         transition: background .2s ease, border-color .2s ease; }
+  /* inside George's .prose (links ink + underline) the WhatsApp link keeps its own look */
+  :global(.prose) .wab { color: var(--wa-green); text-decoration: none; }
+  .wab svg { flex: none; transition: transform .25s ease; }
+  .wab:hover { background: var(--paper-2); border-color: var(--wa-green); }
+  .wab:hover svg { transform: scale(1.12); }
+  .wab--dk:hover { background: rgba(255,255,255,.06); }
+  .wab:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .wab, .wab svg { transition: none; } }
+</style>

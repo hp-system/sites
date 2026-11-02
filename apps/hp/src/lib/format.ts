@@ -18,6 +18,13 @@ export function money(n: number, lang: Lang = 'el'): string {
   }).format(n).replace(/\s/g, ' ');
 }
 
+/** «€10M», «€250K» — the short ends of a price scale (list filter slider, as the mockup). */
+export function moneyShort(n: number, lang: Lang = 'el'): string {
+  return new Intl.NumberFormat(LOCALE[lang], {
+    style: 'currency', currency: brand.market.currency, notation: 'compact', maximumFractionDigits: 1,
+  }).format(n).replace(/\s/g, ' ');
+}
+
 export function num(n: number, lang: Lang = 'el'): string {
   return new Intl.NumberFormat(LOCALE[lang]).format(n);
 }

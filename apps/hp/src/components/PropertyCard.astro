@@ -248,7 +248,10 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
   // Ο Astro μαζεύει τα script των components σε ΕΝΑ αρχείο που τρέχει ΜΙΑ φορά,
   // όσες κάρτες κι αν υπάρχουν στη σελίδα — γι' αυτό δένουμε με έναν βρόχο εδώ
   // αντί για ένα script ανά κάρτα.
-  document.querySelectorAll<HTMLElement>('.ph').forEach((ph) => {
+  // Bound once per card; the list page swaps in new cards without a page load
+  // (ListingPage.astro, in-place filtering) and then fires `hp:list-swap`.
+  const bindRails = () => document.querySelectorAll<HTMLElement>('.ph:not([data-rb])').forEach((ph) => {
+    ph.dataset.rb = '1';
     const rail = ph.querySelector<HTMLElement>('.rail');
     if (!rail) return;
 
@@ -293,4 +296,6 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
     rail.addEventListener('scroll', sync, { passive: true });
     sync();
   });
+  bindRails();
+  document.addEventListener('hp:list-swap', bindRails);
 </script>

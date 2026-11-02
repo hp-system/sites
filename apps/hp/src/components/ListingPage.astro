@@ -25,7 +25,7 @@ import PropertyCard from './PropertyCard.astro';
 import { allProperties, refOf, priceOf, priceVisible } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
 import { prefix, propertyUrl, t, type Lang } from '../lib/i18n';
-import { num, seaLabel, money, sqm } from '../lib/format';
+import { num, seaLabel, money, moneyShort, sqm } from '../lib/format';
 import { cmsImage } from '../lib/content';
 import { heroShot } from '../lib/hero';
 import { clean, marked, coverOf } from '../lib/photos';
@@ -33,7 +33,7 @@ import { brand } from '../brand/index';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
   facetUrl, ui, FACETS, SORTS, SORT_DEFAULT, PER_PAGE, PER_PAGE_OPTIONS,
-  cardsPerPage, SUBTYPES, MUNIS, SEAS,
+  cardsPerPage, SUBTYPES, MUNIS, SEAS, BED_OPTS, defined,
   type Facet, type Query, type Sort,
 } from '../lib/listing';
 
@@ -49,7 +49,9 @@ const memberToken = Astro.cookies.get('member_token')?.value;
 //    ένα «περνάω ό,τι έρθει» θα άφηνε μη συνδεδεμένο να μάθει με `?area=Σάνη`
 //    ποια ακίνητα είναι στη Σάνη — παρακάμπτοντας ολόκληρο το lib/gate.ts.
 const sp = Astro.url.searchParams;
-const q: Query = Object.assign({}, ...facets.map((f) => f.q), queryFromParams(sp));
+// `defined()`: a parameter that is NOT in the URL must not wipe the facet's own value
+// (the «Kassandra» page listed the whole catalogue before — see lib/listing.ts).
+const q: Query = Object.assign({}, ...facets.map((f) => f.q), defined(queryFromParams(sp)));
 
 let items: Awaited<ReturnType<typeof allProperties>> = [];
 let apiDown = false;
@@ -132,6 +134,7 @@ const fromUrl = queryFromParams(sp);
 const activeCount = [
   fromUrl.priceMin, fromUrl.priceMax, fromUrl.sqmMin, fromUrl.sqmMax,
   fromUrl.beds, fromUrl.subcategory, fromUrl.municipality, fromUrl.sea,
+  fromUrl.subs, fromUrl.munis, fromUrl.seas, fromUrl.bedsIn,
 ].filter(Boolean).length;
 
 // ── ΟΙ ΕΠΙΛΟΓΕΣ ΤΩΝ ΤΡΙΩΝ ΝΕΩΝ ΦΙΛΤΡΩΝ ────────────────────────────────────
@@ -185,29 +188,67 @@ const without = (drop: string[]) => {
   return `${pathFor(lang)}${s ? `?${s}` : ''}`;
 };
 
-// The cells of the row. A cell whose value the address already fixes (a facet
-// page, e.g. «Kassandra») is not repeated — same rule as George's form.
+// The cells of the row, as the mockup (Sergei 02/11: «exactly like the MOCKUP»):
+// Municipality · Type · Bedrooms · Sea are MULTI-SELECT ticks, each tick applied at
+// once; Price and Size are a From/To pair with a two-thumb slider, applied on release.
+// Every tick is a real link to the list with that value added/removed (works without
+// JavaScript; `rel=nofollow` — filtered combinations stay out of the index as before).
+// A cell whose value the address already fixes (a facet page, e.g. «Kassandra») is
+// not repeated — same rule as George's form.
 type Opt = { v: string; label: string };
 const catLabel: Record<string, string> = {
   residency: t(lang, 'cat.homes'), land: t(lang, 'cat.land'), business: t(lang, 'cat.commercial'),
 };
 const typeLabel = (v: string) => typeOpts.find((o) => o.v === v)?.label ?? (v === 'hotel' ? t(lang, 'kinds.hotels') : v);
-const cells: { key: string; label: string; on: boolean; opts?: Opt[]; cur?: string;
-               range?: { lo: string; hi: string; loV?: number; hiV?: number; loL: string; hiL: string; step: number } }[] = [];
-if (!lockedBy('municipality')) cells.push({ key: 'muni', label: ui(lang, 'muni'), on: !!fromUrl.municipality, opts: muniOpts, cur: fromUrl.municipality });
-if (!lockedBy('subcategory') && !lockedBy('category')) cells.push({ key: 'type', label: ui(lang, 'type'), on: !!fromUrl.subcategory, opts: typeOpts, cur: fromUrl.subcategory });
-cells.push({ key: 'price', label: t(lang, 'list.price'), on: !!(fromUrl.priceMin || fromUrl.priceMax),
-  range: { lo: 'price_min', hi: 'price_max', loV: fromUrl.priceMin, hiV: fromUrl.priceMax, loL: ui(lang, 'priceFrom'), hiL: ui(lang, 'priceTo'), step: 10000 } });
-cells.push({ key: 'beds', label: ui(lang, 'beds'), on: !!fromUrl.beds,
-  opts: [1, 2, 3, 4, 5].map((n) => ({ v: String(n), label: `${n}+` })), cur: fromUrl.beds ? String(fromUrl.beds) : undefined });
-if (!lockedBy('sea')) cells.push({ key: 'sea', label: ui(lang, 'seaLabel'), on: !!fromUrl.sea, opts: seaOpts, cur: fromUrl.sea });
-cells.push({ key: 'size', label: t(lang, 'list.size'), on: !!(fromUrl.sqmMin || fromUrl.sqmMax),
-  range: { lo: 'sqm_min', hi: 'sqm_max', loV: fromUrl.sqmMin, hiV: fromUrl.sqmMax, loL: ui(lang, 'areaFrom'), hiL: ui(lang, 'areaTo'), step: 10 } });
-// URL keys that belong to a cell (long aliases included, so a form never sends both).
+// URL keys that belong to a cell (long aliases included, so a link never sends both).
 const cellKeys: Record<string, string[]> = {
-  muni: ['muni', 'municipality'], type: ['type', 'subcategory'], beds: ['beds', 'bedrooms'],
+  muni: ['muni', 'municipality'], type: ['type', 'subcategory'], beds: ['beds', 'bedrooms', 'bed'],
   sea: ['sea', 'sea_access'], price: ['price_min', 'price_max'], size: ['sqm_min', 'sqm_max'],
 };
+// What each multi cell has ticked now (one value or several), and the URL key it writes.
+const chosen: Record<string, string[]> = {
+  muni: fromUrl.munis ?? (fromUrl.municipality ? [fromUrl.municipality] : []),
+  type: fromUrl.subs ?? (fromUrl.subcategory ? [fromUrl.subcategory] : []),
+  sea: fromUrl.seas ?? (fromUrl.sea ? [fromUrl.sea] : []),
+  beds: (fromUrl.bedsIn ?? []).map(String),
+};
+const writeKey: Record<string, string> = { muni: 'muni', type: 'type', sea: 'sea', beds: 'bed' };
+const bedOpts: Opt[] = BED_OPTS.map((n) => ({ v: String(n), label: n >= 5 ? `${n}+` : String(n) }));
+const optsOf: Record<string, Opt[]> = { muni: muniOpts, type: typeOpts, sea: seaOpts, beds: bedOpts };
+/** This list with one value of a cell ticked or unticked (page 1; a property ID is dropped). */
+const toggled = (key: string, v: string) => {
+  const cur = chosen[key];
+  const next = cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v];
+  const sp2 = here2([...cellKeys[key], 'page', 'id']);
+  for (const o of optsOf[key]) if (next.includes(o.v)) sp2.append(writeKey[key], o.v);
+  const s2 = sp2.toString();
+  return `${pathFor(lang)}${s2 ? `?${s2}` : ''}`;
+};
+// The two scales of the mockup (price 0 → 10M+, built area 0 → 1,000 m²+); land is
+// another world (300–268,000 m²), so when only land is chosen the plot scale (as the
+// «More filters» window).
+const steps = (...runs: [number, number, number][]) =>
+  runs.flatMap(([from, to, by]) => Array.from({ length: Math.floor((to - from) / by) + 1 }, (_, i) => from + i * by));
+const PRICE_STEPS = steps([0, 1000000, 25000], [1100000, 3000000, 100000], [3500000, 10000000, 500000]);
+const landOnly = q.category === 'land' || (chosen.type.length > 0 && chosen.type.every((v) => v === 'field' || v === 'plot'));
+const SIZE_STEPS = landOnly ? steps([0, 10000, 500], [15000, 100000, 5000]) : steps([0, 300, 10], [325, 1000, 25]);
+const near = (st: number[], n: number) => st.reduce((b, x, i) => (Math.abs(x - n) < Math.abs(st[b] - n) ? i : b), 0);
+type Range = { lo: string; hi: string; loV?: number; hiV?: number; steps: number[]; labels: string[]; loI: number; hiI: number; ends: [string, string] };
+const range = (lo: string, hi: string, loV: number | undefined, hiV: number | undefined, st: number[], fmt: (n: number) => string,
+               short: (n: number) => string = fmt): Range => ({
+  lo, hi, loV, hiV, steps: st, ends: [short(st[0]), `${short(st[st.length - 1])}+`],
+  labels: st.map((n, i) => fmt(n) + (i === st.length - 1 ? '+' : '')),
+  loI: loV ? near(st, loV) : 0, hiI: hiV ? near(st, hiV) : st.length - 1,
+});
+const cells: { key: string; label: string; on: boolean; n?: number; opts?: Opt[]; range?: Range; fmt?: (n: number) => string }[] = [];
+if (!lockedBy('municipality')) cells.push({ key: 'muni', label: ui(lang, 'muni'), on: chosen.muni.length > 0, n: chosen.muni.length, opts: muniOpts });
+if (!lockedBy('subcategory') && !lockedBy('category')) cells.push({ key: 'type', label: ui(lang, 'type'), on: chosen.type.length > 0, n: chosen.type.length, opts: typeOpts });
+cells.push({ key: 'price', label: t(lang, 'list.price'), on: !!(fromUrl.priceMin || fromUrl.priceMax), fmt: (n) => money(n, lang),
+  range: range('price_min', 'price_max', fromUrl.priceMin, fromUrl.priceMax, PRICE_STEPS, (n) => money(n, lang), (n) => moneyShort(n, lang)) });
+cells.push({ key: 'beds', label: ui(lang, 'beds'), on: chosen.beds.length > 0 || !!fromUrl.beds, n: chosen.beds.length, opts: bedOpts });
+if (!lockedBy('sea')) cells.push({ key: 'sea', label: ui(lang, 'seaLabel'), on: chosen.sea.length > 0, n: chosen.sea.length, opts: seaOpts });
+cells.push({ key: 'size', label: t(lang, 'list.size'), on: !!(fromUrl.sqmMin || fromUrl.sqmMax), fmt: (n) => sqm(n, lang),
+  range: range('sqm_min', 'sqm_max', fromUrl.sqmMin, fromUrl.sqmMax, SIZE_STEPS, (n) => sqm(n, lang)) });
 
 // «More filters» = George's full filter form (#fbar). Its number counts what the
 // row does not show: the kind (Homes / Land / Commercial) and «with a pool».
@@ -219,11 +260,16 @@ const span = (lo: number | undefined, hi: number | undefined, f: (n: number) => 
 const tags: { text: string; href: string }[] = [];
 if (fromUrl.id) tags.push({ text: `${ui(lang, 'idPh')} ${fromUrl.id}`, href: without(['id']) });
 if (fromUrl.category) tags.push({ text: catLabel[fromUrl.category] ?? fromUrl.category, href: without(['category']) });
-if (fromUrl.subcategory) tags.push({ text: typeLabel(fromUrl.subcategory), href: without(cellKeys.type) });
-if (fromUrl.municipality) tags.push({ text: muniOpts.find((o) => o.v === fromUrl.municipality)?.label ?? fromUrl.municipality, href: without(cellKeys.muni) });
+// one tag per ticked value (as the mockup); each removes only itself
+for (const v of chosen.type) tags.push({ text: typeLabel(v), href: toggled('type', v) });
+for (const v of chosen.muni) tags.push({ text: muniOpts.find((o) => o.v === v)?.label ?? v, href: toggled('muni', v) });
 if (fromUrl.priceMin || fromUrl.priceMax) tags.push({ text: span(fromUrl.priceMin, fromUrl.priceMax, (n) => money(n, lang)), href: without(cellKeys.price) });
-if (fromUrl.beds) tags.push({ text: t(lang, 'list.beds_tag', { n: fromUrl.beds }), href: without(cellKeys.beds) });
-if (fromUrl.sea) tags.push({ text: seaLabel(fromUrl.sea, lang) || fromUrl.sea, href: without(cellKeys.sea) });
+// `beds` (at least N) still comes from George's phone form and the «More filters» window
+if (fromUrl.beds) tags.push({ text: t(lang, 'list.beds_tag', { n: fromUrl.beds }), href: without(['beds', 'bedrooms']) });
+for (const v of chosen.beds) tags.push({
+  text: v === '5' ? t(lang, 'list.beds_tag', { n: 5 }) : v === '1' ? t(lang, 'list.bed1') : t(lang, 'list.bedn', { n: v }),
+  href: toggled('beds', v) });
+for (const v of chosen.sea) tags.push({ text: seaLabel(v, lang) || v, href: toggled('sea', v) });
 if (fromUrl.sqmMin || fromUrl.sqmMax) tags.push({ text: t(lang, 'list.size_tag', { v: span(fromUrl.sqmMin, fromUrl.sqmMax, (n) => sqm(n, lang)) }), href: without(cellKeys.size) });
 if (fromUrl.pool) tags.push({ text: t(lang, 'coll.pool'), href: without(['pool']) });
 const sorted = !!fromUrl.sort && fromUrl.sort !== SORT_DEFAULT;
@@ -265,7 +311,7 @@ const tilePhoto = (() => {
   <main id="main" class="list-main">
   {/* #102 desktop: the top as on the home page — the end of the home photo with
       the breadcrumb and the H1 on it. On phones this box is just George's column. */}
-  <div class="ltop" style={heroBg}>
+  <div class="ltop" style={heroBg} data-lswap="top">
   <div class="wrap ltop__in">
     {/* 🪤 ΕΠΑΝΕΛΑΜΒΑΝΕ ΤΟΝ ΤΙΤΛΟ. Στη γυμνή λίστα έγραφε «Halkidiki Properties ·
         Ακίνητα προς πώληση στη Χαλκιδική» και ΑΜΕΣΩΣ από κάτω ο H1 έλεγε το ίδιο
@@ -297,43 +343,63 @@ const tilePhoto = (() => {
   </div>
 
   {/* ── #102 DESKTOP FILTER ROW — where the home search bar sits: half on the
-      photo, the page width. Hidden on phones (George's tools below stay). Each
-      cell is its own GET form carrying the other filters as hidden fields, so it
-      works without JavaScript and never sends a parameter twice. No property
-      count anywhere (George 17/10) — the design's «✓ 516» cell is left out. ── */}
-  <div class="lbarwrap" data-lbar>
+      photo, the page width. Hidden on phones (George's tools below stay).
+      As the mockup (Sergei 02/11): ticks (several values per filter) and From/To +
+      slider. Without JavaScript every tick is a real link and the From/To pair a GET
+      form (Enter) carrying the other filters, so nothing is sent twice. With
+      JavaScript the list changes in place (script below: no page load). No property
+      count anywhere (George 17/10) — the design's «✓ 516» cell and the per-option
+      numbers are left out; the small number on a cell is how many values are ticked. ── */}
+  <div class="lbarwrap" data-lbar data-lswap="bar">
     <div class="lbar">
       <div class="lrow">
         <div class="lrow__f">
           {cells.map((c) => (
-            <details class:list={['lc', c.on && 'lc--on', c.range && 'lc--rng']} data-lc>
+            <details class:list={['lc', c.on && 'lc--on', c.range && 'lc--rng']} data-lc data-ck={c.key}>
               <summary class="lc__s">
                 <span class="lc__t">{c.label}</span>
+                {!!c.n && <span class="lc__n">{c.n}</span>}
                 <svg class="lc__chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
               </summary>
               <div class="lc__m">
-                <form method="get" action={pathFor(lang)}>
-                  {keepFields(cellKeys[c.key]).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
-                  {c.opts && c.opts.map((o) => o.v === c.cur ? (
-                    <a class="lopt" href={without(cellKeys[c.key])} aria-current="true">
-                      <span class="lopt__b" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12.5l5 5L20 6.5" /></svg></span>{o.label}
-                    </a>
-                  ) : (
-                    <button class="lopt" type="submit" name={c.key} value={o.v}>
-                      <span class="lopt__b" aria-hidden="true"></span>{o.label}
-                    </button>
-                  ))}
-                  {c.range && (
-                    <div class="lrng">
-                      <label><span class="lrng__l">{c.range.loL}</span>
-                        <input type="number" name={c.range.lo} min="0" step={c.range.step} inputmode="numeric" value={c.range.loV ?? ''} /></label>
-                      <label><span class="lrng__l">{c.range.hiL}</span>
-                        <input type="number" name={c.range.hi} min="0" step={c.range.step} inputmode="numeric" value={c.range.hiV ?? ''} /></label>
-                      <button class="lrng__go" type="submit">{ui(lang, 'apply')}</button>
+                {c.opts && (
+                  <div class="lc__o" role="group" aria-label={c.label}>
+                    {c.opts.map((o) => (
+                      <a class="lopt" role="menuitemcheckbox" aria-checked={chosen[c.key].includes(o.v) ? 'true' : 'false'}
+                         href={toggled(c.key, o.v)} rel="nofollow" data-lx data-keep>
+                        <span class="lopt__b" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12.5l5 5L20 6.5" /></svg></span>
+                        <span>{o.label}</span>
+                      </a>
+                    ))}
+                  </div>
+                )}
+                {c.range && (
+                  <form class="lrng" method="get" action={pathFor(lang)} data-lrng
+                        data-labels={JSON.stringify(c.range.labels)} data-steps={JSON.stringify(c.range.steps)}>
+                    {keepFields(cellKeys[c.key]).map(([k, v]) => <input type="hidden" name={k} value={v} />)}
+                    <div class="lrng__io">
+                      <label><span class="lrng__l">{t(lang, 'list.rng_from')}</span>
+                        <input type="text" inputmode="numeric" autocomplete="off" name={c.range.lo} data-lo
+                               value={c.range.loV && c.fmt ? c.fmt(c.range.loV) : ''} placeholder={c.range.labels[0]}
+                               aria-label={`${c.label} · ${t(lang, 'list.rng_from')}`} /></label>
+                      <label><span class="lrng__l">{t(lang, 'list.rng_to')}</span>
+                        <input type="text" inputmode="numeric" autocomplete="off" name={c.range.hi} data-hi
+                               value={c.range.hiV && c.fmt ? c.fmt(c.range.hiV) : ''} placeholder={c.range.labels[c.range.labels.length - 1]}
+                               aria-label={`${c.label} · ${t(lang, 'list.rng_to')}`} /></label>
                     </div>
-                  )}
-                </form>
-                {c.on && <div class="lc__f"><a href={without(cellKeys[c.key])}>{ui(lang, 'clear')}</a></div>}
+                    <div class="lrng__s" style={`--l:${c.range.loI / (c.range.steps.length - 1)};--r:${1 - c.range.hiI / (c.range.steps.length - 1)}`}>
+                      <i class="lrng__tr" aria-hidden="true"></i><i class="lrng__fi" aria-hidden="true"></i>
+                      <input class="lrng__r" type="range" min="0" max={c.range.steps.length - 1} step="1" value={c.range.loI}
+                             data-rlo aria-label={`${c.label} · ${t(lang, 'list.rng_from')}`} />
+                      <input class="lrng__r" type="range" min="0" max={c.range.steps.length - 1} step="1" value={c.range.hiI}
+                             data-rhi aria-label={`${c.label} · ${t(lang, 'list.rng_to')}`} />
+                    </div>
+                    <div class="lrng__mm" aria-hidden="true"><span>{c.range.ends[0]}</span><span>{c.range.ends[1]}</span></div>
+                    {/* Enter in a field submits (no-JS); the mockup has no Apply button */}
+                    <button class="sr-only" type="submit" tabindex="-1">{ui(lang, 'apply')}</button>
+                  </form>
+                )}
+                <div class="lc__f"><a href={without(cellKeys[c.key])} rel="nofollow" data-lx data-keep>{ui(lang, 'clear')}</a></div>
               </div>
             </details>
           ))}
@@ -343,7 +409,7 @@ const tilePhoto = (() => {
             {moreN > 0 && <span class="lc__n">{moreN}</span>}
           </button>
         </div>
-        <form class="lc lc--id" method="get" action={pathFor(lang)} role="search">
+        <form class="lc lc--id" method="get" action={pathFor(lang)} role="search" data-lxf>
           <label class="lc__idl">
             <svg class="lc__ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
             <span class="sr-only">{ui(lang, 'idLabel')}</span>
@@ -351,14 +417,14 @@ const tilePhoto = (() => {
                    value={q.id ?? ''} placeholder={ui(lang, 'idPh')} />
           </label>
         </form>
-        <details class:list={['lc', 'lc--sort', sorted && 'lc--on']} data-lc>
+        <details class:list={['lc', 'lc--sort', sorted && 'lc--on']} data-lc data-ck="sort">
           <summary class="lc__s">
             <span class="lc__t">{ui(lang, 'sort')}</span>
             <svg class="lc__chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </summary>
           <div class="lc__m lc__m--end">
             {SORTS.map((s) => (
-              <a class="lopt lopt--tick" href={sortUrl(s)} aria-current={s === cur ? 'true' : undefined}>
+              <a class="lopt lopt--tick" href={sortUrl(s)} aria-current={s === cur ? 'true' : undefined} data-lx>
                 {sortLabel[s]}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" /></svg>
               </a>
@@ -382,13 +448,13 @@ const tilePhoto = (() => {
         <div class="ltags lslide">
           <div class="ltags__l">
             {tags.map((g) => (
-              <a class="ltag" href={g.href} aria-label={t(lang, 'list.remove', { v: g.text })}>
+              <a class="ltag" href={g.href} aria-label={t(lang, 'list.remove', { v: g.text })} data-lx>
                 <span>{g.text}</span>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
               </a>
             ))}
           </div>
-          <a class="lclr" href={pathFor(lang)} aria-label={t(lang, 'list.clear_all')}>
+          <a class="lclr" href={pathFor(lang)} aria-label={t(lang, 'list.clear_all')} data-lx>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
             <span class="lclr__tip" aria-hidden="true">{t(lang, 'list.clear_all')}</span>
           </a>
@@ -397,7 +463,7 @@ const tilePhoto = (() => {
     </div>
   </div>
 
-  <div class="wrap list">
+  <div class="wrap list" data-lswap="list">
 
     {/* ΔΥΟ ΟΜΑΔΕΣ, ΟΧΙ ΠΕΝΤΕ ΣΚΟΡΠΙΑ ΣΤΟΙΧΕΙΑ (George, 30/7):
           ΑΡΙΣΤΕΡΑ  = ΕΝΕΡΓΕΙΕΣ  → φίλτρα · αποθήκευση · κωδικός
@@ -597,27 +663,27 @@ const tilePhoto = (() => {
             {res.pages > 1 && (
               <>
                 {res.page > 1
-                  ? <a class="pgw" href={pageUrl(res.page - 1)} aria-label={ui(lang, 'prev')}><i class="pgd"></i><svg class="pga pga--l" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 1L1 6l5 5" /></svg></a>
+                  ? <a class="pgw" href={pageUrl(res.page - 1)} aria-label={ui(lang, 'prev')} data-lx data-top><i class="pgd"></i><svg class="pga pga--l" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 1L1 6l5 5" /></svg></a>
                   : <span class="pgw" aria-disabled="true"><i class="pgd"></i></span>}
                 <span class="lpg__nums">
                   {pgList.map((n) => n === 0
                     ? <span class="pgn pgg" aria-hidden="true">…</span>
                     : n === res.page
                       ? <span class="pgn" aria-current="page">{n}</span>
-                      : <a class="pgn" href={pageUrl(n)} aria-label={t(lang, 'home.page', { n })}>{n}</a>)}
+                      : <a class="pgn" href={pageUrl(n)} aria-label={t(lang, 'home.page', { n })} data-lx data-top>{n}</a>)}
                 </span>
                 {res.page < res.pages
-                  ? <a class="pgw" href={pageUrl(res.page + 1)} aria-label={ui(lang, 'next')}><i class="pgd"></i><svg class="pga pga--r" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M1 1l5 5-5 5" /></svg></a>
+                  ? <a class="pgw" href={pageUrl(res.page + 1)} aria-label={ui(lang, 'next')} data-lx data-top><i class="pgd"></i><svg class="pga pga--r" width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M1 1l5 5-5 5" /></svg></a>
                   : <span class="pgw" aria-disabled="true"><i class="pgd"></i></span>}
               </>
             )}
           </div>
-          <details class="lpg__side lpp" data-lc>
+          <details class="lpg__side lpp" data-lc data-ck="per">
             <summary class="ppb">{ui(lang, 'perPage')}: <b>{per}</b>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></summary>
             <div class="lpp__m">
               {PER_PAGE_OPTIONS.map((n) => (
-                <a class="ppo" href={perUrl(n)} aria-current={n === per ? 'true' : undefined}>{n}
+                <a class="ppo" href={perUrl(n)} aria-current={n === per ? 'true' : undefined} data-lx data-top>{n}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></a>
               ))}
             </div>
@@ -892,8 +958,8 @@ const tilePhoto = (() => {
     .lc { position: relative; flex: 1 1 0; min-width: 0; border-inline-start: 1px solid var(--line); }
     .lrow__f > .lc:first-child { border-inline-start: 0; }
     .lc__s, .lc--more {
-      list-style: none; height: 63px; box-sizing: border-box; padding: 0 8px; width: 100%;
-      display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;
+      list-style: none; height: 63px; box-sizing: border-box; padding: 0 6px; width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;
       cursor: pointer; color: var(--muted); font: inherit; font-size: 15px;
       transition: color .15s ease, background .15s ease;
     }
@@ -906,7 +972,7 @@ const tilePhoto = (() => {
     /* a cell with a value: beige, bold, ink */
     .lc--on > .lc__s, .lc--more.lc--on { background: var(--paper-2); color: var(--ink); font-size: 14px; font-weight: 600; }
     .lc--on .lc__chev { color: var(--ink); }
-    .lc__n { font-size: 13px; font-weight: 400; color: var(--muted); }
+    .lc__n { flex: none; font-size: 13px; font-weight: 400; color: var(--muted); }
     .lc--more {
       appearance: none; border: 0; border-inline-start: 1px solid var(--line); background: none;
       font-size: 13px; gap: 8px; min-height: 0;
@@ -919,7 +985,7 @@ const tilePhoto = (() => {
       box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); padding: 8px 0 0;
       box-shadow: 0 10px 30px rgba(0,0,0,.10);
     }
-    .lc__m > form { padding-bottom: 8px; }
+    .lc__o { padding-bottom: 0; }
     .lc__m--end { inset-inline-start: auto; inset-inline-end: -1px; min-width: 220px; padding: 6px 0; }
     .lopt {
       all: unset; box-sizing: border-box; cursor: pointer; width: 100%;
@@ -931,30 +997,64 @@ const tilePhoto = (() => {
       flex: none; width: 18px; height: 18px; box-sizing: border-box; border: 1px solid var(--line);
       display: flex; align-items: center; justify-content: center; background: var(--paper); color: var(--paper);
     }
-    .lopt[aria-current] .lopt__b { background: var(--ink); border-color: var(--ink); }
+    .lopt[aria-current] .lopt__b, .lopt[aria-checked='true'] .lopt__b { background: var(--ink); border-color: var(--ink); }
     .lopt--tick { justify-content: space-between; gap: 24px; }
     .lopt--tick svg { visibility: hidden; }
     .lopt--tick[aria-current] { font-weight: 600; }
     .lopt--tick[aria-current] svg { visibility: visible; }
-    .lc--rng .lc__m { width: 360px; }
-    .lrng { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; padding: 8px 18px 6px; }
-    .lrng label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    /* Price · Size: From/To + a two-thumb slider (the mockup's 340px menu) */
+    .lc--rng .lc__m { width: 340px; }
+    .lrng { padding: 8px 18px 6px; }
+    .lrng__io { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .lrng__io label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .lrng__l {
       font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--faint); font-weight: 600;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .lrng input {
+    .lrng__io input {
       height: 40px; min-height: 40px; border: 1px solid var(--line); padding: 0 10px; font: inherit; font-size: 14px;
       color: var(--ink); background: var(--paper); min-width: 0; width: 100%; box-sizing: border-box;
     }
-    .lrng input:focus { border-color: var(--ink); outline: none; }
-    .lrng__go {
-      height: 40px; min-height: 40px; border: 0; background: var(--ink); color: var(--paper); padding: 0 14px; cursor: pointer;
-      font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    /* an empty field shows the end of the scale (€0 · €10,000,000+) as its value does */
+    .lrng__io input::placeholder { color: var(--ink); opacity: 1; }
+    .lrng__io input:focus { border-color: var(--ink); outline: none; }
+    .lrng__io input:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+    .lrng__s { position: relative; height: 24px; }
+    .lrng__tr, .lrng__fi { position: absolute; top: 11px; height: 2px; }
+    .lrng__tr { left: 9px; right: 9px; background: var(--line); }
+    .lrng__fi {
+      background: var(--ink);
+      left: calc(9px + (100% - 18px) * var(--l, 0)); right: calc(9px + (100% - 18px) * var(--r, 0));
     }
-    .lrng__go:hover { background: var(--ink-hover); }
+    .lrng__r {
+      position: absolute; inset: 0; width: 100%; height: 24px; min-height: 0; margin: 0; padding: 0;
+      background: none; pointer-events: none; -webkit-appearance: none; appearance: none;
+    }
+    .lrng__r::-webkit-slider-runnable-track { background: none; }
+    .lrng__r::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; pointer-events: auto; width: 18px; height: 18px; border-radius: 50%;
+      background: var(--paper); border: 2px solid var(--ink); box-sizing: border-box; cursor: pointer;
+    }
+    .lrng__r::-moz-range-thumb {
+      pointer-events: auto; width: 14px; height: 14px; border-radius: 50%; background: var(--paper);
+      border: 2px solid var(--ink); cursor: pointer;
+    }
+    .lrng__r:focus { outline: none; }
+    .lrng__r:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .lrng__r:focus-visible::-moz-range-thumb { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .lrng__mm { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; font-size: 11.5px; color: var(--faint); }
+    .lc__f { margin-top: 6px; }
     .lc__f { padding: 10px 16px; border-top: 1px solid var(--line-soft); }
     .lc__f a { font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+    .lc__f a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    /* the multi cells: the number of ticked values after the label (not a property count) */
+    .lc--on .lc__n { font-size: 13px; font-weight: 400; color: var(--muted); }
+
+    /* in-place filtering: a light busy state (only after ~150 ms, set by the script) */
+    .list { transition: opacity .18s ease; }
+    .list[aria-busy='true'] { opacity: .45; pointer-events: none; }
+    /* tags/save prompt already open before a change do not slide in again */
+    .lslide.lslide--still { animation: none; }
     .lc__f a:hover { color: var(--ink); }
 
     /* ID and Sort */
@@ -1154,74 +1254,85 @@ const tilePhoto = (() => {
 </style>
 
 <script>
-  // Τα φίλτρα ανοίγουν/κλείνουν. Η φόρμα δουλεύει και χωρίς αυτό — απλά μένει ανοιχτή.
-  // #102: the desktop «More filters» cell ([data-ftog]) opens the same form; on
-  // desktop it does not open by itself (the row already shows every value).
+  // ⚠️ One catch-all route: this script is bundled into EVERY page. Everything below
+  //    acts only where the list is (`[data-lswap="list"]`), and every listener is
+  //    delegated on `document`, so it keeps working after the list is swapped in place.
   const desk = window.matchMedia('(min-width: 1024px)');
-  const t = document.getElementById('ftog');
-  const b = document.getElementById('fbar');
-  const togs = [t, ...Array.from(document.querySelectorAll<HTMLElement>('[data-ftog]'))].filter(Boolean) as HTMLElement[];
-  if (b && togs.length) {
-    const set = (open: boolean) => {
-      (b as HTMLElement).hidden = !open;
-      togs.forEach((x) => x.setAttribute('aria-expanded', String(open)));
-    };
-    // Αν ο επισκέπτης έχει ήδη ενεργό φίλτρο, ανοίγουν από μόνα τους.
-    const active = b.querySelectorAll('input[type=number]');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const onList = () => !!document.querySelector('[data-lswap="list"]');
+
+  // ── Τα φίλτρα ανοίγουν/κλείνουν. Η φόρμα δουλεύει και χωρίς αυτό — απλά μένει ανοιχτή.
+  // #102: the desktop «More filters» cell ([data-ftog]) opens the filter window (as on
+  // the home page); phones keep George's form under the tools.
+  const setFbar = (open: boolean) => {
+    const b = document.getElementById('fbar');
+    if (!b) return;
+    b.hidden = !open;
+    document.querySelectorAll('#ftog, [data-ftog]').forEach((x) => x.setAttribute('aria-expanded', String(open)));
+  };
+  // Αν ο επισκέπτης έχει ήδη ενεργό φίλτρο, ανοίγουν από μόνα τους (κινητό).
+  {
+    const b = document.getElementById('fbar');
     let any = false;
-    active.forEach((i) => { if ((i as HTMLInputElement).value) any = true; });
-    if (any && !desk.matches) set(true);
-    togs.forEach((x) => x.addEventListener('click', (e) => {
-      // Desktop: the «More filters» cell opens the filter window (as on the home page),
-      // pre-filled with the filters already in the URL. Phones keep the form below.
-      const sheet = document.getElementById('filter-sheet') as HTMLDialogElement | null;
-      if (desk.matches && sheet && x.hasAttribute('data-ftog')) {
-        e.preventDefault();
-        const f = sheet.querySelector('form');
-        const q = new URLSearchParams(location.search);
-        f?.querySelectorAll<HTMLInputElement>('input[name]').forEach((i) => {
-          const alias: Record<string, string> = { municipality: 'muni', bedrooms: 'beds', sea_access: 'sea', subcategory: 'type' };
-          const v = q.get(i.name) ?? (alias[i.name] ? q.get(alias[i.name]) : null);
-          if (i.type === 'radio' || i.type === 'checkbox') { if (v !== null) i.checked = (i.value === v) || (i.type === 'checkbox' && q.getAll(i.name).includes(i.value)); }
-          else if (v !== null) i.value = v;
-        });
-        f?.dispatchEvent(new Event('change', { bubbles: true }));
-        sheet.showModal();
-        document.documentElement.style.overflow = 'hidden';
-        return;
-      }
-      set((b as HTMLElement).hidden);
-    }));
+    b?.querySelectorAll<HTMLInputElement>('input[type=number]').forEach((i) => { if (i.value) any = true; });
+    if (any && !desk.matches) setFbar(true);
   }
+  document.addEventListener('click', (e) => {
+    const x = (e.target as Element | null)?.closest?.('#ftog, [data-ftog]') as HTMLElement | null;
+    if (!x || !onList()) return;
+    const sheet = document.getElementById('filter-sheet') as HTMLDialogElement | null;
+    if (desk.matches && sheet && x.hasAttribute('data-ftog')) {
+      // pre-filled with the filters already in the URL (several values: each one ticked)
+      e.preventDefault();
+      const f = sheet.querySelector('form');
+      const q = new URLSearchParams(location.search);
+      const alias: Record<string, string> = { municipality: 'muni', bedrooms: 'beds', sea_access: 'sea', subcategory: 'type' };
+      f?.querySelectorAll<HTMLInputElement>('input[name]').forEach((i) => {
+        const all = [...q.getAll(i.name), ...(alias[i.name] ? q.getAll(alias[i.name]) : [])];
+        const v = all.length ? all[0] : null;
+        if (i.type === 'radio' || i.type === 'checkbox') { if (v !== null) i.checked = all.includes(i.value); }
+        else if (v !== null) i.value = v;
+      });
+      f?.dispatchEvent(new Event('change', { bubbles: true }));
+      sheet.showModal();
+      document.documentElement.style.overflow = 'hidden';
+      return;
+    }
+    setFbar(!!document.getElementById('fbar')?.hidden);
+  });
 
   // ── #102 desktop: one menu open at a time; a click outside or Esc closes it.
-  const menus = Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-lc]'));
-  menus.forEach((d) => d.addEventListener('toggle', () => {
-    if (!d.open) return;
-    menus.forEach((o) => { if (o !== d) o.open = false; });
-    d.querySelector<HTMLInputElement>('input[type=number]')?.focus();
-  }));
+  const menus = () => Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-lc]'));
+  document.addEventListener('toggle', (e) => {
+    const d = e.target as HTMLElement;
+    if (!(d instanceof HTMLDetailsElement) || !d.matches('[data-lc]') || !d.open) return;
+    menus().forEach((o) => { if (o !== d) o.open = false; });
+  }, true);
   document.addEventListener('click', (e) => {
     const el = e.target as Node;
-    menus.forEach((d) => { if (d.open && !d.contains(el)) d.open = false; });
+    menus().forEach((d) => { if (d.open && !d.contains(el)) d.open = false; });
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    menus.forEach((d) => { if (d.open) { d.open = false; d.querySelector('summary')?.focus(); } });
+    menus().forEach((d) => { if (d.open) { d.open = false; d.querySelector('summary')?.focus(); } });
   });
 
   // ── «No» hides the save question for this search (this tab only).
-  const save = document.querySelector<HTMLElement>('[data-lsave]');
-  const sk = `hp-nosave:${location.pathname}${location.search}`;
-  try { if (save && sessionStorage.getItem(sk)) save.hidden = true; } catch { /* storage off */ }
-  document.querySelector('[data-lsave-no]')?.addEventListener('click', () => {
+  const saveKey = () => `hp-nosave:${location.pathname}${location.search}`;
+  const initSave = () => {
+    const save = document.querySelector<HTMLElement>('[data-lsave]');
+    try { if (save && sessionStorage.getItem(saveKey())) save.hidden = true; } catch { /* storage off */ }
+  };
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element | null)?.closest?.('[data-lsave-no]')) return;
+    const save = document.querySelector<HTMLElement>('[data-lsave]');
     if (save) save.hidden = true;
-    try { sessionStorage.setItem(sk, '1'); } catch { /* storage off */ }
+    try { sessionStorage.setItem(saveKey(), '1'); } catch { /* storage off */ }
   });
 
-  // ── Gilded buttons: the gradient turns once on entering their box.
-  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.querySelectorAll<HTMLElement>('.l-gild').forEach((g) => {
+  // ── Gilded buttons: the gradient turns once on entering their box (bound once per element).
+  const bindGild = () => document.querySelectorAll<HTMLElement>('.l-gild:not([data-gb])').forEach((g) => {
+    g.dataset.gb = '1';
     const run = () => {
       if (!desk.matches || still.matches) return;
       g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun');
@@ -1232,7 +1343,201 @@ const tilePhoto = (() => {
   // ── Back to top: after one screen.
   const top = document.getElementById('toTop');
   const onScroll = () => top?.classList.toggle('on', window.scrollY > window.innerHeight * 0.8);
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-  top?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: still.matches ? 'auto' : 'smooth' }));
+  if (top) {
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    top.addEventListener('click', () => window.scrollTo({ top: 0, behavior: still.matches ? 'auto' : 'smooth' }));
+  }
+
+  // ════════════════════════════════════════════════════════════════════════
+  // IN-PLACE FILTERING (Sergei 02/11: «it must simply apply the filter and re-sort
+  // the list instantly» — no new page). Progressive enhancement over real links and
+  // GET forms: the same URL is fetched in the background, the top (H1), the filter
+  // row with its tags and save question, and the results with the pager are swapped
+  // in place, the address follows with pushState, Back/Forward work (popstate).
+  // The cards stay server-rendered (watermarked photos, the visibility rules).
+  // Desktop only — phones keep George's list behaviour (real page loads).
+  // ════════════════════════════════════════════════════════════════════════
+  let ctrl: AbortController | null = null;
+  let pending = '';
+
+  /** Where focus was inside a cell, so it can come back after the swap. */
+  const focusMark = () => {
+    const a = document.activeElement as HTMLElement | null;
+    const cell = a?.closest?.('details[data-ck]') as HTMLElement | null;
+    if (!a || !cell) return null;
+    const all = Array.from(cell.querySelectorAll<HTMLElement>('summary, a, input:not([type=hidden])'));
+    return { ck: cell.dataset.ck!, i: all.indexOf(a) };
+  };
+
+  const swapHead = (doc: Document) => {
+    document.title = doc.title;
+    for (const sel of ['link[rel="canonical"]', 'meta[name="robots"]', 'meta[name="description"]',
+                       'meta[property="og:url"]', 'meta[property="og:title"]', 'meta[property="og:description"]']) {
+      const a = document.head.querySelector(sel), b = doc.head.querySelector(sel);
+      if (a && b) a.replaceWith(document.importNode(b, true));
+      else if (a) a.remove();
+      else if (b) document.head.append(document.importNode(b, true));
+    }
+    document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((x) => x.remove());
+    doc.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((x) => document.head.append(document.importNode(x, true)));
+  };
+
+  async function go(url: string, o: { keep?: string | null; top?: boolean; push?: boolean } = {}) {
+    const u = new URL(url, location.href);
+    const list = document.querySelector<HTMLElement>('[data-lswap="list"]');
+    if (!list || u.origin !== location.origin) { location.assign(u.href); return; }
+    if (pending === u.href) return;
+    ctrl?.abort();
+    ctrl = new AbortController();
+    pending = u.href;
+    const mark = focusMark();
+    // a light busy state — only if the answer takes longer than ~150 ms (no flash)
+    const busy = window.setTimeout(() => list.setAttribute('aria-busy', 'true'), 150);
+    let html = '';
+    try {
+      const r = await fetch(u.href, { headers: { 'x-partial': '1' }, signal: ctrl.signal, credentials: 'same-origin' });
+      if (!r.ok) throw new Error(String(r.status));
+      html = await r.text();
+    } catch (err) {
+      if ((err as Error)?.name === 'AbortError') return;
+      location.assign(u.href);          // anything odd → the real page
+      return;
+    } finally {
+      window.clearTimeout(busy);
+      if (pending === u.href) pending = '';
+    }
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    if (!doc.querySelector('[data-lswap="list"]')) { location.assign(u.href); return; }
+
+    const hadTags = !!document.querySelector('.ltags');
+    const hadSave = !!document.querySelector('[data-lsave]:not([hidden])');
+    for (const k of ['top', 'bar', 'list']) {
+      const a = document.querySelector(`[data-lswap="${k}"]`), b = doc.querySelector(`[data-lswap="${k}"]`);
+      if (a && b) a.replaceWith(document.importNode(b, true));
+    }
+    // the language links follow the page (a «More filters» search can change the path)
+    const olds = document.querySelectorAll('details.lsw'), news = doc.querySelectorAll('details.lsw');
+    olds.forEach((x, i) => { if (news[i]) x.replaceWith(document.importNode(news[i], true)); });
+    swapHead(doc);
+    if (hadTags) document.querySelector('.ltags')?.classList.add('lslide--still');
+    if (hadSave) document.querySelector('[data-lsave]')?.classList.add('lslide--still');
+    if (o.push !== false) history.pushState({ lx: 1 }, '', u.href);
+
+    // the cell that was being used stays open (ticks, sliders), focus back in place
+    const ck = o.keep ?? null;
+    if (ck) {
+      const d = document.querySelector<HTMLDetailsElement>(`details[data-ck="${ck}"]`);
+      if (d) {
+        d.open = true;
+        if (mark && mark.ck === ck && mark.i >= 0) {
+          Array.from(d.querySelectorAll<HTMLElement>('summary, a, input:not([type=hidden])'))[mark.i]?.focus({ preventScroll: true });
+        }
+      }
+    }
+    afterSwap();
+    // pager / per page are under the results: back up to the bar
+    if (o.top) {
+      const bar = document.querySelector('[data-lbar]');
+      if (bar) {
+        const y = bar.getBoundingClientRect().top + window.scrollY - 16;
+        if (window.scrollY > y) window.scrollTo({ top: y, behavior: still.matches ? 'auto' : 'smooth' });
+      }
+    }
+  }
+
+  const afterSwap = () => {
+    initSave();
+    bindGild();
+    onScroll();
+    // cards bind their photo rails once; tell them new cards arrived (PropertyCard.astro)
+    document.dispatchEvent(new CustomEvent('hp:list-swap'));
+  };
+
+  const inPlace = (e: MouseEvent | SubmitEvent | Event) => desk.matches && onList() && !e.defaultPrevented;
+
+  // links: ticks, tags, clear, sort, per page, pager
+  document.addEventListener('click', (e) => {
+    const a = (e.target as Element | null)?.closest?.('a[data-lx]') as HTMLAnchorElement | null;
+    if (!a || !inPlace(e) || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    // optimistic tick: the box fills at once, the list follows
+    if (a.getAttribute('role') === 'menuitemcheckbox') a.setAttribute('aria-checked', a.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+    const keep = a.hasAttribute('data-keep') ? (a.closest('details[data-ck]') as HTMLElement | null)?.dataset.ck : null;
+    if (!keep) menus().forEach((d) => { d.open = false; });
+    go(a.href, { keep, top: a.hasAttribute('data-top') });
+  });
+
+  // Price · Size: the From/To fields and the slider
+  const rangeUrl = (f: HTMLFormElement) => {
+    const sp = new URLSearchParams();
+    f.querySelectorAll<HTMLInputElement>('input[type=hidden]').forEach((i) => sp.append(i.name, i.value));
+    const digits = (v: string) => v.replace(/\D+/g, '');
+    const lo = f.querySelector<HTMLInputElement>('[data-lo]')!, hi = f.querySelector<HTMLInputElement>('[data-hi]')!;
+    let a = Number(digits(lo.value)) || 0, b = Number(digits(hi.value)) || 0;
+    if (a && b && a > b) [a, b] = [b, a];
+    if (a > 0) sp.set(lo.name, String(a));
+    if (b > 0) sp.set(hi.name, String(b));
+    const s = sp.toString();
+    return `${f.action.split('?')[0]}${s ? `?${s}` : ''}`;
+  };
+  const rangeKeep = (f: HTMLFormElement) => (f.closest('details[data-ck]') as HTMLElement | null)?.dataset.ck ?? null;
+  // while dragging: the fields and the dark part of the line follow (nothing is fetched yet)
+  document.addEventListener('input', (e) => {
+    const r = e.target as HTMLInputElement;
+    if (!r.matches?.('[data-rlo], [data-rhi]')) return;
+    const f = r.closest('form[data-lrng]') as HTMLFormElement;
+    const labels: string[] = JSON.parse(f.dataset.labels || '[]');
+    const last = labels.length - 1;
+    const rlo = f.querySelector<HTMLInputElement>('[data-rlo]')!, rhi = f.querySelector<HTMLInputElement>('[data-rhi]')!;
+    let lo = Number(rlo.value), hi = Number(rhi.value);
+    if (lo > hi) { if (r === rlo) { lo = hi; rlo.value = String(lo); } else { hi = lo; rhi.value = String(hi); } }
+    f.querySelector<HTMLInputElement>('[data-lo]')!.value = lo > 0 ? labels[lo] : '';
+    f.querySelector<HTMLInputElement>('[data-hi]')!.value = hi < last ? labels[hi] : '';
+    const s = f.querySelector<HTMLElement>('.lrng__s')!;
+    s.style.setProperty('--l', String(lo / last));
+    s.style.setProperty('--r', String(1 - hi / last));
+  });
+  // slider released / a field changed → apply
+  document.addEventListener('change', (e) => {
+    const el = e.target as HTMLInputElement;
+    const f = el.closest?.('form[data-lrng]') as HTMLFormElement | null;
+    if (!f || !inPlace(e)) return;
+    if (el.matches('[data-rlo], [data-rhi]')) {
+      // the slider writes the step itself (the label in the field is rounded for reading)
+      const steps: number[] = JSON.parse(f.dataset.steps || '[]'), last = steps.length - 1;
+      const lo = Number(f.querySelector<HTMLInputElement>('[data-rlo]')!.value), hi = Number(f.querySelector<HTMLInputElement>('[data-rhi]')!.value);
+      f.querySelector<HTMLInputElement>('[data-lo]')!.value = lo > 0 ? String(steps[lo]) : '';
+      f.querySelector<HTMLInputElement>('[data-hi]')!.value = hi < last ? String(steps[hi]) : '';
+    }
+    go(rangeUrl(f), { keep: rangeKeep(f) });
+  });
+
+  // forms: Enter in From/To, the property ID, and the «More filters» window
+  document.addEventListener('submit', (e) => {
+    const f = e.target as HTMLFormElement;
+    if (!inPlace(e)) return;
+    if (f.matches('form[data-lrng]')) { e.preventDefault(); go(rangeUrl(f), { keep: rangeKeep(f) }); return; }
+    const sheet = f.closest('#filter-sheet') as HTMLDialogElement | null;
+    if (!f.matches('form[data-lxf]') && !sheet) return;
+    e.preventDefault();
+    const sp = new URLSearchParams();
+    new FormData(f).forEach((v, k) => { if (String(v).trim()) sp.append(k, String(v).trim()); });
+    const s = sp.toString();
+    if (sheet) { sheet.close(); document.documentElement.style.overflow = ''; }
+    menus().forEach((d) => { d.open = false; });
+    go(`${f.action.split('?')[0]}${s ? `?${s}` : ''}`);
+  });
+
+  // Back / Forward between the filter states of this page
+  if (onList()) {
+    history.replaceState({ ...(history.state ?? {}), lx: 1 }, '');
+    window.addEventListener('popstate', (e) => {
+      if (!(e.state as { lx?: number } | null)?.lx || !onList()) return;
+      go(location.href, { push: false });
+    });
+  }
+
+  initSave();
+  bindGild();
 </script>

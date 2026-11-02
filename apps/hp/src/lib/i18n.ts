@@ -626,7 +626,7 @@ export const T: Record<Lang, Dict> = {
 const U: Record<Lang, Dict> = {
   el: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Θέλεις να αποθηκεύσεις αυτή την αναζήτηση;', 'list.yes': 'Ναι', 'list.no': 'Όχι', 'list.clear_all': 'Καθαρισμός όλων', 'list.beds_tag': '{n}+ υπνοδωμάτια', 'list.size': 'Εμβαδόν', 'list.size_tag': 'Εμβαδόν {v}', 'list.price': 'Τιμή', 'list.from': 'Από {v}', 'list.upto': 'Έως {v}', 'list.remove': 'Αφαίρεση: {v}',
+    'list.save_q': 'Θέλεις να αποθηκεύσεις αυτή την αναζήτηση;', 'list.yes': 'Ναι', 'list.no': 'Όχι', 'list.clear_all': 'Καθαρισμός όλων', 'list.beds_tag': '{n}+ υπνοδωμάτια', 'list.size': 'Εμβαδόν', 'list.size_tag': 'Εμβαδόν {v}', 'list.price': 'Τιμή', 'list.from': 'Από {v}', 'list.upto': 'Έως {v}', 'list.remove': 'Αφαίρεση: {v}', 'list.rng_from': 'Από', 'list.rng_to': 'Έως', 'list.bed1': '1 υπνοδωμάτιο', 'list.bedn': '{n} υπνοδωμάτια',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'Γνώρισε πώς πουλάμε.', 'info.more': 'Μάθε περισσότερα', 'info.about_area': 'Για την περιοχή', 'info.form_note': 'Πηγαίνει στους συμβούλους μας.', 'info.form_priv': 'Δεν δημοσιεύεται', 'info.form_priv2': '— κανείς δεν το βλέπει πριν μιλήσουμε.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -1014,7 +1014,7 @@ const U: Record<Lang, Dict> = {
   },
   en: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Do you want to save this search?', 'list.yes': 'Yes', 'list.no': 'No', 'list.clear_all': 'Clear all', 'list.beds_tag': '{n}+ bedrooms', 'list.size': 'Size', 'list.size_tag': 'Size {v}', 'list.price': 'Price', 'list.from': 'From {v}', 'list.upto': 'Up to {v}', 'list.remove': 'Remove {v}',
+    'list.save_q': 'Do you want to save this search?', 'list.yes': 'Yes', 'list.no': 'No', 'list.clear_all': 'Clear all', 'list.beds_tag': '{n}+ bedrooms', 'list.size': 'Size', 'list.size_tag': 'Size {v}', 'list.price': 'Price', 'list.from': 'From {v}', 'list.upto': 'Up to {v}', 'list.remove': 'Remove {v}', 'list.rng_from': 'From', 'list.rng_to': 'To', 'list.bed1': '1 bedroom', 'list.bedn': '{n} bedrooms',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'Get to know how we sell.', 'info.more': 'Learn more', 'info.about_area': 'About the area', 'info.form_note': 'It goes to our advisers.', 'info.form_priv': 'It is not published', 'info.form_priv2': '— no one sees it until we speak.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -1393,7 +1393,7 @@ const U: Record<Lang, Dict> = {
   },
   bg: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Искате ли да запазите това търсене?', 'list.yes': 'Да', 'list.no': 'Не', 'list.clear_all': 'Изчисти всички', 'list.beds_tag': '{n}+ спални', 'list.size': 'Площ', 'list.size_tag': 'Площ {v}', 'list.price': 'Цена', 'list.from': 'От {v}', 'list.upto': 'До {v}', 'list.remove': 'Премахни {v}',
+    'list.save_q': 'Искате ли да запазите това търсене?', 'list.yes': 'Да', 'list.no': 'Не', 'list.clear_all': 'Изчисти всички', 'list.beds_tag': '{n}+ спални', 'list.size': 'Площ', 'list.size_tag': 'Площ {v}', 'list.price': 'Цена', 'list.from': 'От {v}', 'list.upto': 'До {v}', 'list.remove': 'Премахни {v}', 'list.rng_from': 'От', 'list.rng_to': 'До', 'list.bed1': '1 спалня', 'list.bedn': '{n} спални',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'Вижте как продаваме.', 'info.more': 'Научете повече', 'info.about_area': 'За района', 'info.form_note': 'Отива при нашите консултанти.', 'info.form_priv': 'Не се публикува', 'info.form_priv2': '— никой не го вижда, преди да сме говорили.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -1772,7 +1772,7 @@ const U: Record<Lang, Dict> = {
   },
   sr: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Želite li da sačuvate ovu pretragu?', 'list.yes': 'Da', 'list.no': 'Ne', 'list.clear_all': 'Obriši sve', 'list.beds_tag': '{n}+ spavaće sobe', 'list.size': 'Površina', 'list.size_tag': 'Površina {v}', 'list.price': 'Cena', 'list.from': 'Od {v}', 'list.upto': 'Do {v}', 'list.remove': 'Ukloni {v}',
+    'list.save_q': 'Želite li da sačuvate ovu pretragu?', 'list.yes': 'Da', 'list.no': 'Ne', 'list.clear_all': 'Obriši sve', 'list.beds_tag': '{n}+ spavaće sobe', 'list.size': 'Površina', 'list.size_tag': 'Površina {v}', 'list.price': 'Cena', 'list.from': 'Od {v}', 'list.upto': 'Do {v}', 'list.remove': 'Ukloni {v}', 'list.rng_from': 'Od', 'list.rng_to': 'Do', 'list.bed1': '1 spavaća soba', 'list.bedn': '{n} spavaće sobe',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'Upoznajte kako prodajemo.', 'info.more': 'Saznajte više', 'info.about_area': 'O oblasti', 'info.form_note': 'Stiže do naših savetnika.', 'info.form_priv': 'Ne objavljuje se', 'info.form_priv2': '— niko ga ne vidi dok ne razgovaramo.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -2151,7 +2151,7 @@ const U: Record<Lang, Dict> = {
   },
   de: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Möchten Sie diese Suche speichern?', 'list.yes': 'Ja', 'list.no': 'Nein', 'list.clear_all': 'Alle zurücksetzen', 'list.beds_tag': '{n}+ Schlafzimmer', 'list.size': 'Größe', 'list.size_tag': 'Größe {v}', 'list.price': 'Preis', 'list.from': 'Ab {v}', 'list.upto': 'Bis {v}', 'list.remove': '{v} entfernen',
+    'list.save_q': 'Möchten Sie diese Suche speichern?', 'list.yes': 'Ja', 'list.no': 'Nein', 'list.clear_all': 'Alle zurücksetzen', 'list.beds_tag': '{n}+ Schlafzimmer', 'list.size': 'Größe', 'list.size_tag': 'Größe {v}', 'list.price': 'Preis', 'list.from': 'Ab {v}', 'list.upto': 'Bis {v}', 'list.remove': '{v} entfernen', 'list.rng_from': 'Von', 'list.rng_to': 'Bis', 'list.bed1': '1 Schlafzimmer', 'list.bedn': '{n} Schlafzimmer',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'So verkaufen wir.', 'info.more': 'Mehr erfahren', 'info.about_area': 'Über die Region', 'info.form_note': 'Es geht an unsere Berater.', 'info.form_priv': 'Es wird nicht veröffentlicht', 'info.form_priv2': '— niemand sieht es, bevor wir gesprochen haben.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -2530,7 +2530,7 @@ const U: Record<Lang, Dict> = {
   },
   ro: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Doriți să salvați această căutare?', 'list.yes': 'Da', 'list.no': 'Nu', 'list.clear_all': 'Șterge tot', 'list.beds_tag': '{n}+ dormitoare', 'list.size': 'Suprafață', 'list.size_tag': 'Suprafață {v}', 'list.price': 'Preț', 'list.from': 'De la {v}', 'list.upto': 'Până la {v}', 'list.remove': 'Elimină {v}',
+    'list.save_q': 'Doriți să salvați această căutare?', 'list.yes': 'Da', 'list.no': 'Nu', 'list.clear_all': 'Șterge tot', 'list.beds_tag': '{n}+ dormitoare', 'list.size': 'Suprafață', 'list.size_tag': 'Suprafață {v}', 'list.price': 'Preț', 'list.from': 'De la {v}', 'list.upto': 'Până la {v}', 'list.remove': 'Elimină {v}', 'list.rng_from': 'De la', 'list.rng_to': 'Până la', 'list.bed1': '1 dormitor', 'list.bedn': '{n} dormitoare',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'Aflați cum vindem.', 'info.more': 'Aflați mai multe', 'info.about_area': 'Despre zonă', 'info.form_note': 'Ajunge la consultanții noștri.', 'info.form_priv': 'Nu se publică', 'info.form_priv2': '— nimeni nu o vede până nu vorbim.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -2909,7 +2909,7 @@ const U: Record<Lang, Dict> = {
   },
   tr: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Bu aramayı kaydetmek ister misiniz?', 'list.yes': 'Evet', 'list.no': 'Hayır', 'list.clear_all': 'Tümünü temizle', 'list.beds_tag': '{n}+ yatak odası', 'list.size': 'Alan', 'list.size_tag': 'Alan {v}', 'list.price': 'Fiyat', 'list.from': 'En az {v}', 'list.upto': 'En fazla {v}', 'list.remove': '{v} kaldır',
+    'list.save_q': 'Bu aramayı kaydetmek ister misiniz?', 'list.yes': 'Evet', 'list.no': 'Hayır', 'list.clear_all': 'Tümünü temizle', 'list.beds_tag': '{n}+ yatak odası', 'list.size': 'Alan', 'list.size_tag': 'Alan {v}', 'list.price': 'Fiyat', 'list.from': 'En az {v}', 'list.upto': 'En fazla {v}', 'list.remove': '{v} kaldır', 'list.rng_from': 'En az', 'list.rng_to': 'En fazla', 'list.bed1': '1 yatak odası', 'list.bedn': '{n} yatak odası',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'Nasıl sattığımızı tanıyın.', 'info.more': 'Daha fazla bilgi', 'info.about_area': 'Bölge hakkında', 'info.form_note': 'Danışmanlarımıza gider.', 'info.form_priv': 'Yayınlanmaz', 'info.form_priv2': '— konuşana kadar kimse görmez.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -3289,7 +3289,7 @@ const U: Record<Lang, Dict> = {
   },
   he: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'לשמור את החיפוש הזה?', 'list.yes': 'כן', 'list.no': 'לא', 'list.clear_all': 'ניקוי הכול', 'list.beds_tag': '{n}+ חדרי שינה', 'list.size': 'שטח', 'list.size_tag': 'שטח {v}', 'list.price': 'מחיר', 'list.from': 'מ־{v}', 'list.upto': 'עד {v}', 'list.remove': 'הסרת {v}',
+    'list.save_q': 'לשמור את החיפוש הזה?', 'list.yes': 'כן', 'list.no': 'לא', 'list.clear_all': 'ניקוי הכול', 'list.beds_tag': '{n}+ חדרי שינה', 'list.size': 'שטח', 'list.size_tag': 'שטח {v}', 'list.price': 'מחיר', 'list.from': 'מ־{v}', 'list.upto': 'עד {v}', 'list.remove': 'הסרת {v}', 'list.rng_from': 'מ־', 'list.rng_to': 'עד', 'list.bed1': 'חדר שינה 1', 'list.bedn': '{n} חדרי שינה',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'הכירו את הדרך שבה אנחנו מוכרים.', 'info.more': 'למידע נוסף', 'info.about_area': 'על האזור', 'info.form_note': 'זה מגיע ליועצים שלנו.', 'info.form_priv': 'זה לא מתפרסם', 'info.form_priv2': '— אף אחד לא רואה את זה עד שנדבר.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.
@@ -3669,7 +3669,7 @@ const U: Record<Lang, Dict> = {
   },
   ru: {
     // Property list desktop redesign (#102), approved by George 2026-11-02.
-    'list.save_q': 'Хотите сохранить этот поиск?', 'list.yes': 'Да', 'list.no': 'Нет', 'list.clear_all': 'Сбросить всё', 'list.beds_tag': '{n}+ спальни', 'list.size': 'Площадь', 'list.size_tag': 'Площадь {v}', 'list.price': 'Цена', 'list.from': 'От {v}', 'list.upto': 'До {v}', 'list.remove': 'Убрать {v}',
+    'list.save_q': 'Хотите сохранить этот поиск?', 'list.yes': 'Да', 'list.no': 'Нет', 'list.clear_all': 'Сбросить всё', 'list.beds_tag': '{n}+ спальни', 'list.size': 'Площадь', 'list.size_tag': 'Площадь {v}', 'list.price': 'Цена', 'list.from': 'От {v}', 'list.upto': 'До {v}', 'list.remove': 'Убрать {v}', 'list.rng_from': 'От', 'list.rng_to': 'До', 'list.bed1': '1 спальня', 'list.bedn': '{n} спальни',
     // Info pages desktop redesign, wave 1 (#105), approved by George 2026-11-02.
     'info.sell_how': 'Узнайте, как мы продаём.', 'info.more': 'Подробнее', 'info.about_area': 'О районе', 'info.form_note': 'Это получат наши консультанты.', 'info.form_priv': 'Это не публикуется', 'info.form_priv2': '— никто не увидит этого, пока мы не поговорим.',
     // Services desktop redesign, wave 1 (#106), approved by George 2026-11-02.

@@ -417,20 +417,11 @@ const tilePhoto = (() => {
                    value={q.id ?? ''} placeholder={ui(lang, 'idPh')} />
           </label>
         </form>
-        <details class:list={['lc', 'lc--sort', sorted && 'lc--on']} data-lc data-ck="sort">
-          <summary class="lc__s">
-            <span class="lc__t">{ui(lang, 'sort')}</span>
-            <svg class="lc__chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
-          </summary>
-          <div class="lc__m lc__m--end">
-            {SORTS.map((s) => (
-              <a class="lopt lopt--tick" href={sortUrl(s)} aria-current={s === cur ? 'true' : undefined} data-lx>
-                {sortLabel[s]}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" /></svg>
-              </a>
-            ))}
-          </div>
-        </details>
+        {/* Map view (Sergei 02/11): the map is for members — a click opens the sign-in (popup on desktop) */}
+        <a class="lc lc--map" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`} data-ev="member:join_from_list">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+          <span>{t(lang, 'list.map')}</span>
+        </a>
       </div>
 
       {/* the save question slides out under the bar, inside the same box */}
@@ -609,6 +600,33 @@ const tilePhoto = (() => {
       </div>
     ) : (
       <>
+        {/* Between the filters and the cards (Sergei 02/11): what is shown now, Sort, Per page.
+            «Showing a–b» names the cards on this page only — no total (George 17/10: no property counts). */}
+        <div class="lres">
+          <span class="lres__n">{t(lang, 'list.showing', { a: (res.page - 1) * per + 1, b: (res.page - 1) * per + res.items.length })}</span>
+          <div class="lres__r">
+            <details class="lpp lres__d" data-lc data-ck="sort">
+              <summary class="ppb">{ui(lang, 'sort')}: <b>{sortLabel[cur]}</b>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></summary>
+              <div class="lpp__m lres__m">
+                {SORTS.map((s) => (
+                  <a class="ppo" href={sortUrl(s)} aria-current={s === cur ? 'true' : undefined} data-lx>{sortLabel[s]}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></a>
+                ))}
+              </div>
+            </details>
+            <details class="lpp lres__d" data-lc data-ck="per">
+              <summary class="ppb">{ui(lang, 'perPage')}: <b>{per}</b>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></summary>
+              <div class="lpp__m">
+                {PER_PAGE_OPTIONS.map((n) => (
+                  <a class="ppo" href={perUrl(n)} aria-current={n === per ? 'true' : undefined} data-lx>{n}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></a>
+                ))}
+              </div>
+            </details>
+          </div>
+        </div>
         <ul class="grid">
           {res.items.map((p, i) => (
             <>
@@ -678,16 +696,6 @@ const tilePhoto = (() => {
               </>
             )}
           </div>
-          <details class="lpg__side lpp" data-lc data-ck="per">
-            <summary class="ppb">{ui(lang, 'perPage')}: <b>{per}</b>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></summary>
-            <div class="lpp__m">
-              {PER_PAGE_OPTIONS.map((n) => (
-                <a class="ppo" href={perUrl(n)} aria-current={n === per ? 'true' : undefined} data-lx data-top>{n}
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg></a>
-              ))}
-            </div>
-          </details>
         </nav>
       </>
     )}
@@ -710,6 +718,8 @@ const tilePhoto = (() => {
 </Base>
 
 <style>
+  .lres { display: none; }
+
   /* #102: the column is split in two boxes (top strip · results); phones see the
      same paddings as before — top on the first box, bottom on the second. */
   .ltop__in { padding-top: var(--s5); }
@@ -1222,6 +1232,28 @@ const tilePhoto = (() => {
     .ppo[aria-current] svg { visibility: visible; }
     .ppo:hover { background: var(--paper-2); }
 
+
+    /* ── head row between the filters and the cards (desktop only; phones keep George's tools) ── */
+    .lres { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 0 0 18px; }
+    .lres__n { font-size: 13.5px; color: var(--muted); }
+    .lres__r { display: flex; align-items: center; gap: 28px; }
+    .lres__m { min-width: 220px; }
+
+    /* ── Map view: dark cell at the end of the row, gold text ── */
+    .lc--map {
+      flex: none; display: flex; align-items: center; gap: 10px; padding: 0 22px; text-decoration: none;
+      background: var(--ink); color: var(--gold-dk-text); font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+      transition: color .15s ease;
+    }
+    .lc--map:hover { color: var(--gold-dk-hover); }
+
+    /* ── every menu slides down when it opens and back up when it closes (Sergei 02/11) ── */
+    details[data-lc][open] > .lc__m, details[data-lc][open] > .lpp__m { animation: lm-in .2s cubic-bezier(.2,.8,.2,1) both; transform-origin: top; }
+    details[data-lc].lm-out > .lc__m, details[data-lc].lm-out > .lpp__m { animation: lm-out .16s ease both; }
+    @keyframes lm-in  { from { opacity: 0; transform: translateY(-8px); clip-path: inset(0 0 100% 0); } to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } }
+    @keyframes lm-out { from { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } to { opacity: 0; transform: translateY(-8px); clip-path: inset(0 0 100% 0); } }
+    @media (prefers-reduced-motion: reduce) { details[data-lc] > .lc__m, details[data-lc] > .lpp__m { animation: none !important; } }
+
     /* ── back to top ── */
     .l-totop {
       all: unset; box-sizing: border-box; position: fixed; right: 24px; bottom: 24px; z-index: 70;
@@ -1303,18 +1335,31 @@ const tilePhoto = (() => {
 
   // ── #102 desktop: one menu open at a time; a click outside or Esc closes it.
   const menus = () => Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-lc]'));
+  // close with the slide-up (Sergei 02/11); instant when motion is reduced
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const shut = (d: HTMLDetailsElement) => {
+    if (!d.open || d.classList.contains('lm-out')) return;
+    if (calm.matches) { d.open = false; return; }
+    d.classList.add('lm-out');
+    setTimeout(() => { d.open = false; d.classList.remove('lm-out'); }, 150);
+  };
+  document.addEventListener('click', (e) => {
+    const s = (e.target as Element | null)?.closest?.('details[data-lc] > summary');
+    const d = s?.parentElement as HTMLDetailsElement | undefined;
+    if (d && d.open) { e.preventDefault(); shut(d); }
+  }, true);
   document.addEventListener('toggle', (e) => {
     const d = e.target as HTMLElement;
     if (!(d instanceof HTMLDetailsElement) || !d.matches('[data-lc]') || !d.open) return;
-    menus().forEach((o) => { if (o !== d) o.open = false; });
+    menus().forEach((o) => { if (o !== d) shut(o); });
   }, true);
   document.addEventListener('click', (e) => {
     const el = e.target as Node;
-    menus().forEach((d) => { if (d.open && !d.contains(el)) d.open = false; });
+    menus().forEach((d) => { if (d.open && !d.contains(el)) shut(d); });
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    menus().forEach((d) => { if (d.open) { d.open = false; d.querySelector('summary')?.focus(); } });
+    menus().forEach((d) => { if (d.open) { shut(d); d.querySelector('summary')?.focus(); } });
   });
 
   // ── «No» hides the save question for this search (this tab only).

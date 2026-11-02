@@ -309,6 +309,22 @@ const tilePhoto = (() => {
   <FilterSheet lang={lang} total={res.total} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} />
 
   <main id="main" class="list-main">
+  {/* home → list move (Sergei 02/11): decided before the first paint, only when the visitor
+      comes from the home page (its note ≤ 10 s old), on desktop, without reduced motion.
+      The class goes away after the move, so in-place filtering never replays it. */}
+  <script is:inline>
+    (function () {
+      try {
+        var n = Number(localStorage.getItem('hpFromHome') || 0);
+        localStorage.removeItem('hpFromHome');
+        if (!n || Date.now() - n > 10000) return;
+        if (!matchMedia('(min-width: 1024px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var r = document.documentElement;
+        r.classList.add('hp-lfrom');
+        setTimeout(function () { r.classList.remove('hp-lfrom'); }, 2100);
+      } catch (e) { /* storage off: no move */ }
+    })();
+  </script>
   {/* #102 desktop: the top as on the home page — the end of the home photo with
       the breadcrumb and the H1 on it. On phones this box is just George's column. */}
   <div class="ltop" style={heroBg} data-lswap="top">
@@ -1254,6 +1270,15 @@ const tilePhoto = (() => {
     @keyframes lm-in  { from { opacity: 0; transform: translateY(-8px); clip-path: inset(0 0 100% 0); } to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } }
     @keyframes lm-out { from { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } to { opacity: 0; transform: translateY(-8px); clip-path: inset(0 0 100% 0); } }
     @media (prefers-reduced-motion: reduce) { details[data-lc] > .lc__m, details[data-lc] > .lpp__m { animation: none !important; } }
+
+
+    /* ── home → list move: the home photo (its desktop height, 82vh) shrinks into the 242 px strip,
+          the bar below rides up with it; the title and the cards come in at the end ── */
+    :global(html.hp-lfrom) .ltop { animation: l-hero 1.5s cubic-bezier(.65,0,.35,1) both; }
+    :global(html.hp-lfrom) .ltop__in { animation: l-in 1.7s ease both; }
+    :global(html.hp-lfrom) .list { animation: l-in 1.9s ease both; }
+    @keyframes l-hero { 0%, 30% { height: 82vh; background-position: 50% 50%; } 100% { height: 242px; background-position: 50% 100%; } }
+    @keyframes l-in { 0%, 70% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }
 
     /* ── back to top ── */
     .l-totop {

@@ -22,6 +22,7 @@ import ListingPage from '../components/ListingPage.astro';
 import HomePage from '../components/HomePage.astro';
 import PropertyPage from '../components/PropertyPage.astro';
 import LoginPage from '../components/LoginPage.astro';
+import LoginPop from '../components/LoginPop.astro';
 import PanelPage from '../components/PanelPage.astro';
 import FavoritesPage from '../components/FavoritesPage.astro';
 import ProfilePage from '../components/ProfilePage.astro';
@@ -102,6 +103,8 @@ const panelSeg = panelRoot ? (rest[1] ?? '').toLowerCase() : '';
 const isPanel = panelRoot && rest.length <= 2 && (PANEL_PAGES as readonly string[]).includes(panelSeg);
 // Ο προορισμός επιστροφής — από πού πάτησε «εγγραφή». Καθαρίζεται στη σελίδα.
 const nextParam = Astro.url.searchParams.get('next') ?? '';
+// #104: the desktop sign-in popup asks for its own look (embed=1&pop=1); phones and /login keep LoginPage.
+const loginPop = Astro.url.searchParams.get('embed') === '1' && Astro.url.searchParams.get('pop') === '1';
 
 // ── ΚΑΡΤΕΛΑ ΑΚΙΝΗΤΟΥ: /ακινητο/7838 · /en/property/7838 ───────────────────
 // 🪤 ΕΛΕΓΧΕΤΑΙ ΠΡΙΝ ΤΗ ΛΙΣΤΑ. Σε γλώσσες όπου τα δύο slug ΣΥΜΠΙΠΤΟΥΝ (bg και tr
@@ -299,6 +302,7 @@ if (crmDown) { Astro.response.status = 503; Astro.response.headers.set('Retry-Af
   : area ? <AreaPage page={area} />
   : article ? <ArticlePage article={article} />
   : articleList ? <ArticleListPage category={articleList.category} page={articleList.page} />
+  : isLogin && loginPop ? <LoginPop lang={lang} next={nextParam} />
   : isLogin ? <LoginPage lang={lang} next={nextParam} />
   : isHome ? <HomePage lang={lang} />
   : property ? <PropertyPage lang={lang} item={property} all={allItems} />

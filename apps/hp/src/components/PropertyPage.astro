@@ -760,14 +760,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               <div class="qf__ph" id="qf-ph">
                 {/* #103 desktop: country code with search (George's DIAL list). */}
                 <button type="button" class="dial" id="dialBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="dialPop" aria-label={pui(lang, 'cbCountry')}>
-                  <span id="dialL">🇬🇷 +30</span>
+                  <span id="dialL" data-dial-l>🇬🇷 +30</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
                 </button>
                 <input id="qf-p" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder={pui(lang, 'fPhone')} value={meFav?.phone || undefined} />
                 <div class="dial__pop" id="dialPop" hidden>
                   <div class="dial__s">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-                    <input type="search" id="dialQ" placeholder={pui(lang, 'dialSearch')} aria-label={pui(lang, 'dialSearch')} autocomplete="off" />
+                    <input type="search" id="dialQ" data-dial-q placeholder={pui(lang, 'dialSearch')} aria-label={pui(lang, 'dialSearch')} autocomplete="off" />
                   </div>
                   <div class="dial__l" role="listbox" aria-label={pui(lang, 'cbCountry')}>
                     {dial.map((d) => (
@@ -1503,6 +1503,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
 <script>
   import { checkPhone, phoneLeadEmail, DIAL, LANG_CC } from '../lib/callback';
+  import { initDial } from '../lib/dial';
   // ── ΑΓΑΠΗΜΕΝΟ (#59): εναλλαγή χωρίς επαναφόρτωση· σε αποτυχία η κατάσταση μένει ως ήταν.
   const fav = document.getElementById('fav') as HTMLButtonElement | null;
   fav?.addEventListener('click', async () => {
@@ -1630,7 +1631,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
       if (form.id === 'qf' && desk.matches) {
         body.name = `${String(fd.get('first') ?? '').trim()} ${String(fd.get('last') ?? '').trim()}`.trim();
         const ph = body.phone.trim();
-        if (ph) body.phone = /^(\+|00)/.test(ph) ? ph : `+${dialCode} ${ph}`;
+        if (ph) body.phone = /^(\+|00)/.test(ph) ? ph : `+${dialW?.code() ?? '30'} ${ph}`;
         body.message = String(fd.get('message') ?? '').trim();
       }
       if (!/.+@.+\..+/.test(body.email)) {
@@ -1786,41 +1787,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   }
 
   // ── Country code with search (George's DIAL list). First guess: browser region, else the language.
-  const dBtn = document.getElementById('dialBtn');
-  const dPop = document.getElementById('dialPop');
-  const dQ = document.getElementById('dialQ') as HTMLInputElement | null;
-  const dL = document.getElementById('dialL');
-  let dialCode = '30';
-  if (dBtn && dPop && dQ && dL) {
-    const opts = Array.from(dPop.querySelectorAll<HTMLButtonElement>('[data-cc]'));
-    const none = dPop.querySelector('.dial__none') as HTMLElement | null;
-    const pick = (cc: string) => {
-      const o = opts.find((x) => x.dataset.cc === cc) ?? opts[0];
-      if (!o) return;
-      opts.forEach((x) => x.setAttribute('aria-selected', String(x === o)));
-      dialCode = o.dataset.code ?? '30';
-      dL.textContent = `${o.querySelector('.dial__f')?.textContent ?? ''} +${dialCode}`;
-    };
-    pick(guess);
-    const show = (o: boolean) => {
-      dPop.hidden = !o; dBtn.setAttribute('aria-expanded', String(o));
-      if (o) { dQ.value = ''; filter(); dQ.focus(); }
-    };
-    const filter = () => {
-      const q = dQ.value.trim().toLowerCase().replace(/^\+/, '');
-      let n = 0;
-      opts.forEach((x) => {
-        const hit = !q || (x.dataset.q ?? '').includes(q) || (x.dataset.code ?? '').startsWith(q);
-        x.hidden = !hit; if (hit) n++;
-      });
-      if (none) none.hidden = n > 0;
-    };
-    dBtn.addEventListener('click', () => show(dPop.hidden));
-    dQ.addEventListener('input', filter);
-    opts.forEach((x) => x.addEventListener('click', () => { pick(x.dataset.cc ?? ''); show(false); (document.getElementById('qf-p') as HTMLInputElement | null)?.focus(); }));
-    document.addEventListener('click', (e) => { if (!dPop.hidden && !(e.target as Element).closest('#qf-ph')) show(false); });
-    dPop.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); show(false); dBtn.focus(); } });
-  }
+  //    The picker logic lives in lib/dial.ts (shared with the desktop sign-in popup, #104).
+  const dialW = initDial(document.getElementById('qf-ph'), guess,
+    () => (document.getElementById('qf-p') as HTMLInputElement | null)?.focus());
 
   // ── The form: on desktop «Name» + «Surname» are required, George's one field on phones.
   const qfN = document.getElementById('qf-n') as HTMLInputElement | null;

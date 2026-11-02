@@ -23,6 +23,21 @@ try {
   check('embed login: no header, no cookie banner, no nested dialog', !/<header/.test(e) && !e.includes('id="cc"') && !e.includes('id="lgd"') && e.includes('data-embed="1"'), 'bare');
   const n = await (await fetch(SITE + '/en/login')).text();
   check('normal login: header + banner, not embed', /<header/.test(n) && n.includes('id="cc"') && !n.includes('data-embed="1"'), 'full');
+  // #104: the desktop popup (embed=1&pop=1) — new steps, same protections.
+  const pr = await fetch(SITE + '/en/login?embed=1&pop=1&next=%2Fen%2Fproperty%2F10008');
+  const ph = await pr.text();
+  check('pop login: frame-ancestors self', pr.headers.get('content-security-policy') === "frame-ancestors 'self'", String(pr.headers.get('content-security-policy')));
+  check('pop login: noindex', /<meta name="robots" content="noindex/.test(ph), 'noindex');
+  check('pop login: bare (no header, banner, nested dialog)', !/<header/.test(ph) && !ph.includes('id="cc"') && !ph.includes('id="lgd"'), 'bare');
+  check('pop login: steps name+mobile → email → code → welcome', ['id="p0"', 'id="fn"', 'id="sn"', 'id="ph"', 'id="p1"', 'id="em"', 'id="p2"', 'id="cd"', 'id="p4"'].every((x) => ph.includes(x)), 'steps');
+  check('pop login: Continue disabled until consent', /<input type="checkbox" id="agree"/.test(ph) && /id="go0" disabled/.test(ph), 'gated');
+  check('pop login: no Google button (no Google sign-in in the API)', !ph.includes('id="google"'), 'off');
+  check('pop login: country-code picker with search', ph.includes('data-dial-q') && ph.includes('data-cc="GR"') && ph.includes('data-cc="DE"'), 'picker');
+  check('pop login: foreign next not kept', !(await (await fetch(SITE + '/en/login?embed=1&pop=1&next=https%3A%2F%2Fevil.example')).text()).includes('evil.example'), 'safe');
+  const de = await (await fetch(SITE + '/de/login?embed=1&pop=1')).text();
+  check('pop login (de): own texts', de.includes('Fügen Sie Ihre E-Mail hinzu') && de.includes('Freischalten'), 'de');
+  const plain = await (await fetch(SITE + '/en/login?pop=1')).text();
+  check('pop=1 without embed → the plain login page', plain.includes('class="pick"') && !plain.includes('id="p0"'), 'LoginPage');
 } finally { site.kill(); stub.server?.close?.(); }
 console.log(fails ? `${fails} FAIL` : 'ALL OK');
 process.exit(fails ? 1 : 0);

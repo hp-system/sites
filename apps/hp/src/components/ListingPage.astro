@@ -448,7 +448,7 @@ const tilePhoto = (() => {
           </label>
         </form>
         {/* Map view (Sergei 02/11): the map is for members — a click opens the sign-in (popup on desktop) */}
-        <a class="lc lc--map" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`} data-ev="member:join_from_list"
+        <a class="lc lc--map l-gild" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`} data-ev="member:join_from_list"
            aria-label={t(lang, 'list.map')} title={t(lang, 'list.map')}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
           <span class="sr-only">{t(lang, 'list.map')}</span>
@@ -1273,10 +1273,15 @@ const tilePhoto = (() => {
     /* ── Map view: the home search button's square (Sergei 02/11) — black, the pin in gold ── */
     .lc--map {
       flex: none; width: 64px; padding: 0; display: flex; align-items: center; justify-content: center;
-      background: var(--ink); color: var(--gold-dk-text); text-decoration: none; transition: opacity .15s ease, color .15s ease;
+      background: var(--ink); color: var(--gold-dk-text); text-decoration: none; box-sizing: border-box;
+      /* E8 brass outline (Sergei 02/11): the gilded edge on the dark ground, turns once on hover */
+      border: 1px solid var(--gold-dk);
+      border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
+      transition: color .9s ease-in-out;
     }
     .lc--map svg { width: 20px; height: 20px; }
-    .lc--map:hover { opacity: .86; color: var(--gold-dk-hover); }
+    .lc--map:hover, .lc--map:focus-visible { color: var(--gold-dk-hover); }
+    .lc--map:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
 
     /* ── every menu slides down when it opens and back up when it closes (Sergei 02/11) ── */
     details[data-lc][open] > .lc__m, details[data-lc][open] > .lpp__m { animation: lm-in .2s cubic-bezier(.2,.8,.2,1) both; transform-origin: top; }

@@ -39,6 +39,7 @@ import { ui, facetUrl, FACETS, PAIRS, catKey } from '../lib/listing';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { brand } from '../brand/index';
 import {
+  conditionOf, plotSqmOf,
   descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
   energyOf, oldPriceOf, floorName, pui, subName, poiName, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
   isBusiness, homeFactsOf, businessFactsOf, bizSqmOf,
@@ -221,6 +222,17 @@ const highlights = [
   ...(sea ? [{ k: 'sea', label: sea }] : []),
   ...(/exclusive access to the beach|αποκλειστικ\S* πρόσβαση/.test(featText) ? [{ k: 'beach', label: pui(lang, 'beachAccess') }] : []),
   ...(/\bsea[ _-]?view\b|θέα (στη |προς τη )?θάλασσα/.test(featText) ? [{ k: 'view', label: pui(lang, 'seaView') }] : []),
+];
+// Desktop six-fact row (Sergei 01/11): living area · bedrooms · to the sea · energy class · plot · condition.
+const plotN = !land && !biz ? plotSqmOf(a) : 0;
+const seaTxt = seaDistanceText(a, lang, num) ?? sea;
+const sheet = land || biz ? [] : [
+  ...(sqmN > 0 ? [{ k: pui(lang, 'livAreaL'), v: sqmFmt(sqmN, lang), n: true }] : []),
+  ...(Number(a.bedrooms) > 0 ? [{ k: pui(lang, 'bedsL'), v: String(a.bedrooms), n: true }] : []),
+  ...(seaTxt ? [{ k: pui(lang, 'toSeaL'), v: seaTxt, n: true }] : []),
+  ...(energy ? [{ k: pui(lang, 'energyClsL'), v: energy, n: false }] : []),
+  ...(plotN > 0 ? [{ k: pui(lang, 'plotL'), v: sqmFmt(plotN, lang), n: true }] : []),
+  ...(conditionOf(a, lang) ? [{ k: pui(lang, 'condL'), v: conditionOf(a, lang), n: false }] : []),
 ];
 const FEAT_SHOWN = 11;                       // «All N features» after 11, the button is the 12th cell
 const featsMore = feats.length > FEAT_SHOWN + 1;
@@ -429,7 +441,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               </span>
             ))}
           </div>
-          <div class="strip">
+          <div class:list={['strip', sheet.length > 0 && 'strip--ph']}>
             {sqmN > 0 && <div><b class="num">{sqmFmt(sqmN, lang)}</b><span>{pui(lang, 'sqmL')}</span></div>}
             {/* 🪤 ΥΠΝΟΔΩΜΑΤΙΑ ΣΕ ΧΩΡΑΦΙ. Η γη είναι το **40%** του καταλόγου (207 από 517)
                 και έδειχνε τα ίδια κουτιά με μια βίλα. Όπου η βάση είχε τυχαία τιμή,
@@ -446,11 +458,19 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             {!land && energy && <div><b>{energy}</b><span>{pui(lang, 'energyL')}</span></div>}
           </div>
 
+          {/* Desktop, homes (Sergei 01/11 mockup): six facts in one row in this order, no list below.
+              A cell without data is left out; land and hotels keep the strip + list above. */}
+          {sheet.length > 0 && (
+            <div class="strip strip6">
+              {sheet.map((c) => <div><b class:list={[c.n && 'num']}>{c.v}</b><span>{c.k}</span></div>)}
+            </div>
+          )}
+
           {facts.length > 0 && (
             /* Ό,τι ρωτάει πρώτο όποιος αγοράζει γη: χτίζεται; τι δρόμο έχει;
                ρεύμα, νερό; Η ίδια σειρά με το σημερινό site. Για σπίτι: κατάσταση,
                θέρμανση, στάθμευση· για ξενοδοχείο: αστέρια, δωμάτια, κλίνες (#45). */
-            <dl class="lfacts">
+            <dl class:list={['lfacts', sheet.length > 0 && 'lfacts--ph']}>
               {facts.map((f) => (
                 <div class="lfact"><dt>{f.label}</dt><dd>{f.value}</dd></div>
               ))}
@@ -899,6 +919,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 </Base>
 
 <style>
+  .strip.strip6 { display: none; }
+
   .lux { display: inline-block; margin-left: 10px; vertical-align: 6px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em;
          text-transform: uppercase; padding: 4px 9px; background: var(--ink); color: var(--paper); }
   .muni__p { margin: 0 0 12px; color: var(--ink-2); font-size: 15px; max-width: 64ch; }
@@ -1233,6 +1255,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .strip span { white-space: nowrap; font-weight: 400; }
     .strip b { line-height: 1.25; }
     .lfacts { margin: 16px 0 0; }
+    /* homes: the six-fact row (Sergei 01/11) takes the place of the strip and the list */
+    .strip.strip--ph, .lfacts.lfacts--ph { display: none; }
+    .strip.strip6 { display: grid; }
 
     .sec { color: var(--ink); background: var(--paper-2); height: 40px; box-sizing: border-box; line-height: 22px;
            padding: 9px 16px; margin: 32px 0 12px; }

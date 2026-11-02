@@ -250,8 +250,8 @@ const meta = {
         if (n.img && /^https?:\/\//.test(n.img)) r.style.setProperty('--hf-img', 'url("' + String(n.img).replace(/"/g, '') + '")');
         r.classList.add('hp-hfrom', 'hp-hfrom-hide');
         // the home photo fades in over the moving copy just after the move, then the copy goes
-        setTimeout(function () { r.classList.remove('hp-hfrom-hide'); }, 1300);
-        setTimeout(function () { r.classList.remove('hp-hfrom'); }, 1700);
+        setTimeout(function () { r.classList.remove('hp-hfrom-hide'); }, 1000);
+        setTimeout(function () { r.classList.remove('hp-hfrom'); }, 1300);
       } catch (e) { /* storage off: no move */ }
     })();
   </script>
@@ -427,12 +427,12 @@ const meta = {
         returns from the strip's bottom framing), the bar cross-fades (SearchBar), title and blocks come in last ── */
   /* the exact inverse of the home → list move: same photo file the strip showed (cached, no blank start),
      drawn as a background like the strip, the inverse timing curve; the home <img> takes over at the end */
-  html.hp-hfrom .hero { animation: h-grow 1.25s cubic-bezier(.75,0,.45,1) both; }
+  html.hp-hfrom .hero { animation: h-grow 0.95s cubic-bezier(.75,0,.45,1) both; }
   html.hp-hfrom .hero__bg { background-image: var(--hf-img, none); background-size: cover; background-repeat: no-repeat;
-                            animation: h-bgpos 1.25s cubic-bezier(.75,0,.45,1) both; }
+                            animation: h-bgpos 0.95s cubic-bezier(.75,0,.45,1) both; }
   html.hp-hfrom-hide .hero__bg img { opacity: 0 !important; animation: none !important; transition: none !important; }
-  html.hp-hfrom .hero__copy { animation: h-in 1.5s ease both; }
-  html.hp-hfrom #main { animation: h-in 1.6s ease both; }
+  html.hp-hfrom .hero__copy { animation: h-in 1.15s ease both; }
+  html.hp-hfrom #main { animation: h-in 1.2s ease both; }
   @keyframes h-grow { from { min-height: var(--hf-h, 242px); } to { min-height: 82vh; } }
   @keyframes h-bgpos { from { background-position: 50% 100%; } to { background-position: var(--focal, 50% 50%); } }
   @keyframes h-in { 0%, 65% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }

@@ -46,6 +46,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* Keep the scrollbar's place even when a window (filters, photos, sign-in, menu) locks the page with
+   overflow:hidden — otherwise the page behind jumps sideways by the scrollbar's width (Sergei 02/11). */
+html { scrollbar-gutter: stable; }
 body {
   margin: 0;
   background: var(--paper);

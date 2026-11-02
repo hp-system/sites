@@ -1,0 +1,92 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// BY AREA — new block of the desktop redesign (#101, approved by George 2026-11-02).
+//
+// The four municipality pages, each with its «from €» (lowest visible asking
+// price, computed from the listings — lib/prices.ts `fromPrice`), and under them
+// the three guides that bring the most search traffic. It sits under the
+// Collections: the two together fill one screen on desktop, half each.
+//
+// 🔒 Visibility: only the MUNICIPALITY (public). Never the area / village.
+// 🔒 Photos: property photos → watermarked (`marked`), like every tile.
+// 🔢 No counts (George 17/10): prices only.
+// ═══════════════════════════════════════════════════════════════════════════
+import { marked, markedSrcSetSmall, altOf, type Photo } from '../lib/photos';
+import { t, type Lang } from '../lib/i18n';
+import { money } from '../lib/format';
+
+export type AreaTile = { key: string; name: string; href: string; alt: string; fromText: string; photo: Photo | null };
+interface Props { lang: Lang; items: AreaTile[]; from: number }
+const { lang, items, from } = Astro.props;
+
+// The guides are English-only for now (same links as the footer, #69).
+const LINKS = [
+  { href: '/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki', text: t(lang, 'foot.g_buy') },
+  { href: '/en/property-for-sale-in-greece', text: t(lang, 'home.greece') },
+  { href: '/en/articles/business-news/taxes-foreigners-properties-greece', text: t(lang, 'foot.g_tax') },
+];
+---
+<section class="hz areas" aria-labelledby="area-h">
+  <div class="wrap">
+    <div class="shead hz-head">
+      <div>
+        <h2 id="area-h" class="t-h2">{t(lang, 'home.area_h2')}</h2>
+        {from > 0 && <p>{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
+      </div>
+    </div>
+
+    <ul class="atiles">
+      {items.map((a) => (
+        <li>
+          <a class="atile" href={a.href}>
+            {a.photo && (
+              <img src={marked(a.photo.url, 800)} alt={altOf(a.photo, lang, a.alt)}
+                   srcset={markedSrcSetSmall(a.photo.url)}
+                   sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 4), calc(50vw - 26px)"
+                   width="800" height="533" loading="lazy" decoding="async" />
+            )}
+            <span class="atile__t">
+              <b>{a.name}</b>
+              <span>{a.fromText}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <nav class="alinks" aria-label={t(lang, 'foot.guides')}>
+      {LINKS.map((l) => <a href={l.href}>{l.text} <span aria-hidden="true">→</span></a>)}
+    </nav>
+  </div>
+</section>
+
+<style>
+  .areas { padding: var(--s7) 0; }
+  .atiles { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .atile { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: var(--paper-2); }
+  .atile img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+  .atile:hover img { transform: scale(1.03); }
+  .atile__t {
+    position: absolute; inset: auto 0 0 0; padding: 40px var(--s3) var(--s3); color: #fff;
+    background: linear-gradient(0deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,0) 100%);
+  }
+  .atile__t b {
+    display: block; font-size: 19px; font-weight: 300;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 22px rgba(0,0,0,.55); transition: transform .35s ease;
+  }
+  .atile__t span { font-size: 11.5px; letter-spacing: .06em; opacity: .95;
+                   text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.5); }
+  .atile:hover .atile__t b { transform: translateY(-2px); }
+  .alinks { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: var(--s4); font-size: 14px; }
+  .alinks a { color: var(--muted); transition: color .15s ease; }
+  .alinks a:hover { color: var(--ink); }
+  .alinks span { display: inline-block; }
+  :global([dir='rtl']) .alinks span { transform: scaleX(-1); }
+
+  @media (min-width: 1024px) {
+    .atiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .atile__t { padding: 56px var(--s4) var(--s4); }
+    .atile__t b { font-size: 21px; }
+    .alinks { justify-content: space-between; font-size: 15px; }
+  }
+</style>

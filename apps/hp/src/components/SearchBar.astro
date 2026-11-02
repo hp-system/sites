@@ -377,4 +377,16 @@ const idTemplate = propertyUrl(lang, '0');
     .search__ico { display: block; }
     .search__golabel { display: none; }
   }
+  /* #101 desktop redesign: every cell behaves like «More filters» — grey at rest,
+     ink on hover; the ID cell a little wider. */
+  @media (min-width: 1024px) {
+    .search__row { grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto 170px var(--bar); }
+    .search__f, .search__more, .search__id { cursor: pointer; transition: color .15s ease; }
+    .search__f :global(.sel__btn) { color: var(--muted); transition: color .15s ease; }
+    .search__f:hover :global(.sel__caret) { color: var(--ink); }
+    .search__f:hover, .search__f:hover :global(.sel__btn), .search__f:hover :global(.sel__val),
+    .search__id:hover, .search__id:hover .search__idin::placeholder { color: var(--ink); }
+    .search__more:hover .ico, .search__id:hover .ico { color: var(--ink); }
+    .search__more .ico { color: var(--faint); }
+  }
 </style>

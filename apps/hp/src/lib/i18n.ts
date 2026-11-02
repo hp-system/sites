@@ -625,6 +625,8 @@ export const T: Record<Lang, Dict> = {
 // ═══════════════════════════════════════════════════════════════════════════
 const U: Record<Lang, Dict> = {
   el: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'Νέα ακίνητα στη Χαλκιδική', 'home.coll_sub': 'Έτοιμες αναζητήσεις και κάθε τύπος ακινήτου.', 'coll.houses': 'Μονοκατοικίες', 'coll.hotels': 'Ξενοδοχεία & επαγγελματικά', 'home.area_h2': 'Ακίνητα προς πώληση στη Χαλκιδική ανά περιοχή', 'home.area_sub': 'Ελεγμένες αγγελίες με δικές μας φωτογραφίες · από {price}', 'home.from': 'από {price}', 'home.area_alt': 'Ακίνητα προς πώληση — {name}, Χαλκιδική', 'home.greece': 'Ακίνητα προς πώληση στην Ελλάδα', 'ab.h2_we': 'Τα υπόλοιπα τα κάνουμε εμείς για σένα.', 'home.pages': 'Σελίδες', 'home.page': 'Σελίδα {n}', 'home.why': 'Γιατί εμείς', 'home.top': 'Επιστροφή στην αρχή',
     'coll.top': 'Πάνω από ένα εκατομμύριο',
     'off.eyebrow': 'Ξεκλείδωσε το Secret Portfolio', 'off.h2a': 'Σπάνια',
     'search.open': 'Άνοιγμα',
@@ -1000,6 +1002,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Ξεκίνα από την αρχή',
   },
   en: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'New properties in Halkidiki', 'home.coll_sub': 'Ready-made searches and every type of property.', 'coll.houses': 'Houses', 'coll.hotels': 'Hotels & commercial', 'home.area_h2': 'Property for sale in Halkidiki by area', 'home.area_sub': 'Verified listings with our own photos · from {price}', 'home.from': 'from {price}', 'home.area_alt': 'Property for sale in {name}, Halkidiki', 'home.greece': 'Property for sale in Greece', 'ab.h2_we': 'We do the rest for you.', 'home.pages': 'Pages', 'home.page': 'Page {n}', 'home.why': 'Why us', 'home.top': 'Back to top',
     'coll.top': 'Above one million',
     'off.eyebrow': 'Unlock Secret Portfolio', 'off.h2a': 'Exceptional',
     'search.open': 'Open',
@@ -1366,6 +1370,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Start from the beginning',
   },
   bg: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'Нови имоти в Халкидики', 'home.coll_sub': 'Готови търсения и всеки вид имот.', 'coll.houses': 'Къщи', 'coll.hotels': 'Хотели и търговски имоти', 'home.area_h2': 'Имоти за продажба в Халкидики по райони', 'home.area_sub': 'Проверени обяви с наши собствени снимки · от {price}', 'home.from': 'от {price}', 'home.area_alt': 'Имоти за продажба — {name}, Халкидики', 'home.greece': 'Имоти за продажба в Гърция', 'ab.h2_we': 'Останалото го правим ние вместо вас.', 'home.pages': 'Страници', 'home.page': 'Страница {n}', 'home.why': 'Защо ние', 'home.top': 'Към началото',
     'coll.top': 'Над един милион',
     'off.eyebrow': 'Отключете Secret Portfolio', 'off.h2a': 'Редки',
     'search.open': 'Отваряне',
@@ -1732,6 +1738,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Започнете отначало',
   },
   sr: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'Nove nekretnine na Halkidikiju', 'home.coll_sub': 'Gotove pretrage i svaka vrsta nekretnine.', 'coll.houses': 'Kuće', 'coll.hotels': 'Hoteli i poslovni prostori', 'home.area_h2': 'Nekretnine na prodaju na Halkidikiju po oblastima', 'home.area_sub': 'Provereni oglasi sa našim fotografijama · od {price}', 'home.from': 'od {price}', 'home.area_alt': 'Nekretnine na prodaju — {name}, Halkidiki', 'home.greece': 'Nekretnine na prodaju u Grčkoj', 'ab.h2_we': 'Ostalo radimo mi umesto vas.', 'home.pages': 'Stranice', 'home.page': 'Stranica {n}', 'home.why': 'Zašto mi', 'home.top': 'Nazad na vrh',
     'coll.top': 'Preko milion evra',
     'off.eyebrow': 'Otključajte Secret Portfolio', 'off.h2a': 'Izuzetne',
     'search.open': 'Otvori',
@@ -2098,6 +2106,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Krenite iz početka',
   },
   de: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'Neue Immobilien auf Chalkidiki', 'home.coll_sub': 'Fertige Suchen und jede Art von Immobilie.', 'coll.houses': 'Häuser', 'coll.hotels': 'Hotels & Gewerbe', 'home.area_h2': 'Immobilien zum Verkauf auf Chalkidiki nach Region', 'home.area_sub': 'Geprüfte Angebote mit eigenen Fotos · ab {price}', 'home.from': 'ab {price}', 'home.area_alt': 'Immobilien zum Verkauf — {name}, Chalkidiki', 'home.greece': 'Immobilien zum Verkauf in Griechenland', 'ab.h2_we': 'Den Rest erledigen wir für Sie.', 'home.pages': 'Seiten', 'home.page': 'Seite {n}', 'home.why': 'Warum wir', 'home.top': 'Nach oben',
     'coll.top': 'Über eine Million',
     'off.eyebrow': 'Secret Portfolio freischalten', 'off.h2a': 'Besondere',
     'search.open': 'Öffnen',
@@ -2464,6 +2474,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Von vorn beginnen',
   },
   ro: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'Proprietăți noi în Halkidiki', 'home.coll_sub': 'Căutări gata făcute și orice tip de proprietate.', 'coll.houses': 'Case', 'coll.hotels': 'Hoteluri și spații comerciale', 'home.area_h2': 'Proprietăți de vânzare în Halkidiki, pe zone', 'home.area_sub': 'Anunțuri verificate, cu fotografiile noastre · de la {price}', 'home.from': 'de la {price}', 'home.area_alt': 'Proprietăți de vânzare — {name}, Halkidiki', 'home.greece': 'Proprietăți de vânzare în Grecia', 'ab.h2_we': 'Restul îl facem noi pentru dumneavoastră.', 'home.pages': 'Pagini', 'home.page': 'Pagina {n}', 'home.why': 'De ce noi', 'home.top': 'Înapoi sus',
     'coll.top': 'Peste un milion',
     'off.eyebrow': 'Deschideți Secret Portfolio', 'off.h2a': 'Rare',
     'search.open': 'Deschide',
@@ -2830,6 +2842,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Începeți de la început',
   },
   tr: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'Halkidiki\'de yeni gayrimenkuller', 'home.coll_sub': 'Hazır aramalar ve her türden gayrimenkul.', 'coll.houses': 'Evler', 'coll.hotels': 'Oteller ve ticari mülkler', 'home.area_h2': 'Bölgelere göre Halkidiki\'de satılık gayrimenkuller', 'home.area_sub': 'Kendi fotoğraflarımızla doğrulanmış ilanlar · başlangıç {price}', 'home.from': 'başlangıç {price}', 'home.area_alt': 'Satılık gayrimenkuller — {name}, Halkidiki', 'home.greece': 'Yunanistan\'da satılık gayrimenkuller', 'ab.h2_we': 'Gerisini sizin için biz yaparız.', 'home.pages': 'Sayfalar', 'home.page': 'Sayfa {n}', 'home.why': 'Neden biz', 'home.top': 'Başa dön',
     'coll.top': 'Bir milyonun üzerinde',
     'off.eyebrow': 'Secret Portfolio\'nun kilidini açın',
     'off.h2a': 'Nadir',
@@ -3197,6 +3211,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'Baştan başlayın',
   },
   he: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'נכסים חדשים בחלקידיקי', 'home.coll_sub': 'חיפושים מוכנים וכל סוגי הנכסים.', 'coll.houses': 'בתים', 'coll.hotels': 'מלונות ונכסים מסחריים', 'home.area_h2': 'נכסים למכירה בחלקידיקי לפי אזור', 'home.area_sub': 'מודעות מאומתות עם תמונות משלנו · החל מ-{price}', 'home.from': 'החל מ-{price}', 'home.area_alt': 'נכסים למכירה — {name}, חלקידיקי', 'home.greece': 'נכסים למכירה ביוון', 'ab.h2_we': 'את השאר אנחנו עושים בשבילכם.', 'home.pages': 'עמודים', 'home.page': 'עמוד {n}', 'home.why': 'למה אנחנו', 'home.top': 'חזרה למעלה',
     'coll.top': 'מעל מיליון',
     'off.eyebrow': 'פתחו את Secret Portfolio',
     'off.h2a': 'נדירים',
@@ -3564,6 +3580,8 @@ const U: Record<Lang, Dict> = {
     'nf.home_s': 'התחילו מההתחלה',
   },
   ru: {
+    // Home desktop redesign (#101), approved by George 2026-11-02.
+    'home.new_h2': 'Новые объекты на Халкидики', 'home.coll_sub': 'Готовые подборки и любой тип недвижимости.', 'coll.houses': 'Дома', 'coll.hotels': 'Отели и коммерческая недвижимость', 'home.area_h2': 'Недвижимость на продажу на Халкидики по районам', 'home.area_sub': 'Проверенные объявления с нашими фотографиями · от {price}', 'home.from': 'от {price}', 'home.area_alt': 'Недвижимость на продажу — {name}, Халкидики', 'home.greece': 'Недвижимость на продажу в Греции', 'ab.h2_we': 'Остальное мы делаем за Вас.', 'home.pages': 'Страницы', 'home.page': 'Страница {n}', 'home.why': 'Почему мы', 'home.top': 'Наверх',
     'coll.top': 'Свыше миллиона',
     'off.eyebrow': 'Получите доступ к Secret Portfolio',
     'off.h2a': 'Редкие',

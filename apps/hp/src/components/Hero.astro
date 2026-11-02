@@ -91,4 +91,13 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
     .hero__sub { font-size: 17px; }
   }
   @media (min-width: 1100px) { .hero__copy h1 { max-width: 14ch; } }
+  /* #101 desktop redesign: a lighter shade, dark only at the top (menu) and the
+     bottom (title) — the middle of the photo stays clear. */
+  @media (min-width: 1024px) {
+    .hero .scrim--bottom {
+      background: linear-gradient(180deg, rgba(10,14,16,.42) 0%, rgba(10,14,16,0) 22%,
+                                  rgba(10,14,16,0) 55%, rgba(10,14,16,.42) 100%);
+    }
+    .hero__sub { max-width: none; }
+  }
 </style>

@@ -40,46 +40,67 @@ const STRIP = ['s1', 's2', 's3', 's4'];
 // 🛡️ Αν η σελίδα «Επικοινωνία» δεν έχει ακόμη κείμενο, ο σύνδεσμος **δεν σβήνει** —
 //    γίνεται τηλέφωνο. Εδώ το κάλεσμα είναι το προϊόν: κενό κουμπί θα ήταν χαμένος
 //    πελάτης, όχι απλώς λείπουσα σελίδα.
+// #101: the heading breaks after its first sentence on desktop (one line each).
+const [h2a, ...h2rest] = t(lang, 'cx.h2').split(/(?<=[.!?])\s+/);
+const h2b = h2rest.join(' ');
+
 const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
 ---
 <section class="cx" aria-labelledby="cx-h">
   <div class="wrap">
+    {/* #101 desktop (George 2026-11-02): left — the text and the four facts turning
+        every 3 s (dashes); right — the six things we take on as the Company page
+        accordion (one open, hover or click opens another); the two buttons centred
+        under the band. Phone: the same blocks as before (boxes, all open). */}
     <div class="cx__top">
       <div class="cx__lead">
         <p class="t-label cx__eyebrow">{t(lang, 'cx.eyebrow')}</p>
-        <h2 id="cx-h" class="cx__h">{t(lang, 'cx.h2')}</h2>
+        <h2 id="cx-h" class="cx__h">{h2a}{h2b && <><br class="cx__br" /> {h2b}</>}</h2>
         <p class="cx__p">{t(lang, 'cx.p')}</p>
-        <p class="cx__acts">
-          {/* «Δείτε τι χτίζουμε» → η ΣΕΛΙΔΑ ΤΩΝ ΕΡΓΩΝ (George, 28/7: «για τα
-              projects που έχουμε χτίσει θα κάνουμε ειδική σελίδα που θα οδηγεί
-              εκεί»). Γι' αυτό το μπλοκ εδώ ΔΕΝ χρειάζεται φωτογραφίες έργων:
-              λέει τι μπορούμε, και η απόδειξη ζει ένα κλικ παρακάτω. */}
-          <a class="btn cx__btn" href={contentUrl('projects', lang)} data-ev="construction:portfolio">
-            {t(lang, 'cx.cta1')}
-          </a>
-          {/* Ο ιδιοκτήτης οικοπέδου είναι ΑΛΛΟ κοινό από τον αγοραστή — δικό του κουμπί. */}
-          <a class="btn btn--ghost cx__btn cx__btn--ghost" href={contactHref}
-             data-ev="construction:have_land">{t(lang, 'cx.cta2')}</a>
-        </p>
       </div>
 
-      <div class="cx__caps">
-        {CAPS.map((k) => (
-          <div class="cap">
-            <b>{t(lang, `cx.${k}_t`)}</b>
-            <span>{t(lang, `cx.${k}_d`)}</span>
+      <p class="cx__acts">
+        {/* «Δείτε τι χτίζουμε» → η ΣΕΛΙΔΑ ΤΩΝ ΕΡΓΩΝ (George, 28/7: «για τα
+            projects που έχουμε χτίσει θα κάνουμε ειδική σελίδα που θα οδηγεί
+            εκεί»). Γι' αυτό το μπλοκ εδώ ΔΕΝ χρειάζεται φωτογραφίες έργων:
+            λέει τι μπορούμε, και η απόδειξη ζει ένα κλικ παρακάτω. */}
+        <a class="btn cx__btn" href={contentUrl('projects', lang)} data-ev="construction:portfolio">
+          {t(lang, 'cx.cta1')}
+        </a>
+        {/* Ο ιδιοκτήτης οικοπέδου είναι ΑΛΛΟ κοινό από τον αγοραστή — δικό του κουμπί. */}
+        <a class="btn btn--ghost cx__btn cx__btn--ghost" href={contactHref}
+           data-ev="construction:have_land">{t(lang, 'cx.cta2')}</a>
+      </p>
+
+      <div class="cx__caps" data-acc>
+        {CAPS.map((k, i) => (
+          <div class:list={['cap', i === 0 && 'on']}>
+            <button type="button" class="cap__b">
+              <span class="cap__t">{t(lang, `cx.${k}_t`)}</span>
+              <svg class="cap__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.8" aria-hidden="true"><path d="M5 9l7 7 7-7"></path></svg>
+            </button>
+            <div class="cap__w"><div><span class="cap__d">{t(lang, `cx.${k}_d`)}</span></div></div>
           </div>
         ))}
       </div>
-    </div>
 
-    <div class="cx__strip">
-      {STRIP.map((k) => (
-        <div class="st">
-          <b>{t(lang, `cx.${k}_t`)}</b>
-          <span>{t(lang, `cx.${k}_d`)}</span>
+      <div class="cx__strip" role="region" aria-label={t(lang, 'home.why')}>
+        <div class="h-stack" data-rot="cx">
+          {STRIP.map((k, i) => (
+            <div class:list={['st', 'h-sx', i === 0 && 'on']}>
+              <b>{t(lang, `cx.${k}_t`)}</b>
+              <span>{t(lang, `cx.${k}_d`)}</span>
+            </div>
+          ))}
         </div>
-      ))}
+        <div class="h-bars h-bars--dk" role="group" aria-label={t(lang, 'home.why')}>
+          {STRIP.map((k, i) => (
+            <button type="button" class:list={['h-bar', i === 0 && 'on']} aria-pressed={i === 0 ? 'true' : 'false'}
+                    aria-label={t(lang, `cx.${k}_t`)}><span></span></button>
+          ))}
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -94,11 +115,13 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     margin: var(--s2) 0 0; font-weight: 300; letter-spacing: -.02em; line-height: 1.08;
     font-size: clamp(28px, 5.4vw, 44px); max-width: 16ch;
   }
+  .cx__br { display: none; }
   .cx__p {
     margin: var(--s4) 0 0; font-size: 15.5px; line-height: 1.6;
     color: rgba(255,255,255,.78); max-width: 48ch;
   }
-  .cx__acts { display: flex; flex-wrap: wrap; gap: var(--s3); margin: var(--s5) 0 0; }
+  /* Phone: the buttons stay right under the text, as before. */
+  .cx__acts { display: flex; flex-wrap: wrap; gap: var(--s3); margin: calc(-1 * var(--s3)) 0 0; }
   .cx__btn { background: #fff; color: var(--ink-deep); border-color: #fff; }
   .cx__btn--ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.4); }
 
@@ -107,14 +130,17 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.14);
   }
   .cap { background: var(--ink-deep); padding: var(--s4); min-width: 0; }
-  .cap b { display: block; font-size: 14px; font-weight: 600; }
-  .cap span { display: block; margin-top: 3px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
+  /* Phone: every box open — the title is a label, not a control. */
+  .cap__b { all: unset; display: block; pointer-events: none; }
+  .cap__t { display: block; font-size: 14px; font-weight: 600; }
+  .cap__chev { display: none; }
+  .cap__d { display: block; margin-top: 3px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
 
-  .cx__strip {
+  .h-stack {
     display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-    background: rgba(255,255,255,.14); margin: var(--s6) 0 0;
-    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.14);
   }
+  .h-bars { display: none; }
   /* 🪤 ΕΙΧΕ `padding-left: 0` — το κείμενο ακουμπούσε ΠΑΝΩ στη διαχωριστική
      γραμμή αριστερά (George, 28/7: «δεν τα έχεις κεντρίσει καλά, να μην
      ακουμπάνε τέρμα αριστερά»). Ίσο padding σε όλες τις πλευρές. */
@@ -122,9 +148,59 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   .st b { display: block; font-size: clamp(18px, 3.4vw, 24px); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; }
   .st span { display: block; margin-top: 5px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
 
-  @media (min-width: 760px) {
+  @media (min-width: 760px) and (max-width: 1023px) {
     .cx { padding: 74px 0; }
     .cx__top { grid-template-columns: 1.05fr 1fr; gap: var(--s7); align-items: start; }
-    .cx__strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cx__lead { grid-column: 1; grid-row: 1; }
+    .cx__acts { grid-column: 1; grid-row: 2; margin: 0; }
+    .cx__caps { grid-column: 2; grid-row: 1 / span 2; }
+    .cx__strip { grid-column: 1 / -1; }
+    .h-stack { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  /* ── #101 desktop ─────────────────────────────────────────────────────── */
+  @media (min-width: 1024px) {
+    .cx { padding: 44px 0 56px; }
+    .cx__top {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 64px; row-gap: 0;
+      grid-template-areas: "lead acc" "facts acc" "acts acts"; align-items: center;
+    }
+    .cx__lead { grid-area: lead; align-self: end; }
+    .cx__strip { grid-area: facts; align-self: start; margin-top: 30px; }
+    .cx__caps { grid-area: acc; }
+    .cx__acts { grid-area: acts; justify-content: center; margin: 32px 0 0; }
+    .cx__h { margin-top: 14px; font-size: 38px; line-height: 1.14; max-width: none; }
+    .cx__br { display: inline; }
+    .cx__p { margin-top: 22px; line-height: 1.65; max-width: 50ch; }
+
+    /* the accordion (Company page component) on the dark band */
+    .cx__caps { display: block; background: none; border: 0; min-height: 372px; }
+    .cap { padding: 0; background: none; border-bottom: 1px solid rgba(255,255,255,.14); }
+    .cap:last-child { border-bottom: 0; }
+    .cap__b {
+      pointer-events: auto; cursor: pointer; box-sizing: border-box; width: 100%;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0;
+      color: rgba(255,255,255,.6);
+    }
+    .cap__b:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 2px; }
+    .cap__t { font-size: 20px; font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: #fff; }
+    .cap__b:hover .cap__t { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+    .cap__chev { display: block; flex: none; transition: transform .4s ease; }
+    .cap.on .cap__chev { transform: rotate(180deg); }
+    .cap__w {
+      display: grid; grid-template-rows: 0fr; opacity: 0;
+      transition: grid-template-rows .28s cubic-bezier(.4,0,.2,1), opacity .2s ease;
+    }
+    .cap.on .cap__w { grid-template-rows: 1fr; opacity: 1; }
+    .cap__w > div { overflow: hidden; min-height: 0; }
+    .cap__d { margin: 0; padding: 0 36px 16px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.72); }
+
+    /* the four facts: one at a time (stack, dashes and clock are in HomePage.astro) */
+    .h-stack { background: none; border: 0; gap: 0; grid-template-columns: 1fr; justify-items: start; }
+    .st { background: none; padding: 0; }
+    .st b { font-size: 26px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
+    .st span { margin-top: 8px; font-size: 14.5px; color: rgba(255,255,255,.6); line-height: 1.55; }
+    .st span::first-letter { text-transform: uppercase; }
+    .h-bars { display: flex; }
   }
 </style>

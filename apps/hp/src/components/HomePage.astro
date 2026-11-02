@@ -235,6 +235,26 @@ const meta = {
 <Base lang={lang} title={meta.title} description={meta.desc} path="/"
       ogImage={ogPhoto} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={d.heroAlt}
       jsonLd={jsonLd}>
+  {/* list → home move (Sergei 02/11): decided before the first paint, only when the visitor comes from
+      the list (its note ≤ 10 s old), on desktop, without reduced motion; the class goes away after it. */}
+  <script is:inline>
+    (function () {
+      try {
+        var raw = localStorage.getItem('hpFromList');
+        localStorage.removeItem('hpFromList');
+        var n = raw ? JSON.parse(raw) : null;
+        if (!n || !n.t || Date.now() - n.t > 10000) return;
+        if (!matchMedia('(min-width: 1024px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var r = document.documentElement;
+        if (n.h) r.style.setProperty('--hf-h', Math.max(120, Math.min(600, Number(n.h) || 242)) + 'px');
+        if (n.img && /^https?:\/\//.test(n.img)) r.style.setProperty('--hf-img', 'url("' + String(n.img).replace(/"/g, '') + '")');
+        r.classList.add('hp-hfrom', 'hp-hfrom-hide');
+        // the home photo fades in over the moving copy just after the move, then the copy goes
+        setTimeout(function () { r.classList.remove('hp-hfrom-hide'); }, 1000);
+        setTimeout(function () { r.classList.remove('hp-hfrom'); }, 1300);
+      } catch (e) { /* storage off: no move */ }
+    })();
+  </script>
   {/* 1 κεφαλίδα (μέσα στο hero) · 2 hero */}
   <Hero lang={lang} photo={d.heroPhoto as Photo | null} alt={d.heroAlt}
         munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} total={d.total} />
@@ -242,7 +262,7 @@ const meta = {
   <FilterSheet lang={lang} total={d.total}
                munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} />
 
-  <main id="main">
+  <main id="main" data-list-path={new URL(url, "http://x").pathname}>
     {apiDown && (
       <div class="wrap" style="padding:var(--s7) 0">
         <p class="t-body">Τα ακίνητα δεν είναι διαθέσιμα αυτή τη στιγμή. Δοκίμασε σε λίγο.</p>
@@ -402,7 +422,48 @@ const meta = {
     .h-totop:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
     [dir='rtl'] .h-totop { right: auto; left: 24px; }
   }
+
+  /* ── list → home move: the list's 242 px strip grows into the home photo (same file; its focal point
+        returns from the strip's bottom framing), the bar cross-fades (SearchBar), title and blocks come in last ── */
+  /* the exact inverse of the home → list move: same photo file the strip showed (cached, no blank start),
+     drawn as a background like the strip, the inverse timing curve; the home <img> takes over at the end */
+  html.hp-hfrom .hero { animation: h-grow 0.95s cubic-bezier(.75,0,.45,1) both; }
+  html.hp-hfrom .hero__bg { background-image: var(--hf-img, none); background-size: cover; background-repeat: no-repeat;
+                            animation: h-bgpos 0.95s cubic-bezier(.75,0,.45,1) both; }
+  html.hp-hfrom-hide .hero__bg img { opacity: 0 !important; animation: none !important; transition: none !important; }
+  html.hp-hfrom .hero__copy { animation: h-in 1.15s ease both; }
+  html.hp-hfrom #main { animation: h-in 1.2s ease both; }
+  @keyframes h-grow { from { min-height: var(--hf-h, 242px); } to { min-height: 82vh; } }
+  @keyframes h-bgpos { from { background-position: 50% 100%; } to { background-position: var(--focal, 50% 50%); } }
+  @keyframes h-in { 0%, 65% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }
 </style>
+
+<script>
+  // home → list move (Sergei 02/11): a note that lives 10 s, read once by the list page.
+  // Desktop only; nothing is sent anywhere and the URL stays clean (no ?from=home).
+  {
+    const listPath = document.getElementById('main')?.dataset.listPath ?? '';
+    const desk = window.matchMedia('(min-width: 1024px)');
+    const note = (href: string | null) => {
+      if (!desk.matches || !href || !listPath) return;
+      try {
+        const u = new URL(href, location.href);
+        if (!(u.origin === location.origin && decodeURI(u.pathname).startsWith(decodeURI(listPath)))) return;
+        // the list starts from this exact frame: the hero's height on screen, its photo and focal point
+        const hero = document.querySelector<HTMLElement>('.hero');
+        const img = hero?.querySelector<HTMLImageElement>('.hero__bg img');
+        const r = hero?.getBoundingClientRect();
+        const n: Record<string, unknown> = { t: Date.now() };
+        if (r && img && r.top > -40 && r.bottom > 0) {
+          n.h = Math.round(r.bottom); n.img = img.currentSrc || img.src; n.pos = getComputedStyle(img).objectPosition;
+        }
+        localStorage.setItem('hpFromHome', JSON.stringify(n));
+      } catch { /* storage off */ }
+    };
+    document.addEventListener('click', (e) => note((e.target as Element | null)?.closest?.('a[href]')?.getAttribute('href') ?? null), true);
+    document.addEventListener('submit', (e) => { const f = e.target as HTMLFormElement; note(f.getAttribute('action') || location.href); }, true);
+  }
+</script>
 
 <script>
   // ═══════════════════════════════════════════════════════════════════════

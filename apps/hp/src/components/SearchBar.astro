@@ -42,6 +42,7 @@ const PRICES = [
 ];
 // Το πρότυπο της διεύθυνσης ακινήτου — ο κωδικός μπαίνει στη θέση του `0`.
 const idTemplate = propertyUrl(lang, '0');
+import { ui } from '../lib/listing';
 ---
 <div class="searchwrap">
 <form class="search" action={listUrl(lang)} method="get" role="search"
@@ -89,6 +90,15 @@ const idTemplate = propertyUrl(lang, '0');
     </button>
   </div>
 </form>
+{/* list → home move: a still copy of the list's filter row, cross-faded into this bar while the photo grows */}
+<div class="sghost" aria-hidden="true">
+  {[ui(lang, 'muni'), ui(lang, 'type'), t(lang, 'list.price'), ui(lang, 'beds'), ui(lang, 'seaLabel'), t(lang, 'list.size')].map((l) => (
+    <span class="sghost__c">{l}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9l6 6 6-6" /></svg></span>
+  ))}
+  <span class="sghost__c sghost__c--n"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 4.5h12M4.5 8h7M6.8 11.5h2.4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" /></svg>{t(lang, 'search.filters')}</span>
+  <span class="sghost__c sghost__c--n sghost__c--id"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>{t(lang, 'search.id_ph')}</span>
+  <span class="sghost__map"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></svg></span>
+</div>
 </div>
 
 <script>
@@ -389,4 +399,22 @@ const idTemplate = propertyUrl(lang, '0');
     .search__more:hover .ico, .search__id:hover .ico { color: var(--ink); }
     .search__more .ico { color: var(--faint); }
   }
+
+  /* ── list → home move (Sergei 02/11): the list's row fades out into this bar inside the motion ── */
+  .sghost { display: none; }
+  :global(html.hp-hfrom) .sghost {
+    display: flex; position: absolute; z-index: 2; top: 0; left: var(--gut); right: var(--gut); height: calc(var(--bar) + 2px);
+    box-sizing: border-box; background: var(--paper); border: 1px solid var(--line); pointer-events: none;
+    animation: h-ghost 0.95s ease both;
+  }
+  :global(html.hp-hfrom) .search { animation: h-bar 0.95s ease both; }
+  .sghost__c { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 15px; color: var(--muted); white-space: nowrap; }
+  .sghost__c + .sghost__c { border-inline-start: 1px solid var(--line); }
+  .sghost__c svg { color: var(--faint); flex: none; }
+  .sghost__c--n { flex: none; padding: 0 18px; font-size: 13px; }
+  .sghost__c--id { width: 170px; justify-content: flex-start; }
+  .sghost__map { flex: none; width: 64px; display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--gold-dk-text); }
+  /* mirrored timing of the home → list move (there 15–55 %, here 45–85 %) */
+  @keyframes h-ghost { 0%, 45% { opacity: 1; } 85%, 100% { opacity: 0; } }
+  @keyframes h-bar { 0%, 45% { opacity: 0; } 85%, 100% { opacity: 1; } }
 </style>

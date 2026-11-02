@@ -1,0 +1,505 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// The sign-in POPUP on desktop (#104, design approved by George 2026-11-02).
+//
+// Loaded by George's popup (LoginDialog.astro) as /login?embed=1&pop=1 when the window is at
+// least 1024 px wide. Phones and the plain /login page keep LoginPage.astro, untouched.
+//
+// Step order (Sergei's decision) and the API call behind each step — the CRM's API is the
+// same one LoginPage uses, nothing new on the server:
+//   1  first name, surname, mobile (+ consent)   → nothing sent yet, checked in the browser
+//   2  email                                     → POST /api/auth/request {identifier: email}
+//      (an email identifier always gets its code BY EMAIL — CRM requestMemberCode/issue)
+//   3  the 6 digits                              → POST /api/auth/verify  {identifier, code}
+//      then only what the CRM says is missing (`needs`) → POST /api/auth/complete
+//      {name, surname, phone}: the name is saved at once; a NEW phone gets an SMS code …
+//   3b … which is confirmed here                 → POST /api/auth/complete {step:'verify', code}
+//   4  Welcome → Continue closes the popup; the page reloads as a member.
+//
+// 🔒 Why the names and the mobile are sent only AFTER the code: the CRM accepts missing details
+//    only from a signed-in member (complete.ts — account takeover otherwise), and a new phone
+//    is verified on its own. Nothing typed in step 1 is written for an account that already
+//    has it: we send only the fields in `needs`.
+// «Continue with Google»: there is no Google sign-in in the CRM's site API, so the button is
+// behind GOOGLE (off) and is not rendered.
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import { privacyPath } from '../lib/legal';
+import { t, T, type Lang } from '../lib/i18n';
+import { company } from '../lib/company';
+import { brand } from '../brand/index';
+import { DIAL, flag } from '../lib/callback';
+import { pui } from '../lib/property';
+import MARK from './_mark_paths.json';
+
+interface Props { lang: Lang; next?: string }
+const { lang, next = '/' } = Astro.props;
+const co = await company();
+// Same rule as LoginPage: the return target never leaves our site.
+const safeNext = /^\/(?!\/)/.test(next) ? next : '/';
+const GOOGLE = false;   // no Google sign-in in the API — see the note at the top
+
+const regionName = (() => {
+  try { const d = new Intl.DisplayNames([lang], { type: 'region' }); return (cc: string) => d.of(cc) ?? cc; }
+  catch { return (cc: string) => cc; }
+})();
+const dial = DIAL.map((d) => ({ ...d, name: regionName(d.cc), flag: flag(d.cc) }));
+
+const raw = (k: string): string => T[lang]?.[k] ?? T.el[k] ?? k;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const agree = t(lang, 'auth.agree', {
+  terms: `<a href="/en/terms-of-services" target="_blank">${esc(t(lang, 'auth.terms_link'))}</a>`,
+  privacy: `<a href="${privacyPath(lang)}" target="_blank">${esc(t(lang, 'auth.privacy_link'))}</a>`,
+});
+const un = [1, 2, 3].map((i) => t(lang, `auth.un${i}`, { b: `<b>${esc(t(lang, `auth.un${i}_b`))}</b>` }));
+const JS_T = {
+  cont: t(lang, 'auth.continue'), sending: t(lang, 'auth.sending'), checking: t(lang, 'auth.checking'),
+  verify: t(lang, 'auth.verify'),
+  sent: raw('auth.sent'), sent_hint: raw('auth.sent_hint'), sent2: raw('auth.sent2'), sent2_hint: raw('auth.sent2_hint'),
+  ch_sms: t(lang, 'auth.ch.sms'), ch_email: t(lang, 'auth.ch.email'), ch_whatsapp: t(lang, 'auth.ch.whatsapp'),
+  ch_new_sms: t(lang, 'auth.ch.new_sms'), ch_new_email: t(lang, 'auth.ch.new_email'),
+  in_time: raw('auth.in_time'),
+  e_email: t(lang, 'auth.e.email'), e_phone: t(lang, 'auth.e.phone'), e_gr_mobile: t(lang, 'auth.e.gr_mobile'),
+  e_code_len: t(lang, 'auth.e.code_len'), e_code_bad: t(lang, 'auth.e.code_bad'),
+  e_first: t(lang, 'auth.e.first'), e_last: t(lang, 'auth.e.last'), e_save: t(lang, 'auth.e.save'),
+  e_resend: t(lang, 'auth.e.resend'), e_generic: t(lang, 'auth.e.generic'),
+  e_signup_closed: t(lang, 'auth.e.signup_closed'), e_closed: t(lang, 'auth.e.closed'),
+  e_not_mobile: t(lang, 'auth.e.not_mobile'), e_too_many: raw('auth.e.too_many'),
+  e_suspended: t(lang, 'auth.e.suspended'), e_code_left: raw('auth.e.code_left'),
+  e_need_email: t(lang, 'auth.e.need_email'), e_expired: t(lang, 'auth.e.expired'),
+  e_fill: t(lang, 'auth.e.fill'), e_offline: t(lang, 'sb.e.offline'),
+};
+---
+<Base lang={lang} title={t(lang, 'auth.meta_title')} noindex embed description={t(lang, 'auth.meta_desc')}>
+  <main id="main" class="lp" data-next={safeNext} data-lang={lang} data-i18n={JSON.stringify(JS_T)}>
+    <div class="lp__body">
+      <div class="lp__in">
+        <div class="lp__hd">
+          <div class="lp__mk" id="mk" aria-hidden="true">
+            <svg viewBox={MARK.viewBox} aria-hidden="true" focusable="false">
+              {MARK.paths.map((d) => <path fill-rule="evenodd" clip-rule="evenodd" d={d} fill="currentColor" />)}
+            </svg>
+          </div>
+          <p class="lp__lbl">{brand.name}</p>
+          <h1 class="lp__h1">{t(lang, 'auth.h1')}</h1>
+          <p class="lp__say">{t(lang, 'auth.sub')}</p>
+        </div>
+
+        <div class="stps">
+          {/* 1 — name, surname, mobile, consent */}
+          <div class="stp stp--first on" id="p0">
+            <form id="f0" novalidate>
+              <div class="lp__2">
+                <input class="fi" id="fn" autocomplete="given-name" maxlength="40" placeholder={t(lang, 'auth.first')} aria-label={t(lang, 'auth.first')} />
+                <input class="fi" id="sn" autocomplete="family-name" maxlength="40" placeholder={t(lang, 'auth.last')} aria-label={t(lang, 'auth.last')} />
+              </div>
+              {/* The phone field as on the property page: country code with search (lib/dial.ts). */}
+              <div class="ph" id="ph-w">
+                <button type="button" class="dial" aria-haspopup="listbox" aria-expanded="false" aria-controls="lp-dial" aria-label={pui(lang, 'cbCountry')}>
+                  <span data-dial-l>🇬🇷 +30</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+                </button>
+                <input id="ph" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="20"
+                       placeholder={t(lang, 'auth.phone_l')} aria-label={t(lang, 'auth.phone_l')} />
+                <div class="dial__pop" id="lp-dial" hidden>
+                  <div class="dial__s">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                    <input type="search" data-dial-q placeholder={pui(lang, 'dialSearch')} aria-label={pui(lang, 'dialSearch')} autocomplete="off" />
+                  </div>
+                  <div class="dial__l" role="listbox" aria-label={pui(lang, 'cbCountry')}>
+                    {dial.map((d) => (
+                      <button type="button" role="option" aria-selected="false" data-cc={d.cc} data-code={d.code} data-q={`${d.name} ${d.cc} ${d.code}`.toLowerCase()}>
+                        <span class="dial__f">{d.flag}</span><span class="dial__n">{d.name}</span><span class="dial__c"><bdi dir="ltr">+{d.code}</bdi></span>
+                      </button>
+                    ))}
+                    <p class="dial__none" hidden>{pui(lang, 'dialNone')}</p>
+                  </div>
+                </div>
+              </div>
+              <p class="fine">{t(lang, 'auth.pop_why')}</p>
+              {/* Consent (Sergei 02/11): Continue works only when it is ticked. */}
+              <label class="agr"><input type="checkbox" id="agree" /><span class="agr-b" aria-hidden="true"></span><span set:html={agree}></span></label>
+              <p class="err" id="e0" role="alert" aria-live="assertive" hidden></p>
+              <button class="btn" type="submit" id="go0" disabled aria-disabled="true">{t(lang, 'auth.continue')}</button>
+              {/* Holds the place of «Back» so Continue sits where it sits on step 2. */}
+              <p class="fine fine--start" aria-hidden="true" style="visibility:hidden"><span class="bkl">← {t(lang, 'auth.back')}</span></p>
+            </form>
+          </div>
+
+          {/* 2 — email */}
+          <div class="stp stp--email off" id="p1" aria-hidden="true">
+            <h2 class="h2">{t(lang, 'auth.email_h')}</h2>
+            <p class="say">{t(lang, 'auth.by_email_s')}</p>
+            {GOOGLE && <button type="button" class="gbtn" id="google">Google</button>}
+            <form id="f1" novalidate>
+              <input class="fi" id="em" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="120"
+                     placeholder={t(lang, 'auth.email_l')} aria-label={t(lang, 'auth.email_l')} />
+              <p class="err" id="e1" role="alert" aria-live="assertive" hidden></p>
+              <button class="btn" type="submit">{t(lang, 'auth.continue')}</button>
+              <p class="fine fine--start"><button type="button" class="bkl" id="back1">← {t(lang, 'auth.back')}</button></p>
+            </form>
+          </div>
+
+          {/* 3 — the code */}
+          <div class="stp off" id="p2" aria-hidden="true">
+            <form id="f2" novalidate>
+              <h2 class="h2">{t(lang, 'auth.code_h')}</h2>
+              <p class="say" id="sent"></p>
+              <input class="fi fi--code" id="cd" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="7"
+                     placeholder="······" aria-label={t(lang, 'auth.code_l')} aria-describedby="sent" />
+              <p class="err" id="e2" role="alert" aria-live="assertive" hidden></p>
+              <button class="btn" type="submit">{t(lang, 'auth.verify')}</button>
+              <p class="fine">
+                {t(lang, 'auth.not_arrived')} <button type="button" class="lnk" id="again">{t(lang, 'auth.resend')}</button><span id="wait"></span>
+                · <button type="button" class="lnk" id="change">{t(lang, 'auth.change')}</button>
+              </p>
+            </form>
+          </div>
+
+          {/* 3b — the new mobile's code (only when the account had no phone) */}
+          <div class="stp off" id="p3" aria-hidden="true">
+            <form id="f3" novalidate>
+              <h2 class="h2">{t(lang, 'auth.confirm_h')}</h2>
+              <p class="say" id="sent2"></p>
+              <input class="fi fi--code" id="cd2" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="7"
+                     placeholder="······" aria-label={t(lang, 'auth.code_l')} aria-describedby="sent2" />
+              <p class="err" id="e3" role="alert" aria-live="assertive" hidden></p>
+              <button class="btn" type="submit">{t(lang, 'auth.verify')}</button>
+              <p class="fine"><button type="button" class="lnk" id="later">{t(lang, 'auth.not_now')}</button></p>
+            </form>
+          </div>
+
+          {/* 4 — welcome */}
+          <div class="stp off" id="p4" aria-hidden="true">
+            <h2 class="h2">{t(lang, 'auth.done_h')}</h2>
+            <p class="say">{t(lang, 'auth.done_s')}</p>
+            <p class="err" id="e4" role="alert" aria-live="assertive" hidden></p>
+            <button class="btn" type="button" id="go">{t(lang, 'auth.continue')}</button>
+          </div>
+        </div>
+
+        <p class="fine lp__foot">{t(lang, 'auth.no_mkt')}<br>{t(lang, 'auth.help')} <a href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a></p>
+      </div>
+    </div>
+
+    {/* Unlock strip: the padlock opens and closes on a loop (Sergei 02/11). */}
+    <div class="un">
+      <svg class="lock" viewBox="0 0 64 72" aria-hidden="true" focusable="false">
+        <path class="shk" d="M18 46V20a14 14 0 0 1 28 0v16" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="butt" />
+        <rect x="6" y="32" width="52" height="38" fill="currentColor" />
+        <g class="khl"><path d="M32 46v10" stroke-width="4" stroke-linecap="square" /><circle cx="32" cy="46" r="4.5" /></g>
+      </svg>
+      <div>
+        <p class="lp__lbl un__l">{t(lang, 'auth.unlock')}</p>
+        <ul aria-label={t(lang, 'auth.unlock')}>
+          {un.map((h) => <li set:html={h}></li>)}
+        </ul>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* The page lives inside the popup's frame; white, no scrollbars (the frame is sized to it). */
+  :global(html), :global(body.embed) { background: var(--paper); }
+  :global(html) { overflow: hidden; scrollbar-width: none; }
+  .lp { display: flex; flex-direction: column; color: var(--ink); }
+  .lp__body { display: flex; justify-content: center; padding: 28px 40px 22px; }
+  .lp__in { width: 100%; max-width: 420px; position: relative; }
+
+  /* Header floats above the steps; each step reserves the room the header takes on it, so the
+     popup keeps one size and nothing jumps (Sergei 02/11). */
+  .lp__hd { position: absolute; top: 0; left: 0; right: 0; text-align: center; pointer-events: none; }
+  .lp__mk { display: flex; justify-content: center; align-items: flex-end; height: 124px; margin: 0 0 14px; color: var(--ink);
+            transition: height .6s cubic-bezier(.4, 0, .2, 1); }
+  .lp__mk svg { height: 100%; width: auto; display: block; overflow: visible; }
+  .lp.is-small .lp__mk { height: 44px; }
+  .lp__lbl { margin: 0; font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); line-height: 16px; height: 16px; }
+  .lp__h1 { margin: 6px 0 2px; font-size: 30px; font-weight: 300; line-height: 36px; height: 36px; letter-spacing: -.016em; }
+  .lp__say { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 20px; height: 20px; }
+
+  .stps { display: grid; }
+  .stp { grid-area: 1 / 1; min-width: 0; padding-top: 152px; display: flex; flex-direction: column; }
+  .stp--first { padding-top: 232px; }
+  .stp--email { padding-top: 176px; }
+  .stp.off { visibility: hidden; pointer-events: none; }
+  .stp.on { animation: stepfade .35s ease both; }
+  @keyframes stepfade { from { opacity: 0; } to { opacity: 1; } }
+  /* Continue at the same place on steps 1 and 2: the form fills the step, the button goes down. */
+  .stp > form { flex: 1; display: flex; flex-direction: column; }
+  .stp > form > .btn { margin-top: auto; }
+  .stp > form > :global(*:has(+ .btn)), .stp > form > :global(*:has(+ .err + .btn)) { margin-bottom: 12px; }
+
+  .h2, .say, .fine, .stp { text-align: center; }
+  .h2 { font-size: 22px; font-weight: 300; margin: 0 0 6px; line-height: 1.2; }
+  .say { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; }
+  .lp__2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  /* 16 px: below that, iPhone Safari zooms the page in. */
+  .fi { width: 100%; min-height: 46px; box-sizing: border-box; padding: 0 14px; border: 1px solid var(--line); background: var(--paper);
+        color: var(--ink); font: inherit; font-size: 16px; border-radius: var(--r); text-align: start; }
+  .fi::placeholder, .ph input::placeholder { color: var(--faint); opacity: 1; }
+  .fi:focus-visible { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(3, 109, 172, .16); }
+  .fi--code { font-size: 26px; letter-spacing: .34em; text-align: center; font-variant-numeric: tabular-nums; }
+
+  /* Phone with the country-code picker — the property page's look (#103). */
+  .ph { position: relative; display: flex; height: 46px; margin-top: 8px; border: 1px solid var(--line); background: var(--paper); box-sizing: border-box; }
+  .ph:focus-within { border-color: var(--ink); }
+  .ph #ph { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0 11px; font: inherit; font-size: 16px; color: var(--ink); background: transparent; outline: none; }
+  .dial { display: flex; flex: none; width: 88px; height: 100%; align-items: center; justify-content: space-between; gap: 4px; padding: 0 8px;
+          background: transparent; border: 0; border-inline-end: 1px solid var(--line); font: inherit; font-size: 13px; color: var(--ink); cursor: pointer; }
+  .dial svg { width: 10px; height: 10px; flex: none; }
+  .dial:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .dial__pop[hidden] { display: none; }
+  .dial__pop { position: absolute; left: -1px; right: -1px; top: calc(100% + 4px); z-index: 40; background: var(--paper);
+               border: 1px solid rgba(14, 18, 20, .16); box-shadow: 0 12px 28px rgba(10, 14, 16, .14); }
+  .dial__s { display: flex; align-items: center; gap: 8px; padding: 0 10px; height: 38px; border-bottom: 1px solid rgba(14, 18, 20, .10); }
+  .dial__s svg { width: 15px; height: 15px; color: var(--muted); flex: none; }
+  .dial__s input { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0; outline: none; font: inherit; font-size: 14px; background: transparent; color: var(--ink); }
+  .dial__l { max-height: 190px; overflow-y: auto; }
+  .dial__l button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--paper); border: 0;
+                    font: inherit; font-size: 13.5px; color: var(--ink); text-align: start; cursor: pointer; }
+  .dial__l button[hidden] { display: none; }
+  .dial__l button:hover, .dial__l button[aria-selected='true'] { background: var(--paper-2); }
+  .dial__f { width: 22px; }
+  .dial__n { flex: 1; }
+  .dial__c { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .dial__none { margin: 0; padding: 10px; font-size: 13px; color: var(--muted); }
+
+  /* Consent checkbox */
+  .agr { position: relative; display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; font-size: 12.5px; line-height: 1.5;
+         color: var(--ink-2); cursor: pointer; text-align: start; }
+  .agr input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .agr-b { flex: none; width: 18px; height: 18px; margin-top: 1px; box-sizing: border-box; border: 1px solid rgba(14, 18, 20, .35); background: var(--paper);
+           display: flex; align-items: center; justify-content: center; transition: border-color .15s ease, background .15s ease; }
+  .agr:hover .agr-b { border-color: var(--ink); }
+  .agr input:checked + .agr-b { background: var(--ink); border-color: var(--ink); }
+  .agr input:checked + .agr-b::after { content: ""; width: 9px; height: 5px; border-left: 1.6px solid var(--paper); border-bottom: 1.6px solid var(--paper);
+                                      transform: translateY(-1px) rotate(-45deg); }
+  .agr input:focus-visible + .agr-b { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .agr :global(a) { color: var(--ink); }
+
+  /* Gilded-edge button (the site's pattern); the gradient turns once on hover. */
+  @property --gilda { syntax: '<angle>'; inherits: false; initial-value: 315deg; }
+  @keyframes gturn { from { --gilda: 315deg; } to { --gilda: 675deg; } }
+  .btn { width: 100%; min-height: 44px; margin-top: 12px; background: transparent; border: 1px solid var(--gold);
+         border-image: conic-gradient(from var(--gilda), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
+         color: var(--gold-lo); font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; cursor: pointer;
+         transition: background .2s ease, color .2s ease; }
+  .btn:hover { background: var(--paper-2); color: var(--gold); animation: gturn 1.1s ease-in-out 1; }
+  .btn:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; animation: none; background: transparent; }
+  @media (prefers-reduced-motion: reduce) { .btn:hover { animation: none; } }
+
+  .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--ink-2); }
+  .lnk:disabled { cursor: default; opacity: .6; }
+  .lnk:focus-visible, .bkl:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .bkl { all: unset; cursor: pointer; font-size: 15px; color: var(--muted); transition: color .15s ease; }
+  .bkl:hover { color: var(--ink); }
+  .fine { font-size: 11.5px; line-height: 1.5; color: var(--faint); margin: 10px 0 0; }
+  .fine--start { text-align: start; }
+  .fine a { color: var(--ink-2); }
+  .lp__foot { margin-top: 16px; }
+  .err { margin: 10px 0 0; padding: 8px 10px; border: 1px solid #A3312B; color: #A3312B; font-size: 12.5px; text-align: start; }
+  [hidden] { display: none !important; }
+
+  /* Beige strip: the padlock left, «Unlock» and the three lines right (Sergei 02/11). */
+  .un { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 16px; padding: 14px 36px 16px;
+        background: var(--paper-2); border-top: 1px solid var(--line-soft); text-align: start; }
+  .un ul { list-style: none; margin: 0; padding: 0; }
+  .un li { font-size: 13px; line-height: 1.5; color: var(--ink-2); padding: 1px 0; }
+  .un li :global(b) { color: var(--ink); font-weight: 600; }
+  .un__l { margin: 0 0 4px; }
+  .lock { justify-self: center; margin-inline: 6px 18px; width: 66px; height: auto; display: block; overflow: visible; color: var(--paper); }
+  .khl { stroke: var(--paper-3); fill: var(--paper-3); }
+  /* One 4 s timeline: closed → key turns right → key returns while the shackle lifts → open → closed. */
+  .shk { animation: shk 4s ease-in-out infinite; }
+  @keyframes shk { 0%, 28% { transform: translateY(0); } 36%, 75% { transform: translateY(-11px); } 83%, 100% { transform: translateY(0); } }
+  .khl { transform-box: view-box; transform-origin: 32px 46px; animation: khl 4s ease-in-out infinite; }
+  @keyframes khl { 0%, 20% { transform: rotate(0); } 28% { transform: rotate(45deg); } 36%, 100% { transform: rotate(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .lp__mk { transition: none; }
+    .khl { animation: none; }
+    .shk { animation: none; transform: translateY(-11px); }
+  }
+</style>
+
+<script>
+  import { checkPhone } from '../lib/callback';
+  import { initDial, guessCc } from '../lib/dial';
+
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const root = document.querySelector('.lp') as HTMLElement;
+  const L: Record<string, string> = JSON.parse(root.dataset.i18n || '{}');
+  const fill = (s: string, vars: Record<string, string | number> = {}) => {
+    for (const [k, v] of Object.entries(vars)) s = s.split(`{${k}}`).join(String(v));
+    return s;
+  };
+  const fail = (id: string, msg: string) => { const e = $(id); e.textContent = msg; e.hidden = false; };
+  const clear = (id: string) => { $(id).hidden = true; };
+  // Site error → `code` → translated text; a CRM `message` (Greek) only on Greek pages — as LoginPage.
+  const said = (r: { code?: string; message?: string; left?: number; retryAfterSec?: number }, fallback: string) =>
+    (r?.code && L[`e_${r.code}`] && fill(L[`e_${r.code}`], { n: r.left ?? r.retryAfterSec ?? 60 }))
+    || (document.documentElement.lang.startsWith('el') ? r?.message : '') || fallback;
+  const post = async (u: string, b: unknown) => {
+    try {
+      return await (await fetch(u, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) })).json();
+    } catch { return { ok: false, code: 'offline' }; }
+  };
+
+  // Only our own page may hear us (same origin), as in LoginPage.
+  const EMBED = window.parent !== window;
+  const tell = (m: Record<string, unknown>) => { if (EMBED) window.parent.postMessage(m, location.origin); };
+  const tellH = () => tell({ type: 'hp-login-h', h: Math.ceil(document.documentElement.scrollHeight) });
+  if ('ResizeObserver' in window) new ResizeObserver(tellH).observe(document.body);
+  tellH();
+
+  // ── Steps: all stacked in one grid cell; only the current one is visible.
+  const steps = ['p0', 'p1', 'p2', 'p3', 'p4'].map((id) => $(id));
+  const show = (id: string, focus?: string) => {
+    steps.forEach((el) => {
+      const on = el.id === id;
+      el.classList.toggle('on', on); el.classList.toggle('off', !on);
+      el.setAttribute('aria-hidden', String(!on));
+      el.toggleAttribute('inert', !on);
+    });
+    root.classList.toggle('is-small', id !== 'p0');
+    if (focus) ($(focus) as HTMLInputElement).focus({ preventScroll: true });
+  };
+  steps.slice(1).forEach((el) => el.toggleAttribute('inert', true));
+
+  // Esc closes the popup (focus is inside this frame, so the dialog does not see the key).
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !e.defaultPrevented) tell({ type: 'hp-login-close' }); });
+
+  // ── 1: name, surname, mobile, consent
+  const lang = root.dataset.lang || 'en';
+  const dial = initDial($('ph-w'), guessCc(lang), () => $('ph').focus());
+  const agree = $('agree') as HTMLInputElement;
+  const go0 = $('go0') as HTMLButtonElement;
+  const syncAgree = () => { go0.disabled = !agree.checked; go0.setAttribute('aria-disabled', String(!agree.checked)); };
+  agree.addEventListener('change', syncAgree); syncAgree();
+
+  let first = '', last = '', phone = '', email = '', needs: string[] = [], busy = false;
+  ($('f0') as HTMLFormElement).addEventListener('submit', (ev) => {
+    ev.preventDefault(); clear('e0');
+    if (!agree.checked) return;
+    first = ($('fn') as HTMLInputElement).value.trim();
+    last = ($('sn') as HTMLInputElement).value.trim();
+    if (first.length < 2) return fail('e0', L.e_first);
+    if (last.length < 2) return fail('e0', L.e_last);
+    const p = checkPhone(dial?.code() ?? '30', ($('ph') as HTMLInputElement).value);
+    // Mobiles only (George 6/8): a Greek number must be 69…, checked before anything is sent.
+    if (!p.ok) return fail('e0', p.code === 'gr' ? L.e_gr_mobile : L.e_phone);
+    if (p.e164.startsWith('+30') && !/^\+3069\d{8}$/.test(p.e164)) return fail('e0', L.e_gr_mobile);
+    phone = p.e164;
+    show('p1', 'em');
+  });
+  $('back1').addEventListener('click', () => { clear('e1'); show('p0', 'fn'); });
+
+  // ── 2: email → code
+  ($('f1') as HTMLFormElement).addEventListener('submit', async (ev) => {
+    ev.preventDefault(); clear('e1');
+    const v = ($('em') as HTMLInputElement).value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)) return fail('e1', L.e_email);
+    email = v;
+    await send('f1', 'e1');
+  });
+
+  async function send(formId: string, errId: string) {
+    if (busy) return; busy = true;
+    const btn = ($(formId) as HTMLFormElement).querySelector('button[type=submit]') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = L.sending;
+    const r = await post('/api/auth/request', { identifier: email });
+    busy = false; btn.disabled = false; btn.textContent = formId === 'f1' ? L.cont : L.verify;
+    if (!r.ok) {
+      const m: Record<string, string> = {
+        signup_closed: L.e_signup_closed, closed: L.e_closed, bad_email: L.e_email, bad_phone: L.e_phone,
+        not_mobile: L.e_not_mobile, too_many: fill(L.e_too_many, { n: r.retryAfterSec ?? 60 }),
+      };
+      fail(errId, m[r.reason] ?? L.e_generic);
+      return false;
+    }
+    const where = r.channel === 'whatsapp' ? L.ch_whatsapp : r.channel === 'sms' ? L.ch_sms : L.ch_email;
+    $('sent').textContent = r.hint ? fill(L.sent_hint, { where, hint: r.hint }) : fill(L.sent, { where });
+    ($('cd') as HTMLInputElement).value = '';
+    show('p2', 'cd'); countdown();
+    return true;
+  }
+
+  // ── 3: the code → signed in; then only what is missing
+  ($('f2') as HTMLFormElement).addEventListener('submit', async (ev) => {
+    ev.preventDefault(); clear('e2');
+    const code = ($('cd') as HTMLInputElement).value.replace(/\D/g, '');
+    if (code.length !== 6) return fail('e2', L.e_code_len);
+    if (busy) return; busy = true;
+    const btn = ($('f2') as HTMLFormElement).querySelector('button[type=submit]') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = L.checking;
+    const r = await post('/api/auth/verify', { identifier: email, code });
+    busy = false; btn.disabled = false; btn.textContent = L.verify;
+    if (!r.ok) return fail('e2', said(r, r.needEmail ? L.e_need_email : L.e_code_bad));
+    clearInterval(timer);
+    // The member cookie is set: if the popup is closed from here on, the page reloads as a member.
+    tell({ type: 'hp-login-ok' });
+    needs = Array.isArray(r.needs) ? r.needs : [];
+    await complete();
+  });
+
+  async function complete() {
+    const body: Record<string, string> = { step: 'send' };
+    if (needs.includes('name')) { body.name = first; body.surname = last; }
+    if (needs.includes('phone')) body.phone = phone;
+    if (Object.keys(body).length === 1) return show('p4', 'go');
+    busy = true;
+    const r = await post('/api/auth/complete', body);
+    busy = false;
+    if (!r.ok) { fail('e4', said(r, L.e_save)); return show('p4', 'go'); }
+    if (r.pending) {
+      const where = r.channel === 'email' ? L.ch_new_email : L.ch_new_sms;
+      $('sent2').textContent = r.hint ? fill(L.sent2_hint, { where, hint: r.hint }) : fill(L.sent2, { where });
+      return show('p3', 'cd2');
+    }
+    show('p4', 'go');
+  }
+
+  // ── 3b: the new mobile's code
+  ($('f3') as HTMLFormElement).addEventListener('submit', async (ev) => {
+    ev.preventDefault(); clear('e3');
+    const code = ($('cd2') as HTMLInputElement).value.replace(/\D/g, '');
+    if (code.length !== 6) return fail('e3', L.e_code_len);
+    if (busy) return; busy = true;
+    const r = await post('/api/auth/complete', { step: 'verify', code });
+    busy = false;
+    if (!r.ok) return fail('e3', said(r, L.e_code_bad));
+    show('p4', 'go');
+  });
+  $('later').addEventListener('click', () => show('p4', 'go'));
+
+  // ── 4: Continue closes the popup; the page behind reloads (or goes to `next`) as a member.
+  $('go').addEventListener('click', () => {
+    const u = new URL(root.dataset.next || '/', location.href);
+    if (EMBED) tell({ type: 'hp-login', next: u.pathname + u.search }); else location.href = u.pathname + u.search;
+  });
+
+  // Links in the popup (terms, privacy) open outside it; the phone link works as it is.
+  document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((a) => { if (!a.href.startsWith('tel:')) a.target = '_blank'; });
+
+  // ── Send again (with a countdown) · Change
+  let timer: number | undefined;
+  function countdown(sec = 45) {
+    const again = $('again') as HTMLButtonElement, wait = $('wait');
+    again.disabled = true;
+    const tick = () => {
+      wait.textContent = sec > 0 ? fill(L.in_time, { s: String(sec).padStart(2, '0') }) : '';
+      if (sec-- <= 0) { clearInterval(timer); again.disabled = false; }
+    };
+    tick(); clearInterval(timer); timer = window.setInterval(tick, 1000);
+  }
+  $('again').addEventListener('click', async () => {
+    clear('e2');
+    const r = await post('/api/auth/request', { identifier: email });
+    if (!r.ok) return fail('e2', L.e_resend);
+    countdown();
+  });
+  $('change').addEventListener('click', () => { clearInterval(timer); clear('e2'); show('p1', 'em'); });
+
+  ($('fn') as HTMLInputElement).focus({ preventScroll: true });
+</script>

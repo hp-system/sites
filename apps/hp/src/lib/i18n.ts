@@ -822,6 +822,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'τα κρυφά ακίνητα',
     'auth.terms': 'Με τη συνέχεια αποδέχεσαι τους Όρους και την Πολιτική Απορρήτου. Δεν στέλνουμε διαφημιστικά χωρίς να το ζητήσεις.',
     'auth.help': 'Χρειάζεσαι βοήθεια;',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'Χρειαζόμαστε το κινητό σου για να επαληθεύσουμε τον λογαριασμό σου.', 'auth.agree': 'Συμφωνώ με τους {terms} και την {privacy}', 'auth.terms_link': 'Όρους Χρήσης', 'auth.privacy_link': 'Πολιτική Απορρήτου', 'auth.email_h': 'Πρόσθεσε το email σου', 'auth.back': 'Πίσω', 'auth.no_mkt': 'Δεν στέλνουμε διαφημιστικά χωρίς να το ζητήσεις.', 'auth.unlock': 'Ξεκλείδωσε', 'auth.un1': '{b} κάθε ακινήτου', 'auth.un1_b': 'Η περιοχή', 'auth.un2': '{b}, σε πλήρη ανάλυση', 'auth.un2_b': 'Όλες οι φωτογραφίες', 'auth.un3': '{b} που δεν δημοσιεύουμε', 'auth.un3_b': 'Τα κρυφά ακίνητα',
     'auth.sending': 'Στέλνουμε…',
     'auth.checking': 'Ελέγχουμε…',
     'auth.sent': 'Τα στείλαμε {where}.',
@@ -1201,6 +1203,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'the hidden properties',
     'auth.terms': 'By continuing you accept the Terms and the Privacy Policy. We send no marketing unless you ask for it.',
     'auth.help': 'Need help?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'We need your mobile number to verify your account.', 'auth.agree': 'I agree to the {terms} and the {privacy}', 'auth.terms_link': 'Terms of Services', 'auth.privacy_link': 'Privacy Policy', 'auth.email_h': 'Add your email', 'auth.back': 'Back', 'auth.no_mkt': 'We send no marketing unless you ask for it.', 'auth.unlock': 'Unlock', 'auth.un1': '{b} of every property', 'auth.un1_b': 'The area', 'auth.un2': '{b}, at full resolution', 'auth.un2_b': 'Every photograph', 'auth.un3': '{b} we do not publish', 'auth.un3_b': 'The hidden properties',
     'auth.sending': 'Sending…',
     'auth.checking': 'Checking…',
     'auth.sent': 'We sent it {where}.',
@@ -1571,6 +1575,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'скритите имоти',
     'auth.terms': 'С продължаването приемате Общите условия и Политиката за поверителност. Не изпращаме рекламни съобщения, освен ако не ги поискате.',
     'auth.help': 'Нуждаете се от помощ?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'Нужен ни е мобилният ви номер, за да потвърдим профила ви.', 'auth.agree': 'Съгласен съм с {terms} и {privacy}', 'auth.terms_link': 'Общите условия', 'auth.privacy_link': 'Политиката за поверителност', 'auth.email_h': 'Добавете имейла си', 'auth.back': 'Назад', 'auth.no_mkt': 'Не изпращаме рекламни съобщения, освен ако не ги поискате.', 'auth.unlock': 'Отключете', 'auth.un1': '{b} на всеки имот', 'auth.un1_b': 'Районът', 'auth.un2': '{b} в пълна резолюция', 'auth.un2_b': 'Всички снимки', 'auth.un3': '{b}, които не публикуваме', 'auth.un3_b': 'Скритите имоти',
     'auth.sending': 'Изпращаме…',
     'auth.checking': 'Проверяваме…',
     'auth.sent': 'Изпратихме го {where}.',
@@ -1941,6 +1947,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'skrivene nekretnine',
     'auth.terms': 'Nastavkom prihvatate Uslove i Politiku privatnosti. Ne šaljemo reklamne poruke ako ih ne zatražite.',
     'auth.help': 'Potrebna vam je pomoć?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'Potreban nam je vaš broj mobilnog telefona da bismo potvrdili vaš nalog.', 'auth.agree': 'Slažem se sa {terms} i {privacy}', 'auth.terms_link': 'Uslovima korišćenja', 'auth.privacy_link': 'Politikom privatnosti', 'auth.email_h': 'Dodajte svoj imejl', 'auth.back': 'Nazad', 'auth.no_mkt': 'Ne šaljemo reklamne poruke ako ih ne zatražite.', 'auth.unlock': 'Otključajte', 'auth.un1': '{b} svake nekretnine', 'auth.un1_b': 'Lokacija', 'auth.un2': '{b} u punoj rezoluciji', 'auth.un2_b': 'Sve fotografije', 'auth.un3': '{b} koje ne objavljujemo', 'auth.un3_b': 'Skrivene nekretnine',
     'auth.sending': 'Šaljemo…',
     'auth.checking': 'Proveravamo…',
     'auth.sent': 'Poslali smo ga {where}.',
@@ -2311,6 +2319,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'die verborgenen Immobilien',
     'auth.terms': 'Mit dem Fortfahren akzeptieren Sie die Nutzungsbedingungen und die Datenschutzerklärung. Wir senden keine Werbung, sofern Sie sie nicht wünschen.',
     'auth.help': 'Brauchen Sie Hilfe?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'Wir benötigen Ihre Mobilnummer, um Ihr Konto zu bestätigen.', 'auth.agree': 'Ich stimme den {terms} und der {privacy} zu', 'auth.terms_link': 'Nutzungsbedingungen', 'auth.privacy_link': 'Datenschutzerklärung', 'auth.email_h': 'Fügen Sie Ihre E-Mail hinzu', 'auth.back': 'Zurück', 'auth.no_mkt': 'Wir senden keine Werbung, sofern Sie sie nicht wünschen.', 'auth.unlock': 'Freischalten', 'auth.un1': '{b} jeder Immobilie', 'auth.un1_b': 'Die Lage', 'auth.un2': '{b} in voller Auflösung', 'auth.un2_b': 'Alle Fotos', 'auth.un3': '{b}, die wir nicht veröffentlichen', 'auth.un3_b': 'Die verborgenen Immobilien',
     'auth.sending': 'Wird gesendet…',
     'auth.checking': 'Wird geprüft…',
     'auth.sent': 'Wir haben ihn {where} gesendet.',
@@ -2681,6 +2691,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'proprietățile ascunse',
     'auth.terms': 'Continuând, acceptați Termenii și Politica de confidențialitate. Nu trimitem mesaje publicitare dacă nu le cereți.',
     'auth.help': 'Aveți nevoie de ajutor?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'Avem nevoie de numărul dumneavoastră de mobil pentru a vă verifica contul.', 'auth.agree': 'Sunt de acord cu {terms} și cu {privacy}', 'auth.terms_link': 'Termenii și condițiile', 'auth.privacy_link': 'Politica de confidențialitate', 'auth.email_h': 'Adăugați adresa de e-mail', 'auth.back': 'Înapoi', 'auth.no_mkt': 'Nu trimitem mesaje publicitare dacă nu le cereți.', 'auth.unlock': 'Deblocați', 'auth.un1': '{b} fiecărei proprietăți', 'auth.un1_b': 'Zona', 'auth.un2': '{b}, la rezoluție completă', 'auth.un2_b': 'Toate fotografiile', 'auth.un3': '{b} pe care nu le publicăm', 'auth.un3_b': 'Proprietățile ascunse',
     'auth.sending': 'Trimitem…',
     'auth.checking': 'Verificăm…',
     'auth.sent': 'L-am trimis {where}.',
@@ -3052,6 +3064,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'gizli mülkleri',
     'auth.terms': 'Devam ederek Koşulları ve Gizlilik Politikasını kabul edersiniz. Siz istemedikçe tanıtım mesajı göndermiyoruz.',
     'auth.help': 'Yardıma mı ihtiyacınız var?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'Hesabınızı doğrulamak için cep telefonu numaranıza ihtiyacımız var.', 'auth.agree': '{terms} ve {privacy} kabul ediyorum', 'auth.terms_link': 'Hizmet Koşullarını', 'auth.privacy_link': 'Gizlilik Politikasını', 'auth.email_h': 'E-posta adresinizi ekleyin', 'auth.back': 'Geri', 'auth.no_mkt': 'Siz istemedikçe tanıtım mesajı göndermiyoruz.', 'auth.unlock': 'Kilidi açın', 'auth.un1': 'Her mülkün {b}', 'auth.un1_b': 'bölgesi', 'auth.un2': 'Tam çözünürlükte {b}', 'auth.un2_b': 'tüm fotoğraflar', 'auth.un3': 'Yayımlamadığımız {b}', 'auth.un3_b': 'gizli mülkler',
     'auth.sending': 'Gönderiyoruz…',
     'auth.checking': 'Kontrol ediyoruz…',
     'auth.sent': '{where} gönderdik.',
@@ -3423,6 +3437,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'הנכסים החסויים',
     'auth.terms': 'בהמשך אתם מאשרים את התנאים ואת מדיניות הפרטיות. איננו שולחים דיוור פרסומי אלא אם ביקשתם.',
     'auth.help': 'צריכים עזרה?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'אנחנו זקוקים למספר הנייד שלכם כדי לאמת את החשבון.', 'auth.agree': 'אני מאשר/ת את {terms} ואת {privacy}', 'auth.terms_link': 'תנאי השימוש', 'auth.privacy_link': 'מדיניות הפרטיות', 'auth.email_h': 'הוסיפו את האימייל שלכם', 'auth.back': 'חזרה', 'auth.no_mkt': 'איננו שולחים דיוור פרסומי אלא אם ביקשתם.', 'auth.unlock': 'פתחו', 'auth.un1': '{b} של כל נכס', 'auth.un1_b': 'האזור', 'auth.un2': '{b} ברזולוציה מלאה', 'auth.un2_b': 'כל התמונות', 'auth.un3': '{b} שאיננו מפרסמים', 'auth.un3_b': 'הנכסים החסויים',
     'auth.sending': 'שולחים…',
     'auth.checking': 'בודקים…',
     'auth.sent': 'שלחנו {where}.',
@@ -3794,6 +3810,8 @@ const U: Record<Lang, Dict> = {
     'auth.gain3_b': 'скрытые объекты',
     'auth.terms': 'Продолжая, вы принимаете Условия и Политику конфиденциальности. Мы не присылаем рекламу, если вы её не запросили.',
     'auth.help': 'Нужна помощь?',
+    // Desktop sign-in popup (#104), approved by George 2026-11-02.
+    'auth.pop_why': 'Нам нужен ваш номер мобильного, чтобы подтвердить аккаунт.', 'auth.agree': 'Я принимаю {terms} и {privacy}', 'auth.terms_link': 'Условия использования', 'auth.privacy_link': 'Политику конфиденциальности', 'auth.email_h': 'Добавьте вашу почту', 'auth.back': 'Назад', 'auth.no_mkt': 'Мы не присылаем рекламу, если вы её не запросили.', 'auth.unlock': 'Откройте', 'auth.un1': '{b} каждого объекта', 'auth.un1_b': 'Район', 'auth.un2': '{b} в полном разрешении', 'auth.un2_b': 'Все фотографии', 'auth.un3': '{b}, которые мы не публикуем', 'auth.un3_b': 'Скрытые объекты',
     'auth.sending': 'Отправляем…',
     'auth.checking': 'Проверяем…',
     'auth.sent': 'Отправили {where}.',

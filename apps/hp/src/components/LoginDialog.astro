@@ -4,12 +4,15 @@
 // real login page inside a dialog (?embed=1). When it finishes, the login page tells this page
 // (postMessage, same origin only) and we go where the link was meant to go — usually the same
 // page, now unlocked. Without JavaScript the links simply open the login page, as before.
+// #104 (desktop redesign, approved by George 2026-11-02): from 1024 px the dialog is the white
+// 500-px popup over a dimmed, blurred page and loads the new steps (?pop=1, LoginPop.astro);
+// Esc, × and a click beside it close it. Phones keep the dialog and steps exactly as before.
 import { t, type Lang } from '../lib/i18n';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 ---
 <dialog id="lgd" class="lgd" aria-label={t(lang, 'auth.meta_title')}>
-  <button class="lgd__x" type="button" aria-label={t(lang, 'ui.close')}>×</button>
+  <button class="lgd__x" type="button" aria-label={t(lang, 'ui.close')}><span class="lgd__xt" aria-hidden="true">×</span><svg class="lgd__xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
   <iframe class="lgd__f" title={t(lang, 'auth.meta_title')}></iframe>
 </dialog>
 
@@ -21,14 +24,38 @@ const { lang } = Astro.props;
   .lgd__x { position: absolute; top: 6px; right: 8px; z-index: 2; border: 0; background: transparent; font-size: 26px;
             line-height: 1; width: 40px; height: 40px; cursor: pointer; color: var(--ink-2); }
   .lgd__x:focus-visible { outline: 2px solid var(--ink); }
+  .lgd__xs { display: none; }
   @media (max-width: 560px) { .lgd { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; } }
+
+  /* #104 desktop popup */
+  @media (min-width: 1024px) {
+    .lgd.lgd--pop { width: 500px; height: min(660px, calc(100dvh - 24px)); max-height: calc(100dvh - 24px);
+                    box-shadow: 0 30px 80px rgba(0,0,0,.35); animation: lgd-in .4s cubic-bezier(.2,.8,.2,1) both; }
+    .lgd.lgd--pop::backdrop { background: rgba(11,14,16,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: lgd-ov .3s ease both; }
+    .lgd--pop .lgd__f { opacity: 0; transition: opacity .2s ease; }
+    .lgd--pop.is-ready .lgd__f { opacity: 1; }
+    .lgd--pop .lgd__x { top: 12px; right: auto; inset-inline-end: 12px; display: flex; align-items: center; justify-content: center;
+                        color: var(--ink); transition: background .15s ease; }
+    .lgd--pop .lgd__x:hover { background: var(--paper-2); }
+    .lgd--pop .lgd__x:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .lgd--pop .lgd__xt { display: none; }
+    .lgd--pop .lgd__xs { display: block; width: 18px; height: 18px; }
+  }
+  @keyframes lgd-in { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
+  @keyframes lgd-ov { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .lgd.lgd--pop, .lgd.lgd--pop::backdrop { animation: none; } }
 </style>
 
 <script>
   const dlg = document.getElementById('lgd') as HTMLDialogElement | null;
   const frame = dlg?.querySelector('iframe') as HTMLIFrameElement | null;
   let target = '';
+  let signedIn = false;     // #104: the code was right — closing the popup now reloads as a member
+  let leaving = false;
+  const desk = window.matchMedia('(min-width: 1024px)');
   const isLogin = (u: URL) => u.origin === location.origin && /(^|\/)login\/?$/.test(u.pathname);
+  const here = () => location.pathname + location.search;
+  const go = (to: string) => { leaving = true; if (to === here()) location.reload(); else location.href = to; };
   if (dlg && frame && typeof dlg.showModal === 'function') {
     document.addEventListener('click', (e) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -38,24 +65,44 @@ const { lang } = Astro.props;
       if (!isLogin(u)) return;
       e.preventDefault();
       // A plain "Sign in" link has no ?next: the visitor stays on the page they are on.
-      if (!u.searchParams.get('next')) u.searchParams.set('next', location.pathname + location.search);
+      if (!u.searchParams.get('next')) u.searchParams.set('next', here());
       target = u.searchParams.get('next')!;
       u.searchParams.set('embed', '1');
+      const pop = desk.matches;
+      if (pop) u.searchParams.set('pop', '1');
+      dlg.classList.toggle('lgd--pop', pop);
+      dlg.classList.remove('is-ready');
+      signedIn = false;
       frame.src = u.pathname + u.search;
       dlg.showModal();
     });
     dlg.querySelector('.lgd__x')!.addEventListener('click', () => dlg.close());
-    dlg.addEventListener('close', () => { frame.src = 'about:blank'; dlg.style.height = ''; });
+    // #104: a click on the dimmed page beside the popup closes it (desktop popup only).
+    dlg.addEventListener('click', (e) => {
+      if (e.target !== dlg || !dlg.classList.contains('lgd--pop')) return;
+      const r = dlg.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+    });
+    dlg.addEventListener('close', () => {
+      frame.src = 'about:blank'; dlg.style.height = '';
+      if (signedIn && !leaving) go(target || here());
+    });
     window.addEventListener('message', (e) => {
-      if (e.origin !== location.origin || !e.data) return;
+      if (e.origin !== location.origin || !e.data || e.source !== frame.contentWindow) return;
       if (e.data.type === 'hp-login-h' && typeof e.data.h === 'number' && window.innerWidth > 560) {
-        dlg.style.height = `${Math.min(Math.max(e.data.h, 320), window.innerHeight - 40)}px`; return;
+        const pad = dlg.classList.contains('lgd--pop') ? 24 : 40;
+        dlg.style.height = `${Math.min(Math.max(e.data.h, 320), window.innerHeight - pad)}px`;
+        dlg.classList.add('is-ready');
+        return;
       }
+      if (e.data.type === 'hp-login-ok') { signedIn = true; return; }
+      if (e.data.type === 'hp-login-close') { dlg.close(); return; }
       if (e.data.type !== 'hp-login') return;
       const to = typeof e.data.next === 'string' && /^\/(?!\/)/.test(e.data.next) ? e.data.next : target;
+      leaving = true;
       dlg.close();
       // Same page → reload so it opens up; another page → go there.
-      if (to === location.pathname + location.search) location.reload(); else location.href = to;
+      go(to);
     });
   }
 </script>

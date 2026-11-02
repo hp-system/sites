@@ -23,7 +23,7 @@ export async function assertSitePortFree(port = 4331) {
   }
 }
 
-export async function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} }, junk = false, variety = false } = {}) {
+export async function startStub({ port = 4339, n = 1200, content = { t: {}, media: {} }, junk = false, variety = false, needs = [] } = {}) {
   // Pools cycle through "private pool" (3), "no pool" (2) and nothing: 1/3 really have a pool.
   const items = Array.from({ length: n }, (_, i) => ({
     id: `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
@@ -94,7 +94,12 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
       try { body = JSON.parse(raw); } catch { /* keep null */ }
       captured.push({ path: url.pathname, headers: req.headers, body });
       // A successful code check returns a member token, as the CRM does.
-      if (url.pathname === '/api/site/member/verify-code') return send(200, { ok: true, token: 'stub-token', name: 'Stub', needs: [] });
+      if (url.pathname === '/api/site/member/verify-code') return send(200, { ok: true, token: 'stub-token', name: 'Stub', needs });
+      // #104: `needs` (e.g. ['name','phone']) — a new phone gets a code, as the CRM's completeStart does.
+      if (url.pathname === '/api/site/member/complete') return send(200, body?.phone
+        ? { ok: true, delivered: true, channel: 'sms', hint: '•••• 4567', pending: 'add_phone' }
+        : { ok: true, saved: 'name', needs: needs.filter((x) => x !== 'name') });
+      if (url.pathname === '/api/site/member/complete-verify') return send(200, { ok: true, saved: 'phone', needs: [] });
       if (url.pathname === '/api/site/member/favorite') {
         const ref = String(body?.ref ?? '');
         if (favs.has(ref)) favs.delete(ref); else favs.add(ref);

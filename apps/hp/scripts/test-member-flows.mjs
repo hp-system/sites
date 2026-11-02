@@ -22,7 +22,7 @@ for (let i = 0; i < 40; i++) { try { await fetch(SITE + '/robots.txt'); break; }
 const M = { cookie: 'member_token=stub-token' };
 
 try {
-  for (const p of ['/en/login', '/en', '/en/property/10008', '/en/panel/submit']) {
+  for (const p of ['/en/login', '/en/login?embed=1&pop=1', '/en', '/en/property/10008', '/en/panel/submit']) {
     const h = await (await fetch(SITE + p, { headers: p.includes('panel') ? M : {} })).text();
     const ids = [...h.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     const dup = [...new Set(ids.filter((x, i) => ids.indexOf(x) !== i))];

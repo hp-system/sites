@@ -201,8 +201,11 @@ const JS_T = {
 
 <style>
   /* The page lives inside the popup's frame; white, no scrollbars (the frame is sized to it). */
-  :global(html), :global(body.embed) { background: var(--paper); }
-  :global(html) { overflow: hidden; scrollbar-width: none; }
+  /* Scoped to the popup page only (`main.lp`): the site has one catch-all route, so every
+     component's CSS ships on every page — an unscoped `html { overflow: hidden }` here
+     froze the scroll of the whole site (hotfix 2026-11-02). */
+  :global(html:has(main.lp)), :global(body.embed) { background: var(--paper); }
+  :global(html:has(main.lp)) { overflow: hidden; scrollbar-width: none; }
   .lp { display: flex; flex-direction: column; color: var(--ink); }
   .lp__body { display: flex; justify-content: center; padding: 28px 40px 22px; }
   .lp__in { width: 100%; max-width: 420px; position: relative; }

@@ -27,6 +27,23 @@ try {
   const hub = pages['/en/services'] ?? '';
   for (const s of [...SECTIONS.map((x) => `/en/services/${x}`), '/en/construction']) check(`/en/services links ${s}`, hub.includes(`href="${s}"`), 'card');
 
+  // #106 desktop hub: every role panel, door and question is in the HTML (switching only shows / hides);
+  // the panel photos are the service pages' watermarked heroes; phones keep George's page.
+  const panels = [...hub.matchAll(/role="tabpanel"/g)].length;
+  check('/en/services hub: 5 role panels in the HTML', panels === 5, `${panels}`);
+  check('/en/services hub: one H1', (hub.match(/<h1[\s>]/g) ?? []).length === 1, 'h1');
+  for (const id of ['ums_4761/land-sea-view-halkidiki-2986326863', 'ums_4494/detached-house-aerial-halkidiki-2980294460', 'ums_7010/detached-house-pool-halkidiki-2974736545']) {
+    check(`/en/services hub photo ${id}`, hub.includes(`${id}_800w.jpg 800w`) && hub.includes(`${id}_1920w.jpg 1920w`), 'srcset');
+  }
+  check('/en/services hub: no prototype images', !hub.includes('/_blob/'), 'no /_blob/');
+  for (const s of ['/en/book-an-online-appointment', '/en/add-your-property', '/en/services/buyer-services/full-property-management', '/en/faq']) {
+    check(`/en/services hub links ${s}`, hub.includes(`href="${s}"`), 'door / faq');
+  }
+  const qs = (hub.match(/<details class="svc-fq/g) ?? []).length;
+  check('/en/services hub: FAQ questions in the HTML', qs >= 20, `${qs}`);
+  check('/en/services hub: window form posts through the shared form', hub.includes('id="svcPop"') && hub.includes('data-in-pop'), 'dialog');
+  check('/en/services phones: George\'s text and cards kept', hub.includes('One team for the whole property') && hub.includes('info-grid w1-m'), 'w1-m');
+
   // Section pages: one H2 per sub-service with the old slug as id, a jump list, the offer catalogue.
   for (const s of SECTIONS) {
     const html = pages[`/en/services/${s}`] ?? '';

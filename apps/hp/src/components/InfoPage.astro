@@ -26,7 +26,7 @@ import { brand } from '../brand/index';
 import { waHref, viberHref } from '../lib/contact';
 import { HERO_SHOTS } from '../lib/hero';
 import { company } from '../lib/company';
-import { infoCluster, type InfoPage } from '../lib/infopages';
+import { infoCluster, findInfoPage, type InfoPage } from '../lib/infopages';
 import { FACETS, facetUrl } from '../lib/listing';
 import { privacyPath } from '../lib/legal';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
@@ -36,6 +36,7 @@ import RailDash from './RailDash.astro';
 import PageCard from './PageCard.astro';
 import WaLink from './WaLink.astro';
 import { areaCards } from '../lib/areacards';
+import ServicesHub, { type Role } from './ServicesHub.astro';
 import { t } from '../lib/i18n';
 
 interface Props { page: InfoPage }
@@ -129,7 +130,7 @@ try {
 // markup draws it, the desktop-only pieces are hidden there and load nothing.
 const w1 = d.look === 'wave1';
 // The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
-const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell' };
+const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services' };
 const short = NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
 const HOW_KEY: Partial<Record<typeof d.section, string>> = { sell: 'info.sell_how' };
 const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
@@ -139,6 +140,28 @@ const relCards = w1 ? d.related.map((r) => ({
   ...r, text: r.text.replaceAll('{phone}', brand.contact.phoneText), button: r.button || t(lang, 'info.more'),
 })) : [];
 const areas = w1 ? areaCards(items, lang) : [];
+// ── SERVICES HUB, desktop (#106, approved by George 2026-11-02) ─────────────
+// A `wave1` page of the services section with cards = the services hub: George's page stays as it
+// is on phones (the classic layout below, hidden from 1024px), the desktop draws ServicesHub. Every
+// role panel is built from George's own texts: the card (name, short text) and the page it links
+// to (H1, lead, watermarked hero photo). All five panels are in the HTML; switching only shows one.
+const hub = w1 && d.section === 'services' && d.cards.length > 0;
+const roles: Role[] = [];
+if (hub) {
+  for (const c of d.cards) {
+    const sub = (await findInfoPage(c.href))?.data;
+    const img = sub?.image || c.image;
+    roles.push({
+      n: c.title, h: sub?.h1 || c.title, href: c.href,
+      lead: sub?.lead || c.text, what: sub?.lead ? c.text : '',
+      img, srcset: /_1920w\.jpg$/.test(img) ? `${img.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${img} 1920w` : '',
+      alt: (sub?.image ? sub.image_alt : c.image_alt) || c.title,
+      source: sub?.form?.source || `Services: ${c.title}`,
+    });
+  }
+}
+// The FAQ block of the hub: George's FAQ page in the same language (English: /en/faq).
+const faqPage = hub ? (await findInfoPage(`${prefix(lang)}/faq`))?.data ?? null : null;
 
 // ── STRUCTURED DATA ───────────────────────────────────────────────────────
 const org = {
@@ -193,8 +216,9 @@ if (d.faq.length) {
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
 
-  {w1 ? (
-  <main id="main" class="info w1">
+  <main id="main" class:list={['info', { w1, 'w1-svc': hub }]}>
+  {w1 && !hub ? (
+  <>
     <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
         <nav class="crumb" aria-label="breadcrumb">
@@ -316,27 +340,24 @@ if (d.faq.length) {
       </div>
     </section>
 
-    {/* Desktop: the breadcrumb again above the footer (mockup «dir» bar). */}
-    <nav class="w1-dir w1-d" aria-label="breadcrumb">
-      <div class="wrap w1-dir__in">
-        <a href={prefix(lang) || '/'} aria-label={brand.name}>{brand.name}</a>
-        {d.parents.map((c) => <><span aria-hidden="true">›</span><a href={c.path}>{c.name}</a></>)}
-        <span aria-hidden="true">›</span><span aria-current="page">{short}</span>
-      </div>
-    </nav>
-  </main>
+  </>
   ) : (
-  <main id="main" class="info">
+  <>
     <header class="wrap info-top">
       <nav class="crumb" aria-label="breadcrumb">
         {crumbs.slice(0, -1).map((c, i) => (
           <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
         ))}
       </nav>
+      {hub && <p class="w1-d svc-eb">{short}</p>}
       <h1 class="t-display info-h1">{d.h1}</h1>
       {d.lead && <p class="info-lead">{d.lead}</p>}
       {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
     </header>
+
+    {/* #106 Services hub, desktop only (phones keep everything below). */}
+    {hub && <ServicesHub lang={lang} roles={roles} faq={faqPage ? { h: faqPage.h1, href: faqPage.path, items: faqPage.faq } : null}
+                         terms={terms} privacy={privacy} contact={contact} />}
 
     {d.image && (
       <figure class="wrap info-hero">
@@ -346,7 +367,7 @@ if (d.faq.length) {
       </figure>
     )}
 
-    <div class="wrap info-grid">
+    <div class:list={['wrap info-grid', { 'w1-m': hub }]}>
       <article class="prose">
         {d.contact_card && (
           <address class="ccard">
@@ -406,7 +427,7 @@ if (d.faq.length) {
     </div>
 
     {d.related.length > 0 && (
-      <section class="info-band">
+      <section class:list={['info-band', { 'w1-m': hub }]}>
         <div class="wrap">
           <p class="t-label">{ui.related}</p>
           <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
@@ -416,7 +437,7 @@ if (d.faq.length) {
       </section>
     )}
 
-    <section class="info-cta">
+    <section class:list={['info-cta', { 'w1-m': hub }]}>
       <div class="wrap">
         <h2 class="t-h2">{ui.ctaH}</h2>
         <p>{ui.ctaP}</p>
@@ -428,8 +449,20 @@ if (d.faq.length) {
         </p>
       </div>
     </section>
-  </main>
+  </>
   )}
+
+    {/* Desktop: the breadcrumb again above the footer (mockup «dir» bar). */}
+    {w1 && (
+    <nav class="w1-dir w1-d" aria-label="breadcrumb">
+      <div class="wrap w1-dir__in">
+        <a href={prefix(lang) || '/'} aria-label={brand.name}>{brand.name}</a>
+        {d.parents.map((c) => <><span aria-hidden="true">›</span><a href={c.path}>{c.name}</a></>)}
+        <span aria-hidden="true">›</span><span aria-current="page">{short}</span>
+      </div>
+    </nav>
+    )}
+  </main>
 
   <Footer lang={lang} munis={munis} />
   {w1 && <InfoKit lang={lang} />}

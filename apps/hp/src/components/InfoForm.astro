@@ -16,10 +16,15 @@ import { brand } from '../brand/index';
 // form with the names inside the fields, Name and Surname apart, the country-code picker
 // (lib/dial.ts) and consent left / Send right. Phones keep George's form exactly. Same endpoint,
 // same protections (honeypot, 3-second timer; Origin + rate limit in /api/inquiry).
+// `look: 'pop'` (#106, Services, approved by George 2026-11-02) = the same desktop form inside a light
+// window (ServicesHub.astro): extra fields of the window go in the default slot (they fill the hidden
+// `extra`, sent in front of the message), Cancel · phone · WhatsApp · Send at the bottom. On success the
+// form fires `iform:sent` so the window can show its thank-you view.
 interface Props { source: string; title?: string; message?: boolean; terms: string; privacy: string;
-  look?: 'wave1'; lang?: Lang; eyebrow?: string }
+  look?: 'wave1' | 'pop'; lang?: Lang; eyebrow?: string }
 const { source, title = 'Send us a message', message = true, terms, privacy, look, lang = 'en', eyebrow = '' } = Astro.props;
 const w1 = look === 'wave1';
+const pop = look === 'pop';
 // A signed-in member sees their own details already filled in (#64). Guests: empty fields.
 const me = await memberOf(Astro.cookies.get('member_token')?.value);
 const mine = me && !me.blocked ? me : null;
@@ -28,13 +33,59 @@ const regionName = (() => {
   try { const d = new Intl.DisplayNames([lang], { type: 'region' }); return (cc: string) => d.of(cc) ?? cc; }
   catch { return (cc: string) => cc; }
 })();
-const dial = w1 ? DIAL.map((d) => ({ ...d, name: regionName(d.cc), flag: flag(d.cc) })) : [];
+const dial = w1 || pop ? DIAL.map((d) => ({ ...d, name: regionName(d.cc), flag: flag(d.cc) })) : [];
 const full = (mine?.name ?? '').trim();
 const cut = full.indexOf(' ');
 const first = full ? (cut < 0 ? full : full.slice(0, cut)) : undefined;
 const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
 ---
-{w1 ? (
+{pop ? (
+<section class="iform iform--pop" data-lang={lang}>
+  <form class="iform__f" data-source={source} data-w1 data-in-pop novalidate>
+    <div class="pop__body">
+      <slot />
+      <div class="pop__g">
+        <input class="pop__i" name="first" autocomplete="given-name" maxlength="60" placeholder={pui(lang, 'fFirst')} aria-label={pui(lang, 'fFirst')} value={first} />
+        <input class="pop__i" name="last" autocomplete="family-name" maxlength="60" placeholder={pui(lang, 'fSurname')} aria-label={pui(lang, 'fSurname')} value={last} />
+        <input class="pop__i" name="email" type="email" autocomplete="email" required maxlength="200" placeholder={pui(lang, 'fEmail')} aria-label={pui(lang, 'fEmail')} value={mine?.email || undefined} />
+        <div class="iform__ph">
+          <button type="button" class="dial" aria-haspopup="listbox" aria-expanded="false" aria-controls={`${id}-pdp`} aria-label={pui(lang, 'cbCountry')}>
+            <span data-dial-l>🇬🇷 +30</span>
+            <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </button>
+          <input name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder={pui(lang, 'cbPhone')} aria-label={pui(lang, 'cbPhone')} value={mine?.phone || undefined} />
+          <div class="dial__pop" id={`${id}-pdp`} hidden>
+            <div class="dial__s">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <input type="search" data-dial-q placeholder={pui(lang, 'dialSearch')} aria-label={pui(lang, 'dialSearch')} autocomplete="off" />
+            </div>
+            <div class="dial__l" role="listbox" aria-label={pui(lang, 'cbCountry')}>
+              {dial.map((d) => (
+                <button type="button" role="option" aria-selected="false" data-cc={d.cc} data-code={d.code} data-q={`${d.name} ${d.cc} ${d.code}`.toLowerCase()}>
+                  <span class="dial__f">{d.flag}</span><span class="dial__n">{d.name}</span><span class="dial__c"><bdi dir="ltr">+{d.code}</bdi></span>
+                </button>
+              ))}
+              <p class="dial__none" hidden>{pui(lang, 'dialNone')}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {message && <textarea class="pop__i" name="message" rows="3" maxlength="1900" placeholder={pui(lang, 'msgL')} aria-label={pui(lang, 'msgL')}></textarea>}
+      <input type="hidden" name="extra" value="" />
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <p class="consent">
+        By sending this form you accept the <a href={terms}>Terms of Services</a> and the <a href={privacy}>Privacy Policy</a>.
+      </p>
+      <p class="iform__msg" role="status" aria-live="polite"></p>
+    </div>
+    <div class="pop__foot">
+      <button type="button" class="pop__x" data-pop-x>{t(lang, 'svc.cancel')}</button>
+      <span class="pop__ct"><a class="lnkg" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a><WaLink /></span>
+      <button class="btn" type="submit" data-ev="lead:form_submit">{t(lang, 'svc.send')}</button>
+    </div>
+  </form>
+</section>
+) : w1 ? (
 <section class="iform iform--w1" aria-labelledby={`${id}-h`} data-lang={lang}>
   <div class="iform__intro">
     {eyebrow && <p class="iform__eb">{eyebrow}</p>}
@@ -115,7 +166,8 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     f.addEventListener('submit', async (e) => {
       e.preventDefault();
       const d = new FormData(f);
-      const w1 = f.dataset.w1 !== undefined && desk.matches;
+      const popF = f.dataset.inPop !== undefined;
+      const w1 = f.dataset.w1 !== undefined && (desk.matches || popF);
       const name = w1 ? `${String(d.get('first') ?? '').trim()} ${String(d.get('last') ?? '').trim()}`.trim()
         : String(d.get('name') ?? '').trim();
       const email = String(d.get('email') ?? '').trim();
@@ -130,13 +182,15 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
             name, email, phone,
-            message: `[${f.dataset.source}] ${String(d.get('message') ?? '')}`.trim(),
+            // #106: the window's extra fields (kind, area, size, day…) go in front of the message.
+            message: `[${f.dataset.source}] ${[String(d.get('extra') ?? '').trim(), String(d.get('message') ?? '')].filter(Boolean).join(' · ')}`.trim(),
             website: String(d.get('website') ?? ''), t: opened, lang: 'en',
           }),
         });
         if (!r.ok) throw new Error(String(r.status));
         f.reset();
         msg.textContent = 'Thank you — an adviser will reply soon.';
+        if (popF) f.dispatchEvent(new CustomEvent('iform:sent', { bubbles: true }));
       } catch {
         msg.textContent = 'Sending failed. Please call us or try again in a minute.';
       } finally {
@@ -215,4 +269,47 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     .iform--w1 .btn:hover { opacity: 1; background: var(--paper-2); color: var(--ink); border-color: var(--paper-2); }
     .iform--w1 .iform__msg { color: #fff; }
   }
+  /* ── look: pop (#106) — the light window of the Services page (desktop only, ServicesHub.astro) ── */
+  .iform--pop { border-top: 0; padding: 0; margin: 0; max-width: none; }
+  .iform--pop .iform__f { display: block; }
+  .pop__body { padding: 18px 28px 20px; display: grid; gap: 16px; }
+  .pop__body > p { margin: 0; }
+  .pop__g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .iform--pop .iform__f .pop__i { height: 44px; padding: 0 11px; font-size: 16px; color: var(--ink); background: var(--paper);
+    border: 1px solid var(--line); box-sizing: border-box; transition: border-color .15s ease; }
+  .iform--pop .iform__f textarea.pop__i { height: auto; padding: 10px 11px; resize: vertical; }
+  .iform--pop .iform__f .pop__i:hover { border-color: rgba(14,18,20,.35); }
+  .iform--pop .iform__f .pop__i:focus { border-color: var(--ink); outline: none; }
+  .iform--pop .iform__f ::placeholder { color: var(--muted); opacity: 1; }
+  .iform--pop .iform__ph { position: relative; display: flex; height: 44px; border: 1px solid var(--line); background: var(--paper); box-sizing: border-box; transition: border-color .15s ease; }
+  .iform--pop .iform__ph:hover { border-color: rgba(14,18,20,.35); }
+  .iform--pop .iform__ph:focus-within { border-color: var(--ink); }
+  .iform--pop .iform__ph input[type=tel] { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0 11px; background: transparent; outline: none; }
+  .iform--pop .dial { display: flex; flex: none; width: 88px; height: 100%; align-items: center; justify-content: space-between; gap: 4px; padding: 0 8px;
+    background: transparent; border: 0; border-inline-end: 1px solid var(--line); font: inherit; font-size: 13px; color: var(--ink); cursor: pointer; }
+  .iform--pop .dial:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .iform--pop .dial__pop:not([hidden]) { display: block; position: absolute; left: -1px; right: -1px; top: calc(100% + 4px); z-index: 40; background: var(--paper);
+    border: 1px solid rgba(14,18,20,.16); box-shadow: 0 12px 28px rgba(10,14,16,.14); }
+  .iform--pop .dial__s { display: flex; align-items: center; gap: 8px; padding: 0 10px; height: 38px; border-bottom: 1px solid rgba(14,18,20,.10); color: var(--muted); }
+  .iform--pop .dial__s input { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0; outline: none; font-size: 14px; color: var(--ink); background: transparent; }
+  .iform--pop .dial__l { max-height: 228px; overflow-y: auto; }
+  .iform--pop .dial__l button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--paper); border: 0;
+    font: inherit; font-size: 13.5px; color: var(--ink); text-align: start; cursor: pointer; }
+  .iform--pop .dial__l button:hover, .iform--pop .dial__l button[aria-selected='true'] { background: var(--paper-2); }
+  .iform--pop .dial__f { width: 22px; }
+  .iform--pop .dial__n { flex: 1; }
+  .iform--pop .dial__c { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .iform--pop .dial__none { margin: 0; padding: 10px; font-size: 13px; color: var(--muted); }
+  .iform--pop .consent { font-size: 12.5px; color: var(--muted); }
+  .iform--pop .iform__msg:empty { display: none; }
+  .pop__foot { display: flex; align-items: center; gap: 18px; padding: 10px 28px 12px; border-top: 1px solid var(--line); }
+  .pop__x { border: 0; background: none; padding: 0; font: inherit; font-size: 13.5px; color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .pop__x:hover { color: var(--ink); }
+  .pop__x:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .pop__ct { margin-inline-start: auto; display: flex; align-items: center; gap: 4px; font-size: 13.5px; }
+  .pop__ct .lnkg { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+  .pop__ct .lnkg:hover { color: var(--ink); }
+  .pop__foot .btn { min-height: 44px; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+  .pop__foot .btn:hover { opacity: 1; background: var(--paper-2); color: var(--ink); border-color: var(--paper-2); }
+  @media (prefers-reduced-motion: reduce) { .iform--pop .pop__i, .iform--pop .iform__ph { transition: none; } }
 </style>

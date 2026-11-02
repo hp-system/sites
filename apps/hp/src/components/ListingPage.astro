@@ -308,7 +308,7 @@ const tilePhoto = (() => {
   {/* Sergei 02/11 (live): on desktop «More filters» opens the same filter window as on the home page */}
   <FilterSheet lang={lang} total={res.total} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} />
 
-  <main id="main" class="list-main">
+  <main id="main" class="list-main" data-home-path={prefix(lang) || "/"}>
   {/* home → list move (Sergei 02/11): decided before the first paint, only when the visitor
       comes from the home page (its note ≤ 10 s old), on desktop, without reduced motion.
       The class goes away after the move, so in-place filtering never replays it. */}
@@ -1642,4 +1642,23 @@ const tilePhoto = (() => {
 
   initSave();
   bindGild();
+</script>
+
+<script>
+  // list → home move (Sergei 02/11): a note that lives 10 s, read once by the home page (desktop only).
+  {
+    const home = document.getElementById('main')?.dataset.homePath ?? '/';
+    const desk = window.matchMedia('(min-width: 1024px)');
+    const same = (a: string, b: string) => a.replace(/\/+$/, '') === b.replace(/\/+$/, '');
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!a || !desk.matches) return;
+      try {
+        const u = new URL(a.href, location.href);
+        if (u.origin !== location.origin || !same(decodeURI(u.pathname), decodeURI(home)) || u.search) return;
+        const top = document.querySelector<HTMLElement>('.ltop')?.getBoundingClientRect();
+        localStorage.setItem('hpFromList', JSON.stringify({ t: Date.now(), h: top && top.bottom > 0 ? Math.round(top.bottom) : 242 }));
+      } catch { /* storage off */ }
+    }, true);
+  }
 </script>

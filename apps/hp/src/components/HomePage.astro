@@ -235,6 +235,23 @@ const meta = {
 <Base lang={lang} title={meta.title} description={meta.desc} path="/"
       ogImage={ogPhoto} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={d.heroAlt}
       jsonLd={jsonLd}>
+  {/* list → home move (Sergei 02/11): decided before the first paint, only when the visitor comes from
+      the list (its note ≤ 10 s old), on desktop, without reduced motion; the class goes away after it. */}
+  <script is:inline>
+    (function () {
+      try {
+        var raw = localStorage.getItem('hpFromList');
+        localStorage.removeItem('hpFromList');
+        var n = raw ? JSON.parse(raw) : null;
+        if (!n || !n.t || Date.now() - n.t > 10000) return;
+        if (!matchMedia('(min-width: 1024px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var r = document.documentElement;
+        if (n.h) r.style.setProperty('--hf-h', Math.max(120, Math.min(600, Number(n.h) || 242)) + 'px');
+        r.classList.add('hp-hfrom');
+        setTimeout(function () { r.classList.remove('hp-hfrom'); }, 1700);
+      } catch (e) { /* storage off: no move */ }
+    })();
+  </script>
   {/* 1 κεφαλίδα (μέσα στο hero) · 2 hero */}
   <Hero lang={lang} photo={d.heroPhoto as Photo | null} alt={d.heroAlt}
         munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} total={d.total} />
@@ -402,6 +419,16 @@ const meta = {
     .h-totop:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
     [dir='rtl'] .h-totop { right: auto; left: 24px; }
   }
+
+  /* ── list → home move: the list's 242 px strip grows into the home photo (same file; its focal point
+        returns from the strip's bottom framing), the bar cross-fades (SearchBar), title and blocks come in last ── */
+  html.hp-hfrom .hero { animation: h-grow 1.25s cubic-bezier(.55,0,.25,1) both; }
+  html.hp-hfrom .hero__bg img { animation: h-img 1.25s cubic-bezier(.55,0,.25,1) both; }
+  html.hp-hfrom .hero__copy { animation: h-in 1.5s ease both; }
+  html.hp-hfrom #main { animation: h-in 1.6s ease both; }
+  @keyframes h-grow { from { min-height: var(--hf-h, 242px); } to { min-height: 82vh; } }
+  @keyframes h-img { from { object-position: 50% 100%; } to { object-position: var(--focal, 50% 50%); } }
+  @keyframes h-in { 0%, 65% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }
 </style>
 
 <script>

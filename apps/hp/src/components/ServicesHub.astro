@@ -1,0 +1,521 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// SERVICES HUB — DESKTOP REDESIGN, WAVE 1 (#106, package 6 of 7; design «ServicesHelp»
+// approved by George 2026-11-02). Rendered by InfoPage.astro inside a `look: wave1` services
+// page, after the shared H1; phones (< 1024px) never see it and keep George's layout.
+//
+//   lead with «Talk to an adviser» · role menu (Buyer → Seller → Investor → Construction
+//   services → Construction projects) · the chosen role's panel (photo, texts, links)
+//   · three doors (book · add your property · property management) · George's FAQ with search
+//   · two tiles (buying from abroad · design & construction) · contact strip · one window form
+//
+// Behaviour (Sergei 02/11): the menu moves to the next service every 5 s, held while the pointer
+// is over the menu or the panel or while the window is open; a click restarts the count. The
+// chosen item is only bold ink, no bar. The door row has a fixed height (never jumps).
+// SEO: every panel, door, question and link is in the HTML; switching only shows / hides.
+// 🔒 Photos: the service pages' own watermarked heroes (_800w / _1920w); phones download none.
+// The window posts through InfoForm (look="pop") to the same /api/inquiry with the same
+// protections (honeypot, 3-second timer; Origin check + rate limit on the server).
+// ═══════════════════════════════════════════════════════════════════════════
+import InfoForm from './InfoForm.astro';
+import WaLink from './WaLink.astro';
+import { brand } from '../brand/index';
+import { viberHref } from '../lib/contact';
+import { findInfoPage } from '../lib/infopages';
+import { pui } from '../lib/property';
+import { prefix, t, type Lang } from '../lib/i18n';
+
+export type Role = { n: string; h: string; lead: string; what: string; href: string; img: string; srcset: string; alt: string; source: string };
+interface Props {
+  lang: Lang; roles: Role[]; terms: string; privacy: string; contact: string;
+  faq: { h: string; href: string; items: { q: string; a: string }[] } | null;
+}
+const { lang, roles, terms, privacy, contact, faq } = Astro.props;
+const tt = (k: string, v?: Record<string, string | number>) => t(lang, k, v);
+
+// The pages behind the doors: in this language if it has them, else the English ones.
+const pageIn = async (slug: string) => (await findInfoPage(`${prefix(lang)}/${slug}`))?.data.path ?? `/en/${slug}`;
+const bookUrl = await pageIn('book-an-online-appointment');
+const addUrl = await pageIn('add-your-property');
+const pmUrl = await pageIn('services/buyer-services/full-property-management');
+const build = Math.max(0, roles.findIndex((r) => /\/construction$/.test(r.href)));
+
+// Role icons, in the order of the page's cards (buyer, seller, investor, construction services, projects).
+const ICONS = [
+  '<circle cx="15" cy="22" r="7"/><path d="M22 22h16M32 22v6M37 22v4"/>',
+  '<path d="M8 38V8M8 10h26v14H8"/><path d="M14 17h14"/>',
+  '<path d="M6 38h32"/><path d="M10 34V24M18 34V18M26 34V22M34 34V12"/><path d="M8 18l10-8 8 6 10-10"/>',
+  '<path d="M10 38V8h4v30M14 10h22l-4 6"/><path d="M28 16v8M24 24h8v6h-8z"/><path d="M6 38h32"/>',
+  '<path d="M6 20L22 7l16 13"/><path d="M10 17v21h24V17"/><path d="M18 38V28h8v10"/>',
+];
+const DOORS = [
+  { k: 'book', href: bookUrl, h: tt('svc.book'), p: tt('svc.book_p'), cta: tt('svc.book_cta') },
+  { k: 'add', href: addUrl, h: tt('svc.add'), p: tt('svc.add_p'), cta: tt('svc.add_cta') },
+  { k: 'pm', href: pmUrl, h: tt('svc.pm'), p: tt('svc.pm_p'), cta: tt('svc.pm_cta') },
+];
+// The window: title, line under it, where the request comes from (the same `source` as the
+// page's own form, so the office sees one name per subject) and its extra fields.
+const POP = {
+  speak: { t: tt('svc.speak'), lead: `${tt('svc.abroad_h')} ${tt('svc.abroad_h2')}`, src: 'Services', x: [] as string[] },
+  book: { t: tt('svc.book'), lead: tt('svc.book_p'), src: 'E-viewing', x: ['when'] },
+  add: { t: tt('svc.add'), lead: tt('svc.add_p'), src: 'Add your property', x: ['kind', 'place'], size: tt('svc.size') },
+  pm: { t: tt('svc.pm'), lead: tt('svc.pm_p'), src: 'Services: full property management', x: [] as string[] },
+  land: { t: tt('svc.land'), lead: `${tt('svc.build_h')} ${tt('svc.build_h2')}`, src: 'Services: I have land', x: ['place'], size: tt('svc.plot') },
+};
+const KINDS = ['house', 'apartment', 'maisonette', 'villa', 'land', 'commercial'].map((k) => tt(`sb.k.${k}`));
+const TIMES = [pui(lang, 'cbAsap'), pui(lang, 'cbMorning'), pui(lang, 'cbAfternoon')];
+const FAQ_SHOW = 6;
+const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+---
+<div class="w1-d svc" data-lang={lang}>
+  <section class="svc-top">
+    <p class="svc-lead">{tt('svc.lead_a')} <a class="lk2" href={contact} data-pop="speak">{tt('svc.talk')}</a> {tt('svc.lead_b')}</p>
+    <div class="svc-nav" id="svcNav" role="tablist" aria-label={tt('svc.menu')}>
+      {roles.map((r, i) => (
+        <button type="button" class:list={['svc-role', { on: i === 0 }]} role="tab" id={`svcTab${i}`} aria-controls={`svcPanel${i}`}
+                aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-i={i}>
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter" aria-hidden="true" set:html={ICONS[i % ICONS.length]}></svg>
+          <span>{r.n}</span>
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <section class="svc-panels" id="svcPanels">
+    <div class="wrap">
+      {roles.map((r, i) => (
+        <div class:list={['svc-panel', { on: i === 0 }]} role="tabpanel" id={`svcPanel${i}`} aria-labelledby={`svcTab${i}`} hidden={i !== 0}>
+          <picture class="svc-panel__img">
+            <source media="(min-width: 1024px)" srcset={r.srcset || r.img} sizes="(min-width: 1280px) 576px, 45vw" />
+            <img src={GIF} alt={r.alt} width="1920" height="1080" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
+          </picture>
+          <div>
+            <p class="svc-lbl">{r.n}</p>
+            <h2 class="svc-h">{r.h}</h2>
+            <p class="svc-p">{r.lead}</p>
+            {r.what && <p class="svc-w">{r.what}</p>}
+            <p class="svc-acts">
+              <a class="btn" href={r.href}>{tt('info.more')}<span class="sr-only"> — {r.n}</span></a>
+              <button type="button" class="btnw" data-pop="speak" data-src={r.source}>{tt('svc.talk')}</button>
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="svc-doors-s">
+    <div class="wrap">
+      <div class="svc-doors" id="svcDoors">
+        {DOORS.map((d, i) => (
+          <a class:list={['svc-door', { on: i === 0 }]} href={d.href} data-pop={d.k}>
+            <span><b>{d.h}</b><span class="dp">{d.p}</span></span>
+            <span class="dl"><span>{d.cta}</span><span aria-hidden="true" class="ar">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {faq && faq.items.length > 0 && (
+    <section class="svc-faq" aria-labelledby="svcFaqH">
+      <div class="wrap svc-faq__in">
+        <h2 id="svcFaqH" class="svc-faq__h"><a href={faq.href}>{faq.h}</a></h2>
+        <label class="svc-srch">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+          <input type="search" id="svcQ" placeholder={tt('svc.faq_search')} aria-label={tt('svc.faq_search_l')} autocomplete="off" />
+        </label>
+        <p class="svc-cnt" id="svcCnt" aria-live="polite" data-n={tt('svc.faq_n')} data-q1={tt('svc.faq_1q')} data-qn={tt('svc.faq_nq')}>
+          {tt('svc.faq_n', { n: faq.items.length })}
+        </p>
+        <div class="svc-fqs" id="svcFqs">
+          {faq.items.map((f, i) => (
+            <details class:list={['svc-fq', { 'svc-fq--more': i >= FAQ_SHOW }]} name="svcfaq">
+              <summary><h3>{f.q}</h3><i aria-hidden="true"></i></summary>
+              <p class="svc-fqa">{f.a}</p>
+            </details>
+          ))}
+        </div>
+        {faq.items.length > FAQ_SHOW && (
+          <p class="svc-all"><button type="button" class="btnw" id="svcAll">{tt('svc.faq_all', { n: faq.items.length })}</button></p>
+        )}
+      </div>
+    </section>
+  )}
+
+  <section class="svc-tiles">
+    <div class="wrap svc-tiles__in">
+      <div class="svc-tile svc-tile--dk">
+        <div><p class="svc-lbl">{tt('abroad.eyebrow')}</p><h3>{tt('svc.abroad_h')}<br />{tt('svc.abroad_h2')}</h3></div>
+        <p><button type="button" class="btn svc-gild" data-pop="speak">{tt('svc.speak')}</button></p>
+      </div>
+      <div class="svc-tile">
+        <div><p class="svc-lbl">{tt('svc.build_l')}</p><h3>{tt('svc.build_h')}<br />{tt('svc.build_h2')}</h3></div>
+        <p class="svc-acts">
+          <button type="button" class="btn" data-pop="land">{tt('svc.land')}</button>
+          {roles[build] && <a class="btnw" href={roles[build].href} data-role-go={build}>{tt('svc.see_build')}</a>}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="svc-ct">
+    <div class="wrap svc-ct__in">
+      <div><h2>{tt('svc.contact_h')}</h2><p class="svc-ct__s">{tt('svc.office')}</p></div>
+      <div><p class="svc-lbl">{tt('svc.phone')}</p><p class="svc-ct__v"><a class="lk2" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a></p></div>
+      <div><p class="svc-lbl">{tt('svc.wa_viber')}</p><p class="svc-ct__v svc-ct__wa"><WaLink /> · <a class="lk2" href={viberHref()} data-ev="lead:viber">Viber</a></p></div>
+      <div><p class="svc-lbl">{tt('svc.video')}</p><p class="svc-ct__v"><a class="lk2" href={bookUrl} data-pop="book">{tt('svc.book')} ›</a></p></div>
+    </div>
+  </section>
+
+  <dialog class="svc-pop" id="svcPop" aria-labelledby="svcPopT">
+    <div class="svc-pop__hd">
+      <p class="svc-pop__t" id="svcPopT"></p>
+      <button type="button" class="svc-pop__x" data-pop-x aria-label={tt('ui.close')}>
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.4"></path></svg>
+      </button>
+    </div>
+    <div class="svc-pop__form">
+      <InfoForm look="pop" source="Services" terms={terms} privacy={privacy} lang={lang}>
+        <p class="svc-pop__lead" data-pop-lead></p>
+        <div data-x="kind" hidden>
+          <span class="svc-mh" data-l>{tt('svc.what')}</span>
+          <div class="svc-chips">{KINDS.map((k) => <button type="button" class="chq" aria-pressed="false" data-v={k}>{k}</button>)}</div>
+        </div>
+        <div data-x="place" class="svc-place" hidden>
+          <label class="fl2"><span>{tt('sb.area')}</span><input name="x_area" maxlength="80" /></label>
+          <label class="fl2"><span data-size></span><input name="x_size" inputmode="numeric" maxlength="20" /></label>
+          <label class="fl2"><span>{tt('svc.price')}</span><input name="x_price" inputmode="numeric" maxlength="20" /></label>
+        </div>
+        <div data-x="when" hidden>
+          <span class="svc-mh" data-l>{tt('svc.when')}</span>
+          <div class="svc-chips" data-days></div>
+          <div class="svc-chips svc-chips--t">{TIMES.map((k) => <button type="button" class="chq" aria-pressed="false" data-v={k}>{k}</button>)}</div>
+        </div>
+      </InfoForm>
+    </div>
+    <div class="svc-pop__done" hidden>
+      <p>{tt('svc.thanks')}</p>
+      <div><button type="button" class="btn" data-pop-x>{tt('ui.close')}</button></div>
+    </div>
+  </dialog>
+  <script type="application/json" id="svcPopCfg" set:html={JSON.stringify(POP).replace(/</g, '\\u003c')}></script>
+</div>
+
+<style>
+  .svc-pop { display: none; }
+  @media (min-width: 1024px) {
+    .svc { display: block; }
+    /* ── lead + role menu (tight spacing, no selection bar: the chosen item is bold ink) ── */
+    .svc-top { text-align: center; padding: 0 40px; }
+    .svc-lead { margin: 12px auto 0; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--ink-2); }
+    .svc-nav { display: flex; justify-content: center; gap: 28px; margin-top: 14px; padding-bottom: 6px; border-bottom: 1px solid var(--line-soft); }
+    .svc-role { all: unset; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 150px; padding: 4px 0 6px;
+      color: var(--ink-2); text-align: center; font-size: 14px; line-height: 1.4; transition: color .15s ease; }
+    .svc-role svg { transition: transform .2s ease; }
+    .svc-role:hover { color: var(--ink); }
+    .svc-role:hover svg { transform: translateY(-3px); }
+    .svc-role.on { color: var(--ink); font-weight: 600; }
+    .svc-role:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+    /* ── the chosen role's panel ── */
+    .svc-panels { padding: 20px 0 36px; }
+    .svc-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+    .svc-panel[hidden] { display: none; }
+    .svc-panel.on { animation: svc-in .4s ease both; }
+    .svc-panel__img { display: block; overflow: hidden; }
+    .svc-panel__img img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+    .svc-h { margin: 10px 0 0; font-size: 32px; font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: var(--ink); }
+    .svc-p { margin: 12px 0 0; font-size: 16px; line-height: 1.55; color: var(--ink-2); }
+    .svc-w { margin: 14px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--muted); }
+    .svc-acts { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0 0; }
+
+    .svc-lbl { margin: 0; font-size: 10.5px; font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+    .lk2 { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: color .15s ease, border-color .15s ease; }
+    .lk2:hover { color: var(--ink); border-bottom-color: var(--ink); }
+    .btnw { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 20px; box-sizing: border-box; background: var(--paper);
+      color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer; transition: background .2s ease, border-color .2s ease; }
+    .btnw:hover { background: var(--paper-2); border-color: var(--ink); }
+    .btnw:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .svc-acts .btn { min-height: 40px; }
+
+    /* ── three doors: the hovered one grows and turns dark; the row's height is fixed (280px) ── */
+    .svc-doors-s { background: var(--paper-2); padding: 40px 0 44px; }
+    .svc-doors { display: flex; gap: 12px; height: 280px; }
+    .svc-door { flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; box-sizing: border-box;
+      padding: 30px 32px 26px; background: var(--paper); color: var(--ink); overflow: hidden; text-decoration: none;
+      transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease; }
+    .svc-door.on { flex-grow: 1.6; background: var(--ink-deep); color: #fff; }
+    .svc-door b { display: block; font-size: 22px; font-weight: 300; line-height: 1.2; letter-spacing: -.014em; transition: font-size .4s ease; }
+    .svc-door.on b { font-size: 28px; }
+    .svc-door .dp { display: block; margin-top: 10px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 42ch; transition: color .35s ease; }
+    .svc-door.on .dp { color: rgba(255,255,255,.78); }
+    .svc-door .dl { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }
+    .svc-door .ar { font-size: 16px; letter-spacing: 0; transition: transform .3s ease; }
+    .svc-door.on .ar { transform: translateX(6px); }
+    .svc-door:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+    /* ── George's FAQ, searchable ── */
+    .svc-faq { padding: 56px 0; }
+    .svc-faq__in { max-width: 900px; }
+    .svc-faq__h { margin: 0 0 18px; font-size: 28px; font-weight: 300; line-height: 1.2; text-align: center; color: var(--ink); }
+    .svc-faq__h a { color: inherit; text-decoration: none; }
+    .svc-faq__h a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+    .svc-srch { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 18px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+    .svc-srch:focus-within { border-color: var(--ink); }
+    .svc-srch input { flex: 1; min-width: 0; border: 0; outline: 0; font: inherit; font-size: 17px; color: var(--ink); background: transparent; }
+    .svc-srch input::placeholder { color: var(--muted); opacity: 1; }
+    .svc-cnt { margin: 10px 0 18px; font-size: 13px; color: var(--muted); }
+    .svc-fq { border-top: 1px solid var(--line); }
+    .svc-fq:last-of-type { border-bottom: 1px solid var(--line); }
+    .svc-fqs.cut .svc-fq--more, .svc-fq.off { display: none; }
+    .svc-fq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; padding: 14px 2px; }
+    .svc-fq summary::-webkit-details-marker { display: none; }
+    .svc-fq summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .svc-fq h3 { flex: 1; margin: 0; font-size: 16px; font-weight: 600; line-height: 1.4; color: var(--ink); }
+    .svc-fq i { font-style: normal; font-weight: 300; font-size: 22px; line-height: 1; color: var(--ink); }
+    .svc-fq i::before { content: '+'; }
+    .svc-fq[open] i::before { content: '−'; }
+    .svc-fqa { margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: var(--ink-2); white-space: pre-line; max-width: 70ch; }
+    .svc-all { margin: 18px 0 0; text-align: center; }
+
+    /* ── two tiles ── */
+    .svc-tiles { padding: 0 0 56px; }
+    .svc-tiles__in { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .svc-tile { display: flex; flex-direction: column; justify-content: space-between; gap: 24px; padding: 36px 36px 32px; min-height: 260px; box-sizing: border-box; background: var(--paper-2); }
+    .svc-tile p { margin: 0; }
+    .svc-tile h3 { margin: 10px 0 0; font-size: 26px; font-weight: 300; line-height: 1.2; letter-spacing: -.012em; color: var(--ink); }
+    .svc-tile--dk { background: var(--ink-deep); color: #fff; }
+    .svc-tile--dk h3 { color: #fff; }
+    .svc-tile--dk .svc-lbl { color: rgba(255,255,255,.55); }
+    /* «Speak to us»: gilded edge, dark variant (same accent as home, list and property) */
+    .svc-gild { background: transparent; border: 1px solid var(--gold-dk);
+      border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
+      color: var(--gold-dk-text); transition: color .9s ease-in-out; }
+    .svc .svc-gild:hover, .svc .svc-gild:focus-visible { opacity: 1; background: transparent; color: var(--gold-dk-hover); border-color: var(--gold-dk); }
+    .svc-gild:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
+    .svc-gild.grun { animation: svc-gturn 1.1s ease-in-out 1; }
+
+    /* ── contact strip ── */
+    .svc-ct { border-top: 1px solid var(--line-soft); padding: 44px 0 52px; }
+    .svc-ct__in { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 32px; align-items: start; }
+    .svc-ct h2 { margin: 0; font-size: 28px; font-weight: 300; line-height: 1.2; color: var(--ink); }
+    .svc-ct__s { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
+    .svc-ct__v { margin: 8px 0 0; font-size: 17px; }
+    .svc-ct__wa { display: flex; align-items: center; gap: 6px; margin-inline-start: -14px; }
+
+    /* ── the window ── */
+    .svc-pop[open] { display: flex; flex-direction: column; width: 760px; max-width: calc(100% - 48px); max-height: calc(100vh - 48px); padding: 0; border: 0;
+      background: var(--paper); color: var(--ink); box-shadow: 0 18px 44px rgba(0,0,0,.16); line-height: 1.4; overflow: visible; animation: svc-pin .3s ease both; }
+    .svc-pop::backdrop { background: rgba(14,18,20,.5); }
+    .svc-pop__hd { display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; border-bottom: 1px solid var(--line); }
+    .svc-pop__t { margin: 0; font-size: 17px; font-weight: 300; }
+    .svc-pop__x { background: none; border: 0; padding: 8px; margin: -8px; cursor: pointer; display: flex; color: var(--ink); }
+    .svc-pop__x:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .svc-pop__form { overflow: visible; }
+    .svc-pop__lead { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+    .svc-mh { display: block; margin: 0 0 10px; padding: 7px 12px; background: var(--paper-2); font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+    .svc-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .svc-chips--t { margin-top: 8px; }
+    /* the day chips are made in the browser (no scope attribute): styled through the window */
+    .svc-pop :global(.chq) { all: unset; cursor: pointer; box-sizing: border-box; height: 36px; padding: 0 12px; display: inline-flex; align-items: center; font-size: 13px; color: var(--ink-2); border: 1px solid transparent; }
+    .svc-pop :global(.chq:hover) { border-color: var(--line); }
+    .svc-pop :global(.chq[aria-pressed='true']) { border-color: var(--ink); color: var(--ink); }
+    .svc-pop :global(.chq:focus-visible) { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .svc-place:not([hidden]) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: end; }
+    .fl2 { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+    .fl2 input { font: inherit; font-size: 16px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: 0 11px; height: 44px; border-radius: 0; width: 100%; box-sizing: border-box; transition: border-color .15s ease; }
+    .fl2 input:hover { border-color: rgba(14,18,20,.35); }
+    .fl2 input:focus { border-color: var(--ink); outline: none; }
+    .svc-pop__done p { margin: 0; padding: 36px 28px 32px; text-align: center; font-size: 22px; font-weight: 300; }
+    .svc-pop__done div { display: flex; justify-content: center; padding: 0 28px 28px; }
+  }
+  @property --gilda { syntax: '<angle>'; inherits: false; initial-value: 315deg; }
+  @keyframes svc-gturn { from { --gilda: 315deg; } to { --gilda: 675deg; } }
+  @keyframes svc-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes svc-pin { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .svc-role, .svc-role svg, .svc-door, .svc-door b, .svc-door .dp, .svc-door .ar, .svc-gild, .lk2, .btnw, .fl2 input { transition: none; }
+    .svc-panel.on, .svc-gild.grun, .svc-pop[open] { animation: none; }
+  }
+</style>
+
+<style is:global>
+  /* The shared top of the info page (InfoPage.astro) as the design draws it on the services hub:
+     a centred eyebrow and H1, no breadcrumb (it is in the bar above the footer). Desktop only. */
+  .svc-eb { display: none; }
+  @media (min-width: 1024px) {
+    main.w1-svc > .info-top { text-align: center; padding-top: 20px; padding-bottom: 0; }
+    main.w1-svc > .info-top .crumb { display: none; }
+    main.w1-svc > .info-top .svc-eb { display: block; margin: 0; font-size: 10.5px; font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+    main.w1-svc > .info-top .info-h1 { margin: 10px auto 0; max-width: none; font-size: 44px; font-weight: 300; line-height: 1.08; letter-spacing: -.022em; }
+  }
+</style>
+
+<script>
+  // ── Services hub, desktop (#106) ─────────────────────────────────────────
+  const desk = window.matchMedia('(min-width: 1024px)');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const root = document.querySelector<HTMLElement>('.svc');
+  const pop = document.getElementById('svcPop') as HTMLDialogElement | null;
+  if (root && pop) {
+    const lang = root.dataset.lang || 'en';
+
+    // ── role menu: one panel shown; the next one every 5 s; held by pointer, focus or the window ──
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.svc-role'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('.svc-panel'));
+    let cur = 0;
+    let t0 = Date.now();
+    let hold = 0;
+    const show = (i: number, focus = false) => {
+      cur = (i + tabs.length) % tabs.length;
+      tabs.forEach((b, k) => {
+        const on = k === cur;
+        b.classList.toggle('on', on); b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach((p, k) => { p.hidden = k !== cur; p.classList.toggle('on', k === cur); });
+      if (focus) tabs[cur]?.focus();
+    };
+    tabs.forEach((b, i) => b.addEventListener('click', () => { t0 = Date.now(); show(i); }));
+    document.getElementById('svcNav')?.addEventListener('keydown', (e) => {
+      const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!step) return;
+      e.preventDefault(); t0 = Date.now();
+      show(cur + (getComputedStyle(root).direction === 'rtl' ? -step : step), true);
+    });
+    for (const el of [document.getElementById('svcNav'), document.getElementById('svcPanels')]) {
+      el?.addEventListener('mouseenter', () => { hold++; });
+      el?.addEventListener('mouseleave', () => { hold = Math.max(0, hold - 1); t0 = Date.now(); });
+    }
+    window.setInterval(() => {
+      if (!desk.matches || still.matches || document.hidden || hold || pop.open || Date.now() - t0 < 5000) return;
+      t0 = Date.now();
+      show(cur + 1);
+    }, 250);
+    root.querySelectorAll<HTMLElement>('[data-role-go]').forEach((a) => a.addEventListener('click', (e) => {
+      if (!desk.matches) return;
+      e.preventDefault(); t0 = Date.now();
+      show(Number(a.dataset.roleGo));
+      document.getElementById('svcNav')?.scrollIntoView({ behavior: still.matches ? 'auto' : 'smooth', block: 'center' });
+    }));
+
+    // ── doors: the hovered / focused one opens up; leaving the row brings back the first ──
+    const doors = Array.from(root.querySelectorAll<HTMLElement>('.svc-door'));
+    const door = (i: number) => doors.forEach((d, k) => d.classList.toggle('on', k === i));
+    doors.forEach((d, i) => { d.addEventListener('mouseenter', () => door(i)); d.addEventListener('focus', () => door(i)); });
+    document.getElementById('svcDoors')?.addEventListener('mouseleave', () => door(0));
+
+    // ── FAQ: six questions, then all; the search filters every question and answer ──
+    const fqs = document.getElementById('svcFqs');
+    const items = Array.from(root.querySelectorAll<HTMLDetailsElement>('.svc-fq'));
+    const q = document.getElementById('svcQ') as HTMLInputElement | null;
+    const cnt = document.getElementById('svcCnt');
+    const all = document.getElementById('svcAll');
+    fqs?.classList.add('cut');
+    const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+    const filter = () => {
+      const raw = (q?.value ?? '').trim();
+      const words = raw.toLowerCase().split(/\s+/).filter(Boolean);
+      let n = 0;
+      items.forEach((d) => {
+        const hit = !words.length || words.every((w) => (d.textContent ?? '').toLowerCase().includes(w));
+        d.classList.toggle('off', !hit);
+        if (hit) n++;
+      });
+      fqs?.classList.toggle('cut', !words.length && !fqs.dataset.all);
+      if (all) all.parentElement!.hidden = !!words.length || !!fqs?.dataset.all;
+      if (cnt) cnt.textContent = words.length
+        ? fill(n === 1 ? cnt.dataset.q1 ?? '' : cnt.dataset.qn ?? '', { n, q: raw })
+        : fill(cnt.dataset.n ?? '', { n: items.length });
+    };
+    q?.addEventListener('input', () => { items.forEach((d) => { d.open = false; }); filter(); });
+    all?.addEventListener('click', () => { if (fqs) fqs.dataset.all = '1'; filter(); });
+    // one answer open at a time (also where `<details name>` is not supported)
+    items.forEach((d) => d.addEventListener('toggle', () => { if (d.open) items.forEach((x) => { if (x !== d) x.open = false; }); }));
+
+    // ── gilded button: the edge turns once when the pointer comes into its tile, once more on it ──
+    root.querySelectorAll<HTMLElement>('.svc-gild').forEach((g) => {
+      const run = () => { if (!desk.matches || still.matches) return; g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun'); };
+      g.closest('.svc-tile')?.addEventListener('mouseenter', run);
+      g.addEventListener('mouseenter', run);
+    });
+
+    // ── the window: one form, its title / line / source / extra fields set by the button ──
+    type Cfg = { t: string; lead: string; src: string; x: string[]; size?: string };
+    let CFG: Record<string, Cfg> = {};
+    try { CFG = JSON.parse(document.getElementById('svcPopCfg')?.textContent || '{}'); } catch { /* the links still work */ }
+    const form = pop.querySelector<HTMLFormElement>('form');
+    const view = pop.querySelector<HTMLElement>('.svc-pop__form');
+    const done = pop.querySelector<HTMLElement>('.svc-pop__done');
+    const extra = form?.querySelector<HTMLInputElement>('input[name=extra]');
+    const parts = Array.from(pop.querySelectorAll<HTMLElement>('[data-x]'));
+    // next five working days, in the page language
+    const days = pop.querySelector<HTMLElement>('[data-days]');
+    if (days) {
+      const fmt = new Intl.DateTimeFormat(lang, { weekday: 'short', day: 'numeric', month: 'short' });
+      const d = new Date();
+      const out: string[] = [];
+      while (out.length < 5) { d.setDate(d.getDate() + 1); if (d.getDay() % 6) out.push(fmt.format(d)); }
+      days.innerHTML = '';
+      out.forEach((s) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chq'; b.setAttribute('aria-pressed', 'false'); b.dataset.v = s; b.textContent = s; days.appendChild(b); });
+    }
+    const sync = () => {
+      if (!extra) return;
+      const bits: string[] = [];
+      parts.filter((p) => !p.hidden).forEach((p) => {
+        const label = p.querySelector('[data-l]')?.textContent?.trim();
+        const picked = Array.from(p.querySelectorAll<HTMLElement>('.chq[aria-pressed=true]')).map((b) => b.dataset.v).join(', ');
+        if (picked && label) bits.push(`${label}: ${picked}`);
+        p.querySelectorAll<HTMLInputElement>('.fl2').forEach((l) => {
+          const v = l.querySelector('input')?.value.trim();
+          if (v) bits.push(`${l.querySelector('span')?.textContent?.trim()}: ${v}`);
+        });
+      });
+      extra.value = bits.join(' · ');
+    };
+    pop.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLElement>('.chq');
+      if (chip) {
+        chip.parentElement?.querySelectorAll('.chq').forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        sync();
+      }
+    });
+    pop.addEventListener('input', sync);
+    let back: HTMLElement | null = null;
+    const open = (k: string, src?: string) => {
+      const c = CFG[k] ?? CFG.speak;
+      if (!c || !form) return false;
+      pop.querySelector('#svcPopT')!.textContent = c.t;
+      const lead = pop.querySelector<HTMLElement>('[data-pop-lead]');
+      if (lead) { lead.textContent = c.lead; lead.hidden = !c.lead; }
+      parts.forEach((p) => {
+        p.hidden = !c.x.includes(p.dataset.x ?? '');
+        p.querySelectorAll('.chq').forEach((b, i) => b.setAttribute('aria-pressed', String(i === 0 && p.dataset.x === 'kind')));
+        p.querySelectorAll<HTMLInputElement>('input').forEach((i) => { i.value = ''; });
+      });
+      const size = pop.querySelector('[data-size]');
+      if (size) size.textContent = c.size ?? '';
+      form.dataset.source = src || c.src;
+      const msg = form.querySelector('.iform__msg');
+      if (msg) msg.textContent = '';
+      if (view) view.hidden = false;
+      if (done) done.hidden = true;
+      sync();
+      back = document.activeElement as HTMLElement | null;
+      pop.showModal();
+      form.querySelector<HTMLInputElement>('input[name=first]')?.focus();
+      return true;
+    };
+    const close = () => { if (pop.open) pop.close(); };
+    pop.addEventListener('close', () => { t0 = Date.now(); back?.focus(); });
+    pop.addEventListener('click', (e) => {
+      if (e.target === pop || (e.target as HTMLElement).closest('[data-pop-x]')) close();
+    });
+    pop.addEventListener('iform:sent', () => { if (view) view.hidden = true; if (done) done.hidden = false; done?.querySelector<HTMLElement>('.btn')?.focus(); });
+    root.querySelectorAll<HTMLElement>('[data-pop]').forEach((b) => b.addEventListener('click', (e) => {
+      if (!desk.matches) return;                 // phones: the links go to their pages
+      if (open(b.dataset.pop ?? 'speak', b.dataset.src)) e.preventDefault();
+    }));
+  }
+</script>

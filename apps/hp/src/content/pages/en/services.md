@@ -65,6 +65,8 @@ cards:
   height: 500
 contact_card: false
 catalog: []
+# Desktop redesign, wave 1 (#106, approved by George 2026-11-02): ServicesHub on desktop, George's layout on phones.
+look: wave1
 ---
 
 Whatever you need around a property in Halkidiki — buying, selling, investing or building — one team covers it, with engineers, lawyers, accountants and advisers who work together.

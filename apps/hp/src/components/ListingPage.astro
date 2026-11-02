@@ -19,6 +19,7 @@ import Base from '../layouts/Base.astro';
 import { subName } from '../lib/property';
 import Header from './Header.astro';
 import MobileMenu from './MobileMenu.astro';
+import FilterSheet from './FilterSheet.astro';
 import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import { allProperties, refOf, priceOf, priceVisible } from '../lib/api';
@@ -258,6 +259,8 @@ const tilePhoto = (() => {
       phones keep the solid bar — the wrapper only changes ≥1024px. */}
   <div class="lhead"><Header lang={lang} solid pathFor={pathFor} /></div>
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={res.total} />
+  {/* Sergei 02/11 (live): on desktop «More filters» opens the same filter window as on the home page */}
+  <FilterSheet lang={lang} total={res.total} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} />
 
   <main id="main" class="list-main">
   {/* #102 desktop: the top as on the home page — the end of the home photo with
@@ -1168,7 +1171,27 @@ const tilePhoto = (() => {
     let any = false;
     active.forEach((i) => { if ((i as HTMLInputElement).value) any = true; });
     if (any && !desk.matches) set(true);
-    togs.forEach((x) => x.addEventListener('click', () => set((b as HTMLElement).hidden)));
+    togs.forEach((x) => x.addEventListener('click', (e) => {
+      // Desktop: the «More filters» cell opens the filter window (as on the home page),
+      // pre-filled with the filters already in the URL. Phones keep the form below.
+      const sheet = document.getElementById('filter-sheet') as HTMLDialogElement | null;
+      if (desk.matches && sheet && x.hasAttribute('data-ftog')) {
+        e.preventDefault();
+        const f = sheet.querySelector('form');
+        const q = new URLSearchParams(location.search);
+        f?.querySelectorAll<HTMLInputElement>('input[name]').forEach((i) => {
+          const alias: Record<string, string> = { municipality: 'muni', bedrooms: 'beds', sea_access: 'sea', subcategory: 'type' };
+          const v = q.get(i.name) ?? (alias[i.name] ? q.get(alias[i.name]) : null);
+          if (i.type === 'radio' || i.type === 'checkbox') { if (v !== null) i.checked = (i.value === v) || (i.type === 'checkbox' && q.getAll(i.name).includes(i.value)); }
+          else if (v !== null) i.value = v;
+        });
+        f?.dispatchEvent(new Event('change', { bubbles: true }));
+        sheet.showModal();
+        document.documentElement.style.overflow = 'hidden';
+        return;
+      }
+      set((b as HTMLElement).hidden);
+    }));
   }
 
   // ── #102 desktop: one menu open at a time; a click outside or Esc closes it.

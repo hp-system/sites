@@ -631,10 +631,9 @@ const tilePhoto = (() => {
       </div>
     ) : (
       <>
-        {/* Between the filters and the cards (Sergei 02/11): what is shown now, Sort, Per page.
-            «Showing a–b» names the cards on this page only — no total (George 17/10: no property counts). */}
+        {/* Between the filters and the cards (Sergei 02/11): Sort and Per page, on the right.
+            «Showing a–b» was here and was taken out (Sergei 02/11); its text stays in i18n. */}
         <div class="lres">
-          <span class="lres__n">{t(lang, 'list.showing', { a: (res.page - 1) * per + 1, b: (res.page - 1) * per + res.items.length })}</span>
           <div class="lres__r">
             <details class="lpp lres__d" data-lc data-ck="sort">
               <summary class="ppb">{ui(lang, 'sort')}: <b>{sortLabel[cur]}</b>
@@ -1265,8 +1264,7 @@ const tilePhoto = (() => {
 
 
     /* ── head row between the filters and the cards (desktop only; phones keep George's tools) ── */
-    .lres { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 0 0 18px; }
-    .lres__n { font-size: 13.5px; color: var(--muted); }
+    .lres { display: flex; justify-content: flex-end; align-items: center; gap: 24px; margin: 0 0 18px; }
     .lres__r { display: flex; align-items: center; gap: 28px; }
     .lres__m { min-width: 220px; }
 

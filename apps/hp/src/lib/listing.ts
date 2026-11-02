@@ -40,6 +40,17 @@ export type Query = {
   sqmMax?: number;
   /** Ελάχιστα υπνοδωμάτια — «3+», όχι ακριβώς 3. Έτσι το εννοεί ο αγοραστής. */
   beds?: number;
+  /**
+   * Multi-select of the desktop filter row (Sergei 02/11: «exactly like the mockup» —
+   * ticks, several values per filter). Set by `queryFromParams` when the URL repeats a
+   * parameter (`?muni=A&muni=B`); one value keeps using the single field above, so the
+   * facet pages, the area pages and every old link behave exactly as before.
+   */
+  munis?: string[];
+  subs?: string[];
+  seas?: string[];
+  /** Exact bedrooms (`?bed=2&bed=3`); 5 means «5+». The mockup's 1 · 2 · 3 · 4 · 5+. */
+  bedsIn?: number[];
   /** Κωδικός ακινήτου — όταν υπάρχει, υπερισχύει ΟΛΩΝ των άλλων κριτηρίων. */
   id?: string;
   sort?: Sort;
@@ -296,6 +307,13 @@ export function matches(p: SiteProperty, q: Query): boolean {
 
   if (q.category && catKey(a) !== q.category) return false;
   if (q.subcategory && !String(a.subcategory ?? '').toLowerCase().startsWith(q.subcategory)) return false;
+  // Multi-select (desktop row): any of the chosen values.
+  if (q.subs?.length) {
+    const sub = String(a.subcategory ?? '').toLowerCase();
+    if (!q.subs.some((x) => sub.startsWith(x))) return false;
+  }
+  if (q.munis?.length && !q.munis.includes(muniKey(a))) return false;
+  if (q.seas?.length && !q.seas.includes(String(a.sea_access ?? ''))) return false;
   // 🪤 Ο ΔΗΜΟΣ ΦΙΛΤΡΑΡΕΤΑΙ **ΤΟΠΙΚΑ**, ΠΟΤΕ ΜΕΣΩ API. Η βάση κρατά «Κασσάνδρας»
   //    (γενική) και το API κάνει ακριβή σύγκριση κειμένου — αν του στέλναμε το
   //    κλειδί «Κασσάνδρα» (ονομαστική) που ταξιδεύει στα URL μας, η σελίδα του
@@ -334,6 +352,11 @@ export function matches(p: SiteProperty, q: Query): boolean {
   if (q.beds) {
     const b = Number(a.bedrooms);
     if (!Number.isFinite(b) || b < q.beds) return false;
+  }
+  // Exact bedrooms from the row's ticks; «5» stands for «5+». No bedrooms → no match.
+  if (q.bedsIn?.length) {
+    const b = Number(a.bedrooms);
+    if (!Number.isFinite(b) || !q.bedsIn.some((x) => (x >= 5 ? b >= 5 : b === x))) return false;
   }
   if (q.sqmMin || q.sqmMax) {
     const v = n(a.sqm);
@@ -433,7 +456,7 @@ export function runQuery(all: SiteProperty[], q: Query, perPage = PER_PAGE): Res
 //    Το EALIDA API φιλτράρει κανονικά σε περιοχή, οπότε ένα `?area=Σάνη` θα
 //    έλεγε σε μη συνδεδεμένο ποια ακίνητα είναι στη Σάνη χωρίς να δει τη λέξη
 //    πουθενά — παρακάμπτοντας ολόκληρο το lib/gate.ts.
-const PARAMS = ['price_min', 'price_max', 'sqm_min', 'sqm_max', 'beds',
+const PARAMS = ['price_min', 'price_max', 'sqm_min', 'sqm_max', 'beds', 'bed',
                 'type', 'muni', 'sea', 'pool', 'sort', 'page', 'per', 'id',
                 // the names the search bar, filter sheet, collections and menu send (aliases below)
                 'category', 'subcategory', 'municipality', 'sea_access', 'bedrooms'] as const;
@@ -443,11 +466,34 @@ const CATEGORIES = ['residency', 'land', 'business'] as const;
 /** Kinds a URL may ask for: the listing subtypes plus `hotel` (filter sheet). */
 const KIND_KEYS = [...SUBTYPES.map((x) => x.v), 'hotel'].map((v) => ({ v }));
 
+/** The bedroom values of the row (`bed`): 1–4 exact, 5 = «5+». */
+export const BED_OPTS = [1, 2, 3, 4, 5] as const;
+
+/**
+ * Only the keys that carry a value. `Object.assign(facet.q, queryFromParams())` copied
+ * the `undefined` ones too, so a facet page («Kassandra», «Land») lost its own filter
+ * and listed the whole catalogue (found 02/11/2026 while testing #102's row).
+ */
+export function defined<T extends object>(o: T): Partial<T> {
+  return Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined)) as Partial<T>;
+}
+
 export function queryFromParams(sp: URLSearchParams): Partial<Query> {
+  // Digits only: the row's price/size fields show «€25,000» / «120 m²».
   const num = (k: string) => {
-    const v = Number(sp.get(k));
+    const raw = sp.get(k);
+    const v = Number(k.startsWith('price_') || k.startsWith('sqm_') ? String(raw ?? '').replace(/\D+/g, '') : raw);
     return Number.isFinite(v) && v > 0 ? v : undefined;
   };
+  // Every valid value of a repeated parameter (long and short names), in catalogue order.
+  const many = (keys: string[], list: readonly { v: string }[]): string[] => {
+    const got = new Set(keys.flatMap((k) => sp.getAll(k)));
+    return list.map((x) => x.v).filter((v) => got.has(v));
+  };
+  const mu = many(['muni', 'municipality'], MUNIS);
+  const su = many(['type', 'subcategory'], KIND_KEYS);
+  const se = many(['sea', 'sea_access'], SEAS);
+  const bd = BED_OPTS.filter((n) => sp.getAll('bed').includes(String(n)));
   const s = sp.get('sort') as Sort | null;
   // Οι τιμές ελέγχονται ΑΠΕΝΑΝΤΙ ΣΤΟΥΣ ΚΑΤΑΛΟΓΟΥΣ — ό,τι δεν αναγνωρίζεται
   // αγνοείται σιωπηλά αντί να παράγει άδεια λίστα από τυχαία παράμετρο.
@@ -463,9 +509,14 @@ export function queryFromParams(sp: URLSearchParams): Partial<Query> {
     priceMin: num('price_min'), priceMax: num('price_max'),
     sqmMin: num('sqm_min'), sqmMax: num('sqm_max'), beds: num('beds') ?? num('bedrooms'),
     category: one('category', CATEGORIES.map((v) => ({ v }))),
-    subcategory: one('type', KIND_KEYS) ?? one('subcategory', KIND_KEYS),
-    municipality: one('muni', MUNIS) ?? one('municipality', MUNIS),
-    sea: one('sea', SEAS) ?? one('sea_access', SEAS),
+    // One value → the single field (as always); several → the list as well.
+    subcategory: su.length === 1 ? su[0] : undefined,
+    municipality: mu.length === 1 ? mu[0] : undefined,
+    sea: se.length === 1 ? se[0] : undefined,
+    subs: su.length > 1 ? su : undefined,
+    munis: mu.length > 1 ? mu : undefined,
+    seas: se.length > 1 ? se : undefined,
+    bedsIn: bd.length ? [...bd] : undefined,
     pool: sp.get('pool') === '1' || undefined,
     sort: s && SORTS.includes(s) ? s : undefined,
     page: num('page'),
@@ -486,10 +537,16 @@ export function paramsOf(q: Query): string {
   if (q.sqmMin) sp.set('sqm_min', String(q.sqmMin));
   if (q.sqmMax) sp.set('sqm_max', String(q.sqmMax));
   if (q.beds) sp.set('beds', String(q.beds));
+  for (const b of q.bedsIn ?? []) sp.append('bed', String(b));
   if (q.category) sp.set('category', q.category);
-  if (q.subcategory) sp.set('type', q.subcategory);
-  if (q.municipality) sp.set('muni', q.municipality);
-  if (q.sea) sp.set('sea', q.sea);
+  // A list (multi-select) is written as the repeated parameter; else the single value.
+  const put = (k: string, list: string[] | undefined, one: string | undefined) => {
+    if (list && list.length > 1) list.forEach((v) => sp.append(k, v));
+    else if (one ?? list?.[0]) sp.set(k, (one ?? list?.[0])!);
+  };
+  put('type', q.subs, q.subcategory);
+  put('muni', q.munis, q.municipality);
+  put('sea', q.seas, q.sea);
   if (q.pool) sp.set('pool', '1');
   if (q.id) sp.set('id', q.id);
   if (q.sort && q.sort !== SORT_DEFAULT) sp.set('sort', q.sort);

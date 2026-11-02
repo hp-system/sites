@@ -41,6 +41,21 @@ try {
   check('category=land narrows the list', land !== all, land !== all ? 'filtered' : 'returned the whole catalogue');
   const junk = await refs('subcategory=castle&bedrooms=abc');
   check('unknown values are ignored', junk === all, junk === all ? 'whole catalogue' : 'filtered on junk');
+  // Multi-select of the desktop filter row (Sergei 02/11): a repeated parameter = any of the values.
+  const K = 'muni=' + encodeURIComponent('Κασσάνδρα'), S = 'muni=' + encodeURIComponent('Σιθωνία');
+  const ks = await refs(`${K}&${S}`), k = await refs(K), s1 = await refs(S);
+  check('muni=A&muni=B is neither A nor B alone', ks !== k && ks !== s1 && ks !== all, 'union');
+  const swap = await refs(`${S}&${K}`);
+  check('value order does not matter', swap === ks, swap === ks ? 'same results' : 'results differ');
+  const b25 = await refs('bed=2&bed=5'), b2 = await refs('bed=2');
+  check('bed=2&bed=5 differs from bed=2 and from all', b25 !== b2 && b25 !== all && b2 !== all, 'exact bedrooms');
+  const html = await (await fetch(`${SITE}/en/properties?${K}&${S}`)).text();
+  check('multi-value URL stays out of the index', /<meta name="robots" content="noindex/.test(html), 'noindex');
+  // A facet page keeps its own filter (Object.assign used to copy `undefined` over it).
+  const facetHtml = await (await fetch(`${SITE}/en/properties/kassandra?per=48`)).text();
+  const facet = [...facetHtml.matchAll(/href="[^"]*\/en\/property\/([^"/?#]+)"/g)].map((m) => m[1])
+    .filter((v, i, a) => a.indexOf(v) === i).join(',');
+  check('facet page /kassandra = ?muni=Κασσάνδρα', facet === k, facet === k ? 'same results' : 'results differ');
 } finally {
   site.kill(); stub.close?.();
 }

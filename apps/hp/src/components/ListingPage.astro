@@ -1215,8 +1215,10 @@ const tilePhoto = (() => {
     .join__b:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
     .acct { transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s ease; }
     .acct:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(10,14,16,.28), 0 4px 10px rgba(10,14,16,.12); }
-    .join.acct:hover { box-shadow: none; }
-    .join.acct:hover .join__ph { box-shadow: 0 18px 40px rgba(10,14,16,.28), 0 4px 10px rgba(10,14,16,.12); }
+    /* Sergei 03/11: no lift — the tile behaves like a card (its photo zooms a little), the button keeps its own gilded turn */
+    .join.acct, .join.acct:hover { transform: none; box-shadow: none; }
+    .join__bg { transition: transform .45s ease; }
+    .join:hover .join__bg { transform: scale(1.11); }
 
     /* ── pager ── */
     .lpg {
@@ -1455,7 +1457,7 @@ const tilePhoto = (() => {
       if (!desk.matches || still.matches) return;
       g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun');
     };
-    (g.closest('.lsave, .join') ?? g.parentElement)?.addEventListener('mouseenter', run);
+    (g.closest('.join') ? g : (g.closest('.lsave') ?? g.parentElement))?.addEventListener('mouseenter', run);   // the tile's button turns on its own hover (Sergei 03/11)
   });
 
   // ── Back to top: after one screen.

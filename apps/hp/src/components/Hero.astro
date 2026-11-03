@@ -15,6 +15,8 @@ import {
   clean, cleanSrcSet, cleanSrcSetSmall,
   marked, markedSrcSet, markedSrcSetSmall, focalStyle, type Photo,
 } from '../lib/photos';
+import { heroMessage } from '../lib/hero-messages';
+import { isProd } from '../lib/seo';
 import Header from './Header.astro';
 import MobileMenu from './MobileMenu.astro';
 
@@ -22,7 +24,14 @@ interface Props {
   lang: Lang; photo: Photo | null; alt: string;
   munis: { name: string; n: number; key?: string }[]; total: number;
 }
-const { lang, photo, alt, munis, total } = Astro.props;
+const { lang, photo: basePhoto, alt, munis, total } = Astro.props;
+
+// The message slot (lib/hero-messages.ts): a dated message replaces the default copy, and its
+// own picture / video / plain ground. `?hero=<id>` previews one off production only.
+const msg = heroMessage(lang, new Date(), isProd(Astro.request, Astro.url) ? null : Astro.url.searchParams.get('hero'));
+const photo = msg?.look === 'photo' && msg.shot ? { url: msg.shot.url, tag: 'hero', focal: msg.shot.focal } as Photo : basePhoto;
+const plain = msg?.look === 'plain';
+const video = msg?.look === 'video' ? msg.video : undefined;
 
 // 🛡️ Η ΤΡΥΠΑ ΤΗΣ ΕΦΕΔΡΕΙΑΣ. Το `home.ts` βάζει `tag: 'hero'` ΜΟΝΟ όταν η
 //    φωτογραφία βγαίνει από τον δικό μας πίνακα τοπίων. Αν ο πίνακας αδειάσει,
@@ -34,14 +43,18 @@ const src = photo ? (scenic ? clean(photo.url) : marked(photo.url, 1920)) : '';
 const setBig = photo ? (scenic ? cleanSrcSet(photo.url) : markedSrcSet(photo.url)) : '';
 const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSmall(photo.url)) : '';
 ---
-<div class="hero" style={focalStyle(photo)}>
+<div class:list={['hero', msg && 'hero--msg', plain && 'hero--plain']} style={focalStyle(photo)} data-hero-msg={msg?.id}>
   <div class="hero__bg">
+    {/* a video message: muted loop over its poster; data saver / reduced motion keep the poster only */}
+    {video && (
+      <video class="hero__vid" src={video.mp4} poster={video.poster} muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>
+    )}
     {/* 🪤 ΤΟ `<source>` ΚΟΒΕΙ ΤΟ 1920 ΑΠΟ ΤΑ ΚΙΝΗΤΑ.
         Με σκέτο srcset + `sizes="100vw"`, ένα DPR3 κινητό (κάθε iPhone Pro)
         ζητούσε 1170px και κατέβαζε το πλήρες **1920×1280, 669 KB** — LCP
         4.405 ms σε Slow 4G. Κάτω από 760px δίνουμε μόνο 400/800.
         Το σχόλιο μένει ΕΞΩ από το `{cond && ()}` — μέσα σπάει το build. */}
-    {src && (
+    {src && !plain && !video && (
       <picture>
         <source media="(max-width: 759px)" srcset={setSmall} sizes="100vw" />
         <img src={src}
@@ -57,9 +70,33 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
   <MobileMenu lang={lang} munis={munis} total={total} />
 
   <div class="hero__copy">
-    <h1 class="t-display">{t(lang, 'hero.h1')}</h1>
-    <p class="hero__sub">{t(lang, 'hero.sub')}</p>
+    {msg ? (
+      <>
+        {/* the H1 never changes (SEO); while a message is on it is the small line above it */}
+        <h1 class="hero__h1s">{t(lang, 'hero.h1')}</h1>
+        {msg.eyebrow?.[lang] && <p class="hero__eb">{msg.eyebrow[lang]}</p>}
+        <p class="t-display hero__t">{msg.title[lang]}</p>
+        {msg.text?.[lang] && <p class="hero__sub">{msg.text[lang]}</p>}
+        {msg.cta?.label[lang] && (
+          <a class="hero__cta" href={msg.cta.href(lang)} data-ev="hero:cta" data-ev-label={msg.id}>{msg.cta.label[lang]}</a>
+        )}
+      </>
+    ) : (
+      <>
+        <h1 class="t-display">{t(lang, 'hero.h1')}</h1>
+        <p class="hero__sub">{t(lang, 'hero.sub')}</p>
+      </>
+    )}
   </div>
+  {video && (
+    <script is:inline>
+      (function () {
+        var v = document.querySelector('.hero__vid'); if (!v) return;
+        var save = navigator.connection && navigator.connection.saveData;
+        if (save || matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); v.preload = 'none'; }
+      })();
+    </script>
+  )}
 </div>
 
 <style>
@@ -69,6 +106,23 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
     display: flex; flex-direction: column; justify-content: flex-end;
   }
   .hero__bg { position: absolute; inset: 0; background: var(--paper-2); }
+  .hero__vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero--plain .hero__bg { background: var(--ink-deep); }
+  .hero__h1s { margin: 0 0 var(--s4); font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.78); }
+  .hero__eb { margin: 0 0 var(--s3); font-size: 14px; color: rgba(255,255,255,.82); }
+  .hero__t { margin: 0; max-width: 20ch; }
+  .hero--msg:not(.hero--plain) :is(.hero__h1s, .hero__eb, .hero__sub) { text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.45); }
+  .hero__cta {
+    display: inline-flex; align-items: center; height: 48px; margin-top: var(--s5); padding: 0 24px;
+    font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+    color: var(--gold-dk-text); border: 1px solid var(--gold-dk); background: rgba(11,14,16,.35);
+    transition: color .4s ease;
+  }
+  .hero__cta:hover, .hero__cta:focus-visible { color: var(--gold-dk-hover); }
+  .hero__cta:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
+  /* the search bar overlaps the hero's bottom (49 px phones, 33 px from 760 px): a message's button stays clear of it */
+  .hero--msg .hero__copy { padding-bottom: calc(var(--s5) + 44px); }
+  @media (min-width: 760px) { .hero--msg .hero__copy { padding-bottom: calc(var(--s6) + 28px); } }
   .hero__bg img {
     width: 100%; height: 100%; object-fit: cover;
     /* ΣΗΜΕΙΟ ΕΣΤΙΑΣΗΣ — ένα αρχείο, σωστό κάδρο σε κάθε οθόνη.

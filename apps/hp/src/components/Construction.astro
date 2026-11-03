@@ -278,7 +278,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
         a row of cards you page through, the paragraph under it. The accordion and the
         turning facts stay for phones only. ── */
   @media (min-width: 1024px) {
-    .cx { padding: 40px 0 36px; background: var(--paper); color: var(--ink); overflow: hidden; }
+    .cx { padding: 40px 0 28px; background: var(--paper); color: var(--ink); overflow: hidden; }
     .cx .cx__top {
       grid-template-columns: minmax(0, 1fr) auto; column-gap: 48px; row-gap: 0;
       grid-template-areas: "eb eb" "p p" "h acts" "rail rail"; align-items: end;   /* Sergei 03/11: the paragraph right under the label, full width */
@@ -299,7 +299,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx__rw { --off: max(var(--gut), calc((100vw - var(--sbw, 0px) - var(--max)) / 2 + var(--gut)));
               display: block; grid-area: rail; position: relative; margin: 22px 0 0 calc(-1 * var(--off)); width: calc(100vw - var(--sbw, 0px)); }
     .cx__rail { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-                padding: 4px var(--off) 18px; scroll-padding-inline: var(--off); }
+                padding: 4px var(--off) 12px; scroll-padding-inline: var(--off); }
     .cx__rail::-webkit-scrollbar { display: none; }
     .cd { flex: none; width: 300px; min-height: 250px; scroll-snap-align: start;
           background: var(--paper-2); padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;

@@ -141,6 +141,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   @media (min-width: 1024px) {
     .abroad { min-height: 280px; box-sizing: border-box; display: flex; align-items: center; padding: 36px 0; }
     .abroad--you { background: var(--paper); border-top: 0; }
+    /* Sergei 03/11: it follows the light Design & construction band — no centring gap above it */
+    .abroad--you { min-height: 0; padding-top: 12px; }
     .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: start; }
     .abroad__head { max-width: none; }
     .abroad__h { margin: 14px 0 0; font-size: 36px; }

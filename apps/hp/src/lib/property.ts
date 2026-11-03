@@ -36,7 +36,9 @@ export function descriptionOf(a: Attrs, lang: Lang): string {
  * δίνει `{ slug: 'fireplace', label: 'Τζάκι' }`. Έτσι οι διατυπώσεις μπορούν να
  * ξαναγραφούν ελεύθερα σε 9 γλώσσες χωρίς να αγγίξουν τίποτα εδώ.
  */
-export type Feature = { slug?: string; label: string };
+export type Feature = {
+  /** English (and Greek) label at the same position — only for choosing the icon. */
+  key?: string; slug?: string; label: string };
 
 /**
  * Διαβάζει ΚΑΙ ΤΑ ΔΥΟ σχήματα, ώστε να μη χρειαστεί δεύτερο πέρασμα:
@@ -70,7 +72,10 @@ export function featuresOf(a: Attrs, lang: Lang): Feature[] {
   };
   const own = g(lang);
   const list = own.length ? own : (g('en').length ? g('en') : g('el'));
-  return list.map((label) => ({ label }));
+  // The lists are parallel (same order in every language): the English one names the icon,
+  // so a German or Russian page gets the same pictures (Sergei 03/11).
+  const en = g('en'), el = g('el');
+  return list.map((label, i) => ({ label, key: `${en.length === list.length ? en[i] : ''} ${el.length === list.length ? el[i] : ''}`.trim() || undefined }));
 }
 
 /**
@@ -112,6 +117,41 @@ const ICON: Record<string, string> = {
   sofa: 'M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3M2 11h4v4h12v-4h4v6H2zM4 17v2M20 17v2',
   heat: 'M3 20h18M7 16c0-2 2-2 2-4S7 10 7 8M12 16c0-2 2-2 2-4s-2-2-2-4M17 16c0-2 2-2 2-4s-2-2-2-4',
   drain: 'M4 4h16v6H4zM8 10v4a4 4 0 0 0 8 0v-4M12 18v3',
+  // the rest of the catalogue (Sergei 03/11)
+  facade: 'M4 21V7l8-4 8 4v14M2 21h20M9 21v-5h6v5M8 10h2M14 10h2',
+  nature: 'M3 19l6-9 4 6 3-4 5 7zM16 5.5a1.5 1.5 0 1 0 0 .01',
+  corner: 'M5 21V5h14M9 17V9h8',
+  slope: 'M3 20h18L3 9z',
+  flat: 'M2 16h20M5 16v-3h14v3',
+  beach: 'M3 11a9 9 0 0 1 18 0zM12 11v10M2 21h20',
+  amphi: 'M3 20h18M5 16h14M7 12h10M9 8h6',
+  tree: 'M12 21v-6M6 15h12L12 3z',
+  access: 'M11 4.5a1.5 1.5 0 1 0 0 .01M10 7v6h5l2 5M8 10a5 5 0 1 0 6 8',
+  awning: 'M3 6h18l-2 5H5zM5 11v9M19 11v9',
+  build: 'M4 18a8 8 0 0 1 16 0zM2 18h20M12 6v4M9 8l1 3M15 8l-1 3',
+  split: 'M2 20V11l5-4 5 4v9M12 20V11l5-4 5 4v9M1 20h22',
+  attic: 'M3 11 12 4l9 7v9H3zM10 12h4v3h-4z',
+  pv: 'M3 18l2-9h14l2 9zM4 13.5h16M9 9l-1 9M15 9l1 9M12 3v3',
+  stone: 'M3 21V9l9-6 9 6v12zM3 13h18M3 17h18M8 9v4M14 13v4M10 17v4M16 9v4',
+  flatblock: 'M5 21V3h14v18M2 21h20M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2',
+  house: 'M3 11 12 4l9 7v10H3zM9 21v-6h6v6',
+  shield: 'M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z',
+  forest: 'M7 21v-4M4 17h6L7 9zM17 21v-4M14 17h6l-3-9z',
+  penthouse: 'M6 21V8h12v13M4 21h16M9 8V5h6v3',
+  columns: 'M3 9 12 4l9 5M4 9h16M6 9v9M10 9v9M14 9v9M18 9v9M3 20h18',
+  plan: 'M4 4h16v16H4zM4 10h6v10M10 4v6h10',
+  road: 'M8 21 10 3M16 21 14 3M12 6v2M12 11v2M12 16v2',
+  ball: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18',
+  bolt: 'M13 2 5 13h6l-1 9 8-11h-6z',
+  blocks: 'M3 21V11h8v10M13 21V5h8v16M3 21h18',
+  lift: 'M5 3h14v18H5zM9 10l3-3 3 3M9 14l3 3 3-3',
+  pin: 'M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21ZM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z',
+  sun: 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1',
+  drop: 'M12 3c3 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 2-5 5-9Z',
+  box: 'M3 8l9-5 9 5v12H3zM3 8h18M9 20v-6h6v6',
+  bed: 'M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5M6 11.5a1.5 1.5 0 1 0 0 .01',
+  waves: 'M2 12c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 17c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2',
+  handshake: 'M2 11l4-4 4 2 2-1 4 1 6 4M6 7v6l5 4 2-1 3 2 4-3M10 13l2 2',
 };
 /**
  * Αντιστοίχιση **σταθερού slug** → εικονίδιο. Αυτό είναι το μέλλον: το slug δεν
@@ -149,8 +189,45 @@ const fold = (x: string) =>
 export function featureIcon(f: Feature | string): string {
   const slug = typeof f === 'string' ? '' : (f.slug ?? '');
   if (slug && ICON_BY_SLUG[slug]) return ICON_BY_SLUG[slug];
-  const label = typeof f === 'string' ? f : f.label;
+  const label = typeof f === 'string' ? f : `${f.label} ${f.key ?? ''}`;
   const s = fold(label);
+  // order matters: the specific phrases before the general words
+  if (/separation|δυο ανεξαρτητ|διαχωρισ/.test(s)) return ICON.split;
+  if (/under construction|υπο κατασκευ|ανεγειρ/.test(s)) return ICON.build;
+  if (/disabled|αμεα/.test(s)) return ICON.access;
+  if (/photovolt|φωτοβολτ/.test(s)) return ICON.pv;
+  if (/charging|φορτισ/.test(s)) return ICON.bolt;
+  if (/traditional stone|πετρινο|παραδοσιακ/.test(s)) return ICON.stone;
+  if (/neoclassic|νεοκλασ/.test(s)) return ICON.columns;
+  if (/old house|παλιο σπιτι|παλαια οικια/.test(s)) return ICON.house;
+  if (/private forest|δασος|δασικ/.test(s)) return ICON.forest;
+  if (/olive|ελαιω/.test(s)) return ICON.olive;
+  if (/tree plant|δεντρ/.test(s)) return ICON.tree;
+  if (/facade|προσοψ/.test(s)) return ICON.facade;
+  if (/natural beauty|φυσικο καλλος|φυσικη ομορφ/.test(s)) return ICON.nature;
+  if (/natural light|φυσικος φωτισμ|φωτειν/.test(s)) return ICON.sun;
+  if (/corner|γωνιακ/.test(s)) return ICON.corner;
+  if (/slop|επικλιν/.test(s)) return ICON.slope;
+  if (/amphithea|αμφιθεατρ/.test(s)) return ICON.amphi;
+  if (/\bflat\b|επιπεδ/.test(s)) return ICON.flat;
+  if (/sandy beach|αμμουδ|beach|παραλι/.test(s)) return ICON.beach;
+  if (/front of the sea|μπροστα στη θαλασσα|seafront/.test(s)) return ICON.waves;
+  if (/awning|τεντ/.test(s)) return ICON.awning;
+  if (/attic|σοφιτ/.test(s)) return ICON.attic;
+  if (/penthouse|ρετιρε/.test(s)) return ICON.penthouse;
+  if (/floor apartment|διαμερισμ|οροφοδιαμ/.test(s)) return ICON.flatblock;
+  if (/security service|φυλαξ|φυλακ/.test(s)) return ICON.shield;
+  if (/basket|tennis|court|γηπεδ/.test(s)) return ICON.ball;
+  if (/prefab|προκατ/.test(s)) return ICON.blocks;
+  if (/elevator|lift|ασανσερ|ανελκυστ/.test(s)) return ICON.lift;
+  if (/central (point|location)|κεντρικο σημειο/.test(s)) return ICON.pin;
+  if (/road|δρομο/.test(s)) return ICON.road;
+  if (/buildable|οικοδομησ|plan type|εντος σχεδ|εκτος σχεδ|building rate|συντελεστ/.test(s)) return ICON.plan;
+  if (/contribution|αντιπαροχ/.test(s)) return ICON.handshake;
+  if (/storage|αποθηκ/.test(s) && !/parking|σταθμευσ|παρκινγκ/.test(s)) return ICON.box;
+  if (/master bedroom|guest ?house|ξενωνα|υπνοδωμ/.test(s)) return ICON.bed;
+  if (/electricity|ρευμα/.test(s)) return ICON.bolt;
+  if (/^νερο\b|\bwater\b(?! tank)/.test(s)) return ICON.drop;
   if (/κουζιν|kitchen/.test(s)) return ICON.kitchen;
   // Sergei 03/11: the mockup's icons, matched on the words the catalogue uses (en + el)
   if (/πανοραμ|panoram/.test(s)) return ICON.panorama;

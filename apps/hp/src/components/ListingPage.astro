@@ -1111,15 +1111,18 @@ const tilePhoto = (() => {
     .lc--sort.lc--on > .lc__s { font-size: 14px; }
 
     /* under the row, inside the box: the save question, then the tags — sliding down */
-    @keyframes lslide { from { max-height: 0; opacity: 0; } to { max-height: 160px; opacity: 1; } }
-    .lslide { overflow: hidden; animation: lslide .35s ease both; }
+    /* Sergei 03/11: same curve as the home → list move, quicker; the box grows to its real height
+       (interpolate-size: height 0 → auto), the content fades in after it starts */
+    @keyframes lslide { from { height: 0; opacity: 0; } 35% { opacity: 0; } to { height: auto; opacity: 1; } }
+    .lslide { overflow: hidden; interpolate-size: allow-keywords; animation: lslide .55s cubic-bezier(.65,0,.35,1) both; }
     .lsave {
       display: flex; align-items: center; gap: 16px; padding: 10px 16px 10px 22px;
       background: var(--paper-2); border-top: 1px solid var(--line-soft);
     }
     .lsave[hidden] { display: none; }
+    .lsave { justify-content: flex-end; }   /* Sergei 03/11: the question sits on the right, next to its buttons */
     .lsave > svg { flex: none; color: var(--ink); }
-    .lsave__q { flex: 1; font-size: 14.5px; }
+    .lsave__q { flex: none; font-size: 14.5px; }
     .lsave__no, .lsave__yes {
       box-sizing: border-box; height: 34px; min-height: 34px; padding: 0 18px; display: inline-flex; align-items: center;
       font: inherit; font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600;

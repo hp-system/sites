@@ -99,6 +99,10 @@ const spaces = spacesOf(a);
 const dists = distancesOf(a);
 const energy = energyOf(a, lang);
 const desc = descriptionOf(a, lang);
+// The description's first paragraph (blank-line separated) and the rest, for the fold below.
+const descParts = (desc || '').split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+const descFirst = descParts[0] ?? '';
+const descRest = descParts.slice(1).join('\n\n');
 const sea = seaLabel(a.sea_access, lang);
 const rental = rentalUrl(id);
 
@@ -479,7 +483,15 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
           {desc && (<>
             <h2 class="sec">{pui(lang, 'desc')}</h2>
-            <p class="desc">{desc}</p>
+            {/* Sergei 03/11: the first paragraph always; the rest fades out under it, with a button to open and close */}
+            {descRest ? (
+              <div class="dsc" data-dsc>
+                <p class="desc">{descFirst}</p>
+                <div class="dsc__more" id="dsc-more"><p class="desc">{descRest}</p></div>
+                <button type="button" class="dsc__t" aria-expanded="false" aria-controls="dsc-more"
+                        data-more={pui(lang, 'descMore')} data-less={pui(lang, 'descLess')}>{pui(lang, 'descMore')}</button>
+              </div>
+            ) : <p class="desc">{desc}</p>}
           </>)}
 
           {feats.length > 0 && (<>
@@ -1037,6 +1049,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .sec { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint);
          margin: var(--s6) 0 var(--s3); font-weight: 600; }
   .desc { margin: 0; font-size: 15px; color: var(--ink-2); max-width: 70ch; white-space: pre-line; }
+  .dsc__more { overflow: hidden; max-height: 4.8em; margin-top: 1em;
+               -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, transparent 100%);
+               transition: max-height .6s cubic-bezier(.4,0,.2,1); }
+  .dsc.open .dsc__more { -webkit-mask-image: none; mask-image: none; }
+  .dsc__t { margin-top: 10px; padding: 6px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11.5px; font-weight: 600;
+            letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  .dsc__t:hover { color: var(--ink-hover); }
+  @media (prefers-reduced-motion: reduce) { .dsc__more { transition: none; } }
 
   /* Χαρακτηριστικά με εικονίδια — «αισθητικά πολύ γλυκό» (George). */
   .feats { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px var(--s4);
@@ -1549,6 +1569,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
 <script>
   import { checkPhone, phoneLeadEmail, DIAL, LANG_CC } from '../lib/callback';
+  // ── Description fold (Sergei 03/11): open to the real height, close back to the faded lines.
+  document.querySelectorAll<HTMLElement>('[data-dsc]').forEach((box) => {
+    const more = box.querySelector<HTMLElement>('.dsc__more')!, btn = box.querySelector<HTMLButtonElement>('.dsc__t')!;
+    const shut = getComputedStyle(more).maxHeight;
+    btn.addEventListener('click', () => {
+      const open = !box.classList.contains('open');
+      if (open) { box.classList.add('open'); more.style.maxHeight = `${more.scrollHeight}px`; }
+      else { more.style.maxHeight = `${more.scrollHeight}px`; requestAnimationFrame(() => { more.style.maxHeight = shut; }); setTimeout(() => box.classList.remove('open'), 560); }
+      btn.setAttribute('aria-expanded', String(open));
+      btn.textContent = open ? btn.dataset.less ?? '' : btn.dataset.more ?? '';
+    });
+  });
   import { initDial } from '../lib/dial';
   // ── ΑΓΑΠΗΜΕΝΟ (#59): εναλλαγή χωρίς επαναφόρτωση· σε αποτυχία η κατάσταση μένει ως ήταν.
   const fav = document.getElementById('fav') as HTMLButtonElement | null;

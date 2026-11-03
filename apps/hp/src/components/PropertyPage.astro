@@ -1417,6 +1417,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             background: linear-gradient(160deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.64) 45%, rgba(255,255,255,.72) 100%);
             -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%); }
     .pbp { display: flex; align-items: baseline; gap: 10px; height: 26px; white-space: nowrap; }
+    .pbp .price, .pbp .per { font-variant-numeric: lining-nums proportional-nums; }   /* Sergei 03/11: price digits read normally */
     .pbp .price { font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: -.012em; }
     .pbp .price.t-h3 { font-size: 20px; }
     .pbp .per { margin: 0; }

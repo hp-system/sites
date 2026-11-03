@@ -184,3 +184,59 @@ const has = (k: string) => pageExists(k as any);
     width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .55;
   }
 </style>
+
+<style is:global>
+  /* ── Sergei 03/11: on every page the header leaves when the page scrolls down and comes
+        back (solid white, ink text) as soon as it scrolls up; at the top it is itself again ── */
+  header.site-header.hdr-pin {
+    position: fixed !important; top: 0; left: 0; right: 0; z-index: 60;
+    background: var(--paper) !important; color: var(--ink) !important;
+    border-bottom: 1px solid var(--line-soft); box-shadow: 0 6px 20px rgba(10,14,16,.06);
+    transform: translateY(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  header.site-header.hdr-pin.hdr-show { transform: none; }
+  header.site-header.hdr-pin .lsw > summary, header.site-header.hdr-pin .lsw > summary:hover { color: var(--ink); }
+  .hdr-spacer { display: block; }
+  /* while the bar is shown, sticky boxes sit under it, not behind it */
+  html.hdr-up .side, html.hdr-up .art-side, html.hdr-up .info-side { top: calc(var(--hdr-h, 88px) + 12px) !important; }
+  .art-side, .info-side { transition: top .25s ease; }
+  @media (prefers-reduced-motion: reduce) { header.site-header.hdr-pin { transition: none; } }
+</style>
+
+<script>
+  // Hide on the way down, show on the way up. The header switches to a fixed bar only once it
+  // is out of view, so nothing jumps; a static header leaves a spacer of its own height behind.
+  const hdr = document.querySelector<HTMLElement>('header.site-header');
+  if (hdr) {
+    const staticBox = getComputedStyle(hdr).position === 'static';
+    let spacer: HTMLElement | null = null;
+    let h = hdr.offsetHeight, last = window.scrollY, pinned = false, tick = false;
+    const busy = () => !!hdr.querySelector('details[open]') || document.querySelector('[data-menu-open]')?.getAttribute('aria-expanded') === 'true';
+    const pin = (on: boolean) => {
+      if (on === pinned) return;
+      pinned = on;
+      if (on) {
+        h = hdr.offsetHeight;
+        if (staticBox) { spacer = document.createElement('div'); spacer.className = 'hdr-spacer'; spacer.style.height = `${h}px`; hdr.before(spacer); }
+        hdr.classList.add('hdr-pin');
+      } else {
+        hdr.classList.remove('hdr-pin', 'hdr-show');
+        spacer?.remove(); spacer = null;
+      }
+    };
+    const run = () => {
+      tick = false;
+      const y = window.scrollY, d = y - last;
+      if (y <= h) { pin(false); document.documentElement.classList.remove('hdr-up'); last = y; return; }   // at the top: the header as designed
+      if (Math.abs(d) < 6) return;                            // ignore jitter
+      pin(true);
+      if (d < 0) hdr.classList.add('hdr-show');               // going up: it comes back
+      else if (!busy()) hdr.classList.remove('hdr-show');     // going down: it leaves
+      // sticky boxes (price box, side menus) move down while the bar is shown
+      document.documentElement.classList.toggle('hdr-up', hdr.classList.contains('hdr-show'));
+      document.documentElement.style.setProperty('--hdr-h', `${h}px`);
+      last = y;
+    };
+    window.addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(run); } }, { passive: true });
+  }
+</script>

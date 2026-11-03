@@ -1344,7 +1344,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .near .dists li { padding: 7px 0; border-bottom: 1px solid var(--line-soft); align-items: center; gap: 10px; line-height: 1.3; }
     .near .dists li:last-child { border-bottom: 0; }
     .near .dists span { color: var(--muted); }
-    .near__open { position: absolute; inset-inline-end: 12px; bottom: 12px; z-index: 600; display: none; gap: 8px; align-items: center; height: 36px;
+    .near__open { position: absolute; inset-inline-end: 12px; top: 12px; z-index: 600;   /* Sergei 03/11: top corner */
+                  display: none; gap: 8px; align-items: center; height: 36px;
                   padding: 0 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 13px;
                   font-weight: 600; cursor: pointer; }
     .near__open svg { width: 16px; height: 16px; }
@@ -1353,7 +1354,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
     /* ── About <municipality>: the photo band edge to edge, two glass cards, attached to Location ── */
     .muni { position: relative; min-height: 390px; margin-top: 0; }
-    .band__win { display: block; position: absolute; top: 0; bottom: 0; left: -100vw; right: -100vw; overflow: hidden; background: var(--paper-2); }
+    /* Sergei 03/11: the photo as wide as the blocks above and below it (the main column), not edge to edge */
+    .band__win { display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; background: var(--paper-2); }
     .band__ph { position: absolute; inset: 0; clip-path: inset(0); }
     .band__ph img { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; display: block; opacity: 0; transition: opacity .4s ease; }
     .band__ph img.on { opacity: 1; }
@@ -1409,6 +1411,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
     /* ── similar: three columns, the hover of the cards on home and the list ── */
     .sim { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 20px; }
+    /* members have no dark sign-up block under the photo band: the next heading keeps a clear gap (Sergei 03/11) */
+    .muni + .sec { margin-top: 64px; }
     .sim :global(.title) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sim :global(.card:hover .title a) { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
     .sim :global(.card img) { transition: transform .4s ease; }
@@ -1512,7 +1516,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .qf__fine { font-size: 11px; color: var(--muted); line-height: 1.5; }
     /* Sergei 03/11: the two small lines read as one note — 12 px under Send, 4 px apart, 20 px to the box's edge */
     .qf button[type='submit'] + .qf__fine, .qf .hp + .qf__fine { margin-top: 2px; }
-    .qf__fine + .qf__fine { margin-top: -3px; }
+    .qf__fine + .qf__fine { margin-top: -10px; }   /* Sergei 03/11: one even block — no gap between the two notes (the form gap is 10 px) */
     .qf__priv a { white-space: nowrap; }
     .side .card { padding-bottom: 20px; }
 
@@ -1636,11 +1640,15 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         const lat = Number(pm.dataset.lat), lng = Number(pm.dataset.lng);
         const exact = pm.dataset.exact === '1';
         const map = L.map(pm, { scrollWheelZoom: false }).setView([lat, lng], exact ? 15 : 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: exact ? 18 : 14, attribution: '&copy; OpenStreetMap',
+        // Sergei 03/11: members see the satellite picture (Esri World Imagery) with place names on top.
+        const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+        L.tileLayer(ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: exact ? 18 : 14, attribution: 'Tiles &copy; Esri — Esri, Maxar, Earthstar Geographics',
         }).addTo(map);
-        if (exact) L.circleMarker([lat, lng], { radius: 8, color: '#0d1114', weight: 2, fillOpacity: .9 }).addTo(map);
-        else L.circle([lat, lng], { radius: Number(pm.dataset.r), color: '#0d1114', weight: 1.5, fillOpacity: .12 }).addTo(map);
+        L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: exact ? 18 : 14 }).addTo(map);
+        // white lines read on the photo; the exact point keeps a dark centre
+        if (exact) L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0d1114', fillOpacity: .9 }).addTo(map);
+        else L.circle([lat, lng], { radius: Number(pm.dataset.r), color: '#fff', weight: 2, fillColor: '#fff', fillOpacity: .14 }).addTo(map);
       };
       document.head.appendChild(js);
     };
@@ -1945,6 +1953,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     zdots.forEach((d, i) => d.addEventListener('click', () => go(i)));
     zoneEl.addEventListener('mouseenter', () => { hold = true; });
     zoneEl.addEventListener('mouseleave', () => { hold = false; at = Date.now(); });
+    // Sergei 03/11: a sideways swipe (trackpad, shift + wheel) pages the zone too — one page per gesture, no wrap
+    let wheelAt = 0;
+    zoneEl.addEventListener('wheel', (e) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+      if (Math.abs(dx) < 8) return;
+      e.preventDefault();
+      if (Date.now() - wheelAt < 650) return;
+      wheelAt = Date.now();
+      const rtl = document.documentElement.dir === 'rtl';
+      const next = page + ((dx > 0) !== rtl ? 1 : -1);
+      if (next >= 0 && next < zdots.length) go(next);
+    }, { passive: false });
     zoneEl.addEventListener('focusin', () => { hold = true; });
     zoneEl.addEventListener('focusout', () => { hold = false; at = Date.now(); });
     if (!still.matches) setInterval(() => { if (!hold && !document.hidden && desk.matches && Date.now() - at >= 5000) go(page + 1); }, 250);

@@ -91,6 +91,27 @@ const ICON: Record<string, string> = {
   olive: 'M12 21c-4 0-7-3-7-7 0-5 4-9 7-11 3 2 7 6 7 11 0 4-3 7-7 7Zm0-4v-6',
   device: 'M4 6h16v10H4zM8 20h8M12 16v4',
   check: 'M4 12.5 9.5 18 20 6',
+  // Sergei 03/11: the rest of the set from the approved property mockup (24×24, one line, same style)
+  panorama: 'M2 18h20M3 18l5-7 4 5 3-3 6 5',
+  aircon: 'M3 5h18v7H3zM6 9h12M8 15l-1 4M12 15v5M16 15l1 4',
+  gym: 'M6 7v10M3 10v4M18 7v10M21 10v4M6 12h12',
+  alarm: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2ZM10 21h4',
+  cctv: 'M3 8l12-3 2 6-12 3zM8 13l1 4H4M4 15v4M17 9l4-1',
+  door: 'M6 21V3h12v18M3 21h18M15 12v.5M9 7h6v3H9z',
+  gazebo: 'M3 10 12 4l9 6M5 10v10M19 10v10M3 20h18M9 14h6',
+  watering: 'M12 3c3 4 5 6.5 5 9a5 5 0 0 1-10 0c0-2.5 2-5 5-9ZM4 21h16',
+  borehole: 'M12 3v13M8 7h8M9 16h6l-1 5h-4zM5 21h14',
+  tank: 'M5 6c0-1.7 3.1-3 7-3s7 1.3 7 3v12c0 1.7-3.1 3-7 3s-7-1.3-7-3zM5 6c0 1.7 3.1 3 7 3s7-1.3 7-3M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3',
+  solar: 'M3 21l3-8h12l3 8zM12 13v8M4.5 17h15M12 3v2M5.6 5.6 7 7M18.4 5.6 17 7M3 10h2M19 10h2',
+  dish: 'M5 19a10 10 0 0 1 0-14l14 14a10 10 0 0 1-14 0ZM12 12l5-5M8 21h8',
+  wardrobe: 'M5 3h14v18H5zM12 3v18M10 11v2M14 11v2',
+  screen: 'M4 4h16v16H4zM4 9h16M4 14h16M9 4v16M14 4v16',
+  pool: 'M2 19c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M8 16V6a2 2 0 0 1 4 0M16 16V6a2 2 0 0 1 4 0M8 9h8M8 13h8',
+  bath: 'M3 12h18v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4zM5 12V6a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2',
+  parking: 'M4 4h16v16H4zM9 17V7h4a3 3 0 0 1 0 6H9',
+  sofa: 'M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3M2 11h4v4h12v-4h4v6H2zM4 17v2M20 17v2',
+  heat: 'M3 20h18M7 16c0-2 2-2 2-4S7 10 7 8M12 16c0-2 2-2 2-4s-2-2-2-4M17 16c0-2 2-2 2-4s-2-2-2-4',
+  drain: 'M4 4h16v6H4zM8 10v4a4 4 0 0 0 8 0v-4M12 18v3',
 };
 /**
  * Αντιστοίχιση **σταθερού slug** → εικονίδιο. Αυτό είναι το μέλλον: το slug δεν
@@ -131,6 +152,28 @@ export function featureIcon(f: Feature | string): string {
   const label = typeof f === 'string' ? f : f.label;
   const s = fold(label);
   if (/κουζιν|kitchen/.test(s)) return ICON.kitchen;
+  // Sergei 03/11: the mockup's icons, matched on the words the catalogue uses (en + el)
+  if (/πανοραμ|panoram/.test(s)) return ICON.panorama;
+  if (/κλιματισ|air ?condition/.test(s)) return ICON.aircon;
+  if (/πορτα ασφαλ|θωρακισ|safety door|security door/.test(s)) return ICON.door;
+  if (/ντουλαπ|closet|wardrobe/.test(s)) return ICON.wardrobe;
+  if (/ποτισμ|watering/.test(s)) return ICON.watering;
+  if (/σιτ(ε|ες)|screens?|insect/.test(s)) return ICON.screen;
+  if (/ηλιακ|solar boiler|solar water/.test(s)) return ICON.solar;
+  if (/συναγερ|alarm/.test(s)) return ICON.alarm;
+  if (/δορυφορ|satel/.test(s)) return ICON.dish;
+  if (/δεξαμεν|water tank/.test(s)) return ICON.tank;
+  if (/cctv|καμερ/.test(s)) return ICON.cctv;
+  if (/γεωτρησ|borehole|drilling/.test(s)) return ICON.borehole;
+  if (/γυμναστ|\bgym/.test(s)) return ICON.gym;
+  if (/κιοσκ|kiosk|gazebo|περγκολ|pergola/.test(s)) return ICON.gazebo;
+  if (/πισιν|pool|jacuzzi|hot tub|τζακουζι/.test(s)) return ICON.pool;
+  if (/παρκινγκ|σταθμευσ|parking|garage|γκαραζ/.test(s)) return ICON.parking;
+  if (/επιπλωμ|furnish/.test(s)) return ICON.sofa;
+  if (/θερμανσ|heating|geotherm|γεωθερμ|underfloor/.test(s)) return ICON.heat;
+  if (/αποχετευσ|drainage|βιολογικ/.test(s)) return ICON.drain;
+  if (/μπανι|bathroom/.test(s)) return ICON.bath;
+  if (/κηπουρ|gardener/.test(s)) return ICON.garden;
   if (/τζακι|fireplace/.test(s)) return ICON.fireplace;
   if (/θεα|view/.test(s)) return ICON.view;
   if (/κηπο|garden|ελαιω|olive|grove/.test(s)) return /ελαιω|olive/.test(s) ? ICON.olive : ICON.garden;

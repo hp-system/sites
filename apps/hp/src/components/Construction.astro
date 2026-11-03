@@ -281,13 +281,13 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx { padding: 40px 0 36px; background: var(--paper); color: var(--ink); overflow: hidden; }
     .cx .cx__top {
       grid-template-columns: minmax(0, 1fr) auto; column-gap: 48px; row-gap: 0;
-      grid-template-areas: "eb acts" "h acts" "rail rail" "p p"; align-items: end;
+      grid-template-areas: "eb acts" "p acts" "h acts" "rail rail"; align-items: end;   /* Sergei 03/11: the paragraph right under the label */
     }
     .cx .cx__lead { display: contents; }
     .cx .cx__eyebrow { grid-area: eb; color: var(--muted); }
     .cx .cx__h { grid-area: h; margin-top: 14px; font-size: 42px; line-height: 1.1; color: var(--ink); }
     .cx .cx__h b { font-weight: 600; }
-    .cx .cx__p { grid-area: p; margin: 6px 0 0; max-width: none; font-size: 16px; line-height: 1.65; color: var(--ink-2); }
+    .cx .cx__p { grid-area: p; margin: 10px 0 0; max-width: none; font-size: 16px; line-height: 1.65; color: var(--ink-2); }
     .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 0; }
     .cx .cx__btn { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
     .cx .cx__btn:hover { background: var(--ink-hover); border-color: var(--ink-hover); }

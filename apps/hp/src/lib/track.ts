@@ -38,6 +38,8 @@ export const EVENTS = {
   // Πρόθεση αγοραστή
   SEARCH_SUBMIT: 'search:submit',
   FILTERS_OPEN: 'search:filters_open',
+  /** The home hero's message button (lib/hero-messages.ts); `ev_label` = the message id. */
+  HERO_CTA: 'hero:cta',
   CARD_CLICK: 'property:card_click',
   CARD_MORE: 'property:card_more',
   FEATURE_CLICK: 'property:feature_click',
@@ -157,7 +159,10 @@ export const TRACK_SNIPPET = `
   document.addEventListener('click', function(e){
     var el = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
     if (!el) return;
-    send(check(el.getAttribute('data-ev')), { ev_page: location.pathname });
+    var data = { ev_page: location.pathname };
+    var lab = el.getAttribute('data-ev-label');   // e.g. which hero message was clicked
+    if (lab) data.ev_label = lab;
+    send(check(el.getAttribute('data-ev')), data);
   }, { passive: true });
   document.addEventListener('submit', function(e){
     var f = e.target;

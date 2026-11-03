@@ -64,20 +64,20 @@ const DOORS = [
 
   /* ── #101 desktop ─────────────────────────────────────────────────────── */
   @media (min-width: 1024px) {
-    .doors-sec { background: var(--paper-2); padding: 28px 0 44px; }
-    .doors__lbl { display: block; margin: 0 0 18px; }
+    /* Sergei 03/11 (mockup «two home blocks»): black band, beige doors, the chosen one white */
+    .doors-sec { background: var(--ink-deep); padding: 36px 0 40px; }
+    .doors__lbl { display: block; margin: 0 0 16px; color: rgba(255,255,255,.6); }
     .doors { display: flex; gap: 12px; background: none; border: 0; }
     .door {
       position: relative; flex: 1 1 0; min-width: 0; min-height: 250px;
       display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
-      padding: 32px 34px 28px; background: var(--paper); color: var(--ink); overflow: hidden;
+      padding: 24px 30px 26px; background: var(--paper-3); color: var(--ink); overflow: hidden;
       transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease;
     }
-    .door.on { flex-grow: 1.6; background: var(--ink-deep); color: #fff; }
+    .door.on { flex-grow: 1.6; background: #fff; color: var(--ink); }
     .door__h { font-size: 24px; line-height: 1.15; transition: font-size .4s ease; }
     .door.on .door__h { font-size: 32px; }
-    .door p { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 40ch; transition: color .35s ease; }
-    .door.on p { color: rgba(255,255,255,.78); }
+    .door p { margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: var(--ink-2); max-width: 40ch; }
     .dl {
       display: flex; justify-content: space-between; align-items: center;
       font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap;

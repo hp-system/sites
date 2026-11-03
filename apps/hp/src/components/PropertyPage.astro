@@ -99,6 +99,10 @@ const spaces = spacesOf(a);
 const dists = distancesOf(a);
 const energy = energyOf(a, lang);
 const desc = descriptionOf(a, lang);
+// The description's first paragraph (blank-line separated) and the rest, for the fold below.
+const descParts = (desc || '').split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+const descFirst = descParts[0] ?? '';
+const descRest = descParts.slice(1).join('\n\n');
 const sea = seaLabel(a.sea_access, lang);
 const rental = rentalUrl(id);
 
@@ -479,7 +483,15 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
           {desc && (<>
             <h2 class="sec">{pui(lang, 'desc')}</h2>
-            <p class="desc">{desc}</p>
+            {/* Sergei 03/11: the first paragraph always; the rest fades out under it, with a button to open and close */}
+            {descRest ? (
+              <div class="dsc" data-dsc>
+                <p class="desc">{descFirst}</p>
+                <div class="dsc__more" id="dsc-more"><p class="desc">{descRest}</p></div>
+                <button type="button" class="dsc__t" aria-expanded="false" aria-controls="dsc-more"
+                        data-more={pui(lang, 'descMore')} data-less={pui(lang, 'descLess')}>{pui(lang, 'descMore')}</button>
+              </div>
+            ) : <p class="desc">{desc}</p>}
           </>)}
 
           {feats.length > 0 && (<>
@@ -509,6 +521,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               {spaces.map((s) => (
                 <div class="fl">
                   <b class="fl__h">{floorName(lang, s.level + 1)}</b>
+                  {/* desktop (Sergei 03/11, as the mockup): the area large, the rest on one line */}
+                  {Number(s.level_sqm) > 0 && <span class="fl__a num">{sqmFmt(Number(s.level_sqm), lang)}</span>}
+                  <span class="fl__s num">{[
+                    Number(s.rooms) > 0 && `${pui(lang, 'roomsL')} ${s.rooms}`,
+                    Number(s.living_rooms) > 0 && `${pui(lang, 'livingL')} ${s.living_rooms}`,
+                    Number(s.bathrooms) > 0 && `${pui(lang, 'bathsL')} ${s.bathrooms}`,
+                    Number(s.wc) > 0 && `${pui(lang, 'wcL')} ${s.wc}`,
+                  ].filter(Boolean).join(' · ')}</span>
                   <dl>
                     {Number(s.level_sqm) > 0 && (<><dt>{pui(lang, 'sqmL')}</dt><dd class="num">{sqmFmt(Number(s.level_sqm), lang)}</dd></>)}
                     {Number(s.rooms) > 0 && (<><dt>{pui(lang, 'roomsL')}</dt><dd class="num">{s.rooms}</dd></>)}
@@ -761,8 +781,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             )}
             {/* «να σε καλέσουμε» next to the office phone (#82, placement B of the approved mockup) */}
             <p class="tel num">
-              <a href={co.phoneHref} data-ev="call:property">{pui(lang, 'or')} <bdi dir="ltr">{co.phone}</bdi></a>
-              {' · '}<button type="button" class="cb-open" aria-expanded="false" aria-controls="cb-d" data-ev="lead:callback_open">{pui(lang, 'callMe')}</button>
+              {/* desktop (Sergei 03/11): the number as in the header — icon + digits, no «or», no «we call you» */}
+              <a href={co.phoneHref} data-ev="call:property"><span class="tel__or">{pui(lang, 'or')} </span><svg class="tel__ic" viewBox="0 0 18 18" aria-hidden="true"><path d="M5.2 2.6h2.1l1.1 2.8-1.5 1.1a8.4 8.4 0 0 0 4.6 4.6l1.1-1.5 2.8 1.1v2.1a1.3 1.3 0 0 1-1.4 1.3A12.6 12.6 0 0 1 3.9 4A1.3 1.3 0 0 1 5.2 2.6Z" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" /></svg><bdi dir="ltr">{co.phone}</bdi></a>
+              <span class="tel__cb">{' · '}<button type="button" class="cb-open" aria-expanded="false" aria-controls="cb-d" data-ev="lead:callback_open">{pui(lang, 'callMe')}</button></span>
             </p>
             <CallBack lang={lang} id={id} k="d" phone={meFav?.phone} tel={co.phone} telHref={co.phoneHref} hidden />
 
@@ -1036,6 +1057,15 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .sec { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint);
          margin: var(--s6) 0 var(--s3); font-weight: 600; }
   .desc { margin: 0; font-size: 15px; color: var(--ink-2); max-width: 70ch; white-space: pre-line; }
+  .dsc__more { overflow: hidden; max-height: 3.2em; margin-top: 1em;   /* Sergei 03/11: a shorter fade */
+               
+               -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, transparent 100%);
+               transition: max-height .6s cubic-bezier(.4,0,.2,1); }
+  .dsc.open .dsc__more { -webkit-mask-image: none; mask-image: none; }
+  .dsc__t { margin-top: 10px; padding: 6px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11.5px; font-weight: 600;
+            letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-decoration: underline; text-underline-offset: 4px; }
+  .dsc__t:hover { color: var(--ink); }   /* the grey of the area links (Sergei 03/11) */
+  @media (prefers-reduced-motion: reduce) { .dsc__more { transition: none; } }
 
   /* Χαρακτηριστικά με εικονίδια — «αισθητικά πολύ γλυκό» (George). */
   .feats { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px var(--s4);
@@ -1049,6 +1079,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .fl dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 13px; }
   .fl dt { color: var(--muted); }
   .fl dd { margin: 0; text-align: end; }
+  .fl__a, .fl__s { display: none; }
 
   .place { margin: 0; font-size: 15px; color: var(--ink-2); }
   .pmap { margin: 12px 0 0; }
@@ -1119,6 +1150,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .cta--sec { background: none; color: var(--ink); }
   .tel { display: block; text-align: center; font-size: 13px; color: var(--ink-2); margin: 9px 0 0; }
   .tel a { color: inherit; text-decoration: none; }
+  .tel__ic { display: none; }
   .cb-open { border: 0; background: none; padding: 4px 2px; font: inherit; color: var(--brand); cursor: pointer;
              text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
 
@@ -1224,7 +1256,11 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
     /* ── gallery: edge to edge, rows grow with the width so the photos keep their shape ── */
     .galwrap { max-width: none; padding-inline: 0; margin: 0; }
-    .gal { height: auto; grid-auto-rows: auto; grid-template-rows: repeat(2, calc((100vw - 16px) / 4 * .79)); }
+    /* Sergei 03/11: the first screen ends under the facts row. The gallery starts at 246 px and the
+       chips + facts take 144 px under it, so two rows share 100vh - 414 px (8 px gap, 16 px air);
+       never taller than before (width-based), never below 200 px a row. */
+    .gal { height: auto; grid-auto-rows: auto;
+           grid-template-rows: repeat(2, min(calc((100vw - 16px) / 4 * .79), max(200px, calc((100vh - 414px) / 2)))); }
     .gal:not(:has(.cell)) { display: none; }
     .cell img { transition: transform .45s ease; }
     .cell:not(.cell--locked) { cursor: zoom-in; }
@@ -1274,13 +1310,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .fall:hover { color: var(--ink); font-weight: 600; }
     .fall:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
-    .floors { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-inline-start: 0; }
-    .fl { border: 0; border-inline-start: 1px solid var(--line); padding: 18px 16px; text-align: center; }
-    .fl__h { margin-bottom: 10px; }
+    /* Sergei 03/11 (mockup): one column a floor, ground floor first; name · area large · one line */
+    .floors { display: flex; flex-direction: row-reverse; gap: 0; border: 1px solid var(--line); border-inline-start: 0; }
+    .fl { flex: 1 1 0; min-width: 0; border: 0; border-inline-start: 1px solid var(--line); padding: 20px 16px 22px; text-align: center;
+          display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .fl__h { margin: 0; font-size: 15px; }
+    .fl__a { display: block; font-size: 19px; font-weight: 600; font-variant-numeric: lining-nums proportional-nums; }
+    .fl__s { display: block; font-size: 14px; color: var(--muted); font-variant-numeric: lining-nums proportional-nums; }
+    .fl dl { display: none; }
 
     /* ── location: map / lock with the «Nearby» panel ── */
     .place { margin: 0 0 8px; }
-    .loc { position: relative; height: 380px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); }
+    .loc { position: relative; z-index: 0; isolation: isolate; height: 380px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); }   /* its panels' z-indexes stay inside (the header passes over) */
     .loc--nomap { height: auto; overflow: visible; border: 0; }
     .loc .maplock { height: 100%; }
     .loc .maplock__in { transition: padding .25s ease; }
@@ -1410,18 +1451,34 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .card { position: relative; top: auto; border: 1px solid var(--line); padding: 7px 18px 28px; display: flex; flex-direction: column; gap: 14px;
             background: linear-gradient(160deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.64) 45%, rgba(255,255,255,.72) 100%);
             -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%); }
-    .pbp { display: flex; align-items: baseline; gap: 10px; height: 26px; white-space: nowrap; }
-    .pbp .price { font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: -.012em; }
+    .pbp { display: flex; align-items: baseline; gap: 10px; height: 30px; white-space: nowrap; }
+    .pbp .price, .pbp .per { font-variant-numeric: lining-nums proportional-nums; }   /* Sergei 03/11: price digits read normally */
+    .pbp .price { font-size: 30px; font-weight: 600; line-height: 1; letter-spacing: -.012em; }   /* Sergei 03/11: a little larger */
     .pbp .price.t-h3 { font-size: 20px; }
-    .pbp .per { margin: 0; }
+    .pbp .per { margin: 0; font-size: 15px; }   /* half the price */
+    .side .tel { display: none; }   /* Sergei 03/11: no phone button in the price box (the number is in the header) */
     .pbp .old { order: 3; font-size: 12px; }
     .cta { height: 40px; padding: 0 12px; margin: 0; transition: background .2s ease, color .2s ease, border-color .2s ease; }
     .card > .cta[data-tour] { margin-top: 2px; }
     .cta:hover { opacity: 1; background: var(--paper-2); color: var(--ink); border-color: var(--ink); }
     .cta svg { transition: transform .25s ease; }
     .cta:hover svg { transform: scale(1.12); }
-    .cta--wa { border-color: transparent; align-self: center; width: auto; height: auto; padding: 6px 14px; margin: -6px 0; }
+    /* Sergei 03/11: WhatsApp as wide as «Request a tour» */
+    .cta--wa { border-color: transparent; align-self: stretch;   /* the green edge shows on hover only (Sergei 03/11) */
+               width: 100%; height: 40px; padding: 0 12px; margin: 0; }
     .cta--wa:hover { background: var(--paper-2); color: #1faa53; border-color: #1faa53; }
+    /* the phone as in the header: icon + number, proportional digits; no «or», no «we call you» */
+    .tel__or, .tel__cb { display: none; }
+    /* Sergei 03/11: the number is a button shaped like WhatsApp, in the colours of «Send» */
+    .tel { margin: 0; }
+    .tel a { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 40px; box-sizing: border-box;
+             font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--ink); background: var(--paper);
+             border: 1px solid transparent; font-variant-numeric: lining-nums proportional-nums;
+             transition: background .2s ease, border-color .2s ease; }
+    .tel a:hover { background: var(--paper-2); border-color: transparent; opacity: 1; }   /* no black edge (Sergei 03/11) */
+    .tel a:hover .tel__ic { transform: scale(1.12); }
+    .tel__ic { transition: transform .25s ease; }
+    .tel__ic { display: block; width: 17px; height: 17px; flex: none; }
     .tel { margin: -4px 0 0; }
     .qf { border-top: 0; margin: 0; padding: 0; gap: 10px; }
     .qf input, .qf__msg { height: 38px; padding: 0 11px; }
@@ -1451,8 +1508,13 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .dial__none { margin: 0; padding: 10px; font-size: 13px; color: var(--muted); }
     .qf button[type='submit'] { background: var(--paper); color: var(--ink); border: 1px solid transparent;
                                 transition: background .2s ease, border-color .2s ease; }
-    .qf button[type='submit']:hover { background: var(--paper-2); border-color: var(--ink); }
-    .qf__fine { font-size: 11px; color: var(--muted); line-height: 1.6; }
+    .qf button[type='submit']:hover { background: var(--paper-2); border-color: transparent; }   /* no black edge (Sergei 03/11) */
+    .qf__fine { font-size: 11px; color: var(--muted); line-height: 1.5; }
+    /* Sergei 03/11: the two small lines read as one note — 12 px under Send, 4 px apart, 20 px to the box's edge */
+    .qf button[type='submit'] + .qf__fine, .qf .hp + .qf__fine { margin-top: 2px; }
+    .qf__fine + .qf__fine { margin-top: -3px; }
+    .qf__priv a { white-space: nowrap; }
+    .side .card { padding-bottom: 20px; }
 
     /* ── all photos ── */
     .gpop[open] { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
@@ -1528,6 +1590,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
 <script>
   import { checkPhone, phoneLeadEmail, DIAL, LANG_CC } from '../lib/callback';
+  // ── Description fold (Sergei 03/11): open to the real height, close back to the faded lines.
+  document.querySelectorAll<HTMLElement>('[data-dsc]').forEach((box) => {
+    const more = box.querySelector<HTMLElement>('.dsc__more')!, btn = box.querySelector<HTMLButtonElement>('.dsc__t')!;
+    const shut = getComputedStyle(more).maxHeight;
+    btn.addEventListener('click', () => {
+      const open = !box.classList.contains('open');
+      if (open) { box.classList.add('open'); more.style.maxHeight = `${more.scrollHeight}px`; }
+      else { more.style.maxHeight = `${more.scrollHeight}px`; requestAnimationFrame(() => { more.style.maxHeight = shut; }); setTimeout(() => box.classList.remove('open'), 560); }
+      btn.setAttribute('aria-expanded', String(open));
+      btn.textContent = open ? btn.dataset.less ?? '' : btn.dataset.more ?? '';
+    });
+  });
   import { initDial } from '../lib/dial';
   // ── ΑΓΑΠΗΜΕΝΟ (#59): εναλλαγή χωρίς επαναφόρτωση· σε αποτυχία η κατάσταση μένει ως ήταν.
   const fav = document.getElementById('fav') as HTMLButtonElement | null;

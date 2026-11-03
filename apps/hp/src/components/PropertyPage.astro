@@ -1433,8 +1433,15 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .cta--wa:hover { background: var(--paper-2); color: #1faa53; border-color: #1faa53; }
     /* the phone as in the header: icon + number, proportional digits; no «or», no «we call you» */
     .tel__or, .tel__cb { display: none; }
-    .tel a { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font-size: 12px; letter-spacing: .06em;
-             color: var(--ink); font-variant-numeric: lining-nums proportional-nums; }
+    /* Sergei 03/11: the number is a button shaped like WhatsApp, in the colours of «Send» */
+    .tel { margin: 0; }
+    .tel a { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 40px; box-sizing: border-box;
+             font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--ink); background: var(--paper);
+             border: 1px solid transparent; font-variant-numeric: lining-nums proportional-nums;
+             transition: background .2s ease, border-color .2s ease; }
+    .tel a:hover { background: var(--paper-2); border-color: var(--ink); opacity: 1; }
+    .tel a:hover .tel__ic { transform: scale(1.12); }
+    .tel__ic { transition: transform .25s ease; }
     .tel__ic { display: block; width: 17px; height: 17px; flex: none; }
     .tel { margin: -4px 0 0; }
     .qf { border-top: 0; margin: 0; padding: 0; gap: 10px; }

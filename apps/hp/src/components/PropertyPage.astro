@@ -1439,7 +1439,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
              font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--ink); background: var(--paper);
              border: 1px solid transparent; font-variant-numeric: lining-nums proportional-nums;
              transition: background .2s ease, border-color .2s ease; }
-    .tel a:hover { background: var(--paper-2); border-color: var(--ink); opacity: 1; }
+    .tel a:hover { background: var(--paper-2); border-color: transparent; opacity: 1; }   /* no black edge (Sergei 03/11) */
     .tel a:hover .tel__ic { transform: scale(1.12); }
     .tel__ic { transition: transform .25s ease; }
     .tel__ic { display: block; width: 17px; height: 17px; flex: none; }
@@ -1472,7 +1472,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .dial__none { margin: 0; padding: 10px; font-size: 13px; color: var(--muted); }
     .qf button[type='submit'] { background: var(--paper); color: var(--ink); border: 1px solid transparent;
                                 transition: background .2s ease, border-color .2s ease; }
-    .qf button[type='submit']:hover { background: var(--paper-2); border-color: var(--ink); }
+    .qf button[type='submit']:hover { background: var(--paper-2); border-color: transparent; }   /* no black edge (Sergei 03/11) */
     .qf__fine { font-size: 11px; color: var(--muted); line-height: 1.6; }
 
     /* ── all photos ── */

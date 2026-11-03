@@ -52,7 +52,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     every 3 s on one shared clock (a pointer over either band holds both), then the
     close: George's last two sentences and a gilded «Speak to us».
     Phone: the same two blocks, every step listed. */}
-<div class="ab3" data-rot-hold="ab">
+{/* Sergei 03/11: the two stacks keep turning under the pointer (no data-rot-hold any more) */}
+<div class="ab3">
   <section class="abroad abroad--you" aria-labelledby="abroad-h">
     <div class="wrap ab__grid">
       <div class="abroad__head">
@@ -103,7 +104,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   <div class="wrap">
     <p class="abc__p">{c1}</p>
     {c2 && <h2 id="abc-h" class="abc__h">{c2}</h2>}
-    <a class="btn abc__btn h-gild" href={contactHref} data-ev="contact:abroad">{t(lang, 'ab.cta')}</a>
+    <a class="btn abc__btn" href={contactHref} data-ev="contact:abroad">{t(lang, 'ab.cta')}</a>
   </div>
 </section>
 
@@ -140,9 +141,11 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   @media (min-width: 1024px) {
     .abroad { min-height: 280px; box-sizing: border-box; display: flex; align-items: center; padding: 36px 0; }
     .abroad--you { background: var(--paper); border-top: 0; }
-    .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: start; }
+    /* Sergei 03/11: it follows the light Design & construction band — no centring gap above it */
+    .abroad--you { min-height: 0; padding-top: 36px; }   /* a little more air under the cards (Sergei 03/11) */
+    .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }   /* Sergei 03/11: both sides centred on one height */
     .abroad__head { max-width: none; }
-    .abroad__h { margin: 14px 0 0; font-size: 36px; }
+    .abroad__h { margin: 14px 0 0; font-size: 42px; line-height: 1.1; }   /* Sergei 03/11: the same size as «The land is where it begins.» */
     .abroad__h--we { margin: 29px 0 0; color: #fff; }
     .abroad__sub { margin: 18px 0 0; line-height: 1.65; max-width: 60ch; }
     .ab__rot { padding-top: 29px; }
@@ -153,18 +156,17 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abroad--us .two__l i { color: rgba(255,255,255,.6); }
     .h-bars { display: flex; }
 
-    /* the close: George's two last sentences and a gilded button */
+    /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */
     .abc { min-height: 300px; box-sizing: border-box; display: flex; align-items: center; text-align: center; padding: 40px 0; background: var(--paper); }
     .abc .wrap { width: 100%; }
     .abc__p { margin: 0 auto; max-width: 62ch; font-size: 16px; line-height: 1.65; color: var(--muted); }
     .abc__h { margin: 14px 0 0; font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; color: var(--ink); }
     .abc__btn {
       min-height: 48px; padding: 0 30px; margin-top: 30px; font-size: 11.5px;
-      background: transparent; color: var(--gold-lo); border: 1px solid var(--gold);
-      border-image: conic-gradient(from var(--gilda), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
-      transition: color .9s ease-in-out;
+      background: transparent; color: var(--ink); border: 1px solid var(--ink);
+      transition: background .2s ease, color .2s ease;
     }
-    .abc__btn:hover, .abc__btn:focus-visible { color: var(--gold); opacity: 1; }
-    .abc__btn:focus-visible { outline-color: var(--gold-dk); outline-offset: 3px; }
+    .abc__btn:hover, .abc__btn:focus-visible { background: var(--ink); color: var(--paper); opacity: 1; }
+    .abc__btn:focus-visible { outline-color: var(--ink); outline-offset: 3px; }
   }
 </style>

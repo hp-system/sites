@@ -117,7 +117,9 @@ if (count < 1) return null;
     .off .wrap { position: relative; z-index: 1; }
     .off__grid { align-items: center; }
     .off__lock { display: none; }
-    .off__h { margin-top: var(--s3); }
+    /* Sergei 03/11: the heading in two lines, not three — a wider left column, no ch limit */
+    .off__grid { grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 48px; }
+    .off__h { margin-top: var(--s3); max-width: none; text-wrap: balance; font-size: 36px; }
     .off__biglock {
       display: block; position: absolute; left: calc(50% + 13px); top: 0; width: 100px; height: 100px;
       color: #fff; opacity: .07; pointer-events: none; z-index: 0; will-change: transform;

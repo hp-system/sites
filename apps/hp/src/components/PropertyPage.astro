@@ -1344,7 +1344,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .near .dists li { padding: 7px 0; border-bottom: 1px solid var(--line-soft); align-items: center; gap: 10px; line-height: 1.3; }
     .near .dists li:last-child { border-bottom: 0; }
     .near .dists span { color: var(--muted); }
-    .near__open { position: absolute; inset-inline-end: 12px; bottom: 12px; z-index: 600; display: none; gap: 8px; align-items: center; height: 36px;
+    .near__open { position: absolute; inset-inline-end: 12px; top: 12px; z-index: 600;   /* Sergei 03/11: top corner */
+                  display: none; gap: 8px; align-items: center; height: 36px;
                   padding: 0 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 13px;
                   font-weight: 600; cursor: pointer; }
     .near__open svg { width: 16px; height: 16px; }
@@ -1637,11 +1638,15 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         const lat = Number(pm.dataset.lat), lng = Number(pm.dataset.lng);
         const exact = pm.dataset.exact === '1';
         const map = L.map(pm, { scrollWheelZoom: false }).setView([lat, lng], exact ? 15 : 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: exact ? 18 : 14, attribution: '&copy; OpenStreetMap',
+        // Sergei 03/11: members see the satellite picture (Esri World Imagery) with place names on top.
+        const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+        L.tileLayer(ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: exact ? 18 : 14, attribution: 'Tiles &copy; Esri — Esri, Maxar, Earthstar Geographics',
         }).addTo(map);
-        if (exact) L.circleMarker([lat, lng], { radius: 8, color: '#0d1114', weight: 2, fillOpacity: .9 }).addTo(map);
-        else L.circle([lat, lng], { radius: Number(pm.dataset.r), color: '#0d1114', weight: 1.5, fillOpacity: .12 }).addTo(map);
+        L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: exact ? 18 : 14 }).addTo(map);
+        // white lines read on the photo; the exact point keeps a dark centre
+        if (exact) L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0d1114', fillOpacity: .9 }).addTo(map);
+        else L.circle([lat, lng], { radius: Number(pm.dataset.r), color: '#fff', weight: 2, fillColor: '#fff', fillOpacity: .14 }).addTo(map);
       };
       document.head.appendChild(js);
     };

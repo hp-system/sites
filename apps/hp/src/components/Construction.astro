@@ -281,7 +281,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx { padding: 40px 0 36px; background: var(--paper); color: var(--ink); overflow: hidden; }
     .cx .cx__top {
       grid-template-columns: minmax(0, 1fr) auto; column-gap: 48px; row-gap: 0;
-      grid-template-areas: "eb acts" "p acts" "h acts" "rail rail"; align-items: end;   /* Sergei 03/11: the paragraph right under the label */
+      grid-template-areas: "eb eb" "p p" "h acts" "rail rail"; align-items: end;   /* Sergei 03/11: the paragraph right under the label, full width */
     }
     .cx .cx__lead { display: contents; }
     .cx .cx__eyebrow { grid-area: eb; color: var(--muted); }

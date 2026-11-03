@@ -1411,6 +1411,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
     /* ── similar: three columns, the hover of the cards on home and the list ── */
     .sim { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 20px; }
+    /* members have no dark sign-up block under the photo band: the next heading keeps a clear gap (Sergei 03/11) */
+    .muni + .sec { margin-top: 64px; }
     .sim :global(.title) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sim :global(.card:hover .title a) { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
     .sim :global(.card img) { transition: transform .4s ease; }

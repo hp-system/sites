@@ -1310,7 +1310,7 @@ const tilePhoto = (() => {
     @keyframes l-ghost { 0%, 15% { opacity: 1; } 55%, 100% { opacity: 0; } }
     :global(html.hp-lfrom) .ltop__in { animation: l-in 1.15s ease both; }
     :global(html.hp-lfrom) .list { animation: l-in 1.2s ease both; }
-    @keyframes l-hero { from { height: var(--lf-h, 82vh); background-position: var(--lf-pos, 50% 50%); } to { height: 242px; background-position: 50% 100%; } }
+    @keyframes l-hero { from { height: var(--lf-h, max(420px, calc(100vh - 344px))); background-position: var(--lf-pos, 50% 50%); } to { height: 242px; background-position: 50% 100%; } }
     @keyframes l-bar { 0%, 15% { opacity: 0; } 55%, 100% { opacity: 1; } }
     @keyframes l-in { 0%, 65% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }
 

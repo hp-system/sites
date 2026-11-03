@@ -1513,7 +1513,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .qf__fine { font-size: 11px; color: var(--muted); line-height: 1.5; }
     /* Sergei 03/11: the two small lines read as one note — 12 px under Send, 4 px apart, 20 px to the box's edge */
     .qf button[type='submit'] + .qf__fine, .qf .hp + .qf__fine { margin-top: 2px; }
-    .qf__fine + .qf__fine { margin-top: -3px; }
+    .qf__fine + .qf__fine { margin-top: -10px; }   /* Sergei 03/11: one even block — no gap between the two notes (the form gap is 10 px) */
     .qf__priv a { white-space: nowrap; }
     .side .card { padding-bottom: 20px; }
 

@@ -1353,7 +1353,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
     /* ── About <municipality>: the photo band edge to edge, two glass cards, attached to Location ── */
     .muni { position: relative; min-height: 390px; margin-top: 0; }
-    .band__win { display: block; position: absolute; top: 0; bottom: 0; left: -100vw; right: -100vw; overflow: hidden; background: var(--paper-2); }
+    /* Sergei 03/11: the photo on the page's width, not edge to edge — from the content's left line to the
+       price box's right edge (the band sits in the main column: its width + the 24 px padding + the box column) */
+    .band__win { display: block; position: absolute; top: 0; bottom: 0; left: 0; right: calc(-1 * ((100% + 40px) / 3 + 24px)); overflow: hidden; background: var(--paper-2); }
     .band__ph { position: absolute; inset: 0; clip-path: inset(0); }
     .band__ph img { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; display: block; opacity: 0; transition: opacity .4s ease; }
     .band__ph img.on { opacity: 1; }

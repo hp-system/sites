@@ -1224,7 +1224,11 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
     /* ── gallery: edge to edge, rows grow with the width so the photos keep their shape ── */
     .galwrap { max-width: none; padding-inline: 0; margin: 0; }
-    .gal { height: auto; grid-auto-rows: auto; grid-template-rows: repeat(2, calc((100vw - 16px) / 4 * .79)); }
+    /* Sergei 03/11: the first screen ends under the facts row. The gallery starts at 246 px and the
+       chips + facts take 144 px under it, so two rows share 100vh - 414 px (8 px gap, 16 px air);
+       never taller than before (width-based), never below 200 px a row. */
+    .gal { height: auto; grid-auto-rows: auto;
+           grid-template-rows: repeat(2, min(calc((100vw - 16px) / 4 * .79), max(200px, calc((100vh - 414px) / 2)))); }
     .gal:not(:has(.cell)) { display: none; }
     .cell img { transition: transform .45s ease; }
     .cell:not(.cell--locked) { cursor: zoom-in; }

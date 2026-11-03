@@ -521,6 +521,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               {spaces.map((s) => (
                 <div class="fl">
                   <b class="fl__h">{floorName(lang, s.level + 1)}</b>
+                  {/* desktop (Sergei 03/11, as the mockup): the area large, the rest on one line */}
+                  {Number(s.level_sqm) > 0 && <span class="fl__a num">{sqmFmt(Number(s.level_sqm), lang)}</span>}
+                  <span class="fl__s num">{[
+                    Number(s.rooms) > 0 && `${pui(lang, 'roomsL')} ${s.rooms}`,
+                    Number(s.living_rooms) > 0 && `${pui(lang, 'livingL')} ${s.living_rooms}`,
+                    Number(s.bathrooms) > 0 && `${pui(lang, 'bathsL')} ${s.bathrooms}`,
+                    Number(s.wc) > 0 && `${pui(lang, 'wcL')} ${s.wc}`,
+                  ].filter(Boolean).join(' · ')}</span>
                   <dl>
                     {Number(s.level_sqm) > 0 && (<><dt>{pui(lang, 'sqmL')}</dt><dd class="num">{sqmFmt(Number(s.level_sqm), lang)}</dd></>)}
                     {Number(s.rooms) > 0 && (<><dt>{pui(lang, 'roomsL')}</dt><dd class="num">{s.rooms}</dd></>)}
@@ -1071,6 +1079,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .fl dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 13px; }
   .fl dt { color: var(--muted); }
   .fl dd { margin: 0; text-align: end; }
+  .fl__a, .fl__s { display: none; }
 
   .place { margin: 0; font-size: 15px; color: var(--ink-2); }
   .pmap { margin: 12px 0 0; }
@@ -1301,9 +1310,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .fall:hover { color: var(--ink); font-weight: 600; }
     .fall:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
-    .floors { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-inline-start: 0; }
-    .fl { border: 0; border-inline-start: 1px solid var(--line); padding: 18px 16px; text-align: center; }
-    .fl__h { margin-bottom: 10px; }
+    /* Sergei 03/11 (mockup): one column a floor, ground floor first; name · area large · one line */
+    .floors { display: flex; flex-direction: row-reverse; gap: 0; border: 1px solid var(--line); border-inline-start: 0; }
+    .fl { flex: 1 1 0; min-width: 0; border: 0; border-inline-start: 1px solid var(--line); padding: 20px 16px 22px; text-align: center;
+          display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .fl__h { margin: 0; font-size: 15px; }
+    .fl__a { display: block; font-size: 19px; font-weight: 600; font-variant-numeric: lining-nums proportional-nums; }
+    .fl__s { display: block; font-size: 14px; color: var(--muted); font-variant-numeric: lining-nums proportional-nums; }
+    .fl dl { display: none; }
 
     /* ── location: map / lock with the «Nearby» panel ── */
     .place { margin: 0 0 8px; }

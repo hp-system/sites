@@ -44,6 +44,40 @@ const STRIP = ['s1', 's2', 's3', 's4'];
 const [h2a, ...h2rest] = t(lang, 'cx.h2').split(/(?<=[.!?])\s+/);
 const h2b = h2rest.join(' ');
 
+// Desktop redesign (Sergei 03/11, mockup «two home blocks»): the four key words of the heading
+// in bold (land · begins · house · build, in each language), and a row of cards you page through.
+const BOLD: Record<Lang, string[]> = {
+  en: ['land', 'begins', 'house', 'build'], el: ['γη', 'αρχή', 'σπίτι', 'χτίζουμε'],
+  bg: ['Земята', 'началото', 'Къщата', 'строим'], sr: ['Zemlja', 'početak', 'Kuću', 'gradimo'],
+  de: ['Anfang', 'Grund und Boden', 'Haus', 'bauen'], ro: ['Terenul', 'începutul', 'Casa', 'construim'],
+  tr: ['Arazi', 'başlangıçtır', 'Evi', 'inşa ederiz'], he: ['הקרקע', 'ההתחלה', 'הבית', 'בונים'],
+  ru: ['Земля', 'начало', 'Дом', 'строим'],
+};
+/** The sentence cut into plain and bold pieces (each key word where it first stands). */
+const bolden = (s: string): { s: string; b: boolean }[] => {
+  const words = BOLD[lang] ?? [];
+  const out: { s: string; b: boolean }[] = [];
+  let rest = s;
+  for (;;) {
+    const hits = words.map((w) => ({ w, i: rest.indexOf(w) })).filter((h) => h.i >= 0).sort((a, b) => a.i - b.i);
+    if (!hits.length) { if (rest) out.push({ s: rest, b: false }); return out; }
+    const { w, i } = hits[0];
+    if (i) out.push({ s: rest.slice(0, i), b: false });
+    out.push({ s: w, b: true });
+    rest = rest.slice(i + w.length);
+  }
+};
+// The cards in the row: a fact, two things we take on, a fact … (desktop only).
+const ICON: Record<string, string> = {
+  c1: '<path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>',
+  c2: '<rect x="3" y="6" width="13" height="12" rx="1"/><path d="M16 10l5-3v10l-5-3"/>',
+  c3: '<path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M8 13V5a2 2 0 0 1 4 0M14 13V5a2 2 0 0 1 4 0M8 8h6"/>',
+  c4: '<path d="M14 4l6 6-3 3-6-6z"/><path d="M11 7L3 15v3h3l8-8"/>',
+  c5: '<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  c6: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+};
+const ROW = ['s1', 'c1', 'c2', 's2', 'c3', 'c4', 's3', 'c5', 'c6', 's4'];
+
 const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
 ---
 <section class="cx" aria-labelledby="cx-h">
@@ -55,7 +89,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     <div class="cx__top">
       <div class="cx__lead">
         <p class="t-label cx__eyebrow">{t(lang, 'cx.eyebrow')}</p>
-        <h2 id="cx-h" class="cx__h">{h2a}{h2b && <><br class="cx__br" /> {h2b}</>}</h2>
+        <h2 id="cx-h" class="cx__h">{bolden(h2a).map((x) => (x.b ? <b>{x.s}</b> : x.s))}{h2b && <><br class="cx__br" /> {bolden(h2b).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</>}</h2>
         <p class="cx__p">{t(lang, 'cx.p')}</p>
       </div>
 
@@ -71,6 +105,22 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
         <a class="btn btn--ghost cx__btn cx__btn--ghost" href={contactHref}
            data-ev="construction:have_land">{t(lang, 'cx.cta2')}</a>
       </p>
+
+      {/* desktop: the row of cards (the same texts as the boxes below, which stay for phones) */}
+      <div class="cx__rw">
+        <button type="button" class="cx__arw cx__arw--l" data-cx-prev aria-label="‹" hidden>‹</button>
+        <button type="button" class="cx__arw cx__arw--r" data-cx-next aria-label="›">›</button>
+        <div class="cx__rail" data-cx-rail>
+          {ROW.map((k) => k.startsWith('s') ? (
+            <article class="cd cd--fact"><h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p></article>
+          ) : (
+            <article class="cd">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICON[k]}></svg>
+              <h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
 
       <div class="cx__caps" data-acc>
         {CAPS.map((k, i) => (
@@ -104,6 +154,24 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     </div>
   </div>
 </section>
+
+<script>
+  // Desktop row: the arrows page by two cards and hide at the ends; the row's left edge sits on
+  // the page's left line (the window's scrollbar width is measured for that).
+  document.querySelectorAll<HTMLElement>('[data-cx-rail]').forEach((rail) => {
+    const box = rail.parentElement!;
+    const prev = box.querySelector<HTMLButtonElement>('[data-cx-prev]')!;
+    const next = box.querySelector<HTMLButtonElement>('[data-cx-next]')!;
+    const sbw = () => document.documentElement.style.setProperty('--sbw', `${window.innerWidth - document.documentElement.clientWidth}px`);
+    const step = () => ((rail.querySelector('.cd')?.getBoundingClientRect().width ?? 300) + 16) * 2;
+    const ends = () => { prev.hidden = rail.scrollLeft < 4; next.hidden = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 4; };
+    prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+    rail.addEventListener('scroll', ends, { passive: true });
+    window.addEventListener('resize', () => { sbw(); ends(); });
+    sbw(); ends();
+  });
+</script>
 
 <style>
   /* Μαύρο, όπως το Secret Portfolio: είναι τα δύο μπλοκ που δεν πουλάνε ακίνητο
@@ -141,6 +209,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.14);
   }
   .h-bars { display: none; }
+  .cx__rw { display: none; }
+  .cx__h b { font-weight: inherit; }   /* the bold key words are a desktop look; phones keep George's heading */
   /* 🪤 ΕΙΧΕ `padding-left: 0` — το κείμενο ακουμπούσε ΠΑΝΩ στη διαχωριστική
      γραμμή αριστερά (George, 28/7: «δεν τα έχεις κεντρίσει καλά, να μην
      ακουμπάνε τέρμα αριστερά»). Ίσο padding σε όλες τις πλευρές. */
@@ -203,4 +273,54 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .st span::first-letter { text-transform: uppercase; }
     .h-bars { display: flex; }
   }
+
+  /* ── Sergei 03/11 (mockup «two home blocks»): light band — heading and buttons on top,
+        a row of cards you page through, the paragraph under it. The accordion and the
+        turning facts stay for phones only. ── */
+  @media (min-width: 1024px) {
+    .cx { padding: 40px 0 36px; background: var(--paper); color: var(--ink); overflow: hidden; }
+    .cx .cx__top {
+      grid-template-columns: minmax(0, 1fr) auto; column-gap: 48px; row-gap: 0;
+      grid-template-areas: "eb acts" "h acts" "rail rail" "p p"; align-items: end;
+    }
+    .cx .cx__lead { display: contents; }
+    .cx .cx__eyebrow { grid-area: eb; color: var(--muted); }
+    .cx .cx__h { grid-area: h; margin-top: 14px; font-size: 42px; line-height: 1.1; color: var(--ink); }
+    .cx .cx__h b { font-weight: 600; }
+    .cx .cx__p { grid-area: p; margin: 6px 0 0; max-width: none; font-size: 16px; line-height: 1.65; color: var(--ink-2); }
+    .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 0; }
+    .cx .cx__btn { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
+    .cx .cx__btn:hover { background: var(--ink-hover); border-color: var(--ink-hover); }
+    .cx .cx__btn--ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+    .cx .cx__btn--ghost:hover { background: var(--ink); color: #fff; }
+    .cx .cx__caps, .cx .cx__strip { display: none; }
+
+    /* the row bleeds to the window's right edge and starts on the page's left line */
+    .cx__rw { --off: max(var(--gut), calc((100vw - var(--sbw, 0px) - var(--max)) / 2 + var(--gut)));
+              display: block; grid-area: rail; position: relative; margin: 22px 0 0 calc(-1 * var(--off)); width: calc(100vw - var(--sbw, 0px)); }
+    .cx__rail { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+                padding: 4px var(--off) 18px; scroll-padding-inline: var(--off); }
+    .cx__rail::-webkit-scrollbar { display: none; }
+    .cd { flex: none; width: 300px; min-height: 250px; scroll-snap-align: start;
+          background: var(--paper-2); padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;
+          transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s ease; }
+    .cd:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(10,14,16,.10); }
+    .cd svg { width: 34px; height: 34px; color: var(--ink); flex: none; }
+    .cd h3 { margin: 6px 0 0; font-size: 21px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
+    .cd p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+    .cd p::first-letter { text-transform: uppercase; }
+    .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; }
+    .cd--fact h3 { font-size: 26px; font-weight: 300; }
+    .cd--fact p { color: rgba(255,255,255,.72); }
+    .cx__arw { all: unset; box-sizing: border-box; position: absolute; z-index: 3; top: calc(50% - 7px); transform: translateY(-50%);
+               width: 48px; height: 48px; display: grid; place-items: center; cursor: pointer; color: var(--ink); font-size: 22px;
+               background: rgba(255,255,255,.92); border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(10,14,16,.14);
+               transition: border-color .2s ease; }
+    .cx__arw[hidden] { display: none; }
+    .cx__arw--l { left: 24px; }
+    .cx__arw--r { right: 24px; }
+    .cx__arw:hover { border-color: var(--ink); }
+    .cx__arw:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .cd { transition: none; } }
 </style>

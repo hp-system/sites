@@ -433,7 +433,7 @@ const meta = {
   html.hp-hfrom-hide .hero__bg img { opacity: 0 !important; animation: none !important; transition: none !important; }
   html.hp-hfrom .hero__copy { animation: h-in 1.15s ease both; }
   html.hp-hfrom #main { animation: h-in 1.2s ease both; }
-  @keyframes h-grow { from { min-height: var(--hf-h, 242px); } to { min-height: 82vh; } }
+  @keyframes h-grow { from { min-height: var(--hf-h, 242px); } to { min-height: max(420px, calc(100vh - 344px)); } }
   @keyframes h-bgpos { from { background-position: 50% 100%; } to { background-position: var(--focal, 50% 50%); } }
   @keyframes h-in { 0%, 65% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }
 </style>

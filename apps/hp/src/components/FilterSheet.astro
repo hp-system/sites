@@ -21,6 +21,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import { t, listUrl, type Lang } from '../lib/i18n';
 import { num, seaLabel, SEA_KEYS } from '../lib/format';
+import { allProperties } from '../lib/api';
 
 interface Props { lang: Lang; total: number; munis: { name: string; n: number; key?: string }[] }
 const { lang, total, munis } = Astro.props;
@@ -31,13 +32,20 @@ const KINDS: [string, string][] = [
   ['maisonette', t(lang, 'kinds.maisonettes')], ['apartment', t(lang, 'kinds.apartments')],
   ['field', t(lang, 'kinds.land')], ['hotel', t(lang, 'kinds.hotels')],
 ];
+// Sergei 03/11: a type with no property for sale right now is not offered (it only ever
+// answered «no properties»). Read from the same cached set as the list (one call a minute);
+// the type comes back by itself the day the catalogue has one. If the read fails, all stay.
+const haveKinds = await allProperties().then((xs) => new Set(xs.map((p) => String(p.attributes?.subcategory ?? ''))), () => null);
+const KINDS_SHOWN = KINDS.filter(([v]) => !v || !haveKinds || haveKinds.has(v));
 
 // Τα ονόματα έρχονται από το ΙΔΙΟ σημείο με τις κάρτες (lib/format.ts).
 const SEA: [string, string][] = [['', t(lang, 'ui.any')],
                                  ...SEA_KEYS.map((k) => [k, seaLabel(k, lang)] as [string, string])];
 
-const BEDS: [string, string][] = [['', t(lang, 'ui.any')], ['1', '1+'], ['2', '2+'],
-                                  ['3', '3+'], ['4', '4+'], ['5', '5+']];
+// Sergei 03/11: every group is multi-select. Bedrooms are exact numbers (5 = 5 or more), as the
+// list's own row writes them (`bed`, repeated); «at least» could not be combined.
+const BEDS: [string, string][] = [['', t(lang, 'ui.any')], ['1', '1'], ['2', '2'],
+                                  ['3', '3'], ['4', '4'], ['5', '5+']];
 
 // Ξενοδοχεία: το `hotel_rooms` κινείται από 1 ως 26+ στα 36 διαθέσιμα, οπότε τα
 // σκαλιά είναι πιο αραιά από τα υπνοδωμάτια — αλλιώς τα μισά πλακίδια θα ήταν άδεια.
@@ -79,9 +87,9 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       <fieldset class="fs__g fs__g--wide fs__a-kind">
         <legend class="fs__l">{t(lang, 'f.kind')}</legend>
         <div class="chips">
-          {KINDS.map(([v, n], i) => (
+          {KINDS_SHOWN.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="subcategory" value={v} checked={i === 0} />
+              <input type="checkbox" name="subcategory" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               {/* desktop says «All types» as the mockup (George's search-bar text); phones keep «Any» */}
               <span>{i === 0 ? <><span class="fs-mob">{n}</span><span class="fs-desk">{t(lang, 'search.what.all')}</span></> : n}</span>
             </label>
@@ -94,7 +102,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
         <div class="chips">
           {MUNIS.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="municipality" value={v} checked={i === 0} />
+              <input type="checkbox" name="municipality" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               <span>{n}</span>
             </label>
           ))}
@@ -124,7 +132,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
         <div class="chips">
           {SEA.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="sea_access" value={v} checked={i === 0} />
+              <input type="checkbox" name="sea_access" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               <span>{n}</span>
             </label>
           ))}
@@ -139,7 +147,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
         <div class="chips">
           {BEDS.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="bedrooms" value={v} checked={i === 0} />
+              <input type="checkbox" name="bed" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               <span class="num">{n}</span>
             </label>
           ))}
@@ -149,6 +157,8 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       {/* ── ΔΩΜΑΤΙΑ — μόνο για ξενοδοχεία ────────────────────────────────
           Το `hotel_rooms` είναι γεμάτο και στα 36 (τιμές 1-26+). Τα αστέρια
           ΔΕΝ μπαίνουν: 21 από τα 36 γράφουν «1», δηλαδή προεπιλογή, όχι μέτρηση. */}
+      {/* rooms are a hotel filter: offered only while there is a hotel to find (Sergei 03/11) */}
+      {KINDS_SHOWN.some(([v]) => v === 'hotel') && (<>
       <fieldset class="fs__g fs__g--wide fs__a-rooms" data-only="hotel" hidden>
         <legend class="fs__l">{t(lang, 'f.rooms')}</legend>
         <div class="chips">
@@ -160,6 +170,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
           ))}
         </div>
       </fieldset>
+      </>)}
 
       {/* Η ετικέτα αλλάζει: για γη τα τετραγωνικά ΕΙΝΑΙ το οικόπεδο (επαληθεύτηκε
           — το `sqm` της γης ταυτίζεται με το `land_usage` ως τη δεύτερη δεκαδική). */}
@@ -251,7 +262,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       ctrl?.abort();
       ctrl = new AbortController();
       const p = new URLSearchParams();
-      new FormData(form).forEach((v, k) => { if (String(v).trim()) p.set(k, String(v)); });
+      new FormData(form).forEach((v, k) => { if (String(v).trim()) p.append(k, String(v)); });
       out.dataset.busy = '1';
       try {
         const r = await fetch(`/api/count?${p}`, { signal: ctrl.signal });
@@ -270,9 +281,26 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     const family: Record<string, string> = JSON.parse(form.dataset.family || '{}');
     const pair = form.querySelector<HTMLElement>('[data-sqm-built]');
 
+    // the family of the ticked types: one family (all homes, or land) narrows the groups; a mix shows all
+    const famOf = () => {
+      const fs = new Set([...form.querySelectorAll<HTMLInputElement>('input[name=subcategory]:checked')]
+        .map((i) => i.value).filter(Boolean).map((v) => family[v] ?? ''));
+      return fs.size === 1 ? [...fs][0] : '';
+    };
+    // multi-select groups: «Any» clears the others; ticking a value clears «Any»; none ticked = «Any»
+    form.addEventListener('change', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el?.type !== 'checkbox' || el.name === 'pool') return;
+      const group = [...form.querySelectorAll<HTMLInputElement>(`input[type=checkbox][name="${el.name}"]`)];
+      const any = group.find((i) => i.hasAttribute('data-any'));
+      if (!any) return;
+      if (el === any) { if (any.checked) group.forEach((i) => { if (i !== any) i.checked = false; }); else any.checked = !group.some((i) => i !== any && i.checked); }
+      else if (el.checked) any.checked = false;
+      else if (!group.some((i) => i !== any && i.checked)) any.checked = true;
+    }, true);
+
     function applyKind() {
-      const kind = (form.querySelector<HTMLInputElement>('input[name=subcategory]:checked')?.value) ?? '';
-      const fam = family[kind] ?? '';          // κενό = «όλα τα είδη» → δείξε τα πάντα
+      const fam = famOf();                     // κενό = «όλα τα είδη» → δείξε τα πάντα
 
       form.querySelectorAll<HTMLElement>('[data-only]').forEach((g) => {
         const show = !fam || g.dataset.only === fam;
@@ -319,6 +347,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       const last = r.steps.length - 1, a = Number(r.lo.value), b = Number(r.hi.value);
       r.el.style.setProperty('--lo', String(a / last));
       r.el.style.setProperty('--hi', String(b / last));
+      fmtRange(r);
     }
     function syncRange(r: Rng) {
       const last = r.steps.length - 1;
@@ -331,6 +360,16 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       r.max.placeholder = on ? `${show(r, r.steps[last])}+` : '—';
       paint(r);
     }
+    // the formatted copy of each field's value (desktop), kept in step with every change
+    const fmtOf = (r: Rng, f: HTMLInputElement) => {
+      const box = f.closest<HTMLElement>('.fs__f'); if (!box) return;
+      let s = box.querySelector<HTMLElement>('.fs__fmt');
+      if (!s) { s = document.createElement('span'); s.className = 'fs__fmt'; s.setAttribute('aria-hidden', 'true'); box.appendChild(s); }
+      const v = Number(f.value);
+      if (f.value.trim() && Number.isFinite(v) && v >= 0) { s.textContent = show(r, v); box.setAttribute('data-fmt', ''); }
+      else { s.textContent = ''; box.removeAttribute('data-fmt'); }
+    };
+    const fmtRange = (r: Rng) => { fmtOf(r, r.min); fmtOf(r, r.max); };
     function syncRanges() { ranges.forEach(syncRange); }
     ranges.forEach((r) => {
       const slide = (which: 'lo' | 'hi') => {
@@ -350,8 +389,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     const sqmPair = ranges.find((r) => r.el.dataset.stepsLand);
     const rescale = () => {
       if (!sqmPair) return;
-      const kind = form.querySelector<HTMLInputElement>('input[name=subcategory]:checked')?.value ?? '';
-      const land = family[kind] === 'land';
+      const land = famOf() === 'land';
       sqmPair.steps = JSON.parse((land ? sqmPair.el.dataset.stepsLand : sqmPair.el.dataset.stepsBuilt) || '[0]');
       syncRange(sqmPair);
     };
@@ -521,6 +559,13 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     .fs__pair .fs__f input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .fs__pair .fs__f input::placeholder { color: var(--ink); opacity: 1; }
     .fs__pair .fs__f:focus-within { border-color: var(--ink); }
+    /* Sergei 03/11: a typed or slid value reads like the placeholder («€2,500,000», «250 m²»);
+       the raw number shows only while the field is being edited */
+    .fs__pair .fs__f { position: relative; }
+    :global(.fs__fmt) { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--ink);
+               pointer-events: none; white-space: nowrap; display: none; }
+    .fs__pair .fs__f[data-fmt]:not(:focus-within) :global(.fs__fmt) { display: block; }
+    .fs__pair .fs__f[data-fmt]:not(:focus-within) input { color: transparent; }
     .fs__dash { color: var(--faint); }
     .fs__rng { display: block; grid-column: 1 / -1; position: relative; height: 24px; margin-top: 10px; }
     .fs__track, .fs__fill { position: absolute; top: 11px; height: 2px; }

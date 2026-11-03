@@ -90,6 +90,9 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
     .hero__copy { padding-bottom: var(--s6); max-width: var(--max); margin: 0 auto; width: 100%; }
     .hero__sub { font-size: 17px; }
   }
+  /* desktop (Sergei 03/11): the first screen ends at the bottom of the first row of photos
+     (the bar, «New properties» and the photos take 344 px under the hero), never below 420 px */
+  @media (min-width: 1024px) { .hero { min-height: max(420px, calc(100vh - 344px)); } }
   /* desktop: the title in one line (Sergei 02/11) */
   @media (min-width: 1024px) { .hero__copy h1 { max-width: none; } }
   /* #101 desktop redesign: a lighter shade, dark only at the top (menu) and the

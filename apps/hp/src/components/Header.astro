@@ -140,7 +140,8 @@ const has = (k: string) => pageExists(k as any);
     min-height: 44px; min-width: 44px; justify-content: center;
   }
   .tel svg { width: 17px; height: 17px; flex: none; }
-  .tel__n { display: inline; font-size: 11px; letter-spacing: .04em; }
+  /* Sergei 03/11: a phone number is read, not compared in a column — proportional digits (tabular ones left gaps around each «1») */
+  .tel__n { display: inline; font-size: 11px; letter-spacing: .04em; font-variant-numeric: lining-nums proportional-nums; }
   /* Στόχος αφής 44×44 (μετρήθηκε 20×12): οι γραμμές μένουν 20×12 οπτικά, αλλά η
      περιοχή που δέχεται το δάχτυλο είναι ολόκληρη. Αρνητικό margin ώστε να μην
      αλλάξει η στοίχιση της κεφαλίδας. */

@@ -665,6 +665,7 @@ const tilePhoto = (() => {
                 <li class="join acct">
                   {/* #102 desktop: the free-account tile — a blurred, watermarked photo
                       behind, lifts on hover. George's texts unchanged. */}
+                  <div class="join__ph">
                   {tilePhoto && <img class="join__bg" src={tilePhoto} alt="" aria-hidden="true" loading="lazy" decoding="async" width="400" height="267" />}
                   {/* 🔐 ΟΣΟ ΨΗΛΟ ΟΣΟ ΜΙΑ ΚΑΡΤΑ, ΟΧΙ ΛΩΡΙΔΑ (George, 30/7).
                       Στέκεται μέσα στη ροή των αποτελεσμάτων, στη θέση όπου ο
@@ -683,6 +684,7 @@ const tilePhoto = (() => {
                     <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v13H3zM8 6l1.5-2h5L16 6M12 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" /></svg><span>{ui(lang, 'joinB2')}</span></li>
                     <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2ZM10 21h4" /></svg><span>{ui(lang, 'joinB3')}</span></li>
                   </ul>
+                  </div>
                   <a class="join__b l-gild" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`}
                      data-ev="member:join_from_list">
                     {ui(lang, 'joinCta')}
@@ -932,6 +934,7 @@ const tilePhoto = (() => {
   @media (min-width: 760px) {
     .join { grid-column: span 1; padding: var(--s5); }
   }
+  .join__ph { display: contents; }
   .join__lock {
     display: grid; place-items: center; width: 44px; height: 44px;
     border: 1px solid rgba(255,255,255,.28); color: var(--paper);
@@ -1111,15 +1114,18 @@ const tilePhoto = (() => {
     .lc--sort.lc--on > .lc__s { font-size: 14px; }
 
     /* under the row, inside the box: the save question, then the tags — sliding down */
-    @keyframes lslide { from { max-height: 0; opacity: 0; } to { max-height: 160px; opacity: 1; } }
-    .lslide { overflow: hidden; animation: lslide .35s ease both; }
+    /* Sergei 03/11: same curve as the home → list move, quicker; the box grows to its real height
+       (interpolate-size: height 0 → auto), the content fades in after it starts */
+    @keyframes lslide { from { height: 0; opacity: 0; } 35% { opacity: 0; } to { height: auto; opacity: 1; } }
+    .lslide { overflow: hidden; interpolate-size: allow-keywords; animation: lslide .55s cubic-bezier(.65,0,.35,1) both; }
     .lsave {
       display: flex; align-items: center; gap: 16px; padding: 10px 16px 10px 22px;
       background: var(--paper-2); border-top: 1px solid var(--line-soft);
     }
     .lsave[hidden] { display: none; }
+    .lsave { justify-content: flex-end; }   /* Sergei 03/11: the question sits on the right, next to its buttons */
     .lsave > svg { flex: none; color: var(--ink); }
-    .lsave__q { flex: 1; font-size: 14.5px; }
+    .lsave__q { flex: none; font-size: 14.5px; }
     .lsave__no, .lsave__yes {
       box-sizing: border-box; height: 34px; min-height: 34px; padding: 0 18px; display: inline-flex; align-items: center;
       font: inherit; font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600;
@@ -1177,33 +1183,42 @@ const tilePhoto = (() => {
     .grid :global(.heart:hover svg) { fill: var(--gold-soft); }
 
     /* the free-account tile: second row, first cell (as the design); photo behind */
+    /* Sergei 03/11: the photo part is a card photo (3:2), the button sits below it where a card has its price */
     .join {
-      grid-row: 2; grid-column: 1; position: relative; overflow: hidden; background: var(--ink-deep);
-      padding: 20px; gap: 14px; align-content: space-between; justify-items: stretch;
+      grid-row: 2; grid-column: 1; position: relative; background: none;
+      padding: 0; gap: 12px; align-content: start; justify-items: stretch;
+    }
+    .join__ph {
+      display: flex; flex-direction: column; justify-content: center; gap: 12px; position: relative; overflow: hidden;
+      aspect-ratio: 3 / 2; padding: 16px 18px; background: var(--ink-deep); color: var(--paper);
     }
     .join__bg {
       display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
       filter: blur(7px) saturate(.92); transform: scale(1.08);
     }
-    .join::before { content: ''; position: absolute; inset: 0; background: rgba(10,14,16,.46); z-index: 0; }
-    .join > :not(.join__bg) { position: relative; z-index: 1; }
+    .join__ph::before { content: ''; position: absolute; inset: 0; background: rgba(10,14,16,.46); z-index: 1; }
+    .join__ph > :not(.join__bg) { position: relative; z-index: 2; }
     .join__lock { display: none; }
-    .join__h { font-size: 16px; font-weight: 600; line-height: 1.32; }
-    .join__list { gap: 8px; font-size: 12.5px; line-height: 1.4; }
+    .join__h { font-size: 15px; font-weight: 600; line-height: 1.3; }
+    .join__list { gap: 6px; font-size: 12px; line-height: 1.35; }
     .join__list li { grid-template-columns: 18px 1fr; gap: 9px; }
     .join__list li::before { content: none; }
     .join__ic { display: block; color: #fff; }
     .join__b {
       margin-top: 0; height: 40px; padding: 0 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
-      font-size: 11.5px; letter-spacing: .09em; font-weight: 600; background: transparent; color: var(--gold-dk-text);
-      border: 1px solid var(--gold-dk);
-      border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
+      font-size: 11.5px; letter-spacing: .09em; font-weight: 600; background: transparent; color: var(--gold-lo);
+      border: 1px solid var(--gold);
+      border-image: conic-gradient(from var(--gilda), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
       transition: color .9s ease-in-out;
     }
-    .join__b:hover, .join__b:focus-visible { background: transparent; color: var(--gold-dk-hover); }
+    .join__b:hover, .join__b:focus-visible { background: transparent; color: var(--gold); }
     .join__b:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
     .acct { transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s ease; }
     .acct:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(10,14,16,.28), 0 4px 10px rgba(10,14,16,.12); }
+    /* Sergei 03/11: no lift — the tile behaves like a card (its photo zooms a little), the button keeps its own gilded turn */
+    .join.acct, .join.acct:hover { transform: none; box-shadow: none; }
+    .join__bg { transition: transform .45s ease; }
+    .join:hover .join__bg { transform: scale(1.11); }
 
     /* ── pager ── */
     .lpg {
@@ -1310,7 +1325,7 @@ const tilePhoto = (() => {
     @keyframes l-ghost { 0%, 15% { opacity: 1; } 55%, 100% { opacity: 0; } }
     :global(html.hp-lfrom) .ltop__in { animation: l-in 1.15s ease both; }
     :global(html.hp-lfrom) .list { animation: l-in 1.2s ease both; }
-    @keyframes l-hero { from { height: var(--lf-h, 82vh); background-position: var(--lf-pos, 50% 50%); } to { height: 242px; background-position: 50% 100%; } }
+    @keyframes l-hero { from { height: var(--lf-h, max(420px, calc(100vh - 344px))); background-position: var(--lf-pos, 50% 50%); } to { height: 242px; background-position: 50% 100%; } }
     @keyframes l-bar { 0%, 15% { opacity: 0; } 55%, 100% { opacity: 1; } }
     @keyframes l-in { 0%, 65% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }
 
@@ -1442,7 +1457,7 @@ const tilePhoto = (() => {
       if (!desk.matches || still.matches) return;
       g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun');
     };
-    (g.closest('.lsave, .join') ?? g.parentElement)?.addEventListener('mouseenter', run);
+    (g.closest('.join') ? g : (g.closest('.lsave') ?? g.parentElement))?.addEventListener('mouseenter', run);   // the tile's button turns on its own hover (Sergei 03/11)
   });
 
   // ── Back to top: after one screen.

@@ -37,24 +37,28 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     const items = await allProperties(token);
     // ⛔ Το `area` ΔΕΝ είναι φίλτρο εδώ: η περιοχή είναι κλειδωμένη για τους μη
     //    συνδεδεμένους και δεν την ξεγλιστράμε μέσω μετρητή.
-    const sub = q.get('subcategory') || '';
+    // Multi-select (Sergei 03/11): a repeated parameter = any of its values (long and short names).
+    const all = (...ks: string[]) => ks.flatMap((k) => q.getAll(k)).map((v) => v.trim()).filter(Boolean);
+    const subs = all('subcategory', 'type');
     const cat = q.get('category') || '';
-    const muni = q.get('municipality') || '';
+    const munis = all('municipality', 'muni').map((m) => muniKey(m));
+    const seas = all('sea_access', 'sea');
+    const bedIn = all('bed').map(Number).filter((x) => Number.isFinite(x) && x > 0);
     const pMin = n(q.get('price_min')), pMax = n(q.get('price_max'));
     const sMin = n(q.get('sqm_min')), sMax = n(q.get('sqm_max'));
     const beds = n(q.get('bedrooms'));
-    const sea = q.get('sea_access') || '';
     const pool = q.get('pool') === '1';
 
     const total = items.filter((p) => {
       const a = p.attributes ?? {};
-      if (sub && a.subcategory !== sub) return false;
+      if (subs.length && !subs.includes(String(a.subcategory ?? ''))) return false;
       if (cat && a.category !== cat) return false;
       // Ο δήμος συγκρίνεται με ΚΛΕΙΔΙ, όχι με κείμενο: η βάση κρατά γενική
       // («Νέας Προποντίδας»), το URL ονομαστική («Νέα Προποντίδα»). Δες gate.ts.
-      if (muni && muniKey(a) !== muniKey(muni)) return false;
+      if (munis.length && !munis.includes(muniKey(a))) return false;
       if (beds && Number(a.bedrooms ?? 0) < beds) return false;
-      if (sea && a.sea_access !== sea) return false;
+      if (seas.length && !seas.includes(String(a.sea_access ?? ''))) return false;
+      if (bedIn.length) { const b = Number(a.bedrooms ?? 0); if (!bedIn.some((x) => (x >= 5 ? b >= 5 : b === x))) return false; }
       // B-04: same rule as the listing — pool code "2" means "no pool" (traps T-K05).
       if (pool && !hasPool(a)) return false;
       const sq = Number(a.sqm ?? 0);

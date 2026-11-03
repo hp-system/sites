@@ -104,6 +104,9 @@ const id = `sel-${name}-${Math.random().toString(36).slice(2, 7)}`;
     const open = () => {
       list.hidden = false; root.setAttribute('data-open', '');
       btn.setAttribute('aria-expanded', 'true'); setActive(active);
+      // Sergei 03/11: a menu that ends below the screen brings itself into view (page scrolls just enough).
+      const over = list.getBoundingClientRect().bottom + 16 - window.innerHeight;
+      if (over > 0) window.scrollBy({ top: over, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     };
     const close = () => {
       list.hidden = true; root.removeAttribute('data-open');

@@ -371,6 +371,9 @@ import { ui } from '../lib/listing';
        Το `position: relative` κάνει το πεδίο τον κοντινότερο άξονα και κερδίζει
        από το `.search` του κινητού, χωρίς να ξαναγραφτεί ο κανόνας του μενού. */
     .search__f { padding: 0 22px; position: relative; }
+    /* Sergei 03/11: the whole cell opens the menu, not only the words (the button's hit area covers the cell) */
+    .search__f { cursor: pointer; }
+    .search__f :global(.sel__btn)::after { content: ''; position: absolute; inset: 0; }
     .search__more, .search__id {
       border-top: 0; border-inline-start: 1px solid var(--line); padding: 0 18px;
     }

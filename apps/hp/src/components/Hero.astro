@@ -115,11 +115,12 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
   .hero__cta {
     display: inline-flex; align-items: center; height: 48px; margin-top: var(--s5); padding: 0 24px;
     font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
-    color: var(--gold-dk-text); border: 1px solid var(--gold-dk); background: rgba(11,14,16,.35);
-    transition: color .4s ease;
+    /* a message button is not a call to register: white outline, never the gilded edge (Sergei 03/11) */
+    color: #fff; border: 1px solid rgba(255,255,255,.6); background: rgba(11,14,16,.2);
+    transition: background .25s ease, color .25s ease, border-color .25s ease;
   }
-  .hero__cta:hover, .hero__cta:focus-visible { color: var(--gold-dk-hover); }
-  .hero__cta:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
+  .hero__cta:hover, .hero__cta:focus-visible { background: #fff; color: var(--ink); border-color: #fff; }
+  .hero__cta:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
   /* the search bar overlaps the hero's bottom (49 px phones, 33 px from 760 px): a message's button stays clear of it */
   .hero--msg .hero__copy { padding-bottom: calc(var(--s5) + 44px); }
   @media (min-width: 760px) { .hero--msg .hero__copy { padding-bottom: calc(var(--s6) + 28px); } }

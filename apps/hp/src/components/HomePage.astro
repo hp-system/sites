@@ -479,6 +479,21 @@ const meta = {
   const still = window.matchMedia('(prefers-reduced-motion: reduce)');
   const moving = () => desk.matches && !still.matches;
 
+  // ── A sideways swipe (trackpad, or shift + wheel) as one step, the same on every rotating block
+  //    (Sergei 03/11): `step(+1 | -1)` is called once per gesture; vertical scrolling is left alone.
+  const onSwipe = (el: HTMLElement, step: (dir: 1 | -1) => void) => {
+    let at = 0;
+    el.addEventListener('wheel', (e) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+      if (Math.abs(dx) < 8 || !desk.matches) return;
+      e.preventDefault();
+      if (Date.now() - at < 650) return;
+      at = Date.now();
+      const rtl = getComputedStyle(el).direction === 'rtl';
+      step((dx > 0) !== rtl ? 1 : -1);
+    }, { passive: false });
+  };
+
   // ── Carousels: a page of four every 5 s while on screen; pointer/focus holds;
   //    a dash scrolls to its page and restarts the count; the dash follows the row.
   document.querySelectorAll<HTMLElement>('[data-hrail]').forEach((rail) => {
@@ -507,6 +522,7 @@ const meta = {
     rail.addEventListener('focusin', () => { hold = true; });
     rail.addEventListener('focusout', () => { hold = false; t0 = Date.now(); });
     rail.addEventListener('pointerdown', () => { t0 = Date.now(); }, { passive: true });
+    onSwipe(rail, (d) => { t0 = Date.now(); to(Math.max(0, Math.min(max(), pos() + d * (rail.clientWidth + gap)))); });
     window.setInterval(() => {
       if (!moving() || document.hidden || hold || Date.now() - t0 < 5000) return;
       const r = rail.getBoundingClientRect();
@@ -534,7 +550,7 @@ const meta = {
   // ── Stacks: one item at a time, every 3 s; stacks with the same name share one
   //    clock (the two «Buying from abroad» bands change together); a pointer over
   //    `[data-rot-hold]` holds that clock; a dash shows its item and restarts.
-  type Clock = { timer: number | null; held: boolean; steps: (() => void)[] };
+  type Clock = { timer: number | null; held: boolean; steps: (() => void)[]; backs?: (() => void)[] };
   const clocks = new Map<string, Clock>();
   const startClock = (c: Clock) => {
     if (c.timer) window.clearInterval(c.timer);
@@ -559,6 +575,10 @@ const meta = {
     const c = clocks.get(name)!;
     c.steps.push(() => show((cur + 1) % items.length));
     bars.forEach((b, n) => b.addEventListener('click', () => { show(n); startClock(c); }));
+    c.backs = c.backs ?? [];
+    c.backs.push(() => show((cur - 1 + items.length) % items.length));
+    // a swipe turns every stack on this clock together (the two «Buying from abroad» bands stay in step)
+    onSwipe(stack.parentElement ?? stack, (d) => { (d > 0 ? c.steps : c.backs!).forEach((f) => f()); startClock(c); });
   });
   clocks.forEach((c) => startClock(c));
   document.querySelectorAll<HTMLElement>('[data-rot-hold]').forEach((el) => {

@@ -42,8 +42,10 @@ const KINDS_SHOWN = KINDS.filter(([v]) => !v || !haveKinds || haveKinds.has(v));
 const SEA: [string, string][] = [['', t(lang, 'ui.any')],
                                  ...SEA_KEYS.map((k) => [k, seaLabel(k, lang)] as [string, string])];
 
-const BEDS: [string, string][] = [['', t(lang, 'ui.any')], ['1', '1+'], ['2', '2+'],
-                                  ['3', '3+'], ['4', '4+'], ['5', '5+']];
+// Sergei 03/11: every group is multi-select. Bedrooms are exact numbers (5 = 5 or more), as the
+// list's own row writes them (`bed`, repeated); «at least» could not be combined.
+const BEDS: [string, string][] = [['', t(lang, 'ui.any')], ['1', '1'], ['2', '2'],
+                                  ['3', '3'], ['4', '4'], ['5', '5+']];
 
 // Ξενοδοχεία: το `hotel_rooms` κινείται από 1 ως 26+ στα 36 διαθέσιμα, οπότε τα
 // σκαλιά είναι πιο αραιά από τα υπνοδωμάτια — αλλιώς τα μισά πλακίδια θα ήταν άδεια.
@@ -87,7 +89,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
         <div class="chips">
           {KINDS_SHOWN.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="subcategory" value={v} checked={i === 0} />
+              <input type="checkbox" name="subcategory" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               {/* desktop says «All types» as the mockup (George's search-bar text); phones keep «Any» */}
               <span>{i === 0 ? <><span class="fs-mob">{n}</span><span class="fs-desk">{t(lang, 'search.what.all')}</span></> : n}</span>
             </label>
@@ -100,7 +102,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
         <div class="chips">
           {MUNIS.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="municipality" value={v} checked={i === 0} />
+              <input type="checkbox" name="municipality" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               <span>{n}</span>
             </label>
           ))}
@@ -130,7 +132,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
         <div class="chips">
           {SEA.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="sea_access" value={v} checked={i === 0} />
+              <input type="checkbox" name="sea_access" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               <span>{n}</span>
             </label>
           ))}
@@ -145,7 +147,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
         <div class="chips">
           {BEDS.map(([v, n], i) => (
             <label class="chip">
-              <input type="radio" name="bedrooms" value={v} checked={i === 0} />
+              <input type="checkbox" name="bed" value={v} checked={i === 0} data-any={i === 0 ? '' : undefined} />
               <span class="num">{n}</span>
             </label>
           ))}
@@ -260,7 +262,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       ctrl?.abort();
       ctrl = new AbortController();
       const p = new URLSearchParams();
-      new FormData(form).forEach((v, k) => { if (String(v).trim()) p.set(k, String(v)); });
+      new FormData(form).forEach((v, k) => { if (String(v).trim()) p.append(k, String(v)); });
       out.dataset.busy = '1';
       try {
         const r = await fetch(`/api/count?${p}`, { signal: ctrl.signal });
@@ -279,9 +281,26 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     const family: Record<string, string> = JSON.parse(form.dataset.family || '{}');
     const pair = form.querySelector<HTMLElement>('[data-sqm-built]');
 
+    // the family of the ticked types: one family (all homes, or land) narrows the groups; a mix shows all
+    const famOf = () => {
+      const fs = new Set([...form.querySelectorAll<HTMLInputElement>('input[name=subcategory]:checked')]
+        .map((i) => i.value).filter(Boolean).map((v) => family[v] ?? ''));
+      return fs.size === 1 ? [...fs][0] : '';
+    };
+    // multi-select groups: «Any» clears the others; ticking a value clears «Any»; none ticked = «Any»
+    form.addEventListener('change', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el?.type !== 'checkbox' || el.name === 'pool') return;
+      const group = [...form.querySelectorAll<HTMLInputElement>(`input[type=checkbox][name="${el.name}"]`)];
+      const any = group.find((i) => i.hasAttribute('data-any'));
+      if (!any) return;
+      if (el === any) { if (any.checked) group.forEach((i) => { if (i !== any) i.checked = false; }); else any.checked = !group.some((i) => i !== any && i.checked); }
+      else if (el.checked) any.checked = false;
+      else if (!group.some((i) => i !== any && i.checked)) any.checked = true;
+    }, true);
+
     function applyKind() {
-      const kind = (form.querySelector<HTMLInputElement>('input[name=subcategory]:checked')?.value) ?? '';
-      const fam = family[kind] ?? '';          // κενό = «όλα τα είδη» → δείξε τα πάντα
+      const fam = famOf();                     // κενό = «όλα τα είδη» → δείξε τα πάντα
 
       form.querySelectorAll<HTMLElement>('[data-only]').forEach((g) => {
         const show = !fam || g.dataset.only === fam;
@@ -370,8 +389,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     const sqmPair = ranges.find((r) => r.el.dataset.stepsLand);
     const rescale = () => {
       if (!sqmPair) return;
-      const kind = form.querySelector<HTMLInputElement>('input[name=subcategory]:checked')?.value ?? '';
-      const land = family[kind] === 'land';
+      const land = famOf() === 'land';
       sqmPair.steps = JSON.parse((land ? sqmPair.el.dataset.stepsLand : sqmPair.el.dataset.stepsBuilt) || '[0]');
       syncRange(sqmPair);
     };

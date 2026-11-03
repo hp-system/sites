@@ -189,7 +189,7 @@ const has = (k: string) => pageExists(k as any);
   /* ── Sergei 03/11: on every page the header leaves when the page scrolls down and comes
         back (solid white, ink text) as soon as it scrolls up; at the top it is itself again ── */
   header.site-header.hdr-pin {
-    position: fixed !important; top: 0; left: 0; right: 0; z-index: 60;
+    position: fixed !important; top: 0; left: 0; right: 0; z-index: 200;   /* above every panel of the pages (the property «Nearby» list had 100+) */
     background: var(--paper) !important; color: var(--ink) !important;
     border-bottom: 1px solid var(--line-soft); box-shadow: 0 6px 20px rgba(10,14,16,.06);
     transform: translateY(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1);

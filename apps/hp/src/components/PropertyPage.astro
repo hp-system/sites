@@ -1321,7 +1321,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
     /* ── location: map / lock with the «Nearby» panel ── */
     .place { margin: 0 0 8px; }
-    .loc { position: relative; height: 380px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); }
+    .loc { position: relative; z-index: 0; isolation: isolate; height: 380px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); }   /* its panels' z-indexes stay inside (the header passes over) */
     .loc--nomap { height: auto; overflow: visible; border: 0; }
     .loc .maplock { height: 100%; }
     .loc .maplock__in { transition: padding .25s ease; }

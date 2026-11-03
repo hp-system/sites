@@ -1049,13 +1049,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .sec { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint);
          margin: var(--s6) 0 var(--s3); font-weight: 600; }
   .desc { margin: 0; font-size: 15px; color: var(--ink-2); max-width: 70ch; white-space: pre-line; }
-  .dsc__more { overflow: hidden; max-height: 4.8em; margin-top: 1em;
+  .dsc__more { overflow: hidden; max-height: 3.2em; margin-top: 1em;   /* Sergei 03/11: a shorter fade */
+               
                -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, transparent 100%);
                transition: max-height .6s cubic-bezier(.4,0,.2,1); }
   .dsc.open .dsc__more { -webkit-mask-image: none; mask-image: none; }
   .dsc__t { margin-top: 10px; padding: 6px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11.5px; font-weight: 600;
-            letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
-  .dsc__t:hover { color: var(--ink-hover); }
+            letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-decoration: underline; text-underline-offset: 4px; }
+  .dsc__t:hover { color: var(--ink); }   /* the grey of the area links (Sergei 03/11) */
   @media (prefers-reduced-motion: reduce) { .dsc__more { transition: none; } }
 
   /* Χαρακτηριστικά με εικονίδια — «αισθητικά πολύ γλυκό» (George). */

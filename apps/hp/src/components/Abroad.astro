@@ -143,7 +143,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abroad--you { background: var(--paper); border-top: 0; }
     /* Sergei 03/11: it follows the light Design & construction band — no centring gap above it */
     .abroad--you { min-height: 0; padding-top: 12px; }
-    .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: start; }
+    .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }   /* Sergei 03/11: both sides centred on one height */
     .abroad__head { max-width: none; }
     .abroad__h { margin: 14px 0 0; font-size: 36px; }
     .abroad__h--we { margin: 29px 0 0; color: #fff; }

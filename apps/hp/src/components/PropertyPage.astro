@@ -1451,11 +1451,12 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .card { position: relative; top: auto; border: 1px solid var(--line); padding: 7px 18px 28px; display: flex; flex-direction: column; gap: 14px;
             background: linear-gradient(160deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.64) 45%, rgba(255,255,255,.72) 100%);
             -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%); }
-    .pbp { display: flex; align-items: baseline; gap: 10px; height: 26px; white-space: nowrap; }
+    .pbp { display: flex; align-items: baseline; gap: 10px; height: 30px; white-space: nowrap; }
     .pbp .price, .pbp .per { font-variant-numeric: lining-nums proportional-nums; }   /* Sergei 03/11: price digits read normally */
-    .pbp .price { font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: -.012em; }
+    .pbp .price { font-size: 30px; font-weight: 600; line-height: 1; letter-spacing: -.012em; }   /* Sergei 03/11: a little larger */
     .pbp .price.t-h3 { font-size: 20px; }
-    .pbp .per { margin: 0; }
+    .pbp .per { margin: 0; font-size: 15px; }   /* half the price */
+    .side .tel { display: none; }   /* Sergei 03/11: no phone button in the price box (the number is in the header) */
     .pbp .old { order: 3; font-size: 12px; }
     .cta { height: 40px; padding: 0 12px; margin: 0; transition: background .2s ease, color .2s ease, border-color .2s ease; }
     .card > .cta[data-tour] { margin-top: 2px; }

@@ -1946,6 +1946,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     zdots.forEach((d, i) => d.addEventListener('click', () => go(i)));
     zoneEl.addEventListener('mouseenter', () => { hold = true; });
     zoneEl.addEventListener('mouseleave', () => { hold = false; at = Date.now(); });
+    // Sergei 03/11: a sideways swipe (trackpad, shift + wheel) pages the zone too — one page per gesture, no wrap
+    let wheelAt = 0;
+    zoneEl.addEventListener('wheel', (e) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+      if (Math.abs(dx) < 8) return;
+      e.preventDefault();
+      if (Date.now() - wheelAt < 650) return;
+      wheelAt = Date.now();
+      const rtl = document.documentElement.dir === 'rtl';
+      const next = page + ((dx > 0) !== rtl ? 1 : -1);
+      if (next >= 0 && next < zdots.length) go(next);
+    }, { passive: false });
     zoneEl.addEventListener('focusin', () => { hold = true; });
     zoneEl.addEventListener('focusout', () => { hold = false; at = Date.now(); });
     if (!still.matches) setInterval(() => { if (!hold && !document.hidden && desk.matches && Date.now() - at >= 5000) go(page + 1); }, 250);

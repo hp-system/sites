@@ -16,7 +16,7 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
-import { allProperties } from '../lib/api';
+import { allProperties, visitorCountry } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { contentUrl, pageExists } from '../lib/pages';
@@ -54,7 +54,7 @@ const contact = pageExists('contact') ? contentUrl('contact', lang) : listUrl(la
 
 let munis: { name: string; key: string }[] = [];
 try {
-  const items = await allProperties(Astro.cookies.get('member_token')?.value);
+  const items = await allProperties(Astro.cookies.get('member_token')?.value, visitorCountry(Astro.request));   // #18
   munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
     .slice(0, 4)
     .map((k) => {

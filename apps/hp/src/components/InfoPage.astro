@@ -19,7 +19,7 @@ import InfoForm from './InfoForm.astro';
 import InfoWidget from './InfoWidget.astro';
 import { priceTables } from '../lib/prices';
 import type { SiteProperty } from '../lib/api';
-import { allProperties } from '../lib/api';
+import { allProperties, visitorCountry } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
@@ -114,7 +114,7 @@ let munis: { name: string; key: string }[] = [];
 const memberToken = Astro.cookies.get('member_token')?.value;
 let items: SiteProperty[] = [];
 try {
-  items = await allProperties(memberToken);
+  items = await allProperties(memberToken, visitorCountry(Astro.request));   // #18
   munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
     .slice(0, 4)
     .map((k) => {

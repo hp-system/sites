@@ -20,23 +20,39 @@ export type SiteProperty = {
 
 type ListResponse = { total: number; page: number; limit: number; items: SiteProperty[] };
 
-async function get<T>(path: string, memberToken?: string): Promise<T> {
+async function get<T>(path: string, memberToken?: string, country?: string): Promise<T> {
   const headers: Record<string, string> = { accept: 'application/json' };
   if (memberToken) headers['x-member-token'] = memberToken;
+  if (country) headers['x-visitor-country'] = country;
   const res = await fetch(`${API}${path}`, { headers });
   if (!res.ok) throw new Error(`EALIDA API ${path} → HTTP ${res.status}`);
   return res.json() as Promise<T>;
 }
 
+/**
+ * The visitor's country, for the energy-certificate rule (D-20261104-GT-2, issue #18): visitors
+ * from Greece do not see properties without a valid certificate in lists; the CRM API applies
+ * the rule when the site forwards `x-visitor-country` (crm-v0.7.0).
+ * Read ONLY from Cloudflare's `CF-IPCountry`, set by the edge on the server side — never from
+ * a query, a cookie or anything else the browser controls. Unknown (no header, `XX`, Tor `T1`)
+ * → undefined → the API shows everything, as for a visitor from elsewhere.
+ * Do NOT pass it for the sitemap or feeds: search engines keep seeing every property.
+ * Rejected: a GeoIP table in the site — a second source of truth next to the edge's.
+ */
+export function visitorCountry(request: Request): string | undefined {
+  const c = (request.headers.get('cf-ipcountry') || '').trim().toUpperCase();
+  return /^[A-Z]{2}$/.test(c) && c !== 'XX' && c !== 'T1' ? c : undefined;
+}
+
 export const api = {
-  properties: (q: Record<string, string | number | undefined> = {}, memberToken?: string) => {
+  properties: (q: Record<string, string | number | undefined> = {}, memberToken?: string, country?: string) => {
     const p = new URLSearchParams();
     for (const [k, v] of Object.entries(q)) if (v !== undefined && v !== '') p.set(k, String(v));
     const qs = p.toString();
-    return get<ListResponse>(`/site/properties${qs ? '?' + qs : ''}`, memberToken);
+    return get<ListResponse>(`/site/properties${qs ? '?' + qs : ''}`, memberToken, country);
   },
-  property: (id: string, memberToken?: string) =>
-    get<SiteProperty>(`/site/property/${encodeURIComponent(id)}`, memberToken),
+  property: (id: string, memberToken?: string, country?: string) =>
+    get<SiteProperty>(`/site/property/${encodeURIComponent(id)}`, memberToken, country),
 };
 
 /** Το API δίνει 60 ανά σελίδα — μαζεύουμε όσα χρειάζονται για τα σύνολα της αρχικής. */
@@ -77,10 +93,10 @@ const PAGE_SIZE = 60;      // API maximum for /site/properties
 const SAFETY_MAX = 5_000;
 let ceilingWarned = false;
 
-async function fetchAll(memberToken?: string): Promise<SiteProperty[]> {
+async function fetchAll(memberToken?: string, country?: string): Promise<SiteProperty[]> {
   const out: SiteProperty[] = [];
   for (let page = 1; ; page++) {
-    const r = await api.properties({ limit: PAGE_SIZE, page }, memberToken);
+    const r = await api.properties({ limit: PAGE_SIZE, page }, memberToken, country);
     out.push(...r.items);
     if (out.length >= r.total || r.items.length === 0) break;
     if (out.length >= SAFETY_MAX) {
@@ -129,28 +145,31 @@ type Entry = { at: number; items: SiteProperty[] };
 const caches = new Map<string, Entry>();
 const inflights = new Map<string, Promise<SiteProperty[]>>();
 
-/** Κλειδί θεατή. Ο ανώνυμος είναι σταθερός· κάθε μέλος έχει δικό του. */
-function viewerKey(memberToken?: string): string {
-  return memberToken ? `m:${memberToken}` : 'anon';
+/** Κλειδί θεατή. Ο ανώνυμος είναι σταθερός· κάθε μέλος έχει δικό του.
+ *  #18: the country is part of the key — the API answers a visitor from Greece with a shorter
+ *  list, so one shared set would show Greek visitors the uncertified properties (or hide them
+ *  from everyone else). Anonymous keys are at most one per country code, so they stay bounded. */
+function viewerKey(memberToken?: string, country?: string): string {
+  return (memberToken ? `m:${memberToken}` : 'anon') + (country ? `|${country}` : '');
 }
 
-/** Κρατά τη μνήμη φραγμένη — πετά την παλαιότερη εγγραφή ΜΕΛΟΥΣ, ποτέ την ανώνυμη. */
+/** Κρατά τη μνήμη φραγμένη — πετά την παλαιότερη εγγραφή ΜΕΛΟΥΣ, ποτέ ανώνυμη. */
 function trim(): void {
   if (caches.size <= MAX_VIEWERS) return;
   let oldest: string | null = null;
   let oldestAt = Infinity;
   for (const [k, v] of caches) {
-    if (k === 'anon') continue;
+    if (k.startsWith('anon')) continue;
     if (v.at < oldestAt) { oldestAt = v.at; oldest = k; }
   }
   if (oldest) caches.delete(oldest);
 }
 
-function revalidate(memberToken?: string): Promise<SiteProperty[]> {
-  const key = viewerKey(memberToken);
+function revalidate(memberToken?: string, country?: string): Promise<SiteProperty[]> {
+  const key = viewerKey(memberToken, country);
   const running = inflights.get(key);
   if (running) return running;                  // ένα αίτημα εν πτήσει ΑΝΑ ΘΕΑΤΗ
-  const p = fetchAll(memberToken)
+  const p = fetchAll(memberToken, country)
     .then((items) => { caches.set(key, { at: Date.now(), items }); trim(); return items; })
     .catch((e) => {
       // Αν πέσει το API και έχουμε παλιά δεδομένα ΤΟΥ ΙΔΙΟΥ θεατή, μένουμε όρθιοι.
@@ -163,16 +182,19 @@ function revalidate(memberToken?: string): Promise<SiteProperty[]> {
   return p;
 }
 
-export async function allProperties(memberToken?: string): Promise<SiteProperty[]> {
-  const key = viewerKey(memberToken);
+/** `country`: pass `visitorCountry(request)` for every visitor-facing LIST (list, home, area,
+ *  collection, similar, counter). Leave it out for the property page lookup and ID search (they
+ *  open by link or code for everyone), and for the sitemap and feeds. */
+export async function allProperties(memberToken?: string, country?: string): Promise<SiteProperty[]> {
+  const key = viewerKey(memberToken, country);
   const hit = caches.get(key);
   const age = hit ? Date.now() - hit.at : Infinity;
   if (hit && age < TTL) return hit.items;
   if (hit && age < STALE_MAX) {
-    void revalidate(memberToken).catch(() => {});  // από πίσω· ο καλών δεν περιμένει
+    void revalidate(memberToken, country).catch(() => {});  // από πίσω· ο καλών δεν περιμένει
     return hit.items;
   }
-  return revalidate(memberToken);
+  return revalidate(memberToken, country);
 }
 
 /** Shape of a public property id in a URL or form: `8075`, `HP-8564` (router and /api/inquiry, B-03). */

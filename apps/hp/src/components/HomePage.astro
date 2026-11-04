@@ -18,7 +18,7 @@ import Doors from './Doors.astro';
 import Abroad from './Abroad.astro';
 import Footer from './Footer.astro';
 
-import { allProperties, refOf, priceOf, priceVisible } from '../lib/api';
+import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
 import { buildHome } from '../lib/home';
 import { coverOf, marked, clean, heroReady, shareImage, SHARE_W, SHARE_H, type Photo } from '../lib/photos';
 import { hasPool, catKey, facetUrl, FACETS } from '../lib/listing';
@@ -48,7 +48,7 @@ const memberToken = Astro.cookies.get('member_token')?.value;
 let items: Awaited<ReturnType<typeof allProperties>> = [];
 let apiDown = false;
 try {
-  items = await allProperties(memberToken);
+  items = await allProperties(memberToken, visitorCountry(Astro.request));   // #18
 } catch (e) {
   // Το site δεν πέφτει επειδή έπεσε το API — δείχνει σκελετό και το λέει στα logs.
   apiDown = true;

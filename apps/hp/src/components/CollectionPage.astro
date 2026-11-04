@@ -25,7 +25,7 @@ import Header from './Header.astro';
 import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import { prefix, t, type Lang } from '../lib/i18n';
-import { allProperties, type SiteProperty } from '../lib/api';
+import { allProperties, visitorCountry, type SiteProperty } from '../lib/api';
 import { viewerFor, isSecretFlag } from '../lib/gate';
 import { company } from '../lib/company';
 import type { Member } from '../lib/member';
@@ -41,7 +41,7 @@ let secret: SiteProperty[] = [];
 let ultra: SiteProperty[] = [];
 let failed = false;
 try {
-  const all = await allProperties(token);
+  const all = await allProperties(token, visitorCountry(Astro.request));   // #18
   for (const it of all) {
     const a = it.attributes ?? {};
     if (isSecretFlag(a.ultra_secret)) ultra.push(it);

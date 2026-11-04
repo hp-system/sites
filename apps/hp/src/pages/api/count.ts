@@ -14,7 +14,7 @@
 // ⏭️ Όταν το API αποκτήσει τα φίλτρα, αυτό το αρχείο γίνεται προώθηση 3 γραμμών.
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
-import { allProperties, priceOf, priceVisible } from '../../lib/api';
+import { allProperties, visitorCountry, priceOf, priceVisible } from '../../lib/api';
 import { muniKey } from '../../lib/gate';
 import { hasPool } from '../../lib/listing';
 
@@ -27,14 +27,14 @@ const n = (v: string | null) => {
   return Number.isFinite(x) && x > 0 ? x : null;
 };
 
-export const GET: APIRoute = async ({ url, cookies }) => {
+export const GET: APIRoute = async ({ url, cookies, request }) => {
   const q = url.searchParams;
   try {
     // 🔐 Ο μετρητής μετράει ό,τι ΒΛΕΠΕΙ ο συγκεκριμένος επισκέπτης. Χωρίς το token
     //    το μέλος έβλεπε πλήθος χωρίς τα ιδιωτικά — δηλαδή ο αριθμός δεν συμφωνούσε
     //    με τη λίστα που θα του σερβίραμε.
     const token = cookies.get('member_token')?.value;
-    const items = await allProperties(token);
+    const items = await allProperties(token, visitorCountry(request));   // #18: the count matches the list
     // ⛔ Το `area` ΔΕΝ είναι φίλτρο εδώ: η περιοχή είναι κλειδωμένη για τους μη
     //    συνδεδεμένους και δεν την ξεγλιστράμε μέσω μετρητή.
     // Multi-select (Sergei 03/11): a repeated parameter = any of its values (long and short names).
@@ -80,7 +80,7 @@ export const GET: APIRoute = async ({ url, cookies }) => {
         'content-type': 'application/json',
         // B-06 (traps T-K08): a member's count includes private properties — never shared caches.
         'cache-control': token ? 'private, max-age=30' : 'public, max-age=30, s-maxage=120',
-        ...(token ? { vary: 'cookie' } : {}),
+        vary: token ? 'cookie, cf-ipcountry' : 'cf-ipcountry',   // #18: the count differs by country
       },
     });
   } catch {

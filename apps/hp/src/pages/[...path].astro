@@ -43,7 +43,7 @@ import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, pageLangs, content
 import { memberOf, type Member } from '../lib/member';
 import { PUBLISHED, DEFAULT_LANG, SLUG, prefix, type Lang } from '../lib/i18n';
 import { facetBySlug, PAIRS, type Facet } from '../lib/listing';
-import { allProperties, refOf, REF_RE, type SiteProperty } from '../lib/api';
+import { allProperties, visitorCountry, refOf, REF_RE, type SiteProperty } from '../lib/api';
 
 export const prerender = false;
 
@@ -132,11 +132,15 @@ const maybeProp = !isHome && rest.length === 2
 
 if (maybeProp) {
   try {
-    allItems = await allProperties(memberToken);
+    // #18 (D-20261104-GT-2): the page itself opens for everyone by link or code — looked up in
+    // the full set. Its «similar» list follows the visitor's country like every other list.
+    const full = await allProperties(memberToken);
     // Πεζά/κεφαλαία αδιάφορα: το «hp-8564» γραμμένο με το χέρι πρέπει να βρίσκει
     // το ίδιο ακίνητο με το «HP-8564» του συνδέσμου.
     const want = rest[1].toLowerCase();
-    property = allItems.find((p) => refOf(p).toLowerCase() === want) ?? null;
+    property = full.find((p) => refOf(p).toLowerCase() === want) ?? null;
+    const country = visitorCountry(Astro.request);
+    allItems = country ? await allProperties(memberToken, country) : full;
   } catch {
     property = null;                       // το API έπεσε → όχι άδεια σελίδα
     crmDown = true;                        // #88: 503 + Retry-After, so Google retries instead of dropping the page

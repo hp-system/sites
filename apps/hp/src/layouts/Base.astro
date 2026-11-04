@@ -96,7 +96,7 @@ Astro.response.headers.set(
 );
 // #18: list pages differ by the visitor's country (energy-certificate rule for Greece). Cloudflare
 // ignores Vary for HTML (traps T-K07), so before any HTML edge-cache rule the cache key must add
-// the country, or GR must bypass — see traps T-K10.
+// the country, or GR must bypass — see ssot traps T-K20.
 Astro.response.headers.set('Vary', 'Cookie, Accept-Encoding, CF-IPCountry');
 
 // Consent defaults on every page; the GTM loader only on the real production host.

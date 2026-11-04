@@ -21,7 +21,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 import { t, listUrl, type Lang } from '../lib/i18n';
 import { num, seaLabel, SEA_KEYS } from '../lib/format';
-import { allProperties } from '../lib/api';
+import { allProperties, visitorCountry } from '../lib/api';
 
 interface Props { lang: Lang; total: number; munis: { name: string; n: number; key?: string }[] }
 const { lang, total, munis } = Astro.props;
@@ -35,7 +35,7 @@ const KINDS: [string, string][] = [
 // Sergei 03/11: a type with no property for sale right now is not offered (it only ever
 // answered «no properties»). Read from the same cached set as the list (one call a minute);
 // the type comes back by itself the day the catalogue has one. If the read fails, all stay.
-const haveKinds = await allProperties().then((xs) => new Set(xs.map((p) => String(p.attributes?.subcategory ?? ''))), () => null);
+const haveKinds = await allProperties(undefined, visitorCountry(Astro.request)).then((xs) => new Set(xs.map((p) => String(p.attributes?.subcategory ?? ''))), () => null);
 const KINDS_SHOWN = KINDS.filter(([v]) => !v || !haveKinds || haveKinds.has(v));
 
 // Τα ονόματα έρχονται από το ΙΔΙΟ σημείο με τις κάρτες (lib/format.ts).

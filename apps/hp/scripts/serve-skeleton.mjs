@@ -7,7 +7,7 @@ import { startStub } from './stub-api.mjs';
 
 const REAL = process.argv.includes('--real');
 const PORT = REAL ? 4333 : 4330;
-const stub = await startStub({ port: 4339, n: 300, variety: true });
+const stub = await startStub({ port: 4349, n: 300, variety: true }); // 4349: the tests use 4339
 const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
   stdio: 'inherit',
   env: { ...process.env, HOST: '127.0.0.1', PORT: String(PORT), SITE_ENV: 'preview', SKELETON: REAL ? '' : '1', EALIDA_API: stub.base, PUBLIC_ORIGIN: `http://127.0.0.1:${PORT}` },

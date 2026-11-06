@@ -1,0 +1,128 @@
+{
+  "id": "P07",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "Villas / luxury properties",
+  "pageType": "listing",
+  "path": "/ro/proprietati/vile",
+  "keyword": {
+    "primary": "vile grecia",
+    "volume": 10,
+    "secondary": [
+      "vile pe plaja grecia — 10",
+      "vile de vanzare grecia — 0",
+      "vile de lux grecia — 0",
+      "proprietati de lux grecia — 0"
+    ],
+    "otherGeography": [
+      "vile de vanzare halkidiki — 0",
+      "vile de lux halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Vile de vânzare în Grecia – vile de lux în Halkidiki",
+  "meta": "Vile în Grecia, în Halkidiki: vile de lux cu piscină, grădină și vedere la mare, de vânzare. Vedeți ofertele selectate și cereți o vizionare privată.",
+  "h1": "Vile în Grecia – vile de lux de vânzare în Halkidiki",
+  "h2": [
+    "Vile cu piscină și vedere la mare",
+    "Vile pe plajă în Halkidiki",
+    "Vile de lux în Kassandra și Sithonia",
+    "Vile și viza de aur",
+    "Ce verificați la cumpărarea unei vile"
+  ],
+  "faqQuestions": [
+    "Cât costă o vilă în Grecia, în Halkidiki?",
+    "Ce vile de lux se găsesc lângă plajă în Halkidiki?",
+    "Poate o vilă din Halkidiki să conteze pentru viza de aur?",
+    "Cine se ocupă de întreținerea vilei când nu sunt în Grecia?"
+  ],
+  "faq": [
+    {
+      "q": "Cât costă o vilă în Grecia, în Halkidiki?",
+      "a": "Prețul unei vile depinde de suprafață, teren, piscină, vedere, distanța până la mare și calitatea construcției. Diferențele sunt mari între o vilă mai veche în interior și una nouă pe malul mării. Folosiți filtrul de preț și cereți-ne detalii pentru vilele care vă interesează."
+    },
+    {
+      "q": "Ce vile de lux se găsesc lângă plajă în Halkidiki?",
+      "a": "Vilele de lux lângă plajă se găsesc mai ales în Kassandra și Sithonia, unde coasta este lungă și variată. Oferta se schimbă des, așa că vedeți lista actuală de pe această pagină sau pagina cu proprietăți pe malul mării. Vă trimitem și variante noi, potrivite cerințelor."
+    },
+    {
+      "q": "Poate o vilă din Halkidiki să conteze pentru viza de aur?",
+      "a": "Da, dacă îndeplinește condițiile. În Halkidiki, pragul este de 400.000 € pentru o singură locuință de cel puțin 120 m². Cetățenii români nu au nevoie de viza de aur, dar regula poate interesa partenerii sau familia din afara UE. Situația din noiembrie 2026, de confirmat cu avocatul nostru."
+    },
+    {
+      "q": "Cine se ocupă de întreținerea vilei când nu sunt în Grecia?",
+      "a": "Ne putem ocupa noi, prin serviciul de administrare după cumpărare. Asta poate include verificări periodice, coordonarea grădinarului, a curățeniei și a întreținerii piscinei, precum și rezolvarea micilor probleme. Stabilim împreună ce servicii vă trebuie și cât de des vreți să primiți vești și fotografii despre vilă."
+    }
+  ],
+  "intro": "<p>Vile în Grecia, toate în Halkidiki: aici găsiți vile de lux de vânzare, cu piscină, grădină și vedere la mare. Lucrăm numai în Halkidiki, așa că fiecare vilă din listă se află în nordul Greciei. Filtrați după municipiu, preț, suprafață și distanța până la mare. Pentru vilele care vă interesează, programați o vizionare privată la fața locului sau prin apel video.</p>",
+  "body": "<h2>Vile cu piscină și vedere la mare</h2><p>La o vilă contează intimitatea, piscina, vederea și mărimea terenului. Uitați-vă și la calitatea construcției, la izolație și la accesul pe tot parcursul anului, nu doar vara.</p><h2>Vile pe plajă în Halkidiki</h2><p>Vilele chiar pe plajă sunt mai puține decât cele aflate la câțiva pași de mare. Proprietățile de pe malul mării au nevoie de o verificare atentă a zonei de coastă, făcută de avocat și de inginer.</p><h2>Vile de lux în Kassandra și Sithonia</h2><p>Kassandra are vile aproape de plaje organizate și de sate animate vara. Sithonia oferă vile între pini, cu vedere spre golfuri liniștite. Fiecare municipiu are și o pagină separată cu vile.</p><h2>Vile și viza de aur</h2><p>În Halkidiki, o locuință de cel puțin 120 m² cu valoarea de minimum 400.000 € poate conta pentru viza de aur. Regula privește cetățenii din afara UE și este cea din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Ce verificați la cumpărarea unei vile</h2><ul><li>autorizația de construire și eventualele extinderi</li><li>titlul de proprietate și cadastrul</li><li>piscina, instalațiile și certificatul energetic</li><li>cine are grijă de vilă când sunteți plecați</li></ul>",
+  "listingFilter": "luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/vile",
+  "hreflang": "P07: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Vile"
+  ],
+  "heroAlt": "Vilă albă cu piscină și vedere la mare în Halkidiki – vile în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Vile în Grecia – vile de lux în Halkidiki",
+  "anchor": "vile în Grecia",
+  "anchorVariants": [
+    "vile de lux în Halkidiki",
+    "vile de vânzare în Halkidiki, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "vile de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra/vile"
+    },
+    {
+      "anchor": "vile de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia/vile"
+    },
+    {
+      "anchor": "case de vânzare în Grecia pe malul mării",
+      "href": "/ro/proprietati/pe-plaja"
+    },
+    {
+      "anchor": "viza de aur Grecia",
+      "href": "/ro/viza-de-aur-grecia"
+    },
+    {
+      "anchor": "cumpărare casă în Grecia",
+      "href": "/ro/cumparare-casa-in-grecia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P09",
+    "P11",
+    "P12",
+    "P15",
+    "P16",
+    "P20"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 429,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

@@ -1,0 +1,140 @@
+{
+  "id": "P12",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "A",
+  "name": "Property in Sithonia",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/sitonija",
+  "keyword": {
+    "primary": "nekretnine sitonija",
+    "volume": 20,
+    "secondary": [
+      "sitonija nekretnine — 20",
+      "nekretnine nikiti prodaja — 30",
+      "nekretnine grčka sitonija — 10",
+      "nekretnine sitonija prodaja — 10",
+      "prodaja apartmana sitonija — 10",
+      "prodaja stanova sitonija — 10"
+    ],
+    "otherGeography": [
+      "nekretnine sitonija halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Grčka – nekretnine Sitonija, Halkidiki: prodaja",
+  "meta": "Nekretnine Sitonija u Grčkoj: kuće, stanovi i vile na srednjem poluostrvu Halkidikija, uz borove šume i mirne uvale. Pogledajte ponudu.",
+  "h1": "Grčka – nekretnine Sitonija: kuće i stanovi na prodaju na Halkidikiju",
+  "h2": [
+    "Nekretnine na prodaju u opštini Sitonija",
+    "Sitonija: priroda, uvale i mirniji ritam",
+    "Nikiti, Neos Marmaras i okolina – opšti pregled",
+    "Stanovi i apartmani u Sitoniji",
+    "Cene nekretnina u Sitoniji"
+  ],
+  "faqQuestions": [
+    "Koja mesta u Sitoniji su najpogodnija za kupovinu nekretnine?",
+    "Da li je Sitonija mirnija od Kasandre?",
+    "Kakav je život u Sitoniji van sezone?",
+    "Koliko je Sitonija udaljena od Soluna?"
+  ],
+  "faq": [
+    {
+      "q": "Koja mesta u Sitoniji su najpogodnija za kupovinu nekretnine?",
+      "a": "Za život tokom cele godine najpraktičniji su veći centri kao Nikiti i Neos Marmaras, jer imaju prodavnice i usluge. Za letovanje i mir kupci biraju i manja mesta i uvale dalje na jugu. Uz svaku nekretninu prikazujemo opštinu, a lokaciju objašnjavamo pri razgledanju."
+    },
+    {
+      "q": "Da li je Sitonija mirnija od Kasandre?",
+      "a": "Da, uglavnom jeste. Sitonija je manje izgrađena, sa više šume i malih uvala, pa je i leti mirnija od Kasandre. Kasandra zauzvrat ima više usluga i bliža je Solunu. Mnogi kupci obiđu obe opštine pre nego što odluče gde da kupe."
+    },
+    {
+      "q": "Kakav je život u Sitoniji van sezone?",
+      "a": "Van sezone je Sitonija vrlo mirna. Veća mesta imaju prodavnice, apoteke i osnovne usluge, ali mnogi restorani i hoteli zatvaraju posle leta. Za život tokom cele godine birajte mesto u kome ljudi stalno žive i proverite kako put do njega izgleda zimi."
+    },
+    {
+      "q": "Koliko je Sitonija udaljena od Soluna?",
+      "a": "Do Sitonije se iz Soluna vozi duže nego do Kasandre, jer se prolazi kroz Nea Propontidu i nastavlja dalje na istok. Tačno vreme zavisi od mesta na poluostrvu i od saobraćaja. Pri razgledanju vam rado opišemo realno vreme vožnje do konkretne lokacije."
+    }
+  ],
+  "intro": "<p>Nekretnine Sitonija: ovde su kuće, stanovi i vile na prodaju u opštini Sitonija, na srednjem poluostrvu Halkidikija, na severu Grčke. Sitonija je zelenija i mirnija od Kasandre, sa borovim šumama i mnogo malih uvala sa bistrom vodom.</p><p>Uz svaku nekretninu prikazana je samo opština, a tačnu lokaciju dobijate pri razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Nekretnine na prodaju u opštini Sitonija</h2><p>Ponuda obuhvata stanove i apartmane blizu plaže, kuće sa baštom i vile sa pogledom na more. Filtrirajte po tipu, ceni i udaljenosti od mora.</p><h2>Sitonija: priroda, uvale i mirniji ritam</h2><p>Borova šuma ovde često dopire do same obale, a uvale su male i raznovrsne. Gradnja je ređa nego u Kasandri, pa je i ritam mirniji. Zauzvrat je zimi manje usluga, a do Soluna se vozi duže.</p><h2>Nikiti, Neos Marmaras i okolina – opšti pregled</h2><p>Nikiti, na ulazu u Sitoniju, i Neos Marmaras, na zapadnoj obali, glavni su centri poluostrva, sa prodavnicama, restoranima i uslugama. Manja mesta i uvale južnije su mirniji, posebno van sezone.</p><h2>Stanovi i apartmani u Sitoniji</h2><p>Stanovi i apartmani su često u manjim zgradama ili kompleksima blizu plaže, pogodni za letovanje i izdavanje. Proverite zajedničke troškove, mogućnost izdavanja i pristup zimi, jer su neka mesta van sezone gotovo prazna.</p><h2>Cene nekretnina u Sitoniji</h2><p>Cenu određuju udaljenost od mora, pogled, pristupni put i blizina većih mesta. Nekretnine u većim mestima i uz dobar put tražene su i za stalni život. Aktuelne cene vidite u ponudi na ovoj stranici.</p>",
+  "listingFilter": "municipality=sithonia",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/sitonija",
+  "hreflang": "P12: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Sitonija"
+  ],
+  "heroAlt": "Nekretnine Sitonija – tirkizna uvala sa borovima na poluostrvu Sitonija, Grčka",
+  "galleryAltPattern": "{type} na prodaju, Sitonija, Halkidiki – {feature}",
+  "ogTitle": "Grčka – nekretnine Sitonija, Halkidiki",
+  "anchor": "nekretnine u Sitoniji",
+  "anchorVariants": [
+    "nekretnine Sitonija – Halkidiki",
+    "kuće i stanovi u Sitoniji na prodaju"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "prodaja kuća u Grčkoj",
+      "href": "/sr/nekretnina/kuce"
+    },
+    {
+      "anchor": "prodaja vila u Grčkoj",
+      "href": "/sr/nekretnina/vile"
+    },
+    {
+      "anchor": "placevi u Grčkoj na prodaju",
+      "href": "/sr/nekretnina/zemljiste"
+    },
+    {
+      "anchor": "prodaja vila u Sitoniji",
+      "href": "/sr/nekretnina/sitonija/vile"
+    },
+    {
+      "anchor": "nekretnine na moru u Sitoniji",
+      "href": "/sr/nekretnina/sitonija/prva-linija"
+    },
+    {
+      "anchor": "život u Grčkoj na Halkidikiju",
+      "href": "/sr/halkidiki"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P16",
+    "P18",
+    "P21"
+  ],
+  "cta": "Pogledajte nekretnine u Sitoniji",
+  "oldUrls": [
+    {
+      "path": "/sr/nekretnine-u/sitonija",
+      "clicks": 3
+    }
+  ],
+  "words": 428,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

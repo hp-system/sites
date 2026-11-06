@@ -1,0 +1,117 @@
+{
+  "id": "P06",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "B",
+  "name": "Maisonettes for sale",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/dupleksi",
+  "keyword": {
+    "primary": "prodaja dupleksa grcka",
+    "volume": 0,
+    "secondary": [
+      "dupleks na prodaju grcka — 0",
+      "mezoneta grcka prodaja — 0",
+      "dupleks stan grcka — 0"
+    ],
+    "otherGeography": [
+      "dupleks halkidiki prodaja — 0",
+      "mezonete halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Prodaja dupleksa Grčka – dupleksi i mezonete, Halkidiki",
+  "meta": "Prodaja dupleksa u Grčkoj: mezonete na dva nivoa na Halkidikiju, sa dvorištem ili terasom, blizu mora. Pogledajte ponudu i zakažite obilazak.",
+  "h1": "Prodaja dupleksa Grčka – mezonete na dva nivoa na Halkidikiju",
+  "h2": [
+    "Šta je mezoneta (dupleks) u Grčkoj",
+    "Dupleksi na prodaju na Halkidikiju",
+    "Dupleks ili stan: prednosti za porodicu",
+    "Zajedničko dvorište, bazen i troškovi održavanja",
+    "Gde tražiti dupleks: Kasandra, Sitonija, Nea Propontida"
+  ],
+  "faqQuestions": [
+    "Šta je mezoneta (dupleks) u Grčkoj?",
+    "Da li dupleks na Halkidikiju ima sopstveno dvorište i parking?",
+    "Da li je dupleks bolji izbor od stana za porodicu?",
+    "Koliko košta dupleks na Halkidikiju?"
+  ],
+  "faq": [
+    {
+      "q": "Šta je mezoneta (dupleks) u Grčkoj?",
+      "a": "Mezoneta je grčki naziv za dupleks: stan ili kuću na dva nivoa sa sopstvenim ulazom. Najčešće je deo manjeg kompleksa, sa dnevnim boravkom na jednom i spavaćim sobama na drugom nivou. Mnoge imaju baštu, terasu na krovu ili pristup zajedničkom bazenu."
+    },
+    {
+      "q": "Da li dupleks na Halkidikiju ima sopstveno dvorište i parking?",
+      "a": "Mnogi dupleksi imaju sopstvenu malu baštu ili terasu, a parking je često na placu kompleksa. To ipak nije pravilo, pa je uz svaku ponudu važno proveriti šta pripada samo vama, a šta je zajedničko. Pri razgledanju vam to pokazujemo na licu mesta."
+    },
+    {
+      "q": "Da li je dupleks bolji izbor od stana za porodicu?",
+      "a": "Za mnoge porodice jeste: dupleks nudi više prostora, odvojene nivoe za dnevni deo i sobe i često baštu, a održavanje je lakše nego kod samostalne kuće. Stan je obično povoljniji i jednostavniji kada niste tu. Izbor zavisi od budžeta i načina korišćenja."
+    },
+    {
+      "q": "Koliko košta dupleks na Halkidikiju?",
+      "a": "Cena zavisi od opštine, udaljenosti od mora, pogleda, kvadrature i starosti kompleksa. Dupleks je obično skuplji od stana na sličnoj lokaciji, a povoljniji od samostalne kuće. Aktuelne cene vidite u ponudi na ovoj stranici, uz filter po ceni i opštini."
+    }
+  ],
+  "intro": "<p>Prodaja dupleksa Grčka: ovde su mezonete, odnosno stanovi i kuće na dva nivoa, na prodaju na Halkidikiju, na severu Grčke. Dupleks ima sopstveni ulaz i više prostora od stana, a održava se lakše od samostalne kuće.</p><p>Sve ponude su na Halkidikiju, gde radi naša agencija. Filtrirajte po opštini i ceni i zakažite razgledanje uživo ili putem video poziva, uz obilazak kompleksa i okoline.</p>",
+  "body": "<h2>Šta je mezoneta (dupleks) u Grčkoj</h2><p>Grčka reč „mezoneta“ označava ono što kod nas zovemo dupleks: stan ili kuću na dva nivoa, sa sopstvenim ulazom. Dupleksi su najčešće u manjim kompleksima od nekoliko jedinica.</p><h2>Dupleksi na prodaju na Halkidikiju</h2><p>Uz svaki dupleks prikazana je opština, a tačna lokacija se dogovara pri razgledanju. U opisu proverite kvadraturu po nivoima, broj kupatila i da li postoji terasa na krovu.</p><h2>Dupleks ili stan: prednosti za porodicu</h2><p>Dupleks daje više privatnosti: spavaće sobe su obično na jednom nivou, a dnevni boravak na drugom. Često ima malu baštu ili terasu, što porodicama sa decom mnogo znači.</p><h2>Zajedničko dvorište, bazen i troškovi održavanja</h2><p>U kompleksima se dvorište, bazen i rasveta održavaju zajednički, pa se plaćaju i zajednički troškovi. U poređenju sa samostalnom kućom održavanje je jednostavnije, ali visinu tih troškova proverite pre kupovine.</p><h2>Gde tražiti dupleks: Kasandra, Sitonija, Nea Propontida</h2><p>U Kasandri su dupleksi često u kompleksima blizu plaža i letnjih sadržaja. Sitonija nudi duplekse u zelenilu i mirnijim mestima. Nea Propontida odgovara onima koji žele da žive cele godine, blizu Soluna.</p>",
+  "listingFilter": "subcategory=maisonette",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/dupleksi",
+  "hreflang": "P06: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Dupleksi"
+  ],
+  "heroAlt": "Prodaja dupleksa Grčka – mezonete sa terasama i zajedničkim bazenom na Halkidikiju",
+  "galleryAltPattern": "{type} na prodaju, {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Prodaja dupleksa Grčka – mezonete na Halkidikiju",
+  "anchor": "prodaja dupleksa u Grčkoj",
+  "anchorVariants": [
+    "dupleksi na prodaju na Halkidikiju",
+    "mezonete na Halkidikiju"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    },
+    {
+      "anchor": "prodaja kuća u Grčkoj",
+      "href": "/sr/nekretnina/kuce"
+    },
+    {
+      "anchor": "prodaja stanova u Grčkoj",
+      "href": "/sr/nekretnina/stanovi"
+    },
+    {
+      "anchor": "nekretnine u Kasandri",
+      "href": "/sr/nekretnina/kasandra"
+    },
+    {
+      "anchor": "nekretnine u Sitoniji",
+      "href": "/sr/nekretnina/sitonija"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P04"
+  ],
+  "cta": "Pogledajte duplekse",
+  "oldUrls": [],
+  "words": 404,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

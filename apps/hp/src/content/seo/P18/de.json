@@ -1,0 +1,98 @@
+{
+  "id": "P18",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Sithonia seafront",
+  "pageType": "listing",
+  "path": "/de/immobilien/sithonia/am-meer",
+  "keyword": {
+    "primary": "haus kaufen chalkidiki sithonia",
+    "volume": 20,
+    "secondary": [
+      "haus kaufen sithonia chalkidiki — 0",
+      "haus kaufen sithonia — 0",
+      "sithonia haus kaufen — 0",
+      "nikiti haus kaufen — 10"
+    ],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Haus kaufen Chalkidiki Sithonia – direkt am Meer",
+  "meta": "Haus kaufen auf Sithonia, Chalkidiki, direkt am Meer: Häuser und Villen in erster Reihe an ruhigen Buchten. Jetzt Häuser am Meer auf Sithonia ansehen.",
+  "h1": "Haus kaufen auf Sithonia, Chalkidiki – direkt am Meer",
+  "h2": [
+    "Häuser in erster Reihe auf Sithonia",
+    "Buchten und Strände von Sithonia",
+    "Küstenzone und Baurecht am Meer",
+    "Ferienhaus oder Wohnsitz am Meer"
+  ],
+  "faqQuestions": [
+    "Gibt es auf Sithonia Häuser direkt am Meer?",
+    "Welche Buchten auf Sithonia eignen sich für ein Ferienhaus?",
+    "Was kostet ein Haus am Meer auf Sithonia?"
+  ],
+  "faq": [
+    {
+      "q": "Gibt es auf Sithonia Häuser direkt am Meer?",
+      "a": "Ja, aber sie sind selten. Auf dieser Seite sehen Sie alle Häuser in erster Reihe, die wir aktuell auf Sithonia anbieten. Wenn gerade nichts Passendes dabei ist, sagen Sie uns, was Sie suchen. Wir melden uns, sobald ein neues Angebot dazukommt."
+    },
+    {
+      "q": "Welche Buchten auf Sithonia eignen sich für ein Ferienhaus?",
+      "a": "Das hängt davon ab, was Sie suchen. Rund um Nikiti gibt es lange Strände und gute Versorgung. Weiter im Süden, etwa bei Sarti, ist es ruhiger, mit Blick auf den Athos. Am besten sehen Sie sich mehrere Buchten an. Wir planen gern eine Besichtigungstour."
+    },
+    {
+      "q": "Was kostet ein Haus am Meer auf Sithonia?",
+      "a": "Häuser direkt am Meer gehören auf Sithonia zu den gefragtesten Immobilien. Der Preis hängt von Lage, Größe, Zustand und Strandzugang ab. Die aktuellen Angebote mit Preis sehen Sie oben in der Liste. Planen Sie zusätzlich die Kaufnebenkosten ein. Wir sagen Ihnen offen, ob ein Preis zur Lage passt."
+    }
+  ],
+  "intro": "<p>Haus kaufen auf Chalkidiki, Sithonia, direkt am Meer: Hier finden Sie alle Häuser, Wohnungen und Villen in der Gemeinde Sithonia, die in erster Reihe oder mit direktem Zugang zum Strand liegen. Wir zeigen hier nur Immobilien, die wirklich direkt am Wasser liegen. Sithonia bietet kleine Buchten, klares Wasser und viel Ruhe. Fragen Sie eine Besichtigung an, vor Ort oder per Video.</p>",
+  "body": "<h2>Häuser in erster Reihe auf Sithonia</h2><p>Erste Reihe heißt: Zwischen Ihrem Haus und dem Strand steht kein anderes Gebäude. Auf Sithonia liegen solche Häuser oft an kleinen Buchten, umgeben von Pinien. Sie sind selten und sehr gefragt.</p><h2>Buchten und Strände von Sithonia</h2><p>Die Küste von Sithonia wechselt zwischen Sand, Felsen und kleinen Buchten. Rund um Nikiti gibt es lange Strände, weiter im Süden, etwa bei Sarti, liegen ruhigere Buchten mit Blick auf den Athos.</p><h2>Küstenzone und Baurecht am Meer</h2><p>Strände sind in Griechenland öffentlich, und direkt an der Küste gilt eine geschützte Zone mit strengen Bauregeln. Stand November 2026, von unserem Anwalt zu bestätigen. Bei Häusern am Meer prüft der Anwalt die Genehmigungen besonders genau.</p><h2>Ferienhaus oder Wohnsitz am Meer</h2><p>Als Ferienhaus ist ein Haus am Meer auf Sithonia ideal. Für ganzjähriges Wohnen sollten Sie die Nähe zu Nikiti oder Neos Marmaras beachten, wo es auch im Winter Versorgung gibt. Achten Sie auf Heizung und Schutz vor Feuchtigkeit.</p>",
+  "listingFilter": "municipality=sithonia & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/sithonia/am-meer",
+  "hreflang": "P18: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Sithonia",
+    "Am Meer"
+  ],
+  "heroAlt": "Haus über einer ruhigen Bucht auf Sithonia, Chalkidiki – Haus kaufen Sithonia am Meer",
+  "galleryAltPattern": "{type} direkt am Meer in Sithonia, Chalkidiki – {feature}",
+  "ogTitle": "Haus kaufen auf Sithonia, Chalkidiki – direkt am Meer",
+  "anchor": "Häuser am Meer auf Sithonia",
+  "anchorVariants": [
+    "Haus kaufen Sithonia am Meer",
+    "Immobilien direkt am Meer auf Sithonia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Sithonia",
+      "href": "/de/immobilien/sithonia"
+    },
+    {
+      "anchor": "Haus direkt am Meer auf Chalkidiki",
+      "href": "/de/immobilien/am-meer"
+    },
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P12"
+  ],
+  "cta": "Häuser am Meer ansehen",
+  "oldUrls": [],
+  "words": 352,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

@@ -1,0 +1,117 @@
+{
+  "id": "P06",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "B",
+  "name": "Maisonettes for sale",
+  "pageType": "listing",
+  "path": "/ro/proprietati/duplexuri",
+  "keyword": {
+    "primary": "duplex de vanzare grecia",
+    "volume": 0,
+    "secondary": [
+      "duplexuri de vanzare grecia — 0",
+      "casa duplex grecia — 0",
+      "duplex la mare grecia — 0"
+    ],
+    "otherGeography": [
+      "duplex de vanzare halkidiki — 0",
+      "duplexuri halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Duplex de vânzare în Grecia – duplexuri în Halkidiki",
+  "meta": "Duplex de vânzare în Grecia, în Halkidiki: locuințe pe două niveluri, cu grădină sau terasă, aproape de mare. Vedeți ofertele și cereți o vizionare.",
+  "h1": "Duplex de vânzare în Grecia – duplexuri în Halkidiki",
+  "h2": [
+    "Ce este un duplex (maisonetă) în Grecia",
+    "Duplexuri cu grădină sau terasă",
+    "Duplexuri aproape de mare",
+    "Duplex sau apartament: ce se potrivește",
+    "Duplexuri în Kassandra, Sithonia, Nea Propontida și Aristotelis"
+  ],
+  "faqQuestions": [
+    "Ce este un duplex (maisonetă) în Grecia?",
+    "Cât costă un duplex în Halkidiki?",
+    "Un duplex are teren sau grădină proprie?",
+    "Ce taxe se plătesc la cumpărarea unui duplex în Grecia?"
+  ],
+  "faq": [
+    {
+      "q": "Ce este un duplex (maisonetă) în Grecia?",
+      "a": "Este o locuință pe două niveluri, numită în greacă „mezonetă”. De obicei face parte dintr-un complex mic, are intrare proprie și uneori o grădină sau o terasă. Spre deosebire de o casă independentă, terenul este împărțit cu vecinii din același complex."
+    },
+    {
+      "q": "Cât costă un duplex în Halkidiki?",
+      "a": "Prețul depinde de municipiu, de distanța până la mare, de suprafață și de vechimea complexului. Un duplex nou cu vedere la mare costă mai mult decât unul mai vechi, aflat mai departe de plajă. Folosiți filtrul de preț de pe această pagină pentru a vedea ofertele actuale."
+    },
+    {
+      "q": "Un duplex are teren sau grădină proprie?",
+      "a": "Adesea da, dar nu întotdeauna. Unele duplexuri au o grădină de folosință exclusivă, altele doar o terasă. Terenul pe care stă complexul este de regulă comun. Avocatul verifică în acte exact ce cumpărați și ce spații se folosesc în comun."
+    },
+    {
+      "q": "Ce taxe se plătesc la cumpărarea unui duplex în Grecia?",
+      "a": "La revânzare se plătește taxa de transfer de 3,09% (3% plus o taxă municipală). La construcțiile noi, TVA-ul este suspendat până la 31.12.2026. Se adaugă notarul, avocatul și cadastrul, de regulă câteva procente în total. Sunt regulile din noiembrie 2026, de confirmat cu avocatul nostru."
+    }
+  ],
+  "intro": "<p>Duplex de vânzare în Grecia, în Halkidiki: aici vedeți locuințele noastre pe două niveluri, numite în Grecia „mezonetă”. Multe au intrare proprie, o grădină mică sau o terasă pe acoperiș și sunt aproape de mare. Lucrăm numai în Halkidiki, așa că fiecare duplex din listă se află în nordul Greciei. Filtrați după municipiu și preț, apoi programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Ce este un duplex (maisonetă) în Grecia</h2><p>Mezoneta grecească este o locuință pe două niveluri, de obicei într-un complex mic, cu câteva unități pe același teren. Fiecare duplex are intrarea lui, iar terenul comun se împarte cu vecinii. Este o casă duplex în Grecia, între apartament și casa independentă.</p><h2>Duplexuri cu grădină sau terasă</h2><p>Multe duplexuri au o grădină mică la parter sau o terasă la etaj, bune pentru serile de vară. Întrebați dacă grădina este de folosință exclusivă și cum se împart cheltuielile pentru spațiile comune.</p><h2>Duplexuri aproape de mare</h2><p>Complexele cu duplexuri sunt des construite în satele de pe coastă, la mică distanță de plajă. Un duplex la mare în Grecia vă oferă mai mult spațiu decât un apartament, fără grija unei case mari.</p><h2>Duplex sau apartament: ce se potrivește</h2><ul><li>Duplexul are mai mult spațiu și mai multă intimitate.</li><li>Apartamentul are costuri mai mici și întreținere mai simplă.</li><li>Casa independentă oferă teren propriu, dar cere mai multă grijă.</li></ul><h2>Duplexuri în Kassandra, Sithonia, Nea Propontida și Aristotelis</h2><p>Găsiți duplexuri în toate cele patru zone. Kassandra și Sithonia sunt alese mai ales pentru vacanță, Nea Propontida pentru locuit tot anul, iar Aristotelis pentru liniște.</p>",
+  "listingFilter": "subcategory=maisonette",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/duplexuri",
+  "hreflang": "P06: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Duplexuri"
+  ],
+  "heroAlt": "Duplex pe două niveluri cu terasă și grădină în Halkidiki – duplex de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Duplex de vânzare în Grecia – Halkidiki",
+  "anchor": "duplex de vânzare în Grecia",
+  "anchorVariants": [
+    "duplexuri de vânzare în Halkidiki",
+    "duplex în Halkidiki, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "case de vânzare în Grecia",
+      "href": "/ro/proprietati/case"
+    },
+    {
+      "anchor": "apartamente de vânzare în Grecia",
+      "href": "/ro/proprietati/apartamente"
+    },
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P04"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 433,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

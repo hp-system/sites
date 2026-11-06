@@ -1,0 +1,130 @@
+{
+  "id": "P05",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Apartments for sale",
+  "pageType": "listing",
+  "path": "/de/immobilien/wohnungen",
+  "keyword": {
+    "primary": "chalkidiki wohnung kaufen",
+    "volume": 70,
+    "secondary": [
+      "wohnung kaufen chalkidiki direkt am meer — 50",
+      "wohnung kaufen chalkidiki — 40",
+      "wohnung chalkidiki kaufen — 30",
+      "wohnung in chalkidiki kaufen — 20",
+      "wohnung kaufen in chalkidiki — 10"
+    ],
+    "otherGeography": [
+      "wohnung kaufen griechenland — 150",
+      "wohnung in griechenland kaufen — 100",
+      "wohnung griechenland — 80",
+      "wohnung kaufen griechenland chalkidiki — 10"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Chalkidiki Wohnung kaufen – Wohnungen in Griechenland",
+  "meta": "Wohnung kaufen auf Chalkidiki: Apartments und Studios nahe am Strand, ideal als Ferienwohnung oder Alterswohnsitz. Jetzt Wohnungen ansehen und anfragen.",
+  "h1": "Chalkidiki: Wohnung kaufen – Apartments und Studios in Griechenland",
+  "h2": [
+    "Wohnung kaufen auf Chalkidiki direkt am Meer",
+    "Wohnungen in Griechenland kaufen: Apartment oder Studio?",
+    "Wohnungen nach Region: Kassandra, Sithonia, Nea Propontida",
+    "Laufende Kosten einer Wohnung in Griechenland",
+    "Ferienwohnung vermieten: was Sie wissen sollten"
+  ],
+  "faqQuestions": [
+    "Was kostet eine Wohnung auf Chalkidiki?",
+    "Gibt es Wohnungen auf Chalkidiki direkt am Meer?",
+    "Welche Nebenkosten hat eine Wohnung in Griechenland pro Jahr?",
+    "Kann ich eine Ferienwohnung in Griechenland vermieten?"
+  ],
+  "faq": [
+    {
+      "q": "Was kostet eine Wohnung auf Chalkidiki?",
+      "a": "Das hängt von Lage, Größe, Baujahr und Meerblick ab. Ein Studio im Ort kostet deutlich weniger als ein großes Apartment in erster Reihe. Mit dem Preisfilter sehen Sie sofort, was in Ihr Budget passt. Planen Sie zusätzlich die Kaufnebenkosten und die laufenden Kosten ein."
+    },
+    {
+      "q": "Gibt es Wohnungen auf Chalkidiki direkt am Meer?",
+      "a": "Ja, aber sie sind selten und schnell verkauft. Nutzen Sie den Filter „Entfernung zum Meer“, um Wohnungen am Strand oder in wenigen Gehminuten zu finden. Wenn Sie eine bestimmte Lage suchen, sagen Sie es uns. Wir melden uns, sobald ein passendes Angebot da ist."
+    },
+    {
+      "q": "Welche Nebenkosten hat eine Wohnung in Griechenland pro Jahr?",
+      "a": "Jedes Jahr zahlen Sie die Immobiliensteuer ENFIA. In einer Anlage kommen Gemeinschaftskosten hinzu, etwa für Pool, Garten und Reinigung. Dazu kommen Strom, Wasser und Internet. Die Beträge sind je nach Wohnung sehr unterschiedlich. Wir zeigen Ihnen vor dem Kauf die Kosten der konkreten Wohnung."
+    },
+    {
+      "q": "Kann ich eine Ferienwohnung in Griechenland vermieten?",
+      "a": "Ja, das ist möglich. Für die Kurzzeitvermietung brauchen Sie eine Registrierung, und Sie müssen die Einnahmen versteuern. Die Regeln ändern sich öfter. Stand November 2026; die aktuellen Vorgaben bestätigt unser Anwalt. Auf Wunsch kümmern wir uns um Gäste, Reinigung und Wartung."
+    }
+  ],
+  "intro": "<p>Auf Chalkidiki eine Wohnung kaufen – hier finden Sie alle Apartments und Studios, die wir aktuell anbieten. Eine Wohnung ist ideal, wenn Sie einige Wochen im Jahr am Meer verbringen und sich sonst um wenig kümmern möchten. Filtern Sie nach Gemeinde, Preis und Entfernung zum Strand. Wir zeigen Ihnen jede Wohnung gern vor Ort oder per Video – ganz wie es für Sie am besten passt.</p>",
+  "body": "<h2>Wohnung kaufen auf Chalkidiki direkt am Meer</h2><p>Wohnungen in Strandnähe sind sehr gefragt. Mit dem Filter „Entfernung zum Meer“ sehen Sie schnell, was wenige Schritte vom Wasser entfernt liegt. Achten Sie auf Meerblick, Parkplatz und einen Gemeinschaftspool, wenn es einen gibt.</p><h2>Wohnungen in Griechenland kaufen: Apartment oder Studio?</h2><p>Ein Studio ist kompakt und günstig im Unterhalt. Ein Apartment mit eigenem Schlafzimmer bietet mehr Platz für Familie und Gäste. Wenn Sie auch im Winter kommen möchten, prüfen Sie Heizung und Dämmung.</p><h2>Wohnungen nach Region: Kassandra, Sithonia, Nea Propontida</h2><p>Kassandra hat viele Wohnungen in lebhaften Ferienorten. Sithonia ist ruhiger, mit kleinen Anlagen nah an Buchten. In Nea Propontida finden Sie Wohnungen in Orten, die das ganze Jahr belebt sind – gut für Rentner und Dauerbewohner.</p><h2>Laufende Kosten einer Wohnung in Griechenland</h2><p>Planen Sie diese jährlichen Kosten ein:</p><ul><li>Immobiliensteuer ENFIA</li><li>Gemeinschaftskosten der Anlage, etwa für Pool und Garten</li><li>Strom, Wasser und Internet</li></ul><p>Die Höhe hängt von Größe, Lage und Anlage ab. Wir zeigen Ihnen vor dem Kauf, was bei der jeweiligen Wohnung anfällt.</p><h2>Ferienwohnung vermieten: was Sie wissen sollten</h2><p>Die Kurzzeitvermietung muss in Griechenland registriert werden. Die Regeln ändern sich öfter. Stand November 2026; die aktuellen Vorgaben bestätigt unser Anwalt. Auf Wunsch übernehmen wir die Verwaltung Ihrer Wohnung.</p>",
+  "listingFilter": "subcategory=apartment|studio (NEW facet)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/wohnungen",
+  "hreflang": "P05: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Wohnungen"
+  ],
+  "heroAlt": "Apartmentanlage mit Pool nahe dem Strand auf Chalkidiki – Chalkidiki Wohnung kaufen",
+  "galleryAltPattern": "Wohnung zum Kauf in {municipality}, Chalkidiki – {feature}",
+  "ogTitle": "Chalkidiki: Wohnung kaufen – Apartments in Griechenland",
+  "anchor": "Wohnung kaufen auf Chalkidiki",
+  "anchorVariants": [
+    "Wohnungen auf Chalkidiki",
+    "Wohnung in Griechenland kaufen"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "günstige Häuser auf Chalkidiki",
+      "href": "/de/immobilien/guenstig"
+    },
+    {
+      "anchor": "Immobilien in Kassandra",
+      "href": "/de/immobilien/kassandra"
+    },
+    {
+      "anchor": "Immobilien auf Sithonia",
+      "href": "/de/immobilien/sithonia"
+    },
+    {
+      "anchor": "als Deutscher ein Haus in Griechenland kaufen",
+      "href": "/de/immobilienkauf-griechenland"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P06",
+    "P10",
+    "P13"
+  ],
+  "cta": "Wohnungen ansehen",
+  "oldUrls": [],
+  "words": 444,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

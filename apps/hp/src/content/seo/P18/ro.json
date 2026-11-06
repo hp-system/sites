@@ -1,0 +1,98 @@
+{
+  "id": "P18",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "C",
+  "name": "Sithonia seafront",
+  "pageType": "listing",
+  "path": "/ro/proprietati/sithonia/pe-plaja",
+  "keyword": {
+    "primary": "case pe plaja sithonia",
+    "volume": 0,
+    "secondary": [
+      "case la mare sithonia — 0",
+      "vile pe plaja sithonia — 0"
+    ],
+    "otherGeography": [
+      "case pe plaja sithonia grecia — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case pe plajă în Grecia – Sithonia, Halkidiki",
+  "meta": "Case pe plajă în Sithonia, Halkidiki, Grecia: case și vile lângă golfuri cu ape limpezi, la prima linie sau aproape de mare. Vedeți ofertele acum.",
+  "h1": "Case pe plajă în Grecia – Sithonia, Halkidiki",
+  "h2": [
+    "Case la prima linie în Sithonia",
+    "Vile lângă golfuri liniștite",
+    "Apartamente lângă plajă",
+    "Zona de coastă: ce se verifică"
+  ],
+  "faqQuestions": [
+    "Se găsesc case chiar pe plajă în Sithonia?",
+    "Cât costă o casă la mare în Sithonia?",
+    "Ce trebuie verificat la o casă de pe malul mării în Grecia?"
+  ],
+  "faq": [
+    {
+      "q": "Se găsesc case chiar pe plajă în Sithonia?",
+      "a": "Da, dar sunt mai puține decât casele cu vedere la mare sau aflate la câțiva pași de plajă. Multe proprietăți de pe coasta Sithoniei sunt pe pantă, deasupra golfurilor. Oferta se schimbă des, așa că vedeți lista actuală de pe această pagină."
+    },
+    {
+      "q": "Cât costă o casă la mare în Sithonia?",
+      "a": "Prețul depinde de distanța până la apă, de suprafață, de vedere și de starea casei. O casă la prima linie costă de regulă mai mult decât una pe deal, cu vedere spre golf. Folosiți filtrul de preț și cereți-ne detalii pentru casele care vă plac."
+    },
+    {
+      "q": "Ce trebuie verificat la o casă de pe malul mării în Grecia?",
+      "a": "Verificați limita zonei de coastă protejate (aigialos), autorizația de construire, titlul de proprietate, cadastrul și, în zonele cu pădure, regulile speciale. Avocatul și inginerul fac aceste verificări înainte de semnare. Este situația din noiembrie 2026, de confirmat cu avocatul nostru."
+    }
+  ],
+  "intro": "<p>Case pe plajă în Grecia, în Sithonia: aici găsiți case și vile lângă golfuri cu ape limpezi, la prima linie sau aproape de mare, toate în municipiul Sithonia din Halkidiki, în nordul Greciei. Pe această pagină, „pe plajă” înseamnă direct pe nisip sau la prima linie, nu doar cu vedere la mare. Filtrați după tip și preț, apoi programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Case la prima linie în Sithonia</h2><p>Coasta Sithoniei are multe golfuri mici, unde pădurea de pin coboară până la apă. Este mai liniștită decât Kassandra, iar o casă la prima linie aici înseamnă adesea mai multă intimitate. Apa este limpede, iar multe golfuri sunt ferite de vânt, potrivite pentru înot și pentru o barcă mică.</p><h2>Vile lângă golfuri liniștite</h2><p>Vilele de lângă golfuri au de obicei grădină, terasă și uneori piscină. Verificați drumul de acces până la vilă și cum arată zona în extrasezon. După cumpărare, ne putem ocupa noi de administrarea vilei cât sunteți plecați.</p><h2>Apartamente lângă plajă</h2><p>Apartamentele lângă plajă sunt potrivite pentru vacanțe și au întreținere simplă. Întrebați de parcare și de cheltuielile comune ale complexului. Pentru o familie, un apartament cu grădină la parter este adesea cea mai practică alegere.</p><h2>Zona de coastă: ce se verifică</h2><p>Fâșia de lângă apă (aigialos) este protejată prin lege în Grecia, iar în Sithonia se verifică și apropierea de zonele de pădure. Avocatul și inginerul fac aceste verificări. Este situația din noiembrie 2026, de confirmat cu avocatul nostru.</p>",
+  "listingFilter": "municipality=sithonia & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/sithonia/pe-plaja",
+  "hreflang": "P18: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Sithonia",
+    "Pe plajă"
+  ],
+  "heroAlt": "Casă lângă un golf cu pini și apă limpede în Sithonia, Halkidiki – case pe plajă în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Case pe plajă în Sithonia, Halkidiki – Grecia",
+  "anchor": "case pe plajă în Sithonia",
+  "anchorVariants": [
+    "case la mare în Sithonia",
+    "proprietăți pe plajă în Sithonia, Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    },
+    {
+      "anchor": "case de vânzare în Grecia pe malul mării",
+      "href": "/ro/proprietati/pe-plaja"
+    },
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P12"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 373,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

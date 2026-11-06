@@ -1,0 +1,127 @@
+{
+  "id": "P09",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "Seafront / by the sea",
+  "pageType": "listing",
+  "path": "/ro/proprietati/pe-plaja",
+  "keyword": {
+    "primary": "case de vanzare in grecia pe malul marii",
+    "volume": 30,
+    "secondary": [
+      "case de vanzare grecia la mare — 10",
+      "case de vanzare grecia pe plaja — 10",
+      "casa pe plaja grecia — 10",
+      "case grecia pe plaja — 10",
+      "case de vacanta grecia pe plaja — 10"
+    ],
+    "otherGeography": [
+      "case de vacanta grecia pe plaja halkidiki — 10",
+      "case pe plaja halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case de vânzare în Grecia pe malul mării – Halkidiki",
+  "meta": "Case de vânzare în Grecia pe malul mării, în Halkidiki: case, vile și apartamente pe plajă sau la câțiva pași de apă. Vedeți ofertele și cereți detalii.",
+  "h1": "Case de vânzare în Grecia pe malul mării, în Halkidiki",
+  "h2": [
+    "Case pe plajă, prima linie la mare",
+    "Case de vacanță la mare în Halkidiki",
+    "Kassandra sau Sithonia: unde cumpărați la mare",
+    "Zona de coastă: ce trebuie verificat",
+    "Apartamente și vile pe malul mării"
+  ],
+  "faqQuestions": [
+    "Ce înseamnă „prima linie la mare” în Grecia?",
+    "Se poate construi chiar pe plajă în Grecia?",
+    "Cât costă o casă pe malul mării în Halkidiki?",
+    "Care zone din Halkidiki au cele mai multe case la mare?"
+  ],
+  "faq": [
+    {
+      "q": "Ce înseamnă „prima linie la mare” în Grecia?",
+      "a": "Prima linie înseamnă că între proprietate și mare nu se mai află nicio altă clădire. Uneori există un drum, o alee sau o porțiune de plajă publică. Este diferit de „vedere la mare”, unde proprietatea poate fi mai departe de apă, de exemplu pe un deal."
+    },
+    {
+      "q": "Se poate construi chiar pe plajă în Grecia?",
+      "a": "Nu. Plaja și fâșia de coastă de lângă apă (aigialos) sunt protejate prin lege, iar construcțiile noi sunt permise doar la o anumită distanță de ele. Avocatul și inginerul verifică fiecare proprietate de pe coastă. Este situația din noiembrie 2026, de confirmat cu avocatul nostru."
+    },
+    {
+      "q": "Cât costă o casă pe malul mării în Halkidiki?",
+      "a": "Casele de pe malul mării sunt de regulă mai scumpe decât cele aflate mai departe de apă. Prețul depinde de municipiu, de suprafață, de starea casei și de plaja din față. Folosiți filtrul de preț de pe această pagină și cereți-ne detalii pentru casele care vă plac."
+    },
+    {
+      "q": "Care zone din Halkidiki au cele mai multe case la mare?",
+      "a": "Kassandra și Sithonia au cele mai lungi coaste turistice și, de aceea, multe case de vacanță lângă mare. Nea Propontida are localități pe malul mării locuite tot anul. Aristotelis are o coastă mai liniștită, lângă Muntele Athos. Oferta se schimbă des, așa că vedeți lista actuală."
+    }
+  ],
+  "intro": "<p>Case de vânzare în Grecia pe malul mării, toate în Halkidiki: aici găsiți case, vile și apartamente pe plajă sau la câțiva pași de apă. Pe această pagină, „pe malul mării” înseamnă direct pe plajă sau la prima linie, nu doar cu vedere la mare. Lucrăm numai în Halkidiki, în nordul Greciei. Filtrați după municipiu și preț, apoi programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Case pe plajă, prima linie la mare</h2><p>O casă pe plajă în Grecia vă permite să ieșiți din curte direct pe nisip. La prima linie, între casă și mare nu mai există altă clădire, uneori doar un drum sau o alee. O proprietate cu vedere la mare poate fi mai sus pe deal, mai departe de apă.</p><h2>Case de vacanță la mare în Halkidiki</h2><p>Multe case de vânzare la mare sunt folosite ca reședință de vacanță, vara și în extrasezon. Gândiți-vă la parcare, la umbră și la cine are grijă de casă iarna. După cumpărare, ne putem ocupa noi de administrare.</p><h2>Kassandra sau Sithonia: unde cumpărați la mare</h2><p>Kassandra are plaje organizate, cu nisip, și sate animate vara, mai dezvoltate. Sithonia este mai verde, cu golfuri mici și liniștite și păduri de pin până la apă. Ambele au pagini separate cu proprietăți pe plajă.</p><h2>Zona de coastă: ce trebuie verificat</h2><p>În Grecia, fâșia de lângă apă (aigialos) este protejată prin lege. Avocatul și inginerul verifică unde trece limita ei și dacă construcția respectă regulile. Este situația din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Apartamente și vile pe malul mării</h2><p>Pe lângă case, găsiți aici apartamente lângă plajă, bune pentru vacanțe, și vile cu grădină sau piscină la prima linie.</p>",
+  "listingFilter": "sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/pe-plaja",
+  "hreflang": "P09: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Pe plajă"
+  ],
+  "heroAlt": "Casă albă pe plajă cu mare turcoaz în Halkidiki – case de vânzare în Grecia pe malul mării",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Case pe malul mării în Grecia – Halkidiki",
+  "anchor": "case de vânzare în Grecia pe malul mării",
+  "anchorVariants": [
+    "case pe plajă în Halkidiki",
+    "case la mare în Grecia, în Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "case pe plajă în Kassandra",
+      "href": "/ro/proprietati/kassandra/pe-plaja"
+    },
+    {
+      "anchor": "case pe plajă în Sithonia",
+      "href": "/ro/proprietati/sithonia/pe-plaja"
+    },
+    {
+      "anchor": "vile în Grecia",
+      "href": "/ro/proprietati/vile"
+    },
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P07",
+    "P14",
+    "P17",
+    "P18"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 462,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

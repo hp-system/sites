@@ -1,0 +1,136 @@
+{
+  "id": "P01",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Homepage",
+  "pageType": "home",
+  "path": "/de",
+  "keyword": {
+    "primary": "immobilien chalkidiki",
+    "volume": 160,
+    "secondary": [
+      "chalkidiki immobilien — 30",
+      "halkidiki immobilien — 10",
+      "immobilien halkidiki — 0",
+      "immobilien auf chalkidiki — 0"
+    ],
+    "otherGeography": [
+      "immobilien griechenland chalkidiki — 20",
+      "immobilien chalkidiki griechenland — 0"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Immobilien Chalkidiki – Ihr Makler in Nordgriechenland",
+  "meta": "Immobilien auf Chalkidiki: Häuser, Wohnungen, Villen und Grundstücke in Nordgriechenland, begleitet von unserem Team vor Ort. Jetzt Angebote ansehen.",
+  "h1": "Immobilien Chalkidiki – Häuser, Wohnungen und Villen in Griechenland",
+  "h2": [
+    "Immobilien auf Chalkidiki kaufen: so begleiten wir Sie",
+    "Kassandra, Sithonia und die Athos-Region im Überblick",
+    "Ausgewählte Immobilien auf Chalkidiki",
+    "Haus, Wohnung oder Grundstück – welche Immobilie passt zu Ihnen?",
+    "Kaufablauf und Nebenkosten in Griechenland",
+    "Golden Visa mit einer Immobilie auf Chalkidiki"
+  ],
+  "faqQuestions": [
+    "Wie kaufe ich als Deutscher eine Immobilie auf Chalkidiki?",
+    "Welche Region auf Chalkidiki passt zu mir: Kassandra, Sithonia oder Athos-Region?",
+    "Welche Nebenkosten fallen beim Immobilienkauf in Griechenland an?",
+    "Kann ich eine Immobilie auf Chalkidiki aus der Ferne kaufen?"
+  ],
+  "faq": [
+    {
+      "q": "Wie kaufe ich als Deutscher eine Immobilie auf Chalkidiki?",
+      "a": "Als EU-Bürger dürfen Sie in Griechenland frei Immobilien kaufen. Sie beantragen eine griechische Steuernummer, eröffnen ein Bankkonto und beauftragen einen unabhängigen Anwalt. Er prüft Grundbuch, Genehmigungen und Schulden. Danach unterschreiben Sie den Kaufvertrag beim Notar. Wir begleiten Sie bei jedem Schritt und helfen bei der Abstimmung mit allen Beteiligten."
+    },
+    {
+      "q": "Welche Region auf Chalkidiki passt zu mir: Kassandra, Sithonia oder Athos-Region?",
+      "a": "Das hängt davon ab, was Ihnen wichtig ist. Kassandra liegt am nächsten zum Flughafen Thessaloniki und hat viel Infrastruktur. Sithonia bietet mehr Natur und Ruhe. Die Athos-Region ist am ursprünglichsten, aber weiter entfernt. Für ganzjähriges Leben eignen sich auch Nea Propontida und Polygyros. Wir beraten Sie gern."
+    },
+    {
+      "q": "Welche Nebenkosten fallen beim Immobilienkauf in Griechenland an?",
+      "a": "Stand November 2026: Beim Kauf einer Bestandsimmobilie zahlen Sie 3,09 % Grunderwerbsteuer. Bei Neubauten ist die Mehrwertsteuer bis 31.12.2026 ausgesetzt. Dazu kommen Notar, Anwalt und Grundbuchamt, zusammen meist einige Prozent des Kaufpreises. Die genauen Beträge bestätigt unser Anwalt für Ihren konkreten Fall."
+    },
+    {
+      "q": "Kann ich eine Immobilie auf Chalkidiki aus der Ferne kaufen?",
+      "a": "Ja, das geht. Wir zeigen Ihnen Immobilien per Video und beantworten Ihre Fragen direkt vor Ort. Mit einer Vollmacht kann Ihr Anwalt viele Schritte für Sie erledigen, auch die Unterschrift beim Notar. Trotzdem empfehlen wir, die Immobilie vor dem Kauf einmal selbst zu sehen."
+    }
+  ],
+  "intro": "<p>Immobilien Chalkidiki – genau darum geht es bei uns, und nur darum. Halkidiki Properties ist ein Maklerbüro mit Sitz auf Chalkidiki in Nordgriechenland. Wir verkaufen Häuser, Wohnungen, Villen und Grundstücke ausschließlich hier: in Kassandra, Sithonia, Nea Propontida, Aristotelis und Polygyros.</p><p>Sie suchen ein Ferienhaus am Meer, eine Wohnung für den Ruhestand oder Bauland? Wir zeigen Ihnen passende Angebote, begleiten Sie zu den Besichtigungen und bleiben bis nach dem Kauf an Ihrer Seite.</p>",
+  "body": "<h2>Immobilien auf Chalkidiki kaufen: so begleiten wir Sie</h2><p>Wir kennen die Orte, die Wege und die Menschen hier. Wir planen Ihre Besichtigungen, vor Ort oder per Video. Für Steuernummer, Anwalt und Notar zeigen wir Ihnen die nächsten Schritte. Nach dem Kauf kümmern wir uns auf Wunsch um Ihre Immobilie.</p><h2>Kassandra, Sithonia und die Athos-Region im Überblick</h2><p>Chalkidiki hat drei Halbinseln. Kassandra ist am besten erschlossen und im Sommer lebhaft. Sithonia ist grüner und ruhiger, mit vielen kleinen Buchten. Die Athos-Region in der Gemeinde Aristotelis ist am ursprünglichsten. Nea Propontida und Polygyros sind ganzjährig belebt.</p><h2>Ausgewählte Immobilien auf Chalkidiki</h2><p>Hier sehen Sie eine Auswahl aktueller Angebote. Alle Immobilien finden Sie in unserer Liste, filterbar nach Region, Art, Preis und Entfernung zum Meer.</p><h2>Haus, Wohnung oder Grundstück – welche Immobilie passt zu Ihnen?</h2><p>Eine Wohnung ist praktisch, wenn Sie nur einige Wochen im Jahr hier sind. Ein Haus oder eine Villa bietet mehr Platz und Privatsphäre. Ein Grundstück lohnt sich, wenn Sie selbst bauen möchten – mit Geduld und guter Prüfung.</p><h2>Kaufablauf und Nebenkosten in Griechenland</h2><p>Sie brauchen eine griechische Steuernummer, ein Bankkonto und einen Anwalt, der die Unterlagen prüft. Den Kaufvertrag unterzeichnen Sie beim Notar. Planen Sie Nebenkosten ein: Stand November 2026 fallen bei Bestandsimmobilien 3,09 % Grunderwerbsteuer an, dazu Kosten für Notar, Anwalt und Grundbuch.</p><h2>Golden Visa mit einer Immobilie auf Chalkidiki</h2><p>Für Nicht-EU-Bürger kann eine Immobilie auf Chalkidiki zu einer Aufenthaltserlaubnis führen. Stand November 2026 gilt hier eine Mindestinvestition von 400.000 € in eine Wohnimmobilie ab 120 m². Deutsche und andere EU-Bürger brauchen das Golden Visa nicht.</p>",
+  "listingFilter": "featured listings + entry blocks",
+  "indexing": "index, follow",
+  "canonical": "/de",
+  "hreflang": "P01: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "Organization",
+    "RealEstateAgent , WebSite, BreadcrumbList not needed"
+  ],
+  "breadcrumb": [
+    "Startseite"
+  ],
+  "heroAlt": "Bucht mit türkisblauem Wasser und Pinienwald auf Chalkidiki – Immobilien Chalkidiki am Meer",
+  "galleryAltPattern": "{type} zum Kauf in {municipality}, Chalkidiki – {feature}",
+  "ogTitle": "Immobilien Chalkidiki – Häuser, Wohnungen und Villen in Griechenland",
+  "anchor": "Immobilien Chalkidiki",
+  "anchorVariants": [
+    "Immobilienmakler auf Chalkidiki",
+    "Halkidiki Properties – Immobilien auf Chalkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "Wohnung kaufen auf Chalkidiki",
+      "href": "/de/immobilien/wohnungen"
+    },
+    {
+      "anchor": "Villa auf Chalkidiki kaufen",
+      "href": "/de/immobilien/villen"
+    },
+    {
+      "anchor": "Grundstück auf Chalkidiki kaufen",
+      "href": "/de/immobilien/grundstuecke"
+    },
+    {
+      "anchor": "Haus direkt am Meer auf Chalkidiki",
+      "href": "/de/immobilien/am-meer"
+    },
+    {
+      "anchor": "Immobilien in Kassandra",
+      "href": "/de/immobilien/kassandra"
+    },
+    {
+      "anchor": "Immobilien auf Sithonia",
+      "href": "/de/immobilien/sithonia"
+    },
+    {
+      "anchor": "als Deutscher ein Haus in Griechenland kaufen",
+      "href": "/de/immobilienkauf-griechenland"
+    },
+    {
+      "anchor": "Golden Visa Griechenland",
+      "href": "/de/golden-visa-griechenland"
+    },
+    {
+      "anchor": "Chalkidiki Strände und Leben",
+      "href": "/de/halkidiki"
+    }
+  ],
+  "linkedFrom": [],
+  "cta": "Immobilien entdecken",
+  "oldUrls": [],
+  "words": 512,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

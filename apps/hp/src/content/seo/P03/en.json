@@ -1,0 +1,160 @@
+{
+  "id": "P03",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Property in Greece (hub)",
+  "pageType": "content+listing",
+  "path": "/en/property-in-greece",
+  "keyword": {
+    "primary": "property for sale in greece",
+    "volume": 900,
+    "secondary": [
+      "real estate greece — 1000",
+      "property for sale greece — 600",
+      "greece property for sale — 350",
+      "greek property for sale — 350",
+      "greece real estate for sale — 350",
+      "property in greece — 300"
+    ],
+    "otherGeography": [
+      "property for sale in halkidiki greece — 20",
+      "real estate greece halkidiki — 70",
+      "real estate halkidiki greece — 30",
+      "property for sale halkidiki greece — 10"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Property for Sale in Greece – Homes in Halkidiki",
+  "meta": "Property for sale in Greece on the Halkidiki peninsula, Northern Greece: houses, villas and land near the sea, one hour from Thessaloniki. View listings.",
+  "h1": "Property for Sale in Greece: Homes in Halkidiki, Northern Greece",
+  "h2": [
+    "Why Halkidiki for property in Greece",
+    "Halkidiki compared with the Greek islands",
+    "Property types for sale in Halkidiki, Greece",
+    "Can foreigners buy property in Greece?",
+    "Costs and taxes when buying in Greece",
+    "Greece Golden Visa through property"
+  ],
+  "faqQuestions": [
+    "Where is the best place to buy property in Greece?",
+    "Can foreigners buy property in Greece?",
+    "Is buying property in Greece a good investment?",
+    "Why buy property in Halkidiki rather than the Greek islands?"
+  ],
+  "faq": [
+    {
+      "q": "Where is the best place to buy property in Greece?",
+      "a": "It depends on how you will use the home. Islands suit buyers who want a remote holiday feel and accept ferry or flight connections. Mainland regions such as Halkidiki suit buyers who want road access, a long season and year-round services. We sell only in Halkidiki, so we can explain in detail how its areas differ."
+    },
+    {
+      "q": "Can foreigners buy property in Greece?",
+      "a": "Yes. EU and non-EU citizens can buy property in Greece. You need a Greek tax number (AFM), a Greek bank account and an independent lawyer to check the title and permits. In certain border areas non-EU buyers need a permit; your lawyer confirms each case. Stated as of November 2026."
+    },
+    {
+      "q": "Is buying property in Greece a good investment?",
+      "a": "Property can be a good long-term choice, but nobody can promise a return. Value depends on location, condition, legal status and the market. Many buyers in Halkidiki buy first for their own use, with letting as a bonus. Check all purchase and running costs and get independent advice before deciding."
+    },
+    {
+      "q": "Why buy property in Halkidiki rather than the Greek islands?",
+      "a": "Halkidiki is reached by road from Thessaloniki airport, so you avoid ferries and connecting flights. Larger towns stay open all year, the season is long and the three peninsulas offer very different settings. If you want a quiet island village, an island may suit you better; if you want access and choice, visit Halkidiki."
+    }
+  ],
+  "intro": "<p>Looking for property for sale in Greece? Our homes are all in one region, Halkidiki in Northern Greece, so that is the honest focus of this page. Halkidiki combines long beaches and clear water with mainland access, about an hour by car from Thessaloniki airport to the start of the Kassandra peninsula. Below you will find featured homes, villas and land, plus what to know before buying in Greece.</p>",
+  "body": "<h2>Why Halkidiki for property in Greece</h2><p>Halkidiki lies south-east of Thessaloniki, Greece's second city, with three peninsulas reaching into the Aegean: Kassandra, Sithonia and Athos. You drive there from the airport, without ferries or domestic flights, which makes short trips easy. The coastline is long and varied, from sandy bays to rocky coves under pine forests.</p><p>Larger towns such as Nea Moudania and Polygyros stay open all year, with shops, banks and health services, so living here is not only a summer option.</p><p>Each area has its own character. Kassandra is the most developed peninsula, with sandy beaches and lively resorts. Sithonia is greener and quieter. Nea Propontida, on the western coast, has towns with a permanent population, Polygyros is the regional capital, and Aristotelis, in the north-east, looks towards Mount Athos.</p><h2>Halkidiki compared with the Greek islands</h2><p>The islands have their own charm, but access depends on ferries and flights, and many island villages close for the winter. In Halkidiki you reach your home by road at any time of year, and services in the larger towns work twelve months a year. The summer season is long. The trade-off is that Halkidiki feels less remote than a small island.</p><h2>Property types for sale in Halkidiki, Greece</h2><p>Our listings in Halkidiki, Greece, include:</p><ul><li>houses and maisonettes for families or holidays</li><li>apartments and studios near the beach</li><li>villas with private pools and sea views</li><li>building plots and olive groves</li><li>seafront homes on the first line to the sea</li></ul><p>Each listing shows the municipality, the main features and the distance to the sea. Use the filters to compare, and ask us for a viewing in person or by video.</p><h2>Can foreigners buy property in Greece?</h2><p>Yes. EU and non-EU citizens, including buyers from the UK and the USA, can buy property in Greece. You need a Greek tax number (AFM) and a Greek bank account. In some border areas non-EU buyers need an extra permit, and your lawyer checks whether this applies to the property you choose.</p><h2>Costs and taxes when buying in Greece</h2><p>As of November 2026, to be confirmed by our lawyer:</p><ul><li>transfer tax of 3.09% on a resale (3% plus a municipal surcharge)</li><li>VAT on new builds suspended until 31/12/2026</li><li>lawyer, notary and land-registry costs that vary, typically several percent in total</li></ul><p>After the purchase you pay the annual ENFIA property tax and normal running costs. Before you make an offer, ask for a written estimate of all costs so you know your total budget. Our buying guide explains each step and cost in detail.</p><h2>Greece Golden Visa through property</h2><p>Non-EU buyers can get a residence permit through property. As of November 2026, Halkidiki is in the €400,000 zone (Law 5100/2024), for one residential property of at least 120 m². EU citizens do not need it. Our Golden Visa page sets out the full rules.</p>",
+  "listingFilter": "all live listings (featured 12) + link to full list",
+  "indexing": "index, follow",
+  "canonical": "/en/property-in-greece",
+  "hreflang": "P03: el, en, de, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "Article",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Property in Greece"
+  ],
+  "heroAlt": "Coastline of the Halkidiki peninsula in Northern Greece with villas above the sea – property for sale in Greece",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Property for Sale in Greece – Houses & Villas in Halkidiki",
+  "anchor": "property for sale in Greece",
+  "anchorVariants": [
+    "property in Greece",
+    "Greek property for sale in Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "apartments for sale in Halkidiki",
+      "href": "/en/properties/apartments-for-sale"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "land for sale in Halkidiki",
+      "href": "/en/properties/land-for-sale"
+    },
+    {
+      "anchor": "beachfront property for sale in Halkidiki",
+      "href": "/en/properties/seafront"
+    },
+    {
+      "anchor": "cheap houses for sale in Halkidiki",
+      "href": "/en/properties/affordable"
+    },
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    },
+    {
+      "anchor": "Greece Golden Visa",
+      "href": "/en/golden-visa-greece"
+    },
+    {
+      "anchor": "Halkidiki beaches and living guide",
+      "href": "/en/halkidiki"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P19",
+    "P20"
+  ],
+  "cta": "View Halkidiki listings",
+  "oldUrls": [],
+  "words": 755,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

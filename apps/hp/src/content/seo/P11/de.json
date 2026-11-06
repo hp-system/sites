@@ -1,0 +1,130 @@
+{
+  "id": "P11",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Property in Kassandra",
+  "pageType": "listing",
+  "path": "/de/immobilien/kassandra",
+  "keyword": {
+    "primary": "immobilien kassandra",
+    "volume": 0,
+    "secondary": [
+      "immobilien pefkochori — 10",
+      "pefkochori wohnung kaufen — 10"
+    ],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Immobilien Kassandra – Chalkidiki, Griechenland",
+  "meta": "Immobilien auf Kassandra, Chalkidiki: Häuser, Wohnungen und Villen auf dem ersten Finger, nah an Thessaloniki. Jetzt Immobilien in Kassandra ansehen.",
+  "h1": "Immobilien in Kassandra auf Chalkidiki kaufen",
+  "h2": [
+    "Kassandra: Lage, Strände und Infrastruktur",
+    "Ost- und Westküste von Kassandra im Vergleich",
+    "Wohnung oder Haus in Kassandra kaufen",
+    "Leben auf Kassandra außerhalb der Saison",
+    "Kassandra oder Sithonia?"
+  ],
+  "faqQuestions": [
+    "Was kostet eine Immobilie auf Kassandra?",
+    "Ist Kassandra auch im Winter belebt?",
+    "Kassandra oder Sithonia – wo kaufe ich besser?",
+    "Wie weit ist Kassandra vom Flughafen Thessaloniki entfernt?"
+  ],
+  "faq": [
+    {
+      "q": "Was kostet eine Immobilie auf Kassandra?",
+      "a": "Das hängt von Ort, Art, Größe, Zustand und Nähe zum Meer ab. An der lebhaften Ostküste und direkt am Strand sind die Preise meist höher. Im Hinterland und an ruhigeren Orten bekommen Sie oft mehr Fläche. Mit dem Preisfilter sehen Sie alle Angebote in Ihrem Budget."
+    },
+    {
+      "q": "Ist Kassandra auch im Winter belebt?",
+      "a": "Teilweise. Viele Ferienorte sind im Winter sehr ruhig, Hotels und Strandbars schließen. Größere Orte wie Kassandria bleiben aber das ganze Jahr belebt, mit Supermärkten, Schulen und einem Gesundheitszentrum. Wenn Sie ganzjährig hier leben möchten, beraten wir Sie gern zur passenden Lage."
+    },
+    {
+      "q": "Kassandra oder Sithonia – wo kaufe ich besser?",
+      "a": "Das hängt von Ihren Wünschen ab. Kassandra ist näher am Flughafen, besser erschlossen und im Sommer lebhaft. Sithonia ist ruhiger, grüner und hat viele kleine Buchten, ist aber weiter entfernt. Am besten sehen Sie sich beide Halbinseln an. Wir planen gern eine Besichtigungstour."
+    },
+    {
+      "q": "Wie weit ist Kassandra vom Flughafen Thessaloniki entfernt?",
+      "a": "Bis zum Anfang von Kassandra fahren Sie vom Flughafen Thessaloniki etwa eine Stunde mit dem Auto. Orte weiter im Süden der Halbinsel erreichen Sie entsprechend später. Die Straße ist gut ausgebaut. Im Sommer kann es an Wochenenden mehr Verkehr geben."
+    }
+  ],
+  "intro": "<p>Immobilien Kassandra: Hier finden Sie alle Häuser, Wohnungen, Villen und Grundstücke, die wir aktuell in der Gemeinde Kassandra anbieten. Kassandra ist die erste Halbinsel von Chalkidiki und von allen drei Halbinseln am schnellsten von Thessaloniki aus erreichbar. Sie ist gut erschlossen, im Sommer lebhaft und hat lange Sandstrände. Filtern Sie nach Art, Preis und Entfernung zum Meer, und fragen Sie eine Besichtigung an – vor Ort oder per Video.</p>",
+  "body": "<h2>Kassandra: Lage, Strände und Infrastruktur</h2><p>Vom Flughafen Thessaloniki erreichen Sie den Anfang von Kassandra in etwa einer Stunde. Die Halbinsel hat viele Sandstrände, Pinienwälder und Orte mit Restaurants, Geschäften und Ärzten. Im Hauptort Kassandria finden Sie Supermärkte und ein Gesundheitszentrum.</p><h2>Ost- und Westküste von Kassandra im Vergleich</h2><p>Die Ostküste mit Orten wie Kallithea, Hanioti und Pefkochori ist lebhaft und touristisch. Hier sehen Sie die Sonne über dem Meer aufgehen. Die Westküste ist ruhiger, mit kleineren Orten und schönen Sonnenuntergängen. An klaren Tagen sieht man von dort bis zum Olymp.</p><h2>Wohnung oder Haus in Kassandra kaufen</h2><p>Eine Wohnung eignet sich gut für Ferien und lässt sich einfach abschließen. Ein Haus oder eine Villa bietet mehr Platz, Garten und oft einen Pool. In beliebten Orten an der Ostküste sind Immobilien gefragt; im Hinterland finden Sie oft mehr Fläche fürs Geld.</p><h2>Leben auf Kassandra außerhalb der Saison</h2><p>Im Winter wird es deutlich ruhiger. Viele Hotels und Strandbars schließen. Größere Orte wie Kassandria bleiben aber das ganze Jahr belebt, mit Geschäften, Schulen und Ärzten. Für ganzjähriges Wohnen lohnt sich eine Lage in der Nähe dieser Orte.</p><h2>Kassandra oder Sithonia?</h2><p>Kassandra ist näher an Thessaloniki, belebter und besser erschlossen. Sithonia ist grüner, ruhiger und hat viele kleine Buchten. Wer kurze Wege und Leben schätzt, wählt oft Kassandra. Wer Natur und Ruhe sucht, eher Sithonia.</p>",
+  "listingFilter": "municipality=kassandra",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/kassandra",
+  "hreflang": "P11: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Kassandra"
+  ],
+  "heroAlt": "Sandstrand und Pinienwald an der Küste von Kassandra, Chalkidiki – Immobilien Kassandra",
+  "galleryAltPattern": "{type} zum Kauf in Kassandra, Chalkidiki – {feature}",
+  "ogTitle": "Immobilien in Kassandra auf Chalkidiki kaufen",
+  "anchor": "Immobilien in Kassandra",
+  "anchorVariants": [
+    "Immobilien Kassandra Chalkidiki",
+    "Haus kaufen in Kassandra"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "Villa auf Chalkidiki kaufen",
+      "href": "/de/immobilien/villen"
+    },
+    {
+      "anchor": "Grundstück auf Chalkidiki kaufen",
+      "href": "/de/immobilien/grundstuecke"
+    },
+    {
+      "anchor": "Villen in Kassandra",
+      "href": "/de/immobilien/kassandra/villen"
+    },
+    {
+      "anchor": "Häuser am Meer in Kassandra",
+      "href": "/de/immobilien/kassandra/am-meer"
+    },
+    {
+      "anchor": "Chalkidiki Strände und Leben",
+      "href": "/de/halkidiki"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P15",
+    "P17",
+    "P21"
+  ],
+  "cta": "Immobilien in Kassandra ansehen",
+  "oldUrls": [],
+  "words": 458,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

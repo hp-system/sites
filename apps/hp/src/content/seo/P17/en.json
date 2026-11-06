@@ -1,0 +1,98 @@
+{
+  "id": "P17",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Kassandra seafront",
+  "pageType": "listing",
+  "path": "/en/properties/kassandra/seafront",
+  "keyword": {
+    "primary": "beachfront property for sale kassandra",
+    "volume": 0,
+    "secondary": [
+      "houses for sale kassandra halkidiki — 20",
+      "houses for sale in kassandra halkidiki — 20"
+    ],
+    "otherGeography": [
+      "houses for sale in greece by the sea — 80"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Beachfront Property for Sale in Kassandra, Halkidiki",
+  "meta": "Beachfront property for sale in Kassandra, Halkidiki: seafront houses, villas and apartments on the first line to the sea. See seafront homes in Kassandra.",
+  "h1": "Beachfront Property for Sale in Kassandra, Halkidiki",
+  "h2": [
+    "Seafront houses in Kassandra",
+    "Beachfront villas and apartments",
+    "East or west coast of Kassandra?",
+    "Building rules near the shore"
+  ],
+  "faqQuestions": [
+    "Can I buy a house right on the beach in Kassandra?",
+    "How much is seafront property in Kassandra, Halkidiki?",
+    "Which side of Kassandra is best for seafront homes?"
+  ],
+  "faq": [
+    {
+      "q": "Can I buy a house right on the beach in Kassandra?",
+      "a": "You can buy an existing house on the first line, with only the public beach between you and the sea. You cannot own the beach itself, and new building close to the shoreline is restricted. Your lawyer checks the permits of the house before you buy."
+    },
+    {
+      "q": "How much is seafront property in Kassandra, Halkidiki?",
+      "a": "Seafront homes are among the most expensive in Halkidiki, and prices depend on the beach, the size and the condition of the home. Apartments cost less than villas. Use the price filter to see current seafront homes in Kassandra. Ask us about running costs as well."
+    },
+    {
+      "q": "Which side of Kassandra is best for seafront homes?",
+      "a": "It depends on what you value. The west coast has sunsets and long sandy beaches. The east coast has morning sun, calm water and more resorts nearby. We can show you seafront homes on both coasts in one day. Both coasts have sandy beaches."
+    }
+  ],
+  "intro": "<p>Beachfront property for sale in Kassandra, Halkidiki: seafront houses, villas and apartments on the first line to the sea. Kassandra has long sandy beaches and the shortest drive from Thessaloniki of the three peninsulas. Every listing below is in the municipality of Kassandra. Book a viewing in person or by video. First-line homes here are rare, so it pays to ask early.</p>",
+  "body": "<h2>Seafront houses in Kassandra</h2><p>Houses for sale in Kassandra on the first line are rare and in demand. Most are holiday homes with a garden opening onto the beach. Check winter access, the condition of the building after years of sea air, and how busy the beach gets in August.</p><h2>Beachfront villas and apartments</h2><p>Seafront villas offer privacy and pools, while seafront apartments are a more affordable way to wake up next to the water. Both come up in the resort villages along the two coasts.</p><h2>East or west coast of Kassandra?</h2><p>The west coast faces the Thermaic Gulf, with sunsets over the sea and long sandy beaches. The east coast faces Sithonia across the Toroneos Gulf, with morning sun and lively resorts. Visit both before deciding.</p><h2>Building rules near the shore</h2><p>As of November 2026, to be confirmed by our lawyer, the shore zone in Greece is public: nobody can own or fence the beach, and building close to the official shoreline is restricted. Existing seafront homes were built under the rules of their time, so your lawyer and an engineer check the permits of any home before you buy.</p>",
+  "listingFilter": "municipality=kassandra & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/kassandra/seafront",
+  "hreflang": "P17: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Kassandra",
+    "Seafront"
+  ],
+  "heroAlt": "Seafront house with terrace on a sandy beach in Kassandra, Halkidiki – beachfront property for sale",
+  "galleryAltPattern": "{type} for sale in Kassandra, Halkidiki – beachfront with {feature}",
+  "ogTitle": "Beachfront Property for Sale in Kassandra, Halkidiki",
+  "anchor": "beachfront property in Kassandra",
+  "anchorVariants": [
+    "seafront homes in Kassandra",
+    "Kassandra houses by the sea"
+  ],
+  "linksOut": [
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "beachfront property for sale in Halkidiki",
+      "href": "/en/properties/seafront"
+    },
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P11"
+  ],
+  "cta": "See Kassandra seafront",
+  "oldUrls": [],
+  "words": 389,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

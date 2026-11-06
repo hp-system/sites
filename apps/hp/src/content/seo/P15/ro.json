@@ -1,0 +1,98 @@
+{
+  "id": "P15",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "C",
+  "name": "Kassandra villas",
+  "pageType": "listing",
+  "path": "/ro/proprietati/kassandra/vile",
+  "keyword": {
+    "primary": "vile de vanzare kassandra",
+    "volume": 0,
+    "secondary": [
+      "vile de lux kassandra — 0",
+      "vile cu piscina kassandra — 0"
+    ],
+    "otherGeography": [
+      "vile de vanzare kassandra grecia — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Vile de vânzare în Grecia – Kassandra, Halkidiki",
+  "meta": "Vile de vânzare în Kassandra, Halkidiki, Grecia: vile de lux cu piscină, grădină și vedere la mare. Vedeți vilele selectate și cereți o vizionare.",
+  "h1": "Vile de vânzare în Grecia – vile în Kassandra, Halkidiki",
+  "h2": [
+    "Vile cu piscină în Kassandra",
+    "Vile cu vedere la mare",
+    "Vile și viza de aur",
+    "Ce verificați la o vilă în Kassandra"
+  ],
+  "faqQuestions": [
+    "Cât costă o vilă în Kassandra?",
+    "Se găsesc vile cu piscină lângă plajă în Kassandra?",
+    "Poate o vilă din Kassandra să conteze pentru viza de aur?"
+  ],
+  "faq": [
+    {
+      "q": "Cât costă o vilă în Kassandra?",
+      "a": "Prețul depinde de suprafață, teren, piscină, vedere și distanța până la plajă. O vilă nouă cu vedere la mare costă mult mai mult decât una mai veche, în interior. Folosiți filtrul de preț de pe această pagină și cereți-ne detalii pentru vilele care vă interesează."
+    },
+    {
+      "q": "Se găsesc vile cu piscină lângă plajă în Kassandra?",
+      "a": "Da, se găsesc, mai ales în satele de pe coastă și pe dealurile din apropiere. Cele chiar la prima linie sunt mai puține. Oferta se schimbă des, așa că vedeți lista actuală și cereți-ne să vă anunțăm când apar vile noi."
+    },
+    {
+      "q": "Poate o vilă din Kassandra să conteze pentru viza de aur?",
+      "a": "Da, dacă îndeplinește condițiile: în Halkidiki, pragul este de 400.000 € pentru o singură locuință de cel puțin 120 m². Cetățenii români nu au nevoie de viza de aur, dar regula poate interesa partenerii sau familia din afara UE. Situația din noiembrie 2026, de confirmat cu avocatul nostru."
+    }
+  ],
+  "intro": "<p>Vile de vânzare în Grecia, în Kassandra: aici găsiți vile de lux cu piscină, grădină și vedere la mare, toate în municipiul Kassandra din Halkidiki, în nordul Greciei. Peninsula are plaje organizate și este la aproximativ o oră de aeroportul din Salonic. Filtrați după preț, suprafață și distanța până la mare, apoi programați o vizionare privată la fața locului sau prin apel video.</p>",
+  "body": "<h2>Vile cu piscină în Kassandra</h2><p>Cumpărătorii de vile din Kassandra caută de obicei intimitate, o piscină proprie și o plajă organizată la care să ajungă ușor. Uitați-vă la mărimea terenului, la orientarea terasei și la cât de liniștită este strada. În satele animate vara, o vilă puțin mai retrasă vă oferă liniște seara, iar plaja rămâne la câteva minute.</p><h2>Vile cu vedere la mare</h2><p>Multe vile sunt pe dealurile din spatele satelor, cu vedere spre golf. Sunt mai retrase decât cele de pe coastă, dar plaja rămâne aproape, la câteva minute cu mașina. Seara, de pe terasă, vedeți apusul peste golf.</p><h2>Vile și viza de aur</h2><p>În Halkidiki, o singură locuință de cel puțin 120 m² și minimum 400.000 € poate conta pentru viza de aur. Regula privește cetățenii din afara UE. Este situația din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Ce verificați la o vilă în Kassandra</h2><ul><li>autorizația de construire, inclusiv pentru piscină și extinderi</li><li>titlul de proprietate și cadastrul</li><li>accesul pe tot parcursul anului</li><li>cine se ocupă de vilă iarna</li></ul><p>După cumpărare, ne putem ocupa noi de administrarea vilei: verificări periodice, grădină, piscină și curățenie.</p>",
+  "listingFilter": "municipality=kassandra & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/kassandra/vile",
+  "hreflang": "P15: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Kassandra",
+    "Vile"
+  ],
+  "heroAlt": "Vilă cu piscină și vedere la golf în Kassandra, Halkidiki – vile de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Vile de vânzare în Kassandra, Halkidiki – Grecia",
+  "anchor": "vile de vânzare în Kassandra",
+  "anchorVariants": [
+    "vile de lux în Kassandra",
+    "vile în Kassandra, Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "vile în Grecia",
+      "href": "/ro/proprietati/vile"
+    },
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P11"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 383,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

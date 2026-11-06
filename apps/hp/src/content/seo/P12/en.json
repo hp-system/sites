@@ -1,0 +1,144 @@
+{
+  "id": "P12",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Property in Sithonia",
+  "pageType": "listing",
+  "path": "/en/properties/sithonia",
+  "keyword": {
+    "primary": "sithonia real estate",
+    "volume": 80,
+    "secondary": [
+      "sithonia property for sale — 30",
+      "real estate sithonia — 30",
+      "sithonia apartments for sale — 60",
+      "land for sale sithonia — 30",
+      "sithonia real estate for sale — 10",
+      "property for sale in agios nikolaos sithonia — 30"
+    ],
+    "otherGeography": [
+      "real estate sithonia greece — 20",
+      "property for sale sithonia greece — 20",
+      "land for sale sithonia greece — 20"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Sithonia Real Estate – Property for Sale in Halkidiki",
+  "meta": "Sithonia real estate: homes, apartments, villas and land on Halkidiki's greenest peninsula, with pine forests and quiet coves. See Sithonia listings.",
+  "h1": "Sithonia Real Estate: Property for Sale in Halkidiki",
+  "h2": [
+    "Living in Sithonia",
+    "Sithonia villages at a glance",
+    "Houses and apartments for sale in Sithonia",
+    "Land for sale in Sithonia",
+    "Villas and seafront property in Sithonia",
+    "Sithonia or Kassandra?"
+  ],
+  "faqQuestions": [
+    "What is it like to live in Sithonia, Halkidiki?",
+    "Is Sithonia quieter than Kassandra?",
+    "Can I buy land in Sithonia and build a house?",
+    "Which beaches in Sithonia are close to property for sale?"
+  ],
+  "faq": [
+    {
+      "q": "What is it like to live in Sithonia, Halkidiki?",
+      "a": "Peaceful and close to nature. Summer brings visitors to the resorts, but much of the coast stays green and uncrowded. In winter the smaller villages are very quiet, so year-round residents often choose a larger village such as Nikiti or Neos Marmaras."
+    },
+    {
+      "q": "Is Sithonia quieter than Kassandra?",
+      "a": "Generally, yes. Sithonia is less built-up than Kassandra, with fewer large resorts and more forest. The trade-off is a longer drive from Thessaloniki and fewer services in the smaller villages, especially outside the season. For many buyers, that calm is exactly the appeal, and the larger villages still keep basic services open."
+    },
+    {
+      "q": "Can I buy land in Sithonia and build a house?",
+      "a": "Often, yes, but not on every plot. Forest areas, zoning, plot size and road access all affect what you can build. Ask a civil engineer to check the plot before you sign, and your lawyer to confirm the legal side."
+    },
+    {
+      "q": "Which beaches in Sithonia are close to property for sale?",
+      "a": "Sithonia has beaches along both coasts, from long sandy bays to small rocky coves. Many of our listings are a short drive from a beach, and some are on the first line. Use the distance-to-sea filter to see how close each home is."
+    }
+  ],
+  "intro": "<p>Sithonia real estate: homes, apartments, villas and land on the middle peninsula of Halkidiki, the greenest and least built-up of the three. Pine forests run down to coves with clear water, and the pace is slower than in Kassandra. Every listing below is in the municipality of Sithonia. Book a viewing in person or by video. It suits buyers who want nature and quiet more than nightlife.</p>",
+  "body": "<h2>Living in Sithonia</h2><p>Sithonia suits buyers who want nature, quiet and the sea. The drive from Thessaloniki is longer than to Kassandra, and many smaller villages are very quiet outside the season, while the larger ones keep basic services open all year.</p><h2>Sithonia villages at a glance</h2><ul><li>Nikiti, at the start of the peninsula, with a year-round community</li><li>Neos Marmaras on the west coast, the busiest resort</li><li>Vourvourou on the east coast, with small islands in a shallow bay</li><li>Sarti, facing Mount Athos</li><li>Agios Nikolaos, a traditional village near the east coast</li></ul><h2>Houses and apartments for sale in Sithonia</h2><p>Holiday apartments and maisonettes are common in the resort villages, with houses on the hills above the sea. Filter by type and price to compare.</p><h2>Land for sale in Sithonia</h2><p>Sithonia has sea-view plots and olive groves. Forest and zoning rules apply in many areas, so have an engineer confirm what can be built before you buy.</p><h2>Villas and seafront property in Sithonia</h2><p>Villas above quiet coves and homes on the first line to the sea are among the most sought-after properties in Halkidiki. See our Sithonia villas and Sithonia seafront pages.</p><h2>Sithonia or Kassandra?</h2><p>Choose Sithonia for nature, privacy and clear coves. Choose Kassandra for a shorter drive, sandy beaches and more services. Many buyers view both before deciding.</p>",
+  "listingFilter": "municipality=sithonia",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/sithonia",
+  "hreflang": "P12: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Sithonia"
+  ],
+  "heroAlt": "Pine forest meeting a turquoise cove on the Sithonia peninsula, Halkidiki – Sithonia real estate",
+  "galleryAltPattern": "{type} for sale in Sithonia, Halkidiki – {feature}",
+  "ogTitle": "Sithonia Real Estate – Homes, Villas & Land in Halkidiki",
+  "anchor": "Sithonia real estate",
+  "anchorVariants": [
+    "property for sale in Sithonia",
+    "real estate in Sithonia, Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "land for sale in Halkidiki",
+      "href": "/en/properties/land-for-sale"
+    },
+    {
+      "anchor": "Sithonia villas for sale",
+      "href": "/en/properties/sithonia/villas-for-sale"
+    },
+    {
+      "anchor": "beachfront property in Sithonia",
+      "href": "/en/properties/sithonia/seafront"
+    },
+    {
+      "anchor": "Halkidiki beaches and living guide",
+      "href": "/en/halkidiki"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P16",
+    "P18",
+    "P21"
+  ],
+  "cta": "See Sithonia properties",
+  "oldUrls": [
+    {
+      "path": "/en/property-for-sale/sithonia",
+      "clicks": 5
+    }
+  ],
+  "words": 463,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

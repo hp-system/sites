@@ -1,0 +1,117 @@
+{
+  "id": "P13",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "B",
+  "name": "Property in Nea Propontida (Nea Moudania, Nea Kallikratia)",
+  "pageType": "listing",
+  "path": "/ro/proprietati/nea-propontida",
+  "keyword": {
+    "primary": "case de vanzare nea propontida",
+    "volume": 0,
+    "secondary": [
+      "case de vanzare nea moudania — 0",
+      "case de vanzare nea kallikratia — 0",
+      "apartamente nea moudania — 0"
+    ],
+    "otherGeography": [
+      "case de vanzare nea propontida halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case de vânzare în Grecia – Nea Propontida, Halkidiki",
+  "meta": "Case de vânzare în Grecia, în Nea Propontida (Halkidiki): case și apartamente aproape de mare și de Salonic, bune pentru tot anul. Vedeți ofertele.",
+  "h1": "Case de vânzare în Grecia – proprietăți în Nea Propontida, Halkidiki",
+  "h2": [
+    "De ce Nea Propontida: aproape de Salonic",
+    "Case și apartamente pentru tot anul",
+    "Proprietăți la mare în Nea Propontida",
+    "Servicii, școli și transport",
+    "Nea Moudania și Nea Kallikratia, pe scurt"
+  ],
+  "faqQuestions": [
+    "Unde se află Nea Propontida în Halkidiki?",
+    "Nea Propontida este potrivită pentru locuit tot anul?",
+    "Cât de departe este Nea Propontida de Salonic?",
+    "Ce fel de proprietăți se găsesc în Nea Propontida?"
+  ],
+  "faq": [
+    {
+      "q": "Unde se află Nea Propontida în Halkidiki?",
+      "a": "Nea Propontida se află în partea de vest a Halkidikiului, între Salonic și peninsula Kassandra. Este prima zonă din Halkidiki la care ajungeți dinspre oraș. Cuprinde localități de pe coastă, precum Nea Moudania și Nea Kallikratia, și sate din interior."
+    },
+    {
+      "q": "Nea Propontida este potrivită pentru locuit tot anul?",
+      "a": "Da. Este una dintre zonele cele mai potrivite pentru locuit tot anul în Halkidiki, pentru că localitățile mari au magazine, școli și servicii medicale deschise și iarna. De aceea, zona merită văzută dacă vreți să vă mutați sau să vă pensionați în Grecia."
+    },
+    {
+      "q": "Cât de departe este Nea Propontida de Salonic?",
+      "a": "Este partea Halkidikiului cea mai apropiată de Salonic. De la aeroportul din Salonic, drumul cu mașina durează de obicei sub o oră, în funcție de localitate și de trafic. Asta face zona practică pentru zboruri și pentru drumuri în oraș."
+    },
+    {
+      "q": "Ce fel de proprietăți se găsesc în Nea Propontida?",
+      "a": "Găsiți apartamente în localități, case cu grădină, duplexuri și terenuri. Unele sunt aproape de mare, altele în sate liniștite din interior. Folosiți filtrul de tip și de preț de pe această pagină pentru ofertele actuale. Dacă nu găsiți ce căutați, spuneți-ne ce vă trebuie și vă trimitem variante."
+    }
+  ],
+  "intro": "<p>Case de vânzare în Grecia, în Nea Propontida: aici găsiți case și apartamente din municipiul Nea Propontida, partea Halkidikiului cea mai apropiată de Salonic. Lucrăm numai în Halkidiki, așa că toate ofertele sunt în nordul Greciei. Este o zonă bună pentru locuit tot anul, cu servicii aproape și mare la câțiva pași. Filtrați după tip și preț, apoi programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>De ce Nea Propontida: aproape de Salonic</h2><p>Nea Propontida este poarta de vest a Halkidikiului. Este prima zonă la care ajungeți dinspre Salonic, înainte de peninsule. Asta o face practică pentru cine vrea aeroportul și orașul aproape.</p><h2>Case și apartamente pentru tot anul</h2><p>Localitățile de aici trăiesc tot anul, nu doar vara. Găsiți apartamente în localități, case cu grădină și duplexuri. Pentru pensionari și familii, apropierea de servicii contează mult: farmacia, medicul și supermarketul sunt la câteva minute.</p><h2>Proprietăți la mare în Nea Propontida</h2><p>Coasta zonei are plaje lungi și o faleză în localitățile mai mari. Unele apartamente și case sunt la câțiva pași de mare, altele mai sus, cu vedere spre golf.</p><h2>Servicii, școli și transport</h2><ul><li>magazine și supermarketuri deschise tot anul</li><li>școli și centre de sănătate</li><li>legături rutiere bune spre Salonic</li></ul><h2>Nea Moudania și Nea Kallikratia, pe scurt</h2><p>Nea Moudania este unul dintre cele mai mari orașe din Halkidiki, cu port și servicii tot anul. Nea Kallikratia este o localitate de pe coastă, mai aproape de Salonic, cu plajă lungă și viață și în extrasezon.</p>",
+  "listingFilter": "municipality=propontida",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/nea-propontida",
+  "hreflang": "P13: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Nea Propontida"
+  ],
+  "heroAlt": "Faleză cu case și apartamente în Nea Propontida, Halkidiki – case de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Case de vânzare în Grecia – Nea Propontida, Halkidiki",
+  "anchor": "case de vânzare în Nea Propontida",
+  "anchorVariants": [
+    "proprietăți în Nea Propontida, Halkidiki",
+    "case în Nea Propontida, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "case de vânzare în Grecia",
+      "href": "/ro/proprietati/case"
+    },
+    {
+      "anchor": "apartamente de vânzare în Grecia",
+      "href": "/ro/proprietati/apartamente"
+    },
+    {
+      "anchor": "teren de vânzare în Grecia",
+      "href": "/ro/proprietati/terenuri"
+    },
+    {
+      "anchor": "viața în Grecia, în Halkidiki",
+      "href": "/ro/halkidiki"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P08",
+    "P21"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 416,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

@@ -1,0 +1,95 @@
+{
+  "id": "P17",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Kassandra seafront",
+  "pageType": "listing",
+  "path": "/de/immobilien/kassandra/am-meer",
+  "keyword": {
+    "primary": "haus kaufen kassandra am meer",
+    "volume": 0,
+    "secondary": [
+      "haus kaufen pefkochori — 10"
+    ],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Haus kaufen Kassandra am Meer – Chalkidiki",
+  "meta": "Haus kaufen in Kassandra direkt am Meer: Häuser, Villen und Wohnungen in erster Reihe auf Chalkidiki, nah an Thessaloniki. Jetzt Angebote ansehen.",
+  "h1": "Haus kaufen in Kassandra direkt am Meer – Chalkidiki",
+  "h2": [
+    "Immobilien in erster Reihe in Kassandra",
+    "Ost- und Westküste: Strände im Vergleich",
+    "Küstenzone und Baurecht am Meer",
+    "Haus am Meer als Ferienhaus oder Wohnsitz"
+  ],
+  "faqQuestions": [
+    "Gibt es in Kassandra noch Häuser direkt am Meer?",
+    "Welche Küste von Kassandra hat die ruhigeren Strände?",
+    "Was kostet ein Haus am Meer in Kassandra?"
+  ],
+  "faq": [
+    {
+      "q": "Gibt es in Kassandra noch Häuser direkt am Meer?",
+      "a": "Ja, aber nur wenige, und sie sind gefragt. Auf dieser Seite sehen Sie alle Häuser in erster Reihe, die wir aktuell in Kassandra anbieten. Wenn gerade nichts Passendes dabei ist, sagen Sie uns, was Sie suchen. Wir melden uns, sobald ein neues Angebot kommt."
+    },
+    {
+      "q": "Welche Küste von Kassandra hat die ruhigeren Strände?",
+      "a": "In der Regel die Westküste. Dort sind die Orte kleiner, und auch im Sommer geht es entspannter zu. Dazu kommen schöne Sonnenuntergänge über dem Meer. Die Ostküste ist lebhafter, mit mehr Restaurants und Bars. Am besten sehen Sie sich beide Seiten an."
+    },
+    {
+      "q": "Was kostet ein Haus am Meer in Kassandra?",
+      "a": "Häuser in erster Reihe gehören zu den teuersten Immobilien auf Kassandra. Der Preis hängt von Ort, Größe, Zustand und Strandzugang ab. Die aktuellen Angebote mit Preis sehen Sie oben in der Liste. Planen Sie zusätzlich die Kaufnebenkosten ein. Wir sagen Ihnen offen, ob ein Preis zur Lage passt."
+    }
+  ],
+  "intro": "<p>Sie möchten ein Haus kaufen in Kassandra, am Meer? Hier finden Sie alle Häuser, Wohnungen und Villen in der Gemeinde Kassandra, die direkt am Meer oder in erster Reihe liegen. Wir zeigen hier nur Immobilien, die wirklich direkt am Wasser liegen. Solche Angebote sind selten und schnell weg. Fragen Sie deshalb früh eine Besichtigung an, vor Ort oder per Video.</p>",
+  "body": "<h2>Immobilien in erster Reihe in Kassandra</h2><p>Erste Reihe heißt: Zwischen Ihrem Haus und dem Strand steht kein anderes Gebäude. Sie hören das Meer und sind in wenigen Schritten im Wasser. Diese Lagen sind in Kassandra sehr gefragt.</p><h2>Ost- und Westküste: Strände im Vergleich</h2><p>An der Ostküste, etwa rund um Pefkochori und Hanioti, liegen lebhafte Orte mit langen Sandstränden. Die Westküste ist ruhiger, mit kleineren Orten und Sonnenuntergängen über dem Meer. Wer Trubel mag, wählt eher den Osten.</p><h2>Küstenzone und Baurecht am Meer</h2><p>Strände sind in Griechenland öffentlich, und direkt an der Küste gilt eine geschützte Zone mit strengen Bauregeln. Stand November 2026, von unserem Anwalt zu bestätigen. Bei Häusern am Meer prüft der Anwalt die Genehmigungen besonders genau.</p><h2>Haus am Meer als Ferienhaus oder Wohnsitz</h2><p>Für Ferien ist ein Haus am Meer ideal. Wer das ganze Jahr hier lebt, sollte auf Heizung, Dämmung und Schutz vor Feuchtigkeit achten. Wenn Sie nicht vor Ort sind, kümmern wir uns auf Wunsch um Ihr Haus.</p>",
+  "listingFilter": "municipality=kassandra & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/kassandra/am-meer",
+  "hreflang": "P17: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Kassandra",
+    "Am Meer"
+  ],
+  "heroAlt": "Haus mit Garten direkt am Strand in Kassandra, Chalkidiki – Haus kaufen Kassandra am Meer",
+  "galleryAltPattern": "{type} direkt am Meer in Kassandra, Chalkidiki – {feature}",
+  "ogTitle": "Haus kaufen in Kassandra direkt am Meer – Chalkidiki",
+  "anchor": "Häuser am Meer in Kassandra",
+  "anchorVariants": [
+    "Haus kaufen Kassandra am Meer",
+    "Immobilien direkt am Meer in Kassandra"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien in Kassandra",
+      "href": "/de/immobilien/kassandra"
+    },
+    {
+      "anchor": "Haus direkt am Meer auf Chalkidiki",
+      "href": "/de/immobilien/am-meer"
+    },
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P11"
+  ],
+  "cta": "Häuser am Meer ansehen",
+  "oldUrls": [],
+  "words": 356,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

@@ -1,0 +1,118 @@
+{
+  "id": "P13",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "B",
+  "name": "Property in Nea Propontida (Nea Moudania, Nea Kallikratia)",
+  "pageType": "listing",
+  "path": "/de/immobilien/nea-propontida",
+  "keyword": {
+    "primary": "immobilien nea moudania",
+    "volume": 10,
+    "secondary": [
+      "haus kaufen nea moudania — 10",
+      "nea moudania wohnung kaufen — 10"
+    ],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Immobilien Nea Moudania & Nea Propontida, Chalkidiki",
+  "meta": "Immobilien in Nea Propontida mit Nea Moudania: ganzjährig belebt, nah an Thessaloniki und am Meer. Jetzt Wohnungen und Häuser auf Chalkidiki ansehen.",
+  "h1": "Immobilien in Nea Propontida (Nea Moudania) auf Chalkidiki",
+  "h2": [
+    "Nea Propontida: ganzjährig leben am Meer",
+    "Nea Moudania und Nea Kallikratia im Überblick",
+    "Wohnung oder Haus in Nea Propontida kaufen",
+    "Anbindung an Thessaloniki und den Flughafen"
+  ],
+  "faqQuestions": [
+    "Ist Nea Moudania ganzjährig bewohnt?",
+    "Wie weit ist Nea Propontida von Thessaloniki entfernt?",
+    "Eignet sich Nea Propontida zum Auswandern oder für Rentner?",
+    "Was kostet eine Wohnung in Nea Propontida?"
+  ],
+  "faq": [
+    {
+      "q": "Ist Nea Moudania ganzjährig bewohnt?",
+      "a": "Ja. Nea Moudania ist eine Kleinstadt, in der viele Menschen das ganze Jahr leben. Es gibt Schulen, Supermärkte, Ärzte, Banken und Behörden. Auch im Winter haben viele Geschäfte und Cafés geöffnet. Das macht den Ort interessant für alle, die dauerhaft auf Chalkidiki wohnen möchten."
+    },
+    {
+      "q": "Wie weit ist Nea Propontida von Thessaloniki entfernt?",
+      "a": "Nea Propontida ist die Gemeinde auf Chalkidiki, die Thessaloniki am nächsten liegt. Vom Flughafen fahren Sie in weniger als einer Stunde nach Nea Moudania, nach Nea Kallikratia noch kürzer. Eine gut ausgebaute Straße verbindet die Orte mit der Stadt. Das ist ideal für Ausflüge und Arztbesuche."
+    },
+    {
+      "q": "Eignet sich Nea Propontida zum Auswandern oder für Rentner?",
+      "a": "Für viele ja. Die Orte sind das ganze Jahr belebt, mit Geschäften, Ärzten und guter Anbindung an die Krankenhäuser in Thessaloniki. Gleichzeitig wohnen Sie am Meer. Wer ruhiges Leben mit kurzen Wegen sucht, findet hier eine gute Wahl. Wir beraten Sie gern."
+    },
+    {
+      "q": "Was kostet eine Wohnung in Nea Propontida?",
+      "a": "Der Preis hängt von Ort, Größe, Baujahr und Nähe zum Strand ab. Wohnungen im Zentrum oder in erster Reihe kosten mehr als Wohnungen am Ortsrand. Mit dem Preisfilter sehen Sie alle aktuellen Angebote in Ihrem Budget. Planen Sie zusätzlich die Kaufnebenkosten ein."
+    }
+  ],
+  "intro": "<p>Immobilien Nea Moudania und die ganze Gemeinde Nea Propontida: Hier finden Sie alle Häuser, Wohnungen und Grundstücke, die wir aktuell in dieser Gegend anbieten. Nea Propontida liegt am nächsten an Thessaloniki und ist das ganze Jahr belebt. Hier leben viele Menschen dauerhaft, mit Schulen, Geschäften und Ärzten. Filtern Sie nach Art und Preis und fragen Sie eine Besichtigung an, vor Ort oder per Video.</p>",
+  "body": "<h2>Nea Propontida: ganzjährig leben am Meer</h2><p>Anders als viele Ferienorte ist Nea Propontida auch im Winter lebendig. Das macht die Gemeinde interessant für alle, die hier dauerhaft wohnen möchten, auch für Rentner. Strände gibt es entlang der ganzen Küste.</p><h2>Nea Moudania und Nea Kallikratia im Überblick</h2><p>Nea Moudania ist eine Kleinstadt mit Hafen, Geschäften, Schulen und Behörden. Nea Kallikratia liegt näher an Thessaloniki und hat eine lange Strandpromenade. Beide Orte bieten Leben das ganze Jahr. Dazwischen und in der Umgebung liegen kleinere Dörfer am Meer.</p><h2>Wohnung oder Haus in Nea Propontida kaufen</h2><p>In den Orten finden Sie vor allem Wohnungen, oft nah am Zentrum oder am Strand. Am Rand und in den Dörfern gibt es Häuser mit Garten. Für Dauerbewohner sind Heizung, Parkplatz und kurze Wege zu Geschäften besonders wichtig.</p><h2>Anbindung an Thessaloniki und den Flughafen</h2><p>Vom Flughafen Thessaloniki sind Sie in weniger als einer Stunde in Nea Moudania. Eine gut ausgebaute Straße verbindet die Gemeinde mit der Stadt. Gleichzeitig ist Nea Propontida das Tor nach Kassandra, das direkt im Süden beginnt.</p>",
+  "listingFilter": "municipality=propontida",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/nea-propontida",
+  "hreflang": "P13: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Nea Propontida"
+  ],
+  "heroAlt": "Strandpromenade am Meer in Nea Propontida, Chalkidiki – Immobilien Nea Moudania",
+  "galleryAltPattern": "{type} zum Kauf in Nea Propontida, Chalkidiki – {feature}",
+  "ogTitle": "Immobilien in Nea Propontida und Nea Moudania, Chalkidiki",
+  "anchor": "Immobilien in Nea Propontida",
+  "anchorVariants": [
+    "Immobilien Nea Moudania",
+    "Wohnung kaufen in Nea Propontida"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "Wohnung kaufen auf Chalkidiki",
+      "href": "/de/immobilien/wohnungen"
+    },
+    {
+      "anchor": "Grundstück auf Chalkidiki kaufen",
+      "href": "/de/immobilien/grundstuecke"
+    },
+    {
+      "anchor": "Chalkidiki Strände und Leben",
+      "href": "/de/halkidiki"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P08",
+    "P21"
+  ],
+  "cta": "Immobilien ansehen",
+  "oldUrls": [
+    {
+      "path": "/de/immobilien-in/nea-propontida",
+      "clicks": 3
+    }
+  ],
+  "words": 410,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

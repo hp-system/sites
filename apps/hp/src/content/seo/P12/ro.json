@@ -1,0 +1,132 @@
+{
+  "id": "P12",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "Property in Sithonia",
+  "pageType": "listing",
+  "path": "/ro/proprietati/sithonia",
+  "keyword": {
+    "primary": "case de vanzare sithonia grecia",
+    "volume": 20,
+    "secondary": [
+      "case de vanzare nikiti grecia — 10",
+      "proprietati sithonia — 0",
+      "vile sithonia — 0"
+    ],
+    "otherGeography": [
+      "case de vanzare sithonia halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case de vânzare în Grecia – Sithonia, Halkidiki",
+  "meta": "Case de vânzare în Grecia, în Sithonia (Halkidiki): case, apartamente și vile între păduri de pin și golfuri liniștite. Vedeți ofertele selectate.",
+  "h1": "Case de vânzare în Grecia – proprietăți în Sithonia, Halkidiki",
+  "h2": [
+    "De ce Sithonia: natură și golfuri liniștite",
+    "Case și apartamente în Sithonia",
+    "Vile în Sithonia",
+    "Proprietăți la mare în Sithonia",
+    "Cum se ajunge și viața de zi cu zi"
+  ],
+  "faqQuestions": [
+    "Cum se ajunge în Sithonia din România?",
+    "Este Sithonia mai liniștită decât Kassandra?",
+    "Cât costă o casă în Sithonia?",
+    "Se găsesc case lângă plajă în Sithonia?"
+  ],
+  "faq": [
+    {
+      "q": "Cum se ajunge în Sithonia din România?",
+      "a": "Cu mașina, mergeți prin Bulgaria spre Salonic, apoi continuați spre Halkidiki, prin Nea Propontida, până în Sithonia. Cu avionul, zburați la Salonic și închiriați o mașină. Drumul de la aeroport durează mai mult decât până în Kassandra, pentru că Sithonia este peninsula din mijloc."
+    },
+    {
+      "q": "Este Sithonia mai liniștită decât Kassandra?",
+      "a": "Da, în general. Sithonia are mai multă natură, păduri de pin și golfuri mici, iar satele sunt mai puțin aglomerate decât în Kassandra. Vara și aici e animație, dar ritmul rămâne mai calm. Este o alegere bună pentru cine caută liniște."
+    },
+    {
+      "q": "Cât costă o casă în Sithonia?",
+      "a": "Prețul depinde de distanța până la mare, de vedere, de suprafață și de vechimea construcției. O casă cu vedere spre golf sau la prima linie costă mai mult decât una în interior. Folosiți filtrul de preț de pe această pagină și cereți-ne detalii pentru casele care vă plac."
+    },
+    {
+      "q": "Se găsesc case lângă plajă în Sithonia?",
+      "a": "Da. Coasta Sithoniei are multe golfuri, iar unele case și vile sunt la câțiva pași de plajă sau chiar la prima linie. Oferta se schimbă des. Vedeți pagina cu proprietăți pe plajă din Sithonia pentru lista actuală. Vă putem trimite și variante noi imediat ce apar."
+    }
+  ],
+  "intro": "<p>Case de vânzare în Grecia, în Sithonia: aici găsiți case, apartamente și vile din municipiul Sithonia, peninsula din mijloc a Halkidikiului, între păduri de pin și golfuri liniștite. Lucrăm numai în Halkidiki, așa că toate ofertele sunt în nordul Greciei. Filtrați după tip, preț și distanța până la mare. Când găsiți o proprietate potrivită, programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>De ce Sithonia: natură și golfuri liniștite</h2><p>Sithonia este mai verde și mai liniștită decât Kassandra. Pădurile de pin coboară până la mare, iar coasta are multe golfuri mici cu apă limpede. Satele, precum Nikiti, Neos Marmaras sau Sarti, sunt animate vara și calme iarna.</p><h2>Case și apartamente în Sithonia</h2><p>Găsiți apartamente pentru vacanță, duplexuri în complexe mici și case cu grădină. Multe sunt pe dealuri, cu vedere spre golf. Gândiți-vă cât de aproape vreți să fiți de magazine și de plajă.</p><h2>Vile în Sithonia</h2><p>Sithonia atrage cumpărătorii care caută intimitate și natură. Vilele cu piscină și vedere la mare au o pagină separată, cu o selecție doar din această zonă.</p><h2>Proprietăți la mare în Sithonia</h2><p>Pentru casele de la prima linie, vedeți pagina dedicată proprietăților pe plajă din Sithonia. La orice teren sau casă de pe coastă, avocatul și inginerul verifică limita zonei de coastă protejate.</p><h2>Cum se ajunge și viața de zi cu zi</h2><p>Drumul spre Sithonia trece prin Nea Propontida, iar de la aeroportul din Salonic durează mai mult decât până în Kassandra. Pe peninsulă, un drum de coastă leagă satele. Pentru cumpărături mari și servicii, localitățile din nordul peninsulei sunt cele mai practice în extrasezon.</p>",
+  "listingFilter": "municipality=sithonia",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/sithonia",
+  "hreflang": "P12: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Sithonia"
+  ],
+  "heroAlt": "Golf cu ape limpezi și pini în Sithonia, Halkidiki – case de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Case de vânzare în Grecia – Sithonia, Halkidiki",
+  "anchor": "case de vânzare în Sithonia",
+  "anchorVariants": [
+    "proprietăți în Sithonia, Halkidiki",
+    "case în Sithonia, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "case de vânzare în Grecia",
+      "href": "/ro/proprietati/case"
+    },
+    {
+      "anchor": "vile în Grecia",
+      "href": "/ro/proprietati/vile"
+    },
+    {
+      "anchor": "teren de vânzare în Grecia",
+      "href": "/ro/proprietati/terenuri"
+    },
+    {
+      "anchor": "vile de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia/vile"
+    },
+    {
+      "anchor": "case pe plajă în Sithonia",
+      "href": "/ro/proprietati/sithonia/pe-plaja"
+    },
+    {
+      "anchor": "viața în Grecia, în Halkidiki",
+      "href": "/ro/halkidiki"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P16",
+    "P18",
+    "P21"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 442,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

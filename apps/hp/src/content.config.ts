@@ -90,4 +90,51 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { articles, pages };
+// SEO pages of George's spec (#150, plan E-111): src/content/seo/{PageID}/{lang}.json, written by
+// scripts/import-seo-spec.mjs from the xlsx and checked by scripts/test-seo-spec.mjs. Not rendered
+// yet: the templates read it from stage 2 on. Only EN is switched on until the languages stage.
+const seo = defineCollection({
+  loader: glob({ pattern: '**/*.json', base: './src/content/seo' }),
+  schema: z.object({
+    id: z.string().regex(/^P\d{2}$/),
+    lang: z.enum(['el', 'en', 'bg', 'sr', 'de', 'ro', 'tr', 'he', 'ru']),
+    buildOrder: z.number().nullable(),
+    priority: z.string(),
+    name: z.string(),
+    pageType: z.string(),
+    path: z.string().startsWith('/'),
+    keyword: z.object({
+      primary: z.string(), volume: z.number(),
+      secondary: z.array(z.string()), otherGeography: z.array(z.string()),
+    }),
+    titleFocus: z.string(),
+    title: z.string().max(60),
+    meta: z.string().min(120).max(160),
+    h1: z.string().min(1),
+    h2: z.array(z.string()),
+    faqQuestions: z.array(z.string()),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })),
+    intro: z.string(),
+    body: z.string(),
+    listingFilter: z.string(),
+    indexing: z.string(),
+    canonical: z.string(),
+    hreflang: z.string(),
+    schema: z.array(z.string()),
+    breadcrumb: z.array(z.string()),
+    heroAlt: z.string(),
+    galleryAltPattern: z.string(),
+    ogTitle: z.string(),
+    anchor: z.string(),
+    anchorVariants: z.array(z.string()),
+    linksOut: z.array(z.object({ anchor: z.string(), href: z.string() })),
+    linkedFrom: z.array(z.string()),
+    cta: z.string(),
+    oldUrls: z.array(z.object({ path: z.string(), clicks: z.number() })),
+    words: z.number(),
+    editorialLine: z.string(),
+    lawyerCheck: z.string(),
+  }),
+});
+
+export const collections = { articles, pages, seo };

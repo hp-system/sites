@@ -1,0 +1,132 @@
+{
+  "id": "P12",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Property in Sithonia",
+  "pageType": "listing",
+  "path": "/de/immobilien/sithonia",
+  "keyword": {
+    "primary": "immobilien chalkidiki sithonia",
+    "volume": 10,
+    "secondary": [
+      "immobilien sithonia griechenland — 10",
+      "immobilien sithonia — 0",
+      "immobilien nikiti — 10",
+      "nikiti wohnung kaufen — 10"
+    ],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Immobilien Sithonia – Chalkidiki, Griechenland",
+  "meta": "Immobilien auf Sithonia, Chalkidiki: Häuser, Villen und Grundstücke an ruhigen Buchten mit Pinienwald. Jetzt Immobilien auf Sithonia ansehen und anfragen.",
+  "h1": "Immobilien auf Sithonia, Chalkidiki – Häuser und Villen",
+  "h2": [
+    "Sithonia: Natur, Buchten und Lage",
+    "Wohnorte auf Sithonia im Überblick",
+    "Haus oder Villa auf Sithonia kaufen",
+    "Sithonia außerhalb der Saison",
+    "Sithonia oder Kassandra?"
+  ],
+  "faqQuestions": [
+    "Was kostet eine Immobilie auf Sithonia?",
+    "Ist Sithonia ruhiger als Kassandra?",
+    "Wie gut ist Sithonia im Winter versorgt?",
+    "Welche Orte auf Sithonia eignen sich zum Wohnen?"
+  ],
+  "faq": [
+    {
+      "q": "Was kostet eine Immobilie auf Sithonia?",
+      "a": "Der Preis hängt von Ort, Art, Größe, Meerblick und Nähe zum Strand ab. Häuser und Villen mit Blick auf eine Bucht sind besonders gefragt. In kleineren Orten im Landesinneren bekommen Sie oft mehr Fläche fürs Geld. Mit dem Preisfilter sehen Sie alle Angebote in Ihrem Budget."
+    },
+    {
+      "q": "Ist Sithonia ruhiger als Kassandra?",
+      "a": "Ja, in der Regel schon. Sithonia ist weniger bebaut, hat mehr Wald und viele kleine Buchten. Auch im Sommer finden Sie dort ruhige Ecken. Kassandra ist dagegen lebhafter und besser erschlossen. Was besser zu Ihnen passt, finden Sie am besten bei einer Besichtigung heraus."
+    },
+    {
+      "q": "Wie gut ist Sithonia im Winter versorgt?",
+      "a": "In größeren Orten wie Nikiti und Neos Marmaras gibt es das ganze Jahr Supermärkte, Apotheken und Ärzte. Kleine Ferienorte sind im Winter dagegen sehr ruhig, viele Geschäfte schließen. Für größere medizinische Fragen fahren viele nach Thessaloniki. Wir beraten Sie gern zur passenden Lage."
+    },
+    {
+      "q": "Welche Orte auf Sithonia eignen sich zum Wohnen?",
+      "a": "Für ganzjähriges Wohnen eignen sich vor allem Nikiti und Neos Marmaras, weil sie gut versorgt sind. Wer Ruhe sucht und vor allem im Sommer kommt, findet weiter im Süden, etwa bei Sarti, schöne Lagen. Wir zeigen Ihnen gern verschiedene Orte bei einer Besichtigungstour."
+    }
+  ],
+  "intro": "<p>Immobilien Chalkidiki Sithonia: Hier finden Sie alle Häuser, Villen, Wohnungen und Grundstücke, die wir aktuell in der Gemeinde Sithonia anbieten. Sithonia ist die mittlere Halbinsel von Chalkidiki. Sie ist grüner und ruhiger als Kassandra, mit Pinienwäldern und vielen kleinen Buchten. Filtern Sie nach Art, Preis und Entfernung zum Meer, und fragen Sie eine Besichtigung an. Wir zeigen Ihnen jede Immobilie vor Ort oder per Video.</p>",
+  "body": "<h2>Sithonia: Natur, Buchten und Lage</h2><p>Sithonia ist bekannt für klares Wasser, Felsen, Sandbuchten und viel Wald. Die Landschaft ist ursprünglicher als auf Kassandra. Die Fahrt von Thessaloniki dauert etwas länger, dafür ist es auch im Sommer an vielen Orten ruhiger.</p><h2>Wohnorte auf Sithonia im Überblick</h2><p>Nikiti am Anfang der Halbinsel ist ein größerer Ort mit Geschäften und Versorgung. Neos Marmaras ist lebhaft, mit Hafen und Promenade. Weiter im Süden liegen ruhigere Orte wie Sarti, mit Blick auf den Berg Athos. Dazwischen gibt es viele kleine Siedlungen an Buchten.</p><h2>Haus oder Villa auf Sithonia kaufen</h2><p>Auf Sithonia suchen viele Käufer ein Haus oder eine Villa mit Meerblick und Privatsphäre. Grundstücke sind oft größer und liegen am Hang über dem Meer. Achten Sie auf eine gute Zufahrt und die Entfernung zum nächsten größeren Ort.</p><h2>Sithonia außerhalb der Saison</h2><p>Im Winter ist Sithonia sehr ruhig. Viele Geschäfte in kleinen Orten schließen. In Nikiti und Neos Marmaras finden Sie aber das ganze Jahr Supermärkte, Apotheken und Ärzte. Für ganzjähriges Wohnen sind diese Orte besonders geeignet.</p><h2>Sithonia oder Kassandra?</h2><p>Sithonia bietet mehr Natur und Ruhe, Kassandra mehr Infrastruktur und kürzere Wege nach Thessaloniki. Wer abschalten möchte, ist auf Sithonia gut aufgehoben. Wer Leben und Auswahl schätzt, wählt eher Kassandra.</p>",
+  "listingFilter": "municipality=sithonia",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/sithonia",
+  "hreflang": "P12: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Sithonia"
+  ],
+  "heroAlt": "Türkisblaue Bucht mit Felsen und Pinien auf Sithonia, Chalkidiki – Immobilien Sithonia",
+  "galleryAltPattern": "{type} zum Kauf in Sithonia, Chalkidiki – {feature}",
+  "ogTitle": "Immobilien auf Sithonia, Chalkidiki – Häuser und Villen",
+  "anchor": "Immobilien auf Sithonia",
+  "anchorVariants": [
+    "Immobilien Sithonia Chalkidiki",
+    "Haus kaufen auf Sithonia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "Villa auf Chalkidiki kaufen",
+      "href": "/de/immobilien/villen"
+    },
+    {
+      "anchor": "Grundstück auf Chalkidiki kaufen",
+      "href": "/de/immobilien/grundstuecke"
+    },
+    {
+      "anchor": "Villen auf Sithonia",
+      "href": "/de/immobilien/sithonia/villen"
+    },
+    {
+      "anchor": "Häuser am Meer auf Sithonia",
+      "href": "/de/immobilien/sithonia/am-meer"
+    },
+    {
+      "anchor": "Chalkidiki Strände und Leben",
+      "href": "/de/halkidiki"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P16",
+    "P18",
+    "P21"
+  ],
+  "cta": "Immobilien auf Sithonia ansehen",
+  "oldUrls": [],
+  "words": 445,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

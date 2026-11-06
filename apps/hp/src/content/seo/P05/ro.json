@@ -1,0 +1,125 @@
+{
+  "id": "P05",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "Apartments for sale",
+  "pageType": "listing",
+  "path": "/ro/proprietati/apartamente",
+  "keyword": {
+    "primary": "apartamente de vanzare grecia",
+    "volume": 10,
+    "secondary": [
+      "apartamente grecia pe plaja de vanzare — 30",
+      "garsoniere de vanzare grecia — 0",
+      "apartament la mare grecia — 0"
+    ],
+    "otherGeography": [
+      "apartamente de vanzare in grecia halkidiki — 0",
+      "apartamente de vanzare halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Apartamente de vânzare în Grecia – Halkidiki, la mare",
+  "meta": "Apartamente de vânzare în Grecia, în Halkidiki: garsoniere și apartamente aproape de plajă, noi sau la revânzare. Vedeți ofertele și cereți detalii.",
+  "h1": "Apartamente de vânzare în Grecia – apartamente în Halkidiki",
+  "h2": [
+    "Apartamente aproape de plajă în Halkidiki",
+    "Garsoniere și apartamente cu două sau trei camere",
+    "Apartamente noi sau la revânzare",
+    "Cheltuieli comune și întreținere",
+    "Apartamente în Kassandra, Sithonia, Nea Propontida și Aristotelis"
+  ],
+  "faqQuestions": [
+    "Cât costă un apartament la mare în Grecia, în Halkidiki?",
+    "Ce cheltuieli de întreținere are un apartament în Halkidiki?",
+    "Pot cumpăra un apartament în construcție în Grecia?",
+    "Ce taxe se plătesc la cumpărarea unui apartament în Grecia?"
+  ],
+  "faq": [
+    {
+      "q": "Cât costă un apartament la mare în Grecia, în Halkidiki?",
+      "a": "Prețul depinde de distanța până la plajă, de suprafață, de vechimea clădirii și de municipiu. O garsonieră mai veche, la câteva minute de mare, costă mult mai puțin decât un apartament nou cu vedere la mare. Folosiți filtrul de preț sau vedeți pagina cu oferte până la 150.000 €."
+    },
+    {
+      "q": "Ce cheltuieli de întreținere are un apartament în Halkidiki?",
+      "a": "Plătiți curentul, apa și, dacă există, cheltuielile comune ale blocului pentru curățenie, grădină sau piscină. Se adaugă impozitul anual pe proprietate ENFIA și, opțional, administrarea apartamentului cât sunteți plecați. Cereți întotdeauna istoricul cheltuielilor comune înainte de cumpărare, ca să știți din timp ce costuri vă așteaptă în fiecare an."
+    },
+    {
+      "q": "Pot cumpăra un apartament în construcție în Grecia?",
+      "a": "Da, se poate, iar uneori așa găsiți o alegere mai bună de etaj sau de vedere. Înainte de semnare, avocatul verifică autorizația de construire, dreptul constructorului asupra terenului și termenele din contract. La construcțiile noi, TVA-ul este suspendat până la 31.12.2026, conform regulilor din noiembrie 2026, de confirmat cu avocatul nostru."
+    },
+    {
+      "q": "Ce taxe se plătesc la cumpărarea unui apartament în Grecia?",
+      "a": "La revânzare se plătește taxa de transfer de 3,09% (3% plus o taxă municipală). La apartamentele noi, TVA-ul este suspendat până la 31.12.2026. Se adaugă onorariile notarului, ale avocatului și taxele de cadastru, de regulă câteva procente în total. Valorile sunt din noiembrie 2026."
+    }
+  ],
+  "intro": "<p>Apartamente de vânzare în Grecia, toate în Halkidiki: aici găsiți garsoniere și apartamente din nordul Greciei, multe aproape de plajă. Lucrăm numai în Halkidiki, așa că fiecare apartament din listă se află în această regiune. Filtrați după municipiu, preț, număr de camere și distanța până la mare. Când găsiți un apartament potrivit, programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Apartamente aproape de plajă în Halkidiki</h2><p>Pentru vacanță, mulți cumpărători caută un apartament la mare în Grecia, de unde ajung pe jos la plajă. Verificați și locul de parcare, mai ales vara, când satele de pe coastă sunt aglomerate. Dacă vreți un apartament chiar pe malul mării, vedeți pagina dedicată proprietăților de pe plajă.</p><h2>Garsoniere și apartamente cu două sau trei camere</h2><p>Garsonierele de vânzare în Grecia sunt alese des pentru vacanțe scurte și au costuri mici de întreținere. Un apartament cu două sau trei camere se potrivește unei familii sau celor care vor să stea mai mult timp.</p><h2>Apartamente noi sau la revânzare</h2><p>La apartamentele noi, TVA-ul este suspendat până la 31.12.2026. La revânzare se plătește taxa de transfer de 3,09%. Sunt regulile din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Cheltuieli comune și întreținere</h2><p>Multe blocuri mici au cheltuieli comune pentru curățenie, grădină, piscină sau iluminat. Înainte de cumpărare, cereți istoricul acestor cheltuieli, autorizația clădirii și certificatul energetic al apartamentului.</p><h2>Apartamente în Kassandra, Sithonia, Nea Propontida și Aristotelis</h2><p>În Kassandra și Sithonia, apartamentele sunt mai ales pentru vacanță. În Nea Propontida găsiți apartamente în localități cu servicii tot anul. Aristotelis oferă o coastă mai liniștită, lângă Muntele Athos.</p>",
+  "listingFilter": "subcategory=apartment|studio (NEW facet)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/apartamente",
+  "hreflang": "P05: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Apartamente"
+  ],
+  "heroAlt": "Bloc mic cu apartamente și balcoane spre mare în Halkidiki – apartamente de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Apartamente de vânzare în Grecia – Halkidiki",
+  "anchor": "apartamente de vânzare în Grecia",
+  "anchorVariants": [
+    "apartamente de vânzare în Halkidiki",
+    "apartamente la mare în Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "case de vânzare în Grecia",
+      "href": "/ro/proprietati/case"
+    },
+    {
+      "anchor": "case ieftine de vânzare în Grecia",
+      "href": "/ro/proprietati/ieftine"
+    },
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    },
+    {
+      "anchor": "cumpărare casă în Grecia",
+      "href": "/ro/cumparare-casa-in-grecia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P04",
+    "P06",
+    "P10",
+    "P13"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 454,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

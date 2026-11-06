@@ -1,0 +1,99 @@
+{
+  "id": "P15",
+  "lang": "tr",
+  "buildOrder": 4,
+  "priority": "C",
+  "name": "Kassandra villas",
+  "pageType": "listing",
+  "path": "/tr/emlak/kassandra/villa",
+  "keyword": {
+    "primary": "kassandra satılık villa",
+    "volume": 0,
+    "secondary": [
+      "kassandra lüks villa — 0",
+      "halkidiki satılık villa — 10"
+    ],
+    "otherGeography": [
+      "yunanistan satılık villa — 150",
+      "yunanistan villa satılık — 40"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Kassandra Satılık Villa – Halkidiki, Yunanistan",
+  "meta": "Kassandra satılık villa ilanları: Halkidiki'de havuzlu, deniz manzaralı lüks villalar. Kassandra'daki villaları inceleyin ve bilgi isteyin.",
+  "h1": "Kassandra'da Satılık Villa: Halkidiki'de Lüks Villalar",
+  "h2": [
+    "Kassandra'da satılık lüks villalar",
+    "Havuzlu ve deniz manzaralı villalar",
+    "Kassandra'da villa fiyatlarını neler belirler?",
+    "Villa alımı ve Golden Visa"
+  ],
+  "faqQuestions": [
+    "Kassandra'da villa fiyatları ne kadar?",
+    "Kassandra'da havuzlu villa bulmak kolay mı?",
+    "Kassandra'daki villa Golden Visa için uygun olur mu?"
+  ],
+  "faq": [
+    {
+      "q": "Kassandra'da villa fiyatları ne kadar?",
+      "a": "Kassandra'da villa fiyatlarını en çok deniz manzarası, kumsala uzaklık, arsa büyüklüğü, havuz ve yapı kalitesi belirler. Kumsala yürüme mesafesindeki villalarla iç kesimdeki villalar arasında belirgin fark olabilir. Her villanın güncel fiyatını kendi sayfasında gösteriyoruz; bütçenizi filtreye girerek uygun seçenekleri görebilirsiniz. Benzer villalarla karşılaştırma yapmanıza da yardımcı oluruz."
+    },
+    {
+      "q": "Kassandra'da havuzlu villa bulmak kolay mı?",
+      "a": "Kassandra'daki villaların önemli bir kısmında özel havuz ya da sitenin ortak havuzu bulunur. Havuz bilgisi ilanlarda özellikler arasında yazar. Satın almadan önce havuzun izinlerini, bakım maliyetini ve kış koruma düzenini sormanızı, izin durumunu da avukatınıza kontrol ettirmenizi öneririz. Siz yokken havuz bakımı için de bir düzen kurmanız gerekir."
+    },
+    {
+      "q": "Kassandra'daki villa Golden Visa için uygun olur mu?",
+      "a": "Koşullar sağlanırsa evet. Kasım 2026 itibarıyla Halkidiki'de en az 400.000 € değerinde ve en az 120 m² büyüklüğünde tek bir konut, AB dışı alıcılar için Golden Visa başvurusuna uygun olabilir. Bu bilgiler avukatımızın teyidine tabidir. AB vatandaşlarının Golden Visa'ya ihtiyacı yoktur. Uygun villaları ilanlarda birlikte belirleyebiliriz."
+    }
+  ],
+  "intro": "<p>Kassandra satılık villa ilanlarını bu sayfada bulursunuz: Halkidiki'nin en hareketli yarımadasında havuzlu, deniz manzaralı lüks villalar. Kassandra, düzenli kumsallara, restoranlara ve Selanik'e yakınlığıyla villa arayanların sık tercih ettiği bir bölgedir.</p><p>Fiyat ve denize uzaklığa göre filtreleyin, ilginizi çeken villalar hakkında bilgi isteyin. Her ilanda villanın bulunduğu belediye yazar; tam konumu gösterimde paylaşırız. Gösterimleri yerinde ya da görüntülü yapıyoruz; uzaktaysanız villayı canlı yayında birlikte dolaşabiliriz.</p>",
+  "body": "<h2>Kassandra'da satılık lüks villalar</h2><p>Kassandra'daki villalar genellikle tepelerde geniş deniz manzaralı evler ya da kumsala yürüme mesafesindeki modern yapılardır. Kassandra lüks villa arayanlar çoğunlukla mahremiyet, geniş bahçe ve kaliteli yapı ister. Yazın kalabalık olan bir bölgede sakin bir konum, villanın değerini artıran önemli bir özelliktir. Kassandra'daki tüm ev seçeneklerini ise Kassandra satılık ev sayfamızda görebilirsiniz.</p><h2>Havuzlu ve deniz manzaralı villalar</h2><p>Havuz, Kassandra'daki villalarda en çok aranan özelliklerden biridir. Deniz manzarası ise villanın yüksekliğine ve yönüne bağlıdır; gün batımını gören batı kıyısı ile sabah güneşini alan doğu kıyısı farklı bir his verir. Gösterimde manzarayı farklı odalardan görmenizi öneririz.</p><h2>Kassandra'da villa fiyatlarını neler belirler?</h2><ul><li>Deniz manzarası ve kumsala uzaklık</li><li>Arsa büyüklüğü, havuz ve bahçe</li><li>Mahremiyet ve çevredeki yapılaşma</li><li>Yapı kalitesi, yaşı ve bakım durumu</li></ul><p>Her villanın güncel fiyatı kendi sayfasında yazar.</p><h2>Villa alımı ve Golden Visa</h2><p>Kasım 2026 itibarıyla Halkidiki, Golden Visa için 400.000 € bölgesindedir. En az 120 m² büyüklüğünde ve en az 400.000 € değerindeki tek bir villa, AB dışı alıcılar için oturum izni başvurusuna uygun olabilir. Bu bilgiler avukatımızın teyidine tabidir. Uygun villaları ve başvuru adımlarını Golden Visa sayfamızda ayrıca anlatıyoruz. AB vatandaşlarının bu programa ihtiyacı yoktur.</p>",
+  "listingFilter": "municipality=kassandra & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/tr/emlak/kassandra/villa",
+  "hreflang": "P15: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Ana Sayfa",
+    "Emlak",
+    "Kassandra",
+    "Villa"
+  ],
+  "heroAlt": "Kassandra'da havuzlu, çam ağaçları arasında satılık lüks villa",
+  "galleryAltPattern": "Satılık {type}, {municipality} – Halkidiki, Yunanistan, {feature}",
+  "ogTitle": "Kassandra'da Satılık Villa – Halkidiki, Yunanistan",
+  "anchor": "Kassandra satılık villa",
+  "anchorVariants": [
+    "Kassandra'da lüks villalar",
+    "Kassandra'da havuzlu villa ilanları"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Kassandra satılık ev",
+      "href": "/tr/emlak/kassandra"
+    },
+    {
+      "anchor": "Yunanistan satılık villa",
+      "href": "/tr/emlak/villa"
+    },
+    {
+      "anchor": "Halkidiki satılık ev ilanları",
+      "href": "/tr/emlak"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P11"
+  ],
+  "cta": "Villaları Gör",
+  "oldUrls": [],
+  "words": 390,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

@@ -1,0 +1,142 @@
+{
+  "id": "P11",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Property in Kassandra",
+  "pageType": "listing",
+  "path": "/en/properties/kassandra",
+  "keyword": {
+    "primary": "real estate kassandra halkidiki",
+    "volume": 30,
+    "secondary": [
+      "kassandra real estate — 20",
+      "property for sale in kassandra halkidiki — 10",
+      "property for sale kassandra greece — 10",
+      "property for sale in sani halkidiki — 30",
+      "properties for sale in kallithea halkidiki — 10",
+      "property for sale afitos halkidiki — 10"
+    ],
+    "otherGeography": [
+      "property for sale kassandra greece — 10",
+      "kassandra greece property for sale — 0"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Kassandra Real Estate – Property for Sale in Halkidiki",
+  "meta": "Real estate in Kassandra, Halkidiki: houses, apartments, villas and plots on the first peninsula, about an hour from Thessaloniki airport. See listings.",
+  "h1": "Real Estate in Kassandra, Halkidiki: Property for Sale",
+  "h2": [
+    "Living in Kassandra",
+    "Kassandra villages at a glance",
+    "Houses and apartments for sale in Kassandra",
+    "Villas and seafront property in Kassandra",
+    "Kassandra or Sithonia?"
+  ],
+  "faqQuestions": [
+    "What is it like to live in Kassandra, Halkidiki?",
+    "Is Kassandra or Sithonia better for buying property?",
+    "Which villages in Kassandra are busy all year round?",
+    "How far is Kassandra from Thessaloniki airport?"
+  ],
+  "faq": [
+    {
+      "q": "What is it like to live in Kassandra, Halkidiki?",
+      "a": "In summer it is lively, with beach bars, restaurants and many visitors. Outside the season it becomes calm, and life centres on the larger villages, which keep shops, schools and services open. Many owners enjoy the long summer and the quiet months that follow."
+    },
+    {
+      "q": "Is Kassandra or Sithonia better for buying property?",
+      "a": "Neither is better; they suit different buyers. Kassandra offers more services, sandy beaches and a shorter drive from Thessaloniki. Sithonia is greener and quieter, with clear coves. View both before deciding; we can arrange viewings on both peninsulas in one trip."
+    },
+    {
+      "q": "Which villages in Kassandra are busy all year round?",
+      "a": "Villages with a permanent population, such as Kassandreia, Kallithea and Nea Potidea, keep shops, cafés and services open through the winter. Smaller resort areas in the south of the peninsula are much quieter outside the season. Ask us about the area of any home you like."
+    },
+    {
+      "q": "How far is Kassandra from Thessaloniki airport?",
+      "a": "About one hour by car from Thessaloniki airport to the start of the Kassandra peninsula. Villages further south take longer, and summer traffic can add time. We give you a realistic travel time for each home you view. Nea Potidea and Kassandreia are the closest larger villages."
+    }
+  ],
+  "intro": "<p>Real estate in Kassandra, Halkidiki: houses, apartments, villas and plots on the first and most developed peninsula of Halkidiki. Kassandra starts about an hour by car from Thessaloniki airport, with long sandy beaches and resorts that are busy all summer. Every listing below is in the municipality of Kassandra. Book a viewing in person or by video. We can arrange several viewings across the peninsula in one trip.</p>",
+  "body": "<h2>Living in Kassandra</h2><p>Kassandra is lively in summer and much quieter in winter. The larger villages keep shops, cafés and pharmacies open all year, while some resort areas close after the season. For year-round life, choose a village with permanent residents and check the drive to the nearest health centre.</p><h2>Kassandra villages at a glance</h2><p>The peninsula has a varied mix of places:</p><ul><li>Kallithea and Afytos on the east coast, with restaurants, beaches and the old stone centre of Afytos</li><li>the Sani area on the west coast, known for its resort and marina</li><li>Pefkochori and Chaniotis further south, busy holiday villages</li><li>Kassandreia, the inland village with year-round services</li></ul><h2>Houses and apartments for sale in Kassandra</h2><p>Holiday apartments and maisonettes are the most common homes in Kassandra, with detached houses in the villages and on the hills above the coast. Filter by type and price to compare.</p><h2>Villas and seafront property in Kassandra</h2><p>Kassandra has many villas with private pools and sea views, and seafront homes on both coasts. See our Kassandra villas and Kassandra seafront pages.</p><h2>Kassandra or Sithonia?</h2><p>Kassandra is closer to Thessaloniki, more developed and livelier, with sandy beaches. Sithonia is greener and quieter, with coves and pine forests, but a longer drive. Your choice depends on whether you value convenience or quiet more.</p>",
+  "listingFilter": "municipality=kassandra",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/kassandra",
+  "hreflang": "P11: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Kassandra"
+  ],
+  "heroAlt": "Pine-lined beach and holiday homes on the Kassandra peninsula, Halkidiki – real estate in Kassandra",
+  "galleryAltPattern": "{type} for sale in Kassandra, Halkidiki – {feature}",
+  "ogTitle": "Kassandra Real Estate – Homes & Villas for Sale in Halkidiki",
+  "anchor": "real estate in Kassandra, Halkidiki",
+  "anchorVariants": [
+    "property for sale in Kassandra",
+    "Kassandra real estate"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "land for sale in Halkidiki",
+      "href": "/en/properties/land-for-sale"
+    },
+    {
+      "anchor": "villas for sale in Kassandra",
+      "href": "/en/properties/kassandra/villas-for-sale"
+    },
+    {
+      "anchor": "beachfront property in Kassandra",
+      "href": "/en/properties/kassandra/seafront"
+    },
+    {
+      "anchor": "Halkidiki beaches and living guide",
+      "href": "/en/halkidiki"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P15",
+    "P17",
+    "P21"
+  ],
+  "cta": "See Kassandra properties",
+  "oldUrls": [
+    {
+      "path": "/en/property-for-sale/kassandra",
+      "clicks": 6
+    }
+  ],
+  "words": 462,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

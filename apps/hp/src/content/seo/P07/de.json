@@ -1,0 +1,128 @@
+{
+  "id": "P07",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Villas / luxury properties",
+  "pageType": "listing",
+  "path": "/de/immobilien/villen",
+  "keyword": {
+    "primary": "chalkidiki villa",
+    "volume": 20,
+    "secondary": [
+      "chalkidiki villa mit pool — 10"
+    ],
+    "otherGeography": [
+      "villa in griechenland kaufen — 100",
+      "griechenland villa kaufen — 70",
+      "villa in griechenland — 100",
+      "griechenland villa — 100"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Chalkidiki Villa kaufen – Luxusvillen in Griechenland",
+  "meta": "Villa kaufen auf Chalkidiki: Luxusvillen mit Pool und Meerblick in Kassandra, Sithonia und der Athos-Region. Jetzt Villen ansehen und anfragen.",
+  "h1": "Chalkidiki Villa kaufen – Luxusimmobilien in Griechenland",
+  "h2": [
+    "Villa mit Pool auf Chalkidiki",
+    "Villa in Griechenland kaufen: warum Chalkidiki?",
+    "Luxusvillen nach Region",
+    "Villa und Golden Visa",
+    "Verwaltung und Vermietung Ihrer Villa"
+  ],
+  "faqQuestions": [
+    "Was kostet eine Villa auf Chalkidiki?",
+    "Welche Villen auf Chalkidiki haben einen Pool?",
+    "Eignet sich eine Villa in Griechenland für das Golden Visa?",
+    "Wer kümmert sich um die Villa, wenn ich nicht vor Ort bin?"
+  ],
+  "faq": [
+    {
+      "q": "Was kostet eine Villa auf Chalkidiki?",
+      "a": "Der Preis hängt von Lage, Meerblick, Grundstück, Größe und Bauqualität ab. Eine Villa in erster Reihe kostet deutlich mehr als eine Villa im Hinterland. Mit dem Preisfilter sehen Sie die Angebote in Ihrem Budget. Rechnen Sie außerdem mit Kaufnebenkosten und laufenden Kosten für Pool und Garten."
+    },
+    {
+      "q": "Welche Villen auf Chalkidiki haben einen Pool?",
+      "a": "Viele unserer Villen haben einen privaten Pool. In jedem Angebot sehen Sie die Ausstattung genau beschrieben. Wenn Sie nur Villen mit Pool sehen möchten, sagen Sie es uns. Wir stellen Ihnen eine passende Auswahl zusammen und zeigen sie Ihnen vor Ort oder per Video."
+    },
+    {
+      "q": "Eignet sich eine Villa in Griechenland für das Golden Visa?",
+      "a": "Ja, wenn sie die Bedingungen erfüllt. Stand November 2026 gilt auf Chalkidiki eine Mindestinvestition von 400.000 € in eine einzige Wohnimmobilie mit mindestens 120 m². Das Golden Visa ist nur für Nicht-EU-Bürger relevant. Die Voraussetzungen im Einzelfall bestätigt unser Anwalt vor dem Kauf."
+    },
+    {
+      "q": "Wer kümmert sich um die Villa, wenn ich nicht vor Ort bin?",
+      "a": "Das übernehmen wir auf Wunsch. Wir kontrollieren die Villa regelmäßig, organisieren Garten- und Poolpflege und kümmern uns um Reparaturen. Vor Ihrer Ankunft bereiten wir alles vor. So müssen Sie sich aus der Ferne um wenig kümmern und wissen trotzdem, dass alles in Ordnung ist."
+    }
+  ],
+  "intro": "<p>Eine Chalkidiki Villa ist für viele Käufer das Ziel: viel Platz, ein eigener Pool und der Blick auf das Meer. Hier finden Sie alle Villen und hochwertigen Häuser, die wir aktuell auf Chalkidiki verkaufen. Filtern Sie nach Gemeinde, Preis und Ausstattung. Jede Villa zeigen wir Ihnen gern persönlich oder per Video – diskret und in Ruhe. Wir verkaufen nur auf Chalkidiki und kennen die besten Lagen.</p>",
+  "body": "<h2>Villa mit Pool auf Chalkidiki</h2><p>Was macht eine Villa aus? Meist sind es ein privater Pool, Meerblick, ein großes Grundstück und eine gute Bauqualität. Achten Sie auch auf Ausrichtung, Schatten im Sommer und eine gute Zufahrt. Diese Punkte entscheiden, wie angenehm Sie hier wohnen. Wir zeigen Ihnen bei der Besichtigung, worauf es bei der jeweiligen Villa ankommt.</p><h2>Villa in Griechenland kaufen: warum Chalkidiki?</h2><p>Chalkidiki ist vom Flughafen Thessaloniki schnell erreichbar, ohne Fähre und das ganze Jahr. Die Küste ist lang und abwechslungsreich, mit Sandstränden und ruhigen Buchten. Für Villenkäufer bedeutet das: Erholung am Meer und trotzdem gute Anbindung.</p><h2>Luxusvillen nach Region</h2><p>In Kassandra liegen viele Villen nah an Orten mit Restaurants und Geschäften. Sithonia bietet mehr Natur, Pinienwälder und Privatsphäre. In Aristotelis, rund um die Athos-Region, finden Sie besonders ruhige Lagen mit weitem Blick.</p><h2>Villa und Golden Visa</h2><p>Für Nicht-EU-Bürger kann eine Villa auf Chalkidiki zu einer griechischen Aufenthaltserlaubnis führen. Stand November 2026, von unserem Anwalt zu bestätigen: Chalkidiki liegt in der 400.000-€-Zone, und die Investition muss in eine einzige Wohnimmobilie ab 120 m² fließen. EU-Bürger brauchen kein Golden Visa.</p><h2>Verwaltung und Vermietung Ihrer Villa</h2><p>Wenn Sie nicht vor Ort sind, kümmern wir uns auf Wunsch um Ihre Villa: Kontrolle, Pflege von Garten und Pool, Handwerker. So finden Sie bei jeder Ankunft alles in gutem Zustand vor. Wir arbeiten dabei diskret und halten Sie regelmäßig auf dem Laufenden.</p>",
+  "listingFilter": "luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/villen",
+  "hreflang": "P07: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Villen"
+  ],
+  "heroAlt": "Moderne Villa mit Infinity-Pool und Meerblick auf Chalkidiki – Chalkidiki Villa kaufen",
+  "galleryAltPattern": "Villa zum Kauf in {municipality}, Chalkidiki – {feature}",
+  "ogTitle": "Chalkidiki Villa kaufen – Luxusvillen in Griechenland",
+  "anchor": "Villa auf Chalkidiki kaufen",
+  "anchorVariants": [
+    "Luxusvillen auf Chalkidiki",
+    "Villa in Griechenland kaufen"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    },
+    {
+      "anchor": "Villen in Kassandra",
+      "href": "/de/immobilien/kassandra/villen"
+    },
+    {
+      "anchor": "Villen auf Sithonia",
+      "href": "/de/immobilien/sithonia/villen"
+    },
+    {
+      "anchor": "Haus direkt am Meer auf Chalkidiki",
+      "href": "/de/immobilien/am-meer"
+    },
+    {
+      "anchor": "Golden Visa Griechenland",
+      "href": "/de/golden-visa-griechenland"
+    },
+    {
+      "anchor": "als Deutscher ein Haus in Griechenland kaufen",
+      "href": "/de/immobilienkauf-griechenland"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P09",
+    "P11",
+    "P12",
+    "P15",
+    "P16",
+    "P20"
+  ],
+  "cta": "Villen ansehen",
+  "oldUrls": [],
+  "words": 471,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

@@ -1,0 +1,115 @@
+{
+  "id": "P10",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "B",
+  "name": "Affordable property (up to €150,000)",
+  "pageType": "listing",
+  "path": "/en/properties/affordable",
+  "keyword": {
+    "primary": "cheap houses for sale in halkidiki, greece",
+    "volume": 30,
+    "secondary": [
+      "cheap houses for sale in halkidiki greece — 20"
+    ],
+    "otherGeography": [
+      "cheap houses for sale in greece — 200",
+      "cheap houses for sale in greece near beach — 200",
+      "cheap property in greece — 100",
+      "property for sale in greece under 100k — 70"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Cheap Houses for Sale in Halkidiki, Greece – Under €150k",
+  "meta": "Cheap houses for sale in Halkidiki, Greece: affordable apartments, studios and village homes up to €150,000, many near the beach. See affordable listings.",
+  "h1": "Cheap Houses for Sale in Halkidiki, Greece – Up to €150,000",
+  "h2": [
+    "Affordable apartments and studios",
+    "Cheap houses near the beach in Halkidiki",
+    "Village houses to renovate",
+    "Property in Greece under €100,000",
+    "Hidden costs of buying cheap property"
+  ],
+  "faqQuestions": [
+    "Can you still buy a cheap house in Greece near the beach?",
+    "What can I buy in Halkidiki for under €150,000?",
+    "Are cheap houses in Greece a good investment?",
+    "What extra costs come with a cheap property in Greece?"
+  ],
+  "faq": [
+    {
+      "q": "Can you still buy a cheap house in Greece near the beach?",
+      "a": "Yes, but expect compromises. Within this budget you usually find studios, small apartments or older houses, either a short walk from the sea or in quieter villages. Use the price and distance-to-sea filters together to see what is available today. Expect smaller spaces."
+    },
+    {
+      "q": "What can I buy in Halkidiki for under €150,000?",
+      "a": "Typically a studio or small apartment near the coast, a small older house, or a village home that needs work. Larger homes close to the beach are usually above this budget. Listings change often, so check the list below or ask us to send you new homes that match."
+    },
+    {
+      "q": "Are cheap houses in Greece a good investment?",
+      "a": "They can be, if the legal status is clean and the total cost, including renovation, makes sense. Nobody can promise a return. Have a lawyer check the title and permits, and an engineer check the building, before you sign. Think about running costs too."
+    },
+    {
+      "q": "What extra costs come with a cheap property in Greece?",
+      "a": "As of November 2026: transfer tax of 3.09% on a resale, plus lawyer, notary and land-registry fees, typically several percent in total. Then add renovation, legalisation of unpermitted spaces, utility connections and the annual ENFIA property tax. Our lawyer confirms the figures for each case."
+    }
+  ],
+  "intro": "<p>Cheap houses for sale in Halkidiki, Greece, up to €150,000: apartments, studios and village homes, many within reach of the beach. Every home below is in Halkidiki, Northern Greece, and the list is filtered to €150,000 or less. Check the extra costs before you decide, and book a viewing in person or by video. It is a practical way to own a holiday base in Greece on a smaller budget.</p>",
+  "body": "<h2>Affordable apartments and studios</h2><p>Studios and small apartments are the most common homes in this budget, often in small buildings near holiday villages. They make an easy holiday base and are simple to lock up when you leave.</p><h2>Cheap houses near the beach in Halkidiki</h2><p>Small houses close to the sea do appear in this range, usually older, smaller or in less famous villages. Being a few streets back from the beach often makes the biggest difference to the price.</p><h2>Village houses to renovate</h2><p>Older houses in inland villages can be bought at lower prices, but budget for renovation. Have an engineer check the structure, the roof and the legal status before you sign.</p><h2>Property in Greece under €100,000</h2><p>Homes under €100,000 exist, mostly studios, small apartments and village houses. Filter by price to see what is available today.</p><h2>Hidden costs of buying cheap property</h2><p>As of November 2026, to be confirmed by our lawyer, transfer tax on a resale is 3.09%, and lawyer, notary and land-registry costs typically add several percent. Add renovation, legalisation of any unpermitted spaces, furniture and the annual ENFIA property tax.</p>",
+  "listingFilter": "price_max=150000 (NEW facet)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/affordable",
+  "hreflang": "P10: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Affordable"
+  ],
+  "heroAlt": "Small whitewashed apartment block near the beach in Halkidiki – cheap houses for sale in Halkidiki, Greece",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Cheap Houses for Sale in Halkidiki, Greece – Up to €150,000",
+  "anchor": "cheap houses for sale in Halkidiki",
+  "anchorVariants": [
+    "affordable property in Halkidiki",
+    "Halkidiki homes under €150,000"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "apartments for sale in Halkidiki",
+      "href": "/en/properties/apartments-for-sale"
+    },
+    {
+      "anchor": "land for sale in Halkidiki",
+      "href": "/en/properties/land-for-sale"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P03",
+    "P05",
+    "P19"
+  ],
+  "cta": "See affordable homes",
+  "oldUrls": [],
+  "words": 437,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

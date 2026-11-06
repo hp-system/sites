@@ -1,0 +1,98 @@
+{
+  "id": "P17",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "C",
+  "name": "Kassandra seafront",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/kasandra/prva-linija",
+  "keyword": {
+    "primary": "kasandra nekretnine na moru",
+    "volume": 0,
+    "secondary": [
+      "kasandra prvi red do mora — 0",
+      "kuće na moru kasandra — 0"
+    ],
+    "otherGeography": [
+      "nekretnine kasandra halkidiki na moru — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Grčka – Kasandra nekretnine na moru, prvi red do mora",
+  "meta": "Kasandra nekretnine na moru: kuće, stanovi i vile u prvom redu do mora na Halkidikiju u Grčkoj, sa izlazom na plažu. Pogledajte ponudu.",
+  "h1": "Kasandra nekretnine na moru – prvi red do mora, Halkidiki, Grčka",
+  "h2": [
+    "Nekretnine u prvom redu do mora u Kasandri",
+    "Plaže Kasandre: pesak, borovi i plitko more",
+    "Na šta pazite kod nekretnine uz samu obalu",
+    "Kasandra leti i zimi"
+  ],
+  "faqQuestions": [
+    "Koje nekretnine u Kasandri su u prvom redu do mora?",
+    "Da li je plaža ispred nekretnine u Kasandri javna?",
+    "Kakva je situacija sa gužvom na plažama Kasandre leti?"
+  ],
+  "faq": [
+    {
+      "q": "Koje nekretnine u Kasandri su u prvom redu do mora?",
+      "a": "Na ovoj stranici su samo nekretnine kod kojih između kuće ili stana i plaže nema puta ni druge zgrade. Uz svaku je navedena opština Kasandra, a tačnu lokaciju dobijate pri razgledanju. Takve ponude su retke, pa vam se rado javimo kada se pojavi nova."
+    },
+    {
+      "q": "Da li je plaža ispred nekretnine u Kasandri javna?",
+      "a": "Da. U Grčkoj su plaže i pojas uz more javni, pa i ispred nekretnine u prvom redu svako može da prođe i da se kupa. Vlasnik ne sme da ogradi plažu. Prednost prvog reda je direktan izlaz na more i pogled, a ne privatna plaža."
+    },
+    {
+      "q": "Kakva je situacija sa gužvom na plažama Kasandre leti?",
+      "a": "U julu i avgustu plaže kod većih letovališta su veoma posećene, posebno vikendom. Van vrhunca sezone, u junu i septembru, obala je znatno mirnija. Ako vam je mir važan, pri razgledanju vam pokazujemo i mirnije delove obale Kasandre, gde je i leti tiše."
+    }
+  ],
+  "intro": "<p>Kasandra nekretnine na moru: ovde su kuće, stanovi i vile u prvom redu do mora u opštini Kasandra, na Halkidikiju, na severu Grčke. Prvi red za nas znači da između nekretnine i plaže nema puta ni druge zgrade.</p><p>Uz svaku nekretninu prikazana je samo opština, a tačnu lokaciju dobijate pri razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Nekretnine u prvom redu do mora u Kasandri</h2><p>Ova stranica prikazuje samo nekretnine u prvom redu u Kasandri. Takvih ponuda ima malo, pa vredi pratiti stranicu ili nam reći šta tražite, da vam se javimo čim se pojavi nova.</p><h2>Plaže Kasandre: pesak, borovi i plitko more</h2><p>Obala Kasandre je poznata po dugim peščanim plažama, borovima blizu vode i plitkom moru, pogodnom za decu. U julu i avgustu plaže kod letovališta su veoma posećene.</p><h2>Na šta pazite kod nekretnine uz samu obalu</h2><ul><li>pojas uz more je javan i ne sme se ograđivati</li><li>pravni status objekata blizu obale</li><li>vlaga i održavanje zbog blizine mora</li><li>gužva i buka leti u blizini plaže</li></ul><h2>Kasandra leti i zimi</h2><p>Leti je Kasandra puna života, sa restoranima i barovima uz more. Zimi je mirna i deo usluga ne radi, što je važno ako planirate da u nekretnini boravite van sezone.</p>",
+  "listingFilter": "municipality=kassandra & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/kasandra/prva-linija",
+  "hreflang": "P17: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Kasandra",
+    "Prvi red do mora"
+  ],
+  "heroAlt": "Kasandra nekretnine na moru – kuća uz peščanu plažu sa borovima, Halkidiki",
+  "galleryAltPattern": "{type} u prvom redu do mora, Kasandra, Halkidiki – {feature}",
+  "ogTitle": "Kasandra nekretnine na moru – prvi red do mora",
+  "anchor": "nekretnine na moru u Kasandri",
+  "anchorVariants": [
+    "Kasandra – prvi red do mora",
+    "kuće na moru u Kasandri"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine u Kasandri",
+      "href": "/sr/nekretnina/kasandra"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na moru",
+      "href": "/sr/nekretnina/prva-linija"
+    },
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P11"
+  ],
+  "cta": "Pogledajte ponudu na moru",
+  "oldUrls": [],
+  "words": 350,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

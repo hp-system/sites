@@ -1,0 +1,95 @@
+{
+  "id": "P15",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Kassandra villas",
+  "pageType": "listing",
+  "path": "/en/properties/kassandra/villas-for-sale",
+  "keyword": {
+    "primary": "villas for sale kassandra halkidiki",
+    "volume": 0,
+    "secondary": [],
+    "otherGeography": [
+      "villas for sale in greece with private pool — 90"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Villas for Sale in Kassandra, Halkidiki – Luxury Homes",
+  "meta": "Villas for sale in Kassandra, Halkidiki: luxury homes with private pool and sea views on the first peninsula, close to Thessaloniki. View Kassandra villas.",
+  "h1": "Villas for Sale in Kassandra, Halkidiki",
+  "h2": [
+    "Luxury villas with private pool in Kassandra",
+    "Sea-view villas on the Kassandra coast",
+    "Why Kassandra for a luxury home",
+    "Villas and the Greece Golden Visa"
+  ],
+  "faqQuestions": [
+    "Are there villas with a private pool for sale in Kassandra?",
+    "How much is a luxury villa in Kassandra, Halkidiki?",
+    "Can a villa in Kassandra qualify for the Greece Golden Visa?"
+  ],
+  "faq": [
+    {
+      "q": "Are there villas with a private pool for sale in Kassandra?",
+      "a": "Yes. Many villas for sale in Kassandra have a private pool, often with terraces and outdoor dining areas. Use the filters to show only villas with a pool, and ask us about maintenance costs if you will be away for long periods."
+    },
+    {
+      "q": "How much is a luxury villa in Kassandra, Halkidiki?",
+      "a": "Prices depend on the sea view, the plot, the size, the quality of the build and the distance to the beach. Sea-view villas in the most sought-after areas of Kassandra are at the top of the Halkidiki market. Filter by price to see current villas."
+    },
+    {
+      "q": "Can a villa in Kassandra qualify for the Greece Golden Visa?",
+      "a": "It can. As of November 2026, a villa in Kassandra may qualify if it is one residential property of at least 120 m² bought for €400,000 or more, and the other conditions are met, including no short-term letting. Our lawyer confirms each case."
+    }
+  ],
+  "intro": "<p>Villas for sale in Kassandra, Halkidiki: luxury homes with private pools and sea views on the first peninsula. Kassandra is the closest of the three peninsulas to Thessaloniki airport, about an hour by car. Every villa below is in the municipality of Kassandra. Ask us for a private viewing in person or by video. Hillside homes with wide views and villas near the beach are both included.</p>",
+  "body": "<h2>Luxury villas with private pool in Kassandra</h2><p>Most villas here come with a private pool, terraces and landscaped gardens. Check the plot size, privacy from neighbours and who will look after the pool and garden while you are away; we offer property management after the purchase.</p><h2>Sea-view villas on the Kassandra coast</h2><p>The west coast faces the sunset over the Thermaic Gulf, and the east coast looks across to Sithonia. Hillside villas often have the widest views, while villas close to the beach trade some view for easy access to the water.</p><h2>Why Kassandra for a luxury home</h2><p>Kassandra combines easy access with services: beach clubs, restaurants, marinas and shops near the main resort areas, and a long summer season. It suits buyers who want comfort and convenience close to the airport.</p><h2>Villas and the Greece Golden Visa</h2><p>As of November 2026, to be confirmed by our lawyer, one residential property in Halkidiki of at least 120 m² bought for €400,000 or more may qualify for the Greece Golden Visa. Other conditions apply, including a ban on short-term letting of the property. See our Golden Visa page for the details.</p>",
+  "listingFilter": "municipality=kassandra & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/kassandra/villas-for-sale",
+  "hreflang": "P15: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Kassandra",
+    "Villas"
+  ],
+  "heroAlt": "Luxury villa with private pool and pine trees in Kassandra, Halkidiki – villas for sale in Kassandra",
+  "galleryAltPattern": "{type} for sale in Kassandra, Halkidiki – luxury villa with {feature}",
+  "ogTitle": "Villas for Sale in Kassandra, Halkidiki – Pool & Sea View",
+  "anchor": "villas for sale in Kassandra",
+  "anchorVariants": [
+    "Kassandra luxury villas",
+    "luxury homes in Kassandra, Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P11"
+  ],
+  "cta": "See Kassandra villas",
+  "oldUrls": [],
+  "words": 387,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

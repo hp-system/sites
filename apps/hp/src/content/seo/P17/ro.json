@@ -1,0 +1,98 @@
+{
+  "id": "P17",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "C",
+  "name": "Kassandra seafront",
+  "pageType": "listing",
+  "path": "/ro/proprietati/kassandra/pe-plaja",
+  "keyword": {
+    "primary": "case pe plaja kassandra",
+    "volume": 0,
+    "secondary": [
+      "case la mare kassandra — 0",
+      "apartamente pe plaja kassandra — 0"
+    ],
+    "otherGeography": [
+      "case pe plaja kassandra grecia — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case pe plajă în Grecia – Kassandra, Halkidiki",
+  "meta": "Case pe plajă în Kassandra, Halkidiki, Grecia: case, apartamente și vile la prima linie sau la câțiva pași de mare. Vedeți ofertele și cereți detalii.",
+  "h1": "Case pe plajă în Grecia – Kassandra, Halkidiki",
+  "h2": [
+    "Case la prima linie în Kassandra",
+    "Apartamente lângă plajă",
+    "Vile pe malul mării",
+    "Zona de coastă: ce se verifică"
+  ],
+  "faqQuestions": [
+    "Se găsesc case chiar pe plajă în Kassandra?",
+    "Cât costă o casă la mare în Kassandra?",
+    "Ce trebuie verificat la o casă de pe malul mării în Grecia?"
+  ],
+  "faq": [
+    {
+      "q": "Se găsesc case chiar pe plajă în Kassandra?",
+      "a": "Da, se găsesc, dar sunt mai puține decât casele aflate la câțiva pași de mare. Unele sunt chiar la prima linie, altele au între ele și plajă doar o alee sau un drum. Oferta se schimbă des, așa că vedeți lista actuală de pe această pagină."
+    },
+    {
+      "q": "Cât costă o casă la mare în Kassandra?",
+      "a": "Casele la mare din Kassandra sunt de regulă mai scumpe decât cele din interior. Prețul depinde de suprafață, de starea casei, de plaja din față și de faptul că este nouă sau la revânzare. Folosiți filtrul de preț și cereți-ne detalii pentru casele care vă plac."
+    },
+    {
+      "q": "Ce trebuie verificat la o casă de pe malul mării în Grecia?",
+      "a": "Verificați limita zonei de coastă protejate (aigialos), autorizația de construire, titlul de proprietate și cadastrul. Verificați și certificatul energetic și starea casei, pentru că aerul sărat afectează în timp tâmplăria și instalațiile. Avocatul și inginerul fac aceste verificări înainte de semnare. Este situația din noiembrie 2026, de confirmat cu avocatul nostru."
+    }
+  ],
+  "intro": "<p>Case pe plajă în Grecia, în Kassandra: aici găsiți case, apartamente și vile la prima linie sau la câțiva pași de mare, toate în municipiul Kassandra din Halkidiki, în nordul Greciei. Pe această pagină, „pe plajă” înseamnă direct pe nisip sau la prima linie, nu doar cu vedere la mare. Filtrați după tip și preț, apoi programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Case la prima linie în Kassandra</h2><p>Kassandra are plaje lungi, cu nisip și multe dintre ele organizate. Vara sunt animate, iar în extrasezon devin liniștite. O casă la prima linie vă duce din curte direct la apă. Gândiți-vă cum vreți să o folosiți: dacă vă place animația verii, alegeți un sat plin de viață, iar dacă vreți liniște, o plajă mai retrasă.</p><h2>Apartamente lângă plajă</h2><p>Apartamentele lângă plajă sunt o variantă bună pentru vacanțe și au întreținere mai simplă decât o casă. Întrebați de locul de parcare și de cheltuielile comune ale clădirii. Un balcon spre mare face diferența în serile de vară.</p><h2>Vile pe malul mării</h2><p>Vilele pe malul mării sunt mai puține decât casele și apartamentele de pe coastă. Au de obicei grădină și uneori piscină, iar intimitatea depinde de cât de circulată este plaja din față.</p><h2>Zona de coastă: ce se verifică</h2><p>Fâșia de lângă apă (aigialos) este protejată prin lege în Grecia. Avocatul și inginerul verifică limita ei și dacă construcția respectă regulile. Este situația din noiembrie 2026, de confirmat cu avocatul nostru.</p>",
+  "listingFilter": "municipality=kassandra & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/kassandra/pe-plaja",
+  "hreflang": "P17: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Kassandra",
+    "Pe plajă"
+  ],
+  "heroAlt": "Casă cu terasă direct pe plaja cu nisip din Kassandra, Halkidiki – case pe plajă în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Case pe plajă în Kassandra, Halkidiki – Grecia",
+  "anchor": "case pe plajă în Kassandra",
+  "anchorVariants": [
+    "case la mare în Kassandra",
+    "proprietăți pe plajă în Kassandra, Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "case de vânzare în Grecia pe malul mării",
+      "href": "/ro/proprietati/pe-plaja"
+    },
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P11"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 386,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

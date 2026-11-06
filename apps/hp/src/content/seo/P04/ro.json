@@ -1,0 +1,133 @@
+{
+  "id": "P04",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "Houses / homes for sale",
+  "pageType": "listing",
+  "path": "/ro/proprietati/case",
+  "keyword": {
+    "primary": "case de vanzare grecia",
+    "volume": 150,
+    "secondary": [
+      "case grecia — 50",
+      "casa de vanzare grecia — 20",
+      "casa de vacanta grecia — 20",
+      "cat costa o casa in grecia — 20",
+      "case grecia de vanzare — 10",
+      "casa in grecia — 10"
+    ],
+    "otherGeography": [
+      "case de vanzare halkidiki — 10",
+      "casa de vanzare halkidiki — 10",
+      "case de vanzare grecia halkidiki — 10",
+      "case de vanzare in halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case de vânzare în Grecia – Halkidiki, aproape de mare",
+  "meta": "Case de vânzare în Grecia, în Halkidiki: case de vacanță și locuințe pentru tot anul, aproape de mare. Filtrați după zonă și preț și cereți o vizionare.",
+  "h1": "Case de vânzare în Grecia – case în Halkidiki",
+  "h2": [
+    "Case de vacanță în Halkidiki",
+    "Cât costă o casă în Grecia, în Halkidiki",
+    "Case lângă mare sau cu vedere la mare",
+    "Case în Kassandra, Sithonia, Nea Propontida și Aristotelis",
+    "Ce verificați înainte să cumpărați o casă în Grecia"
+  ],
+  "faqQuestions": [
+    "Cât costă o casă în Grecia, în Halkidiki?",
+    "Ce impozit se plătește pentru o casă în Grecia?",
+    "Este mai bine o casă nouă sau una la revânzare?",
+    "Cât durează cumpărarea unei case în Grecia?"
+  ],
+  "faq": [
+    {
+      "q": "Cât costă o casă în Grecia, în Halkidiki?",
+      "a": "Prețul variază mult după zonă, distanța până la mare, suprafață și vechime. O casă mai veche în interior costă mult mai puțin decât o casă nouă pe malul mării. Folosiți filtrul de preț de pe această pagină sau vedeți pagina cu proprietăți până la 150.000 €."
+    },
+    {
+      "q": "Ce impozit se plătește pentru o casă în Grecia?",
+      "a": "La cumpărarea unei case la revânzare se plătește taxa de transfer de 3,09%. La casele noi, TVA-ul este suspendat până la 31.12.2026. Ca proprietar plătiți apoi în fiecare an impozitul pe proprietate ENFIA. Sunt regulile din noiembrie 2026, de confirmat cu avocatul nostru."
+    },
+    {
+      "q": "Este mai bine o casă nouă sau una la revânzare?",
+      "a": "Depinde de ce vă doriți. O casă nouă are finisaje moderne și consum mai mic de energie, iar TVA-ul este suspendat până la 31.12.2026. O casă la revânzare poate avea un preț mai bun și o locație deja consacrată, dar poate cere renovări. Vă arătăm ambele variante la vizionare."
+    },
+    {
+      "q": "Cât durează cumpărarea unei case în Grecia?",
+      "a": "Durata depinde mai ales de acte. Obținerea codului fiscal AFM și deschiderea contului bancar se fac relativ repede, iar verificările avocatului durează mai mult dacă proprietatea are probleme de acte. Avocatul vă spune de la început cât va dura, în funcție de proprietatea aleasă."
+    }
+  ],
+  "intro": "<p>Case de vânzare în Grecia, toate în Halkidiki: aici vedeți casele noastre din nordul Greciei, de la case de vacanță aproape de plajă până la locuințe pentru tot anul. Lucrăm numai în Halkidiki, așa că fiecare casă din listă se află în această regiune. Filtrați după municipiu, preț, suprafață și distanța până la mare. Dacă vă place o casă, programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Case de vacanță în Halkidiki</h2><p>O casă de vacanță în Grecia înseamnă de obicei o locuință la câțiva pași de plajă, folosită vara și în extrasezon. Gândiți-vă din timp cine are grijă de ea cât sunteți plecați. După cumpărare, ne putem ocupa noi de administrarea casei.</p><h2>Cât costă o casă în Grecia, în Halkidiki</h2><p>Nu există un preț unic. Contează distanța până la mare, vederea, suprafața, starea clădirii, municipiul și dacă locuința este nouă sau la revânzare. Folosiți filtrul de preț ca să vedeți ce se potrivește bugetului pe care îl aveți.</p><h2>Case lângă mare sau cu vedere la mare</h2><p>O casă lângă mare vă duce pe jos la plajă. O casă cu vedere la mare este adesea pe deal, mai liniștită, cu panoramă. Ambele variante au avantaje, iar la vizionare vă arătăm diferența.</p><h2>Case în Kassandra, Sithonia, Nea Propontida și Aristotelis</h2><p>Kassandra și Sithonia sunt alese mai ales pentru vacanță. Nea Propontida are orașe cu servicii tot anul, aproape de Salonic. Aristotelis este mai retrasă, lângă Muntele Athos.</p><h2>Ce verificați înainte să cumpărați o casă în Grecia</h2><ul><li>titlul de proprietate și înregistrarea la cadastru (Ktimatologio)</li><li>autorizația de construire</li><li>certificatul energetic</li><li>accesul, apa și curentul</li></ul><p>Avocatul și inginerul verifică aceste acte înainte de semnare.</p>",
+  "listingFilter": "category=residency",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/case",
+  "hreflang": "P04: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Case"
+  ],
+  "heroAlt": "Casă cu terasă și grădină lângă mare în Halkidiki – case de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Case de vânzare în Grecia – case în Halkidiki",
+  "anchor": "case de vânzare în Grecia",
+  "anchorVariants": [
+    "case de vânzare în Halkidiki",
+    "case în Grecia, în Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "apartamente de vânzare în Grecia",
+      "href": "/ro/proprietati/apartamente"
+    },
+    {
+      "anchor": "duplex de vânzare în Grecia",
+      "href": "/ro/proprietati/duplexuri"
+    },
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    },
+    {
+      "anchor": "cumpărare casă în Grecia",
+      "href": "/ro/cumparare-casa-in-grecia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P05",
+    "P06",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P20"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 454,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

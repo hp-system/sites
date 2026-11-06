@@ -1,0 +1,133 @@
+{
+  "id": "P07",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "A",
+  "name": "Villas / luxury properties",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/vile",
+  "keyword": {
+    "primary": "prodaja vila grcka",
+    "volume": 0,
+    "secondary": [
+      "vile u grckoj na plazi — 20",
+      "luksuzne vile grcka — 0",
+      "luksuzne nekretnine grcka — 0",
+      "vila sa bazenom grcka prodaja — 0"
+    ],
+    "otherGeography": [
+      "vile halkidiki prodaja — 0",
+      "luksuzne vile halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Prodaja vila Grčka – luksuzne vile na Halkidikiju",
+  "meta": "Prodaja vila u Grčkoj: luksuzne vile sa bazenom i pogledom na more na Halkidikiju, uz diskretan pregled i video obilazak. Zatražite više detalja.",
+  "h1": "Prodaja vila Grčka – luksuzne vile sa bazenom na Halkidikiju",
+  "h2": [
+    "Luksuzne vile na prodaju u Grčkoj – Halkidiki",
+    "Vile uz plažu i vile sa pogledom na more",
+    "Vile u Kasandri i Sitoniji",
+    "Vila i Zlatna viza: zona od 400.000 €",
+    "Održavanje vile: bazen, bašta, upravljanje"
+  ],
+  "faqQuestions": [
+    "Koliko košta vila u Grčkoj na moru?",
+    "Da li kupovina vile u Grčkoj može da donese Zlatnu vizu?",
+    "Koliki su troškovi održavanja vile sa bazenom?",
+    "Da li je moguće kupiti vilu u Grčkoj preko firme?"
+  ],
+  "faq": [
+    {
+      "q": "Koliko košta vila u Grčkoj na moru?",
+      "a": "Cena zavisi od toga da li je vila u prvom redu ili sa pogledom, od veličine placa i kuće, bazena, kvaliteta gradnje i opštine. Vile u prvom redu do mora su najređe i najskuplje. Aktuelne cene vila na Halkidikiju vidite u ponudi na ovoj stranici."
+    },
+    {
+      "q": "Da li kupovina vile u Grčkoj može da donese Zlatnu vizu?",
+      "a": "Može, ako ispunjava uslove. Prema pravilima od novembra 2026, na Halkidikiju je prag 400.000 € za jednu stambenu nekretninu od najmanje 120 m². Državljanima EU Zlatna viza nije potrebna. Pre kupovine naš advokat proverava da li konkretna vila ispunjava sve uslove."
+    },
+    {
+      "q": "Koliki su troškovi održavanja vile sa bazenom?",
+      "a": "Zavise od veličine vile, bazena i bašte. Redovni troškovi su održavanje bazena, baštovan, struja, voda, porez na imovinu ENFIA i osiguranje, a po potrebi i upravljanje dok niste tu. Za konkretnu vilu tražite od prodavca račune iz prethodne godine, kako biste realno planirali budžet."
+    },
+    {
+      "q": "Da li je moguće kupiti vilu u Grčkoj preko firme?",
+      "a": "U načelu je moguće kupiti nekretninu u Grčkoj preko firme, ali to menja poreske obaveze i papirologiju, a za Zlatnu vizu važe posebna pravila. Da li je to dobro rešenje za vas, procenjuju advokat i računovođa pre potpisivanja. Mi vas povezujemo sa njima."
+    }
+  ],
+  "intro": "<p>Prodaja vila Grčka: ovde su luksuzne vile i kuće visoke klase na prodaju na Halkidikiju, na severu Grčke, često sa bazenom, baštom i pogledom na more. Sve vile u ponudi nalaze se na Halkidikiju, gde radi naša agencija.</p><p>Filtrirajte po opštini, ceni i udaljenosti od mora, a zatim zakažite diskretno razgledanje uživo ili putem video poziva, uz obilazak okoline i plaže.</p>",
+  "body": "<h2>Luksuzne vile na prodaju u Grčkoj – Halkidiki</h2><p>U ovoj ponudi su luksuzne nekretnine u Grčkoj iz našeg portfolija, sve na Halkidikiju. Uz svaku vilu prikazana je opština, a tačna lokacija se otkriva pri razgledanju, što i vlasnicima i kupcima daje potrebnu diskreciju.</p><h2>Vile uz plažu i vile sa pogledom na more</h2><p>Vilu nazivamo „uz plažu“ samo kada je u prvom redu do mora, bez puta između nje i plaže. Mnogo je više vila sa pogledom na more, na padini iznad obale. Proverite orijentaciju, jer od nje zavise sunce, vetar i pogled na zalazak.</p><h2>Vile u Kasandri i Sitoniji</h2><p>Kasandra nudi vile blizu razvijenih mesta, restorana i usluga. Sitonija je izbor za one koji traže više privatnosti, borove šume i vile iznad mirnih uvala.</p><h2>Vila i Zlatna viza: zona od 400.000 €</h2><p>Prema pravilima od novembra 2026, Halkidiki je u zoni od 400.000 €: za Zlatnu vizu potrebna je jedna stambena nekretnina od najmanje 120 m². Mnoge vile ispunjavaju ovaj uslov, ali svaki slučaj potvrđuje naš advokat. Detalje pročitajte na stranici o Zlatnoj vizi.</p><h2>Održavanje vile: bazen, bašta, upravljanje</h2><p>Bazen i bašta traže redovno održavanje, posebno dok niste tu. Posle kupovine možemo da preuzmemo upravljanje vilom, da bi sve bilo spremno kada dođete.</p>",
+  "listingFilter": "luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/vile",
+  "hreflang": "P07: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Vile"
+  ],
+  "heroAlt": "Prodaja vila Grčka – moderna vila sa bazenom i pogledom na Egejsko more na Halkidikiju",
+  "galleryAltPattern": "{type} na prodaju, {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Prodaja vila Grčka – luksuzne vile na Halkidikiju",
+  "anchor": "prodaja vila u Grčkoj",
+  "anchorVariants": [
+    "luksuzne vile na Halkidikiju",
+    "vile na prodaju na Halkidikiju"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    },
+    {
+      "anchor": "prodaja vila u Kasandri",
+      "href": "/sr/nekretnina/kasandra/vile"
+    },
+    {
+      "anchor": "prodaja vila u Sitoniji",
+      "href": "/sr/nekretnina/sitonija/vile"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na moru",
+      "href": "/sr/nekretnina/prva-linija"
+    },
+    {
+      "anchor": "Zlatna viza Grčka",
+      "href": "/sr/zlatna-viza-grcka"
+    },
+    {
+      "anchor": "kupovina nekretnine u Grčkoj",
+      "href": "/sr/kupovina-nekretnine-u-grckoj"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P09",
+    "P11",
+    "P12",
+    "P15",
+    "P16",
+    "P20"
+  ],
+  "cta": "Pogledajte vile",
+  "oldUrls": [
+    {
+      "path": "/sr/nekretnine-na-halkidikiju-u-grckoj/vile-halkidikiju",
+      "clicks": 3
+    }
+  ],
+  "words": 437,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

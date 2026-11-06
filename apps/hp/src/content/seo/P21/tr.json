@@ -1,0 +1,126 @@
+{
+  "id": "P21",
+  "lang": "tr",
+  "buildOrder": 4,
+  "priority": "B",
+  "name": "Halkidiki guide: living, retiring, beaches",
+  "pageType": "content",
+  "path": "/tr/halkidiki",
+  "keyword": {
+    "primary": "yunanistanda yaşam",
+    "volume": 0,
+    "secondary": [
+      "yunanistan emekli oturum izni — 100",
+      "yunanistan oturum izni şartları — 100",
+      "yunanistan oturum izni nasıl alınır — 70",
+      "yunanistan da oturum izni şartları — 60"
+    ],
+    "otherGeography": [
+      "halkidiki'de yaşam — 0",
+      "halkidiki plajları — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Yunanistan'da Yaşam ve Emeklilik: Halkidiki Rehberi",
+  "meta": "Yunanistan'da yaşam ve emeklilik için Halkidiki: plajlar, yıl boyu kasabalar, sağlık, ulaşım ve oturum izni seçenekleri. Rehberi okuyun.",
+  "h1": "Yunanistan'da Yaşam: Halkidiki'de Yaşamak, Emeklilik ve Plajlar",
+  "h2": [
+    "Halkidiki'de yaşam: yazın ve kışın",
+    "Yıl boyu yaşanabilecek kasabalar",
+    "Emekliler için oturum izni seçenekleri",
+    "Sağlık, alışveriş ve Selanik'e ulaşım",
+    "Halkidiki plajları: Kassandra, Sithonia ve Athos kıyısı",
+    "Yaşamak için ev seçerken nelere dikkat edilmeli?"
+  ],
+  "faqQuestions": [
+    "Halkidiki'de yaşamak nasıl, kışın hayat devam ediyor mu?",
+    "Emekliler Yunanistan'da nasıl oturum izni alır?",
+    "Halkidiki'nin en güzel plajları hangileri?",
+    "Halkidiki'de sağlık hizmetlerine ve Selanik'e ulaşım nasıl?"
+  ],
+  "faq": [
+    {
+      "q": "Halkidiki'de yaşamak nasıl, kışın hayat devam ediyor mu?",
+      "a": "Evet, ama nerede yaşadığınıza bağlıdır. Polygyros, Nea Moudania, Nea Kallikratia, Kassandria ve Ierissos gibi kasabalarda market, okul, eczane ve bankalar kışın da açıktır. Pek çok tatil köyü ise sezon dışında oldukça sessizleşir. Kalıcı yaşam için yıl boyu yaşayan bir kasabaya yakın bir ev seçmenizi öneririz; sakinliği seviyorsanız kış aylarının dinginliği bir avantaj olabilir."
+    },
+    {
+      "q": "Emekliler Yunanistan'da nasıl oturum izni alır?",
+      "a": "AB vatandaşı emekliler Yunanistan'da serbestçe yaşayabilir. AB dışından gelenler için Kasım 2026 itibarıyla başlıca iki yol vardır: Halkidiki'de en az 400.000 € değerinde ve en az 120 m² büyüklüğünde tek bir konutla Golden Visa ya da yurt dışından düzenli geliri olan kişiler için mali bağımsızlık oturum izni. Şartlar değişebilir; avukatımız her durumu teyit eder."
+    },
+    {
+      "q": "Halkidiki'nin en güzel plajları hangileri?",
+      "a": "Bu, ne aradığınıza bağlıdır. Kassandra uzun kumlu, düzenli ve hareketli plajlarıyla, Sithonia çam ormanlarının denize indiği küçük koylar ve berrak suyuyla, Athos kıyısı ise Ierissos ve Ouranoupoli çevresindeki sakin plajları ve manzarasıyla öne çıkar. Sezon dışında pek çok plaj neredeyse boştur; bu da bölgede yaşayanların en sevdiği şeylerden biridir. Evinizi seçerken en sevdiğiniz plaja uzaklığı da hesaba katabilirsiniz."
+    },
+    {
+      "q": "Halkidiki'de sağlık hizmetlerine ve Selanik'e ulaşım nasıl?",
+      "a": "Polygyros'ta bir hastane, bazı büyük kasabalarda sağlık merkezleri bulunur; daha kapsamlı tedavi için çoğu kişi Selanik'e gider. Selanik Havalimanı'ndan Kassandra'nın girişine arabayla yaklaşık bir saatte ulaşılır; Nea Propontida daha yakın, Sithonia ve Aristotelis daha uzaktır. Bölgede yaşayacaksanız kendi aracınızın olması günlük hayatı çok kolaylaştırır. Ev seçerken en yakın sağlık merkezine uzaklığı mutlaka kontrol edin."
+    }
+  ],
+  "intro": "<p>Yunanistan'da yaşam hayal ediyorsanız Halkidiki, deniz kenarında sakin bir hayatı büyük bir şehre yakınlıkla birleştiren bir bölgedir. Selanik'in güneydoğusundaki üç yarımada, kumsalları, çam ormanları ve yıl boyu yaşayan kasabalarıyla hem emeklilik hem de kalıcı yaşam için düşünülebilir.</p><p>Bu rehberde Halkidiki'de günlük hayatın yazın ve kışın nasıl geçtiğini, yıl boyu yaşanabilecek kasabaları, sağlık ve ulaşım olanaklarını, emekliler için oturum izni seçeneklerini ve plajları dürüstçe anlatıyoruz. Oturum izniyle ilgili bilgiler Kasım 2026 itibarıyladır ve avukatımızın teyidine tabidir.</p>",
+  "body": "<h2>Halkidiki'de yaşam: yazın ve kışın</h2><p>Halkidiki'nin iki yüzü vardır. Yazın kumsallar, restoranlar ve tatil köyleri çok canlıdır; Yunanistan'ın her yerinden ve yurt dışından gelen ziyaretçilerle bölge hareketlenir. Bu dönemde trafik, park yeri ve kalabalık da artar.</p><p>Kışın ise pek çok tatil köyü oldukça sessizleşir; bazı oteller, restoranlar ve dükkânlar sezon sonunda kapanır. Buna karşılık yıl boyu yaşayan kasabalarda günlük hayat normal akışında sürer. Halkidiki'de yaşamak isteyenlerin çoğu, bu yüzden evlerini yıl boyu açık olan bir kasabaya yakın seçer.</p><p>Sakinliği seviyorsanız kış aylarındaki bu dinginlik bir avantaj olabilir. Daha sosyal bir hayat istiyorsanız büyük kasabalara ya da Selanik'e yakın bölgelere bakmanızı öneririz.</p><p>Günlük hayatın ritmi de Yunan yaşam tarzını yansıtır: sabah pazarları, kahvehanelerde uzun sohbetler, yazın köy şenlikleri ve akşam yemeklerinin geç saatlerde yenmesi. Yerel halkla birkaç kelime Yunanca konuşabilmek, komşularla ilişkileri ve resmi işleri kolaylaştırır.</p><h2>Yıl boyu yaşanabilecek kasabalar</h2><p>Halkidiki'de kalıcı yaşam için en çok tercih edilen yerler, yıl boyu nüfusu olan ve hizmetleri açık kalan kasabalardır:</p><ul><li><strong>Polygyros:</strong> Halkidiki'nin idari merkezidir; resmi daireler, okullar ve hastane buradadır.</li><li><strong>Nea Moudania:</strong> Nea Propontida'nın en büyük kasabalarından biridir; liman, alışveriş ve hizmetlerle yıl boyu canlıdır.</li><li><strong>Nea Kallikratia:</strong> Selanik'e yakın, sahil boyunca uzanan bir yerleşimdir.</li><li><strong>Kassandria:</strong> Kassandra yarımadasında yıl boyu yaşayan bir kasabadır.</li><li><strong>Ierissos:</strong> Aristotelis bölgesinde, balıkçılığıyla bilinen ve kışın da yaşayan bir kasabadır.</li></ul><p>Bu kasabalara yakın bir ev, kışın da market, eczane, okul ve bankaya kolayca ulaşmanızı sağlar.</p><p>Daha sakin bir hayat isteyenler iç kesimdeki dağ köylerini de değerlendirebilir. Bu köylerde evler genellikle daha uygun fiyatlıdır ve doğa çok yakındır; buna karşılık kumsala ve hizmetlere araçla gitmeniz gerekir. Seçim yaparken hangi hizmetlere ne sıklıkla ihtiyaç duyacağınızı düşünün.</p><h2>Emekliler için oturum izni seçenekleri</h2><p>AB vatandaşları Yunanistan'da serbestçe yaşayabilir; yalnızca yerel kayıt işlemlerini yapmaları gerekir. AB dışından gelen emekliler içinse Kasım 2026 itibarıyla başlıca iki yol vardır:</p><ul><li><strong>Golden Visa:</strong> Halkidiki 400.000 € bölgesindedir; en az 120 m² büyüklüğünde tek bir konuta bu tutarda yatırım yaparak oturum izni için başvurulabilir.</li><li><strong>Mali açıdan bağımsız kişiler için oturum izni:</strong> Yunanistan'da çalışmadan, yurt dışından düzenli geliriyle yaşayan kişiler için ayrı bir izin türüdür. Gelir şartları ve belgeler avukatınız tarafından değerlendirilir.</li></ul><p>Yunanistan emekli oturum izni ve Yunanistan oturum izni şartları zaman zaman değişir. Hangi yolun size uygun olduğunu, gerekli belgeleri ve süreci başvurudan önce avukatımızla netleştirmenizi öneririz. Bu sayfa hukuki danışmanlık yerine geçmez.</p><h2>Sağlık, alışveriş ve Selanik'e ulaşım</h2><p>Polygyros'ta bir hastane, bazı büyük kasabalarda ise sağlık merkezleri bulunur. Daha kapsamlı tedavi ve uzman doktorlar için çoğu kişi Selanik'teki hastanelere gider. Ev seçerken en yakın sağlık hizmetine ve Selanik yoluna uzaklığı mutlaka hesaba katın.</p><p>Günlük alışveriş için büyük kasabalarda süpermarketler, pazarlar ve dükkânlar yıl boyu açıktır. Daha büyük alışverişler için Selanik kolay ulaşılabilir bir seçenektir.</p><p>Ulaşım açısından Halkidiki anakarada olduğu için araçla her yere gidebilirsiniz. Selanik Havalimanı'ndan Kassandra'nın girişine arabayla yaklaşık bir saatte ulaşılır; Nea Propontida daha yakın, Sithonia ve Aristotelis daha uzaktır. Türkiye'den karayoluyla gelenler İpsala sınır kapısından Egnatia otoyoluyla Selanik'e, oradan Halkidiki'ye geçebilir. Bölgede yaşayacaksanız kendi aracınızın olması günlük hayatı çok kolaylaştırır.</p><p>Yunanistan'a yerleşirken bazı resmi işlemleri de planlamanız gerekir: Yunan vergi numarası (AFM), banka hesabı, gerekiyorsa oturum izni ve yerel kayıtlar. Bu işlemlerin sırası ve gerekli belgeler kişiye göre değiştiği için avukatınızdan destek almanızı öneririz.</p><h2>Halkidiki plajları: Kassandra, Sithonia ve Athos kıyısı</h2><p>Halkidiki plajları her yarımadada farklı bir karakter taşır:</p><ul><li><strong>Kassandra:</strong> Uzun kumlu plajlar, düzenli şezlong ve restoran olanakları, sığ ve çocuklar için uygun deniz. Yazın en hareketli kıyı burasıdır.</li><li><strong>Sithonia:</strong> Çam ormanlarının denize indiği küçük koylar, kumlu ve kayalık kıyılar, berrak su. Daha doğal ve sakin bir deniz tatili sunar.</li><li><strong>Athos kıyısı:</strong> Ierissos ve Ouranoupoli çevresinde daha sakin plajlar ve Athos dağı manzarası. Ouranoupoli'den Athos kıyısı boyunca tekne turları düzenlenir.</li></ul><p>Athos dağı bir manastır devletidir ve yalnızca erkekler özel izinle ziyaret edebilir; tekne turları ise herkese açıktır. Halkidiki'de yaşamanın en güzel yanlarından biri, sezon dışında bu plajların neredeyse boş olmasıdır.</p><h2>Yaşamak için ev seçerken nelere dikkat edilmeli?</h2><p>Yazlık bir evle yıl boyu yaşanacak bir ev aynı ölçütlerle seçilmez. Kalıcı yaşam için şunlara dikkat etmenizi öneririz:</p><ul><li>Isıtma sistemi, yalıtım ve enerji kimlik belgesi</li><li>Yıl boyu açık olan market, eczane ve sağlık hizmetlerine uzaklık</li><li>Kışın yol durumu ve Selanik'e ulaşım</li><li>Komşuların ve çevrenin kışın da yaşayıp yaşamadığı</li><li>İnternet bağlantısı, özellikle uzaktan çalışacaksanız</li></ul><p>Halkidiki Properties olarak yalnızca Halkidiki'de satış yapıyoruz. Size uygun bölgeyi ve evi birlikte değerlendirebilir, gösterimleri yerinde ya da görüntülü yapabiliriz. Satın alma süreci ve masraflar için Yunanistan'da ev alma rehberimize, oturum izni için Golden Visa sayfamıza göz atabilirsiniz.</p><p>Son bir tavsiye: Kalıcı olarak taşınmadan önce bölgeyi mümkünse hem yazın hem de kışın görün. Aynı köy iki mevsimde çok farklı bir yer olabilir. Halkidiki'yi farklı zamanlarda görmek, size en uygun yaşam alanını seçmenizi kolaylaştırır.</p>",
+  "listingFilter": "—",
+  "indexing": "index, follow",
+  "canonical": "/tr/halkidiki",
+  "hreflang": "P21: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "Article",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Ana Sayfa",
+    "Halkidiki Rehberi"
+  ],
+  "heroAlt": "Halkidiki'de sakin bir sahil kasabası ve çam ağaçlı kumsal – Yunanistan'da yaşam",
+  "galleryAltPattern": "Halkidiki'de yaşam: {type}, {municipality}, {feature}",
+  "ogTitle": "Yunanistan'da Yaşam ve Emeklilik – Halkidiki Rehberi",
+  "anchor": "Yunanistan'da yaşam: Halkidiki rehberi",
+  "anchorVariants": [
+    "Halkidiki'de yaşamak",
+    "Yunanistan'da emeklilik için Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Kassandra satılık ev",
+      "href": "/tr/emlak/kassandra"
+    },
+    {
+      "anchor": "Sithonia satılık ev",
+      "href": "/tr/emlak/sithonia"
+    },
+    {
+      "anchor": "Nea Propontida satılık ev",
+      "href": "/tr/emlak/nea-propontida"
+    },
+    {
+      "anchor": "Aristotelis satılık ev",
+      "href": "/tr/emlak/aristotelis"
+    },
+    {
+      "anchor": "Halkidiki satılık ev ilanları",
+      "href": "/tr/emlak"
+    },
+    {
+      "anchor": "Yunanistan'da ev almak",
+      "href": "/tr/yunanistanda-ev-almak"
+    },
+    {
+      "anchor": "Yunanistan Golden Visa",
+      "href": "/tr/yunanistan-golden-visa"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P03",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P19"
+  ],
+  "cta": "Halkidiki'deki Evleri Gör",
+  "oldUrls": [],
+  "words": 1048,
+  "editorialLine": "Kasım 2026'da güncellendi · İnceleyen: George Tsigaras, Kurucu",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

@@ -1,0 +1,161 @@
+{
+  "id": "P02",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "All properties for sale in Halkidiki (main listing)",
+  "pageType": "listing",
+  "path": "/ro/proprietati",
+  "keyword": {
+    "primary": "imobiliare halkidiki",
+    "volume": 10,
+    "secondary": [
+      "imobiliare grecia halkidiki — 0",
+      "proprietati de vanzare halkidiki — 0",
+      "anunturi imobiliare halkidiki — 0"
+    ],
+    "otherGeography": [
+      "proprietati de vanzare grecia — 0",
+      "anunturi imobiliare grecia — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Proprietăți de vânzare în Grecia: imobiliare Halkidiki",
+  "meta": "Imobiliare Halkidiki: toate proprietățile noastre de vânzare din Grecia de Nord, cu filtre după tip, zonă și preț. Alegeți și programați o vizionare.",
+  "h1": "Proprietăți de vânzare în Grecia – imobiliare Halkidiki",
+  "h2": [
+    "Căutați după tip: case, apartamente, vile, terenuri",
+    "Proprietăți pe zone: Kassandra, Sithonia, Nea Propontida, Aristotelis",
+    "Proprietăți la mare în Halkidiki",
+    "Ce costuri se adaugă la prețul de vânzare",
+    "Cum programați o vizionare în Halkidiki"
+  ],
+  "faqQuestions": [
+    "Cum aflu dacă o proprietate din Halkidiki mai este disponibilă?",
+    "Pot viziona proprietățile din Halkidiki online, prin apel video?",
+    "Ce acte îmi trebuie pentru a cumpăra o proprietate în Grecia?",
+    "Ce costuri se adaugă la prețul unei proprietăți în Grecia?"
+  ],
+  "faq": [
+    {
+      "q": "Cum aflu dacă o proprietate din Halkidiki mai este disponibilă?",
+      "a": "Pe site apar doar ofertele active, dar situația se poate schimba repede, mai ales vara. Cel mai sigur este să ne scrieți din pagina proprietății. Vă confirmăm disponibilitatea și, dacă proprietatea s-a vândut, vă propunem variante asemănătoare din aceeași zonă."
+    },
+    {
+      "q": "Pot viziona proprietățile din Halkidiki online, prin apel video?",
+      "a": "Da. Organizăm vizionări online, prin apel video, în care vă arătăm proprietatea cameră cu cameră, vederea, drumul de acces și împrejurimile. Puteți pune întrebări în timp real. Mulți cumpărători fac întâi o vizionare video și apoi vin la fața locului pentru proprietățile preferate."
+    },
+    {
+      "q": "Ce acte îmi trebuie pentru a cumpăra o proprietate în Grecia?",
+      "a": "Aveți nevoie de un act de identitate valabil, de un cod fiscal grecesc (AFM) și de un cont într-o bancă din Grecia. Avocatul verifică actele proprietății, iar notarul întocmește contractul. Este situația din noiembrie 2026, de confirmat cu avocatul nostru pentru fiecare caz în parte."
+    },
+    {
+      "q": "Ce costuri se adaugă la prețul unei proprietăți în Grecia?",
+      "a": "La revânzare se plătește taxa de transfer de 3,09% (3% plus taxa municipală). La construcțiile noi, TVA-ul este suspendat până la 31.12.2026. Onorariile notarului, ale avocatului și taxele de cadastru variază și ajung de regulă la câteva procente în total, conform regulilor din noiembrie 2026."
+    }
+  ],
+  "intro": "<p>Imobiliare Halkidiki: pe această pagină vedeți toate proprietățile noastre de vânzare, toate în Halkidiki, în nordul Greciei. Lucrăm numai în această regiune, așa că nu veți găsi aici oferte din alte părți ale țării. Filtrați după tip, municipiu, preț și distanța până la mare, apoi deschideți pe rând anunțurile care vă interesează. Când găsiți ceva potrivit, programați o vizionare, la fața locului sau online.</p>",
+  "body": "<h2>Căutați după tip: case, apartamente, vile, terenuri</h2><p>Alegeți din filtru tipul de proprietate: case, apartamente și garsoniere, duplexuri, vile sau terenuri. Fiecare tip are și o pagină separată, cu informații utile despre ce trebuie verificat.</p><h2>Proprietăți pe zone: Kassandra, Sithonia, Nea Propontida, Aristotelis</h2><ul><li><strong>Kassandra</strong>: plaje organizate și sate animate vara.</li><li><strong>Sithonia</strong>: păduri de pin și golfuri liniștite.</li><li><strong>Nea Propontida</strong>: cea mai aproape de Salonic, cu servicii tot anul.</li><li><strong>Aristotelis</strong>: coastă liniștită, lângă Muntele Athos.</li></ul><h2>Proprietăți la mare în Halkidiki</h2><p>Dacă vreți să fiți aproape de apă, folosiți filtrul de distanță până la mare. Proprietățile de pe malul mării au o pagină proprie, iar acolo explicăm și ce se verifică în zona de coastă.</p><h2>Ce costuri se adaugă la prețul de vânzare</h2><p>La revânzare se plătește taxa de transfer de 3,09%. La construcțiile noi, TVA-ul este suspendat până la 31.12.2026. Se adaugă notarul, avocatul și cadastrul. Sunt valorile din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Cum programați o vizionare în Halkidiki</h2><p>Scrieți-ne din pagina proprietății și stabilim împreună ziua și ora. Puteți veni la fața locului sau puteți vedea casa online, prin apel video, cu tot ce se află în jur.</p>",
+  "listingFilter": "none (all live listings)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati",
+  "hreflang": "P02: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți"
+  ],
+  "heroAlt": "Vedere aeriană asupra unei peninsule din Halkidiki cu case și plaje – imobiliare Halkidiki",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Imobiliare Halkidiki – proprietăți de vânzare în Grecia",
+  "anchor": "imobiliare Halkidiki",
+  "anchorVariants": [
+    "proprietăți de vânzare în Halkidiki",
+    "toate proprietățile din Halkidiki, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "case de vânzare în Grecia",
+      "href": "/ro/proprietati/case"
+    },
+    {
+      "anchor": "apartamente de vânzare în Grecia",
+      "href": "/ro/proprietati/apartamente"
+    },
+    {
+      "anchor": "duplex de vânzare în Grecia",
+      "href": "/ro/proprietati/duplexuri"
+    },
+    {
+      "anchor": "vile în Grecia",
+      "href": "/ro/proprietati/vile"
+    },
+    {
+      "anchor": "teren de vânzare în Grecia",
+      "href": "/ro/proprietati/terenuri"
+    },
+    {
+      "anchor": "case de vânzare în Grecia pe malul mării",
+      "href": "/ro/proprietati/pe-plaja"
+    },
+    {
+      "anchor": "case ieftine de vânzare în Grecia",
+      "href": "/ro/proprietati/ieftine"
+    },
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    },
+    {
+      "anchor": "case de vânzare în Nea Propontida",
+      "href": "/ro/proprietati/nea-propontida"
+    },
+    {
+      "anchor": "case de vânzare în Aristotelis",
+      "href": "/ro/proprietati/aristotelis"
+    },
+    {
+      "anchor": "cumpărare casă în Grecia",
+      "href": "/ro/cumparare-casa-in-grecia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15",
+    "P16",
+    "P17",
+    "P18",
+    "P19",
+    "P20",
+    "P21"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 428,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

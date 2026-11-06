@@ -1,0 +1,104 @@
+{
+  "id": "P06",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "B",
+  "name": "Maisonettes for sale",
+  "pageType": "listing",
+  "path": "/de/immobilien/maisonetten",
+  "keyword": {
+    "primary": "maisonette kaufen chalkidiki",
+    "volume": 0,
+    "secondary": [],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Maisonette kaufen Chalkidiki – Griechenland",
+  "meta": "Maisonette kaufen auf Chalkidiki: zweigeschossige Wohnungen mit Garten oder Terrasse, oft in kleinen Anlagen nahe am Meer. Jetzt Maisonetten ansehen.",
+  "h1": "Maisonette kaufen auf Chalkidiki – Maisonetten in Griechenland",
+  "h2": [
+    "Was ist eine Maisonette in Griechenland?",
+    "Maisonetten auf Chalkidiki nach Region",
+    "Maisonette oder Haus: Vor- und Nachteile",
+    "Gemeinschaftskosten und Verwaltung einer Anlage"
+  ],
+  "faqQuestions": [
+    "Was ist eine Maisonette in Griechenland?",
+    "Was kostet eine Maisonette auf Chalkidiki?",
+    "Maisonette oder freistehendes Haus – was passt besser?"
+  ],
+  "faq": [
+    {
+      "q": "Was ist eine Maisonette in Griechenland?",
+      "a": "Eine Maisonette ist in Griechenland meist ein kleines Haus auf zwei Ebenen mit eigenem Eingang. Oft ist es eine Doppelhaushälfte oder Teil einer kleinen Anlage mit gemeinsamem Garten oder Pool. Sie verbindet den Platz eines Hauses mit dem geringeren Aufwand einer Wohnung."
+    },
+    {
+      "q": "Was kostet eine Maisonette auf Chalkidiki?",
+      "a": "Der Preis hängt von Lage, Größe, Zustand und Entfernung zum Meer ab. Meist liegt eine Maisonette preislich zwischen einer Wohnung und einem freistehenden Haus. Mit dem Preisfilter sehen Sie sofort, welche Angebote zu Ihrem Budget passen. Denken Sie auch an die Gemeinschaftskosten."
+    },
+    {
+      "q": "Maisonette oder freistehendes Haus – was passt besser?",
+      "a": "Wenn Sie vor allem Ferien hier verbringen, ist eine Maisonette oft praktischer: weniger Pflege, geteilte Kosten, oft ein Pool. Wenn Sie viel Privatsphäre und einen eigenen Garten möchten oder dauerhaft hier leben, passt ein Haus meist besser. Wir zeigen Ihnen gern beides."
+    }
+  ],
+  "intro": "<p>Maisonette kaufen auf Chalkidiki: Hier finden Sie alle Maisonetten, die wir aktuell anbieten. In Griechenland ist eine Maisonette meist ein Haus auf zwei Ebenen, oft als Doppelhaushälfte oder in einer kleinen Anlage mit Garten oder Pool. Sie bietet mehr Platz als eine Wohnung und weniger Arbeit als ein freistehendes Haus. Filtern Sie nach Gemeinde und Preis und fragen Sie eine Besichtigung an.</p>",
+  "body": "<h2>Was ist eine Maisonette in Griechenland?</h2><p>In Deutschland meint man mit Maisonette oft eine Wohnung über zwei Etagen. In Griechenland ist es meist ein eigenes kleines Haus mit eigenem Eingang. Häufig teilt es eine Wand mit dem Nachbarn oder liegt in einer Anlage mit mehreren Einheiten.</p><h2>Maisonetten auf Chalkidiki nach Region</h2><p>Maisonetten gibt es auf allen drei Halbinseln. In Kassandra liegen viele in Ferienorten mit guter Infrastruktur. Auf Sithonia finden Sie ruhigere Anlagen im Grünen. In Nea Propontida eignen sie sich gut für ganzjähriges Wohnen.</p><h2>Maisonette oder Haus: Vor- und Nachteile</h2><ul><li>Maisonette: meist günstiger, weniger Pflege, oft mit Gemeinschaftspool</li><li>Freistehendes Haus: mehr Privatsphäre, eigener Garten, mehr Freiheit beim Umbau</li></ul><p>Für Ferien ist eine Maisonette oft praktischer. Wer dauerhaft hier leben möchte, wählt eher ein Haus. Am besten sehen Sie sich beides an und vergleichen in Ruhe.</p><h2>Gemeinschaftskosten und Verwaltung einer Anlage</h2><p>In einer Anlage teilen sich die Eigentümer Kosten für Pool, Garten und Reinigung. Fragen Sie vor dem Kauf nach der Hausordnung und den laufenden Kosten. Wichtig ist auch, dass die Baugenehmigung der ganzen Anlage in Ordnung ist. Ihr Anwalt prüft das. Auf Wunsch übernehmen wir nach dem Kauf auch die Betreuung Ihrer Maisonette, wenn Sie nicht vor Ort sind.</p>",
+  "listingFilter": "subcategory=maisonette",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/maisonetten",
+  "hreflang": "P06: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Maisonetten"
+  ],
+  "heroAlt": "Zweigeschossige Maisonette mit Terrasse in einer kleinen Anlage auf Chalkidiki – Maisonette kaufen Chalkidiki",
+  "galleryAltPattern": "Maisonette zum Kauf in {municipality}, Chalkidiki – {feature}",
+  "ogTitle": "Maisonette kaufen auf Chalkidiki – Maisonetten in Griechenland",
+  "anchor": "Maisonette kaufen auf Chalkidiki",
+  "anchorVariants": [
+    "Maisonetten auf Chalkidiki",
+    "Maisonette in Griechenland"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "Wohnung kaufen auf Chalkidiki",
+      "href": "/de/immobilien/wohnungen"
+    },
+    {
+      "anchor": "Immobilien in Kassandra",
+      "href": "/de/immobilien/kassandra"
+    },
+    {
+      "anchor": "Immobilien auf Sithonia",
+      "href": "/de/immobilien/sithonia"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P04"
+  ],
+  "cta": "Maisonetten ansehen",
+  "oldUrls": [],
+  "words": 388,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

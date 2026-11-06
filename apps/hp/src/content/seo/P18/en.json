@@ -1,0 +1,99 @@
+{
+  "id": "P18",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Sithonia seafront",
+  "pageType": "listing",
+  "path": "/en/properties/sithonia/seafront",
+  "keyword": {
+    "primary": "beachfront property for sale sithonia",
+    "volume": 0,
+    "secondary": [
+      "sithonia house for sale — 50",
+      "sithonia houses for sale — 30",
+      "house for sale in sithonia — 20"
+    ],
+    "otherGeography": [
+      "houses for sale in greece by the sea — 80"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Beachfront Property for Sale in Sithonia, Halkidiki",
+  "meta": "Beachfront property for sale in Sithonia, Halkidiki: seafront homes and villas by quiet coves and clear water, on the first line to the sea. See listings.",
+  "h1": "Beachfront Property for Sale in Sithonia, Halkidiki",
+  "h2": [
+    "Seafront houses in Sithonia",
+    "Beachfront villas by quiet coves",
+    "East or west coast of Sithonia?",
+    "Building rules near the shore"
+  ],
+  "faqQuestions": [
+    "Can I buy a house right on the beach in Sithonia?",
+    "How much is seafront property in Sithonia, Halkidiki?",
+    "Which part of Sithonia is best for seafront homes?"
+  ],
+  "faq": [
+    {
+      "q": "Can I buy a house right on the beach in Sithonia?",
+      "a": "You can buy an existing house on the first line, with only the public shore between you and the water. You cannot own the beach, and building close to the shoreline is restricted. Your lawyer checks the permits of any seafront home before you buy."
+    },
+    {
+      "q": "How much is seafront property in Sithonia, Halkidiki?",
+      "a": "Seafront property in Sithonia is at the top end of the Halkidiki market, and prices vary with the cove, the size and the condition of the home. Use the price filter to see current seafront homes. Villas above the best coves are at the top of that range, while smaller homes cost less."
+    },
+    {
+      "q": "Which part of Sithonia is best for seafront homes?",
+      "a": "The west coast suits buyers who love sunsets and want a resort nearby. The east coast is quieter, faces Mount Athos and gets the morning sun. Both have clear water, and we can show you homes on both coasts in one trip."
+    }
+  ],
+  "intro": "<p>Beachfront property for sale in Sithonia, Halkidiki: seafront homes and villas by quiet coves and clear water. Sithonia's coast mixes sandy bays, rocks and pine trees that reach the sea. Every listing below is in the municipality of Sithonia. Book a viewing in person or by video. It suits buyers who prefer a quiet cove and clear water to a busy beach.</p>",
+  "body": "<h2>Seafront houses in Sithonia</h2><p>A Sithonia house for sale on the first line to the sea is rare. Most are holiday homes with a garden or terrace above the water. Check the access road, which can be steep or unpaved near the smaller coves.</p><h2>Beachfront villas by quiet coves</h2><p>Seafront villas here often sit above a cove rather than on a long busy beach, with privacy and a pool. Some share access to a small beach with a few neighbours.</p><h2>East or west coast of Sithonia?</h2><p>The west coast faces Kassandra and the sunset, with resorts such as Neos Marmaras. The east coast faces Mount Athos, with quieter villages such as Vourvourou and Sarti and the morning sun.</p><h2>Building rules near the shore</h2><p>As of November 2026, to be confirmed by our lawyer, the shore zone in Greece is public: nobody can own or fence the beach, and building close to the official shoreline is restricted. Existing seafront homes were built under the rules of their time, so your lawyer and an engineer check the permits of any home before you buy.</p>",
+  "listingFilter": "municipality=sithonia & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/sithonia/seafront",
+  "hreflang": "P18: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Sithonia",
+    "Seafront"
+  ],
+  "heroAlt": "House above a rocky cove with clear water in Sithonia, Halkidiki – beachfront property for sale",
+  "galleryAltPattern": "{type} for sale in Sithonia, Halkidiki – beachfront with {feature}",
+  "ogTitle": "Beachfront Property for Sale in Sithonia, Halkidiki",
+  "anchor": "beachfront property in Sithonia",
+  "anchorVariants": [
+    "seafront homes in Sithonia",
+    "Sithonia houses by the sea"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "beachfront property for sale in Halkidiki",
+      "href": "/en/properties/seafront"
+    },
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P12"
+  ],
+  "cta": "See Sithonia seafront",
+  "oldUrls": [],
+  "words": 384,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

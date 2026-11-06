@@ -1,0 +1,99 @@
+{
+  "id": "P16",
+  "lang": "tr",
+  "buildOrder": 4,
+  "priority": "C",
+  "name": "Sithonia villas",
+  "pageType": "listing",
+  "path": "/tr/emlak/sithonia/villa",
+  "keyword": {
+    "primary": "sithonia satılık villa",
+    "volume": 0,
+    "secondary": [
+      "sithonia lüks villa — 0",
+      "halkidiki satılık villa — 10"
+    ],
+    "otherGeography": [
+      "yunanistan satılık villa — 150",
+      "yunanistan villa satılık — 40"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Sithonia Satılık Villa – Halkidiki, Yunanistan",
+  "meta": "Sithonia satılık villa ilanları: Halkidiki'nin yeşil yarımadasında koylara bakan, havuzlu lüks villalar. Sithonia villalarını şimdi inceleyin.",
+  "h1": "Sithonia'da Satılık Villa: Halkidiki'de Lüks Villalar",
+  "h2": [
+    "Sithonia'da satılık lüks villalar",
+    "Koylara bakan deniz manzaralı villalar",
+    "Sithonia'da villa fiyatlarını neler belirler?",
+    "Villa alımı ve Golden Visa"
+  ],
+  "faqQuestions": [
+    "Sithonia'da villa fiyatları ne kadar?",
+    "Sithonia'da denize yakın villa bulunur mu?",
+    "Sithonia'daki villa Golden Visa için uygun olur mu?"
+  ],
+  "faq": [
+    {
+      "q": "Sithonia'da villa fiyatları ne kadar?",
+      "a": "Sithonia'da villa fiyatlarını en çok manzara, koya uzaklık, arsa büyüklüğü, havuz, yol erişimi ve yapı kalitesi belirler. Koya yürüme mesafesindeki villalarla tepelerdeki villalar arasında belirgin fark olabilir. Her villanın güncel fiyatını kendi sayfasında gösteriyoruz; bütçenizi filtreye girerek uygun seçenekleri görebilirsiniz. Benzer villalarla karşılaştırma yapmanıza da yardımcı oluruz."
+    },
+    {
+      "q": "Sithonia'da denize yakın villa bulunur mu?",
+      "a": "Evet, Sithonia'da koylara yürüme mesafesinde villalar bulunur, ancak bu tür villalar az olduğu için çabuk ilgi görür. Bazı villalara ulaşım dar ve virajlı yollardan olabilir; gösterimde yolu da görmenizi öneririz. Kıyıya yakın yapıların yasal durumunu bir avukat ve mühendise kontrol ettirin. Yeni ilanlardan haberdar olmak için aradığınız özellikleri bize yazabilirsiniz."
+    },
+    {
+      "q": "Sithonia'daki villa Golden Visa için uygun olur mu?",
+      "a": "Koşullar sağlanırsa evet. Kasım 2026 itibarıyla Halkidiki'de en az 400.000 € değerinde ve en az 120 m² büyüklüğünde tek bir konut, AB dışı alıcılar için Golden Visa başvurusuna uygun olabilir. Bu bilgiler avukatımızın teyidine tabidir. AB vatandaşlarının Golden Visa'ya ihtiyacı yoktur. Uygun villaları ilanlarda birlikte belirleyebiliriz."
+    }
+  ],
+  "intro": "<p>Sithonia satılık villa ilanlarını bu sayfada bulursunuz: Halkidiki'nin yeşil yarımadasında koylara bakan, havuzlu lüks villalar. Sithonia, çam ormanları, berrak koyları ve sakin temposuyla doğayla iç içe bir villa arayanlar için öne çıkar.</p><p>Fiyat ve denize uzaklığa göre filtreleyin, ilginizi çeken villalar hakkında bilgi isteyin. Her ilanda villanın bulunduğu belediye yazar; tam konumu gösterimde paylaşırız. Gösterimleri yerinde ya da görüntülü yapıyoruz; uzaktaysanız villayı canlı yayında birlikte dolaşabiliriz.</p>",
+  "body": "<h2>Sithonia'da satılık lüks villalar</h2><p>Sithonia'daki villalar genellikle çam ağaçları arasında, tepelerden koylara bakan evlerdir. Sithonia lüks villa arayanlar çoğunlukla doğa, mahremiyet ve manzara ister. Kassandra'ya göre daha sakin bir tempo sunan bölge, kalabalıktan uzak bir yaz geçirmek isteyenlere hitap eder. Sithonia'daki tüm ev seçeneklerini ise Sithonia satılık ev sayfamızda görebilirsiniz.</p><h2>Koylara bakan deniz manzaralı villalar</h2><p>Sithonia'nın engebeli kıyısı sayesinde pek çok villa küçük koylara ve açık denize bakar. Batı kıyısından Kassandra'yı, doğu kıyısından ise havanın açık olduğu günlerde Athos dağını görmek mümkündür. Havuz ve teras, bu manzarayı en iyi değerlendiren özelliklerdir.</p><h2>Sithonia'da villa fiyatlarını neler belirler?</h2><ul><li>Manzara ve koya uzaklık</li><li>Arsa büyüklüğü, havuz ve bahçe</li><li>Yol erişimi ve kışın ulaşım</li><li>Yapı kalitesi, yaşı ve bakım durumu</li></ul><p>Her villanın güncel fiyatı kendi sayfasında yazar.</p><h2>Villa alımı ve Golden Visa</h2><p>Kasım 2026 itibarıyla Halkidiki, Golden Visa için 400.000 € bölgesindedir. En az 120 m² büyüklüğünde ve en az 400.000 € değerindeki tek bir villa, AB dışı alıcılar için oturum izni başvurusuna uygun olabilir. Bu bilgiler avukatımızın teyidine tabidir. Uygun villaları ve başvuru adımlarını Golden Visa sayfamızda ayrıca anlatıyoruz. AB vatandaşlarının bu programa ihtiyacı yoktur.</p>",
+  "listingFilter": "municipality=sithonia & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/tr/emlak/sithonia/villa",
+  "hreflang": "P16: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Ana Sayfa",
+    "Emlak",
+    "Sithonia",
+    "Villa"
+  ],
+  "heroAlt": "Sithonia'da turkuaz koya bakan havuzlu satılık lüks villa",
+  "galleryAltPattern": "Satılık {type}, {municipality} – Halkidiki, Yunanistan, {feature}",
+  "ogTitle": "Sithonia'da Satılık Villa – Halkidiki, Yunanistan",
+  "anchor": "Sithonia satılık villa",
+  "anchorVariants": [
+    "Sithonia'da lüks villalar",
+    "Sithonia'da deniz manzaralı villa ilanları"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Sithonia satılık ev",
+      "href": "/tr/emlak/sithonia"
+    },
+    {
+      "anchor": "Yunanistan satılık villa",
+      "href": "/tr/emlak/villa"
+    },
+    {
+      "anchor": "Halkidiki satılık ev ilanları",
+      "href": "/tr/emlak"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P12"
+  ],
+  "cta": "Villaları Gör",
+  "oldUrls": [],
+  "words": 388,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

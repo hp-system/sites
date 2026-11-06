@@ -1,0 +1,97 @@
+{
+  "id": "P16",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Sithonia villas",
+  "pageType": "listing",
+  "path": "/de/immobilien/sithonia/villen",
+  "keyword": {
+    "primary": "sithonia villa",
+    "volume": 40,
+    "secondary": [
+      "sarti villa — 10"
+    ],
+    "otherGeography": [
+      "villa in griechenland kaufen — 100"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Villa kaufen Sithonia – Luxusvillen auf Chalkidiki",
+  "meta": "Villa kaufen auf Sithonia, Chalkidiki: Luxusvillen mit Pool und Meerblick an ruhigen Buchten zwischen Pinienwäldern. Jetzt Villen ansehen und anfragen.",
+  "h1": "Sithonia Villa kaufen – Luxusvillen auf Chalkidiki",
+  "h2": [
+    "Villen auf Sithonia mit Pool und Meerblick",
+    "Ruhige Buchten und Natur auf Sithonia",
+    "Vermietung und Verwaltung Ihrer Villa",
+    "Villa auf Sithonia und Golden Visa"
+  ],
+  "faqQuestions": [
+    "Was kostet eine Villa auf Sithonia?",
+    "Gibt es Villen auf Sithonia mit eigenem Strandzugang?",
+    "Kann ich eine Villa auf Sithonia ganzjährig nutzen?"
+  ],
+  "faq": [
+    {
+      "q": "Was kostet eine Villa auf Sithonia?",
+      "a": "Der Preis hängt von Lage, Größe, Grundstück, Meerblick und Ausstattung ab. Villen mit direktem Blick auf eine Bucht sind besonders gefragt. Mit dem Preisfilter sehen Sie sofort, welche Angebote in Ihr Budget passen. Rechnen Sie auch mit den laufenden Kosten für Pool und Garten."
+    },
+    {
+      "q": "Gibt es Villen auf Sithonia mit eigenem Strandzugang?",
+      "a": "Es gibt Villen, die sehr nah am Meer liegen, manche mit einem Weg direkt zum Strand. Der Strand selbst ist in Griechenland aber immer öffentlich. Einen privaten Strand kann Ihnen deshalb niemand verkaufen. In den Angeboten sehen Sie die Entfernung zum Meer."
+    },
+    {
+      "q": "Kann ich eine Villa auf Sithonia ganzjährig nutzen?",
+      "a": "Ja, wenn die Villa gut gedämmt ist und eine Heizung hat. Beachten Sie, dass kleinere Orte im Winter sehr ruhig sind. In Nikiti und Neos Marmaras gibt es aber das ganze Jahr Supermärkte, Apotheken und Ärzte. Wir beraten Sie gern zur passenden Lage."
+    }
+  ],
+  "intro": "<p>Eine Sithonia Villa bedeutet vor allem eins: Ruhe. Hier finden Sie alle Villen, die wir aktuell in der Gemeinde Sithonia auf Chalkidiki verkaufen. Viele liegen an Hängen über kleinen Buchten, umgeben von Pinienwald, mit Pool und weitem Blick aufs Meer. Gern nehmen wir uns Zeit für Sie. Fragen Sie eine Besichtigung an – wir zeigen Ihnen jede Villa vor Ort oder per Video.</p>",
+  "body": "<h2>Villen auf Sithonia mit Pool und Meerblick</h2><p>Auf Sithonia sind die Grundstücke oft größer, die Nachbarn weiter weg. Ein eigener Pool und Meerblick gehören bei vielen Villen dazu. Achten Sie auf eine gute Zufahrt, besonders bei Lagen am Hang.</p><h2>Ruhige Buchten und Natur auf Sithonia</h2><p>Sithonia ist grüner und weniger bebaut als Kassandra. Es gibt viele kleine Buchten mit klarem Wasser. Wichtig: Strände sind in Griechenland öffentlich. Einen privaten Strand gibt es also auch vor einer Villa nicht.</p><h2>Vermietung und Verwaltung Ihrer Villa</h2><p>Die Fahrt von Thessaloniki dauert länger als nach Kassandra, und kleinere Orte sind im Winter ruhig. Wenn Sie nicht vor Ort sind, kümmern wir uns auf Wunsch um Ihre Villa. Für die Kurzzeitvermietung ist eine Registrierung nötig.</p><h2>Villa auf Sithonia und Golden Visa</h2><p>Für Nicht-EU-Bürger kann eine Villa zu einer Aufenthaltserlaubnis führen. Stand November 2026, von unserem Anwalt zu bestätigen: Auf Sithonia gilt die 400.000-€-Grenze für eine einzige Wohnimmobilie ab 120 m².</p>",
+  "listingFilter": "municipality=sithonia & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/sithonia/villen",
+  "hreflang": "P16: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Sithonia",
+    "Villen"
+  ],
+  "heroAlt": "Villa mit Pool zwischen Pinien über einer Bucht auf Sithonia, Chalkidiki – Sithonia Villa kaufen",
+  "galleryAltPattern": "Villa zum Kauf in Sithonia, Chalkidiki – {feature}",
+  "ogTitle": "Sithonia Villa kaufen – Luxusvillen auf Chalkidiki",
+  "anchor": "Villen auf Sithonia",
+  "anchorVariants": [
+    "Sithonia Villa kaufen",
+    "Luxusvillen auf Sithonia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Sithonia",
+      "href": "/de/immobilien/sithonia"
+    },
+    {
+      "anchor": "Villa auf Chalkidiki kaufen",
+      "href": "/de/immobilien/villen"
+    },
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P12"
+  ],
+  "cta": "Villen auf Sithonia ansehen",
+  "oldUrls": [],
+  "words": 347,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

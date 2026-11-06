@@ -1,0 +1,127 @@
+{
+  "id": "P08",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "Land & plots for sale",
+  "pageType": "listing",
+  "path": "/ro/proprietati/terenuri",
+  "keyword": {
+    "primary": "teren de vanzare grecia",
+    "volume": 0,
+    "secondary": [
+      "terenuri de vanzare grecia — 0",
+      "teren la mare grecia — 0",
+      "teren construibil grecia — 0"
+    ],
+    "otherGeography": [
+      "teren de vanzare halkidiki — 0",
+      "terenuri halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Teren de vânzare în Grecia – terenuri în Halkidiki",
+  "meta": "Teren de vânzare în Grecia, în Halkidiki: terenuri pentru casă sau vilă, aproape de mare sau cu vedere. Vedeți ofertele și cereți actele terenului.",
+  "h1": "Teren de vânzare în Grecia – terenuri în Halkidiki",
+  "h2": [
+    "Terenuri construibile în Halkidiki",
+    "Terenuri lângă mare sau cu vedere la mare",
+    "Ce se poate construi pe un teren în Grecia",
+    "Acte și verificări înainte de cumpărare",
+    "Terenuri în Kassandra, Sithonia, Nea Propontida și Aristotelis"
+  ],
+  "faqQuestions": [
+    "Pot construi o casă pe un teren cumpărat în Grecia?",
+    "Ce suprafață minimă trebuie să aibă un teren pentru construcție în Grecia?",
+    "Ce verific înainte să cumpăr un teren în Halkidiki?",
+    "Cât costă un teren lângă mare în Halkidiki?"
+  ],
+  "faq": [
+    {
+      "q": "Pot construi o casă pe un teren cumpărat în Grecia?",
+      "a": "Da, dacă terenul este construibil. Asta depinde de poziția lui față de planul urbanistic, de suprafață, de accesul la drum și de eventualele zone protejate. Înainte de cumpărare, un inginer și un avocat verifică terenul și vă spun exact ce se poate construi."
+    },
+    {
+      "q": "Ce suprafață minimă trebuie să aibă un teren pentru construcție în Grecia?",
+      "a": "Nu există o singură cifră valabilă peste tot. Suprafața minimă depinde de zonă, de faptul că terenul este în interiorul sau în afara planului urbanistic și de alte reguli locale. Inginerul verifică fiecare teren în parte, conform regulilor din noiembrie 2026."
+    },
+    {
+      "q": "Ce verific înainte să cumpăr un teren în Halkidiki?",
+      "a": "Verificați titlul de proprietate și cadastrul, accesul la drum, posibilitatea de a lega apa și curentul și dacă terenul se află în zonă de pădure sau de coastă protejată. Cereți inginerului să confirme ce se poate construi. Noi vă punem în legătură cu avocați și ingineri din zonă."
+    },
+    {
+      "q": "Cât costă un teren lângă mare în Halkidiki?",
+      "a": "Prețul depinde de distanța până la mare, de suprafață, de vedere, de acces și de regulile de construcție. Un teren construibil aproape de plajă costă mult mai mult decât unul în interior. Folosiți filtrul de preț sau cereți-ne o selecție de terenuri."
+    }
+  ],
+  "intro": "<p>Teren de vânzare în Grecia, în Halkidiki: aici găsiți terenuri pentru casă sau vilă, aproape de mare sau cu vedere spre ea. Lucrăm numai în Halkidiki, așa că fiecare teren din listă se află în nordul Greciei. Filtrați după municipiu, preț și suprafață. Pentru terenurile care vă interesează, vă trimitem actele disponibile și programăm o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Terenuri construibile în Halkidiki</h2><p>Un teren construibil în Grecia are reguli care depind de locul în care se află. Contează dacă terenul este în interiorul sau în afara planului urbanistic, ce suprafață are și dacă are ieșire la un drum. De aceea, fiecare teren trebuie verificat înainte de cumpărare.</p><h2>Terenuri lângă mare sau cu vedere la mare</h2><p>Un teren la mare în Grecia este foarte căutat, dar zona de coastă are reguli speciale. Terenurile de pe deal, cu vedere la mare, oferă adesea mai multă liniște și mai multă libertate la proiectare.</p><h2>Ce se poate construi pe un teren în Grecia</h2><p>Ce suprafață puteți construi și cât de înaltă poate fi casa depind de regulile zonei. Nu există un răspuns valabil pentru toate terenurile. Un inginer verifică terenul și vă spune ce se poate construi pe el.</p><h2>Acte și verificări înainte de cumpărare</h2><ul><li>titlul de proprietate și înregistrarea la cadastru</li><li>accesul la drum, apă și curent</li><li>dacă terenul este în zonă de pădure sau de coastă protejată</li><li>regulile de construcție ale zonei</li></ul><p>Avocatul și inginerul fac aceste verificări. Regulile sunt cele din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Terenuri în Kassandra, Sithonia, Nea Propontida și Aristotelis</h2><p>Găsiți terenuri în toate cele patru zone, de la loturi aproape de sate până la terenuri cu măslini și vedere la mare.</p>",
+  "listingFilter": "category=land",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/terenuri",
+  "hreflang": "P08: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Terenuri"
+  ],
+  "heroAlt": "Teren cu măslini și vedere la mare în Halkidiki – teren de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Teren de vânzare în Grecia – Halkidiki",
+  "anchor": "teren de vânzare în Grecia",
+  "anchorVariants": [
+    "terenuri de vânzare în Halkidiki",
+    "teren în Halkidiki, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "case de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra"
+    },
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    },
+    {
+      "anchor": "case de vânzare în Nea Propontida",
+      "href": "/ro/proprietati/nea-propontida"
+    },
+    {
+      "anchor": "case de vânzare în Aristotelis",
+      "href": "/ro/proprietati/aristotelis"
+    },
+    {
+      "anchor": "cumpărare casă în Grecia",
+      "href": "/ro/cumparare-casa-in-grecia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P19"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 456,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

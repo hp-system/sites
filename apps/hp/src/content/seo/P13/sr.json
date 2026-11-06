@@ -1,0 +1,122 @@
+{
+  "id": "P13",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "B",
+  "name": "Property in Nea Propontida (Nea Moudania, Nea Kallikratia)",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/nea-propontida",
+  "keyword": {
+    "primary": "nekretnine nea kalikratija",
+    "volume": 0,
+    "secondary": [
+      "nekretnine nea mudanja — 0",
+      "prodaja stanova nea kalikratija — 0",
+      "nekretnine nea propontida — 0"
+    ],
+    "otherGeography": [
+      "nekretnine nea propontida halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Nekretnine Grčka – Nea Propontida i Nea Kalikratija",
+  "meta": "Nekretnine u Grčkoj, Nea Propontida: stanovi i kuće u mestima kao što su Nea Kalikratija i Nea Mudanja, otvorenim cele godine. Pogledajte ponudu.",
+  "h1": "Nekretnine Grčka – Nea Propontida: Nea Kalikratija, Nea Mudanja i okolina",
+  "h2": [
+    "Nekretnine na prodaju u opštini Nea Propontida",
+    "Nea Kalikratija i Nea Mudanja – život tokom cele godine",
+    "Stanovi blizu plaže i škola, prodavnica, lekara",
+    "Blizina Soluna i aerodroma",
+    "Cene nekretnina u Nea Propontidi"
+  ],
+  "faqQuestions": [
+    "Da li je Nea Propontida pogodna za život tokom cele godine?",
+    "Koliko je Nea Kalikratija udaljena od Soluna?",
+    "Da li su stanovi u Nea Propontidi jeftiniji nego u Kasandri?",
+    "Kakve su plaže u Nea Propontidi?"
+  ],
+  "faq": [
+    {
+      "q": "Da li je Nea Propontida pogodna za život tokom cele godine?",
+      "a": "Da. Nea Mudanja i Nea Kalikratija žive cele godine, sa školama, prodavnicama, bankama i zdravstvenim službama. Zbog blizine Soluna ovde mnogi žive stalno, a ne samo leti. Zato je opština dobar izbor za porodice, penzionere i one koji rade na daljinu."
+    },
+    {
+      "q": "Koliko je Nea Kalikratija udaljena od Soluna?",
+      "a": "Nea Kalikratija je među mestima na Halkidikiju najbližim Solunu, pa se do grada i aerodroma stiže brže nego iz Kasandre ili Sitonije. Tačno vreme vožnje zavisi od dela grada i saobraćaja. Pri razgledanju vam rado opišemo realne udaljenosti i najbolji put do grada."
+    },
+    {
+      "q": "Da li su stanovi u Nea Propontidi jeftiniji nego u Kasandri?",
+      "a": "Mnogi kupci sa manjim budžetom traže upravo ovde, ali opšte pravilo ne postoji. Cena zavisi od udaljenosti od mora, starosti zgrade i lokacije, a i u Kasandri ima povoljnijih stanova. Najbolje je uporediti konkretne ponude u obe opštine, a mi vam rado pomažemo u tome."
+    },
+    {
+      "q": "Kakve su plaže u Nea Propontidi?",
+      "a": "Obala Nea Propontide ima duge peščane plaže, uglavnom sa plitkim morem, pogodne za porodice sa decom. Plaže su blizu naselja, pa se do mora često ide pešice. Leti su posećene, a van sezone mirne i pogodne za duge šetnje uz more."
+    }
+  ],
+  "intro": "<p>Nekretnine Nea Kalikratija, Nea Mudanja i okolina: ovde su stanovi i kuće na prodaju u opštini Nea Propontida, na kopnenoj obali na ulazu u Halkidiki, na severu Grčke. Ovo je deo Halkidikija najbliži Solunu, sa mestima koja žive cele godine.</p><p>Uz svaku nekretninu prikazana je samo opština, a tačnu lokaciju dobijate pri razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Nekretnine na prodaju u opštini Nea Propontida</h2><p>Ponuda obuhvata stanove blizu plaže, duplekse i kuće sa baštom. Filtrirajte po tipu, ceni i udaljenosti od mora.</p><h2>Nea Kalikratija i Nea Mudanja – život tokom cele godine</h2><p>Nea Mudanja je sedište opštine i ima luku, a Nea Kalikratija je živo primorsko mesto i van sezone. U oba mesta tokom cele godine rade škole, prodavnice i zdravstvene službe.</p><h2>Stanovi blizu plaže i škola, prodavnica, lekara</h2><p>Zato je Nea Propontida dobar izbor za stalni život, rad na daljinu i porodice sa decom. Stan blizu plaže ovde ne znači odricanje od svakodnevnih usluga.</p><h2>Blizina Soluna i aerodroma</h2><p>Ovo je deo Halkidikija najbliži Solunu i aerodromu, što olakšava česte dolaske, posao u gradu i odlaske kod lekara ili u administraciju.</p><h2>Cene nekretnina u Nea Propontidi</h2><p>Cena zavisi od udaljenosti od mora, starosti zgrade i blizine centra. Mnogi kupci sa manjim budžetom počinju potragu baš ovde. Aktuelne cene vidite u ponudi na ovoj stranici.</p>",
+  "listingFilter": "municipality=propontida",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/nea-propontida",
+  "hreflang": "P13: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Nea Propontida"
+  ],
+  "heroAlt": "Nekretnine Nea Kalikratija – šetalište uz more i stambene zgrade u Nea Propontidi",
+  "galleryAltPattern": "{type} na prodaju, Nea Propontida, Halkidiki – {feature}",
+  "ogTitle": "Nekretnine Grčka – Nea Propontida, Halkidiki",
+  "anchor": "nekretnine u Nea Kalikratiji i Nea Propontidi",
+  "anchorVariants": [
+    "nekretnine Nea Propontida",
+    "stanovi u Nea Kalikratiji na prodaju"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "prodaja kuća u Grčkoj",
+      "href": "/sr/nekretnina/kuce"
+    },
+    {
+      "anchor": "prodaja stanova u Grčkoj",
+      "href": "/sr/nekretnina/stanovi"
+    },
+    {
+      "anchor": "placevi u Grčkoj na prodaju",
+      "href": "/sr/nekretnina/zemljiste"
+    },
+    {
+      "anchor": "život u Grčkoj na Halkidikiju",
+      "href": "/sr/halkidiki"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P08",
+    "P21"
+  ],
+  "cta": "Pogledajte nekretnine u Nea Propontidi",
+  "oldUrls": [
+    {
+      "path": "/sr/nekretnine-u/nea-propontida",
+      "clicks": 1
+    }
+  ],
+  "words": 404,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

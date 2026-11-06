@@ -1,0 +1,137 @@
+{
+  "id": "P08",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "A",
+  "name": "Land & plots for sale",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/zemljiste",
+  "keyword": {
+    "primary": "placevi grcka",
+    "volume": 20,
+    "secondary": [
+      "grcka placevi na moru — 20",
+      "plac u grckoj — 10",
+      "placevi grcka prodaja — 10",
+      "plac u grckoj prodaja — 0"
+    ],
+    "otherGeography": [
+      "placevi halkidiki — 0",
+      "plac na prodaju halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Placevi Grčka – plac i zemljište na prodaju, Halkidiki",
+  "meta": "Placevi u Grčkoj: građevinski placevi i zemljište na Halkidikiju, blizu mora ili sa pogledom. Proverite uslove gradnje sa nama i zakažite obilazak.",
+  "h1": "Placevi Grčka – placevi i zemljište na prodaju na Halkidikiju",
+  "h2": [
+    "Placevi na prodaju u Grčkoj – Halkidiki",
+    "Placevi na moru i sa pogledom na more",
+    "Da li je plac građevinski: koeficijent, površina, pristupni put",
+    "Gradnja kuće na placu u Grčkoj",
+    "Troškovi kupovine placa u Grčkoj"
+  ],
+  "faqQuestions": [
+    "Da li stranac može da kupi plac u Grčkoj?",
+    "Kako da proverim da li je plac u Grčkoj građevinski?",
+    "Koliko kvadrata može da se izgradi na placu na Halkidikiju?",
+    "Koji su troškovi kupovine placa u Grčkoj?"
+  ],
+  "faq": [
+    {
+      "q": "Da li stranac može da kupi plac u Grčkoj?",
+      "a": "Da. I državljani zemalja van EU mogu da kupe plac u Grčkoj, uz grčki poreski broj i račun u banci. U nekim pograničnim oblastima traži se posebna dozvola, a advokat proverava svaki slučaj. Na Halkidikiju vam pomažemo da sve proverite pre nego što date ponudu."
+    },
+    {
+      "q": "Kako da proverim da li je plac u Grčkoj građevinski?",
+      "a": "Ovlašćeni inženjer proverava da li je plac unutar urbanističkog plana ili van njega, koja je minimalna površina, koeficijent izgradnje, izlaz na put, šumska karta i ograničenja uz obalu. Advokat proverava vlasništvo i upis u katastar. Tek tada znate šta se sme graditi."
+    },
+    {
+      "q": "Koliko kvadrata može da se izgradi na placu na Halkidikiju?",
+      "a": "To zavisi od konkretnog placa: da li je u urbanističkom planu, koliko je velik, koji koeficijent važi i kakva su lokalna ograničenja. Zato ne navodimo kvadraturu unapred. Pre kupovine inženjer izrađuje procenu za taj plac, a mi organizujemo tu proveru."
+    },
+    {
+      "q": "Koji su troškovi kupovine placa u Grčkoj?",
+      "a": "Prema pravilima od novembra 2026, plaća se porez na prenos od 3,09% (3% plus opštinski dodatak). Tome se dodaju notar, advokat, upis u katastar i nalaz inženjera, obično ukupno nekoliko procenata cene. Tačne iznose za vaš plac potvrđuje advokat pre potpisivanja."
+    }
+  ],
+  "intro": "<p>Placevi Grčka: ovde su placevi i zemljište na prodaju na Halkidikiju, na severu Grčke, od manjih placeva u mestu do većih parcela sa pogledom na more. Sve ponude nalaze se na Halkidikiju, gde radi naša agencija.</p><p>Pre kupovine placa najvažnije je znati šta se na njemu sme graditi. Zato uz svaku ponudu savetujemo proveru inženjera i advokata, a razgledanje možete zakazati uživo ili putem video poziva.</p>",
+  "body": "<h2>Placevi na prodaju u Grčkoj – Halkidiki</h2><p>Uz svaki plac prikazana je opština, a tačna lokacija i granice pokazuju se pri razgledanju. Filtrirajte ponudu po opštini, ceni i udaljenosti od mora.</p><h2>Placevi na moru i sa pogledom na more</h2><p>Placevi uz samu obalu su retki, jer je pojas uz more u Grčkoj javan i za njega važe ograničenja gradnje. Češći su placevi na padini sa pogledom na more, gde treba proveriti nagib i pristup.</p><h2>Da li je plac građevinski: koeficijent, površina, pristupni put</h2><p>U Grčkoj je ključno da li je plac unutar ili van urbanističkog plana. Proverava se:</p><ul><li>minimalna površina i koeficijent izgradnje za plac van plana</li><li>izlaz na javni put</li><li>da li je plac na šumskoj karti</li><li>ograničenja zbog blizine obale</li><li>upis u katastar</li></ul><h2>Gradnja kuće na placu u Grčkoj</h2><p>Za gradnju su potrebni projekat i građevinska dozvola, koje priprema ovlašćeni inženjer. Šta i koliko se može izgraditi zavisi od pravila za svaki plac, zato kvadraturu ne obećavamo unapred, već je proverava inženjer.</p><h2>Troškovi kupovine placa u Grčkoj</h2><p>Prema pravilima od novembra 2026, porez na prenos iznosi 3,09%. Dodaju se notar, advokat, upis u katastar i nalaz inženjera, obično ukupno nekoliko procenata cene. Iznose potvrđuje naš advokat.</p>",
+  "listingFilter": "category=land",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/zemljiste",
+  "hreflang": "P08: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Zemljište"
+  ],
+  "heroAlt": "Placevi Grčka – plac sa maslinama i pogledom na more na Halkidikiju",
+  "galleryAltPattern": "{type} na prodaju, {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Placevi Grčka – plac i zemljište na prodaju na Halkidikiju",
+  "anchor": "placevi u Grčkoj na prodaju",
+  "anchorVariants": [
+    "placevi na Halkidikiju",
+    "plac u Grčkoj"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    },
+    {
+      "anchor": "nekretnine u Kasandri",
+      "href": "/sr/nekretnina/kasandra"
+    },
+    {
+      "anchor": "nekretnine u Sitoniji",
+      "href": "/sr/nekretnina/sitonija"
+    },
+    {
+      "anchor": "nekretnine u Nea Kalikratiji i Nea Propontidi",
+      "href": "/sr/nekretnina/nea-propontida"
+    },
+    {
+      "anchor": "nekretnine u Jerisosu i opštini Aristotelis",
+      "href": "/sr/nekretnina/aristotelis"
+    },
+    {
+      "anchor": "kupovina nekretnine u Grčkoj",
+      "href": "/sr/kupovina-nekretnine-u-grckoj"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P19"
+  ],
+  "cta": "Pogledajte placeve",
+  "oldUrls": [
+    {
+      "path": "/sr/nekretnine-na-halkidikiju-u-grckoj/plac-halkidiki",
+      "clicks": 4
+    },
+    {
+      "path": "/sr/nekretnine-na-halkidikiju-u-grckoj/halkidiki-placevi",
+      "clicks": 3
+    }
+  ],
+  "words": 432,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

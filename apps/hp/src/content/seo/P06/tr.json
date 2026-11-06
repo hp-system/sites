@@ -1,0 +1,109 @@
+{
+  "id": "P06",
+  "lang": "tr",
+  "buildOrder": 4,
+  "priority": "B",
+  "name": "Maisonettes for sale",
+  "pageType": "listing",
+  "path": "/tr/emlak/dubleks",
+  "keyword": {
+    "primary": "yunanistan satılık dubleks",
+    "volume": 0,
+    "secondary": [
+      "yunanistan satılık ev — 800",
+      "yunanistan ev fiyatları — 300"
+    ],
+    "otherGeography": [
+      "halkidiki satılık dubleks — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Yunanistan Satılık Dubleks – Halkidiki'de Dubleks Evler",
+  "meta": "Yunanistan'da satılık dubleks ev: Halkidiki'de bahçeli, iki katlı ve denize yakın dubleksler. Aileler ve yazlık için ilanları şimdi inceleyin.",
+  "h1": "Yunanistan'da Satılık Dubleks: Halkidiki'de İki Katlı Evler",
+  "h2": [
+    "Halkidiki'de satılık dubleks evler",
+    "Dubleks mi, müstakil ev mi?",
+    "Bahçeli ve deniz manzaralı dubleksler",
+    "Dubleks fiyatlarını neler belirler?"
+  ],
+  "faqQuestions": [
+    "Dubleks ev ile müstakil ev arasındaki fark nedir?",
+    "Halkidiki'de satılık dubleks fiyatları ne kadar?",
+    "Dubleks evlerde bahçe ve otopark ortak mı kullanılır?"
+  ],
+  "faq": [
+    {
+      "q": "Dubleks ev ile müstakil ev arasındaki fark nedir?",
+      "a": "Müstakil ev kendi arsasında tek başına durur ve tüm bahçe size aittir. Dubleks ise iki ya da üç katlı, iç merdivenli bir evdir ve çoğu zaman bir ya da birkaç komşu evle duvar veya bahçe paylaşır. Dubleksler genellikle daha uygun fiyatlıdır ve bakım giderleri paylaşılır; müstakil ev ise daha fazla mahremiyet sunar."
+    },
+    {
+      "q": "Halkidiki'de satılık dubleks fiyatları ne kadar?",
+      "a": "Fiyatlar bölgeye, kumsala uzaklığa, manzaraya ve sitenin olanaklarına göre değişir. Denize yakın, havuzlu bir sitedeki dubleksle iç kesimdeki bir dubleks arasında belirgin fark olabilir. Her ilanın güncel fiyatını kendi sayfasında gösteriyoruz; bütçenizi filtreye girerek size uygun seçenekleri görebilirsiniz. Benzer dubleksleri karşılaştırmanıza da yardımcı oluruz."
+    },
+    {
+      "q": "Dubleks evlerde bahçe ve otopark ortak mı kullanılır?",
+      "a": "Bu, her sitede farklıdır. Bazı dublekslerin kendine ait bahçesi ve otoparkı vardır, bazılarında ise bahçe, havuz ve otopark ortak kullanılır. Hangi alanın size ait olduğu tapuda ve site düzeninde yazar. Satın almadan önce bunu avukatınıza kontrol ettirmenizi ve ortak giderleri sormanızı öneririz."
+    }
+  ],
+  "intro": "<p>Yunanistan'da satılık dubleks arıyorsanız Halkidiki'deki iki ya da üç katlı evleri bu sayfada bulursunuz. Dubleksler, müstakil evin ferahlığını daha kontrollü bir bütçe ve bakımla birleştirir. Her ilanda evin bulunduğu belediye yazar.</p><p>Çoğu bahçeli, bazıları deniz manzaralıdır; aileler ve yazlık kullanım için özellikle uygundur. Bölge, fiyat ve denize uzaklığa göre filtreleyin. Beğendiğiniz bir dubleks için yerinde ya da görüntülü gösterim randevusu alabilirsiniz.</p>",
+  "body": "<h2>Halkidiki'de satılık dubleks evler</h2><p>Yunanistan'da dubleks, genellikle iki ya da üç kattan oluşan, iç merdivenli bir evdir. Çoğu zaman yan yana birkaç evden oluşan küçük bir sitede ya da ikiz ev olarak inşa edilir. Halkidiki'de dubleksler tatil köylerinde de, yıl boyu yaşayan kasabalarda da bulunur.</p><h2>Dubleks mi, müstakil ev mi?</h2><p>Müstakil ev kendi arsası üzerinde tek başına durur; mahremiyeti fazladır ama bakımı da size aittir. Dubleks ise komşu evlerle duvar ya da bahçe paylaşabilir. Karşılığında genellikle daha uygun fiyatlıdır ve bakım giderleri paylaşılır. Yunanistan'da satılık ev ararken iki seçeneği yan yana değerlendirmenizi öneririz.</p><h2>Bahçeli ve deniz manzaralı dubleksler</h2><p>Pek çok dubleksin özel ya da ortak bir bahçesi vardır. Üst kattaki yatak odaları ve teraslar çoğu zaman deniz manzarası sunar. Çocuklu aileler için zemin kattaki yaşam alanı ile üst kattaki yatak odalarının ayrı olması da pratiktir.</p><h2>Dubleks fiyatlarını neler belirler?</h2><ul><li>Kumsala uzaklık ve manzara</li><li>Özel bahçe, otopark ve ortak havuz gibi olanaklar</li><li>Evin yaşı, yalıtımı ve bakım durumu</li><li>Bölge ve yıl boyu ulaşım</li></ul><p>Her ilanın güncel fiyatı kendi sayfasında yazar.</p>",
+  "listingFilter": "subcategory=maisonette",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/tr/emlak/dubleks",
+  "hreflang": "P06: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Ana Sayfa",
+    "Emlak",
+    "Dubleks"
+  ],
+  "heroAlt": "Halkidiki'de bahçeli, iki katlı satılık dubleks ev",
+  "galleryAltPattern": "Satılık {type}, {municipality} – Halkidiki, Yunanistan, {feature}",
+  "ogTitle": "Yunanistan'da Satılık Dubleks – Halkidiki",
+  "anchor": "Yunanistan satılık dubleks",
+  "anchorVariants": [
+    "Halkidiki'de satılık dubleks evler",
+    "Yunanistan'da dubleks ev ilanları"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki satılık ev ilanları",
+      "href": "/tr/emlak"
+    },
+    {
+      "anchor": "Yunanistan'da satılık ev",
+      "href": "/tr/yunanistan-emlak"
+    },
+    {
+      "anchor": "Yunanistan ev fiyatları ve Halkidiki'de satılık evler",
+      "href": "/tr/emlak/konut"
+    },
+    {
+      "anchor": "Yunanistan satılık daire ilanları",
+      "href": "/tr/emlak/daire"
+    },
+    {
+      "anchor": "Kassandra satılık ev",
+      "href": "/tr/emlak/kassandra"
+    },
+    {
+      "anchor": "Sithonia satılık ev",
+      "href": "/tr/emlak/sithonia"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P04"
+  ],
+  "cta": "Dubleksleri Gör",
+  "oldUrls": [],
+  "words": 368,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

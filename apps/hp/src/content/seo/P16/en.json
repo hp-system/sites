@@ -1,0 +1,98 @@
+{
+  "id": "P16",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Sithonia villas",
+  "pageType": "listing",
+  "path": "/en/properties/sithonia/villas-for-sale",
+  "keyword": {
+    "primary": "sithonia villas for sale",
+    "volume": 20,
+    "secondary": [
+      "seafront villa for sale neos marmaras halkidiki — 10"
+    ],
+    "otherGeography": [
+      "villas in greece for sale — 150",
+      "villa in greece for sale — 70"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Sithonia Villas for Sale – Luxury Homes in Halkidiki",
+  "meta": "Sithonia villas for sale: private homes with pool and sea views among the pine forests and coves of Sithonia, Halkidiki. See villas in Sithonia today.",
+  "h1": "Sithonia Villas for Sale, Halkidiki",
+  "h2": [
+    "Sea-view villas in Sithonia",
+    "Villas with private pool",
+    "Why Sithonia for a private villa",
+    "Villas and the Greece Golden Visa"
+  ],
+  "faqQuestions": [
+    "Are there villas by the sea for sale in Sithonia?",
+    "How much is a villa in Sithonia, Halkidiki?",
+    "Is Sithonia a good place for a private holiday villa?"
+  ],
+  "faq": [
+    {
+      "q": "Are there villas by the sea for sale in Sithonia?",
+      "a": "Yes. Some villas in Sithonia are on the first line to the sea or a short walk from a cove, and many have open sea views from the hillside. Use the distance-to-sea filter, or see our Sithonia seafront page. First-line homes are rare, so ask us early."
+    },
+    {
+      "q": "How much is a villa in Sithonia, Halkidiki?",
+      "a": "Prices depend on the view, the plot, the size, the build quality and how close the villa is to the sea. Villas above the best coves are at the top of the market. Filter by price to see current villas in Sithonia."
+    },
+    {
+      "q": "Is Sithonia a good place for a private holiday villa?",
+      "a": "Yes, if privacy and nature matter to you. Sithonia is greener and quieter than Kassandra, with clear coves and pine forest. The trade-off is a longer drive and fewer services in the smaller villages. We can also manage the villa while you are away."
+    }
+  ],
+  "intro": "<p>Sithonia villas for sale: private homes with pools and sea views among the pine forests and coves of Halkidiki's middle peninsula. Every villa below is in the municipality of Sithonia, Northern Greece. Ask us for a private viewing in person or by video. It suits buyers who want privacy, nature and the sound of the sea rather than busy resorts.</p>",
+  "body": "<h2>Sea-view villas in Sithonia</h2><p>Many villas in Sithonia sit on hillsides above the sea. From the west coast you look across to Kassandra and the sunset; from the east coast the view reaches Mount Athos. Around Neos Marmaras, Nikiti and Vourvourou the coastline is especially varied, with bays, small islands and rocky points.</p><h2>Villas with private pool</h2><p>A private pool is standard in most villas, often with stone terraces and gardens of olive and pine. Check who will look after the pool and garden while you are away; we offer property management after the purchase.</p><h2>Why Sithonia for a private villa</h2><p>Sithonia offers privacy, nature and quiet coves rather than busy resorts. The drive from Thessaloniki is longer than to Kassandra, which keeps much of the coast calm. It suits buyers who want a retreat.</p><h2>Villas and the Greece Golden Visa</h2><p>As of November 2026, to be confirmed by our lawyer, one residential property in Halkidiki of at least 120 m² bought for €400,000 or more may qualify for the Greece Golden Visa. Other conditions apply, including a ban on short-term letting of the property. See our Golden Visa page for the details.</p>",
+  "listingFilter": "municipality=sithonia & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/sithonia/villas-for-sale",
+  "hreflang": "P16: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Sithonia",
+    "Villas"
+  ],
+  "heroAlt": "Stone villa with pool above a cove in Sithonia, Halkidiki – Sithonia villas for sale",
+  "galleryAltPattern": "{type} for sale in Sithonia, Halkidiki – luxury villa with {feature}",
+  "ogTitle": "Sithonia Villas for Sale – Private Homes by the Sea",
+  "anchor": "Sithonia villas for sale",
+  "anchorVariants": [
+    "villas for sale in Sithonia",
+    "luxury villas in Sithonia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P12"
+  ],
+  "cta": "See Sithonia villas",
+  "oldUrls": [],
+  "words": 386,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

@@ -1,0 +1,125 @@
+{
+  "id": "P09",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Seafront / by the sea",
+  "pageType": "listing",
+  "path": "/en/properties/seafront",
+  "keyword": {
+    "primary": "beachfront property for sale halkidiki",
+    "volume": 60,
+    "secondary": [
+      "beachfront homes for sale in halkidiki greece — 20",
+      "halkidiki beachfront villas for sale — 10",
+      "beachfront land for sale halkidiki — 50"
+    ],
+    "otherGeography": [
+      "houses for sale in greece by the sea — 80"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Beachfront Property for Sale in Halkidiki, Greece",
+  "meta": "Beachfront property for sale in Halkidiki: seafront houses, villas and plots on the first line to the sea in Kassandra and Sithonia. See seafront homes.",
+  "h1": "Beachfront Property for Sale in Halkidiki",
+  "h2": [
+    "Seafront houses and villas",
+    "Beachfront land in Halkidiki",
+    "First line to the sea: what it means",
+    "Seafront property in Kassandra and Sithonia",
+    "Rules on building near the shore in Greece"
+  ],
+  "faqQuestions": [
+    "How much does beachfront property in Halkidiki cost?",
+    "Can you build right on the beach in Greece?",
+    "What does 'first line to the sea' mean in Greece?",
+    "Which part of Halkidiki has the best beachfront homes?"
+  ],
+  "faq": [
+    {
+      "q": "How much does beachfront property in Halkidiki cost?",
+      "a": "Beachfront property is the most expensive type in Halkidiki, and prices vary with the area, the beach and the size of the home. A seafront villa in a sought-after part of Kassandra or Sithonia costs much more than a small seafront apartment elsewhere. Filter by price to see current options."
+    },
+    {
+      "q": "Can you build right on the beach in Greece?",
+      "a": "No. As of November 2026, the beach and the shore zone are public, and building is restricted within a set distance of the shoreline. Existing seafront homes were built under the rules of their time, so your lawyer and engineer must check the permits of any house you consider."
+    },
+    {
+      "q": "What does 'first line to the sea' mean in Greece?",
+      "a": "It means there is nothing between the property and the sea: no other building and usually no road. You walk from your garden to the beach. Homes on the second line sit just behind and often still have sea views."
+    },
+    {
+      "q": "Which part of Halkidiki has the best beachfront homes?",
+      "a": "It depends on taste. Kassandra has long sandy beaches, organised resorts and a shorter drive from Thessaloniki. Sithonia offers quieter coves and clear water among pine trees. We can show you seafront homes on both peninsulas in one trip. We can arrange viewings in several areas."
+    }
+  ],
+  "intro": "<p>Beachfront property for sale in Halkidiki: houses, villas and plots on the first line to the sea, with nothing between you and the water. Every listing below is in Halkidiki, Northern Greece. Use the filters to compare areas and prices, and book a viewing in person or by video. Kassandra and Sithonia have the most seafront homes, but every municipality has some.</p>",
+  "body": "<h2>Seafront houses and villas</h2><p>Seafront homes range from simple holiday houses to modern villas with pools. Expect higher prices than for homes a few streets back, and check how busy the beach in front gets in August.</p><h2>Beachfront land in Halkidiki</h2><p>Beachfront plots are rare. Building rules near the shore are strict, so an engineer must confirm what is allowed before you buy.</p><h2>First line to the sea: what it means</h2><p>In Greece, \"first line\" means there is no building or road between the property and the beach. \"Second line\" homes sit just behind, often with a sea view at a lower price.</p><h2>Seafront property in Kassandra and Sithonia</h2><p>Kassandra has long sandy beaches and more services nearby. Sithonia has quieter coves, rocks and pine trees down to the water. Nea Propontida, Polygyros and Aristotelis also have seafront homes in a more local setting.</p><h2>Rules on building near the shore in Greece</h2><p>As of November 2026, to be confirmed by our lawyer, the shore zone in Greece is public: nobody can own or fence the beach. The state sets the shoreline for each area, and building close to it is restricted. Check the official shoreline, erosion and the access road before buying.</p>",
+  "listingFilter": "sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/seafront",
+  "hreflang": "P09: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Seafront"
+  ],
+  "heroAlt": "House on the first line to the sea with a sandy beach in Halkidiki – beachfront property for sale",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – beachfront with {feature}",
+  "ogTitle": "Beachfront Property for Sale in Halkidiki – Homes on the Sea",
+  "anchor": "beachfront property for sale in Halkidiki",
+  "anchorVariants": [
+    "seafront property in Halkidiki",
+    "Halkidiki homes by the sea"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "beachfront property in Kassandra",
+      "href": "/en/properties/kassandra/seafront"
+    },
+    {
+      "anchor": "beachfront property in Sithonia",
+      "href": "/en/properties/sithonia/seafront"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P07",
+    "P14",
+    "P17",
+    "P18"
+  ],
+  "cta": "See seafront homes",
+  "oldUrls": [],
+  "words": 449,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

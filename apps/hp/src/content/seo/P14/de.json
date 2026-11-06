@@ -1,0 +1,110 @@
+{
+  "id": "P14",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "B",
+  "name": "Property in Aristotelis (Ierissos, Ouranoupoli, Mount Athos area)",
+  "pageType": "listing",
+  "path": "/de/immobilien/aristotelis",
+  "keyword": {
+    "primary": "immobilien aristotelis chalkidiki",
+    "volume": 0,
+    "secondary": [],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Immobilien Aristotelis – Athos-Region, Chalkidiki",
+  "meta": "Immobilien in Aristotelis auf Chalkidiki: Häuser und Grundstücke rund um Ierissos und Ouranoupoli in der Athos-Region. Jetzt Angebote ansehen.",
+  "h1": "Immobilien in Aristotelis – Ierissos, Ouranoupoli und Athos-Region",
+  "h2": [
+    "Aristotelis: die Athos-Halbinsel im Überblick",
+    "Ierissos, Ouranoupoli und Umgebung",
+    "Natur, Ruhe und Strände der Athos-Region",
+    "Haus oder Grundstück in Aristotelis kaufen"
+  ],
+  "faqQuestions": [
+    "Wo liegt die Gemeinde Aristotelis auf Chalkidiki?",
+    "Kann man in der Nähe des Bergs Athos eine Immobilie kaufen?",
+    "Ist Ierissos ganzjährig bewohnt?",
+    "Wie weit ist Ouranoupoli von Thessaloniki entfernt?"
+  ],
+  "faq": [
+    {
+      "q": "Wo liegt die Gemeinde Aristotelis auf Chalkidiki?",
+      "a": "Aristotelis liegt im Osten von Chalkidiki, auf der dritten Halbinsel und im Land nördlich davon. Zur Gemeinde gehören Orte wie Ierissos, Nea Roda, Ouranoupoli und Stagira, der Geburtsort des Philosophen Aristoteles. Den Süden der Halbinsel bildet der Mönchsstaat Athos. Er ist für Käufer nicht zugänglich."
+    },
+    {
+      "q": "Kann man in der Nähe des Bergs Athos eine Immobilie kaufen?",
+      "a": "Ja, aber nur außerhalb des Mönchsstaates. Auf dem Athos selbst kann man keine Immobilien kaufen. In Orten wie Ouranoupoli, Nea Roda oder Ierissos, also auf dem zugänglichen Teil der Halbinsel, ist das möglich. Hier wohnen Sie ruhig, mit Blick auf Meer und Berge."
+    },
+    {
+      "q": "Ist Ierissos ganzjährig bewohnt?",
+      "a": "Ja. Ierissos ist einer der größeren Orte der Gemeinde Aristotelis und das ganze Jahr bewohnt. Es gibt Geschäfte, einen Hafen und grundlegende Versorgung. Im Sommer ist mehr los, im Winter ist es ruhig, aber nicht leer. Für größere Einkäufe fahren viele nach Thessaloniki."
+    },
+    {
+      "q": "Wie weit ist Ouranoupoli von Thessaloniki entfernt?",
+      "a": "Mit dem Auto brauchen Sie von Thessaloniki bis Ouranoupoli etwa zwei Stunden, je nach Verkehr und Startpunkt. Die Strecke führt durch das grüne Landesinnere von Chalkidiki. Für Wochenendbesuche ist das etwas weiter, für längere Aufenthalte aber gut machbar. Wir planen Besichtigungen gern so, dass sich die Fahrt lohnt."
+    }
+  ],
+  "intro": "<p>Immobilien Aristotelis, Chalkidiki: Hier finden Sie alle Häuser, Wohnungen und Grundstücke, die wir aktuell in der Gemeinde Aristotelis anbieten. Sie liegt auf der dritten Halbinsel, rund um die Athos-Region, mit Orten wie Ierissos, Nea Roda und Ouranoupoli. Die Gegend ist ruhiger und weniger bebaut als Kassandra oder Sithonia. Filtern Sie nach Art und Preis und fragen Sie eine Besichtigung an.</p>",
+  "body": "<h2>Aristotelis: die Athos-Halbinsel im Überblick</h2><p>Die Gemeinde Aristotelis umfasst den zugänglichen Teil der dritten Halbinsel und das Land nördlich davon. Den Süden der Halbinsel bildet der Berg Athos, ein Mönchsstaat. Dort kann man keine Immobilien kaufen, und nur Männer dürfen ihn mit Genehmigung besuchen.</p><h2>Ierissos, Ouranoupoli und Umgebung</h2><p>Ierissos ist ein lebendiger Ort mit Hafen und langem Strand, auch im Winter bewohnt. Nea Roda liegt am schmalsten Teil der Halbinsel. Ouranoupoli ist der letzte Ort vor der Grenze zum Athos. Von hier fahren Boote entlang der Küste des Athos.</p><h2>Natur, Ruhe und Strände der Athos-Region</h2><p>Die Region ist grün und hügelig, mit klarem Wasser und ruhigen Stränden. Vor der Küste liegt die kleine Insel Ammouliani. Wer Ruhe und Natur sucht und keine großen Ferienorte braucht, fühlt sich hier wohl.</p><h2>Haus oder Grundstück in Aristotelis kaufen</h2><p>Hier finden Sie Häuser in den Orten und Grundstücke mit weitem Blick aufs Meer. Die Fahrt von Thessaloniki ist länger als nach Kassandra. Deshalb lohnt sich ein Kauf vor allem für längere Aufenthalte. Bei Grundstücken prüft ein Ingenieur vor dem Kauf die Bebaubarkeit.</p>",
+  "listingFilter": "municipality=aristotelis",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/aristotelis",
+  "hreflang": "P14: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Aristotelis"
+  ],
+  "heroAlt": "Küste bei Ouranoupoli mit Blick Richtung Athos, Chalkidiki – Immobilien Aristotelis",
+  "galleryAltPattern": "{type} zum Kauf in Aristotelis, Chalkidiki – {feature}",
+  "ogTitle": "Immobilien in Aristotelis – Athos-Region, Chalkidiki",
+  "anchor": "Immobilien in Aristotelis",
+  "anchorVariants": [
+    "Immobilien in der Athos-Region",
+    "Haus kaufen bei Ierissos"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "Grundstück auf Chalkidiki kaufen",
+      "href": "/de/immobilien/grundstuecke"
+    },
+    {
+      "anchor": "Haus direkt am Meer auf Chalkidiki",
+      "href": "/de/immobilien/am-meer"
+    },
+    {
+      "anchor": "Chalkidiki Strände und Leben",
+      "href": "/de/halkidiki"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P08",
+    "P21"
+  ],
+  "cta": "Immobilien ansehen",
+  "oldUrls": [],
+  "words": 417,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

@@ -1,0 +1,133 @@
+{
+  "id": "P04",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "A",
+  "name": "Houses / homes for sale",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/kuce",
+  "keyword": {
+    "primary": "prodaja kuca grcka",
+    "volume": 90,
+    "secondary": [
+      "prodaja kuca u grckoj — 50",
+      "kuce u grckoj — 40",
+      "kuće u grčkoj prodaja — 20",
+      "grcka prodaja kuca — 20",
+      "kuca na prodaju grcka — 10",
+      "kupovina kuce u grckoj — 10"
+    ],
+    "otherGeography": [
+      "prodaja kuca halkidiki — 20",
+      "prodaja kuca grcka halkidiki — 20",
+      "kuce na prodaju halkidiki — 10",
+      "halkidiki kuce na prodaju — 10"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Prodaja kuća Grčka – kuće na prodaju na Halkidikiju",
+  "meta": "Prodaja kuća u Grčkoj: samostalne kuće, dupleksi i vile na Halkidikiju, blizu mora i sa dvorištem. Pogledajte ponudu i zakažite obilazak ili video poziv.",
+  "h1": "Prodaja kuća Grčka – kuće na Halkidikiju blizu mora",
+  "h2": [
+    "Kuće na prodaju u Grčkoj – ponuda na Halkidikiju",
+    "Kuće uz more ili u zelenilu: Kasandra, Sitonija, Aristotelis",
+    "Koliko košta kuća u Grčkoj?",
+    "Na šta obratiti pažnju pri kupovini kuće u Grčkoj",
+    "Kuća za odmor ili za stalni život"
+  ],
+  "faqQuestions": [
+    "Koliko košta kuća u Grčkoj blizu mora?",
+    "Da li stranac može da kupi kuću u Grčkoj?",
+    "Koji su troškovi pri kupovini kuće u Grčkoj?",
+    "Da li mi je za kupovinu kuće u Grčkoj potreban advokat?"
+  ],
+  "faq": [
+    {
+      "q": "Koliko košta kuća u Grčkoj blizu mora?",
+      "a": "Zavisi od udaljenosti od plaže, pogleda, veličine i stanja kuće. Kuće u prvom redu do mora su najskuplje, a kuće nekoliko minuta od plaže ili u unutrašnjosti znatno su povoljnije. Aktuelne cene na Halkidikiju vidite u ponudi na ovoj stranici, uz filter po ceni."
+    },
+    {
+      "q": "Da li stranac može da kupi kuću u Grčkoj?",
+      "a": "Da. Državljani Srbije i drugih zemalja van EU mogu da kupe kuću u Grčkoj. Potrebni su grčki poreski broj (AFM) i račun u grčkoj banci. Za neke pogranične oblasti traži se posebna dozvola, a advokat proverava svaki slučaj pre potpisivanja."
+    },
+    {
+      "q": "Koji su troškovi pri kupovini kuće u Grčkoj?",
+      "a": "Prema pravilima od novembra 2026, kod preprodaje se plaća porez na prenos od 3,09% (3% plus opštinski dodatak). PDV na novogradnju je suspendovan do 31.12.2026. Dodaju se notar, advokat i upis u katastar, ukupno obično nekoliko procenata. Iznose potvrđuje advokat."
+    },
+    {
+      "q": "Da li mi je za kupovinu kuće u Grčkoj potreban advokat?",
+      "a": "Za strane kupce advokat je praktično neophodan. On proverava vlasništvo, terete i dozvole, priprema dokumentaciju i prati potpisivanje kod notara. Preporučujemo nezavisnog advokata koji zastupa samo vas, a mi vas rado povezujemo sa advokatima koji imaju iskustva sa stranim kupcima."
+    }
+  ],
+  "intro": "<p>Prodaja kuća Grčka: ovde su samostalne kuće, dupleksi i vile na prodaju, sve na Halkidikiju, na severu Grčke. Neke su na nekoliko koraka od plaže, druge u mirnijim mestima sa baštom i pogledom na more ili šumu.</p><p>Filtrirajte ponudu po opštini, ceni i udaljenosti od mora, a kada vam se neka kuća dopadne, zakažite razgledanje uživo ili putem video poziva.</p>",
+  "body": "<h2>Kuće na prodaju u Grčkoj – ponuda na Halkidikiju</h2><p>Sve kuće u ovoj ponudi nalaze se na Halkidikiju, jer naša agencija radi samo ovde. Uz svaku kuću prikazujemo opštinu, a tačnu lokaciju dobijate pri razgledanju.</p><h2>Kuće uz more ili u zelenilu: Kasandra, Sitonija, Aristotelis</h2><p>U Kasandri su kuće često u razvijenim letnjim mestima, blizu peščanih plaža i usluga. Sitonija nudi više zelenila, borove šume i male uvale. U opštini Aristotelis kraj je tiši i manje izgrađen, sa pogledom prema Svetoj Gori.</p><h2>Koliko košta kuća u Grčkoj?</h2><p>Cenu kuće određuju udaljenost od mora, pogled, veličina placa, starost i kvalitet gradnje i opština. Dve kuće iste veličine, jedna u prvom redu do mora a druga u unutrašnjosti, mogu se veoma razlikovati u ceni.</p><h2>Na šta obratiti pažnju pri kupovini kuće u Grčkoj</h2><ul><li>građevinska dozvola i legalizacija svih delova kuće</li><li>granice placa i upis u katastar</li><li>energetski sertifikat</li><li>pristupni put koji je prohodan cele godine</li><li>priključci za vodu i struju</li></ul><h2>Kuća za odmor ili za stalni život</h2><p>Za odmor su zanimljiva letnja mesta blizu plaže, gde je leto živo, a zima vrlo mirna. Za stalni život birajte mesta koja žive i zimi, sa prodavnicama, školom i lekarom u blizini, kao što su gradići u opštini Nea Propontida.</p>",
+  "listingFilter": "category=residency",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/kuce",
+  "hreflang": "P04: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Kuće"
+  ],
+  "heroAlt": "Prodaja kuća Grčka – kamena kuća sa baštom i pogledom na more na Halkidikiju",
+  "galleryAltPattern": "{type} na prodaju, {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Prodaja kuća Grčka – kuće na prodaju na Halkidikiju",
+  "anchor": "prodaja kuća u Grčkoj",
+  "anchorVariants": [
+    "kuće na prodaju na Halkidikiju",
+    "kuće u Grčkoj na prodaju"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    },
+    {
+      "anchor": "prodaja stanova u Grčkoj",
+      "href": "/sr/nekretnina/stanovi"
+    },
+    {
+      "anchor": "prodaja dupleksa u Grčkoj",
+      "href": "/sr/nekretnina/dupleksi"
+    },
+    {
+      "anchor": "nekretnine u Kasandri",
+      "href": "/sr/nekretnina/kasandra"
+    },
+    {
+      "anchor": "nekretnine u Sitoniji",
+      "href": "/sr/nekretnina/sitonija"
+    },
+    {
+      "anchor": "kupovina nekretnine u Grčkoj",
+      "href": "/sr/kupovina-nekretnine-u-grckoj"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P05",
+    "P06",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P20"
+  ],
+  "cta": "Pogledajte kuće",
+  "oldUrls": [],
+  "words": 428,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

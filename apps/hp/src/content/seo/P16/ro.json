@@ -1,0 +1,98 @@
+{
+  "id": "P16",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "C",
+  "name": "Sithonia villas",
+  "pageType": "listing",
+  "path": "/ro/proprietati/sithonia/vile",
+  "keyword": {
+    "primary": "vile de vanzare sithonia",
+    "volume": 0,
+    "secondary": [
+      "vile de lux sithonia — 0",
+      "vile cu piscina sithonia — 0"
+    ],
+    "otherGeography": [
+      "vile de vanzare sithonia grecia — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Vile de vânzare în Grecia – Sithonia, Halkidiki",
+  "meta": "Vile de vânzare în Sithonia, Halkidiki, Grecia: vile de lux între pini și golfuri liniștite, cu piscină și vedere la mare. Cereți o vizionare privată.",
+  "h1": "Vile de vânzare în Grecia – vile în Sithonia, Halkidiki",
+  "h2": [
+    "Vile cu vedere la mare în Sithonia",
+    "Vile cu piscină între pini",
+    "Vile și viza de aur",
+    "Ce verificați la o vilă în Sithonia"
+  ],
+  "faqQuestions": [
+    "Cât costă o vilă în Sithonia?",
+    "Se găsesc vile izolate cu vedere la mare în Sithonia?",
+    "Poate o vilă din Sithonia să conteze pentru viza de aur?"
+  ],
+  "faq": [
+    {
+      "q": "Cât costă o vilă în Sithonia?",
+      "a": "Prețul depinde de suprafață, teren, piscină, vedere și distanța până la mare. O vilă cu vedere largă spre golf sau aproape de plajă costă mai mult decât una mai retrasă. Folosiți filtrul de preț de pe această pagină și cereți-ne detalii pentru vilele care vă plac."
+    },
+    {
+      "q": "Se găsesc vile izolate cu vedere la mare în Sithonia?",
+      "a": "Da. Sithonia este potrivită pentru cine caută o vilă retrasă, între pini, cu vedere la mare. Verificați însă drumul de acces și conexiunile la apă și curent, mai ales iarna. Vă arătăm toate aceste detalii la vizionare, la fața locului sau prin apel video."
+    },
+    {
+      "q": "Poate o vilă din Sithonia să conteze pentru viza de aur?",
+      "a": "Da, dacă îndeplinește condițiile: în Halkidiki, pragul este de 400.000 € pentru o singură locuință de cel puțin 120 m². Cetățenii români nu au nevoie de viza de aur, dar regula poate interesa partenerii sau familia din afara UE. Situația din noiembrie 2026, de confirmat cu avocatul nostru."
+    }
+  ],
+  "intro": "<p>Vile de vânzare în Grecia, în Sithonia: aici găsiți vile de lux între pini și golfuri liniștite, cu piscină și vedere la mare, toate în municipiul Sithonia din Halkidiki, în nordul Greciei. Sithonia este aleasă pentru natură și intimitate. Filtrați după preț, suprafață și distanța până la mare, apoi programați o vizionare privată la fața locului sau prin apel video.</p>",
+  "body": "<h2>Vile cu vedere la mare în Sithonia</h2><p>Coasta Sithoniei are multe golfuri mici, iar dealurile cu pini oferă vederi largi spre mare. Multe vile sunt construite pe pantă, cu terase orientate spre apă și spre apus. Pe peninsula din mijloc a Halkidikiului, natura rămâne aproape oriunde vă aflați.</p><h2>Vile cu piscină între pini</h2><p>O vilă între pini înseamnă umbră, liniște și intimitate. Verificați drumul de acces, mai ales dacă vila este pe un drum de pământ, și cum se face întreținerea grădinii și a piscinei pe tot parcursul anului.</p><h2>Vile și viza de aur</h2><p>În Halkidiki, o singură locuință de cel puțin 120 m² și minimum 400.000 € poate conta pentru viza de aur. Regula privește cetățenii din afara UE. Este situația din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Ce verificați la o vilă în Sithonia</h2><ul><li>autorizația de construire și eventualele extinderi</li><li>dacă terenul este aproape de o zonă de pădure protejată</li><li>accesul, apa și curentul</li><li>cine are grijă de vilă cât sunteți plecați</li></ul><p>După cumpărare, ne putem ocupa noi de administrarea vilei: verificări periodice, grădină, piscină și curățenie.</p>",
+  "listingFilter": "municipality=sithonia & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/sithonia/vile",
+  "hreflang": "P16: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Sithonia",
+    "Vile"
+  ],
+  "heroAlt": "Vilă între pini cu vedere la golf în Sithonia, Halkidiki – vile de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Vile de vânzare în Sithonia, Halkidiki – Grecia",
+  "anchor": "vile de vânzare în Sithonia",
+  "anchorVariants": [
+    "vile de lux în Sithonia",
+    "vile în Sithonia, Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "case de vânzare în Sithonia",
+      "href": "/ro/proprietati/sithonia"
+    },
+    {
+      "anchor": "vile în Grecia",
+      "href": "/ro/proprietati/vile"
+    },
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P12"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 376,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

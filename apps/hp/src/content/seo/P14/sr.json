@@ -1,0 +1,122 @@
+{
+  "id": "P14",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "B",
+  "name": "Property in Aristotelis (Ierissos, Ouranoupoli, Mount Athos area)",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/aristotelis",
+  "keyword": {
+    "primary": "nekretnine jerisos",
+    "volume": 0,
+    "secondary": [
+      "nekretnine uranopolis — 0",
+      "nekretnine aristotelis halkidiki — 0",
+      "prodaja kuca jerisos — 0"
+    ],
+    "otherGeography": [
+      "nekretnine aristotelis grčka — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Nekretnine Grčka – Jerisos, Uranopolis, Aristotelis",
+  "meta": "Nekretnine u Grčkoj, opština Aristotelis: kuće i stanovi u Jerisosu, Uranopolisu i okolini, na trećem poluostrvu Halkidikija. Pogledajte ponudu.",
+  "h1": "Nekretnine Grčka – Jerisos, Uranopolis i opština Aristotelis",
+  "h2": [
+    "Nekretnine na prodaju u opštini Aristotelis",
+    "Jerisos, Uranopolis i obala ka Svetoj Gori",
+    "Mirniji deo Halkidikija: priroda i manja gradnja",
+    "Kako stići: putevi i udaljenosti",
+    "Cene nekretnina u opštini Aristotelis"
+  ],
+  "faqQuestions": [
+    "Kakav je život u Jerisosu i Uranopolisu van sezone?",
+    "Da li se mogu kupiti nekretnine blizu Svete Gore?",
+    "Koliko je opština Aristotelis udaljena od Soluna?",
+    "Koje su plaže u opštini Aristotelis?"
+  ],
+  "faq": [
+    {
+      "q": "Kakav je život u Jerisosu i Uranopolisu van sezone?",
+      "a": "Jerisos živi cele godine: ima prodavnice, škole, luku i osnovne usluge. Uranopolis je zimi mirniji, ali ga zbog brodova prema Svetoj Gori posećuju i van leta. Za stalni život Jerisos je praktičniji, a za mir i pogled na Svetu Goru biraju se i manja mesta."
+    },
+    {
+      "q": "Da li se mogu kupiti nekretnine blizu Svete Gore?",
+      "a": "Da. U Uranopolisu, poslednjem mestu pre granice Svete Gore, i u okolini nekretnine se kupuju kao bilo gde na Halkidikiju. Na samoj Svetoj Gori to nije moguće, jer je to monaška država sa posebnim statusom. Advokat proverava svaku nekretninu pre kupovine."
+    },
+    {
+      "q": "Koliko je opština Aristotelis udaljena od Soluna?",
+      "a": "Opština Aristotelis je dalje od Soluna nego Kasandra ili Nea Propontida, pa se do Jerisosa i Uranopolisa vozi duže. Tačno vreme zavisi od mesta i saobraćaja. Mnogi kupci baš zbog te udaljenosti ovde nalaze mirnije okruženje i manje gužve leti."
+    },
+    {
+      "q": "Koje su plaže u opštini Aristotelis?",
+      "a": "Obala opštine ima peščane plaže kod Jerisosa i Nea Rode, kao i plaže oko Uranopolisa sa pogledom prema Svetoj Gori. Ostrvo Amuljani, do koga se stiže trajektom, poznato je po svetlom pesku i plitkom moru. Leti je ovde obično manje gužve nego u Kasandri."
+    }
+  ],
+  "intro": "<p>Nekretnine Jerisos, Uranopolis i okolina: ovde su kuće, stanovi i placevi na prodaju u opštini Aristotelis, na istočnoj strani Halkidikija, prema Svetoj Gori, na severu Grčke. Ovo je mirniji i manje izgrađen deo Halkidikija, sa zelenim zaleđem i čistim morem.</p><p>Uz svaku nekretninu prikazana je samo opština, a tačnu lokaciju dobijate pri razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Nekretnine na prodaju u opštini Aristotelis</h2><p>Ponuda obuhvata stanove i kuće u primorskim mestima i placeve u zaleđu. Filtrirajte po tipu, ceni i udaljenosti od mora.</p><h2>Jerisos, Uranopolis i obala ka Svetoj Gori</h2><p>Jerisos je ribarski gradić koji živi cele godine. Uranopolis je polazna tačka za brodove prema Svetoj Gori, a u blizini su Nea Roda i ostrvo Amuljani. Sama Sveta Gora je monaška država u kojoj se nekretnine ne mogu kupiti, a posećuju je samo muškarci, uz dozvolu.</p><h2>Mirniji deo Halkidikija: priroda i manja gradnja</h2><p>Gradnja je ređa nego u Kasandri, a zaleđe je zeleno i brdovito. Leto je mirnije, što odgovara onima koji traže tišinu.</p><h2>Kako stići: putevi i udaljenosti</h2><p>Do opštine Aristotelis se iz Soluna vozi duže nego do Kasandre, kroz unutrašnjost Halkidikija. Tačno vreme zavisi od mesta i saobraćaja.</p><h2>Cene nekretnina u opštini Aristotelis</h2><p>Cena zavisi od udaljenosti od mora, pogleda i blizine Jerisosa ili Uranopolisa. Aktuelne cene vidite u ponudi na ovoj stranici.</p>",
+  "listingFilter": "municipality=aristotelis",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/aristotelis",
+  "hreflang": "P14: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Aristotelis"
+  ],
+  "heroAlt": "Nekretnine Jerisos – obala opštine Aristotelis sa pogledom ka Svetoj Gori, Halkidiki",
+  "galleryAltPattern": "{type} na prodaju, Aristotelis, Halkidiki – {feature}",
+  "ogTitle": "Nekretnine Grčka – Jerisos i Uranopolis, Halkidiki",
+  "anchor": "nekretnine u Jerisosu i opštini Aristotelis",
+  "anchorVariants": [
+    "nekretnine Aristotelis – Halkidiki",
+    "kuće u Jerisosu i Uranopolisu"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "prodaja kuća u Grčkoj",
+      "href": "/sr/nekretnina/kuce"
+    },
+    {
+      "anchor": "placevi u Grčkoj na prodaju",
+      "href": "/sr/nekretnina/zemljiste"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na moru",
+      "href": "/sr/nekretnina/prva-linija"
+    },
+    {
+      "anchor": "život u Grčkoj na Halkidikiju",
+      "href": "/sr/halkidiki"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P08",
+    "P21"
+  ],
+  "cta": "Pogledajte nekretnine u Aristotelisu",
+  "oldUrls": [
+    {
+      "path": "/sr/nekretnine-u/aristotelis",
+      "clicks": 2
+    }
+  ],
+  "words": 405,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

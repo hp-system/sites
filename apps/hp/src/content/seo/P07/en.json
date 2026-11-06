@@ -1,0 +1,143 @@
+{
+  "id": "P07",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Villas / luxury properties",
+  "pageType": "listing",
+  "path": "/en/properties/villas-for-sale",
+  "keyword": {
+    "primary": "halkidiki villas for sale",
+    "volume": 30,
+    "secondary": [
+      "villas in halkidiki for sale — 40",
+      "villas for sale halkidiki — 30",
+      "halkidiki luxury villas for sale — 30",
+      "villas for sale in halkidiki — 30",
+      "luxury villas for sale in halkidiki — 20",
+      "halkidiki villa for sale — 20"
+    ],
+    "otherGeography": [
+      "villas for sale in greece — 200",
+      "luxury real estate greece — 150",
+      "villas for sale greece — 150",
+      "luxury homes for sale in greece — 80"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Villas for Sale in Halkidiki, Greece – Luxury Homes",
+  "meta": "Halkidiki villas for sale: luxury homes with private pool and sea views in Kassandra and Sithonia, Northern Greece. Discreet, local help. View villas.",
+  "h1": "Halkidiki Villas for Sale: Luxury Homes in Greece",
+  "h2": [
+    "Luxury villas with private pool",
+    "Sea-view and beachfront villas",
+    "Villas for sale in Kassandra",
+    "Villas for sale in Sithonia",
+    "Villas and the Greece Golden Visa",
+    "Buying a luxury villa in Greece: what to check"
+  ],
+  "faqQuestions": [
+    "How much does a villa in Halkidiki cost?",
+    "Are there villas with a private pool for sale in Halkidiki?",
+    "Can buying a villa in Halkidiki qualify for the Greece Golden Visa?",
+    "Which area of Halkidiki is best for a luxury villa?"
+  ],
+  "faq": [
+    {
+      "q": "How much does a villa in Halkidiki cost?",
+      "a": "Villa prices depend on location, sea view, plot size, build quality and distance to the beach. Sea-view villas in the most sought-after parts of Kassandra and Sithonia are at the top of the market. Filter by price to see current villas, and ask us about the full costs of each."
+    },
+    {
+      "q": "Are there villas with a private pool for sale in Halkidiki?",
+      "a": "Yes. Many of our villas have a private pool, often with sun terraces and outdoor dining areas. Use the filters to show only villas with a pool, and ask us about pool maintenance if you will be away for long periods."
+    },
+    {
+      "q": "Can buying a villa in Halkidiki qualify for the Greece Golden Visa?",
+      "a": "It can. As of November 2026, a villa in Halkidiki can qualify if it is one residential property of at least 120 m² bought for €400,000 or more. Other conditions apply, including limits on short-term letting. Our lawyer confirms each case before you commit."
+    },
+    {
+      "q": "Which area of Halkidiki is best for a luxury villa?",
+      "a": "Kassandra suits buyers who want services, restaurants and a shorter drive from Thessaloniki. Sithonia suits those who want greenery, privacy and quiet coves. Both have sea-view villas, and many buyers view villas on both peninsulas before deciding. We can arrange viewings in both areas in one trip."
+    }
+  ],
+  "intro": "<p>Halkidiki villas for sale, with private pools, generous plots and open views of the Aegean. All villas below are in Halkidiki, Northern Greece, mainly in Kassandra and Sithonia, and each listing shows the municipality and the main features. Ask us for a private viewing in person or by video. Hillside homes with wide views and villas close to the beach are both included.</p>",
+  "body": "<h2>Luxury villas with private pool</h2><p>A private pool, outdoor living areas and a garden that is easy to maintain are what most villa buyers ask for. Check the plot size, the quality of construction and insulation, and who will look after the pool when you are away.</p><h2>Sea-view and beachfront villas</h2><p>Sea views are the main driver of villa prices. Beachfront villas are rare, as the shore in Greece is public and building near it is restricted. Hillside villas often have wider views and more privacy.</p><h2>Villas for sale in Kassandra</h2><p>Kassandra is the most developed peninsula, with beach clubs, restaurants and services around areas such as Sani and Pefkochori, and the shortest drive from Thessaloniki airport.</p><h2>Villas for sale in Sithonia</h2><p>Sithonia is greener and quieter, with pine forests, clear coves and views towards Mount Athos. It suits buyers who value privacy and nature over nightlife.</p><h2>Villas and the Greece Golden Visa</h2><p>As of November 2026, to be confirmed by our lawyer, one residential property in Halkidiki of at least 120 m² bought for €400,000 or more may qualify for the Greece Golden Visa. See our Golden Visa page for the conditions.</p><h2>Buying a luxury villa in Greece: what to check</h2><p>Before you buy, your lawyer and an engineer check the title, the building permit, any legalisation and outstanding debts. Ask about running costs too: gardening, pool care, security and the annual ENFIA property tax.</p>",
+  "listingFilter": "luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/villas-for-sale",
+  "hreflang": "P07: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Villas"
+  ],
+  "heroAlt": "Modern villa with infinity pool overlooking the sea in Halkidiki – villas for sale in Halkidiki",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – luxury villa with {feature}",
+  "ogTitle": "Halkidiki Villas for Sale – Luxury Homes with Pool & Sea View",
+  "anchor": "villas for sale in Halkidiki",
+  "anchorVariants": [
+    "Halkidiki luxury villas",
+    "luxury villas for sale in Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "villas for sale in Kassandra",
+      "href": "/en/properties/kassandra/villas-for-sale"
+    },
+    {
+      "anchor": "Sithonia villas for sale",
+      "href": "/en/properties/sithonia/villas-for-sale"
+    },
+    {
+      "anchor": "beachfront property for sale in Halkidiki",
+      "href": "/en/properties/seafront"
+    },
+    {
+      "anchor": "Greece Golden Visa",
+      "href": "/en/golden-visa-greece"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P09",
+    "P11",
+    "P12",
+    "P15",
+    "P16",
+    "P20"
+  ],
+  "cta": "See villas",
+  "oldUrls": [
+    {
+      "path": "/en/properties-in-halkidiki-greece/halkidiki-villa",
+      "clicks": 4
+    },
+    {
+      "path": "/en/articles/buyers/exploring-the-allure-of-luxury-properties",
+      "clicks": 1
+    }
+  ],
+  "words": 481,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

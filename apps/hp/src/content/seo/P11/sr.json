@@ -1,0 +1,138 @@
+{
+  "id": "P11",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "A",
+  "name": "Property in Kassandra",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/kasandra",
+  "keyword": {
+    "primary": "nekretnine grcka kasandra",
+    "volume": 10,
+    "secondary": [
+      "nekretnine kasandra prodaja — 10",
+      "nekretnine grcka pefkohori — 60",
+      "prodaja nekretnina hanioti grcka — 40"
+    ],
+    "otherGeography": [
+      "nekretnine kasandra halkidiki — 0",
+      "kasandra halkidiki prodaja kuca — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Nekretnine Grčka – Kasandra, Halkidiki: prodaja",
+  "meta": "Nekretnine Grčka, Kasandra: kuće, stanovi i vile na prvom poluostrvu Halkidikija, blizu peščanih plaža i turističkih mesta. Pogledajte ponudu.",
+  "h1": "Nekretnine Grčka, Kasandra – kuće i stanovi na prodaju na Halkidikiju",
+  "h2": [
+    "Nekretnine na prodaju u opštini Kasandra",
+    "Kasandra: mesta, plaže i život tokom cele godine",
+    "Pefkohori, Hanioti i okolina – šta kupci treba da znaju",
+    "Cene nekretnina u Kasandri",
+    "Kako stići do Kasandre iz Srbije"
+  ],
+  "faqQuestions": [
+    "Koji deo Kasandre je najbolji za kupovinu nekretnine?",
+    "Da li je Kasandra živa i van sezone?",
+    "Da li su nekretnine u Kasandri skuplje nego u Sitoniji?",
+    "Koliko je Kasandra udaljena od aerodroma u Solunu?"
+  ],
+  "faq": [
+    {
+      "q": "Koji deo Kasandre je najbolji za kupovinu nekretnine?",
+      "a": "Zavisi od namene. Mesta na istočnoj obali, kao Pefkohori i Hanioti, tražena su za letovanje i izdavanje. Zapadna obala je mirnija, sa pogledom na zalazak sunca. Za život tokom cele godine birajte mesta bliže ulazu na poluostrvo i uslugama koje rade zimi."
+    },
+    {
+      "q": "Da li je Kasandra živa i van sezone?",
+      "a": "Delimično. Veća mesta imaju prodavnice, apoteke i ponešto restorana i zimi, ali mnoga letovališta posle sezone utihnu. Za život tokom cele godine važno je izabrati mesto u kome ljudi stalno žive. Pri razgledanju vam pokazujemo kako mesto izgleda i van sezone."
+    },
+    {
+      "q": "Da li su nekretnine u Kasandri skuplje nego u Sitoniji?",
+      "a": "Ne postoji opšte pravilo. Cena zavisi od udaljenosti od mora, pogleda, stanja i tipa nekretnine. Kasandra je razvijenija i bliža Solunu, a Sitonija mirnija i zelenija, pa kupci često porede iste tipove nekretnina u obe opštine. Najbolje je uporediti konkretne ponude."
+    },
+    {
+      "q": "Koliko je Kasandra udaljena od aerodroma u Solunu?",
+      "a": "Od aerodroma u Solunu do početka Kasandre kolima se stiže za oko sat vremena. Do mesta na jugu poluostrva vožnja traje duže, u zavisnosti od saobraćaja i sezone. To je jedan od razloga zašto je Kasandra popularna i za kraće boravke."
+    }
+  ],
+  "intro": "<p>Nekretnine Grčka, Kasandra: ovde su kuće, stanovi i vile na prodaju u opštini Kasandra, na zapadnom poluostrvu Halkidikija, na severu Grčke. Kasandra je najrazvijeniji deo Halkidikija, sa dugim peščanim plažama i mestima koja su leti puna života.</p><p>Uz svaku nekretninu prikazana je samo opština, a tačnu lokaciju dobijate pri razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Nekretnine na prodaju u opštini Kasandra</h2><p>Ponuda obuhvata stanove i studije blizu plaže, duplekse u kompleksima, kuće i vile sa pogledom na more. Filtrirajte po tipu, ceni i udaljenosti od mora, a mi vam pomažemo da uporedite ponude iz različitih delova poluostrva.</p><h2>Kasandra: mesta, plaže i život tokom cele godine</h2><p>Na poluostrvo se ulazi preko kanala kod Potideje. Duž obale su letovališta kao što su Kalitea, Pefkohori, Hanioti i Polihrono, sa peščanim plažama i plitkim morem. Leto je vrlo živo, a zimi je znatno mirnije i deo usluga radi skraćeno.</p><h2>Pefkohori, Hanioti i okolina – šta kupci treba da znaju</h2><p>Ova mesta su tražena za letovanje i izdavanje, sa mnogo restorana i prodavnica u sezoni. Ko želi da živi cele godine, treba da proveri šta radi zimi i koliko su daleko najbliži lekar i prodavnica.</p><h2>Cene nekretnina u Kasandri</h2><p>Cena zavisi od udaljenosti od mora, pogleda, starosti objekta i od toga da li je nekretnina u centru letovališta ili u mirnijem delu. Aktuelne cene vidite u ponudi na ovoj stranici.</p><h2>Kako stići do Kasandre iz Srbije</h2><p>Iz Srbije se vozi auto-putem preko Severne Makedonije do Soluna, a zatim prema Nea Mudaniji i Kasandri. Od aerodroma u Solunu do početka Kasandre ima oko sat vremena vožnje.</p>",
+  "listingFilter": "municipality=kassandra",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/kasandra",
+  "hreflang": "P11: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Kasandra"
+  ],
+  "heroAlt": "Nekretnine Grčka Kasandra – borova šuma i peščana plaža na poluostrvu Kasandra",
+  "galleryAltPattern": "{type} na prodaju, Kasandra, Halkidiki – {feature}",
+  "ogTitle": "Nekretnine Grčka – Kasandra, Halkidiki",
+  "anchor": "nekretnine u Kasandri",
+  "anchorVariants": [
+    "nekretnine Grčka – Kasandra",
+    "kuće i stanovi u Kasandri na prodaju"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "prodaja kuća u Grčkoj",
+      "href": "/sr/nekretnina/kuce"
+    },
+    {
+      "anchor": "prodaja vila u Grčkoj",
+      "href": "/sr/nekretnina/vile"
+    },
+    {
+      "anchor": "placevi u Grčkoj na prodaju",
+      "href": "/sr/nekretnina/zemljiste"
+    },
+    {
+      "anchor": "prodaja vila u Kasandri",
+      "href": "/sr/nekretnina/kasandra/vile"
+    },
+    {
+      "anchor": "nekretnine na moru u Kasandri",
+      "href": "/sr/nekretnina/kasandra/prva-linija"
+    },
+    {
+      "anchor": "život u Grčkoj na Halkidikiju",
+      "href": "/sr/halkidiki"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P15",
+    "P17",
+    "P21"
+  ],
+  "cta": "Pogledajte nekretnine u Kasandri",
+  "oldUrls": [
+    {
+      "path": "/sr/nekretnine-u/kasandra",
+      "clicks": 5
+    }
+  ],
+  "words": 444,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

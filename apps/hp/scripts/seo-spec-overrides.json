@@ -1,0 +1,5 @@
+{
+  "_note": "Corrections to George's spec, applied by scripts/import-seo-spec.mjs. The xlsx itself is never edited. pages: {\"P04/en\": {field: value}}; allowedLinkTargets: link targets outside the spec pages.",
+  "pages": {},
+  "allowedLinkTargets": []
+}

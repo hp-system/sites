@@ -109,7 +109,7 @@ const seo = defineCollection({
     }),
     titleFocus: z.string(),
     title: z.string().max(60),
-    meta: z.string().min(120).max(160),
+    meta: z.string().min(130).max(155),  // spec 0_README rule 7
     h1: z.string().min(1),
     h2: z.array(z.string()),
     faqQuestions: z.array(z.string()),

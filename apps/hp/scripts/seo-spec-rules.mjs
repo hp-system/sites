@@ -2,7 +2,7 @@
 // (scripts/import-seo-spec.mjs) and the CI test (scripts/test-seo-spec.mjs), so the committed
 // JSON in src/content/seo is checked with exactly the rules it was imported with.
 //
-// Each rule comes from sheet 0_README of the spec or from our own rules (R-006 location,
+// Each rule comes from sheet 0_README (meta 130–155 = rule 7, title 60 = rule 6) of the spec or from our own rules (R-006 location,
 // R-008 all languages, R-010 no counts). validate() returns a list of error strings.
 
 export const LANGS = ['el', 'en', 'de', 'sr', 'bg', 'ro', 'ru', 'tr', 'he'];
@@ -12,8 +12,8 @@ export const NOT_BUILT = { P03: ['sr', 'bg', 'ro'] };
 export const ALLOWED_TAGS = ['p', 'h2', 'h3', 'ul', 'li', 'strong'];
 
 export const TITLE_MAX = 60;
-export const META_MIN = 120;
-export const META_MAX = 160;
+export const META_MIN = 130;
+export const META_MAX = 155;
 export const INTRO_MAX_WORDS = 120;
 
 const len = (s) => [...(s ?? '')].length;

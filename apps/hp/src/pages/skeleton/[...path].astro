@@ -1,0 +1,195 @@
+---
+// Local skeleton (#157): a wireframe of every registry page, on only with SKELETON=1 outside
+// production. The middleware rewrites a registry URL to /skeleton/<URL>; /skeleton alone is the
+// map. No design here: the look of the real pages goes mockup → George first (R-009).
+import { hp } from '../../brand/hp';
+import { isProd } from '../../lib/seo';
+import {
+  skeletonOn, findByPath, seoOf, langsOf, pathOf, PAGES, SECTIONS, SECTION_LABEL, LANGS,
+  children, menuOf, footerPages, fullTitle, ldJson, type RegPage,
+} from '../../lib/skeleton';
+
+if (!skeletonOn() || isProd(Astro.request, Astro.url)) return new Response('Not found', { status: 404 });
+
+const raw = Astro.params.path ? `/${Astro.params.path}` : '';
+let rest = raw;
+try { rest = decodeURIComponent(raw); } catch { /* keep */ }
+if (rest === '/~') rest = '/'; // the Greek home page lives at the root
+const hit = rest ? findByPath(rest) : undefined;
+if (rest && !hit) return new Response('Not a registry page', { status: 404 });
+
+const ORIGIN = hp.web.origin;
+const isMap = !hit;
+const reg = hit ? (PAGES.find((p) => p.id === hit.id) as RegPage) : undefined;
+const lang = hit?.lang ?? 'en';
+const seo = hit ? seoOf(hit.id, lang) : undefined;
+const href = (id: string) => pathOf(id, lang) ?? '#';
+const title = seo ? fullTitle(seo.title, hp.name) : reg ? `${reg.name} — brief pending` : 'Skeleton map';
+
+// Breadcrumb: names from the spec; links are a skeleton approximation (home, listing hub, parent).
+const crumbs = seo
+  ? seo.breadcrumb.map((name, i, a) => ({
+      name,
+      url: i === 0 ? href('P01') : i === a.length - 1 ? seo.path
+        : i === 1 && reg?.template === 'listing' ? href('P02')
+        : reg?.parent ? href(reg.parent) : undefined,
+    }))
+  : [];
+
+// og:locale per language (spec 0_README rule 21).
+const OG_LOCALE: Record<string, string> = { el: 'el_GR', en: 'en_GB', de: 'de_DE', sr: 'sr_RS', bg: 'bg_BG', ro: 'ro_RO', ru: 'ru_RU', tr: 'tr_TR', he: 'he_IL' };
+const ORG_ID = `${ORIGIN}/#org`;
+// Sitewide Organization + RealEstateAgent (rule 11). Name, phone and address from the brand config;
+// logo and sameAs (Business Profile, socials) come later (D12).
+const org = { '@context': 'https://schema.org', '@type': ['Organization', 'RealEstateAgent'], '@id': ORG_ID, name: hp.name, url: ORIGIN,
+  telephone: hp.contact.phoneE164, email: hp.contact.email,
+  address: { '@type': 'PostalAddress', streetAddress: hp.addressLatin?.street ?? hp.address.street, addressLocality: hp.addressLatin?.city ?? hp.address.city, postalCode: hp.address.postalCode, addressCountry: hp.address.country } };
+const ld: unknown[] = [org];
+if (seo) {
+  const abs = (p?: string) => (p ? ORIGIN + encodeURI(p) : undefined);
+  if (seo.schema.includes('BreadcrumbList')) ld.push({ '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.url) })) });
+  if (seo.schema.includes('FAQPage') && seo.faq.length) ld.push({ '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: seo.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+  if (seo.schema.includes('WebSite')) ld.push({ '@context': 'https://schema.org', '@type': 'WebSite', url: abs(seo.path), name: hp.name, inLanguage: lang, publisher: { '@id': ORG_ID } });
+  if (seo.schema.includes('CollectionPage')) ld.push({ '@context': 'https://schema.org', '@type': 'CollectionPage', name: seo.h1, url: abs(seo.path), inLanguage: lang });
+  // Article: author = the company (rule 11). datePublished / dateModified are set at publishing; the spec has only «Updated November 2026».
+  if (seo.schema.includes('Article')) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: seo.h1, url: abs(seo.path), inLanguage: lang,
+    author: { '@id': ORG_ID }, publisher: { '@id': ORG_ID } });
+}
+const hreflang = seo ? langsOf(seo.id).map((l) => ({ l, url: ORIGIN + encodeURI(seoOf(seo.id, l)!.path) })) : [];
+const kids = reg ? children(reg.id) : [];
+const status = (r: RegPage) => r.status;
+---
+<!doctype html>
+<html lang={lang} dir={lang === 'he' ? 'rtl' : 'ltr'}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  {seo && <meta name="description" content={seo.meta} />}
+  <meta name="robots" content="noindex, nofollow" />
+  {seo && <link rel="canonical" href={ORIGIN + encodeURI(seo.path)} />}
+  {hreflang.map((h) => <link rel="alternate" hreflang={h.l} href={h.url} />)}
+  {hreflang.length > 0 && seoOf(seo!.id, 'en') && <link rel="alternate" hreflang="x-default" href={ORIGIN + encodeURI(seoOf(seo!.id, 'en')!.path)} />}
+  {seo && <meta property="og:title" content={seo.ogTitle} />}
+  {seo && <meta property="og:description" content={seo.meta} />}
+  {seo && <meta property="og:type" content={seo.schema.includes('Article') ? 'article' : 'website'} />}
+  {seo && <meta property="og:url" content={ORIGIN + encodeURI(seo.path)} />}
+  <meta property="og:locale" content={OG_LOCALE[lang] ?? 'en_GB'} />
+  {ld.map((x) => <script type="application/ld+json" set:html={ldJson(x)} />)}
+  <style>
+    :root { --ink:#1b2422; --mut:#5f6b69; --line:#d6dcda; --bg:#f6f7f6; --box:#fff; --acc:#0f5f66; --warn:#9a6100; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.55 system-ui, sans-serif; color:var(--ink); background:var(--bg); }
+    a { color:var(--acc); }
+    .bar { background:#13201f; color:#fff; font-size:12px; padding:6px 16px; }
+    header { background:var(--box); border-bottom:1px solid var(--line); padding:10px 16px; display:flex; flex-wrap:wrap; gap:6px 18px; align-items:flex-start; }
+    header .logo { font-weight:700; margin-right:12px; text-decoration:none; color:var(--ink); }
+    details.m { position:relative; }
+    details.m summary { cursor:pointer; font-weight:600; list-style:none; }
+    details.m ul { position:absolute; z-index:5; background:#fff; border:1px solid var(--line); margin:6px 0 0; padding:8px 12px; list-style:none; min-width:260px; }
+    details.m li { padding:3px 0; font-size:14px; }
+    main { max-width:980px; margin:0 auto; padding:20px 16px 60px; }
+    .meta { font:12px/1.5 ui-monospace, Consolas, monospace; background:#eef2f1; border:1px dashed var(--line); padding:10px 12px; margin:10px 0 18px; overflow-wrap:anywhere; }
+    .meta b { color:var(--acc); }
+    .crumbs { font-size:13px; color:var(--mut); }
+    .grid { border:2px dashed var(--line); background:var(--box); padding:28px; text-align:center; color:var(--mut); margin:18px 0; }
+    .slot { border-left:3px solid var(--acc); padding-left:12px; }
+    .faq details { border-bottom:1px solid var(--line); padding:8px 0; }
+    .faq h3 { display:inline; font-size:16px; }
+    .links { background:var(--box); border:1px solid var(--line); padding:12px 16px; margin-top:24px; }
+    .tag { display:inline-block; font-size:11px; padding:1px 6px; border-radius:3px; background:#e1eeee; color:var(--acc); }
+    .tag.new { background:#fbf0da; color:var(--warn); }
+    table { border-collapse:collapse; width:100%; font-size:13px; background:var(--box); }
+    th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+    th { font-size:11px; text-transform:uppercase; color:var(--mut); }
+    footer { border-top:1px solid var(--line); background:var(--box); padding:16px; font-size:13px; display:flex; flex-wrap:wrap; gap:6px 16px; }
+    .scroll { overflow-x:auto; }
+  </style>
+</head>
+<body>
+  <div class="bar">SKELETON · local only · structure, not design · <a style="color:#9fd" href="/skeleton">map of all pages</a></div>
+  <header>
+    <a class="logo" href={href('P01')}>{hp.name}</a>
+    {SECTIONS.map((s) => (
+      <details class="m"><summary>{SECTION_LABEL[s]}</summary>
+        <ul>{menuOf(s).map((p) => <li><a href={href(p.id)}>{p.name}</a> {p.status === 'new' && <span class="tag new">new</span>}</li>)}</ul>
+      </details>
+    ))}
+  </header>
+  <main>
+    {isMap && (
+      <Fragment>
+        <h1>All pages ({PAGES.length})</h1>
+        <p>Each row opens the page at its real URL. Spec pages exist in every language listed; P22+ are EN until the languages stage.</p>
+        <div class="scroll"><table>
+          <thead><tr><th>ID</th><th>Page</th><th>Menu</th><th>Status</th><th>EN URL</th><th>Languages</th><th>Main keyword (EN)</th><th>Words</th></tr></thead>
+          <tbody>{PAGES.map((p) => {
+            const en = seoOf(p.id, 'en');
+            return <tr>
+              <td>{p.id}</td><td>{p.name}</td>
+              <td>{p.menu ? `${SECTION_LABEL[p.menu.section]} ${p.menu.order}` : p.parent ? `under ${p.parent}` : p.footer ? 'footer' : '—'}</td>
+              <td><span class={`tag ${status(p) === 'new' ? 'new' : ''}`}>{status(p)}</span></td>
+              <td><a href={pathOf(p.id, 'en')}>{pathOf(p.id, 'en')}</a></td>
+              <td>{p.source === 'spec' ? langsOf(p.id).map((l) => <Fragment><a href={seoOf(p.id, l)!.path}>{l}</a> </Fragment>) : 'en'}</td>
+              <td>{en ? `${en.keyword.primary} (${en.keyword.volume}/mo)` : 'brief pending'}</td>
+              <td>{en?.words ?? '—'}</td>
+            </tr>;
+          })}</tbody>
+        </table></div>
+      </Fragment>
+    )}
+
+    {seo && (
+      <Fragment>
+        <nav class="crumbs">{crumbs.map((c, i) => <Fragment>{i > 0 && ' › '}{c.url && i < crumbs.length - 1 ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</Fragment>)}</nav>
+        <div class="meta">
+          <div><b>{seo.id}</b> · {reg?.name} · {lang} · priority {seo.priority} · template {reg?.template}</div>
+          <div><b>title</b> ({[...title].length}): {title}</div>
+          <div><b>meta</b> ({[...seo.meta].length}): {seo.meta}</div>
+          <div><b>keyword</b>: {seo.keyword.primary} — {seo.keyword.volume}/month · secondary: {seo.keyword.secondary.join(' · ')}</div>
+          <div><b>indexing</b>: {seo.indexing}</div>
+          <div><b>schema</b>: {seo.schema.join(' + ')} · <b>languages</b>: {langsOf(seo.id).join(' ')}</div>
+          {seo.listingFilter && <div><b>listing filter</b>: {seo.listingFilter}</div>}
+          {seo.oldUrls.length > 0 && <div><b>old URLs 301 here</b>: {seo.oldUrls.map((o) => `${o.path} (${o.clicks})`).join(' · ')}</div>}
+        </div>
+        <h1>{seo.h1}</h1>
+        {seo.editorialLine && <p class="crumbs">{seo.editorialLine}</p>}
+        <div class="slot" set:html={seo.intro} />
+        {reg?.template === 'listing' || seo.pageType.includes('listing')
+          ? <div class="grid">PROPERTY GRID — 24 per page, newest first · filter: {seo.listingFilter || '—'} · <a href={href('P02')}>{seo.cta}</a></div>
+          : <div class="grid">HERO IMAGE · alt: «{seo.heroAlt}»</div>}
+        <div class="slot" set:html={seo.body} />
+        {seo.faq.length > 0 && (
+          <section class="faq"><h2>FAQ</h2>
+            {seo.faq.map((f) => <details open><summary><h3>{f.q}</h3></summary><div set:html={f.a} /></details>)}
+          </section>
+        )}
+        <div class="links"><strong>Links out (exact anchors from the spec)</strong>
+          <ul>{seo.linksOut.map((l) => <li><a href={l.href}>{l.anchor}</a></li>)}</ul>
+          {kids.length > 0 && <Fragment><strong>Pages under this one</strong><ul>{kids.map((k) => <li><a href={href(k.id)}>{k.name}</a></li>)}</ul></Fragment>}
+        </div>
+      </Fragment>
+    )}
+
+    {reg && !seo && (
+      <Fragment>
+        <div class="meta">
+          <div><b>{reg.id}</b> · {reg.name} · {lang} · template {reg.template} · status <span class={`tag ${reg.status === 'new' ? 'new' : ''}`}>{reg.status}</span></div>
+          <div><b>menu</b>: {reg.menu ? `${SECTION_LABEL[reg.menu.section]} ${reg.menu.order}` : reg.parent ? `under ${reg.parent}` : reg.footer ? 'footer' : '—'}</div>
+          {reg.note && <div><b>note</b>: {reg.note}</div>}
+        </div>
+        <h1>{reg.name}</h1>
+        <div class="grid">BRIEF PENDING — title, meta, H1, H2, FAQ and text come from the brief (D-20261106-SS-2), approved by Sergei</div>
+        {reg.parent && <p>Parent: <a href={href(reg.parent)}>{PAGES.find((p) => p.id === reg.parent)?.name}</a></p>}
+        {kids.length > 0 && <div class="links"><strong>Pages under this one</strong><ul>{kids.map((k) => <li><a href={href(k.id)}>{k.name}</a></li>)}</ul></div>}
+      </Fragment>
+    )}
+  </main>
+  <footer>
+    {footerPages().map((p) => <a href={href(p.id)}>{p.name}</a>)}
+    <span style="flex-basis:100%;color:var(--mut)">Languages of this page: {seo ? langsOf(seo.id).map((l) => <Fragment><a href={seoOf(seo.id, l)!.path}>{l}</a> </Fragment>) : 'en'}</span>
+  </footer>
+</body>
+</html>

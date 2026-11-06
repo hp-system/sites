@@ -127,7 +127,8 @@ function page(r) {
     indexing: r['Indexing rule'],
     canonical: toPath(r['Canonical']),
     hreflang: r['hreflang cluster'],
-    schema: r['Schema.org'].split('+').map((x) => x.replace(/\(.*?\)/g, '').trim()).filter(Boolean),
+    // «A + B (note), C, D not needed» → [A, B, C]: notes in brackets dropped, «not needed» items dropped.
+    schema: r['Schema.org'].replace(/\(.*?\)/g, '').split(/[+,]/).map((x) => x.trim()).filter((x) => x && !/not needed/i.test(x)),
     breadcrumb: r['Breadcrumb'].split('>').map((x) => x.trim()).filter(Boolean),
     heroAlt: r['Hero image alt'],
     galleryAltPattern: r['Listing/gallery image alt pattern'],
@@ -152,7 +153,8 @@ function page(r) {
 
 function applyOverrides(p, overrides) {
   const o = overrides[`${p.id}/${p.lang}`];
-  return o ? { ...p, ...o } : p;
+  // Keys starting with «_» are the reason for the override, kept in the overrides file only.
+  return o ? { ...p, ...Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('_'))) } : p;
 }
 
 // ── main ─────────────────────────────────────────────────────────────────────

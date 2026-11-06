@@ -28,6 +28,7 @@ import type { MiddlewareHandler } from 'astro';
 import { isProd } from './lib/seo';
 import { originHeader } from './lib/origin';
 import { redirectFor } from './lib/redirects';
+import { skeletonOn, findByPath } from './lib/skeleton';
 
 // ── Same-origin check for form posts (B-24) ──────────────────────────────────
 // Astro's built-in check is switched off in astro.config.mjs (it compared against
@@ -54,6 +55,11 @@ function crossSiteForm(request: Request, url: URL): boolean {
 export const onRequest: MiddlewareHandler = async (ctx, next) => {
   if (crossSiteForm(ctx.request, ctx.url)) {
     return new Response(`Cross-site ${ctx.request.method} form submissions are forbidden`, { status: 403 });
+  }
+  // Local skeleton (#157): with SKELETON=1 outside production, a registry URL shows its wireframe.
+  if (skeletonOn() && !isProd(ctx.request, ctx.url) && (ctx.request.method === 'GET' || ctx.request.method === 'HEAD')
+    && !ctx.url.pathname.startsWith('/skeleton') && findByPath(ctx.url.pathname)) {
+    return ctx.rewrite('/skeleton' + (ctx.url.pathname === '/' ? '/~' : ctx.url.pathname)); // «/~» = the root page
   }
   // Old site URLs → their new page (#56). Only GET/HEAD; the target is encoded once here
   // (raw Greek letters in a Location header give HTTP 500, see [...path].astro).

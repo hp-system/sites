@@ -99,7 +99,8 @@ const noindex = !isIndexable(facets.map((f) => f.key), sp) || thin;
 const onlyPage = [...sp.keys()].every((k) => k === 'page');
 const selfQuery = !firstPage && onlyPage ? `?page=${res.page}` : '';
 
-const pageNote = firstPage ? '' : ` – ${ui(lang, 'pageOf', { a: res.page, b: res.pages })}`;
+// «Page 2», never «2 of 10»: the number of pages would reveal the catalogue size (no counts).
+const pageNote = firstPage ? '' : ` – ${t(lang, 'home.page', { n: res.page })}`;
 const title = spec
   ? specTitle(spec.title, brand.name) + pageNote
   : (isThemed ? `${heading} — ${ui(lang, 'all')}` : ui(lang, 'all')) + pageNote;

@@ -73,7 +73,8 @@
   "hreflang": "P01: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
   "schema": [
     "Organization",
-    "RealEstateAgent , WebSite, BreadcrumbList not needed"
+    "RealEstateAgent",
+    "WebSite"
   ],
   "breadcrumb": [
     "Početna"

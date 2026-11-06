@@ -40,6 +40,7 @@ const cases = {
   'FAQ count differs': { faq: good.faq.slice(1) },
   'coordinate in text': { intro: good.intro + '<p>40.123456, 23.456789</p>' },
   'unknown link target': { linksOut: [{ anchor: 'x', href: '/en/nowhere' }] },
+  'unknown schema type': { schema: ['CollectionPage', 'BreadcrumbList not needed'] },
   'duplicate title': { title: pages.find((p) => p.id === 'P07' && p.lang === 'en').title },
 };
 for (const [name, patch] of Object.entries(cases)) check(`rule catches: ${name}`, bad(patch).length > 0);

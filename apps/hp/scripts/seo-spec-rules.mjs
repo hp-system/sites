@@ -15,6 +15,8 @@ export const TITLE_MAX = 60;
 export const META_MIN = 130;
 export const META_MAX = 155;
 export const INTRO_MAX_WORDS = 120;
+/** schema.org types the spec names (0_README rule 11). */
+export const SCHEMA_TYPES = ['Organization', 'RealEstateAgent', 'WebSite', 'CollectionPage', 'ItemList', 'Article', 'BreadcrumbList', 'FAQPage'];
 
 const len = (s) => [...(s ?? '')].length;
 const words = (html) => html.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).filter(Boolean).length;
@@ -65,6 +67,8 @@ export function validate(pages, { knownPaths = new Set(), allowedLinkTargets = [
     if (len(p.title) > TITLE_MAX) err(p, `title ${len(p.title)} > ${TITLE_MAX}`);
     if (len(p.meta) < META_MIN || len(p.meta) > META_MAX) err(p, `meta ${len(p.meta)} outside ${META_MIN}–${META_MAX}`);
     if (!p.h1) err(p, 'H1 missing');
+    const badSchema = (p.schema ?? []).filter((s) => !SCHEMA_TYPES.includes(s));
+    if (!p.schema?.length || badSchema.length) err(p, `schema types unknown or empty: ${JSON.stringify(p.schema)}`);
     for (const k of ['title', 'meta', 'path']) {
       const key = `${p.lang}|${p[k]}`;
       if (seen[k].has(key)) err(p, `${k} duplicates ${seen[k].get(key)}`);

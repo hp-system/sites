@@ -36,15 +36,26 @@ const crumbs = seo
     }))
   : [];
 
-const ld: unknown[] = [];
+// og:locale per language (spec 0_README rule 21).
+const OG_LOCALE: Record<string, string> = { el: 'el_GR', en: 'en_GB', de: 'de_DE', sr: 'sr_RS', bg: 'bg_BG', ro: 'ro_RO', ru: 'ru_RU', tr: 'tr_TR', he: 'he_IL' };
+const ORG_ID = `${ORIGIN}/#org`;
+// Sitewide Organization + RealEstateAgent (rule 11). Name, phone and address from the brand config;
+// logo and sameAs (Business Profile, socials) come later (D12).
+const org = { '@context': 'https://schema.org', '@type': ['Organization', 'RealEstateAgent'], '@id': ORG_ID, name: hp.name, url: ORIGIN,
+  telephone: hp.contact.phoneE164, email: hp.contact.email,
+  address: { '@type': 'PostalAddress', streetAddress: hp.addressLatin?.street ?? hp.address.street, addressLocality: hp.addressLatin?.city ?? hp.address.city, postalCode: hp.address.postalCode, addressCountry: hp.address.country } };
+const ld: unknown[] = [org];
 if (seo) {
   const abs = (p?: string) => (p ? ORIGIN + encodeURI(p) : undefined);
   if (seo.schema.includes('BreadcrumbList')) ld.push({ '@context': 'https://schema.org', '@type': 'BreadcrumbList',
     itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.url) })) });
   if (seo.schema.includes('FAQPage') && seo.faq.length) ld.push({ '@context': 'https://schema.org', '@type': 'FAQPage',
     mainEntity: seo.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
-  const main = seo.schema.find((s) => s === 'CollectionPage' || s === 'Article');
-  if (main) ld.push({ '@context': 'https://schema.org', '@type': main, name: seo.h1, url: abs(seo.path), inLanguage: lang });
+  if (seo.schema.includes('WebSite')) ld.push({ '@context': 'https://schema.org', '@type': 'WebSite', url: abs(seo.path), name: hp.name, inLanguage: lang, publisher: { '@id': ORG_ID } });
+  if (seo.schema.includes('CollectionPage')) ld.push({ '@context': 'https://schema.org', '@type': 'CollectionPage', name: seo.h1, url: abs(seo.path), inLanguage: lang });
+  // Article: author = the company (rule 11). datePublished / dateModified are set at publishing; the spec has only «Updated November 2026».
+  if (seo.schema.includes('Article')) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: seo.h1, url: abs(seo.path), inLanguage: lang,
+    author: { '@id': ORG_ID }, publisher: { '@id': ORG_ID } });
 }
 const hreflang = seo ? langsOf(seo.id).map((l) => ({ l, url: ORIGIN + encodeURI(seoOf(seo.id, l)!.path) })) : [];
 const kids = reg ? children(reg.id) : [];
@@ -62,6 +73,10 @@ const status = (r: RegPage) => r.status;
   {hreflang.map((h) => <link rel="alternate" hreflang={h.l} href={h.url} />)}
   {hreflang.length > 0 && seoOf(seo!.id, 'en') && <link rel="alternate" hreflang="x-default" href={ORIGIN + encodeURI(seoOf(seo!.id, 'en')!.path)} />}
   {seo && <meta property="og:title" content={seo.ogTitle} />}
+  {seo && <meta property="og:description" content={seo.meta} />}
+  {seo && <meta property="og:type" content={seo.schema.includes('Article') ? 'article' : 'website'} />}
+  {seo && <meta property="og:url" content={ORIGIN + encodeURI(seo.path)} />}
+  <meta property="og:locale" content={OG_LOCALE[lang] ?? 'en_GB'} />
   {ld.map((x) => <script type="application/ld+json" set:html={ldJson(x)} />)}
   <style>
     :root { --ink:#1b2422; --mut:#5f6b69; --line:#d6dcda; --bg:#f6f7f6; --box:#fff; --acc:#0f5f66; --warn:#9a6100; }

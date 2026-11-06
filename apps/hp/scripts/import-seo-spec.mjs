@@ -153,7 +153,8 @@ function page(r) {
 
 function applyOverrides(p, overrides) {
   const o = overrides[`${p.id}/${p.lang}`];
-  return o ? { ...p, ...o } : p;
+  // Keys starting with «_» are the reason for the override, kept in the overrides file only.
+  return o ? { ...p, ...Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('_'))) } : p;
 }
 
 // ── main ─────────────────────────────────────────────────────────────────────

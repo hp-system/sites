@@ -1,0 +1,4 @@
+{
+  "_note": "Real (not skeleton) spec pages that must pass every SEO check (#153). A page goes in when its template portion is done, so it can never fall back. Format: PageID/lang.",
+  "pages": []
+}

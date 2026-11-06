@@ -1,12 +1,12 @@
 {
-  "_note": "Page registry (#151, plan E-111). One row per page ID. P01–P21 are George's spec: their URLs, texts and links come from src/content/seo/<ID>/<lang>.json. P22+ are the other pages; they get a brief and a new text by D-20261106-SS-2. Stage 3 is EN only: paths of P22+ in the other 8 languages are decided before stage 5 (Q-20261106-SS-1). Status: spec = data imported · live = page exists on the site, text to be replaced · new = page to create · proposed = URL or place waits for Sergei. Menu, footer, breadcrumbs, sitemap and redirects are generated from this file from stage 2 on.",
+  "_note": "Page registry (#151, plan E-111). One row per page ID. P01–P21 are George's spec: their URLs, texts and links come from src/content/seo/<ID>/<lang>.json. P22+ are the other pages; they get a brief and a new text by D-20261106-SS-2. Stage 3 is EN only: paths of P22+ in the other 8 languages are decided before stage 5 (Q-20261106-SS-1). Status: spec = data imported · live = page exists on the site, text to be replaced · new = page to create. URLs of new pages were checked against the spec, GSC and GA4 data (2026-11-06). Menu, footer, breadcrumbs, sitemap and redirects are generated from this file from stage 2 on.",
   "sections": ["buy", "sell", "halkidiki", "services", "about", "exclusive", "contact"],
   "pages": [
     { "id": "P01", "name": "Homepage", "source": "spec", "template": "home", "menu": null, "footer": false, "status": "spec" },
     { "id": "P02", "name": "All properties", "source": "spec", "template": "listing", "menu": { "section": "buy", "order": 1 }, "footer": true, "status": "spec" },
     { "id": "P04", "name": "Houses (Residency)", "source": "spec", "template": "listing", "menu": { "section": "buy", "order": 2 }, "footer": true, "status": "spec" },
     { "id": "P08", "name": "Land", "source": "spec", "template": "listing", "menu": { "section": "buy", "order": 3 }, "footer": true, "status": "spec" },
-    { "id": "P22", "name": "Professional (hotels and commercial)", "source": "page", "template": "listing", "menu": { "section": "buy", "order": 4 }, "footer": false, "status": "proposed", "paths": { "en": "/en/properties/commercial" }, "note": "D3 + seo-real-data-2026-11: hotels for sale. New facet; noindex below 6 listings. URL proposed." },
+    { "id": "P22", "name": "Professional (hotels and commercial)", "source": "page", "template": "listing", "menu": { "section": "buy", "order": 4 }, "footer": false, "status": "new", "paths": { "en": "/en/properties/hotels-for-sale" }, "note": "D3. Data: the demand is hotels (GSC «hotels for sale halkidiki» 174 impressions, «…in halkidiki» 128, «ξενοδοχεια προς πωληση χαλκιδικη» 243; spec 2_Keywords 40/month). Slug in the spec pattern of villas-for-sale and land-for-sale. Noindex below 6 listings; old hotel URLs keep George's targets until it is indexable." },
     { "id": "P05", "name": "Apartments", "source": "spec", "template": "listing", "menu": { "section": "buy", "order": 5 }, "footer": true, "status": "spec" },
     { "id": "P07", "name": "Villas", "source": "spec", "template": "listing", "menu": { "section": "buy", "order": 6 }, "footer": true, "status": "spec" },
     { "id": "P09", "name": "Seafront", "source": "spec", "template": "listing", "menu": { "section": "buy", "order": 7 }, "footer": true, "status": "spec" },
@@ -19,7 +19,7 @@
     { "id": "P24", "name": "Sell", "source": "page", "template": "info", "menu": { "section": "sell", "order": 1 }, "footer": false, "status": "live", "paths": { "en": "/en/sell" } },
     { "id": "P25", "name": "Exclusive assignment", "source": "page", "template": "info", "menu": { "section": "sell", "order": 2 }, "footer": false, "status": "live", "paths": { "en": "/en/work-with-us-exclusively" } },
     { "id": "P26", "name": "Add your property", "source": "page", "template": "info", "menu": { "section": "sell", "order": 3 }, "footer": false, "status": "live", "paths": { "en": "/en/add-your-property" } },
-    { "id": "P27", "name": "Real-estate photography guide", "source": "page", "template": "info", "menu": { "section": "sell", "order": 4 }, "footer": false, "status": "proposed", "paths": { "en": "/en/sell/property-photography-guide" }, "note": "New page from the old PDF guide. URL proposed." },
+    { "id": "P27", "name": "Real-estate photography guide", "source": "page", "template": "info", "menu": { "section": "sell", "order": 4 }, "footer": false, "status": "new", "paths": { "en": "/en/sell/property-photography-guide" }, "note": "New page from the old PDF guide (George's «check» row → here). No search demand in the data: a Sell tool, not a ranking page." },
     { "id": "P28", "name": "Sell: assign to us", "source": "page", "template": "info", "menu": null, "parent": "P24", "footer": false, "status": "live", "paths": { "en": "/en/sell/assign-to-halkidiki-real-estate" } },
     { "id": "P29", "name": "Sell: advertise worldwide", "source": "page", "template": "info", "menu": null, "parent": "P24", "footer": false, "status": "live", "paths": { "en": "/en/sell/advertise-your-property-worldwide" } },
     { "id": "P30", "name": "Sell: from abroad", "source": "page", "template": "info", "menu": null, "parent": "P24", "footer": false, "status": "live", "paths": { "en": "/en/sell/make-purchase-easy" } },
@@ -33,7 +33,6 @@
     { "id": "P12", "name": "Sithonia", "source": "spec", "template": "listing", "menu": { "section": "halkidiki", "order": 3 }, "footer": true, "status": "spec" },
     { "id": "P13", "name": "Nea Propontida", "source": "spec", "template": "listing", "menu": { "section": "halkidiki", "order": 4 }, "footer": false, "status": "spec" },
     { "id": "P14", "name": "Aristotelis", "source": "spec", "template": "listing", "menu": { "section": "halkidiki", "order": 5 }, "footer": false, "status": "spec" },
-    { "id": "P58", "name": "Polygyros", "source": "page", "template": "listing", "menu": { "section": "halkidiki", "order": 6 }, "footer": false, "status": "proposed", "paths": { "en": "/en/properties/polygyros" }, "note": "The 5th municipality of Halkidiki; not in the spec. New area facet; noindex below 6 listings. Proposed." },
     { "id": "P15", "name": "Kassandra villas", "source": "spec", "template": "listing", "menu": null, "parent": "P11", "footer": false, "status": "spec" },
     { "id": "P16", "name": "Sithonia villas", "source": "spec", "template": "listing", "menu": null, "parent": "P12", "footer": false, "status": "spec" },
     { "id": "P17", "name": "Kassandra seafront", "source": "spec", "template": "listing", "menu": null, "parent": "P11", "footer": false, "status": "spec" },
@@ -54,11 +53,11 @@
     { "id": "P46", "name": "Values", "source": "page", "template": "info", "menu": { "section": "about", "order": 4 }, "parent": "P43", "footer": false, "status": "live", "paths": { "en": "/en/about-us/values" } },
     { "id": "P47", "name": "Social responsibility", "source": "page", "template": "info", "menu": { "section": "about", "order": 5 }, "parent": "P43", "footer": false, "status": "live", "paths": { "en": "/en/about-us/company-social-responsibility" } },
     { "id": "P48", "name": "Partners", "source": "page", "template": "info", "menu": { "section": "about", "order": 6 }, "footer": false, "status": "live", "paths": { "en": "/en/our-partners" } },
-    { "id": "P49", "name": "Team", "source": "page", "template": "info", "menu": { "section": "about", "order": 7 }, "parent": "P43", "footer": false, "status": "proposed", "paths": { "en": "/en/about-us/our-team" }, "note": "404 today; the old /our-team has backlinks. URL proposed." },
+    { "id": "P49", "name": "Team", "source": "page", "template": "info", "menu": { "section": "about", "order": 7 }, "parent": "P43", "footer": false, "status": "new", "paths": { "en": "/en/team" }, "note": "404 today. George's table sends /el/η-ομαδα-μας to /team, so EN follows his slug." },
     { "id": "P50", "name": "Careers", "source": "page", "template": "info", "menu": { "section": "about", "order": 8 }, "footer": false, "status": "live", "paths": { "en": "/en/careers" } },
     { "id": "P51", "name": "Job: Bulgarian speaker", "source": "page", "template": "info", "menu": null, "parent": "P50", "footer": false, "status": "live", "paths": { "en": "/en/careers/bulgarian-speaker" }, "note": "Job posting: noindex once closed." },
 
-    { "id": "P52", "name": "Exclusive (ex VIP)", "source": "page", "template": "info", "menu": { "section": "exclusive", "order": 1 }, "footer": false, "status": "proposed", "paths": { "en": "/en/exclusive" }, "note": "D-20261105-SS-1 €1M+ club. Today /en/vip; the new slug is proposed, /en/vip then 301s to it." },
+    { "id": "P52", "name": "Exclusive (ex VIP)", "source": "page", "template": "info", "menu": { "section": "exclusive", "order": 1 }, "footer": false, "status": "new", "paths": { "en": "/en/exclusive" }, "note": "D-20261105-SS-1 €1M+ club; successor of /en/vip. George's table sends /vip to Sell (written before the club decision); /el/vip has 1,046 backlinks, so it goes to its successor here instead." },
     { "id": "P23", "name": "Pre-published (teaser)", "source": "page", "template": "info", "menu": { "section": "exclusive", "order": 2 }, "parent": "P52", "footer": false, "status": "live", "paths": { "en": "/en/pre-published-properties" }, "note": "D4: inside Exclusive, public teaser without listing details." },
     { "id": "P53", "name": "Why register", "source": "page", "template": "info", "menu": { "section": "exclusive", "order": 3 }, "footer": false, "status": "live", "paths": { "en": "/en/why-register" } },
     { "id": "P54", "name": "Register as a buyer", "source": "page", "template": "info", "menu": null, "parent": "P53", "footer": false, "status": "live", "paths": { "en": "/en/why-register/buyer" } },
@@ -78,6 +77,6 @@
   ],
   "retired": [
     { "path": "/en/property-for-sale-in-greece", "to": "P03", "why": "D2: the spec hub replaces it (301)." },
-    { "path": "/en/vip", "to": "P52", "why": "Renamed to Exclusive (proposed slug); 301 once P52 is live." }
+    { "path": "/en/vip", "to": "P52", "why": "Renamed to Exclusive; 301 once P52 is live (deviation from George's vip → Sell, see P52 note)." }
   ]
 }

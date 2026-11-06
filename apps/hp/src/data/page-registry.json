@@ -32,6 +32,7 @@
     { "id": "P12", "name": "Sithonia", "source": "spec", "template": "listing", "menu": { "section": "halkidiki", "order": 3 }, "footer": true, "status": "spec" },
     { "id": "P13", "name": "Nea Propontida", "source": "spec", "template": "listing", "menu": { "section": "halkidiki", "order": 4 }, "footer": false, "status": "spec" },
     { "id": "P14", "name": "Aristotelis", "source": "spec", "template": "listing", "menu": { "section": "halkidiki", "order": 5 }, "footer": false, "status": "spec" },
+    { "id": "P58", "name": "Polygyros", "source": "page", "template": "listing", "menu": { "section": "halkidiki", "order": 6 }, "footer": false, "status": "new", "paths": { "en": "/en/properties/polygyros" }, "note": "The 5th municipality (Gerakini, Psakoudia, Polygyros town); not in the spec. Needed by spec rule 16: every property links to its municipality page. The site already has an EN area text at /en/property-for-sale/polygyros, which 301s here (D1). Low property demand in GSC; noindex below 6 listings, like every listing page." },
     { "id": "P15", "name": "Kassandra villas", "source": "spec", "template": "listing", "menu": null, "parent": "P11", "footer": false, "status": "spec" },
     { "id": "P16", "name": "Sithonia villas", "source": "spec", "template": "listing", "menu": null, "parent": "P12", "footer": false, "status": "spec" },
     { "id": "P17", "name": "Kassandra seafront", "source": "spec", "template": "listing", "menu": null, "parent": "P11", "footer": false, "status": "spec" },

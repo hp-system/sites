@@ -306,9 +306,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
                 grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 12px;
                 position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
                 grid-template-areas: "s1 s1 c1 c2 c3" "c4 c5 c1 s2 s2" "s3 s3 c6 s4 s4"; }
-    /* Sergei 08/11: the same shading as the property of the week (base.css `.scrim--bottom`) */
     .cx__shade { position: absolute; inset: 0; pointer-events: none;
-                 background: linear-gradient(180deg, rgba(0,0,0,.52) 0%, rgba(0,0,0,.18) 16%, rgba(0,0,0,.04) 34%, rgba(0,0,0,.78) 100%); }
+                 box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
     /* Sergei 08/11: tiles only white (services) and black (facts) */
     .cd { min-width: 0; overflow: hidden; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
     .cd svg { width: 40px; height: 40px; color: var(--ink); flex: none; stroke-width: 1.2; }   /* Sergei 08/11: bigger icons */

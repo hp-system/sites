@@ -44,6 +44,24 @@ const sentences = (x: string) => x.split(/(?<=[.!?])\s+/);
 const [h2a] = sentences(t(lang, 'ab.h2'));
 const [c1, ...cRest] = sentences(t(lang, 'ab.close'));
 const c2 = cRest.join(' ');
+// Sergei 08/11: the close's key words in bold (as «The land … begins» above), in every language.
+const CLOSE_BOLD: Record<Lang, string[]> = {
+  en: ['no risk', 'checked'], el: ['κανένα ρίσκο', 'ελέγξει'], bg: ['риск', 'проверили'],
+  sr: ['nijedan rizik', 'proverili'], de: ['kein Risiko', 'geprüft'], ro: ['niciun risc', 'verificat'],
+  tr: ['hiçbir riski', 'kontrol'], he: ['שום סיכון', 'בדקנו'], ru: ['ни одного риска', 'проверили'],
+};
+const c2parts = (() => {
+  const out: { s: string; b: boolean }[] = [];
+  let rest = c2;
+  for (;;) {
+    const hits = (CLOSE_BOLD[lang] ?? []).map((w) => ({ w, i: rest.indexOf(w) })).filter((h) => h.i >= 0).sort((x, y) => x.i - y.i);
+    if (!hits.length) { if (rest) out.push({ s: rest, b: false }); return out; }
+    const { w, i } = hits[0];
+    if (i) out.push({ s: rest.slice(0, i), b: false });
+    out.push({ s: w, b: true });
+    rest = rest.slice(i + w.length);
+  }
+})();
 
 const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
 ---
@@ -103,7 +121,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
 <section class="abc" aria-labelledby="abc-h">
   <div class="wrap">
     <p class="abc__p">{c1}</p>
-    {c2 && <h2 id="abc-h" class="abc__h">{c2}</h2>}
+    {c2 && <h2 id="abc-h" class="abc__h">{c2parts.map((x) => (x.b ? <b>{x.s}</b> : x.s))}</h2>}
     <a class="btn abc__btn" href={contactHref} data-ev="contact:abroad">{t(lang, 'ab.cta')}</a>
   </div>
 </section>
@@ -203,6 +221,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abc .wrap { width: 100%; }
     .abc__p { margin: 0 auto; max-width: 62ch; font-size: 16px; line-height: 1.65; color: var(--muted); }
     .abc__h { margin: 14px 0 0; font-size: 42px; font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: var(--ink); }   /* Sergei 08/11: the size of «We do the rest for you.» */
+    .abc__h b { font-weight: 600; }
     .abc__btn {
       min-height: 48px; padding: 0 30px; margin-top: 30px; font-size: 11.5px;
       background: transparent; color: var(--ink); border: 1px solid var(--ink);

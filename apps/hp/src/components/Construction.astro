@@ -43,6 +43,11 @@ const STRIP = ['s1', 's2', 's3', 's4'];
 // #101: the heading breaks after its first sentence on desktop (one line each).
 const [h2a, ...h2rest] = t(lang, 'cx.h2').split(/(?<=[.!?])\s+/);
 const h2b = h2rest.join(' ');
+// Sergei 08/11 (desktop): when both sentences open with the same word («The … / The …»), that word
+// is set once, large, beside the two lines. Layout only — the full heading stays for screen readers.
+const lead = (x: string) => x.match(/^(\S+)\s+([\s\S]*)$/);
+const la = lead(h2a), lb = h2b ? lead(h2b) : null;
+const pair = la && lb && la[1] === lb[1] ? { w: la[1], a: la[2], b: lb[2] } : null;
 
 // Desktop redesign (Sergei 03/11, mockup «two home blocks»): the four key words of the heading
 // in bold (land · begins · house · build, in each language), and a row of cards you page through.
@@ -92,7 +97,16 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     <div class="cx__top">
       <div class="cx__lead">
         <p class="t-label cx__eyebrow">{t(lang, 'cx.eyebrow')}</p>
-        <h2 id="cx-h" class="cx__h">{bolden(h2a).map((x) => (x.b ? <b>{x.s}</b> : x.s))}{h2b && <><br class="cx__br" /> {bolden(h2b).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</>}</h2>
+        <h2 id="cx-h" class:list={['cx__h', pair && 'cx__h--pair']}>
+          <span class="cx__hx">{bolden(h2a).map((x) => (x.b ? <b>{x.s}</b> : x.s))}{h2b && <><br class="cx__br" /> {bolden(h2b).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</>}</span>
+          {pair && (
+            <span class="cx__pair" aria-hidden="true">
+              <span class="cx__pw">{pair.w}</span>
+              <span class="cx__pl">{bolden(pair.a).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</span>
+              <span class="cx__pl">{bolden(pair.b).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</span>
+            </span>
+          )}
+        </h2>
         <p class="cx__p">{t(lang, 'cx.p')}</p>
       </div>
 
@@ -282,6 +296,12 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx .cx__eyebrow { grid-area: eb; color: var(--muted); }
     .cx .cx__h { grid-area: h; margin-top: 14px; font-size: 42px; line-height: 1.1; color: var(--ink); }
     .cx .cx__h b { font-weight: 600; }
+    /* Sergei 08/11: one shared first word for the two lines («The» once, two lines high) */
+    .cx__pair { display: none; }
+    .cx .cx__h--pair .cx__hx { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .cx .cx__h--pair .cx__pair { display: grid; grid-template-columns: auto auto; justify-content: start; column-gap: .22em; align-items: center; }
+    .cx__pw { grid-row: 1 / span 2; font-size: 2.1em; line-height: .9; font-weight: 300; letter-spacing: -.03em; }
+    .cx__pl { display: block; }
     .cx .cx__p { grid-area: p; margin: 10px 0 0; max-width: none; font-size: 16px; line-height: 1.65; color: var(--muted); }   /* the grey of the area links (Sergei 03/11) */
     .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 0; }
     .cx .cx__btn { background: var(--ink); color: #fff; border: 1px solid var(--ink); }

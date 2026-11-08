@@ -182,8 +182,10 @@ h1, h2, h3, h4 { margin: 0; font-weight: inherit; text-wrap: balance; }
 
 /* A spec section's text under a home block's heading (SEO portion 2, Sergei 08/11) — George's HTML
    (p, ul, li, strong); the municipalities list reads as one line of short items. */
-.spec-sub { margin-top: var(--s2); max-width: 72ch; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
-.spec-sub p { margin: 0 0 var(--s2); }
+.spec-sub { margin-top: var(--s2); max-width: none; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
+.spec-sub p { margin: 0 0 var(--s2); max-width: none; font-size: inherit; }   /* .shead p would cap it at 56ch */
 .spec-sub p:last-child { margin-bottom: 0; }
 .spec-sub ul { list-style: none; margin: var(--s2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s5); }
 .spec-sub strong { color: var(--ink); font-weight: 600; }
+/* Sergei 08/11: a block head that carries a spec text takes the full width (the text runs across) */
+.shead > div:has(> .spec-sub) { flex: 1 1 auto; max-width: none; min-width: 0; }

@@ -40,3 +40,11 @@ export function specTitle(title: string, brand: string): string {
 export function specCrumbs(p: SpecPage, links: (string | undefined)[]): { name: string; url?: string }[] {
   return p.breadcrumb.map((name, i, a) => ({ name, url: i === a.length - 1 ? p.path : links[i] }));
 }
+
+/** The spec body cut at its H2s: [{ h2, html }] (html = what follows the heading). */
+export function specSections(body: string): { h2: string; html: string }[] {
+  return body.split(/(?=<h2>)/).filter((x) => x.startsWith('<h2>')).map((x) => {
+    const m = x.match(/^<h2>([\s\S]*?)<\/h2>([\s\S]*)$/);
+    return { h2: m ? m[1] : '', html: m ? m[2].trim() : x };
+  });
+}

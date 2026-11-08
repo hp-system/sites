@@ -5,15 +5,20 @@
 //   part="rest"  → the H2 body, the FAQ (questions as H3, answers in the HTML) and the links block
 // The HTML comes from the importer's allowlist (p h2 h3 ul li strong, no attributes), so it is
 // rendered as is. Links come only from the spec's «links out», with their exact anchors (rule 15).
-import type { SpecPage } from '../lib/seo-pages';
+import { specSections, type SpecPage } from '../lib/seo-pages';
 import type { Lang } from '../lib/i18n';
 
 interface Props {
   page: SpecPage; part: 'intro' | 'rest'; lang: Lang;
   /** 'tiles': the FAQ as open blocks side by side across the text width (home, Sergei 08/11). */
   faq?: 'list' | 'tiles';
+  /** 'rotate': the H2 sections in one block of fixed height, one at a time every 3 s, dashes to
+   *  pick one (home, Sergei 08/11: «стоять на месте, но перелистывать SEO-текст»). Every section
+   *  stays in the HTML, in the spec's order — search engines read all of it. Phones: all shown. */
+  body?: 'prose' | 'rotate';
 }
-const { page, part, lang, faq = 'list' } = Astro.props;
+const { page, part, lang, faq = 'list', body = 'prose' } = Astro.props;
+const secs = body === 'rotate' ? specSections(page.body) : [];
 
 const L: Record<Lang, { faq: string; more: string }> = {
   en: { faq: 'Frequently asked questions', more: 'See also' },
@@ -32,7 +37,24 @@ const ui = L[lang] ?? L.en;
 
 {part === 'rest' && (
   <section class="st wrap" aria-label={page.h1}>
-    {page.body && <div class="prose" set:html={page.body} />}
+    {page.body && body === 'prose' && <div class="prose" set:html={page.body} />}
+    {secs.length > 0 && (
+      <div class="st-rot" data-rot-hold="seo">
+        <div class="h-bars st-rot__bars" role="group" aria-label={page.h1}>
+          {secs.map((x, i) => (
+            <button type="button" class:list={['h-bar', i === 0 && 'on']} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={x.h2.replace(/<[^>]+>/g, '')}><span></span></button>
+          ))}
+        </div>
+        <div class="h-stack st-rot__stack" data-rot="seo">
+          {secs.map((x, i) => (
+            <article class:list={['h-sx', 'st-rot__it', i === 0 && 'on']}>
+              <h2 set:html={x.h2} />
+              <div class="prose" set:html={x.html} />
+            </article>
+          ))}
+        </div>
+      </div>
+    )}
     {page.faq.length > 0 && faq === 'tiles' && (
       <section class="faqt" aria-label={ui.faq}>
         <p class="t-label st-lbl">{ui.faq}</p>
@@ -81,6 +103,16 @@ const ui = L[lang] ?? L.en;
   .faq .faq-q { font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; margin: 0; color: var(--ink); }
   .faq-a { margin: var(--s2) 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); }
   .faq-a :global(p) { margin: 0 0 var(--s2); }
+  /* SEO sections rotating in one block (home) */
+  .st-rot { position: relative; border-top: 1px solid var(--line); padding-top: var(--s6); }
+  .st-rot__bars { display: none; }
+  .st-rot__it h2 { font-size: var(--fs-s3); font-weight: 300; letter-spacing: -.016em; line-height: 1.14; color: var(--ink); margin: 0 0 var(--s4); max-width: 30ch; }
+  .st-rot__it .prose { max-width: 72ch; }
+  .st-rot__it + .st-rot__it { margin-top: var(--s7); }
+  @media (min-width: 1024px) {
+    .st-rot__bars { display: flex; position: absolute; top: var(--s4); right: 0; margin: 0; }
+    .st-rot__it + .st-rot__it { margin-top: 0; }
+  }
   /* FAQ as tiles (home): every answer open, the blocks share the text width */
   .faqt__row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); }
   .faqt__it { background: var(--paper-2); padding: var(--s5); display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }

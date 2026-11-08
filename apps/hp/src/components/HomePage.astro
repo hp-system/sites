@@ -266,7 +266,7 @@ if (spec?.faq.length) jsonLd.push({
     })();
   </script>
   {/* 1 κεφαλίδα (μέσα στο hero) · 2 hero */}
-  <Hero lang={lang} photo={d.heroPhoto as Photo | null} alt={heroAlt} h1={spec?.h1}
+  <Hero lang={lang} photo={d.heroPhoto as Photo | null} alt={heroAlt} h1={spec?.h1} intro={spec?.intro}
         munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} total={d.total} />
   <SearchBar lang={lang} total={d.total} />
   <FilterSheet lang={lang} total={d.total}
@@ -279,8 +279,7 @@ if (spec?.faq.length) jsonLd.push({
       </div>
     )}
 
-    {/* SEO portion 2: the spec intro, between the H1 and the grid (spec rule 9) */}
-    {spec?.intro && <div class="wrap home-intro"><SpecText page={spec} part="intro" lang={lang} /></div>}
+    {/* SEO portion 2: the spec intro is the hero's ticker, right under the H1 (spec rule 9) */}
 
     {/* 3 επιλεγμένα */}
     {d.newest.length > 0 && (
@@ -345,8 +344,6 @@ if (spec?.faq.length) jsonLd.push({
 </Base>
 
 <style>
-  /* SEO portion 2: the spec intro under the hero, in the text column */
-  .home-intro { padding-block: var(--s7) 0; }
   /* 🕳️ ΤΟ ΚΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗ ΜΠΑΡΑ ΑΝΑΖΗΤΗΣΗΣ (George, 30/7: «αρκετά μεγάλο,
      μίκρυνέ το κατά 50%»). Ήταν 107px στο desktop και 97px στο κινητό, από ΔΥΟ
      πηγές που καμία δεν ήταν γραμμένη ως «κενό κάτω από τη μπάρα»:

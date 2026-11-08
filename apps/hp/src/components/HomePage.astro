@@ -331,7 +331,14 @@ if (spec?.faq.length) jsonLd.push({
 
     {/* SEO portion 2: George's H2 body, FAQ and links — at the very bottom, after the close and
         before the footer (Sergei 08/11). Still «below the grid» as the spec's rule 9 asks. */}
-    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" />}
+    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" links="columns"
+      more={[
+        // the guides that sat under the area tiles (English articles for now, as in the footer, #69).
+        // «Property for sale in Greece» (/en/property-for-sale-in-greece) is NOT carried over: the
+        // spec already links that anchor to the Greece hub P03 — one anchor, two URLs would split it.
+        { href: '/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki', text: t(lang, 'foot.g_buy') },
+        { href: '/en/articles/business-news/taxes-foreigners-properties-greece', text: t(lang, 'foot.g_tax') },
+      ]} />}
   </main>
 
   {/* 11 υποσέλιδο */}

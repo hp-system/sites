@@ -5,7 +5,7 @@
 //   part="rest"  → the H2 body, the FAQ (questions as H3, answers in the HTML) and the links block
 // The HTML comes from the importer's allowlist (p h2 h3 ul li strong, no attributes), so it is
 // rendered as is. Links come only from the spec's «links out», with their exact anchors (rule 15).
-import { specSections, type SpecPage } from '../lib/seo-pages';
+import { specSections, specByPath, type SpecPage } from '../lib/seo-pages';
 import type { Lang } from '../lib/i18n';
 
 interface Props {
@@ -16,8 +16,31 @@ interface Props {
    *  pick one (home, Sergei 08/11: «стоять на месте, но перелистывать SEO-текст»). Every section
    *  stays in the HTML, in the spec's order — search engines read all of it. Phones: all shown. */
   body?: 'prose' | 'rotate';
+  /** 'columns': the spec's links grouped like the footer — properties / areas / guides (home,
+   *  Sergei 08/11); `more` adds the block's own guide links to the guides column. */
+  links?: 'inline' | 'columns';
+  more?: { href: string; text: string }[];
 }
-const { page, part, lang, faq = 'list', body = 'prose' } = Astro.props;
+const { page, part, lang, faq = 'list', body = 'prose', links = 'inline', more = [] } = Astro.props;
+// Group a spec link by the spec page it points to: P02, P04–P10 property lists; P03, P11–P18 areas
+// and the Greece hub; anything else (P19+ guides, other pages) → guides. Anchors stay word for word.
+const G: Record<Lang, [string, string, string]> = {
+  en: ['Properties', 'Areas', 'Guides'], el: ['Ακίνητα', 'Περιοχές', 'Οδηγοί'], de: ['Immobilien', 'Regionen', 'Ratgeber'],
+  sr: ['Nekretnine', 'Oblasti', 'Vodiči'], bg: ['Имоти', 'Райони', 'Наръчници'], ro: ['Proprietăți', 'Zone', 'Ghiduri'],
+  ru: ['Недвижимость', 'Районы', 'Гиды'], tr: ['Emlak', 'Bölgeler', 'Rehberler'], he: ['נכסים', 'אזורים', 'מדריכים'],
+};
+const groupOf = (href: string): 0 | 1 | 2 => {
+  let path = href; try { path = new URL(href, 'https://x').pathname; } catch {}
+  const n = Number((specByPath(path)?.id ?? '').slice(1));
+  if (n === 2 || (n >= 4 && n <= 10)) return 0;
+  if (n === 3 || (n >= 11 && n <= 18)) return 1;
+  return 2;
+};
+const cols: { href: string; text: string }[][] = [[], [], []];
+if (links === 'columns') {
+  page.linksOut.forEach((l) => cols[groupOf(l.href)].push({ href: l.href, text: l.anchor }));
+  cols[2].push(...more);
+}
 const secs = body === 'rotate' ? specSections(page.body) : [];
 
 const L: Record<Lang, { faq: string; more: string }> = {
@@ -73,7 +96,17 @@ const ui = L[lang] ?? L.en;
         ))}
       </section>
     )}
-    {page.linksOut.length > 0 && (
+    {page.linksOut.length > 0 && links === 'columns' && (
+      <nav class="st-cols" aria-label={ui.more}>
+        {cols.map((c, i) => c.length > 0 && (
+          <div class="st-col">
+            <p class="t-label st-lbl">{(G[lang] ?? G.en)[i]}</p>
+            <ul>{c.map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>
+          </div>
+        ))}
+      </nav>
+    )}
+    {page.linksOut.length > 0 && links === 'inline' && (
       <nav class="st-links" aria-label={ui.more}>
         <p class="t-label st-lbl">{ui.more}</p>
         <ul>{page.linksOut.map((l) => <li><a href={l.href}>{l.anchor}</a></li>)}</ul>
@@ -120,6 +153,12 @@ const ui = L[lang] ?? L.en;
   .faqt .faq-a { margin: 0; }
   @media (min-width: 760px) { .faqt__row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 1024px) { .faqt__row { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  /* the spec links as footer-like columns (home) */
+  .st-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); border-top: 1px solid var(--line); padding-top: var(--s6); }
+  .st-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+  .st-col a { color: var(--ink-2); font-size: var(--fs-s0); text-decoration: none; }
+  .st-col a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  @media (min-width: 760px) { .st-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .st-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); }
   .st-links a { color: var(--ink); font-size: var(--fs-s0); text-underline-offset: 3px; }
 </style>

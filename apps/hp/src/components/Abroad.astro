@@ -149,6 +149,13 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
       }
       if (k < 1) els.forEach((el) => { el.style.fontSize = `${Math.floor(base * k * 10) / 10}px`; });
     }
+    // the band's padding centres the big line: hand it the heading's real line height
+    const h = document.querySelector<HTMLElement>('.ab3 .abroad__h');
+    const box = document.querySelector<HTMLElement>('.ab3');
+    const b = document.querySelector<HTMLElement>('.ab3 .two__l b');
+    // the taller of the two big lines (they share a baseline) is the one centred
+    const lh = Math.max(h ? parseFloat(getComputedStyle(h).lineHeight) : 0, b ? parseFloat(getComputedStyle(b).lineHeight) : 0);
+    if (box && lh) box.style.setProperty('--abl', `${lh}px`);
   };
   fit();
   document.fonts?.ready.then(fit);
@@ -210,8 +217,11 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     /* Sergei 08/11: the BIG lines of both columns on one line, through the band's middle; the small
        text hangs above (label) or below (sub, role) and no longer pushes them. 116 px = 140 (half of
        280) − half the 46 px heading line. The columns share the heading's baseline. */
-    /* Sergei 08/11 (type canon page): the big lines on the upper golden line, 0.382 of 280 = 107; 84 = 107 − half the 46 px line */
-    .abroad, .abroad--you { align-items: flex-start; padding-top: 84px; padding-bottom: 28px; }
+    /* Sergei 08/11: both bands the same height (--abh) and the big lines on the middle of each:
+       padding-top = half the band − half the 46 px line. --abh leaves room for three lines of
+       17 px text under the line in every language. */
+    .ab3 { --abh: 340px; }
+    .abroad, .abroad--you { min-height: var(--abh); height: var(--abh); align-items: flex-start; padding-top: calc(var(--abh) / 2 - var(--abl, 48px) / 2); padding-bottom: 0; }   /* --abl: the heading's line height, set by the script */
     .ab__grid { align-items: baseline; }
     .abroad__head { position: relative; }
     .abroad__eyebrow { position: absolute; left: 0; bottom: 100%; margin: 0 0 14px; }

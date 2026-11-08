@@ -16,8 +16,12 @@ import { t, type Lang } from '../lib/i18n';
 import { money } from '../lib/format';
 
 export type AreaTile = { key: string; name: string; href: string; alt: string; fromText: string; photo: Photo | null };
-interface Props { lang: Lang; items: AreaTile[]; from: number }
-const { lang, items, from } = Astro.props;
+interface Props {
+  lang: Lang; items: AreaTile[]; from: number;
+  /** A section of George's SEO spec (P01) shown as this block's head (Sergei 08/11): its H2 and text. */
+  spec?: { h2: string; html: string };
+}
+const { lang, items, from, spec } = Astro.props;
 
 // The guides are English-only for now (same links as the footer, #69).
 const LINKS = [
@@ -30,8 +34,8 @@ const LINKS = [
   <div class="wrap">
     <div class="shead hz-head">
       <div>
-        <h2 id="area-h" class="t-h2">{t(lang, 'home.area_h2')}</h2>
-        {from > 0 && <p>{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
+        <h2 id="area-h" class="t-h2">{spec?.h2 ?? t(lang, 'home.area_h2')}</h2>
+        {spec?.html ? <div class="spec-sub" set:html={spec.html} /> : from > 0 && <p>{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
       </div>
     </div>
 

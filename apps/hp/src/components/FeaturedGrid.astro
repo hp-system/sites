@@ -11,8 +11,12 @@ import { t, type Lang } from '../lib/i18n';
 import PropertyCard from './PropertyCard.astro';
 
 import type { Viewer } from '../lib/gate';
-interface Props { items: SiteProperty[]; lang: Lang; total?: number; viewer: Viewer }
-const { items, lang, viewer } = Astro.props;
+interface Props {
+  items: SiteProperty[]; lang: Lang; total?: number; viewer: Viewer;
+  /** A section of George's SEO spec (P01) shown as this block's head (Sergei 08/11): its H2 and text. */
+  spec?: { h2: string; html: string };
+}
+const { items, lang, viewer, spec } = Astro.props;
 const pages = Math.ceil(items.length / 4);
 ---
 <section class="section np" aria-labelledby="featured-h">
@@ -23,7 +27,8 @@ const pages = Math.ceil(items.length / 4);
         engines see every link. Phone/tablet: the same grid as before. */}
     <div class="shead np__head">
       <div>
-        <h2 id="featured-h" class="t-h2">{t(lang, 'home.new_h2')}</h2>
+        <h2 id="featured-h" class="t-h2">{spec?.h2 ?? t(lang, 'home.new_h2')}</h2>
+        {spec?.html && <div class="spec-sub" set:html={spec.html} />}
       </div>
       {pages > 1 && (
         <div class="h-dash" role="group" aria-label={t(lang, 'home.pages')} data-dash-for="railNp">

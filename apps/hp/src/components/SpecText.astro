@@ -8,8 +8,12 @@
 import type { SpecPage } from '../lib/seo-pages';
 import type { Lang } from '../lib/i18n';
 
-interface Props { page: SpecPage; part: 'intro' | 'rest'; lang: Lang }
-const { page, part, lang } = Astro.props;
+interface Props {
+  page: SpecPage; part: 'intro' | 'rest'; lang: Lang;
+  /** 'tiles': the FAQ as open blocks side by side across the text width (home, Sergei 08/11). */
+  faq?: 'list' | 'tiles';
+}
+const { page, part, lang, faq = 'list' } = Astro.props;
 
 const L: Record<Lang, { faq: string; more: string }> = {
   en: { faq: 'Frequently asked questions', more: 'See also' },
@@ -29,7 +33,17 @@ const ui = L[lang] ?? L.en;
 {part === 'rest' && (
   <section class="st wrap" aria-label={page.h1}>
     {page.body && <div class="prose" set:html={page.body} />}
-    {page.faq.length > 0 && (
+    {page.faq.length > 0 && faq === 'tiles' && (
+      <section class="faqt" aria-label={ui.faq}>
+        <p class="t-label st-lbl">{ui.faq}</p>
+        <div class="faqt__row">
+          {page.faq.map((f) => (
+            <article class="faqt__it"><h3 class="faq-q">{f.q}</h3><div class="faq-a" set:html={f.a.includes('<') ? f.a : `<p>${f.a}</p>`} /></article>
+          ))}
+        </div>
+      </section>
+    )}
+    {page.faq.length > 0 && faq === 'list' && (
       <section class="faq" aria-label={ui.faq}>
         <p class="t-label st-lbl">{ui.faq}</p>
         {page.faq.map((f, i) => (
@@ -67,6 +81,13 @@ const ui = L[lang] ?? L.en;
   .faq .faq-q { font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; margin: 0; color: var(--ink); }
   .faq-a { margin: var(--s2) 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); }
   .faq-a :global(p) { margin: 0 0 var(--s2); }
+  /* FAQ as tiles (home): every answer open, the blocks share the text width */
+  .faqt__row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); }
+  .faqt__it { background: var(--paper-2); padding: var(--s5); display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
+  .faqt .faq-q { font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; margin: 0; color: var(--ink); }
+  .faqt .faq-a { margin: 0; }
+  @media (min-width: 760px) { .faqt__row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .faqt__row { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
   .st-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); }
   .st-links a { color: var(--ink); font-size: var(--fs-s0); text-underline-offset: 3px; }
 </style>

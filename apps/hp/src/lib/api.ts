@@ -20,11 +20,36 @@ export type SiteProperty = {
 
 type ListResponse = { total: number; page: number; limit: number; items: SiteProperty[] };
 
+/**
+ * Time limits for the property requests (outage 2026-11-08: the CRM API stopped answering and
+ * every page that lists properties hung until Cloudflare cut it; company/content already had 4 s).
+ * REQUEST_MS caps one request; FETCH_ALL_MS caps the whole paged pull (normally ~2 s for 9 pages).
+ * On a timeout the request throws, and the callers already handle that: lists render without
+ * properties (`apiDown`), the property page answers 503 + Retry-After (#88), a stale cache is kept.
+ * After a timeout or network error the API counts as down for DOWN_MS: further calls fail at
+ * once instead of each waiting REQUEST_MS again (one page calls the API several times in a row,
+ * so without this a page took 20–36 s). An HTTP error (the API answered) does not trip it.
+ * Rejected: one long limit (30 s) — the visitor still stares at a blank page and Cloudflare
+ * may cut first; no limit — the 2026-11-08 hang.
+ */
+const REQUEST_MS = 8_000;
+const FETCH_ALL_MS = 15_000;
+const DOWN_MS = 30_000;
+let downUntil = 0;
+
 async function get<T>(path: string, memberToken?: string, country?: string): Promise<T> {
   const headers: Record<string, string> = { accept: 'application/json' };
   if (memberToken) headers['x-member-token'] = memberToken;
   if (country) headers['x-visitor-country'] = country;
-  const res = await fetch(`${API}${path}`, { headers });
+  if (Date.now() < downUntil) throw new Error(`EALIDA API ${path} → skipped, API down (retry after ${new Date(downUntil).toISOString()})`);
+  let res: Response;
+  try {
+    res = await fetch(`${API}${path}`, { headers, signal: AbortSignal.timeout(REQUEST_MS) });
+  } catch (e) {
+    downUntil = Date.now() + DOWN_MS;
+    console.error(`[hp-site] EALIDA API ${path} → ${(e as Error).name}: ${(e as Error).message}; skipping the API for ${DOWN_MS / 1000} s`);
+    throw e;
+  }
   if (!res.ok) throw new Error(`EALIDA API ${path} → HTTP ${res.status}`);
   return res.json() as Promise<T>;
 }
@@ -95,7 +120,9 @@ let ceilingWarned = false;
 
 async function fetchAll(memberToken?: string, country?: string): Promise<SiteProperty[]> {
   const out: SiteProperty[] = [];
+  const deadline = Date.now() + FETCH_ALL_MS;
   for (let page = 1; ; page++) {
+    if (Date.now() > deadline) throw new Error(`EALIDA API /site/properties: pull exceeded ${FETCH_ALL_MS} ms at page ${page}`);
     const r = await api.properties({ limit: PAGE_SIZE, page }, memberToken, country);
     out.push(...r.items);
     if (out.length >= r.total || r.items.length === 0) break;

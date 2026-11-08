@@ -49,6 +49,7 @@ type Raw = Partial<Record<
 let cache: { at: number; raw: Raw } | null = null;
 const TTL = 60_000;                       // ένα λεπτό — οι αλλαγές CMS ισχύουν σχεδόν αμέσως
 let inflight: Promise<Raw> | null = null;
+const DOWN_MS = 30_000;                   // after a failure: retry the API no sooner than this
 
 async function load(): Promise<Raw> {
   if (cache && Date.now() - cache.at < TTL) return cache.raw;
@@ -63,7 +64,11 @@ async function load(): Promise<Raw> {
     .catch(() => {
       // 🛡️ Το API κάτω ΔΕΝ σβήνει το τηλέφωνο. Κρατάμε ό,τι είχαμε· αν δεν είχαμε
       //    ποτέ, γυρίζουμε κενό και αναλαμβάνει το `pick()` παρακάτω.
-      return cache?.raw ?? {};
+      // Outage 2026-11-08: remember the failure for DOWN_MS, so the next calls on the same
+      // page do not wait 4 s each again (a page asks several times).
+      const raw = cache?.raw ?? {};
+      cache = { at: Date.now() - TTL + DOWN_MS, raw };
+      return raw;
     })
     .finally(() => { inflight = null; });
   return inflight;

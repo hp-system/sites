@@ -76,7 +76,10 @@ const ICON: Record<string, string> = {
   c5: '<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
   c6: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
 };
-const ROW = ['s1', 'c1', 'c2', 's2', 'c3', 'c4', 's3', 'c5', 'c6', 's4'];
+const ROW = ['s1', 'c1', 'c2', 'c3', 'c4', 'c5', 's2', 's3', 'c6', 's4'];
+// Sergei 08/11 (canvas «HP Construction bento», v3): the row becomes a bento under the page, seen
+// through a full-width window; the tiles slide past faster than the page while the window crosses
+// the screen. Placement is by grid area (cd--<key>), so the order above is only the reading order.
 
 const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
 ---
@@ -107,19 +110,18 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
       </p>
 
       {/* desktop: the row of cards (the same texts as the boxes below, which stay for phones) */}
-      <div class="cx__rw">
-        <button type="button" class="cx__arw cx__arw--l" data-cx-prev aria-label="‹" hidden>‹</button>
-        <button type="button" class="cx__arw cx__arw--r" data-cx-next aria-label="›">›</button>
+      <div class="cx__rw" data-cx-win>
         <div class="cx__rail" data-cx-rail>
           {ROW.map((k) => k.startsWith('s') ? (
-            <article class="cd cd--fact"><h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p></article>
+            <article class={`cd cd--fact cd--${k}`}><h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p></article>
           ) : (
-            <article class="cd">
+            <article class={`cd cd--${k}`}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICON[k]}></svg>
               <h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p>
             </article>
           ))}
         </div>
+        <div class="cx__shade" aria-hidden="true"></div>
       </div>
 
       <div class="cx__caps" data-acc>
@@ -156,20 +158,31 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
 </section>
 
 <script>
-  // Desktop row: the arrows page by two cards and hide at the ends; the row's left edge sits on
-  // the page's left line (the window's scrollbar width is measured for that).
-  document.querySelectorAll<HTMLElement>('[data-cx-rail]').forEach((rail) => {
-    const box = rail.parentElement!;
-    const prev = box.querySelector<HTMLButtonElement>('[data-cx-prev]')!;
-    const next = box.querySelector<HTMLButtonElement>('[data-cx-next]')!;
-    const sbw = () => document.documentElement.style.setProperty('--sbw', `${window.innerWidth - document.documentElement.clientWidth}px`);
-    const step = () => ((rail.querySelector('.cd')?.getBoundingClientRect().width ?? 300) + 16) * 2;
-    const ends = () => { prev.hidden = rail.scrollLeft < 4; next.hidden = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 4; };
-    prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
-    rail.addEventListener('scroll', ends, { passive: true });
-    window.addEventListener('resize', () => { sbw(); ends(); });
-    sbw(); ends();
+  // Desktop window onto the bento (Sergei 08/11, v3): while the window travels from the bottom of
+  // the screen to the top, the tiles under it slide their whole extra height — faster than the
+  // page. The window spans the full width (the window's scrollbar width is measured for that).
+  // Reduced motion: no slide; the window is an ordinary scroll box (CSS).
+  document.querySelectorAll<HTMLElement>('[data-cx-win]').forEach((win) => {
+    const rail = win.querySelector<HTMLElement>('[data-cx-rail]')!;
+    const desk = window.matchMedia('(min-width: 1024px)');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sbw = () => win.style.setProperty('--pw', `${document.documentElement.clientWidth}px`);
+    let queued = false;
+    const place = () => {
+      queued = false;
+      if (!desk.matches || still.matches) { rail.style.transform = ''; return; }
+      const r = win.getBoundingClientRect();
+      const range = window.innerHeight - r.height;
+      const p = range > 0 ? Math.min(1, Math.max(0, (window.innerHeight - r.bottom) / range)) : 0;
+      const travel = Math.max(0, rail.offsetHeight - win.clientHeight);
+      rail.style.transform = `translate3d(0, ${-Math.round(p * travel)}px, 0)`;
+    };
+    const ask = () => { if (!queued) { queued = true; requestAnimationFrame(place); } };
+    window.addEventListener('scroll', ask, { passive: true });
+    window.addEventListener('resize', () => { sbw(); ask(); });
+    desk.addEventListener('change', ask);
+    still.addEventListener('change', ask);
+    sbw(); place();
   });
 </script>
 
@@ -295,32 +308,36 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx .cx__btn--ghost:hover { background: var(--ink); color: #fff; }
     .cx .cx__caps, .cx .cx__strip { display: none; }
 
-    /* the row bleeds to the window's right edge and starts on the page's left line */
-    .cx__rw { --off: max(var(--gut), calc((100vw - var(--sbw, 0px) - var(--max)) / 2 + var(--gut)));
-              display: block; grid-area: rail; position: relative; margin: 22px 0 0 calc(-1 * var(--off)); width: calc(100vw - var(--sbw, 0px)); }
-    .cx__rail { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-                padding: 4px var(--off) 12px; scroll-padding-inline: var(--off); }
-    .cx__rail::-webkit-scrollbar { display: none; }
-    .cd { flex: none; width: 300px; min-height: 250px; scroll-snap-align: start;
-          background: var(--paper-2); padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;
-          transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s ease; }
-    .cd:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(10,14,16,.10); }
-    .cd svg { width: 34px; height: 34px; color: var(--ink); flex: none; }
-    .cd h3 { margin: 6px 0 0; font-size: 21px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
-    .cd p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+    /* Sergei 08/11 (v3): a full-width window; the bento lies under it and slides (script above). */
+    /* --pw = the page's width without the scrollbar, measured by the script (some browsers already
+       leave the scrollbar out of 100vw, so 100vw − scrollbar came out 15 px short). */
+    .cx__rw { --pw: calc(100vw - var(--sbw, 0px)); --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
+              display: block; grid-area: rail; position: relative; margin: 40px 0 0 calc(-1 * var(--off)); width: var(--pw);
+              height: 480px; overflow: hidden; background: var(--ink-deep); }
+    .cx__rail { box-sizing: border-box; padding: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-auto-rows: 250px; gap: 12px; will-change: transform;
+                grid-template-areas: "s1 s1 c1 c2 c3" "c4 c5 c1 s2 s2" "s3 s3 c6 s4 s4"; }
+    .cx__shade { position: absolute; inset: 0; pointer-events: none;
+                 box-shadow: inset 0 24px 28px -20px rgba(11,14,16,.85), inset 0 -24px 28px -20px rgba(11,14,16,.85); }
+    .cd { min-width: 0; background: var(--paper-2); padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+    .cd svg { width: 30px; height: 30px; color: var(--ink); flex: none; }
+    .cd h3 { margin: auto 0 0; font-size: 18px; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+    .cd p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
     .cd p::first-letter { text-transform: uppercase; }
-    .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; }
-    .cd--fact h3 { font-size: 26px; font-weight: 300; }
-    .cd--fact p { color: rgba(255,255,255,.72); }
-    .cx__arw { all: unset; box-sizing: border-box; position: absolute; z-index: 3; top: calc(50% - 7px); transform: translateY(-50%);
-               width: 48px; height: 48px; display: grid; place-items: center; cursor: pointer; color: var(--ink); font-size: 22px;
-               background: rgba(255,255,255,.92); border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(10,14,16,.14);
-               transition: border-color .2s ease; }
-    .cx__arw[hidden] { display: none; }
-    .cx__arw--l { left: 24px; }
-    .cx__arw--r { right: 24px; }
-    .cx__arw:hover { border-color: var(--ink); }
-    .cx__arw:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .cd--c1 { grid-area: c1; padding: 28px 26px; gap: 14px; }
+    .cd--c1 svg { width: 64px; height: 64px; stroke-width: 1; }
+    .cd--c1 h3 { font-size: 24px; line-height: 1.2; }
+    .cd--c1 p { font-size: 15px; line-height: 1.55; }
+    .cd--c2 { grid-area: c2; background: var(--paper-3); }
+    .cd--c3 { grid-area: c3; background: var(--paper); }
+    .cd--c4 { grid-area: c4; background: var(--paper); }
+    .cd--c5 { grid-area: c5; background: var(--paper-3); }
+    .cd--c6 { grid-area: c6; }
+    .cd--s1 { grid-area: s1; } .cd--s2 { grid-area: s2; } .cd--s3 { grid-area: s3; } .cd--s4 { grid-area: s4; }
+    .cd--fact { background: var(--ink-hover); color: #fff; justify-content: flex-end; padding: 28px 30px; }
+    .cd--fact h3 { margin: 0; font-size: 40px; font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
+    .cd--fact p { max-width: 40ch; font-size: 16px; line-height: 1.55; color: rgba(255,255,255,.72); }
   }
-  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .cd { transition: none; } }
+  /* Reduced motion: nothing slides; the window becomes an ordinary scroll box. */
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .cx__rw { overflow-y: auto; } .cx__rail { transform: none !important; } }
 </style>

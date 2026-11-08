@@ -19,6 +19,7 @@ import Abroad from './Abroad.astro';
 import Footer from './Footer.astro';
 import SpecText from './SpecText.astro';
 import { specOf, specTitle } from '../lib/seo-pages';
+import REGISTRY from '../data/page-registry.json';
 
 import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
 import { buildHome } from '../lib/home';
@@ -121,8 +122,15 @@ const pickPhoto = (f: (a: any) => boolean) => {
 // approved mockup. The first four are the old collections (same links); the next
 // four are every type of property. A tile with no property behind it is dropped.
 const sub = (a: any) => String(a?.subcategory ?? '').toLowerCase();
+// Sergei 08/11 (George's SEO spec, rule 4): a tile links to the clean spec page of its type where one
+// exists in this language (P04 homes, P05 apartments, P06 maisonettes, P08 land, P09 seafront,
+// — filter URLs are noindex + canonical to those pages. Hotels keep the filter until P22 is
+// built (it waits for its brief; its URL answers 404 today).
+// Pool and «above one million» have no spec page and keep their filters.
+const pageOf = (id: string, fallback: string): string =>
+  specOf(id, lang)?.path ?? (REGISTRY.pages.find((r: any) => r.id === id)?.paths?.[lang] as string | undefined) ?? fallback;
 const COLLS: { key: string; title: string; href: string; keep: (a: any) => boolean }[] = [
-  { key: 'sea',  title: t(lang, 'coll.sea'),  href: `${url}?sea_access=front`, keep: (a) => a.sea_access === 'front' },
+  { key: 'sea',  title: t(lang, 'coll.sea'),  href: pageOf('P09', `${url}?sea_access=front`), keep: (a) => a.sea_access === 'front' },
   // 🪤 ΤΟ ΠΛΑΚΙΔΙΟ ΕΛΕΓΕ **308** ΕΝΩ Η ΑΛΗΘΕΙΑ ΕΙΝΑΙ **103** (διορθώθηκε 30/7).
   //    Το `pools` δεν είναι σημαία ναι/όχι — είναι πολλαπλή επιλογή με κωδικούς,
   //    και ο κωδικός «2» σημαίνει **ΧΩΡΙΣ ΠΙΣΙΝΑ**: τον έχουν 203 ακίνητα.
@@ -131,12 +139,12 @@ const COLLS: { key: string; title: string; href: string; keep: (a: any) => boole
   // 🪤 ΕΔΩ ΗΤΑΝ «Σπάνια & μοναδικά» με σύνδεσμο `?rare=1` — φίλτρο που ΔΕΝ ΥΠΑΡΧΕΙ.
   //    Τα ακίνητα άνω του εκατομμυρίου έχουν 4,23 αιτήματα ανά ακίνητο (μετρήθηκε).
   { key: 'top',  title: t(lang, 'coll.top'),  href: `${url}?price_min=1000000`, keep: (a) => priceOf(a) >= 1_000_000 },
-  { key: 'land', title: t(lang, 'coll.land'), href: `${url}?category=land`, keep: (a) => a.category === 'land' },
-  { key: 'houses', title: t(lang, 'coll.houses'), href: facetUrl(lang, 'houses'),
+  { key: 'land', title: t(lang, 'coll.land'), href: pageOf('P08', `${url}?category=land`), keep: (a) => a.category === 'land' },
+  { key: 'houses', title: t(lang, 'coll.houses'), href: pageOf('P04', facetUrl(lang, 'houses')),
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('detached house') },
-  { key: 'maisonettes', title: t(lang, 'kinds.maisonettes'), href: facetUrl(lang, 'maisonettes'),
+  { key: 'maisonettes', title: t(lang, 'kinds.maisonettes'), href: pageOf('P06', facetUrl(lang, 'maisonettes')),
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('maisonette') },
-  { key: 'apartments', title: t(lang, 'kinds.apartments'), href: `${url}?type=apartment`,
+  { key: 'apartments', title: t(lang, 'kinds.apartments'), href: pageOf('P05', `${url}?type=apartment`),
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('apartment') },
   { key: 'business', title: t(lang, 'coll.hotels'), href: `${url}?category=business`, keep: (a) => catKey(a) === 'business' },
 ];

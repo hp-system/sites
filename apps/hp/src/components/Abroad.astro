@@ -108,6 +108,36 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   </div>
 </section>
 
+
+<script>
+  // Sergei 08/11 (desktop): every big line of the two bands stays on ONE line. Where a language's
+  // line is longer than its column, the font shrinks just enough — one size for the two left
+  // headings and one for all the steps on the right, so nothing jumps when a step turns.
+  const desk = window.matchMedia('(min-width: 1024px)');
+  const groups = [
+    () => Array.from(document.querySelectorAll<HTMLElement>('.ab3 .abroad__h')),
+    () => Array.from(document.querySelectorAll<HTMLElement>('.ab3 .two__l b')),
+  ];
+  const fit = () => {
+    for (const get of groups) {
+      const els = get();
+      els.forEach((el) => el.style.removeProperty('font-size'));
+      if (!desk.matches || !els.length) continue;
+      const base = parseFloat(getComputedStyle(els[0]).fontSize);
+      let k = 1;
+      for (const el of els) {
+        const room = (el.closest('.ab__grid > *') as HTMLElement | null)?.clientWidth ?? el.clientWidth;
+        if (el.scrollWidth > room) k = Math.min(k, room / el.scrollWidth);
+      }
+      if (k < 1) els.forEach((el) => { el.style.fontSize = `${Math.floor(base * k * 10) / 10}px`; });
+    }
+  };
+  fit();
+  document.fonts?.ready.then(fit);
+  window.addEventListener('resize', fit);
+  desk.addEventListener('change', fit);
+</script>
+
 <style>
   /* ── Phone / tablet: George's two blocks, one under the other ─────────── */
   .abroad { padding: var(--s6) 0; }
@@ -152,6 +182,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
 
     .two__l li { padding: 0; border: 0; }
     .two__l b { font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
+    .abroad__h, .two__l b { white-space: nowrap; }   /* Sergei 08/11: one line; the script above shrinks a line that is too long */
     .two__l i { margin-top: 12px; font-size: 15px; color: var(--muted); }
     .abroad--us .two__l i { color: rgba(255,255,255,.6); }
     .h-bars { display: flex; }

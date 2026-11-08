@@ -18,7 +18,9 @@ export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   site: process.env.SITE_URL || brand.web.origin,
-  build: { inlineStylesheets: 'always' },   // ένα αίτημα λιγότερο στο κρίσιμο μονοπάτι
+  // SEO audit 08/11: 'auto' (was 'always'): 276 KB of CSS was inlined into every page and could not be
+  // cached; now the big sheets are files the browser keeps, small ones (< 4 KB) stay inline.
+  build: { inlineStylesheets: 'auto' },   // ένα αίτημα λιγότερο στο κρίσιμο μονοπάτι
   compressHTML: true,
   markdown: { remarkPlugins: [remarkWidgets] },
   server: { port: 4330, host: true },

@@ -99,9 +99,9 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
     )}
     {introText && (
       <div class="hero__tick">
-        <div class="hero__track">
+        {/* SEO audit 08/11: the text is in the HTML once; the loop's repeat is drawn by CSS from data-copy */}
+        <div class="hero__track" data-copy={introText}>
           <p class="hero__tx">{introText}</p>
-          <p class="hero__tx" aria-hidden="true">{introText}</p>
         </div>
       </div>
     )}
@@ -165,10 +165,11 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
   .hero__track { display: inline-flex; gap: 4em; animation: hero-tick 70s linear infinite; }
   .hero__tick:hover .hero__track { animation-play-state: paused; }
   .hero__tx { margin: 0; flex: none; font-size: var(--fs-s0); line-height: 1.55; color: rgba(255,255,255,.88); }
+  .hero__track::after { content: attr(data-copy); flex: none; font-size: var(--fs-s0); line-height: 1.55; color: rgba(255,255,255,.88); }
   @keyframes hero-tick { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 2em)); } }
   @media (prefers-reduced-motion: reduce) {
     .hero__track { animation: none; }
-    .hero__tx[aria-hidden] { display: none; }
+    .hero__track::after { display: none; }
     .hero__tx { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
     .hero__track { display: block; }
   }

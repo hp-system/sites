@@ -25,7 +25,7 @@ const { lang, items, from } = Astro.props;
   <div class="wrap">
     <div class="shead hz-head">
       <div>
-        <h2 id="area-h" class="t-h2">{t(lang, 'home.area_h2')}</h2>
+        <p data-h id="area-h" class="t-h2">{t(lang, 'home.area_h2')}</p>
         {from > 0 && <p>{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
       </div>
     </div>

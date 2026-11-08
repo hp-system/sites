@@ -23,7 +23,7 @@ const pages = Math.ceil(items.length / 4);
         engines see every link. Phone/tablet: the same grid as before. */}
     <div class="shead np__head">
       <div>
-        <h2 id="featured-h" class="t-h2">{t(lang, 'home.new_h2')}</h2>
+        <p data-h id="featured-h" class="t-h2">{t(lang, 'home.new_h2')}</p>
       </div>
       {pages > 1 && (
         <div class="h-dash" role="group" aria-label={t(lang, 'home.pages')} data-dash-for="railNp">

@@ -78,7 +78,7 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
       </button>
     ) : (
-      <a class="heart" href={backTo} aria-label={pui(lang, 'favorite')} data-ev="member:favorite_property">
+      <a class="heart" href={backTo} rel="nofollow" aria-label={pui(lang, 'favorite')} data-ev="member:favorite_property">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z"/></svg>
       </a>
     )}

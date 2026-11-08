@@ -87,7 +87,7 @@ const has = (k: string) => pageExists(k as any);
         δεν μπορέσαμε να απαντήσουμε ποιο σημείο αποδίδει. Δες lib/track.ts. */}
     {inside
       ? <a class="acct" href={`${p}/panel`} data-ev="panel:header">{who || t(lang, 'pnl.title')}</a>
-      : <a href={`${p}/login`} data-ev="register:header">{t(lang, 'nav.login')}</a>}
+      : <a href={`${p}/login`} rel="nofollow" data-ev="register:header">{t(lang, 'nav.login')}</a>}
     <button class="burger" type="button" data-menu-open
             aria-label={t(lang, 'ui.menu')} aria-expanded="false" aria-controls="mobile-menu">
       <i></i><i></i><i></i>

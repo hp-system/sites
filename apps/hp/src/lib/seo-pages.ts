@@ -48,3 +48,13 @@ export function specSections(body: string): { h2: string; html: string }[] {
     return { h2: m ? m[1] : '', html: m ? m[2].trim() : x };
   });
 }
+
+/** URL of a spec page in this language, or `fallback` when the spec has none (SEO audit 08/11:
+ *  menus and tiles link the clean spec pages, not filter URLs). */
+export function specPathOr(id: string, lang: Lang, fallback: string): string {
+  return specOf(id, lang)?.path ?? fallback;
+}
+/** The spec area page of a municipality (its Greek key, as in the data). Polygyros has none. */
+export const MUNI_SPEC: Record<string, string> = {
+  'Κασσάνδρα': 'P11', 'Σιθωνία': 'P12', 'Νέα Προποντίδα': 'P13', 'Αριστοτέλης': 'P14',
+};

@@ -65,6 +65,9 @@ img { height: auto; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; }
 h1, h2, h3, h4 { margin: 0; font-weight: inherit; text-wrap: balance; }
+/* SEO audit 08/11: design headings without a search phrase are paragraphs that look like headings
+   (the outline keeps one H1 and George's H2s) — same reset as h2. */
+[data-h] { margin: 0; font-weight: inherit; text-wrap: balance; }
 
 /* ═══ ΕΣΤΙΑΣΗ ═══
    🔴 ΑΛΛΑΞΕ 28/7 (George): «όταν το πατάς γίνεται μπλε το πεδίο γύρω γύρω, και
@@ -116,7 +119,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: inherit; text-wrap: balance; }
 
 /* Επικεφαλίδα ενότητας: τίτλος + προαιρετικός σύνδεσμος δεξιά. */
 .shead { margin-bottom: var(--s5); }
-.shead p { margin: var(--s2) 0 0; color: var(--muted); font-size: var(--fs-s0); max-width: 56ch; }
+.shead p:not([data-h]) { margin: var(--s2) 0 0; color: var(--muted); font-size: var(--fs-s0); max-width: 56ch; }
 .shead__link { min-height: 44px; display: inline-flex; align-items: center; display: inline-block; margin-top: var(--s3); font-size: var(--fs-s-1); font-weight: 600;
                letter-spacing: .16em; text-transform: uppercase; border-bottom: 1px solid currentColor;
                padding-bottom: 3px; }

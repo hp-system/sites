@@ -55,13 +55,13 @@ import { consentText } from '../lib/consent';
       </div>
 
       <nav aria-label={t(lang, 'foot.properties')}>
-        <h2 class="fcol__h">{t(lang, 'foot.properties')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.properties')}</p>
         {seoLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
         <a href={listUrl(lang)}>{t(lang, 'foot.properties')} →</a>
       </nav>
 
       <nav aria-label={t(lang, 'foot.services')}>
-        <h2 class="fcol__h">{t(lang, 'foot.services')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.services')}</p>
         {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')}</a>}
         {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')}</a>}
         {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')}</a>}
@@ -70,7 +70,7 @@ import { consentText } from '../lib/consent';
 
       {/* Guides, as on the live site (#69): its three most-read articles + the hub. English-only for now. */}
       <nav aria-label={t(lang, 'foot.guides')}>
-        <h2 class="fcol__h">{t(lang, 'foot.guides')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.guides')}</p>
         <a href="/en/articles/all-news/homes-for-sale-in-halkidiki-greece">{t(lang, 'foot.g_houses')}</a>
         <a href="/en/articles/business-news/taxes-foreigners-properties-greece">{t(lang, 'foot.g_tax')}</a>
         <a href="/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki">{t(lang, 'foot.g_buy')}</a>
@@ -78,7 +78,7 @@ import { consentText } from '../lib/consent';
       </nav>
 
       <nav aria-label={t(lang, 'foot.company')}>
-        <h2 class="fcol__h">{t(lang, 'foot.company')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.company')}</p>
         {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
         {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
         {has('projects') && <a href={moved('projects')}>{t(lang, 'foot.projects')}</a>}

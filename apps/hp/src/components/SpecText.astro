@@ -172,8 +172,9 @@ const ui = L[lang] ?? L.en;
     .faqt__it { padding: var(--s5) var(--s6); cursor: default; transition: background-color .2s ease; }
     .faqt__it .faq-q { grid-column: 1 / -1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .faqt__it .faq-a { display: none; }
-    .faqt__it:is(:hover, :focus-within) .faq-q { grid-column: 1; white-space: normal; }
-    .faqt__it:is(:hover, :focus-within) .faq-a { display: block; grid-column: 2; grid-row: 1; }
+    .faqt__it:is(:hover, :focus-within, .is-measure) .faq-q { grid-column: 1; white-space: normal; }
+    .faqt__it:is(:hover, :focus-within, .is-measure) .faq-a { display: block; grid-column: 2; grid-row: 1; }
+    .faqt__row { align-content: start; }   /* the box keeps its height (min-height from the script); rows open inside it */
     .faqt__it:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   }
   /* the spec links as footer-like columns (home) */
@@ -185,3 +186,27 @@ const ui = L[lang] ?? L.en;
   .st-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); }
   .st-links a { color: var(--ink); font-size: var(--fs-s0); text-underline-offset: 3px; }
 </style>
+
+<script>
+  // Sergei 08/11: the FAQ box never changes size — opening a row must not push the page. With a
+  // mouse at desktop width the box reserves room for the tallest open row: measured, never guessed.
+  const fit = () => {
+    document.querySelectorAll<HTMLElement>('.faqt__row').forEach((row) => {
+      row.style.minHeight = '';
+      if (!matchMedia('(min-width: 1024px) and (hover: hover)').matches) return;
+      const items = Array.from(row.querySelectorAll<HTMLElement>('.faqt__it'));
+      const shut = row.getBoundingClientRect().height;
+      let grow = 0;
+      for (const it of items) {
+        const h0 = it.getBoundingClientRect().height;
+        it.classList.add('is-measure');
+        grow = Math.max(grow, it.getBoundingClientRect().height - h0);
+        it.classList.remove('is-measure');
+      }
+      row.style.minHeight = `${Math.ceil(shut + grow)}px`;
+    });
+  };
+  fit();
+  document.fonts?.ready.then(fit);
+  window.addEventListener('resize', fit);
+</script>

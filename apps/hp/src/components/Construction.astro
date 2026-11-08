@@ -299,28 +299,31 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx__rw { --pw: calc(100vw - var(--sbw, 0px)); --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
               display: block; grid-area: rail; position: relative; margin: 40px 0 0 calc(-1 * var(--off)); width: var(--pw);
               height: 480px; overflow: hidden; clip-path: inset(0); background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles */
-    .cx__rail { box-sizing: border-box; padding: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
-                grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 12px; background: var(--paper-3);
-                position: fixed; top: 0; left: 0; width: var(--pw); height: 100vh;
+    /* Sergei 08/11: the tiles as wide as the text (the page's text lines), and lower to match;
+       centred on the screen's height, the beige window around them. */
+    .cx__rail { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(600px, calc(var(--tw) * .6), 100vh);
+                box-sizing: border-box; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 12px;
+                position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
                 grid-template-areas: "s1 s1 c1 c2 c3" "c4 c5 c1 s2 s2" "s3 s3 c6 s4 s4"; }
     .cx__shade { position: absolute; inset: 0; pointer-events: none;
                  box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
     /* Sergei 08/11: tiles only white (services) and black (facts) */
-    .cd { min-width: 0; background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 10px; }
-    .cd svg { width: 46px; height: 46px; color: var(--ink); flex: none; stroke-width: 1.2; }   /* Sergei 08/11: bigger icons */
-    .cd h3 { margin: auto 0 0; font-size: 18px; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
-    .cd p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+    .cd { min-width: 0; overflow: hidden; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+    .cd svg { width: 40px; height: 40px; color: var(--ink); flex: none; stroke-width: 1.2; }   /* Sergei 08/11: bigger icons */
+    .cd h3 { margin: auto 0 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+    .cd p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
     .cd p::first-letter { text-transform: uppercase; }
     .cd--c1 { grid-area: c1; padding: 28px 26px; gap: 14px; }
-    .cd--c1 svg { width: 88px; height: 88px; stroke-width: .9; }
+    .cd--c1 svg { width: 76px; height: 76px; stroke-width: .9; }
     .cd--c1 h3 { font-size: 24px; line-height: 1.2; }
     .cd--c1 p { font-size: 15px; line-height: 1.55; }
     .cd--c2 { grid-area: c2; } .cd--c3 { grid-area: c3; } .cd--c4 { grid-area: c4; } .cd--c5 { grid-area: c5; }
     .cd--c6 { grid-area: c6; }
     .cd--s1 { grid-area: s1; } .cd--s2 { grid-area: s2; } .cd--s3 { grid-area: s3; } .cd--s4 { grid-area: s4; }
-    .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; padding: 28px 30px; }
-    .cd--fact h3 { margin: 0; font-size: 40px; font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
-    .cd--fact p { max-width: 40ch; font-size: 16px; line-height: 1.55; color: rgba(255,255,255,.72); }
+    .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; padding: 24px 26px; }
+    .cd--fact h3 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
+    .cd--fact p { max-width: 40ch; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.72); }
   }
   /* Reduced motion (as the property of the week): no fixed layer; the window is an ordinary scroll box. */
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {

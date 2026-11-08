@@ -18,7 +18,7 @@ interface Props {
   body?: 'prose' | 'rotate';
   /** 'columns': the spec's links grouped like the footer — properties / areas / guides (home,
    *  Sergei 08/11); `more` adds the block's own guide links to the guides column. */
-  links?: 'inline' | 'columns';
+  links?: 'inline' | 'columns' | 'sections';
   more?: { href: string; text: string }[];
 }
 const { page, part, lang, faq = 'list', body = 'prose', links = 'inline', more = [] } = Astro.props;
@@ -36,12 +36,46 @@ const groupOf = (href: string): 0 | 1 | 2 => {
   if (n === 3 || (n >= 11 && n <= 18)) return 1;
   return 2;
 };
+const secs = body === 'rotate' ? specSections(page.body) : [];
+// 'sections' (home, Sergei 08/11): each link goes under the rotating section it belongs to — the one
+// sharing the most distinctive words with its anchor (words found in most sections, like the place
+// name, do not count; works in every language). No match → the first section.
+const words = (x: string) => x.toLowerCase().replace(/<[^>]+>/g, ' ').match(/[\p{L}\p{N}]{4,}/gu) ?? [];
+const secWords = secs.map((x) => new Set(words(x.h2 + ' ' + x.html)));
+const common = new Set([...new Set(secWords.flatMap((w) => [...w]))].filter((w) => secWords.filter((sw) => sw.has(w)).length > secs.length / 2));
+const stem = (w: string) => w.slice(0, 5);
+const headStems = secs.map((x) => new Set(words(x.h2).map(stem)));
+const bodyStems = secWords.map((sw) => new Set([...sw].map(stem)));
+const bySec: { href: string; text: string }[][] = secs.map(() => []);
+// score = 2 × words shared with the section's heading + 1 × with its text; a tie goes to the section
+// with fewer links so far; no match at all → `fallback`
+// words in most anchors («sale», «Halkidiki», «property») say nothing about where a link belongs
+const anchorWords = page.linksOut.map((l) => new Set(words(l.anchor).map(stem)));
+const anchorCommon = new Set([...new Set(anchorWords.flatMap((w) => [...w]))].filter((w) => anchorWords.filter((aw) => aw.has(w)).length > anchorWords.length / 3));
+const secOf = (anchor: string, fallback = 0): number => {
+  const a = words(anchor).filter((w) => !common.has(w)).map(stem).filter((w) => !anchorCommon.has(w));
+  let best = -1, score = 0;
+  secs.forEach((_, i) => {
+    const n = a.reduce((t, w) => t + (headStems[i].has(w) ? 2 : bodyStems[i].has(w) ? 1 : 0), 0);
+    if (n > score || (n === score && n > 0 && bySec[i].length < bySec[best].length)) { score = n; best = i; }
+  });
+  return best < 0 ? fallback : best;
+};
+if (links === 'sections' && secs.length) {
+  let guideSec = 0;
+  page.linksOut.forEach((l) => {
+    const k = secOf(l.anchor);
+    bySec[k].push({ href: l.href, text: l.anchor });
+    let path = l.href; try { path = new URL(l.href, 'https://x').pathname; } catch {}
+    if (specByPath(path)?.id === 'P19') guideSec = k;          // the buying guide's section
+  });
+  more.forEach((l) => bySec[secOf(l.text, guideSec)].push(l));   // our guides join it unless they match better
+}
 const cols: { href: string; text: string }[][] = [[], [], []];
 if (links === 'columns') {
   page.linksOut.forEach((l) => cols[groupOf(l.href)].push({ href: l.href, text: l.anchor }));
   cols[2].push(...more);
 }
-const secs = body === 'rotate' ? specSections(page.body) : [];
 
 const L: Record<Lang, { faq: string; more: string }> = {
   en: { faq: 'Frequently asked questions', more: 'See also' },
@@ -72,7 +106,10 @@ const ui = L[lang] ?? L.en;
           {secs.map((x, i) => (
             <article class:list={['h-sx', 'st-rot__it', i === 0 && 'on']}>
               <h2 set:html={x.h2} />
-              <div class="prose" set:html={x.html} />
+              <div class="st-rot__tx">
+                <div class="prose" set:html={x.html} />
+                {bySec[i]?.length > 0 && <ul class="st-rot__links">{bySec[i].map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>}
+              </div>
             </article>
           ))}
         </div>
@@ -140,6 +177,11 @@ const ui = L[lang] ?? L.en;
   /* SEO sections rotating in one block (home) */
   .st-rot { position: relative; border-top: 1px solid var(--line); padding-top: var(--s6); }
   .st-rot__bars { display: none; }
+  .st-rot__links { list-style: none; margin: var(--s3) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s5); }
+  /* Sergei 08/11: grey at rest, dark on hover, an arrow after each (CSS, so the anchor text stays the spec's) */
+  .st-rot__links a { color: var(--muted); font-size: var(--fs-s0); text-decoration: none; transition: color .15s ease; }
+  .st-rot__links a::after { content: " →"; }
+  .st-rot__links a:hover, .st-rot__links a:focus-visible { color: var(--ink); }
   .st-rot__it h2 { font-size: var(--fs-s3); font-weight: 300; letter-spacing: -.016em; line-height: 1.14; color: var(--ink); margin: 0 0 var(--s4); max-width: 30ch; }
   .st-rot__it .prose { max-width: 72ch; }
   .st-rot__it + .st-rot__it { margin-top: var(--s7); }
@@ -154,6 +196,7 @@ const ui = L[lang] ?? L.en;
     .st-rot__it { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 72px; align-items: center; }
     .st-rot__it h2 { margin: 0; max-width: none; font-size: var(--fs-s4); line-height: 1.1; }
     .st-rot__it .prose { max-width: none; color: var(--muted); }
+    .st-rot__links { list-style: none; margin: var(--s3) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s5); }
   }
   /* FAQ as tiles (home): every answer open, the blocks share the text width */
   .faqt__row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); }

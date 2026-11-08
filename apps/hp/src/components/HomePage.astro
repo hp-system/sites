@@ -171,7 +171,10 @@ const areaTiles = AREA_PAGES.filter((p) => p.kind === 'municipality')
     const name = facet?.name[lang] ?? p.name;
     return {
       key: p.slug, name, from,
-      href: lang === 'en' ? areaUrl(p.slug) : (facet ? facetUrl(lang, facet.key) : url),
+      // Sergei 08/11: the spec's area pages P11–P14 where they exist (one URL per area, as for the
+      // collections); the old area page / facet stays the fallback (e.g. Polygyros has no spec page).
+      href: pageOf(({ kassandra: 'P11', sithonia: 'P12', 'nea-propontida': 'P13', aristotelis: 'P14' } as Record<string, string>)[p.slug] ?? '-',
+        lang === 'en' ? areaUrl(p.slug) : (facet ? facetUrl(lang, facet.key) : url)),
       alt: t(lang, 'home.area_alt', { name }),
       keep,
     };
@@ -339,7 +342,7 @@ if (spec?.faq.length) jsonLd.push({
 
     {/* SEO portion 2: George's H2 body, FAQ and links — at the very bottom, after the close and
         before the footer (Sergei 08/11). Still «below the grid» as the spec's rule 9 asks. */}
-    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" links="columns"
+    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" links="sections"
       more={[
         // the guides that sat under the area tiles (English articles for now, as in the footer, #69).
         // «Property for sale in Greece» (/en/property-for-sale-in-greece) is NOT carried over: the

@@ -149,13 +149,19 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
       }
       if (k < 1) els.forEach((el) => { el.style.fontSize = `${Math.floor(base * k * 10) / 10}px`; });
     }
-    // the band's padding centres the big line: hand it the heading's real line height
-    const h = document.querySelector<HTMLElement>('.ab3 .abroad__h');
-    const box = document.querySelector<HTMLElement>('.ab3');
-    const b = document.querySelector<HTMLElement>('.ab3 .two__l b');
-    // the taller of the two big lines (they share a baseline) is the one centred
-    const lh = Math.max(h ? parseFloat(getComputedStyle(h).lineHeight) : 0, b ? parseFloat(getComputedStyle(b).lineHeight) : 0);
-    if (box && lh) box.style.setProperty('--abl', `${lh}px`);
+    // centre each band's text group: from the label (or the big line) to the lowest text
+    document.querySelectorAll<HTMLElement>('.ab3 .abroad').forEach((band) => {
+      band.style.removeProperty('--abp');
+      if (!desk.matches) return;
+      const r = band.getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(band).paddingTop);
+      const parts = Array.from(band.querySelectorAll<HTMLElement>('.abroad__eyebrow, .abroad__h, .abroad__sub, .two__l .h-sx.on b, .two__l .h-sx.on i'))
+        .filter((e) => e.getClientRects().length).map((e) => e.getBoundingClientRect());
+      if (!parts.length) return;
+      const top = Math.min(...parts.map((q) => q.top)) - r.top, bottom = Math.max(...parts.map((q) => q.bottom)) - r.top;
+      const lift = top - pad;                     // the label hangs above the padding line
+      band.style.setProperty('--abp', `${Math.round((r.height - (bottom - top)) / 2 - lift)}px`);
+    });
   };
   fit();
   document.fonts?.ready.then(fit);
@@ -220,8 +226,11 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     /* Sergei 08/11: both bands the same height (--abh) and the big lines on the middle of each:
        padding-top = half the band − half the 46 px line. --abh leaves room for three lines of
        17 px text under the line in every language. */
-    .ab3 { --abh: 340px; }
-    .abroad, .abroad--you { min-height: var(--abh); height: var(--abh); align-items: flex-start; padding-top: calc(var(--abh) / 2 - var(--abl, 48px) / 2); padding-bottom: 0; }   /* --abl: the heading's line height, set by the script */
+    /* Sergei 08/11 (2): the WHOLE text group of each band (label, big line, text under it) sits on
+       the band's middle, not the big line alone — the label above made the group look low. The
+       script measures the group and sets --abp per band; both bands 300 px. */
+    .ab3 { --abh: 300px; }
+    .abroad, .abroad--you { min-height: var(--abh); height: var(--abh); align-items: flex-start; padding-top: var(--abp, 80px); padding-bottom: 0; }
     .ab__grid { align-items: baseline; }
     .abroad__head { position: relative; }
     .abroad__eyebrow { position: absolute; left: 0; bottom: 100%; margin: 0 0 14px; }

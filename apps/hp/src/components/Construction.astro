@@ -313,13 +313,14 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
        leave the scrollbar out of 100vw, so 100vw − scrollbar came out 15 px short). */
     .cx__rw { --pw: calc(100vw - var(--sbw, 0px)); --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
               display: block; grid-area: rail; position: relative; margin: 40px 0 0 calc(-1 * var(--off)); width: var(--pw);
-              height: 480px; overflow: hidden; background: var(--ink-deep); }
+              height: 480px; overflow: hidden; background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles */
     .cx__rail { box-sizing: border-box; padding: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
                 grid-auto-rows: 250px; gap: 12px; will-change: transform;
                 grid-template-areas: "s1 s1 c1 c2 c3" "c4 c5 c1 s2 s2" "s3 s3 c6 s4 s4"; }
     .cx__shade { position: absolute; inset: 0; pointer-events: none;
-                 box-shadow: inset 0 24px 28px -20px rgba(11,14,16,.85), inset 0 -24px 28px -20px rgba(11,14,16,.85); }
-    .cd { min-width: 0; background: var(--paper-2); padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+                 box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
+    /* Sergei 08/11: tiles only white (services) and black (facts) */
+    .cd { min-width: 0; background: var(--paper); padding: 22px; display: flex; flex-direction: column; gap: 10px; }
     .cd svg { width: 30px; height: 30px; color: var(--ink); flex: none; }
     .cd h3 { margin: auto 0 0; font-size: 18px; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
     .cd p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
@@ -328,13 +329,10 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cd--c1 svg { width: 64px; height: 64px; stroke-width: 1; }
     .cd--c1 h3 { font-size: 24px; line-height: 1.2; }
     .cd--c1 p { font-size: 15px; line-height: 1.55; }
-    .cd--c2 { grid-area: c2; background: var(--paper-3); }
-    .cd--c3 { grid-area: c3; background: var(--paper); }
-    .cd--c4 { grid-area: c4; background: var(--paper); }
-    .cd--c5 { grid-area: c5; background: var(--paper-3); }
+    .cd--c2 { grid-area: c2; } .cd--c3 { grid-area: c3; } .cd--c4 { grid-area: c4; } .cd--c5 { grid-area: c5; }
     .cd--c6 { grid-area: c6; }
     .cd--s1 { grid-area: s1; } .cd--s2 { grid-area: s2; } .cd--s3 { grid-area: s3; } .cd--s4 { grid-area: s4; }
-    .cd--fact { background: var(--ink-hover); color: #fff; justify-content: flex-end; padding: 28px 30px; }
+    .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; padding: 28px 30px; }
     .cd--fact h3 { margin: 0; font-size: 40px; font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
     .cd--fact p { max-width: 40ch; font-size: 16px; line-height: 1.55; color: rgba(255,255,255,.72); }
   }

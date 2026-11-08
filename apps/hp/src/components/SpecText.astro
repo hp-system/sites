@@ -177,6 +177,9 @@ const ui = L[lang] ?? L.en;
     .faqt__it:is(:hover, :focus-within, .is-measure) .faq-a { display: block; grid-column: 2; grid-row: 1; }
     /* Sergei 08/11 (3): no reserved space — each row sits in a slot of its closed height and opens
        OVER the rows below (a raised card), so nothing on the page moves */
+    /* Sergei 08/11 (4): two rows of two, across the WHOLE screen width (--pw measured by the script:
+       the page's width without the scrollbar) */
+    .faqt__row { grid-template-columns: repeat(2, minmax(0, 1fr)); width: var(--pw, 100%); margin-left: calc((100% - var(--pw, 100%)) / 2); }
     .faqt__slot { position: relative; height: var(--faq-slot, 77px); }
     .faqt__slot > .faqt__it { position: absolute; inset: 0 0 auto 0; }
     .faqt__slot > .faqt__it:is(:hover, :focus-within) { z-index: 3; box-shadow: 0 18px 40px rgba(14, 18, 20, .14); }
@@ -199,7 +202,9 @@ const ui = L[lang] ?? L.en;
     document.querySelectorAll<HTMLElement>('.faqt__row').forEach((row) => {
       const first = row.querySelector<HTMLElement>('.faqt__it');
       row.style.removeProperty('--faq-slot');
+      row.style.removeProperty('--pw');
       if (!first || !matchMedia('(min-width: 1024px) and (hover: hover)').matches) return;
+      row.style.setProperty('--pw', `${document.documentElement.clientWidth}px`);
       row.style.setProperty('--faq-slot', `${Math.ceil(first.getBoundingClientRect().height)}px`);
     });
   };

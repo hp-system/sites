@@ -117,6 +117,7 @@ const ui = L[lang] ?? L.en;
 
 <style>
   .st { padding-block: var(--s8) var(--s9); display: grid; gap: var(--s7); }
+  .st:has(.st-rot) { gap: var(--s5); padding-block: var(--s6) var(--s7); }   /* home (Sergei 08/11): the SEO blocks closer together */
   .st-intro { margin-top: var(--s3); }
   .prose { max-width: 68ch; font-size: var(--fs-s0); line-height: 1.7; color: var(--ink-2); min-width: 0; }
   .prose :global(h2) { font-size: var(--fs-s2); font-weight: 400; line-height: 1.25; color: var(--ink); margin: var(--s7) 0 var(--s3); }
@@ -147,7 +148,7 @@ const ui = L[lang] ?? L.en;
     .st-rot__it + .st-rot__it { margin-top: 0; }
     /* Sergei 08/11: the «Buying from abroad» band's look — big light heading left, its text right in
        muted, dashes in the top-right corner, the group centred on the band, no rule above */
-    .st-rot { border-top: 0; padding: 56px 0; min-height: 300px; box-sizing: border-box; display: flex; align-items: center; }
+    .st-rot { border-top: 0; padding: var(--s5) 0; min-height: 260px; box-sizing: border-box; display: flex; align-items: center; }   /* Sergei 08/11: tighter */
     .st-rot__stack { width: 100%; }
     .st-rot__stack > .st-rot__it { align-self: center; }
     .st-rot__it { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 72px; align-items: center; }

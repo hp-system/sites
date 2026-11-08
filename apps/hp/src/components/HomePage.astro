@@ -18,7 +18,7 @@ import Doors from './Doors.astro';
 import Abroad from './Abroad.astro';
 import Footer from './Footer.astro';
 import SpecText from './SpecText.astro';
-import { specOf, specTitle, specSections } from '../lib/seo-pages';
+import { specOf, specTitle } from '../lib/seo-pages';
 
 import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
 import { buildHome } from '../lib/home';
@@ -237,25 +237,6 @@ const meta = {
   desc: spec ? spec.meta : t(lang, 'meta.desc'),
 };
 const heroAlt = spec?.heroAlt || d.heroAlt;
-// Spec sections that ARE a home block (Sergei 08/11: «разве эти 2 блока не одно и то же?»): their H2
-// and text become that block's head instead of repeating at the bottom. Only a leading run of
-// sections can move up — the spec's H2 order must hold on the page — so per language the map
-// names the sections that open the body in the blocks' order (grid → areas → types). bg de he ro
-// ru sr tr open with a «why Halkidiki» section that has no block: their body stays at the bottom
-// until each language is done (plan: EN first, languages one by one).
-const HOME_SPEC_MAP: Partial<Record<Lang, ('grid' | 'areas' | 'types')[]>> = {
-  en: ['grid', 'areas', 'types'],
-  el: ['grid', 'areas'],   // el 2 «Κασσάνδρα, Σιθωνία…» stays an H2 at the bottom (an H2 cannot sit inside a block's head twice)
-};
-const secs = spec ? specSections(spec.body) : [];
-const roles = HOME_SPEC_MAP[lang] ?? [];
-const headFor = (role: 'grid' | 'areas' | 'types') => {
-  const i = roles.indexOf(role);
-  return i >= 0 && secs[i] ? secs[i] : undefined;
-};
-const restSpec = spec && roles.length
-  ? { ...spec, body: secs.slice(roles.length).map((x) => `<h2>${x.h2}</h2>${x.html}`).join('') }
-  : spec;
 if (spec?.faq.length) jsonLd.push({
   '@context': 'https://schema.org', '@type': 'FAQPage',
   mainEntity: spec.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
@@ -302,7 +283,7 @@ if (spec?.faq.length) jsonLd.push({
 
     {/* 3 επιλεγμένα */}
     {d.newest.length > 0 && (
-      <FeaturedGrid items={d.newest} lang={lang} total={d.total} viewer={viewer} spec={headFor('grid')} />
+      <FeaturedGrid items={d.newest} lang={lang} total={d.total} viewer={viewer} />
     )}
 
     {/* 4 το μεγάλο ακίνητο (ετικέτα προαιρετική, από CMS) */}
@@ -318,12 +299,11 @@ if (spec?.faq.length) jsonLd.push({
         ⛔ ΜΗΝ ΤΟ ΞΑΝΑΠΡΟΤΕΙΝΕΙΣ σε άλλη μορφή. Το `lib/zones.ts` μένει στον
         δίσκο γιατί το `buildZones` δίνει και τα πλήθη δήμων. */}
 
-    {/* 7a #101: by area — the four municipality pages with «from €» (SEO).
-        Sergei 08/11: now BEFORE the collections — George's spec has «by area» before «types». */}
-    {areaTiles.length > 0 && <Areas lang={lang} items={areaTiles} from={areasFrom} spec={headFor('areas')} />}
-
     {/* 7 συλλογές — μένουν ακριβώς ως έχουν (George: «μια χαρά είναι»). */}
-    <Collections items={collections} lang={lang} spec={headFor('types')} />
+    <Collections items={collections} lang={lang} />
+
+    {/* 7a #101: by area — the four municipality pages with «from €» (SEO). */}
+    {areaTiles.length > 0 && <Areas lang={lang} items={areaTiles} from={areasFrom} />}
 
     {/* 7b ΜΕΛΕΤΗ & ΚΑΤΑΣΚΕΥΗ — μπαίνει ΑΜΕΣΩΣ μετά τις συλλογές επίτηδες:
         η μία από τις τέσσερις είναι «Γη & οικόπεδα» (207 από τα 527), και η
@@ -351,7 +331,7 @@ if (spec?.faq.length) jsonLd.push({
 
     {/* SEO portion 2: George's H2 body, FAQ and links — at the very bottom, after the close and
         before the footer (Sergei 08/11). Still «below the grid» as the spec's rule 9 asks. */}
-    {restSpec && <SpecText page={restSpec} part="rest" lang={lang} faq="tiles" />}
+    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" />}
   </main>
 
   {/* 11 υποσέλιδο */}

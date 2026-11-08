@@ -22,12 +22,8 @@ import { t, listUrl, type Lang } from '../lib/i18n';
 import { num } from '../lib/format';
 
 export type Collection = { key: string; title: string; sub: string; href: string; photo: Photo | null };
-interface Props {
-  items: Collection[]; lang: Lang;
-  /** A section of George's SEO spec (P01) shown as this block's head (Sergei 08/11): its H2 and text. */
-  spec?: { h2: string; html: string };
-}
-const { items, lang, spec } = Astro.props;
+interface Props { items: Collection[]; lang: Lang }
+const { items, lang } = Astro.props;
 const pages = Math.ceil(items.length / 4);
 ---
 <section class="section hz hz--beige colls-sec" aria-labelledby="coll-h">
@@ -37,8 +33,8 @@ const pages = Math.ceil(items.length / 4);
         (dashes top right). Every tile is in the HTML. Phone: the row is swiped. */}
     <div class="shead hz-head">
       <div>
-        <h2 id="coll-h" class="t-h2">{spec?.h2 ?? t(lang, 'coll.h2')}</h2>
-        {spec?.html ? <div class="spec-sub" set:html={spec.html} /> : <p>{t(lang, 'home.coll_sub')}</p>}
+        <h2 id="coll-h" class="t-h2">{t(lang, 'coll.h2')}</h2>
+        <p>{t(lang, 'home.coll_sub')}</p>
       </div>
       {pages > 1 && (
         <div class="h-dash" role="group" aria-label={t(lang, 'home.pages')} data-dash-for="railCl">

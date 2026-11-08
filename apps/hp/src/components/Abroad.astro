@@ -115,7 +115,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   // headings and one for all the steps on the right, so nothing jumps when a step turns.
   const desk = window.matchMedia('(min-width: 1024px)');
   const groups = [
-    () => Array.from(document.querySelectorAll<HTMLElement>('.ab3 .abroad__h')),
+    () => Array.from(document.querySelectorAll<HTMLElement>('.ab3 .abroad__h, .abc__h')),   // the close's line keeps the headings' size
     () => Array.from(document.querySelectorAll<HTMLElement>('.ab3 .two__l b')),
   ];
   const fit = () => {
@@ -202,7 +202,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abc { min-height: 300px; box-sizing: border-box; display: flex; align-items: center; text-align: center; padding: 40px 0; background: var(--paper); }
     .abc .wrap { width: 100%; }
     .abc__p { margin: 0 auto; max-width: 62ch; font-size: 16px; line-height: 1.65; color: var(--muted); }
-    .abc__h { margin: 14px 0 0; font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; color: var(--ink); }
+    .abc__h { margin: 14px 0 0; font-size: 42px; font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: var(--ink); }   /* Sergei 08/11: the size of «We do the rest for you.» */
     .abc__btn {
       min-height: 48px; padding: 0 30px; margin-top: 30px; font-size: 11.5px;
       background: transparent; color: var(--ink); border: 1px solid var(--ink);

@@ -158,6 +158,14 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     /* Sergei 08/11: the switches sit in the band's top-right corner, as in the other blocks */
     .abroad { position: relative; }
     .abroad .h-bars { position: absolute; margin: 0; top: 20px; right: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut))); }
+    /* Sergei 08/11: the BIG lines of both columns on one line, through the band's middle; the small
+       text hangs above (label) or below (sub, role) and no longer pushes them. 116 px = 140 (half of
+       280) − half the 46 px heading line. The columns share the heading's baseline. */
+    .abroad, .abroad--you { align-items: flex-start; padding-top: 116px; padding-bottom: 28px; }
+    .ab__grid { align-items: baseline; }
+    .abroad__head { position: relative; }
+    .abroad__eyebrow { position: absolute; left: 0; bottom: 100%; margin: 0 0 14px; }
+    .abroad__h { margin-top: 0; }
 
     /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */
     .abc { min-height: 300px; box-sizing: border-box; display: flex; align-items: center; text-align: center; padding: 40px 0; background: var(--paper); }

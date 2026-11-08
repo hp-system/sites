@@ -83,7 +83,7 @@ const ui = L[lang] ?? L.en;
         <p class="t-label st-lbl">{ui.faq}</p>
         <div class="faqt__row">
           {page.faq.map((f) => (
-            <article class="faqt__it"><h3 class="faq-q">{f.q}</h3><div class="faq-a" set:html={f.a.includes('<') ? f.a : `<p>${f.a}</p>`} /></article>
+            <article class="faqt__it" tabindex="0"><h3 class="faq-q">{f.q}</h3><div class="faq-a" set:html={f.a.includes('<') ? f.a : `<p>${f.a}</p>`} /></article>
           ))}
         </div>
       </section>
@@ -163,6 +163,18 @@ const ui = L[lang] ?? L.en;
   @media (min-width: 1024px) {
     .faqt__it { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); column-gap: 72px; align-items: start; padding: var(--s6) var(--s6); }
     .faqt .faq-q { font-size: var(--fs-s1); font-weight: 400; line-height: 1.3; }
+  }
+  /* Sergei 08/11 (2): with a mouse, each block is one line — the question alone; pointing at it (or
+     tabbing to it) opens it: the question moves left, the answer appears right. Without a mouse
+     (phones, tablets) every answer stays open. The answers are always in the HTML (FAQPage = the
+     page's FAQ, Google reads text in collapsed blocks). */
+  @media (min-width: 1024px) and (hover: hover) {
+    .faqt__it { padding: var(--s5) var(--s6); cursor: default; transition: background-color .2s ease; }
+    .faqt__it .faq-q { grid-column: 1 / -1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .faqt__it .faq-a { display: none; }
+    .faqt__it:is(:hover, :focus-within) .faq-q { grid-column: 1; white-space: normal; }
+    .faqt__it:is(:hover, :focus-within) .faq-a { display: block; grid-column: 2; grid-row: 1; }
+    .faqt__it:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   }
   /* the spec links as footer-like columns (home) */
   .st-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); border-top: 1px solid var(--line); padding-top: var(--s6); }

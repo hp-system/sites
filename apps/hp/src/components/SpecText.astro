@@ -83,7 +83,7 @@ const ui = L[lang] ?? L.en;
         <p class="t-label st-lbl">{ui.faq}</p>
         <div class="faqt__row">
           {page.faq.map((f) => (
-            <article class="faqt__it" tabindex="0"><h3 class="faq-q">{f.q}</h3><div class="faq-a" set:html={f.a.includes('<') ? f.a : `<p>${f.a}</p>`} /></article>
+            <div class="faqt__slot"><article class="faqt__it" tabindex="0"><h3 class="faq-q">{f.q}</h3><div class="faq-a" set:html={f.a.includes('<') ? f.a : `<p>${f.a}</p>`} /></article></div>
           ))}
         </div>
       </section>
@@ -117,7 +117,7 @@ const ui = L[lang] ?? L.en;
 
 <style>
   .st { padding-block: var(--s8) var(--s9); display: grid; gap: var(--s7); }
-  .st:has(.st-rot) { gap: var(--s5); padding-block: var(--s6) var(--s7); }   /* home (Sergei 08/11): the SEO blocks closer together */
+  .st:has(.st-rot) { gap: var(--s5); padding-block: var(--s6) var(--s6); }   /* bottom = the links' top padding (32), Sergei 08/11 */   /* home (Sergei 08/11): the SEO blocks closer together */
   .st-intro { margin-top: var(--s3); }
   .prose { max-width: 68ch; font-size: var(--fs-s0); line-height: 1.7; color: var(--ink-2); min-width: 0; }
   .prose :global(h2) { font-size: var(--fs-s2); font-weight: 400; line-height: 1.25; color: var(--ink); margin: var(--s7) 0 var(--s3); }
@@ -175,7 +175,11 @@ const ui = L[lang] ?? L.en;
     .faqt__it .faq-a { display: none; }
     .faqt__it:is(:hover, :focus-within, .is-measure) .faq-q { grid-column: 1; white-space: normal; }
     .faqt__it:is(:hover, :focus-within, .is-measure) .faq-a { display: block; grid-column: 2; grid-row: 1; }
-    .faqt__row { align-content: start; }   /* the box keeps its height (min-height from the script); rows open inside it */
+    /* Sergei 08/11 (3): no reserved space — each row sits in a slot of its closed height and opens
+       OVER the rows below (a raised card), so nothing on the page moves */
+    .faqt__slot { position: relative; height: var(--faq-slot, 77px); }
+    .faqt__slot > .faqt__it { position: absolute; inset: 0 0 auto 0; }
+    .faqt__slot > .faqt__it:is(:hover, :focus-within) { z-index: 3; box-shadow: 0 18px 40px rgba(14, 18, 20, .14); }
     .faqt__it:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   }
   /* the spec links as footer-like columns (home) */
@@ -189,22 +193,14 @@ const ui = L[lang] ?? L.en;
 </style>
 
 <script>
-  // Sergei 08/11: the FAQ box never changes size — opening a row must not push the page. With a
-  // mouse at desktop width the box reserves room for the tallest open row: measured, never guessed.
+  // Sergei 08/11: the FAQ rows open over the rows below; each slot is the closed row's height,
+  // measured (not guessed) so it follows the font and the language.
   const fit = () => {
     document.querySelectorAll<HTMLElement>('.faqt__row').forEach((row) => {
-      row.style.minHeight = '';
-      if (!matchMedia('(min-width: 1024px) and (hover: hover)').matches) return;
-      const items = Array.from(row.querySelectorAll<HTMLElement>('.faqt__it'));
-      const shut = row.getBoundingClientRect().height;
-      let grow = 0;
-      for (const it of items) {
-        const h0 = it.getBoundingClientRect().height;
-        it.classList.add('is-measure');
-        grow = Math.max(grow, it.getBoundingClientRect().height - h0);
-        it.classList.remove('is-measure');
-      }
-      row.style.minHeight = `${Math.ceil(shut + grow)}px`;
+      const first = row.querySelector<HTMLElement>('.faqt__it');
+      row.style.removeProperty('--faq-slot');
+      if (!first || !matchMedia('(min-width: 1024px) and (hover: hover)').matches) return;
+      row.style.setProperty('--faq-slot', `${Math.ceil(first.getBoundingClientRect().height)}px`);
     });
   };
   fit();

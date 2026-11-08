@@ -146,15 +146,18 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }   /* Sergei 03/11: both sides centred on one height */
     .abroad__head { max-width: none; }
     .abroad__h { margin: 14px 0 0; font-size: 42px; line-height: 1.1; }   /* Sergei 03/11: the same size as «The land is where it begins.» */
-    .abroad__h--we { margin: 29px 0 0; color: #fff; }
+    .abroad__h--we { margin: 0; color: #fff; }   /* Sergei 08/11: every text centred on the band's height */
     .abroad__sub { margin: 18px 0 0; line-height: 1.65; max-width: 60ch; }
-    .ab__rot { padding-top: 29px; }
+    .ab__rot { padding-top: 0; }
 
     .two__l li { padding: 0; border: 0; }
     .two__l b { font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
     .two__l i { margin-top: 12px; font-size: 15px; color: var(--muted); }
     .abroad--us .two__l i { color: rgba(255,255,255,.6); }
     .h-bars { display: flex; }
+    /* Sergei 08/11: the switches sit in the band's top-right corner, as in the other blocks */
+    .abroad { position: relative; }
+    .abroad .h-bars { position: absolute; margin: 0; top: 20px; right: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut))); }
 
     /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */
     .abc { min-height: 300px; box-sizing: border-box; display: flex; align-items: center; text-align: center; padding: 40px 0; background: var(--paper); }

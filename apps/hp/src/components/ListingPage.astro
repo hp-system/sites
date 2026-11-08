@@ -1350,10 +1350,11 @@ const tilePhoto = (() => {
       /* E8 brass outline (Sergei 02/11): the gilded edge on the dark ground, turns once on hover */
       border: 1px solid var(--gold-dk);
       border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
-      transition: color .9s ease-in-out;
+      transition: background-color .18s ease, color .18s ease;
     }
     .lc--map svg { width: 20px; height: 20px; }
-    .lc--map:hover, .lc--map:focus-visible { color: var(--gold-dk-hover); }
+    /* Sergei 08/11: hover swaps black to white (ink pin), no grey */
+    .lc--map:hover, .lc--map:focus-visible { background: var(--paper); color: var(--ink); }
     .lc--map:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
 
     /* ── every menu slides down when it opens and back up when it closes (Sergei 02/11) ── */
@@ -1530,7 +1531,8 @@ const tilePhoto = (() => {
       if (!desk.matches || still.matches) return;
       g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun');
     };
-    (g.closest('.join') ? g : (g.closest('.lsave') ?? g.parentElement))?.addEventListener('mouseenter', run);   // the tile's button turns on its own hover (Sergei 03/11)
+    // the tile's button turns on its own hover (Sergei 03/11); the map button too — on the bar's hover it kept turning (Sergei 08/11)
+    (g.closest('.join') || g.classList.contains('lc--map') ? g : (g.closest('.lsave') ?? g.parentElement))?.addEventListener('mouseenter', run);
   });
 
   // ── Back to top: after one screen.

@@ -330,11 +330,12 @@ import { ui } from '../lib/listing';
           δύο φορές** — ξεχείλιζε 2px και το iOS ζούμαρε ΟΛΗ την αρχική.
           Το κενό ήταν πάντα του ΓΟΝΕΑ. Εκεί λύθηκε. */
     font: inherit; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
-    cursor: pointer; transition: opacity .18s ease;
+    cursor: pointer; transition: background-color .18s ease, color .18s ease;
   }
   .search__ico { width: 18px; height: 18px; }
   .search__golabel { display: none; }
-  .search__go:hover { opacity: .86; }
+  /* Sergei 08/11: hover swaps to white (ink icon, ink edge) — no grey fade */
+  .search__go:hover { opacity: 1; background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
 
   /* Όταν γράφεται κωδικός, τα κριτήρια σβήνουν: δεν ισχύουν πια. */
   .search[data-id-mode] .search__f { opacity: .38; }

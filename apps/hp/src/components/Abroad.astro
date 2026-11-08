@@ -44,6 +44,9 @@ const sentences = (x: string) => x.split(/(?<=[.!?])\s+/);
 const [h2a] = sentences(t(lang, 'ab.h2'));
 const [c1, ...cRest] = sentences(t(lang, 'ab.close'));
 const c2 = cRest.join(' ');
+// Sergei 08/11: two working options for the close, to choose from — ?close=slices | ?close=stage
+// (local review only; without the parameter the block is as before).
+const closeV = ['slices', 'stage'].includes(Astro.url.searchParams.get('close') ?? '') ? Astro.url.searchParams.get('close') : '';
 // Sergei 08/11: the close's key words in bold (as «The land … begins» above), in every language.
 const CLOSE_BOLD: Record<Lang, string[]> = {
   en: ['no risk', 'checked'], el: ['κανένα ρίσκο', 'ελέγξει'], bg: ['риск', 'проверили'],
@@ -118,13 +121,15 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   </section>
 </div>
 
+<div class:list={['abc-stage', closeV && `abc-stage--${closeV}`]} data-close={closeV || undefined}>
 <section class="abc" aria-labelledby="abc-h">
-  <div class="wrap">
+  <div class="wrap abc__in">
     <p class="abc__p">{c1}</p>
     {c2 && <h2 id="abc-h" class="abc__h">{c2parts.map((x) => (x.b ? <b>{x.s}</b> : x.s))}</h2>}
     <a class="btn abc__btn" href={contactHref} data-ev="contact:abroad">{t(lang, 'ab.cta')}</a>
   </div>
 </section>
+</div>
 
 
 <script>
@@ -167,6 +172,70 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   document.fonts?.ready.then(fit);
   window.addEventListener('resize', fit);
   desk.addEventListener('change', fit);
+</script>
+
+
+<script>
+  // ── Close options (Sergei 08/11), desktop, motion allowed ─────────────────────────────────
+  // slices: the block is cut into vertical strips (copies of it, each clipped to its strip);
+  //   while the block comes up the screen the strips fly in from above and below and meet; on the
+  //   way back they part again. The real block stays underneath (readable, clickable), shown
+  //   once the strips have met.
+  // stage: the block is pinned and fills the screen for one screen of scrolling; its line grows
+  //   a little and the small text and button come forward; then the footer scrolls in.
+  {
+    const host = document.querySelector<HTMLElement>('.abc-stage[data-close]');
+    const desk = window.matchMedia('(min-width: 1024px)');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+    if (host) {
+      const kind = host.dataset.close;
+      const sec = host.querySelector<HTMLElement>('.abc')!;
+      const inner = sec.querySelector<HTMLElement>('.abc__in')!;
+      let strips: HTMLElement[] = [];
+      const N = 14;
+      if (kind === 'slices') {
+        const layer = document.createElement('div');
+        layer.className = 'abc__strips'; layer.setAttribute('aria-hidden', 'true');
+        for (let i = 0; i < N; i++) {
+          const s = document.createElement('div');
+          s.className = 'abc__strip';
+          s.style.clipPath = `inset(0 ${(100 * (N - i - 1)) / N}% 0 ${(100 * i) / N}%)`;
+          const c = inner.cloneNode(true) as HTMLElement;
+          c.querySelectorAll('[id]').forEach((e) => e.removeAttribute('id'));
+          c.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1'));
+          s.appendChild(c); layer.appendChild(s); strips.push(s);
+        }
+        sec.appendChild(layer);
+      }
+      let queued = false;
+      const place = () => {
+        queued = false;
+        const on = desk.matches && !still.matches;
+        host.classList.toggle('is-live', on);
+        if (!on) { strips.forEach((s) => (s.style.transform = '')); sec.style.removeProperty('--p'); return; }
+        const vh = window.innerHeight;
+        if (kind === 'slices') {
+          const r = sec.getBoundingClientRect();
+          // 0 when the block's top reaches the bottom of the screen, 1 when its top has come up 45 % of
+          // the screen (it is the last block before the footer, so its middle may never reach the screen's)
+          const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.45)));
+          const k = 1 - ease(p);
+          strips.forEach((s, i) => { s.style.transform = `translate3d(0, ${(i % 2 ? 1 : -1) * k * (r.height + 80)}px, 0)`; });
+          sec.classList.toggle('is-met', p >= 1);
+        } else {
+          const r = host.getBoundingClientRect();
+          const p = Math.min(1, Math.max(0, -r.top / (r.height - vh)));
+          sec.style.setProperty('--p', ease(p).toFixed(3));
+        }
+      };
+      const ask = () => { if (!queued) { queued = true; requestAnimationFrame(place); } };
+      window.addEventListener('scroll', ask, { passive: true });
+      window.addEventListener('resize', ask);
+      desk.addEventListener('change', ask); still.addEventListener('change', ask);
+      place();
+    }
+  }
 </script>
 
 <style>
@@ -249,5 +318,22 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     }
     .abc__btn:hover, .abc__btn:focus-visible { background: var(--ink); color: var(--paper); opacity: 1; }
     .abc__btn:focus-visible { outline-color: var(--ink); outline-offset: 3px; }
+
+    /* ── Close option «slices» ── */
+    .abc-stage--slices .abc { position: relative; overflow: hidden; }
+    :global(.abc__strips) { display: none; }   /* built by the script → not scoped, hence :global */
+    .abc-stage--slices.is-live :global(.abc__strips) { display: block; position: absolute; inset: 0; pointer-events: none; }
+    :global(.abc__strip) { position: absolute; inset: 0; display: flex; align-items: center; background: var(--paper); will-change: transform; }
+    :global(.abc__strip > .abc__in) { width: 100%; }
+    .abc-stage--slices.is-live .abc > .abc__in { visibility: hidden; }
+    .abc-stage--slices.is-live .abc.is-met > .abc__in { visibility: visible; }
+    .abc-stage--slices.is-live .abc.is-met :global(.abc__strips) { display: none; }
+
+    /* ── Close option «stage» ── */
+    .abc-stage--stage { height: 200vh; }
+    .abc-stage--stage .abc { position: sticky; top: 0; height: 100vh; min-height: 0; }
+    .abc-stage--stage.is-live .abc__h { transform: scale(calc(1 + .18 * var(--p, 0))); transition: none; }
+    .abc-stage--stage.is-live .abc__p { opacity: calc(.35 + .65 * var(--p, 0)); transform: translateY(calc(16px * (1 - var(--p, 0)))); }
+    .abc-stage--stage.is-live .abc__btn { opacity: calc(.2 + .8 * var(--p, 0)); }
   }
 </style>

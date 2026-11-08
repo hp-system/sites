@@ -23,8 +23,11 @@ import MobileMenu from './MobileMenu.astro';
 interface Props {
   lang: Lang; photo: Photo | null; alt: string;
   munis: { name: string; n: number; key?: string }[]; total: number;
+  /** George's SEO spec H1 for the home page (P01, Sergei 08/11); falls back to the i18n H1. */
+  h1?: string;
 }
-const { lang, photo: basePhoto, alt, munis, total } = Astro.props;
+const { lang, photo: basePhoto, alt, munis, total, h1 } = Astro.props;
+const H1 = h1 || t(lang, 'hero.h1');
 
 // The message slot (lib/hero-messages.ts): a dated message replaces the default copy, and its
 // own picture / video / plain ground. `?hero=<id>` previews one off production only.
@@ -73,7 +76,7 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
     {msg ? (
       <>
         {/* the H1 never changes (SEO); while a message is on it is the small line above it */}
-        <h1 class="hero__h1s">{t(lang, 'hero.h1')}</h1>
+        <h1 class="hero__h1s">{H1}</h1>
         {msg.eyebrow?.[lang] && <p class="hero__eb">{msg.eyebrow[lang]}</p>}
         <p class="t-display hero__t">{msg.title[lang]}</p>
         {msg.text?.[lang] && <p class="hero__sub">{msg.text[lang]}</p>}
@@ -83,7 +86,7 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
       </>
     ) : (
       <>
-        <h1 class="t-display">{t(lang, 'hero.h1')}</h1>
+        <h1 class="t-display">{H1}</h1>
         <p class="hero__sub">{t(lang, 'hero.sub')}</p>
       </>
     )}

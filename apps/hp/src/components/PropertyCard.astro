@@ -99,7 +99,7 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
                data-src={i === 0 ? undefined : marked(s.url, 800)}
                data-srcset={i === 0 ? undefined : cardSrcSet(s.url)}
                sizes="(min-width: 1360px) 383px, (min-width: 760px) calc((100vw - 132px) / 3), calc(100vw - 40px)"
-               alt={i === 0 ? altOf(s, lang, title) : ''} width="800" height="533"
+               alt={altOf(s, lang, title)} width="800" height="533"   /* SEO spec rule 14 (08/11): every photo carries its alt; the slide's aria-hidden keeps screen readers on the first */
                loading={eager && i === 0 ? 'eager' : 'lazy'} decoding="async" />
         </a>
       ))}

@@ -22,8 +22,8 @@
 //     παράδοση και οι λογαριασμοί.
 // ═══════════════════════════════════════════════════════════════════════════
 import { t, prefix, type Lang } from '../lib/i18n';
-import { pageExists } from '../lib/pages';
 import { company } from '../lib/company';
+import { waHref, viberHref } from '../lib/contact';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -69,7 +69,10 @@ const c2parts = (() => {
   }
 })();
 
-const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
+const co = await company();
+// Sergei 08/11: the close offers the three direct channels (audit: WhatsApp/Viber lived only on /contact).
+const waLink = waHref(undefined, co.whatsappE164);
+const viberLink = viberHref(co.whatsappE164);
 ---
 {/* #101 desktop (George 2026-11-02): two half-height bands — «One signature from
     you.» (white) and «We do the rest for you.» (dark) — each turning its own steps
@@ -128,8 +131,19 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
 <section class="abc" aria-labelledby="abc-h">
   <div class="wrap abc__in">
     <p class="abc__p">{c1}</p>
-    {c2 && <h2 id="abc-h" class="abc__h">{c2parts.map((x) => (x.b ? <b>{x.s}</b> : x.s))}</h2>}
-    <a class="btn abc__btn" href={contactHref} data-ev="contact:abroad">{t(lang, 'ab.cta')}</a>
+    {/* Sergei 08/11: a big line, not an H2 — the home page's H2s follow George's SEO spec (P01). */}
+    {c2 && <p id="abc-h" class="abc__h">{c2parts.map((x) => (x.b ? <b>{x.s}</b> : x.s))}</p>}
+    <p class="abc__acts">
+      <a class="btn abc__btn" href={waLink} rel="noopener" target="_blank" data-ev="abroad:whatsapp">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12Z"/><path d="M9 9.5c.3 1.8 1.7 3.7 3.6 4.6l1.2-1.1 1.9.8-.4 1.6c-3.4.2-6.6-3.2-6.8-6.5l1.6-.4.8 1.9Z"/></svg>
+        WhatsApp</a>
+      <a class="btn abc__btn" href={viberLink} data-ev="abroad:viber">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c5 0 8 2.4 8 7.5S17 18 12 18l-3.5 3v-3.4C5.6 16.6 4 14.2 4 10.5 4 5.4 7 3 12 3Z"/><path d="M12.5 7.5a3 3 0 0 1 3 3"/></svg>
+        Viber</a>
+      <a class="btn abc__btn" href={co.phoneHref} data-ev="abroad:call">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+        <span dir="ltr">{co.phone}</span></a>
+    </p>
   </div>
 </section>
 </div>
@@ -264,6 +278,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   .abc { padding: var(--s6) 0 var(--s7); background: var(--paper-2); }
   .abc__p { margin: 0; font-size: var(--fs-s0); max-width: 64ch; line-height: 1.55; }
   .abc__h { margin: 0 0 var(--s4); font-size: var(--fs-s0); font-weight: 600; line-height: 1.55; }
+  .abc__acts { display: flex; flex-wrap: wrap; gap: var(--s2); margin: 0; }
+  .abc__btn { display: inline-flex; align-items: center; gap: 8px; }
 
   @media (min-width: 760px) and (max-width: 1023px) {
     .abroad { padding: var(--s7) 0; }
@@ -314,8 +330,10 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abc__p { margin: 0 auto; max-width: 62ch; font-size: var(--fs-s0); line-height: 1.65; color: var(--muted); }
     .abc__h { margin: 14px 0 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: var(--ink); }   /* Sergei 08/11: the size of «We do the rest for you.» */
     .abc__h b { font-weight: 600; }
+    .abc__acts { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 30px 0 0; }
     .abc__btn {
-      min-height: 48px; padding: 0 30px; margin-top: 30px; font-size: var(--fs-s-1);
+      display: inline-flex; align-items: center; gap: 10px;
+      min-height: 48px; padding: 0 26px; margin-top: 0; font-size: var(--fs-s-1);
       background: transparent; color: var(--ink); border: 1px solid var(--ink);
       transition: background .2s ease, color .2s ease;
     }
@@ -337,6 +355,6 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abc-stage--stage .abc { position: sticky; top: 0; height: 100vh; min-height: 0; }
     .abc-stage--stage.is-live .abc__h { transform: scale(calc(1 + .18 * var(--p, 0))); transition: none; }
     .abc-stage--stage.is-live .abc__p { opacity: calc(.35 + .65 * var(--p, 0)); transform: translateY(calc(16px * (1 - var(--p, 0)))); }
-    .abc-stage--stage.is-live .abc__btn { opacity: calc(.2 + .8 * var(--p, 0)); }
+    .abc-stage--stage.is-live .abc__acts { opacity: calc(.2 + .8 * var(--p, 0)); }
   }
 </style>

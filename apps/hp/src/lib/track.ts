@@ -85,7 +85,11 @@ export const EVENTS = {
   CALL_PROPERTY: 'call:property',
   CALL_PROPERTY_BAR: 'call:property_bar',
   CALL_404: 'call:404',
-  CONTACT_ABROAD: 'contact:abroad',
+  // The close of «Buying from abroad» on the home page (Sergei 08/11): three direct channels in
+  // place of the single «Speak to us» → /contact (was CONTACT_ABROAD 'contact:abroad').
+  ABROAD_WHATSAPP: 'abroad:whatsapp',
+  ABROAD_VIBER: 'abroad:viber',
+  ABROAD_CALL: 'abroad:call',
 
   // Content pages: the closing call to action, one name per target
   CONTENT_LIST: 'content:list',
@@ -127,6 +131,9 @@ export const GA_NAMES: Record<string, string> = {
   'area:call': 'click_to_call',
   'article:call': 'click_to_call',
   'content:phone': 'click_to_call',
+  'abroad:whatsapp': 'click_to_whatsapp',
+  'abroad:viber': 'click_to_viber',
+  'abroad:call': 'click_to_call',
   'area:show_all': 'show_properties',
   'area:book_viewing': 'book_viewing',
   'article:book_viewing': 'book_viewing',

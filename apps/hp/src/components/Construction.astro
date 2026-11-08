@@ -158,31 +158,13 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
 </section>
 
 <script>
-  // Desktop window onto the bento (Sergei 08/11, v3): while the window travels from the bottom of
-  // the screen to the top, the tiles under it slide their whole extra height — faster than the
-  // page. The window spans the full width (the window's scrollbar width is measured for that).
-  // Reduced motion: no slide; the window is an ordinary scroll box (CSS).
+  // Desktop window onto the bento (Sergei 08/11): the same «window» as the property of the week —
+  // the bento is fixed to the screen (CSS) and the page scrolls the window across it. Only the
+  // page's width without the scrollbar is measured here; no scroll handler is needed.
   document.querySelectorAll<HTMLElement>('[data-cx-win]').forEach((win) => {
-    const rail = win.querySelector<HTMLElement>('[data-cx-rail]')!;
-    const desk = window.matchMedia('(min-width: 1024px)');
-    const still = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sbw = () => win.style.setProperty('--pw', `${document.documentElement.clientWidth}px`);
-    let queued = false;
-    const place = () => {
-      queued = false;
-      if (!desk.matches || still.matches) { rail.style.transform = ''; return; }
-      const r = win.getBoundingClientRect();
-      const range = window.innerHeight - r.height;
-      const p = range > 0 ? Math.min(1, Math.max(0, (window.innerHeight - r.bottom) / range)) : 0;
-      const travel = Math.max(0, rail.offsetHeight - win.clientHeight);
-      rail.style.transform = `translate3d(0, ${-Math.round(p * travel)}px, 0)`;
-    };
-    const ask = () => { if (!queued) { queued = true; requestAnimationFrame(place); } };
-    window.addEventListener('scroll', ask, { passive: true });
-    window.addEventListener('resize', () => { sbw(); ask(); });
-    desk.addEventListener('change', ask);
-    still.addEventListener('change', ask);
-    sbw(); place();
+    window.addEventListener('resize', sbw);
+    sbw();
   });
 </script>
 
@@ -308,14 +290,18 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx .cx__btn--ghost:hover { background: var(--ink); color: #fff; }
     .cx .cx__caps, .cx .cx__strip { display: none; }
 
-    /* Sergei 08/11 (v3): a full-width window; the bento lies under it and slides (script above). */
+    /* Sergei 08/11: a full-width window onto a bento fixed to the screen — the technique of the
+       property of the week (FeatureProperty.astro): `clip-path` makes the band the frame of a fixed
+       layer, so the page moves and the tiles stay, which reads as depth. The bento fills the screen
+       (3 equal rows), so whatever part the window crosses, it shows tiles. */
     /* --pw = the page's width without the scrollbar, measured by the script (some browsers already
        leave the scrollbar out of 100vw, so 100vw − scrollbar came out 15 px short). */
     .cx__rw { --pw: calc(100vw - var(--sbw, 0px)); --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
               display: block; grid-area: rail; position: relative; margin: 40px 0 0 calc(-1 * var(--off)); width: var(--pw);
-              height: 480px; overflow: hidden; background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles */
+              height: 480px; overflow: hidden; clip-path: inset(0); background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles */
     .cx__rail { box-sizing: border-box; padding: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
-                grid-auto-rows: 250px; gap: 12px; will-change: transform;
+                grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 12px; background: var(--paper-3);
+                position: fixed; top: 0; left: 0; width: var(--pw); height: 100vh;
                 grid-template-areas: "s1 s1 c1 c2 c3" "c4 c5 c1 s2 s2" "s3 s3 c6 s4 s4"; }
     .cx__shade { position: absolute; inset: 0; pointer-events: none;
                  box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
@@ -336,6 +322,9 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cd--fact h3 { margin: 0; font-size: 40px; font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
     .cd--fact p { max-width: 40ch; font-size: 16px; line-height: 1.55; color: rgba(255,255,255,.72); }
   }
-  /* Reduced motion: nothing slides; the window becomes an ordinary scroll box. */
-  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .cx__rw { overflow-y: auto; } .cx__rail { transform: none !important; } }
+  /* Reduced motion (as the property of the week): no fixed layer; the window is an ordinary scroll box. */
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .cx__rw { overflow-y: auto; clip-path: none; }
+    .cx__rail { position: static; width: auto; height: auto; grid-template-rows: none; grid-auto-rows: 250px; }
+  }
 </style>

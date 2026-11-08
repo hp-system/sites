@@ -124,8 +124,7 @@ const pickPhoto = (f: (a: any) => boolean) => {
 const sub = (a: any) => String(a?.subcategory ?? '').toLowerCase();
 // Sergei 08/11 (George's SEO spec, rule 4): a tile links to the clean spec page of its type where one
 // exists in this language (P04 homes, P05 apartments, P06 maisonettes, P08 land, P09 seafront,
-// — filter URLs are noindex + canonical to those pages. Hotels keep the filter until P22 is
-// built (it waits for its brief; its URL answers 404 today).
+// — filter URLs are noindex + canonical to those pages. Hotels → the P22 list (facet «hotels»).
 // Pool and «above one million» have no spec page and keep their filters.
 const pageOf = (id: string, fallback: string): string =>
   specOf(id, lang)?.path ?? (REGISTRY.pages.find((r: any) => r.id === id)?.paths?.[lang] as string | undefined) ?? fallback;
@@ -146,7 +145,7 @@ const COLLS: { key: string; title: string; href: string; keep: (a: any) => boole
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('maisonette') },
   { key: 'apartments', title: t(lang, 'kinds.apartments'), href: pageOf('P05', `${url}?type=apartment`),
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('apartment') },
-  { key: 'business', title: t(lang, 'coll.hotels'), href: `${url}?category=business`, keep: (a) => catKey(a) === 'business' },
+  { key: 'business', title: t(lang, 'coll.hotels'), href: facetUrl(lang, 'hotels'), keep: (a) => catKey(a) === 'business' },
 ];
 // Photos are picked in the OLD order (sea, pool, land, top…): «above one million»
 // would otherwise take the dearest land plot and leave «Land & plots» a second-best.

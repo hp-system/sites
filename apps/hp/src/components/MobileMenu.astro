@@ -20,6 +20,7 @@ import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
 import { pageExists } from '../lib/pages';
 import { specPathOr, MUNI_SPEC } from '../lib/seo-pages';
+import { FACETS, facetUrl } from '../lib/listing';
 
 interface Props { lang: Lang; munis: { name: string; n: number; key?: string }[]; total: number;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -48,8 +49,11 @@ const KINDS: [string, string][] = [
 // SEO audit 08/11: each kind / area links its spec page (George's spec rule 4: filter URLs are
 // noindex); a kind or area without one keeps its filter.
 const KIND_SPEC: Record<string, string> = { 'detached house': 'P07', maisonette: 'P06', apartment: 'P05', land: 'P08' };
-const kindHref = (v: string) => specPathOr(KIND_SPEC[v] ?? '-', lang, `${url}?subcategory=${encodeURIComponent(v)}`);
-const muniHref = (key: string) => specPathOr(MUNI_SPEC[key] ?? '-', lang, `${url}?municipality=${encodeURIComponent(key)}`);
+const kindHref = (v: string) => v === 'hotel' ? facetUrl(lang, 'hotels')
+  : specPathOr(KIND_SPEC[v] ?? '-', lang, `${url}?subcategory=${encodeURIComponent(v)}`);
+const muniFacet = (key: string) => FACETS.find((f) => f.q.municipality === key);
+const muniHref = (key: string) => specPathOr(MUNI_SPEC[key] ?? '-', lang,
+  muniFacet(key) ? facetUrl(lang, muniFacet(key)!.key) : `${url}?municipality=${encodeURIComponent(key)}`);
 
 // 🛡️ ΔΙΧΤΥ: ΔΕΝ ΔΕΙΧΝΟΥΜΕ ΣΥΝΔΕΣΜΟ ΓΙΑ ΣΕΛΙΔΑ ΠΟΥ ΔΕΝ ΥΠΑΡΧΕΙ.
 //    Έτσι γεννήθηκαν οι 124 νεκροί σύνδεσμοι: τα μενού γράφτηκαν πριν τις σελίδες και

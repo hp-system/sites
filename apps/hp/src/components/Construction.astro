@@ -303,11 +303,12 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx__pw { grid-row: 1 / span 2; font-size: 2.1em; line-height: .9; font-weight: 300; letter-spacing: -.03em; }
     .cx__pl { display: block; }
     .cx .cx__p { grid-area: p; margin: 10px 0 0; max-width: none; font-size: 16px; line-height: 1.65; color: var(--muted); }   /* the grey of the area links (Sergei 03/11) */
-    .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 0; }
+    .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 14px 0 0; align-self: center; }   /* Sergei 08/11: centred on the heading's height */
     .cx .cx__btn { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
-    .cx .cx__btn:hover { background: var(--ink-hover); border-color: var(--ink-hover); }
+    /* Sergei 08/11: hovers swap black and white — no grey, no fade */
+    .cx .cx__btn:hover { opacity: 1; background: var(--paper); color: var(--ink); border-color: var(--ink); }
     .cx .cx__btn--ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
-    .cx .cx__btn--ghost:hover { background: var(--ink); color: #fff; }
+    .cx .cx__btn--ghost:hover { opacity: 1; background: var(--ink); color: #fff; border-color: var(--ink); }
     .cx .cx__caps, .cx .cx__strip { display: none; }
 
     /* Sergei 08/11: a full-width window onto a bento fixed to the screen — the technique of the

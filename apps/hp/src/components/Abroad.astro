@@ -46,7 +46,10 @@ const [c1, ...cRest] = sentences(t(lang, 'ab.close'));
 const c2 = cRest.join(' ');
 // Sergei 08/11: two working options for the close, to choose from — ?close=slices | ?close=stage
 // (local review only; without the parameter the block is as before).
-const closeV = ['slices', 'stage'].includes(Astro.url.searchParams.get('close') ?? '') ? Astro.url.searchParams.get('close') : '';
+// Sergei chose «stage» (08/11): it is the default now; ?close=slices still shows the other option
+// and ?close=plain the block without motion, until the choice is final.
+const closeQ = Astro.url.searchParams.get('close') ?? '';
+const closeV = closeQ === 'plain' ? '' : closeQ === 'slices' ? 'slices' : 'stage';
 // Sergei 08/11: the close's key words in bold (as «The land … begins» above), in every language.
 const CLOSE_BOLD: Record<Lang, string[]> = {
   en: ['no risk', 'checked'], el: ['κανένα ρίσκο', 'ελέγξει'], bg: ['риск', 'проверили'],
@@ -330,7 +333,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abc-stage--slices.is-live .abc.is-met :global(.abc__strips) { display: none; }
 
     /* ── Close option «stage» ── */
-    .abc-stage--stage { height: 200vh; }
+    .abc-stage--stage { height: 150vh; }   /* Sergei 08/11: half a screen of scrolling for the whole move (was one screen) */
     .abc-stage--stage .abc { position: sticky; top: 0; height: 100vh; min-height: 0; }
     .abc-stage--stage.is-live .abc__h { transform: scale(calc(1 + .18 * var(--p, 0))); transition: none; }
     .abc-stage--stage.is-live .abc__p { opacity: calc(.35 + .65 * var(--p, 0)); transform: translateY(calc(16px * (1 - var(--p, 0)))); }

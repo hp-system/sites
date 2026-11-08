@@ -165,20 +165,20 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   .abroad__eyebrow { color: var(--faint); }
   .abroad__h { margin: var(--s2) 0 0; }
   .abroad__h--we { margin: 0 0 var(--s3); }
-  .abroad__sub { margin: var(--s3) 0 var(--s4); color: var(--muted); font-size: 15px; max-width: 58ch; }
+  .abroad__sub { margin: var(--s3) 0 var(--s4); color: var(--muted); font-size: var(--fs-s0); max-width: 58ch; }
 
   .two__l { list-style: none; margin: 0; padding: 0; }
-  .two__l li { padding: 11px 0; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.4; }
+  .two__l li { padding: 11px 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.4; }
   .abroad--us .two__l li { border-top-color: rgba(255,255,255,.14); }
   .two__l li:first-child { border-top: 0; }
   .two__l b { display: block; font-weight: 600; }
-  .two__l i { display: block; font-style: normal; font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .two__l i { display: block; font-style: normal; font-size: var(--fs-s-1); color: var(--muted); margin-top: 3px; }
   .abroad--us .two__l i { color: rgba(255,255,255,.5); }
   .h-bars { display: none; }
 
   .abc { padding: var(--s6) 0 var(--s7); background: var(--paper-2); }
-  .abc__p { margin: 0; font-size: 15px; max-width: 64ch; line-height: 1.55; }
-  .abc__h { margin: 0 0 var(--s4); font-size: 15px; font-weight: 600; line-height: 1.55; }
+  .abc__p { margin: 0; font-size: var(--fs-s0); max-width: 64ch; line-height: 1.55; }
+  .abc__h { margin: 0 0 var(--s4); font-size: var(--fs-s0); font-weight: 600; line-height: 1.55; }
 
   @media (min-width: 760px) and (max-width: 1023px) {
     .abroad { padding: var(--s7) 0; }
@@ -193,15 +193,15 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .abroad--you { padding-top: 36px; }   /* a little more air under the cards (Sergei 03/11); Sergei 08/11: the same 280 px height as the dark band below */
     .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }   /* Sergei 03/11: both sides centred on one height */
     .abroad__head { max-width: none; }
-    .abroad__h { margin: 14px 0 0; font-size: 42px; line-height: 1.1; }   /* Sergei 03/11: the same size as «The land is where it begins.» */
+    .abroad__h { margin: 14px 0 0; font-size: var(--fs-s4); line-height: 1.1; }   /* Sergei 03/11: the same size as «The land is where it begins.» */
     .abroad__h--we { margin: 0; color: #fff; }   /* Sergei 08/11: every text centred on the band's height */
     .abroad__sub { margin: 18px 0 0; line-height: 1.65; max-width: 60ch; }
     .ab__rot { padding-top: 0; }
 
     .two__l li { padding: 0; border: 0; }
-    .two__l b { font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
+    .two__l b { font-size: var(--fs-s3); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
     .abroad__h, .two__l b { white-space: nowrap; }   /* Sergei 08/11: one line; the script above shrinks a line that is too long */
-    .two__l i { margin-top: 12px; font-size: 15px; color: var(--muted); }
+    .two__l i { margin-top: 12px; font-size: var(--fs-s0); color: var(--muted); }
     .abroad--us .two__l i { color: rgba(255,255,255,.6); }
     .h-bars { display: flex; }
     /* Sergei 08/11: the switches sit in the band's top-right corner, as in the other blocks */
@@ -210,7 +210,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     /* Sergei 08/11: the BIG lines of both columns on one line, through the band's middle; the small
        text hangs above (label) or below (sub, role) and no longer pushes them. 116 px = 140 (half of
        280) − half the 46 px heading line. The columns share the heading's baseline. */
-    .abroad, .abroad--you { align-items: flex-start; padding-top: 116px; padding-bottom: 28px; }
+    /* Sergei 08/11 (type canon page): the big lines on the upper golden line, 0.382 of 280 = 107; 84 = 107 − half the 46 px line */
+    .abroad, .abroad--you { align-items: flex-start; padding-top: 84px; padding-bottom: 28px; }
     .ab__grid { align-items: baseline; }
     .abroad__head { position: relative; }
     .abroad__eyebrow { position: absolute; left: 0; bottom: 100%; margin: 0 0 14px; }
@@ -219,11 +220,11 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */
     .abc { min-height: 300px; box-sizing: border-box; display: flex; align-items: center; text-align: center; padding: 40px 0; background: var(--paper); }
     .abc .wrap { width: 100%; }
-    .abc__p { margin: 0 auto; max-width: 62ch; font-size: 16px; line-height: 1.65; color: var(--muted); }
-    .abc__h { margin: 14px 0 0; font-size: 42px; font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: var(--ink); }   /* Sergei 08/11: the size of «We do the rest for you.» */
+    .abc__p { margin: 0 auto; max-width: 62ch; font-size: var(--fs-s0); line-height: 1.65; color: var(--muted); }
+    .abc__h { margin: 14px 0 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: var(--ink); }   /* Sergei 08/11: the size of «We do the rest for you.» */
     .abc__h b { font-weight: 600; }
     .abc__btn {
-      min-height: 48px; padding: 0 30px; margin-top: 30px; font-size: 11.5px;
+      min-height: 48px; padding: 0 30px; margin-top: 30px; font-size: var(--fs-s-1);
       background: transparent; color: var(--ink); border: 1px solid var(--ink);
       transition: background .2s ease, color .2s ease;
     }

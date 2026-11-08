@@ -106,20 +106,20 @@ const hi = Math.round((b.median * SQM * 1.1) / 10000) * 10000;
   .valu { border: 1px solid var(--line); padding: var(--s5); background: var(--paper); }
   .valu__row { display: grid; gap: var(--s3); margin-bottom: var(--s5); }
   .vf { border: 1px solid var(--line); padding: 10px 12px; display: block; }
-  .vf__l { display: block; font-size: 9.5px; font-weight: 600; letter-spacing: .18em;
+  .vf__l { display: block; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .18em;
            text-transform: uppercase; color: var(--faint); }
   /* 🍏 16px ΑΚΡΙΒΩΣ, ΟΧΙ 15. Κάτω από 16 το Safari του iPhone κάνει ΑΥΤΟΜΑΤΟ ΖΟΥΜ
      μόλις ακουμπήσεις το πεδίο — και **δεν ξαναμικραίνει** μόνο του. Ο χρήστης μένει
      με τη σελίδα μεγεθυμένη και σκρολάρει πλάγια για να δει το κουμπί. Ένα εικονοστοιχείο
      διαφορά, ολόκληρη η φόρμα χαλασμένη. Το ίδιο ισχύει σε ΚΑΘΕ input/select/textarea. */
-  .vf__v { display: block; width: 100%; margin-top: 3px; padding: 0; font: inherit; font-size: 16px;
+  .vf__v { display: block; width: 100%; margin-top: 3px; padding: 0; font: inherit; font-size: var(--fs-s0);
            color: var(--ink); background: transparent; border: 0; appearance: none; min-height: 24px; }
   .valu__out { display: block; border-top: 1px solid var(--line); padding-top: var(--s4); }
   .valu__range {
-    margin: var(--s2) 0 0; font-size: clamp(23px, 6vw, 31px); font-weight: 300;
+    margin: var(--s2) 0 0; font-size: var(--fs-s2); font-weight: 300;
     letter-spacing: -.016em; font-variant-numeric: lining-nums tabular-nums;
   }
-  .valu__note { margin: var(--s2) 0 var(--s4); font-size: 12.5px; color: var(--muted); max-width: 62ch; }
+  .valu__note { margin: var(--s2) 0 var(--s4); font-size: var(--fs-s-1); color: var(--muted); max-width: 62ch; }
   .valu__note b { color: var(--ink-2); font-weight: 600; }
   @media (min-width: 760px) {
     .valu__row { grid-template-columns: repeat(4, 1fr); }

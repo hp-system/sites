@@ -129,7 +129,7 @@ const has = (k: string) => pageExists(k as any);
   .navlinks { display: none; }
   .navright {
     display: flex; align-items: center; gap: var(--s3); flex: none;
-    font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+    font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
   }
   .langslot { display: none; }
   /* Ο αριθμός φαίνεται ΚΑΙ στο κινητό: ένα εικονίδιο ακουστικού 17px δεν λέει
@@ -141,7 +141,7 @@ const has = (k: string) => pageExists(k as any);
   }
   .tel svg { width: 17px; height: 17px; flex: none; }
   /* Sergei 03/11: a phone number is read, not compared in a column — proportional digits (tabular ones left gaps around each «1») */
-  .tel__n { display: inline; font-size: 11px; letter-spacing: .04em; font-variant-numeric: lining-nums proportional-nums; }
+  .tel__n { display: inline; font-size: var(--fs-s-1); letter-spacing: .04em; font-variant-numeric: lining-nums proportional-nums; }
   /* Στόχος αφής 44×44 (μετρήθηκε 20×12): οι γραμμές μένουν 20×12 οπτικά, αλλά η
      περιοχή που δέχεται το δάχτυλο είναι ολόκληρη. Αρνητικό margin ώστε να μην
      αλλάξει η στοίχιση της κεφαλίδας. */
@@ -160,15 +160,15 @@ const has = (k: string) => pageExists(k as any);
     .site-header__in { padding: 22px var(--gut); }
     .brandlink__sm { display: none; }
     .brandlink__md { display: inline-flex; }
-    .navright { gap: var(--s5); font-size: 12px; letter-spacing: .1em; }
+    .navright { gap: var(--s5); font-size: var(--fs-s-1); letter-spacing: .1em; }
     .langslot { display: inline-flex; }
-    .tel__n { font-size: 12px; letter-spacing: .06em; }
+    .tel__n { font-size: var(--fs-s-1); letter-spacing: .06em; }
   }
 
   @media (min-width: 1080px) {
     .navlinks {
       display: flex; gap: var(--s6);
-      font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+      font-size: var(--fs-s-1); letter-spacing: .1em; text-transform: uppercase;
     }
     .burger { display: none; }
   }

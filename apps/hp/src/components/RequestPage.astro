@@ -57,22 +57,22 @@ const title = t(lang, isEx ? 'ex.h1' : 'req.h1');
 <style>
   .rq { padding: var(--s6) 0 var(--s9); }
   .rq .wrap { max-width: 620px; }
-  .crumb { font-size: 13px; color: var(--faint); display: flex; gap: 8px; }
+  .crumb { font-size: var(--fs-s-1); color: var(--faint); display: flex; gap: 8px; }
   .rq__h { margin: 14px 0 6px; }
-  .rq__s, .rq__done { color: var(--ink-2); margin: 0 0 22px; font-size: 15px; }
+  .rq__s, .rq__done { color: var(--ink-2); margin: 0 0 22px; font-size: var(--fs-s0); }
   form { display: grid; gap: 18px; }
   .fld { display: grid; gap: 6px; border: 0; padding: 0; margin: 0; }
-  .fld > span, .fld legend { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0; }
-  .fld input, .fld select, .fld textarea { font: inherit; font-size: 16px; border: 1px solid var(--line); padding: 11px 12px; background: var(--paper); color: var(--ink); }
+  .fld > span, .fld legend { font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: 0; }
+  .fld input, .fld select, .fld textarea { font: inherit; font-size: var(--fs-s0); border: 1px solid var(--line); padding: 11px 12px; background: var(--paper); color: var(--ink); }
   .opts { display: flex; flex-wrap: wrap; gap: 8px; }
   .opt { position: relative; }
   .opt input { position: absolute; opacity: 0; }
-  .opt span { display: inline-block; border: 1px solid var(--line); padding: 9px 14px; font-size: 14px; cursor: pointer; }
+  .opt span { display: inline-block; border: 1px solid var(--line); padding: 9px 14px; font-size: var(--fs-s0); cursor: pointer; }
   .opt input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .opt input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
-  .msg { margin: 0; font-size: 14px; color: var(--ink-2); min-height: 1.2em; }
+  .msg { margin: 0; font-size: var(--fs-s0); color: var(--ink-2); min-height: 1.2em; }
 </style>
 
 <script>

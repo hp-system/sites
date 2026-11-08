@@ -108,13 +108,13 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
   .hero__bg { position: absolute; inset: 0; background: var(--paper-2); }
   .hero__vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .hero--plain .hero__bg { background: var(--ink-deep); }
-  .hero__h1s { margin: 0 0 var(--s4); font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.78); }
-  .hero__eb { margin: 0 0 var(--s3); font-size: 14px; color: rgba(255,255,255,.82); }
+  .hero__h1s { margin: 0 0 var(--s4); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.78); }
+  .hero__eb { margin: 0 0 var(--s3); font-size: var(--fs-s0); color: rgba(255,255,255,.82); }
   .hero__t { margin: 0; max-width: 20ch; }
   .hero--msg:not(.hero--plain) :is(.hero__h1s, .hero__eb, .hero__sub) { text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.45); }
   .hero__cta {
     display: inline-flex; align-items: center; height: 48px; margin-top: var(--s5); padding: 0 24px;
-    font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
     /* a message button is not a call to register: white outline, never the gilded edge (Sergei 03/11) */
     color: #fff; border: 1px solid rgba(255,255,255,.6); background: rgba(11,14,16,.2);
     transition: background .25s ease, color .25s ease, border-color .25s ease;
@@ -136,14 +136,14 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
   .hero__copy { position: relative; color: #fff; padding: 0 var(--gut) var(--s5); }
   .hero__copy h1 { max-width: 16ch; }
   .hero__sub {
-    margin: var(--s3) 0 0; font-size: 15px; line-height: 1.55;
+    margin: var(--s3) 0 0; font-size: var(--fs-s0); line-height: 1.55;
     color: rgba(255,255,255,.88); max-width: 34ch;
   }
 
   @media (min-width: 760px) {
     .hero { min-height: 82vh; }
     .hero__copy { padding-bottom: var(--s6); max-width: var(--max); margin: 0 auto; width: 100%; }
-    .hero__sub { font-size: 17px; }
+    .hero__sub { font-size: var(--fs-s0); }
   }
   /* desktop (Sergei 03/11): the first screen ends at the bottom of the first row of photos
      (the bar, «New properties» and the photos take 344 px under the hero), never below 420 px */

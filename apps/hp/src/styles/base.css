@@ -54,7 +54,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--f);
-  font-size: 16px;
+  font-size: var(--fs-s0);
   font-weight: 400;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -85,15 +85,15 @@ h1, h2, h3, h4 { margin: 0; font-weight: inherit; text-wrap: balance; }
 .site-header :focus-visible, .feature :focus-visible { outline-color: #fff; }
 
 /* ── Η ΤΥΠΟΓΡΑΦΙΚΗ ΚΛΙΜΑΚΑ ─────────────────────────────────────────────── */
-.t-display { font-size: clamp(30px, 7.4vw, 58px); font-weight: 300; line-height: 1.05; letter-spacing: -.021em; }
-.t-h2      { font-size: clamp(24px, 5vw, 36px);   font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
-.t-h3      { font-size: clamp(16px, 2.2vw, 17px); font-weight: 400; line-height: 1.32; }
-.t-price   { font-size: clamp(22px, 4.6vw, 26px); font-weight: 600; line-height: 1; letter-spacing: -.012em; }
-.t-body    { font-size: clamp(15px, 2vw, 16px);   font-weight: 400; line-height: 1.6; }
-.t-data    { font-size: 13px; font-weight: 400; line-height: 1.45; color: var(--ink-2); }
-.t-label   { font-size: 10.5px; font-weight: 600; line-height: 1.4; letter-spacing: .18em;
+.t-display { font-size: var(--fs-s5); font-weight: 300; line-height: 1.05; letter-spacing: -.021em; }
+.t-h2      { font-size: var(--fs-s3);   font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
+.t-h3      { font-size: var(--fs-s0); font-weight: 400; line-height: 1.32; }
+.t-price   { font-size: var(--fs-s2); font-weight: 600; line-height: 1; letter-spacing: -.012em; }
+.t-body    { font-size: var(--fs-s0);   font-weight: 400; line-height: 1.6; }
+.t-data    { font-size: var(--fs-s-1); font-weight: 400; line-height: 1.45; color: var(--ink-2); }
+.t-label   { font-size: var(--fs-s-1); font-weight: 600; line-height: 1.4; letter-spacing: .12em;
              text-transform: uppercase; color: var(--faint); }
-.t-btn     { font-size: 11px; font-weight: 600; line-height: 1; letter-spacing: .16em; text-transform: uppercase; }
+.t-btn     { font-size: var(--fs-s-1); font-weight: 600; line-height: 1; letter-spacing: .1em; text-transform: uppercase; }
 
 /* ═══ ΑΡΙΘΜΟΙ ΣΕ RTL ═══
    🪤 Σε σελίδα `dir="rtl"` ο αλγόριθμος bidi αναδιατάσσει κάθε ακολουθία που
@@ -116,8 +116,8 @@ h1, h2, h3, h4 { margin: 0; font-weight: inherit; text-wrap: balance; }
 
 /* Επικεφαλίδα ενότητας: τίτλος + προαιρετικός σύνδεσμος δεξιά. */
 .shead { margin-bottom: var(--s5); }
-.shead p { margin: var(--s2) 0 0; color: var(--muted); font-size: 14.5px; max-width: 56ch; }
-.shead__link { min-height: 44px; display: inline-flex; align-items: center; display: inline-block; margin-top: var(--s3); font-size: 11px; font-weight: 600;
+.shead p { margin: var(--s2) 0 0; color: var(--muted); font-size: var(--fs-s0); max-width: 56ch; }
+.shead__link { min-height: 44px; display: inline-flex; align-items: center; display: inline-block; margin-top: var(--s3); font-size: var(--fs-s-1); font-weight: 600;
                letter-spacing: .16em; text-transform: uppercase; border-bottom: 1px solid currentColor;
                padding-bottom: 3px; }
 @media (min-width: 760px) {
@@ -130,7 +130,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: inherit; text-wrap: balance; }
   display: inline-flex; align-items: center; justify-content: center;
   min-height: 44px;                    /* στόχος αφής */
   padding: 13px 24px; border-radius: var(--r);
-  font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
   border: 1px solid var(--ink); background: var(--ink); color: var(--paper);
   cursor: pointer; transition: opacity .18s ease;
 }
@@ -176,6 +176,6 @@ h1, h2, h3, h4 { margin: 0; font-weight: inherit; text-wrap: balance; }
   width: auto; height: auto; margin: 0; padding: 12px 18px;
   clip: auto; overflow: visible; z-index: 100;
   background: var(--ink); color: var(--paper);
-  font-size: 13px; font-weight: 600; letter-spacing: .06em;
+  font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .06em;
   outline: 2px solid var(--paper); outline-offset: -4px;
 }

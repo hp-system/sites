@@ -59,6 +59,19 @@
   --max: 1280px;
   --r: 0px;               /* γωνίες: κοφτές. Το admin έχει 10/14 — άλλο προϊόν. */
 
+  /* ── Type canon (Sergei 08/11/2026; page «HP Type Canon»): eight sizes, base 17 (audience
+     45–64, mostly phones), each step ×√φ (1.272), two steps ×φ. 13 is the floor — nothing
+     smaller anywhere. Steps above 22 drop one step on phones (the @media below).
+     Use ONLY these for font-size; scripts/check-font-sizes.mjs refuses a raw px size.
+     A side case (a word sized to its neighbours, e.g. the shared «The») uses em and is marked. */
+  --fs-s-1: 13px;   /* labels, buttons, data, captions */
+  --fs-s0:  17px;   /* running text, card titles, form fields */
+  --fs-s1:  22px;   /* lead lines, big tile titles */
+  --fs-s2:  22px;   /* prices, sub-headings (28 from 760) */
+  --fs-s3:  28px;   /* section headings, fact tiles (35 from 760) */
+  --fs-s4:  35px;   /* big statement lines (44 from 760) */
+  --fs-s5:  44px;   /* page title, hero (56 from 760) */
+
   /* ── Τυπογραφία ──────────────────────────────────────────────────────── */
   --f: 'Mont', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
   --f-fallback: 'Literata', Georgia, serif;    /* δες data-typeface παρακάτω */
@@ -77,7 +90,7 @@
 }
 
 /* Ένα σημείο αλλαγής. Κάτω από αυτό, μία στήλη. */
-@media (min-width: 760px) { :root { --gut: 40px; } }
+@media (min-width: 760px) { :root { --gut: 40px; --fs-s2: 28px; --fs-s3: 35px; --fs-s4: 44px; --fs-s5: 56px; } }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    ΕΦΕΔΡΙΚΗ ΓΡΑΜΜΑΤΟΣΕΙΡΑ — η αυτόματη εναλλαγή που ζήτησε ο George.

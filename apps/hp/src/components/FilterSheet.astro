@@ -428,7 +428,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px var(--gut); border-bottom: 1px solid var(--line); flex: none;
   }
-  .fs__title { margin: 0; font-size: 17px; font-weight: 300; }
+  .fs__title { margin: 0; font-size: var(--fs-s0); font-weight: 300; }
   .fs__x { background: none; border: 0; padding: 8px; margin: -8px; cursor: pointer; color: var(--ink); }
   .fs__x svg { width: 20px; height: 20px; }
 
@@ -438,12 +438,12 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
   .fs__g { border: 0; padding: 0; margin: 0; min-width: 0; }
   .fs__f { display: block; border: 1px solid var(--line); padding: 9px 12px; }
   .fs__l {
-    display: block; padding: 0; font-size: 9.5px; font-weight: 600; letter-spacing: .18em;
+    display: block; padding: 0; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .18em;
     text-transform: uppercase; color: var(--faint);
   }
   .fs__f input {
     display: block; width: 100%; margin-top: 3px; padding: 0; border: 0; background: transparent;
-    font: inherit; font-size: 16px; color: var(--ink); appearance: none; min-height: 26px;
+    font: inherit; font-size: var(--fs-s0); color: var(--ink); appearance: none; min-height: 26px;
   }
 
   /* ── Τα πλακίδια ───────────────────────────────────────────────────────── */
@@ -455,7 +455,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
   }
   .chip > span {
     display: flex; align-items: center; min-height: 40px; padding: 0 14px;
-    border: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2);
+    border: 1px solid var(--line); font-size: var(--fs-s-1); color: var(--ink-2);
     transition: border-color .14s ease, color .14s ease;
   }
   .chip:hover > span { border-color: var(--ink-2); color: var(--ink); }
@@ -477,12 +477,12 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     border-top: 1px solid var(--line); flex: none;
   }
   .fs__reset {
-    background: none; border: 0; color: var(--muted); font-size: 13px; cursor: pointer;
+    background: none; border: 0; color: var(--muted); font-size: var(--fs-s-1); cursor: pointer;
     padding: 12px 0; min-height: 44px;
   }
   .fs__go {
     flex: 1; min-height: 50px; border: 0; background: var(--ink); color: var(--paper);
-    font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; cursor: pointer;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; cursor: pointer;
   }
   .fs__go b { font-weight: 600; }
   .fs__go[data-empty] { background: var(--muted); }
@@ -526,7 +526,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     .fs__g > .fs__l, .fs .fs__h {
       display: block; box-sizing: border-box; width: 100%; float: none;
       margin: 0 0 10px; padding: 7px 12px; background: var(--paper-2);
-      font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
+      font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase;
       color: var(--ink); font-weight: 600; line-height: 1.4;
     }
 
@@ -534,7 +534,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     .chips { margin-top: 0; }
     .chip > span {
       min-height: 36px; padding: 0 12px; border-color: transparent;
-      font-size: 13px; line-height: 1.2; color: var(--ink-2);
+      font-size: var(--fs-s-1); line-height: 1.2; color: var(--ink-2);
     }
     .chip:hover > span { border-color: var(--ink-2); color: var(--ink); }
     .chip input:checked + span,
@@ -554,7 +554,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
       clip: rect(0 0 0 0); white-space: nowrap; border: 0;
     }
-    .fs__pair .fs__f input { margin: 0; font-size: 14px; min-height: 0; -moz-appearance: textfield; }
+    .fs__pair .fs__f input { margin: 0; font-size: var(--fs-s0); min-height: 0; -moz-appearance: textfield; }
     .fs__pair .fs__f input::-webkit-outer-spin-button,
     .fs__pair .fs__f input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .fs__pair .fs__f input::placeholder { color: var(--ink); opacity: 1; }
@@ -562,7 +562,7 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
     /* Sergei 03/11: a typed or slid value reads like the placeholder («€2,500,000», «250 m²»);
        the raw number shows only while the field is being edited */
     .fs__pair .fs__f { position: relative; }
-    :global(.fs__fmt) { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--ink);
+    :global(.fs__fmt) { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: var(--fs-s0); color: var(--ink);
                pointer-events: none; white-space: nowrap; display: none; }
     .fs__pair .fs__f[data-fmt]:not(:focus-within) :global(.fs__fmt) { display: block; }
     .fs__pair .fs__f[data-fmt]:not(:focus-within) input { color: transparent; }
@@ -591,9 +591,9 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
 
     .fs__foot { padding: 10px 28px 12px; gap: 12px; }
     .fs__reset {
-      padding: 0; min-height: 0; font-size: 13.5px; color: var(--ink-2);
+      padding: 0; min-height: 0; font-size: var(--fs-s-1); color: var(--ink-2);
       text-decoration: underline; text-underline-offset: 3px;
     }
-    .fs__go { flex: none; margin-inline-start: auto; min-height: 44px; padding: 0 22px; font-size: 11px; letter-spacing: .16em; }
+    .fs__go { flex: none; margin-inline-start: auto; min-height: 44px; padding: 0 22px; font-size: var(--fs-s-1); letter-spacing: .16em; }
   }
 </style>

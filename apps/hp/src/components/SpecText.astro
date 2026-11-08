@@ -49,10 +49,10 @@ const ui = L[lang] ?? L.en;
 <style>
   .st { padding-block: var(--s8) var(--s9); display: grid; gap: var(--s7); }
   .st-intro { margin-top: var(--s3); }
-  .prose { max-width: 68ch; font-size: 17px; line-height: 1.7; color: var(--ink-2); min-width: 0; }
-  .prose :global(h2) { font-size: clamp(22px, 3.4vw, 28px); font-weight: 400; line-height: 1.25; color: var(--ink); margin: var(--s7) 0 var(--s3); }
+  .prose { max-width: 68ch; font-size: var(--fs-s0); line-height: 1.7; color: var(--ink-2); min-width: 0; }
+  .prose :global(h2) { font-size: var(--fs-s2); font-weight: 400; line-height: 1.25; color: var(--ink); margin: var(--s7) 0 var(--s3); }
   .prose :global(h2:first-child) { margin-top: 0; }
-  .prose :global(h3) { font-size: 19px; font-weight: 600; color: var(--ink); margin: var(--s5) 0 var(--s2); }
+  .prose :global(h3) { font-size: var(--fs-s0); font-weight: 600; color: var(--ink); margin: var(--s5) 0 var(--s2); }
   .prose :global(p), .prose :global(ul) { margin: 0 0 var(--s4); }
   .prose :global(strong) { color: var(--ink); font-weight: 600; }
   .st-intro.prose :global(p:last-child) { margin-bottom: 0; }
@@ -62,11 +62,11 @@ const ui = L[lang] ?? L.en;
   .faq details:last-child { border-bottom: 1px solid var(--line); }
   .faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: "+"; font-weight: 300; font-size: 20px; line-height: 1; color: var(--ink); }
+  .faq summary::after { content: "+"; font-weight: 300; font-size: var(--fs-s1); line-height: 1; color: var(--ink); }
   .faq details[open] summary::after { content: "−"; }
-  .faq .faq-q { font-size: 17px; font-weight: 600; line-height: 1.4; margin: 0; color: var(--ink); }
-  .faq-a { margin: var(--s2) 0 0; font-size: 16px; line-height: 1.65; color: var(--ink-2); }
+  .faq .faq-q { font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; margin: 0; color: var(--ink); }
+  .faq-a { margin: var(--s2) 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); }
   .faq-a :global(p) { margin: 0 0 var(--s2); }
   .st-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); }
-  .st-links a { color: var(--ink); font-size: 15px; text-underline-offset: 3px; }
+  .st-links a { color: var(--ink); font-size: var(--fs-s0); text-underline-offset: 3px; }
 </style>

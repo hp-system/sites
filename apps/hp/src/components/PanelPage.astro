@@ -154,47 +154,47 @@ const favLabel = favN === 1 ? t(lang, 'ui.one_prop') : t(lang, 'pnl.n_props', { 
   .pnl .wrap { max-width: 620px; }
   .hd { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 8px 0 20px; }
   .hd__h { margin: 0; }
-  .badge { font-size: 10px; font-weight: 600; letter-spacing: .16em; padding: 6px 10px;
+  .badge { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; padding: 6px 10px;
            border: 1px solid var(--line); color: var(--ink-2); }
   .badge--gold { border-color: var(--ink); background: var(--ink); color: var(--paper); }
   .badge--muted { color: var(--faint); }
-  .say { font-size: 14.5px; color: var(--ink-2); margin: 0 0 20px; max-width: 52ch; }
+  .say { font-size: var(--fs-s0); color: var(--ink-2); margin: 0 0 20px; max-width: 52ch; }
 
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
            background: var(--line-soft); border: 1px solid var(--line-soft); margin-bottom: 22px; }
   .tile { background: var(--paper); padding: 16px 18px; display: block; }
-  .tile b { display: block; font-size: 26px; font-weight: 600; line-height: 1; }
-  .tile span { font-size: 10px; font-weight: 600; letter-spacing: .16em;
+  .tile b { display: block; font-size: var(--fs-s2); font-weight: 600; line-height: 1; }
+  .tile span { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em;
                text-transform: uppercase; color: var(--faint); }
 
   .rows { border-top: 1px solid var(--line-soft); }
   .row { display: flex; justify-content: space-between; align-items: center; gap: 12px;
-         padding: 16px 0; border-bottom: 1px solid var(--line-soft); font-size: 15px; }
-  .row small { display: block; font-size: 12px; color: var(--faint); margin-top: 2px; }
+         padding: 16px 0; border-bottom: 1px solid var(--line-soft); font-size: var(--fs-s0); }
+  .row small { display: block; font-size: var(--fs-s-1); color: var(--faint); margin-top: 2px; }
   .row i { font-style: normal; color: var(--faint); }
 
   .ask { border: 1px solid var(--line); padding: 18px; margin-top: 24px; }
   .ask--deep { background: var(--ink-deep); border-color: var(--ink-deep); color: #fff; }
-  .ask__h { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
-  .ask--deep .ask__h { font-weight: 300; font-size: 20px; }
-  .ask__s { margin: 0 0 14px; font-size: 13.5px; color: var(--muted); }
+  .ask__h { margin: 0 0 6px; font-size: var(--fs-s0); font-weight: 600; }
+  .ask--deep .ask__h { font-weight: 300; font-size: var(--fs-s1); }
+  .ask__s { margin: 0 0 14px; font-size: var(--fs-s-1); color: var(--muted); }
   .ask--deep .ask__s { color: rgba(255,255,255,.72); }
 
   .adv { display: flex; align-items: center; gap: 13px; margin-top: 26px;
          border: 1px solid var(--line-soft); padding: 13px 14px; }
   .adv__pic { width: 44px; height: 44px; border-radius: 50%; background: var(--paper-2); flex: none; }
   .adv__t { flex: 1; min-width: 0; }
-  .adv__n { margin: 1px 0 0; font-size: 14.5px; font-weight: 600; }
+  .adv__n { margin: 1px 0 0; font-size: var(--fs-s0); font-weight: 600; }
   .adv__b { min-height: 38px; padding: 0 14px; }
-  .tiny { margin: 0; font-size: 11px; color: var(--faint); }
+  .tiny { margin: 0; font-size: var(--fs-s-1); color: var(--faint); }
 
   .out { margin-top: 30px; display: grid; gap: 2px; }
   .out--all { margin-top: 14px; }
   .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin: 0 0 18px; overflow-x: auto; }
-  .tabs a { padding: 10px 16px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint);
+  .tabs a { padding: 10px 16px; font-size: var(--fs-s-1); letter-spacing: .12em; text-transform: uppercase; color: var(--faint);
             border-bottom: 2px solid transparent; white-space: nowrap; }
   .tabs a[aria-current='page'] { color: var(--ink); border-color: var(--ink); font-weight: 600; }
   .row--static { color: var(--ink-2); }
-  .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--muted); font-size: 13.5px; }
+  .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--muted); font-size: var(--fs-s-1); }
   .lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 </style>

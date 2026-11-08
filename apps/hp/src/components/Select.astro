@@ -48,7 +48,7 @@ const id = `sel-${name}-${Math.random().toString(36).slice(2, 7)}`;
 <style>
   .sel { position: relative; display: block; min-width: 0; }
   .sel__l {
-    display: block; font-size: 9px; font-weight: 600; letter-spacing: .16em;
+    display: block; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em;
     text-transform: uppercase; color: var(--faint);
   }
   .sel__btn {
@@ -62,7 +62,7 @@ const id = `sel-${name}-${Math.random().toString(36).slice(2, 7)}`;
        αφής δεν είναι το κείμενο, είναι το πεδίο. */
     margin-top: 1px; padding: 0; min-height: 22px; margin-bottom: -4px;
     background: none; border: 0; cursor: pointer;
-    font: inherit; font-size: 15px; color: var(--ink); text-align: start;
+    font: inherit; font-size: var(--fs-s0); color: var(--ink); text-align: start;
   }
   .sel__val { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sel__caret { width: 10px; height: 6px; flex: none; color: var(--faint); transition: transform .18s ease; }
@@ -77,7 +77,7 @@ const id = `sel-${name}-${Math.random().toString(36).slice(2, 7)}`;
   }
   /* Οι επιλογές είναι ΔΙΚΟ μας HTML — άρα Mont, και δικό μας χρώμα επισήμανσης. */
   .sel__opt {
-    padding: 11px 16px; font-size: 15px; color: var(--ink-2); cursor: pointer;
+    padding: 11px 16px; font-size: var(--fs-s0); color: var(--ink-2); cursor: pointer;
     min-height: 44px; display: flex; align-items: center;
   }
   .sel__opt:hover, .sel__opt[data-active] { background: var(--paper-2); color: var(--ink); }

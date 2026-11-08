@@ -24,8 +24,8 @@ const { lang } = Astro.props;
     .w1 .w1-m { display: none !important; }
 
     /* ── headings and buttons ───────────────────────────────────────────── */
-    .w1 .w1-h2 { margin: 0; font-size: 40px; font-weight: 300; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; flex: none; }
-    .w1 .w1-h2--sm { font-size: 28px; letter-spacing: -.014em; }
+    .w1 .w1-h2 { margin: 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; flex: none; }
+    .w1 .w1-h2--sm { font-size: var(--fs-s2); letter-spacing: -.014em; }
     .w1 .btn { transition: background .2s ease, color .2s ease, border-color .2s ease; }
     .w1 .btn:hover { opacity: 1; background: var(--paper-2); color: var(--ink); border-color: var(--paper-2); }
     .w1 .lnkg { color: var(--muted); text-decoration: none; transition: color .15s ease; }
@@ -58,15 +58,15 @@ const { lang } = Astro.props;
     .w1 .pc__i { display: block; width: 100%; height: 220px; overflow: hidden; background: var(--paper); }
     .w1 .pc__i img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
     .w1 .pc:hover .pc__i img { transform: scale(1.03); }
-    .w1 .pc__t { margin: 22px 0 0; font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -.012em; max-width: 300px; color: var(--ink); }
+    .w1 .pc__t { margin: 22px 0 0; font-size: var(--fs-s1); font-weight: 600; line-height: 1.25; letter-spacing: -.012em; max-width: 300px; color: var(--ink); }
     .w1 .pc:hover .pc__t { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-    .w1 .pc__p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); max-width: 290px; min-height: 44px; }
+    .w1 .pc__p { margin: 6px 0 0; font-size: var(--fs-s0); line-height: 1.5; color: var(--ink-2); max-width: 290px; min-height: 44px; }
     .w1 .pc__a { display: flex; align-items: center; justify-content: center; gap: 22px; margin: auto 0 0; padding-top: 12px; }   /* Sergei 03/11: a little closer to the text (was 20) */
     .w1 .pc__b { display: inline-flex; align-items: center; height: 40px; padding: 0 20px; background: var(--paper); color: var(--ink);
-                 border: 1px solid var(--line); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+                 border: 1px solid var(--line); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
                  text-decoration: none; transition: background .2s ease, border-color .2s ease; }
     .w1 .pc__b:hover { background: var(--paper-2); border-color: var(--ink); }
-    .w1 .pc__l { font-size: 14.5px; color: var(--muted); text-decoration: none; transition: color .15s ease; }
+    .w1 .pc__l { font-size: var(--fs-s0); color: var(--muted); text-decoration: none; transition: color .15s ease; }
     .w1 .pc__l:hover { color: var(--ink); }
 
     /* ── back to top ────────────────────────────────────────────────────── */

@@ -210,9 +210,9 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
 <style>
   @media (min-width: 1024px) {
     .co { display: block; }
-    .co-lbl { margin: 0; font-size: 10.5px; font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+    .co-lbl { margin: 0; font-size: var(--fs-s-1); font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
     .co-lbl--dk { color: rgba(255,255,255,.55); }
-    .co-more { margin: 16px 0 0; font-size: 14px; }
+    .co-more { margin: 16px 0 0; font-size: var(--fs-s0); }
     .co-lnkd { color: rgba(255,255,255,.62); text-decoration: none; transition: color .15s ease; }
     .co-lnkd:hover { color: #fff; }
 
@@ -220,8 +220,8 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     .co-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-top: 4px; padding-bottom: 48px; }
     .co-fct { margin: 0; padding: 0 24px; border-left: 1px solid var(--line); }
     .co-fct:first-child { border-left: 0; padding-left: 0; }
-    .co-fct b { display: block; font-size: 24px; font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: var(--ink); }
-    .co-fct span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+    .co-fct b { display: block; font-size: var(--fs-s1); font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: var(--ink); }
+    .co-fct span { display: block; margin-top: 6px; font-size: var(--fs-s0); line-height: 1.5; color: var(--muted); }
 
     /* ── two halves of the same height: the values (dark) and our people ── */
     .co-vals, .co-ppl { min-height: 270px; padding: 24px 0; box-sizing: border-box; display: flex; align-items: center; }
@@ -229,15 +229,15 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     .co-vals { background: var(--ink-deep); color: #fff; }
     .co-g2 { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: 56px; align-items: start; }
     .co-g2--mid { align-items: center; }
-    .co-zh { margin: 14px 0 0; font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; color: inherit; }
+    .co-zh { margin: 14px 0 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; color: inherit; }
     .co-ppl .co-zh { color: var(--ink); }
     .co-vals__r { padding-top: 29px; }
     .co-stack { display: grid; }
     .co-sx { grid-area: 1 / 1; margin: 0; opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; }
     .co-sx.on { opacity: 1; transform: none; }
     .co-sx.gone { transform: translateY(-14px); }
-    .co-sx b { display: block; font-size: 36px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
-    .co-sx span { display: block; margin-top: 14px; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,.72); max-width: 56ch; }
+    .co-sx b { display: block; font-size: var(--fs-s3); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
+    .co-sx span { display: block; margin-top: 14px; font-size: var(--fs-s0); line-height: 1.6; color: rgba(255,255,255,.72); max-width: 56ch; }
     /* the values' dashes: the chosen one long, the others short marks; the change slides */
     .co-bars { display: flex; gap: 6px; margin-top: 22px; }
     .co-bar { all: unset; cursor: pointer; padding: 10px 0; }
@@ -248,18 +248,18 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     /* the heading on one line from 1280px, as the design; a long value title wraps (never wider than its column) */
     @media (min-width: 1280px) { .co-zh { white-space: nowrap; } }
     .co-bar:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-    .co-ppl__p { margin: 18px 0 0; font-size: 15px; line-height: 1.65; color: var(--muted); max-width: 48ch; }
-    .co-ppl__q { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.2; letter-spacing: -.016em; color: var(--ink); }
+    .co-ppl__p { margin: 18px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--muted); max-width: 48ch; }
+    .co-ppl__q { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.2; letter-spacing: -.016em; color: var(--ink); }
 
     /* ── our story: the years, one open; the picture on the right follows ── */
     .co-story { background: var(--paper-2); padding: 44px 0; }
     .co-story__in { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 72px; align-items: center; }
-    .co-story__h { margin: 10px 0 18px; font-size: 36px; font-weight: 300; letter-spacing: -.02em; line-height: 1.2; color: var(--ink); }
+    .co-story__h { margin: 10px 0 18px; font-size: var(--fs-s3); font-weight: 300; letter-spacing: -.02em; line-height: 1.2; color: var(--ink); }
     .co-acclist { height: 380px; }
     .co-acc { border-bottom: 1px solid var(--line); }
     .co-acc__h { margin: 0; font: inherit; }
     .co-acb { all: unset; cursor: pointer; box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 0; color: var(--ink); }
-    .co-act { font-size: 22px; font-weight: 300; letter-spacing: -.012em; line-height: 1.2; }
+    .co-act { font-size: var(--fs-s1); font-weight: 300; letter-spacing: -.012em; line-height: 1.2; }
     .co-acb:hover .co-act { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
     .co-acb svg { flex: none; width: 18px; height: 18px; color: var(--muted); transition: transform .4s ease; }
     .co-acb[aria-expanded='true'] svg { transform: rotate(180deg); }
@@ -268,8 +268,8 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
       transition: grid-template-rows .5s cubic-bezier(.4,0,.2,1), opacity .35s ease, visibility 0s linear .5s; }
     .co-accw.on { grid-template-rows: 1fr; opacity: 1; visibility: visible; transition: grid-template-rows .5s cubic-bezier(.4,0,.2,1), opacity .35s ease; }
     .co-accw > div { overflow: hidden; min-height: 0; }
-    .co-acp { margin: 0; padding: 0 36px 18px 0; font-size: 15.5px; line-height: 1.6; color: var(--ink-2); }
-    .co-ack { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .co-acp { margin: 0; padding: 0 36px 18px 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); }
+    .co-ack { display: block; margin-bottom: 6px; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
     .co-accimg { display: grid; overflow: hidden; }
     .co-accimg img { grid-area: 1 / 1; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; display: block; opacity: 0; transition: opacity .5s ease; }
     .co-accimg img.on { opacity: 1; }
@@ -277,9 +277,9 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     /* ── partners: the logos float by, held under the pointer ── */
     .co-prt { padding: 32px 0 30px; }
     .co-prt__hd { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 14px; }
-    .co-prt__h { margin: 6px 0 0; font-size: 28px; font-weight: 300; letter-spacing: -.016em; line-height: 1.2; color: var(--ink); }
-    .co-prt__p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--muted); }
-    .co-prt__all { flex: none; font-size: 14px; color: var(--muted); text-decoration: none; transition: color .15s ease; }
+    .co-prt__h { margin: 6px 0 0; font-size: var(--fs-s2); font-weight: 300; letter-spacing: -.016em; line-height: 1.2; color: var(--ink); }
+    .co-prt__p { margin: 6px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
+    .co-prt__all { flex: none; font-size: var(--fs-s0); color: var(--muted); text-decoration: none; transition: color .15s ease; }
     .co-prt__all:hover { color: var(--ink); }
     .co-mq { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
     .co-mqt { display: flex; align-items: center; gap: 12px; width: max-content; animation: co-mq 60s linear infinite; }
@@ -294,12 +294,12 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
       padding: 32px 34px 28px; background: var(--paper); color: var(--ink); text-decoration: none; overflow: hidden;
       transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease; }
     .co-door.on { flex-grow: 1.6; background: var(--ink-deep); color: #fff; }
-    .co-door b { display: block; font-size: 24px; font-weight: 300; line-height: 1.15; letter-spacing: -.016em; white-space: nowrap; transition: font-size .4s ease; }
-    .co-door.on b { font-size: 32px; }
-    .co-dp { display: block; margin-top: 12px; font-size: 15px; line-height: 1.6; color: var(--muted); max-width: 40ch; transition: color .35s ease; }
+    .co-door b { display: block; font-size: var(--fs-s1); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; white-space: nowrap; transition: font-size .4s ease; }
+    .co-door.on b { font-size: var(--fs-s3); }
+    .co-dp { display: block; margin-top: 12px; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); max-width: 40ch; transition: color .35s ease; }
     .co-door.on .co-dp { color: rgba(255,255,255,.78); }
-    .co-dl { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }
-    .co-ar { font-size: 16px; letter-spacing: 0; transition: transform .3s ease; }
+    .co-dl { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }
+    .co-ar { font-size: var(--fs-s0); letter-spacing: 0; transition: transform .3s ease; }
     .co-door.on .co-ar { transform: translateX(6px); }
     .co-door:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
     :global([dir='rtl']) .co-door.on .co-ar { transform: translateX(-6px) scaleX(-1); }

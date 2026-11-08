@@ -190,11 +190,11 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   .cx__eyebrow { color: rgba(255,255,255,.5); }
   .cx__h {
     margin: var(--s2) 0 0; font-weight: 300; letter-spacing: -.02em; line-height: 1.08;
-    font-size: clamp(28px, 5.4vw, 44px); max-width: 16ch;
+    font-size: var(--fs-s4); max-width: 16ch;
   }
   .cx__br { display: none; }
   .cx__p {
-    margin: var(--s4) 0 0; font-size: 15.5px; line-height: 1.6;
+    margin: var(--s4) 0 0; font-size: var(--fs-s0); line-height: 1.6;
     color: rgba(255,255,255,.78); max-width: 48ch;
   }
   /* Phone: the buttons stay right under the text, as before. */
@@ -209,9 +209,9 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   .cap { background: var(--ink-deep); padding: var(--s4); min-width: 0; }
   /* Phone: every box open — the title is a label, not a control. */
   .cap__b { all: unset; display: block; pointer-events: none; }
-  .cap__t { display: block; font-size: 14px; font-weight: 600; }
+  .cap__t { display: block; font-size: var(--fs-s0); font-weight: 600; }
   .cap__chev { display: none; }
-  .cap__d { display: block; margin-top: 3px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
+  .cap__d { display: block; margin-top: 3px; font-size: var(--fs-s-1); color: rgba(255,255,255,.5); line-height: 1.45; }
 
   .h-stack {
     display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
@@ -224,8 +224,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
      γραμμή αριστερά (George, 28/7: «δεν τα έχεις κεντρίσει καλά, να μην
      ακουμπάνε τέρμα αριστερά»). Ίσο padding σε όλες τις πλευρές. */
   .st { background: var(--ink-deep); padding: var(--s4); min-width: 0; }
-  .st b { display: block; font-size: clamp(18px, 3.4vw, 24px); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; }
-  .st span { display: block; margin-top: 5px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
+  .st b { display: block; font-size: var(--fs-s1); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; }
+  .st span { display: block; margin-top: 5px; font-size: var(--fs-s-1); color: rgba(255,255,255,.5); line-height: 1.45; }
 
   @media (min-width: 760px) and (max-width: 1023px) {
     .cx { padding: 74px 0; }
@@ -248,7 +248,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx__strip { grid-area: facts; align-self: start; margin-top: 30px; }
     .cx__caps { grid-area: acc; }
     .cx__acts { grid-area: acts; justify-content: center; margin: 32px 0 0; }
-    .cx__h { margin-top: 14px; font-size: 38px; line-height: 1.14; max-width: none; }
+    .cx__h { margin-top: 14px; font-size: var(--fs-s3); line-height: 1.14; max-width: none; }
     .cx__br { display: inline; }
     .cx__p { margin-top: 22px; line-height: 1.65; max-width: 50ch; }
 
@@ -262,7 +262,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
       color: rgba(255,255,255,.6);
     }
     .cap__b:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 2px; }
-    .cap__t { font-size: 20px; font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: #fff; }
+    .cap__t { font-size: var(--fs-s1); font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: #fff; }
     .cap__b:hover .cap__t { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
     .cap__chev { display: block; flex: none; transition: transform .4s ease; }
     .cap.on .cap__chev { transform: rotate(180deg); }
@@ -272,13 +272,13 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     }
     .cap.on .cap__w { grid-template-rows: 1fr; opacity: 1; }
     .cap__w > div { overflow: hidden; min-height: 0; }
-    .cap__d { margin: 0; padding: 0 36px 16px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.72); }
+    .cap__d { margin: 0; padding: 0 36px 16px 0; font-size: var(--fs-s0); line-height: 1.6; color: rgba(255,255,255,.72); }
 
     /* the four facts: one at a time (stack, dashes and clock are in HomePage.astro) */
     .h-stack { background: none; border: 0; gap: 0; grid-template-columns: 1fr; justify-items: start; }
     .st { background: none; padding: 0; }
-    .st b { font-size: 26px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
-    .st span { margin-top: 8px; font-size: 14.5px; color: rgba(255,255,255,.6); line-height: 1.55; }
+    .st b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
+    .st span { margin-top: 8px; font-size: var(--fs-s0); color: rgba(255,255,255,.6); line-height: 1.55; }
     .st span::first-letter { text-transform: uppercase; }
     .h-bars { display: flex; }
   }
@@ -294,16 +294,16 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     }
     .cx .cx__lead { display: contents; }
     .cx .cx__eyebrow { grid-area: eb; color: var(--muted); }
-    .cx .cx__h { grid-area: h; margin-top: 14px; font-size: 42px; line-height: 1.1; color: var(--ink); }
+    .cx .cx__h { grid-area: h; margin-top: 14px; font-size: var(--fs-s4); line-height: 1.1; color: var(--ink); }
     .cx .cx__h b { font-weight: 600; }
     /* Sergei 08/11: one shared first word for the two lines («The» once, two lines high) */
     .cx__pair { display: none; }
     .cx .cx__h--pair .cx__hx { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     .cx .cx__h--pair .cx__pair { display: grid; grid-template-columns: auto auto; justify-content: start; column-gap: .22em; align-items: center; }
-    .cx__pw { grid-row: 1 / span 2; font-size: 2.35em;   /* Sergei 08/11: a little bigger */
+    .cx__pw { grid-row: 1 / span 2; font-size: 2.35em;   /* Sergei 08/11: a little bigger · canon-exception (side case, sized to its two lines) */
        line-height: .9; font-weight: 300; letter-spacing: -.03em; }
     .cx__pl { display: block; }
-    .cx .cx__p { grid-area: p; margin: 10px 0 0; max-width: none; font-size: 16px; line-height: 1.65; color: var(--muted); }   /* the grey of the area links (Sergei 03/11) */
+    .cx .cx__p { grid-area: p; margin: 10px 0 0; max-width: none; font-size: var(--fs-s0); line-height: 1.65; color: var(--muted); }   /* the grey of the area links (Sergei 03/11) */
     .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 14px 0 0; align-self: center; }   /* Sergei 08/11: centred on the heading's height */
     .cx .cx__btn { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
     /* Sergei 08/11: hovers swap black and white — no grey, no fade */
@@ -333,19 +333,19 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     /* Sergei 08/11: tiles only white (services) and black (facts) */
     .cd { min-width: 0; overflow: hidden; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
     .cd svg { width: 40px; height: 40px; color: var(--ink); flex: none; stroke-width: 1.2; }   /* Sergei 08/11: bigger icons */
-    .cd h3 { margin: auto 0 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
-    .cd p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+    .cd h3 { margin: auto 0 0; font-size: var(--fs-s0); font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+    .cd p { margin: 0; font-size: var(--fs-s0); line-height: 1.45; color: var(--ink-2); }
     .cd p::first-letter { text-transform: uppercase; }
     .cd--c1 { grid-area: c1; padding: 28px 26px; gap: 14px; }
     .cd--c1 svg { width: 76px; height: 76px; stroke-width: .9; }
-    .cd--c1 h3 { font-size: 24px; line-height: 1.2; }
-    .cd--c1 p { font-size: 15px; line-height: 1.55; }
+    .cd--c1 h3 { font-size: var(--fs-s1); line-height: 1.2; }
+    .cd--c1 p { font-size: var(--fs-s0); line-height: 1.55; }
     .cd--c2 { grid-area: c2; } .cd--c3 { grid-area: c3; } .cd--c4 { grid-area: c4; } .cd--c5 { grid-area: c5; }
     .cd--c6 { grid-area: c6; }
     .cd--s1 { grid-area: s1; } .cd--s2 { grid-area: s2; } .cd--s3 { grid-area: s3; } .cd--s4 { grid-area: s4; }
     .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; padding: 24px 26px; }
-    .cd--fact h3 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
-    .cd--fact p { max-width: 40ch; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.72); }
+    .cd--fact h3 { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
+    .cd--fact p { max-width: 40ch; font-size: var(--fs-s0); line-height: 1.55; color: rgba(255,255,255,.72); }
   }
   /* Reduced motion (as the property of the week): no fixed layer; the window is an ordinary scroll box. */
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {

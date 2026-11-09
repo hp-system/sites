@@ -19,18 +19,13 @@ export type AreaTile = { key: string; name: string; href: string; alt: string; f
 interface Props { lang: Lang; items: AreaTile[]; from: number }
 const { lang, items, from } = Astro.props;
 
-// The guides are English-only for now (same links as the footer, #69).
-const LINKS = [
-  { href: '/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki', text: t(lang, 'foot.g_buy') },
-  { href: '/en/property-for-sale-in-greece', text: t(lang, 'home.greece') },
-  { href: '/en/articles/business-news/taxes-foreigners-properties-greece', text: t(lang, 'foot.g_tax') },
-];
+
 ---
 <section class="hz areas" aria-labelledby="area-h">
   <div class="wrap">
     <div class="shead hz-head">
       <div>
-        <h2 id="area-h" class="t-h2">{t(lang, 'home.area_h2')}</h2>
+        <p data-h id="area-h" class="t-h2">{t(lang, 'home.area_h2')}</p>
         {from > 0 && <p>{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
       </div>
     </div>
@@ -54,9 +49,7 @@ const LINKS = [
       ))}
     </ul>
 
-    <nav class="alinks" aria-label={t(lang, 'foot.guides')}>
-      {LINKS.map((l) => <a href={l.href}>{l.text} <span aria-hidden="true">→</span></a>)}
-    </nav>
+    {/* Sergei 08/11: the guide links moved to the home page's link columns (SpecText «Guides») */}
   </div>
 </section>
 

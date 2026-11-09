@@ -19,6 +19,7 @@ import { num } from '../lib/format';
 import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
 import { pageExists } from '../lib/pages';
+import { specPathOr, MUNI_SPEC } from '../lib/seo-pages';
 
 interface Props { lang: Lang; munis: { name: string; n: number; key?: string }[]; total: number;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -44,6 +45,11 @@ const KINDS: [string, string][] = [
   [t(lang, 'kinds.apartments'), 'apartment'], [t(lang, 'kinds.land'), 'land'],
   [t(lang, 'kinds.hotels'), 'hotel'],
 ];
+// SEO audit 08/11: each kind / area links its spec page (George's spec rule 4: filter URLs are
+// noindex); a kind or area without one keeps its filter.
+const KIND_SPEC: Record<string, string> = { 'detached house': 'P07', maisonette: 'P06', apartment: 'P05', land: 'P08' };
+const kindHref = (v: string) => specPathOr(KIND_SPEC[v] ?? '-', lang, `${url}?subcategory=${encodeURIComponent(v)}`);
+const muniHref = (key: string) => specPathOr(MUNI_SPEC[key] ?? '-', lang, `${url}?municipality=${encodeURIComponent(key)}`);
 
 // 🛡️ ΔΙΧΤΥ: ΔΕΝ ΔΕΙΧΝΟΥΜΕ ΣΥΝΔΕΣΜΟ ΓΙΑ ΣΕΛΙΔΑ ΠΟΥ ΔΕΝ ΥΠΑΡΧΕΙ.
 //    Έτσι γεννήθηκαν οι 124 νεκροί σύνδεσμοι: τα μενού γράφτηκαν πριν τις σελίδες και
@@ -71,7 +77,7 @@ const has = (k: string) => pageExists(k as any);
     <p class="mm__lab">{t(lang, 'mm.where')}</p>
     <ul class="mm__list">
       {munis.map((m) => (
-        <li><a href={`${url}?municipality=${encodeURIComponent(m.key ?? m.name)}`}>
+        <li><a href={muniHref(m.key ?? m.name)}>
           <span>{m.name}</span>
         </a></li>
       ))}
@@ -81,7 +87,7 @@ const has = (k: string) => pageExists(k as any);
     <p class="mm__lab">{t(lang, 'mm.what')}</p>
     <ul class="mm__list">
       {KINDS.map(([label, v]) => (
-        <li><a href={`${url}?subcategory=${encodeURIComponent(v)}`}><span>{label}</span></a></li>
+        <li><a href={kindHref(v)}><span>{label}</span></a></li>
       ))}
     </ul>
 
@@ -97,7 +103,7 @@ const has = (k: string) => pageExists(k as any);
     <div class="mm__foot">
       {inside
       ? <a class="btn" href={`${p}/panel`} data-ev="panel:menu">{t(lang, 'pnl.title')}</a>
-      : <a class="btn" href={`${p}/login`} data-ev="register:menu">{t(lang, 'nav.login')}</a>}
+      : <a class="btn" href={`${p}/login`} rel="nofollow" data-ev="register:menu">{t(lang, 'nav.login')}</a>}
       {inside && (
       <form method="post" action="/api/auth/logout" class="mm__out">
         <button type="submit">Αποσύνδεση</button>

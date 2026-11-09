@@ -17,6 +17,9 @@ import Valuation from './Valuation.astro';
 import Doors from './Doors.astro';
 import Abroad from './Abroad.astro';
 import Footer from './Footer.astro';
+import SpecText from './SpecText.astro';
+import { specOf, specTitle } from '../lib/seo-pages';
+import REGISTRY from '../data/page-registry.json';
 
 import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
 import { buildHome } from '../lib/home';
@@ -119,8 +122,15 @@ const pickPhoto = (f: (a: any) => boolean) => {
 // approved mockup. The first four are the old collections (same links); the next
 // four are every type of property. A tile with no property behind it is dropped.
 const sub = (a: any) => String(a?.subcategory ?? '').toLowerCase();
+// Sergei 08/11 (George's SEO spec, rule 4): a tile links to the clean spec page of its type where one
+// exists in this language (P04 homes, P05 apartments, P06 maisonettes, P08 land, P09 seafront,
+// — filter URLs are noindex + canonical to those pages. Hotels keep the filter until P22 is
+// built (it waits for its brief; its URL answers 404 today).
+// Pool and «above one million» have no spec page and keep their filters.
+const pageOf = (id: string, fallback: string): string =>
+  specOf(id, lang)?.path ?? ((REGISTRY.pages as any[]).find((r) => r.id === id)?.paths?.[lang] as string | undefined) ?? fallback;
 const COLLS: { key: string; title: string; href: string; keep: (a: any) => boolean }[] = [
-  { key: 'sea',  title: t(lang, 'coll.sea'),  href: `${url}?sea_access=front`, keep: (a) => a.sea_access === 'front' },
+  { key: 'sea',  title: t(lang, 'coll.sea'),  href: pageOf('P09', `${url}?sea_access=front`), keep: (a) => a.sea_access === 'front' },
   // 🪤 ΤΟ ΠΛΑΚΙΔΙΟ ΕΛΕΓΕ **308** ΕΝΩ Η ΑΛΗΘΕΙΑ ΕΙΝΑΙ **103** (διορθώθηκε 30/7).
   //    Το `pools` δεν είναι σημαία ναι/όχι — είναι πολλαπλή επιλογή με κωδικούς,
   //    και ο κωδικός «2» σημαίνει **ΧΩΡΙΣ ΠΙΣΙΝΑ**: τον έχουν 203 ακίνητα.
@@ -129,12 +139,12 @@ const COLLS: { key: string; title: string; href: string; keep: (a: any) => boole
   // 🪤 ΕΔΩ ΗΤΑΝ «Σπάνια & μοναδικά» με σύνδεσμο `?rare=1` — φίλτρο που ΔΕΝ ΥΠΑΡΧΕΙ.
   //    Τα ακίνητα άνω του εκατομμυρίου έχουν 4,23 αιτήματα ανά ακίνητο (μετρήθηκε).
   { key: 'top',  title: t(lang, 'coll.top'),  href: `${url}?price_min=1000000`, keep: (a) => priceOf(a) >= 1_000_000 },
-  { key: 'land', title: t(lang, 'coll.land'), href: `${url}?category=land`, keep: (a) => a.category === 'land' },
-  { key: 'houses', title: t(lang, 'coll.houses'), href: facetUrl(lang, 'houses'),
+  { key: 'land', title: t(lang, 'coll.land'), href: pageOf('P08', `${url}?category=land`), keep: (a) => a.category === 'land' },
+  { key: 'houses', title: t(lang, 'coll.houses'), href: pageOf('P04', facetUrl(lang, 'houses')),
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('detached house') },
-  { key: 'maisonettes', title: t(lang, 'kinds.maisonettes'), href: facetUrl(lang, 'maisonettes'),
+  { key: 'maisonettes', title: t(lang, 'kinds.maisonettes'), href: pageOf('P06', facetUrl(lang, 'maisonettes')),
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('maisonette') },
-  { key: 'apartments', title: t(lang, 'kinds.apartments'), href: `${url}?type=apartment`,
+  { key: 'apartments', title: t(lang, 'kinds.apartments'), href: pageOf('P05', `${url}?type=apartment`),
     keep: (a) => catKey(a) === 'residency' && sub(a).startsWith('apartment') },
   { key: 'business', title: t(lang, 'coll.hotels'), href: `${url}?category=business`, keep: (a) => catKey(a) === 'business' },
 ];
@@ -161,7 +171,10 @@ const areaTiles = AREA_PAGES.filter((p) => p.kind === 'municipality')
     const name = facet?.name[lang] ?? p.name;
     return {
       key: p.slug, name, from,
-      href: lang === 'en' ? areaUrl(p.slug) : (facet ? facetUrl(lang, facet.key) : url),
+      // Sergei 08/11: the spec's area pages P11–P14 where they exist (one URL per area, as for the
+      // collections); the old area page / facet stays the fallback (e.g. Polygyros has no spec page).
+      href: pageOf(({ kassandra: 'P11', sithonia: 'P12', 'nea-propontida': 'P13', aristotelis: 'P14' } as Record<string, string>)[p.slug] ?? '-',
+        lang === 'en' ? areaUrl(p.slug) : (facet ? facetUrl(lang, facet.key) : url)),
       alt: t(lang, 'home.area_alt', { name }),
       keep,
     };
@@ -180,7 +193,7 @@ const co = await company();
 const ogPhoto = shareImage(d.heroPhoto as Photo | null);
 const jsonLd = [
   {
-    '@context': 'https://schema.org', '@type': 'RealEstateAgent',
+    '@context': 'https://schema.org', '@type': ['Organization', 'RealEstateAgent'],   // spec rule 11: Organization + RealEstateAgent
     '@id': `${site}#org`, name: co.legalName, url: site,
     // 🔴 ΑΥΤΑ ΤΑ ΔΙΑΒΑΖΕΙ Η GOOGLE. Κενή τιμή εδώ δεν «δείχνει άσχημα» — βγάζει
     //    το τηλέφωνο από το προφίλ της επιχείρησης. Γι' αυτό κάθε πεδίο περνά
@@ -226,14 +239,22 @@ const jsonLd = [
   },
 ];
 
+// SEO portion 2 (Sergei 08/11): George's spec P01 for this language — title, meta, og, H1, hero alt,
+// intro (between the H1 and the grid), the H2 body + FAQ + links (before «Buying from abroad»).
+const spec = specOf('P01', lang);
 const meta = {
   // No property counts in public text (George 17/10): title and description carry no number.
-  title: t(lang, 'meta.title'),
-  desc: t(lang, 'meta.desc'),
+  title: spec ? specTitle(spec.title, brand.name) : t(lang, 'meta.title'),
+  desc: spec ? spec.meta : t(lang, 'meta.desc'),
 };
+const heroAlt = spec?.heroAlt || d.heroAlt;
+if (spec?.faq.length) jsonLd.push({
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: spec.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+} as any);
 ---
-<Base lang={lang} title={meta.title} description={meta.desc} path="/"
-      ogImage={ogPhoto} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={d.heroAlt}
+<Base lang={lang} title={meta.title} description={meta.desc} path="/" ogTitle={spec?.ogTitle}
+      ogImage={ogPhoto} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={heroAlt}
       jsonLd={jsonLd}>
   {/* list → home move (Sergei 02/11): decided before the first paint, only when the visitor comes from
       the list (its note ≤ 10 s old), on desktop, without reduced motion; the class goes away after it. */}
@@ -256,7 +277,7 @@ const meta = {
     })();
   </script>
   {/* 1 κεφαλίδα (μέσα στο hero) · 2 hero */}
-  <Hero lang={lang} photo={d.heroPhoto as Photo | null} alt={d.heroAlt}
+  <Hero lang={lang} photo={d.heroPhoto as Photo | null} alt={heroAlt} h1={spec?.h1} intro={spec?.intro}
         munis={d.munis.map((m) => ({ name: m.name, n: m.count, key: m.key }))} total={d.total} />
   <SearchBar lang={lang} total={d.total} />
   <FilterSheet lang={lang} total={d.total}
@@ -268,6 +289,8 @@ const meta = {
         <p class="t-body">Τα ακίνητα δεν είναι διαθέσιμα αυτή τη στιγμή. Δοκίμασε σε λίγο.</p>
       </div>
     )}
+
+    {/* SEO portion 2: the spec intro is the hero's ticker, right under the H1 (spec rule 9) */}
 
     {/* 3 επιλεγμένα */}
     {d.newest.length > 0 && (
@@ -316,6 +339,19 @@ const meta = {
     {/* George, 28/7: «η αγορά της Χαλκιδικής» και «ποιοι είμαστε» φεύγουν τελείως.
         Μένει ΜΟΝΟ η αγορά από το εξωτερικό — δες Abroad.astro. */}
     <Abroad lang={lang} />
+
+    {/* SEO portion 2: George's H2 body, FAQ and links — at the very bottom, after the close and
+        before the footer (Sergei 08/11). Still «below the grid» as the spec's rule 9 asks. */}
+    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" links="sections"
+      join={(['P13', 'P14'] as const).map((id) => specOf(id, lang)).filter((x) => !!x)
+        .map((x) => ({ href: x!.path, text: x!.anchor, withId: 'P11' }))}
+      more={[
+        // the guides that sat under the area tiles (English articles for now, as in the footer, #69).
+        // «Property for sale in Greece» (/en/property-for-sale-in-greece) is NOT carried over: the
+        // spec already links that anchor to the Greece hub P03 — one anchor, two URLs would split it.
+        { href: '/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki', text: t(lang, 'foot.g_buy') },
+        { href: '/en/articles/business-news/taxes-foreigners-properties-greece', text: t(lang, 'foot.g_tax') },
+      ]} />}
   </main>
 
   {/* 11 υποσέλιδο */}

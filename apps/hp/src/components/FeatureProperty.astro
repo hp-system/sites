@@ -80,7 +80,7 @@ const rent = rentalUrl(id);
         το ακίνητο των 12 εκατ. έδειχνε την τιμή του πιο αδύναμα από μια κάρτα
         των 470.000: η μεγαλύτερη θέση της σελίδας με τη μικρότερη ιεραρχία. */}
     {priceVisible(a) && <p class="t-price feature__price">{money(priceOf(a), lang)}</p>}
-    <h2 id="week-h" class="t-h2 feature__title">{title}</h2>
+    <p data-h id="week-h" class="t-h2 feature__title">{title}</p>
     <p class="feature__facts">
       {sea && <span class="feature__sea" data-sea={a.sea_access}>{sea}</span>}
       <span>{facts}</span>

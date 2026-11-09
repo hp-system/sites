@@ -16,6 +16,7 @@ import { pick } from './api';
 import type { Lang } from './i18n';
 import { memberOf } from './member';
 import { brand } from '../brand/index';
+import { FACETS } from './listing';   // used at call time only (listing imports gate too)
 
 /**
  * ΤΡΙΑ ΕΠΙΠΕΔΑ, ΟΧΙ ΔΥΟ — το όραμα του George (30/7):
@@ -177,7 +178,13 @@ export function municipalityOf(a: Attrs, lang: Lang): string {
   // Ο Ρώσος διαβάζει κυριλλικά χωρίς κόπο· τα «Κασσάνδρα» είναι ξένο αλφάβητο.
   const bg = typeof i18n === 'object' && i18n ? String(i18n.bg ?? '') : '';
   if ((lang === 'bg' || lang === 'ru') && bg) return bg;
-  return muniKey(a);   // τελευταία εφεδρεία: ελληνική ΟΝΟΜΑΣΤΙΚΗ, ποτέ γενική
+  // SEO audit 08/11: properties migrated from Onsea carry no `municipality_i18n` — the site's own
+  // municipality names (the list facets, all 9 languages) come before the Greek fallback, so an
+  // English heading never reads «Detached house — Κασσάνδρα».
+  const key = muniKey(a);
+  const own2 = FACETS.find((f) => f.q?.municipality === key)?.name?.[lang];
+  if (own2) return own2;
+  return key;   // τελευταία εφεδρεία: ελληνική ΟΝΟΜΑΣΤΙΚΗ, ποτέ γενική
 }
 
 /** Η περιοχή — ΜΟΝΟ σε μέλη. Για τους υπόλοιπους: κενό. */

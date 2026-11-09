@@ -94,7 +94,14 @@ export function checkSpecPage(html, page, cluster, opts = {}) {
   if (!inOrder(page.h2, p.h2)) bad('H2 outline (rule 8)', `missing or out of order: ${page.h2.filter((h) => !p.h2.includes(h)).join(' | ') || 'order'}`);
   const body = norm(p.body);
   if (!body.includes(norm(page.intro))) bad('intro text (rule 9)', 'differs from the spec');
-  if (!body.includes(norm(page.body))) bad('body text (rule 9)', 'differs from the spec');
+  // The body may be shown whole, or cut at its H2s with something between the sections (home: each
+  // section's own links, Sergei 08/11): every section must then appear word for word, in order.
+  if (!body.includes(norm(page.body))) {
+    const parts = page.body.split(/(?=<h2>)/).map(norm).filter(Boolean);
+    let at = 0;
+    const ok = parts.every((x) => { const i = body.indexOf(x, at); if (i < 0) return false; at = i + x.length; return true; });
+    if (!ok) bad('body text (rule 9)', 'differs from the spec');
+  }
   for (const f of page.faq) {
     if (!p.h3.includes(f.q)) bad('FAQ question as H3 (rule 8)', f.q);
     if (!body.includes(norm(f.a))) bad('FAQ answer in the HTML (rule 8)', f.q);

@@ -59,14 +59,14 @@ if (count < 1) return null;
             («Πάρτε πρόσβαση στο {b}»). Αν γραφόταν το ένα πάνω στο άλλο, το κουμπί
             θα έλεγε «...στο Ξεκλειδώστε το Secret Portfolio». */}
         <p class="t-label off__eyebrow">{t(lang, 'off.eyebrow')}</p>
-        <h2 id="off-h" class="off__h">
+        <p data-h id="off-h" class="off__h">
           <b class="off__adj">{t(lang, 'off.h2a')}</b> {t(lang, 'off.h2b')}
-        </h2>
+        </p>
       </div>
 
       <div class="off__act">
         <p class="off__ask">{t(lang, 'off.ask2')}</p>
-        <a class="btn h-gild" href={`${prefix(lang)}/login`} data-ev="register:off_market">
+        <a class="btn h-gild" href={`${prefix(lang)}/login`} rel="nofollow" data-ev="register:off_market">
           {t(lang, 'off.access', { b: t(lang, 'off.brand') })}
         </a>
       </div>

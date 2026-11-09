@@ -196,7 +196,7 @@ for (const row of [...rows.values()]) {
   if (row.src === 'override' && row.status !== 301) continue;
   const res = await fetch(base + encodeURI(row.from), { redirect: 'manual' });
   if (res.status !== 200) continue;
-  if (regPaths.has(row.from) && !forced(row.from)) { rows.delete(row.from); keptRegistry++; continue; }
+  if (regPaths.has(row.from)) { rows.delete(row.from); keptRegistry++; continue; }
   if (!row.to) { rows.delete(row.from); keptRegistry++; continue; }   // live page and no target: keep it
   if (forced(row.from) || row.src === 'override') continue;
   row.note = `${row.note} · REVIEW: the new site serves this URL today (→ ${row.to ?? '—'})`;

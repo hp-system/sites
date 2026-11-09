@@ -42,6 +42,7 @@ import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
 import { specByPath, specTitle } from '../lib/seo-pages';
+import { coverOf, marked, markedSrcSet, altOf, focalStyle } from '../lib/photos';
 
 interface Props { page: InfoPage }
 const { page } = Astro.props;
@@ -233,6 +234,12 @@ if (d.widget === 'prices') {
   });
 }
 const faqItems = fresh ? fresh.faq : d.faq;
+// Mosaic photos: the cover of the first guest properties in the site order that have one (never locked),
+// watermarked (R-007), alt from the photo's own texts; guests see the municipality only (R-006).
+const mosaicPhotos = fresh ? items.filter((p) => !p.locked && coverOf(p.attributes)).slice(0, 4).map((p) => {
+  const c = coverOf(p.attributes)!;
+  return { src: marked(c.url, 1920), srcset: markedSrcSet(c.url), alt: altOf(c, lang, `${p.title}, Halkidiki`), style: focalStyle(c) };
+}) : [];
 if (faqItems.length) {
   jsonLd.push({
     '@context': 'https://schema.org', '@type': 'FAQPage',
@@ -310,7 +317,7 @@ if (faqItems.length) {
       </div>
     </section>
 
-    {fresh && <SpecText page={fresh} part="rest" lang={lang} body="mosaic" faq="tiles" />}
+    {fresh && <SpecText page={fresh} part="rest" lang={lang} body="mosaic" faq="tiles" photos={mosaicPhotos} />}
 
     {d.form && (
       <section class="w1-form" id="form">

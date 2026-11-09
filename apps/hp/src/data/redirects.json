@@ -4792,12 +4792,12 @@
   },
   {
    "from": "/en/vip",
-   "to": null,
-   "status": "pending",
+   "to": "/en/exclusive",
+   "status": 301,
    "lang": "en",
    "src": "override",
    "clicks": 0,
-   "note": "D11: VIP becomes Exclusive P52 (/en/exclusive), not built yet; until then /en/vip stays as it is"
+   "note": "D11 + D-20261109-SS-4: VIP became Exclusive P52, now built (batch 1)"
   },
   {
    "from": "/public/images/article/60/1706706818.jpg",

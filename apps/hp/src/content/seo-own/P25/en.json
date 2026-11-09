@@ -1,0 +1,94 @@
+{
+  "id": "P25",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Exclusive assignment",
+  "pageType": "content",
+  "path": "/en/work-with-us-exclusively",
+  "keyword": "exclusive real estate agent Halkidiki",
+  "titleFocus": "Owner intent: exclusive mandate with one agency",
+  "title": "Exclusive Assignment: Sell With One Agency in Halkidiki",
+  "meta": "Give one agency an exclusive assignment to sell your Halkidiki property: a realistic price, full marketing, priority with buyers and one person for you.",
+  "h1": "Exclusive Assignment: Sell Your Halkidiki Property With One Agency",
+  "h2": [
+    "What an exclusive assignment means",
+    "What you get with an exclusive assignment",
+    "We start with a realistic price",
+    "How it works, step by step",
+    "Terms, duration and fee"
+  ],
+  "faqQuestions": [
+    "What is an exclusive assignment in Greece?",
+    "Why give one agency an exclusive assignment?",
+    "Can I still sell the property myself?",
+    "How long does an exclusive assignment last?"
+  ],
+  "faq": [
+    {
+      "q": "What is an exclusive assignment in Greece?",
+      "a": "It is a written agreement that gives one licensed agency the right to sell your property for an agreed period. Other agencies do not advertise it during that period, and the agreed fee is due when the property is sold."
+    },
+    {
+      "q": "Why give one agency an exclusive assignment?",
+      "a": "Your property gets the agency's full marketing effort, priority with its buyers and partner agencies, and one consistent price on the market. You also deal with one person instead of several agencies."
+    },
+    {
+      "q": "Can I still sell the property myself?",
+      "a": "The assignment covers the whole sale for its duration, so the agreed fee applies however the buyer is found. If you already know a possible buyer, tell us before signing and we agree how to handle it in writing."
+    },
+    {
+      "q": "How long does an exclusive assignment last?",
+      "a": "The duration is agreed with you and written in the assignment before we start. Ask us for the terms that apply to your property."
+    }
+  ],
+  "intro": "<p>With an exclusive assignment, one agency takes full responsibility for selling your property. You deal with one person, your property gets our full marketing effort, and buyers see one consistent price instead of the same home listed by several agencies. We accept an exclusive only after we have seen the property and agreed a realistic price with you.</p>",
+  "body": "<h2>What an exclusive assignment means</h2><p>An exclusive assignment is a written agreement in which you give one licensed agency the right to sell your property for an agreed period. During that period other agencies do not advertise it, and the agreed fee is due when the property is sold, even if the buyer finds it in another way. In return, the agency commits its time and budget to your property.</p><h2>What you get with an exclusive assignment</h2><ul><li><strong>Full marketing:</strong> our own photos and video, a complete listing and promotion on our site, social media and the property portals we use.</li><li><strong>Our buyers first:</strong> we present your property to the registered buyers in our database who are looking for this type and area.</li><li><strong>Partner agencies:</strong> the agencies we cooperate with can bring their buyers, through us, at the same price.</li><li><strong>Priority in viewings:</strong> exclusive properties come first when we plan viewings.</li><li><strong>One contact:</strong> one agent knows your property and reports to you after every viewing and offer.</li></ul><h2>We start with a realistic price</h2><p>An overpriced property stays on the market and loses interest. Before we sign, we visit the property, compare it with recent sales in the same area and agree a price with you that buyers will consider. If we believe the price cannot sell, we tell you openly rather than take the assignment.</p><h2>How it works, step by step</h2><ul><li>We visit the property and check its documents.</li><li>We agree the price and the terms with you and sign the assignment.</li><li>We prepare the photos, video and listing, and start the marketing.</li><li>We arrange viewings and bring every serious offer to you.</li><li>When you accept an offer, we coordinate the lawyers and the notary until the final contract.</li></ul><h2>Terms, duration and fee</h2><p>The duration of the assignment and our fee are agreed with you in advance and written in the assignment you sign. You pay the fee only when the property is sold. Ask us for the terms that apply to your property.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "https://www.halkidikiproperties.com/en/work-with-us-exclusively",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "Article",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Sell",
+    "Exclusive assignment"
+  ],
+  "heroAlt": "Owner and agent signing an exclusive assignment for a property in Halkidiki",
+  "galleryAltPattern": "",
+  "ogTitle": "Exclusive Assignment – Sell Your Halkidiki Property With One Agency",
+  "anchor": "exclusive assignment",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "sell your property in Halkidiki",
+      "href": "/en/sell"
+    },
+    {
+      "anchor": "add your property",
+      "href": "/en/add-your-property"
+    }
+  ],
+  "linkedFrom": [
+    "P24 Sell",
+    "header menu Sell"
+  ],
+  "cta": "Ask for an estimate",
+  "ctaHref": "/en/add-your-property",
+  "oldUrls": [
+    "/en/work-with-us-exclusively",
+    "/el/συνεργασου-μαζι-μας-αποκλειστικα",
+    "/bg/сътрудничете-изключително-с-нас",
+    "/en/sell/work-with-us-exclusively"
+  ],
+  "words": 526,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "YES — the line «the agreed fee is due even if you or another agency sell during the assignment» describes the contract; confirm the wording.",
+  "source": "brief batch-1.json"
+}

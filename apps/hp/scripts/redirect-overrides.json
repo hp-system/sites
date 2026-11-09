@@ -135,9 +135,9 @@
     },
     {
       "from": "/en/vip",
-      "to": null,
-      "status": "pending",
-      "reason": "D11: VIP becomes Exclusive P52 (/en/exclusive), not built yet; until then /en/vip stays as it is"
+      "to": "/en/exclusive",
+      "status": 301,
+      "reason": "D11 + D-20261109-SS-4: VIP became Exclusive P52, now built (batch 1)"
     },
     {
       "from": "/en/sell/work-with-us-exclusively",

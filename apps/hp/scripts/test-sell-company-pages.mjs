@@ -19,9 +19,11 @@ const types = (html) => [...html.matchAll(/<script type="application\/ld\+json"[
 const stop = await start();
 try {
   const pages = {};
-  pages['/en/sell'] = await checkPage('/en/sell', { types: ['CollectionPage'], form: true });
+  // batch 1 (D-20261109-SS-4): Sell and the exclusive page carry the new texts — content pages, so
+  // Article + BreadcrumbList + FAQPage (George's README rule 11), no longer CollectionPage / Service.
+  pages['/en/sell'] = await checkPage('/en/sell', { types: ['Article', 'FAQPage'], form: true });
   for (const p of SELL) pages[p] = await checkPage(p, { types: [p.includes('future') ? 'WebPage' : 'Service'] });
-  for (const p of SELL_FORM) pages[p] = await checkPage(p, { types: [p.includes('why-') ? 'WebPage' : 'Service'], form: true });
+  for (const p of SELL_FORM) pages[p] = await checkPage(p, { types: [p === '/en/work-with-us-exclusively' ? 'Article' : p.includes('why-') ? 'WebPage' : 'Service'], form: true });
   for (const p of ABOUT) pages[p] = await checkPage(p, { types: ['AboutPage'] });
   pages['/en/our-partners'] = await checkPage('/en/our-partners', { types: ['CollectionPage'] });
   pages['/en/careers'] = await checkPage('/en/careers', { types: ['CollectionPage'] });

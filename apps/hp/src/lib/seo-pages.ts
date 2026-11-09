@@ -10,9 +10,14 @@ export type SpecPage = {
   schema: string[]; breadcrumb: string[]; heroAlt: string; galleryAltPattern: string;
   anchor: string; anchorVariants: string[];
   linksOut: { anchor: string; href: string }[]; cta: string; editorialLine: string;
+  ctaHref?: string;   // own pages (P22+): where the CTA button goes
 };
 
-const files = import.meta.glob('../content/seo/*/*.json', { eager: true, import: 'default' }) as Record<string, SpecPage>;
+const files = {
+  ...import.meta.glob('../content/seo/*/*.json', { eager: true, import: 'default' }),
+  // pages outside George's spec (P22+), written from briefs in his format (D-20261106-SS-2)
+  ...import.meta.glob('../content/seo-own/*/*.json', { eager: true, import: 'default' }),
+} as Record<string, SpecPage>;
 const BY_PATH = new Map<string, SpecPage>();
 const BY_ID = new Map<string, SpecPage>();
 for (const p of Object.values(files)) {
@@ -25,6 +30,13 @@ const decode = (u: string): string => { try { return decodeURIComponent(u); } ca
 /** The spec page at this URL path (raw or percent-encoded), if George's spec has one. */
 export function specByPath(path: string): SpecPage | undefined {
   return BY_PATH.get((decode(path).replace(/\/+$/, '') || '/').toLowerCase());
+}
+
+/** The URL of a breadcrumb step named `name` in `lang`: the spec or own page whose own last crumb
+ *  carries that name (e.g. «Sell» → /en/sell). Undefined when no page has it. */
+export function crumbPath(name: string, lang: Lang): string | undefined {
+  for (const p of BY_ID.values()) if (p.lang === lang && p.breadcrumb[p.breadcrumb.length - 1] === name) return p.path;
+  return undefined;
 }
 
 /** The same page in another language (P03 falls back to the home page in sr/bg/ro). */

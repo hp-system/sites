@@ -1,0 +1,99 @@
+{
+  "id": "P52",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Exclusive (ex VIP)",
+  "pageType": "content",
+  "path": "/en/exclusive",
+  "keyword": "luxury property Halkidiki",
+  "titleFocus": "Buyer intent at the top of the market: luxury property Halkidiki, private access",
+  "title": "Exclusive: Private Access to Luxury Property in Halkidiki",
+  "meta": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki: off-market properties, exact locations, documents and one agent for you.",
+  "h1": "Exclusive: Private Access to Luxury Property in Halkidiki",
+  "h2": [
+    "Who Exclusive is for",
+    "What Exclusive members see",
+    "Properties that are never advertised",
+    "How to join",
+    "Discretion"
+  ],
+  "faqQuestions": [
+    "What is Exclusive?",
+    "Who can join Exclusive?",
+    "How do I join Exclusive?",
+    "Is my search kept confidential?"
+  ],
+  "faq": [
+    {
+      "q": "What is Exclusive?",
+      "a": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki. Members see the full details of every property, including a private collection that is never advertised, and work with one agent."
+    },
+    {
+      "q": "Who can join Exclusive?",
+      "a": "Registered members who are looking for property from €1 million. Every request is reviewed by our team before access is opened."
+    },
+    {
+      "q": "How do I join Exclusive?",
+      "a": "Create a member account, press «Join Exclusive» in your account and our team reviews your request. Once it is approved, we open your access and introduce you to your agent."
+    },
+    {
+      "q": "Is my search kept confidential?",
+      "a": "Yes. Your search, your budget and the properties you look at stay between you and our team."
+    }
+  ],
+  "intro": "<p>Exclusive is our private club for buyers looking for homes from €1 million in Halkidiki. Members see the full details of every property, including some that are never advertised, and work with one agent who knows what they are looking for. If you are searching at this level and value discretion, Exclusive gives you the complete picture before you travel.</p>",
+  "body": "<h2>Who Exclusive is for</h2><p>Exclusive is for buyers of luxury property: seafront villas, estates, large plots by the sea and special properties from €1 million upwards. It is not a general newsletter. If your budget is lower, our member account already shows you more than a guest sees, and our listings cover every price range.</p><h2>What Exclusive members see</h2><p>Guests on our site see the municipality of a property and its public photos. Members see more. Exclusive members see everything we know about the property:</p><ul><li><strong>the exact location</strong> of the property</li><li><strong>the price history</strong></li><li><strong>videos, documents and floor plans</strong></li><li><strong>new properties first</strong>, before they are published</li></ul><h2>Properties that are never advertised</h2><p>Some owners of high-value homes do not want their property on any portal. We keep these properties in a private collection that only Exclusive members can see. Many of the most interesting properties in Halkidiki change hands this way, without ever being advertised.</p><h2>How to join</h2><ul><li><strong>Create a member account</strong> on our site, if you do not have one yet.</li><li><strong>Press «Join Exclusive»</strong> in your account.</li><li><strong>Our team reviews your request</strong> and may contact you briefly to understand what you are looking for.</li><li><strong>We open your access</strong> once the request is approved, and introduce you to your agent.</li></ul><h2>Discretion</h2><p>Your search, your budget and the properties you look at stay between you and our team. The same applies to the owners: details of the private collection are shared only with approved members.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "https://www.halkidikiproperties.com/en/exclusive",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "Article",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Exclusive"
+  ],
+  "heroAlt": "Luxury villa with a private pool by the sea in Halkidiki",
+  "galleryAltPattern": "",
+  "ogTitle": "Exclusive – Private Access to Luxury Property in Halkidiki",
+  "anchor": "Exclusive",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "Greece Golden Visa",
+      "href": "/en/golden-visa-greece"
+    },
+    {
+      "anchor": "sell your property in Halkidiki",
+      "href": "/en/sell"
+    }
+  ],
+  "linkedFrom": [
+    "header menu Exclusive",
+    "P24 Sell",
+    "P07 Villas / luxury properties",
+    "member panel"
+  ],
+  "cta": "Join Exclusive",
+  "ctaHref": "/en/login",
+  "oldUrls": [
+    "/en/vip",
+    "/el/vip",
+    "/sr/vip",
+    "/bg/vip"
+  ],
+  "words": 407,
+  "editorialLine": "",
+  "lawyerCheck": "NO",
+  "source": "brief batch-1.json"
+}

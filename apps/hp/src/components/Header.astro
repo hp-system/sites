@@ -33,7 +33,7 @@ const co = await company();
 // list of its pages. Pages not built yet stay out (Team P49 and Exclusive P52 wait for their text;
 // a menu link to a 404 is what made the 124 dead links). Other languages keep the old menu until
 // their stage: most new pages have no URL in them yet.
-const NOT_BUILT = new Set(['P49', 'P52']);
+const NOT_BUILT = new Set(['P52']);   // P49 is dropped (D-20261109-SS-4) and never in the menu
 const LABEL: Record<string, string> = {
   P03: 'Property in Greece', P19: 'Buying property in Greece', P22: 'Hotels & commercial', P04: 'Houses',
   P23: 'Pre-published', P10: 'Affordable, up to €150,000',

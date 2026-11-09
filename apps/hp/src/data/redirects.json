@@ -3010,12 +3010,12 @@
   },
   {
    "from": "/el/η-ομαδα-μας",
-   "to": "/team",
-   "status": "pending",
+   "to": "/about",
+   "status": 301,
    "lang": "el",
-   "src": "spec",
-   "clicks": 2,
-   "note": "content page"
+   "src": "override",
+   "clicks": 0,
+   "note": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page"
   },
   {
    "from": "/el/θεσεις-εργασιας",

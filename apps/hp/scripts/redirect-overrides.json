@@ -150,6 +150,12 @@
       "to": "/en/articles/all-news",
       "status": 301,
       "reason": "the blog index stays (registry page, D-20261109-SS-2); the sheet sent /en/articles to the home page"
+    },
+    {
+      "from": "/el/η-ομαδα-μας",
+      "to": "/about",
+      "status": 301,
+      "reason": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page"
     }
   ],
   "moves": [],

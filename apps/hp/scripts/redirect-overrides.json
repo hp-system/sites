@@ -135,15 +135,9 @@
     },
     {
       "from": "/en/vip",
-      "to": null,
-      "status": "pending",
-      "reason": "D11: VIP becomes Exclusive P52 (/en/exclusive), not built yet; until then /en/vip stays as it is"
-    },
-    {
-      "from": "/en/articles/business-news/taxes-foreigners-properties-greece",
-      "to": null,
-      "status": "keep",
-      "reason": "D-20261109-SS-2: the one strong article (731 of 928 blog clicks in 16 months, 68k impressions, position 8.9, 191 backlinks) keeps its URL and becomes a new page «Property taxes for foreigners in Greece» written to the spec rules"
+      "to": "/en/exclusive",
+      "status": 301,
+      "reason": "D11 + D-20261109-SS-4: VIP became Exclusive P52, now built (batch 1)"
     },
     {
       "from": "/en/sell/work-with-us-exclusively",
@@ -156,6 +150,12 @@
       "to": "/en/articles/all-news",
       "status": 301,
       "reason": "the blog index stays (registry page, D-20261109-SS-2); the sheet sent /en/articles to the home page"
+    },
+    {
+      "from": "/el/η-ομαδα-μας",
+      "to": "/about",
+      "status": 301,
+      "reason": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page"
     }
   ],
   "moves": [],

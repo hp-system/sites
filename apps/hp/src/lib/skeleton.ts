@@ -25,7 +25,7 @@ const files = import.meta.glob('../content/seo/*/*.json', { eager: true, import:
 const SEO = new Map<string, SeoPage>();
 for (const p of Object.values(files)) SEO.set(`${p.id}/${p.lang}`, p);
 
-export const PAGES = registry.pages as RegPage[];
+export const PAGES = (registry.pages as RegPage[]).filter((p) => p.status !== 'dropped');   // D-20261109-SS-4
 export const SECTIONS = registry.sections as string[];
 export const SECTION_LABEL: Record<string, string> = {
   buy: 'Buy', sell: 'Sell', halkidiki: 'Halkidiki', services: 'Services', about: 'About us', exclusive: 'Exclusive', contact: 'Contact',

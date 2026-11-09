@@ -71,7 +71,7 @@ try {
   check(`all ${expected.size} English pages are linked from somewhere`, orphans.length === 0, orphans.slice(0, 5).join(', ') || 'none');
   const en = await (await fetch(SITE + '/en')).text();
   check('header: Blog → /en/articles/all-news', /<nav class="navlinks[^"]*"[\s\S]*?href="\/en\/articles\/all-news"[\s\S]*?<\/nav>/.test(en), 'link');
-  check('footer: Guides column with the 3 guides', ['/en/properties/homes-for-sale', '/en/articles/business-news/taxes-foreigners-properties-greece', '/en/buying-property-in-greece'].every((u) => en.includes(`href="${u}"`)), 'links');
+  check('footer: Guides column with the guides', ['/en/properties/homes-for-sale', '/en/buying-property-in-greece'].every((u) => en.includes(`href="${u}"`)), 'links');
 } finally {
   site.kill(); stub.server?.close?.();
 }

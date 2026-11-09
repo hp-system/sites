@@ -8,9 +8,14 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import SpecText from './SpecText.astro';
-import { specOf, specTitle, type SpecPage } from '../lib/seo-pages';
+import { specOf, specTitle, crumbPath, type SpecPage } from '../lib/seo-pages';
 import { prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
+import InfoForm from './InfoForm.astro';
+import { findInfoPage } from '../lib/infopages';
+import { HERO_SHOTS } from '../lib/hero';
+import { privacyPath } from '../lib/legal';
+import registry from '../data/page-registry.json';
 
 interface Props { page: SpecPage }
 const { page } = Astro.props;
@@ -21,8 +26,22 @@ const own = LANGS.filter((l) => specOf(page.id, l)?.id === page.id);   // P03 ha
 const pathFor = (l: Lang) => specOf(page.id, l)?.path ?? page.path;
 
 const siteRoot = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+// Own pages P22+ (batch briefs) replace the text of an old page at the same URL, but keep what
+// that page did besides text (D-20261106-SS-2 is about texts only): its lead form, its share
+// image, and links to its subpages from the registry. Their titles come from the subpages.
+const old = Number(page.id.slice(1)) > 21 ? await findInfoPage(page.path) : null;
+const form = old?.data.form ?? null;
+const image = old?.data.image || HERO_SHOTS[0]?.url || '';
+const imageAlt = page.heroAlt || HERO_SHOTS[0]?.alt.en || page.h1;
+const kidsReg = (registry as { pages: { id: string; parent?: string; status: string; paths?: Record<string, string> }[] }).pages
+  .filter((r) => r.parent === page.id && r.status === 'live' && r.paths?.[lang]);
+const kids = (await Promise.all(kidsReg.map(async (r) => {
+  const d = (await findInfoPage(r.paths![lang]))?.data;
+  return d ? { href: r.paths![lang], name: d.h1 || d.title } : null;
+}))).filter((k): k is { href: string; name: string } => !!k);
 const abs = (u: string) => siteRoot + encodeURI(u);
-const crumbs = page.breadcrumb.map((name, i, a) => ({ name, url: i === 0 ? (prefix(lang) || '/') : i === a.length - 1 ? undefined : undefined }));
+const crumbs = page.breadcrumb.map((name, i, a) => ({ name, url: i === 0 ? (prefix(lang) || '/') : i === a.length - 1 ? page.path : crumbPath(name, lang) }));
 
 const jsonLd: unknown[] = [
   ...(page.schema.includes('CollectionPage') ? [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: page.h1, url: abs(page.path), inLanguage: lang }] : []),
@@ -35,18 +54,32 @@ const jsonLd: unknown[] = [
 ];
 ---
 <Base lang={lang} title={specTitle(page.title, brand.name)} description={page.meta} pathFor={pathFor} langs={own}
-      ogTitle={page.ogTitle} jsonLd={jsonLd}>
+      ogTitle={page.ogTitle} jsonLd={jsonLd} ogImage={image ? (image.startsWith('/') ? siteRoot + image : image) : undefined} ogImageAlt={imageAlt}>
   <Header lang={lang} solid pathFor={pathFor} />
   <main id="main" class="gp">
     <div class="wrap gp__head">
       <nav class="gp__crumb" aria-label="breadcrumb">
-        {crumbs.map((c, i) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{c.url ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</>))}
+        {crumbs.map((c, i, a) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{c.url && i < a.length - 1 ? <a href={c.url}>{c.name}</a> : <span aria-current={i === a.length - 1 ? 'page' : undefined}>{c.name}</span>}</>))}
       </nav>
       <h1 class="t-display gp__h1">{page.h1}</h1>
       {page.editorialLine && <p class="gp__ed">{page.editorialLine}</p>}
       <SpecText page={page} part="intro" lang={lang} />
+      {/* existing event names only (B-11, lib/track.ts): the club page is a sign-in call, the sell pages a seller call */}
+      {page.ctaHref && page.id === 'P52' && <p class="gp__cta"><a class="btn" href={page.ctaHref} data-ev="register:info">{page.cta}</a></p>}
+      {page.ctaHref && page.id !== 'P52' && <p class="gp__cta"><a class="btn" href={form ? '#gp-form' : page.ctaHref} data-ev="content:sell">{page.cta}</a></p>}
     </div>
     <SpecText page={page} part="rest" lang={lang} />
+    {kids.length > 0 && (
+      <section class="wrap gp__kids" aria-labelledby="gp-kids-h">
+        <p data-h id="gp-kids-h" class="gp__label">{page.name}</p>
+        <ul>{kids.map((k) => <li><a href={k.href}>{k.name}</a></li>)}</ul>
+      </section>
+    )}
+    {form && (
+      <section class="wrap gp__form" id="gp-form">
+        <InfoForm source={form.source} title={form.title || undefined} message={form.message} terms="/en/terms-of-services" privacy={privacyPath(lang)} />
+      </section>
+    )}
   </main>
   <Footer lang={lang} />
 </Base>
@@ -58,4 +91,8 @@ const jsonLd: unknown[] = [
   .gp__h1 { max-width: 22ch; }
   .gp__ed { margin: 0; font-size: var(--fs-s-1); color: var(--muted); }
   .gp :global(.st-intro) { max-width: 68ch; }
+  .gp__cta { margin: 0; }
+  .gp__kids, .gp__form { padding-block: var(--s6); }
+  .gp__kids ul { margin: var(--s3) 0 0; padding: 0; list-style: none; display: grid; gap: var(--s2); grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  .gp__label { margin: 0; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 </style>

@@ -32,7 +32,7 @@ try {
     const p = JSON.parse(readFileSync(`src/content/seo/${id}/${f}`, 'utf8'));
     urls.push([`${p.id}/${p.lang}`, p.path, p.h1]);
   }
-  for (const p of JSON.parse(readFileSync('src/data/page-registry.json', 'utf8')).pages) if (p.paths) urls.push([`${p.id}/en`, p.paths.en, p.name]);
+  for (const p of JSON.parse(readFileSync('src/data/page-registry.json', 'utf8')).pages) if (p.paths && p.status !== 'dropped') urls.push([`${p.id}/en`, p.paths.en, p.name]);
   const bad = [];
   for (const [k, path, h1] of urls) {
     const { status, html } = await get(4351, path);

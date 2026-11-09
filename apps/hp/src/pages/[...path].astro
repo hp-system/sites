@@ -302,8 +302,13 @@ if (pageKey && !content) notFound = true;
 // Sergei 08/11: a spec content page with no template yet (P03, P19, P20, P21) opens in the plain
 // GuidePage instead of a 404 — George's text, every language the spec has.
 const GUIDE_IDS = new Set(['P03', 'P19', 'P20', 'P21']);
-const guideSpec = notFound ? specByPath(Astro.url.pathname) : undefined;
-const guide = guideSpec && GUIDE_IDS.has(guideSpec.id) && guideSpec.lang === lang ? guideSpec : undefined;
+// Own pages P22+ (approved briefs, scripts/import-seo-briefs.mjs) take their URL over the old
+// page there (D-20261106-SS-2: no old texts), in the same plain template as the guides.
+const atPath = specByPath(Astro.url.pathname);
+// …except where the old page has George's approved design (wave 1): InfoPage then shows the new text inside it.
+const ownPage = atPath && Number(atPath.id.slice(1)) > 21 && atPath.lang === lang && info?.data.look !== 'wave1' ? atPath : undefined;
+const guideSpec = notFound ? atPath : undefined;
+const guide = ownPage ?? (guideSpec && GUIDE_IDS.has(guideSpec.id) && guideSpec.lang === lang ? guideSpec : undefined);
 if (guide) notFound = false;
 
 if (notFound) Astro.response.status = propertyGone ? 410 : 404;

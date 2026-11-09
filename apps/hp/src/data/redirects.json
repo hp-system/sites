@@ -3010,12 +3010,12 @@
   },
   {
    "from": "/el/η-ομαδα-μας",
-   "to": "/team",
-   "status": "pending",
+   "to": "/about",
+   "status": 301,
    "lang": "el",
-   "src": "spec",
-   "clicks": 2,
-   "note": "content page"
+   "src": "override",
+   "clicks": 0,
+   "note": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page"
   },
   {
    "from": "/el/θεσεις-εργασιας",
@@ -3954,6 +3954,15 @@
    "note": "topic"
   },
   {
+   "from": "/en/articles/business-news/taxes-foreigners-properties-greece",
+   "to": "/en/buying-property-in-greece",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 711,
+   "note": "topic"
+  },
+  {
    "from": "/en/articles/business-news/tourism-investment",
    "to": "/en/properties",
    "status": 301,
@@ -4783,12 +4792,12 @@
   },
   {
    "from": "/en/vip",
-   "to": null,
-   "status": "pending",
+   "to": "/en/exclusive",
+   "status": 301,
    "lang": "en",
    "src": "override",
    "clicks": 0,
-   "note": "D11: VIP becomes Exclusive P52 (/en/exclusive), not built yet; until then /en/vip stays as it is"
+   "note": "D11 + D-20261109-SS-4: VIP became Exclusive P52, now built (batch 1)"
   },
   {
    "from": "/public/images/article/60/1706706818.jpg",

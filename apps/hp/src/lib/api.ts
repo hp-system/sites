@@ -3,6 +3,7 @@
 // Το site ΔΕΝ αποθηκεύει τίποτα — ούτε εικόνες, ούτε αντίγραφα. Μόνο διαβάζει.
 // ───────────────────────────────────────────────────────────────────────────
 const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
+import { publicDbOn, publicSets, publicChangedAt } from './publicdb';
 
 export type Attrs = Record<string, any>;
 
@@ -216,7 +217,7 @@ function revalidate(memberToken?: string, country?: string): Promise<SitePropert
   const key = viewerKey(memberToken, country);
   const running = inflights.get(key);
   if (running) return running;                  // ένα αίτημα εν πτήσει ΑΝΑ ΘΕΑΤΗ
-  const p = fetchAll(memberToken, country)
+  const p = (!memberToken && publicDbOn ? fromPublicDb(country) : fetchAll(memberToken, country))
     .then((items) => { caches.set(key, { at: Date.now(), items }); trim(); return items; })
     .catch((e) => {
       // Αν πέσει το API και έχουμε παλιά δεδομένα ΤΟΥ ΙΔΙΟΥ θεατή, μένουμε όρθιοι.
@@ -258,6 +259,27 @@ export async function allProperties(memberToken?: string, country?: string): Pro
   try { return await Promise.race([pull, late]); } finally { clearTimeout(timer); }
 }
 
+/** The guest sets from the public DB (sites#174): one query fills both anonymous keys (~0.5 s for
+ *  the whole set, against ~48 s through the CRM API). On any DB error the CRM API path takes over,
+ *  so the site never depends on the public DB alone. */
+let publicAt: string | null = null;
+async function fromPublicDb(country?: string): Promise<SiteProperty[]> {
+  try {
+    const keep = (xs: SiteProperty[]) => xs.filter((p) => isRealProperty(p) && REF_RE.test(refOf(p)));
+    const { all, gr, changedAt } = await publicSets<SiteProperty>();
+    if (!all.length) throw new Error('public DB has no properties yet');
+    const now = Date.now();
+    const a = keep(all), g = keep(gr);
+    caches.set(viewerKey(undefined, undefined), { at: now, items: a });
+    caches.set(viewerKey(undefined, 'GR'), { at: now, items: g });
+    publicAt = changedAt;
+    return country === 'GR' ? g : a;
+  } catch (e) {
+    console.error(`[hp-site] public DB read failed, using the CRM API: ${(e as Error).message}`);
+    return fetchAll(undefined, country);
+  }
+}
+
 /** True when this member's own set is in memory. While it is not, `allProperties` hands the member
  *  the anonymous set, which lacks the member-tier fields (approximate point, exclusive data), so
  *  the property page asks the CRM for that one property with the member's token instead (~2 s). */
@@ -276,7 +298,18 @@ function warm(): void {
     for (const c of [undefined, 'GR']) await revalidate(undefined, c).catch(() => {});
   };
   void cycle();
-  setInterval(() => { void cycle(); }, REFRESH_MS).unref?.();
+  if (publicDbOn) {
+    // Public DB: ask every 30 s whether the sender changed anything; reload both sets only then.
+    setInterval(() => {
+      void publicChangedAt().then((at) => {
+        if (at !== publicAt) return revalidate(undefined, undefined);
+        for (const c of [undefined, 'GR']) { const e = caches.get(viewerKey(undefined, c)); if (e) e.at = Date.now(); }
+      }).catch((e) => console.error(`[hp-site] public DB check failed: ${(e as Error).message}`));
+    }, 30_000).unref?.();
+    setInterval(() => { void cycle(); }, REFRESH_MS * 5).unref?.();   // a full reload now and then anyway
+  } else {
+    setInterval(() => { void cycle(); }, REFRESH_MS).unref?.();
+  }
 }
 
 /** Shape of a public property id in a URL or form: `8075`, `HP-8564` (router and /api/inquiry, B-03). */

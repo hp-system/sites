@@ -31,6 +31,7 @@ type Payload = {
 let cache: { at: number; data: Payload } | null = null;
 const TTL = 60_000;
 let inflight: Promise<Payload> | null = null;
+const DOWN_MS = 30_000;   // after a failure: retry the API no sooner than this
 
 async function load(): Promise<Payload> {
   if (cache && Date.now() - cache.at < TTL) return cache.data;
@@ -40,7 +41,8 @@ async function load(): Promise<Payload> {
     .then((d: Payload) => { cache = { at: Date.now(), data: d ?? {} }; return cache.data; })
     // Το CMS κάτω ΔΕΝ αδειάζει τη σελίδα: γυρνάμε ό,τι είχαμε, αλλιώς κενό —
     // και κάθε καλών έχει δική του εφεδρεία από το λεξικό.
-    .catch(() => cache?.data ?? {})
+    // Outage 2026-11-08: remember the failure for DOWN_MS so later calls do not wait 4 s each.
+    .catch(() => { const data = cache?.data ?? {}; cache = { at: Date.now() - TTL + DOWN_MS, data }; return data; })
     .finally(() => { inflight = null; });
   return inflight;
 }

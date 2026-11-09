@@ -14,6 +14,7 @@ import { spawn } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { startStub } from './stub-api.mjs';
+import { movedTo } from './retired.mjs';
 
 const SITE = 'http://127.0.0.1:4331';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -72,17 +73,23 @@ try {
   }
   check('archived near-duplicates found', archived.length >= 1, `${archived.length} files in archive/articles-merged-20261021`);
   for (const r of redirects) {
-    check(`articles.json ${r.from}`, livePaths.has(r.to) && !livePaths.has(r.from), `→ ${r.to} (target live: ${livePaths.has(r.to)}, source not live: ${!livePaths.has(r.from)})`);
+    check(`articles.json ${r.from}`, (livePaths.has(r.to) || !!movedTo(r.to)) && !livePaths.has(r.from), `→ ${r.to} (target live: ${livePaths.has(r.to)}, source not live: ${!livePaths.has(r.from)})`);
   }
   for (const x of archived) {
     check(`archived ${x.clean} is mapped in articles.json`, redirects.some((r) => r.from === x.clean), 'redirect recorded');
     const r = await fetch(SITE + encodeURI(x.clean), { redirect: 'manual' });
     // Since the 301 engine (#56) the old address moves permanently to the kept article; never a page.
-    const to = redirects.find((m) => m.from === x.clean)?.to;
+    const kept = redirects.find((m) => m.from === x.clean)?.to;
+    const to = movedTo(kept ?? '') ?? kept;   // #152: a kept article folded into a guide → straight to the guide (one hop)
     check(`archived ${x.clean} is not served (301 to the kept article)`, r.status === 301 && decodeURIComponent(r.headers.get('location') ?? '') === to, `status ${r.status} ${r.headers.get('location') ?? ''}`);
   }
   for (const a of arts) {
     const path = `/en/articles/${a.cat}/${a.slug}`;
+    if (movedTo(path)) {   // D-20261109-SS-2: folded into a guide — checked as a 301, not as a page
+      const m = await fetch(SITE + encodeURI(path), { redirect: 'manual' });
+      check(`${a.slug} folded → ${movedTo(path)}`, m.status === 301 && decodeURIComponent(m.headers.get('location') ?? '') === movedTo(path), `status ${m.status} ${m.headers.get('location') ?? ''}`);
+      continue;
+    }
     const r = await fetch(SITE + encodeURI(path));
     const html = await r.text();
     const ok200 = r.status === 200;

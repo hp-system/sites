@@ -4,6 +4,7 @@
 // Usage (from apps/hp, after `pnpm build`): node scripts/test-remaining-pages.mjs
 import { readFileSync } from 'node:fs';
 import { start, check, failures, checkPage, productionSitemap } from './info-seo-check.mjs';
+import { movedTo } from './retired.mjs';
 
 const visible = (html) => html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ')
   .replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ');
@@ -21,7 +22,13 @@ try {
     check('pre-published: empty state for guests', /Pre-published properties are shown to registered members/.test(pre), 'guest empty state');
   }
 
-  const gr = await checkPage('/en/property-for-sale-in-greece', { types: ['WebPage', 'FAQPage'] });
+  // D2 (#152): the Greece page moved to the spec URL; the old one answers 301.
+  const grMoved = movedTo('/en/property-for-sale-in-greece');
+  if (grMoved) {
+    const m = await fetch('http://127.0.0.1:4331/en/property-for-sale-in-greece', { redirect: 'manual' });
+    check(`Greece: 301 → ${grMoved} (D2)`, m.status === 301 && m.headers.get('location') === grMoved, `${m.status} ${m.headers.get('location')}`);
+  }
+  const gr = grMoved ? null : await checkPage('/en/property-for-sale-in-greece', { types: ['WebPage', 'FAQPage'] });
   if (gr) {
     check('Greece: no Nea Moudania office', !/office in Nea Moudania/i.test(visible(gr)), 'office = brand address');
     check('Greece: "from €" guide rendered', /class="pw-guide"/.test(gr) && /from €[\d,]+/.test(visible(gr)), 'price guide');
@@ -58,7 +65,8 @@ try {
   const sm = await productionSitemap();
   for (const p of ['/en/pre-published-properties', '/en/property-for-sale-in-greece', '/en/halkidiki-property-prices',
     '/en/why-register', '/en/why-register/buyer', '/en/why-register/owner', '/en/vip', '/en/real-estate-agent']) {
-    check(`sitemap has ${p}`, sm.includes(`${p}</loc>`), p);
+    if (movedTo(p)) check(`sitemap leaves out the moved ${p}`, !sm.includes(`${p}</loc>`), p);
+    else check(`sitemap has ${p}`, sm.includes(`${p}</loc>`), p);
   }
 } finally {
   stop();

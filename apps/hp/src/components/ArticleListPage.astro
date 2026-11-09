@@ -10,6 +10,7 @@ import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
+import { redirectFor } from '../lib/redirects';
 import {
   CATEGORIES, PER_PAGE, articleUrl, categoryName, categoryUrl, inCategory, readingMinutes,
   dateText, excerptOf,
@@ -59,7 +60,7 @@ const img = (a: (typeof all)[number]) => a.data.hero_image || a.data.og_image;
       </nav>
       <h1 class="t-display al-h1">{category === 'all-news' ? 'Articles' : name}</h1>
       <nav class="tabs" aria-label="Categories">
-        {CATEGORIES.map((c) => (
+        {CATEGORIES.filter((c) => !redirectFor(categoryUrl(c.key))).map((c) => (
           <a href={categoryUrl(c.key)} aria-current={c.key === category ? 'page' : undefined}>{c.name}</a>
         ))}
       </nav>

@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { startStub } from './stub-api.mjs';
+import { movedTo } from './retired.mjs';
 
 const SITE = 'http://127.0.0.1:4331';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -14,7 +15,8 @@ const check = (name, ok, detail) => { if (!ok) fails++; console.log(`${ok ? 'OK 
 
 const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
 const urls = walk('src/content/articles/en').filter((f) => f.endsWith('.md'))
-  .map((f) => (readFileSync(f, 'utf8').match(/^clean_url:\s*['"]?([^'"\n]+)/m) || [])[1]).filter(Boolean);
+  .map((f) => (readFileSync(f, 'utf8').match(/^clean_url:\s*['"]?([^'"\n]+)/m) || [])[1]).filter(Boolean)
+  .filter((u) => !movedTo(u));   // D-20261109-SS-2: articles folded into the guides are no longer pages
 
 const stub = await startStub({ port: 4339, n: 30 });
 const site = spawn(process.execPath, ['dist/server/entry.mjs'], {

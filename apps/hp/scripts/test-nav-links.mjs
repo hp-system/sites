@@ -10,6 +10,7 @@ import { spawn } from 'node:child_process';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { startStub } from './stub-api.mjs';
+import { movedTo } from './retired.mjs';
 
 const SITE = 'http://127.0.0.1:4331';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -66,11 +67,11 @@ try {
   check(`no broken internal link (${status.size} pages crawled)`, broken.length === 0, broken.slice(0, 4).map(([p, s]) => `${p} ${s} ← ${from.get(p)}`).join(' | ') || 'none');
   const hops = [...status].filter(([, s]) => s >= 300 && s < 400);
   check('no internal link is a redirect hop', hops.length === 0, hops.slice(0, 4).map(([p, s]) => `${p} ${s} ← ${from.get(p)}`).join(' | ') || 'none');
-  const orphans = [...expected].filter((p) => !linked.has(p));
+  const orphans = [...expected].filter((p) => !linked.has(p) && !movedTo(p));   // moved pages (#152) are not pages
   check(`all ${expected.size} English pages are linked from somewhere`, orphans.length === 0, orphans.slice(0, 5).join(', ') || 'none');
   const en = await (await fetch(SITE + '/en')).text();
   check('header: Blog → /en/articles/all-news', /<nav class="navlinks[^"]*"[\s\S]*?href="\/en\/articles\/all-news"[\s\S]*?<\/nav>/.test(en), 'link');
-  check('footer: Guides column with the 3 guides', ['/en/articles/all-news/homes-for-sale-in-halkidiki-greece', '/en/articles/business-news/taxes-foreigners-properties-greece', '/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki'].every((u) => en.includes(`href="${u}"`)), 'links');
+  check('footer: Guides column with the 3 guides', ['/en/properties/homes-for-sale', '/en/articles/business-news/taxes-foreigners-properties-greece', '/en/buying-property-in-greece'].every((u) => en.includes(`href="${u}"`)), 'links');
 } finally {
   site.kill(); stub.server?.close?.();
 }

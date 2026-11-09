@@ -4,6 +4,7 @@ import node from '@astrojs/node';
 import { brand } from './src/brand/index.ts';
 // Article widgets (the cost calculator) rendered from markdown markers.
 import { remarkWidgets } from './src/lib/remark-widgets.mjs';
+import { remarkFinalLinks } from './src/lib/remark-final-links.mjs';
 
 // ───────────────────────────────────────────────────────────────────────────
 // SSR με node adapter — ΟΧΙ static build.
@@ -22,7 +23,7 @@ export default defineConfig({
   // cached; now the big sheets are files the browser keeps, small ones (< 4 KB) stay inline.
   build: { inlineStylesheets: 'auto' },   // ένα αίτημα λιγότερο στο κρίσιμο μονοπάτι
   compressHTML: true,
-  markdown: { remarkPlugins: [remarkWidgets] },
+  markdown: { remarkPlugins: [remarkWidgets, remarkFinalLinks] },
   server: { port: 4330, host: true },
   devToolbar: { enabled: false },
   // B-24: Astro's own CSRF check compares the browser Origin with the URL the container sees.

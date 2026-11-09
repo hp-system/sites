@@ -8,6 +8,7 @@
 //    `old_url` for the 301 engine, which comes at the end of the build.
 //  · No count anywhere — no "46 Results" (George 17/10).
 // ═══════════════════════════════════════════════════════════════════════════
+import { redirectFor } from './redirects';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type Article = CollectionEntry<'articles'>;
@@ -40,7 +41,9 @@ export async function allArticles(): Promise<Article[]> {
   if (cache) return cache;
   // The glob loader takes the frontmatter `slug` as the id, so the language comes from the folder.
   const list = await getCollection('articles', (e) => (e.filePath ?? '').includes(`/articles/${ARTICLE_LANG}/`));
-  cache = list.sort((a, b) => stamp(b) - stamp(a));
+  // #152 / D-20261109-SS-2: an article the redirect table folds into a guide is no longer a page —
+  // not in lists, not «related», not in the sitemap.
+  cache = list.filter((a) => !redirectFor(articleUrl(a))).sort((a, b) => stamp(b) - stamp(a));
   return cache;
 }
 

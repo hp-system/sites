@@ -12,6 +12,7 @@
 // to a property, and property cards keep showing the municipality only.
 // ═══════════════════════════════════════════════════════════════════════════
 import type { Query } from '../../lib/listing';
+import { redirectFor } from '../../lib/redirects';
 
 export type PriceGroup = {
   label: string;
@@ -347,6 +348,15 @@ export function areaPage(slug: string): AreaPage | undefined {
 }
 
 /** The page URL — English only for now. */
-export function areaUrl(slug: string): string {
+/** The old area page's own path (its route, its canonical). */
+export function areaPath(slug: string): string {
   return `/en/property-for-sale/${slug}`;
+}
+
+/** Where a link to this area goes: the final address (#152). D1 moved the area pages to the
+ *  spec pages (/en/properties/<area>); a link never makes Google follow a redirect hop. */
+export function areaUrl(slug: string): string {
+  const own = areaPath(slug);
+  const r = redirectFor(own);
+  return r?.status === 301 ? r.to : own;
 }

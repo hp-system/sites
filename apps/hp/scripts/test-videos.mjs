@@ -5,6 +5,7 @@
 import { spawn } from 'node:child_process';
 import { startStub } from './stub-api.mjs';
 import { videoHtml } from '../src/lib/remark-widgets.mjs';
+import { movedTo } from './retired.mjs';
 
 const SITE = 'http://127.0.0.1:4331';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -30,7 +31,7 @@ const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
 for (let i = 0; i < 40; i++) { try { await fetch(SITE + '/robots.txt'); break; } catch { await sleep(250); } }
 
 try {
-  for (const [p, id] of Object.entries(PAGES)) {
+  for (const [p, id] of Object.entries(PAGES).filter(([p]) => !movedTo(p))) {   // D-20261109-SS-2: folded articles are no longer pages
     const r = await fetch(SITE + p);
     const h = await r.text();
     const n = h.split(`youtube-nocookie.com/embed/${id}`).length - 1;

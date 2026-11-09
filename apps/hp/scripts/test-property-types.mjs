@@ -53,7 +53,7 @@ try {
   // #79 — Luxury badge, "About the municipality" block, six similar properties.
   const lx = await page('/en/property/10012');
   check('luxury: badge next to the title', /class="lux"[^>]*>Luxury</.test(lx.html), 'badge');
-  check('municipality block with intro and links', lx.html.includes('id="muni-h"') && lx.text.includes('About Kassandra') && lx.html.includes('href="/en/property-for-sale/kassandra"') && lx.html.includes('taxes-foreigners-properties-greece'), 'block');
+  check('municipality block with intro and links', lx.html.includes('id="muni-h"') && lx.text.includes('About Kassandra') && lx.html.includes('href="/en/properties/kassandra"')   /* #152: links go to the final address (D1) */ && lx.html.includes('taxes-foreigners-properties-greece'), 'block');
   const simN = (lx.html.split('class="sim"')[1] ?? '').split('</ul>')[0].split('<article class="card').length - 1;
   check('similar: up to 6', simN > 3 && simN <= 6, `${simN} cards`);
   const lxl = await page('/en/properties');

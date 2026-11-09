@@ -20,13 +20,14 @@
 //    → B-20: that script never existed; the check is `node scripts/verify-seo.mjs <base> --mode=production`
 //      (every <loc> answers 200, canonical = loc, index).
 // ═══════════════════════════════════════════════════════════════════════════
+import { redirectFor } from '../lib/redirects';
 import type { APIRoute } from 'astro';
 import { hreflangs, hreflangsBy, propertyUrl, type Lang } from '../lib/i18n';
 import { allProperties, refOf } from '../lib/api';
 import { facetUrl, FACETS, PAIRS, matches, minLive, type Query } from '../lib/listing';
 import { PAGE_KEYS, pageExists, pageLangs, contentUrl } from '../lib/pages';
 import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
-import { AREA_PAGES, areaUrl } from '../content/areas/en';
+import { AREA_PAGES, areaPath } from '../content/areas/en';
 import { CATEGORIES, allArticles, articleUrl, categoryUrl, inCategory } from '../lib/articles';
 import { allInfoPages, infoLastmod } from '../lib/infopages';
 
@@ -66,7 +67,7 @@ const PAGES: Page[] = [
   // fallbacks under other prefixes carry a canonical to the original and stay out).
 
   // Area and category pages — English only until the translation phase (George 20/10/2026).
-  ...AREA_PAGES.map((p) => ({ pathFor: () => areaUrl(p.slug), langs: ['en'] as Lang[], lastmod: BUILD_DAY })),
+  ...AREA_PAGES.map((p) => ({ pathFor: () => areaPath(p.slug), langs: ['en'] as Lang[], lastmod: BUILD_DAY })),
 
 ];
 
@@ -145,6 +146,12 @@ const loc = (path: string) => ORIGIN + encodeURI(path);
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/** #152: a URL the redirect engine moves away (301) or drops (410) never goes into the sitemap. */
+function stays(page: Page): boolean {
+  const first = page.pathFor ? page.pathFor((page.langs?.[0] ?? 'en') as Lang) : page.path ?? '/';
+  return !redirectFor(first);
+}
+
 function urlBlock(page: Page): string {
   const alts = page.pathFor ? hreflangsBy(page.pathFor, page.langs) : hreflangs(page.path ?? '/');
   // Κάθε γλωσσική εκδοχή είναι δικό της <url> και παραθέτει ΟΛΟΚΛΗΡΟ το σύνολο
@@ -184,7 +191,7 @@ export const GET: APIRoute = async ({ request, url }) => {
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${[...(await liveFacets(PAGES)), ...(await contentPages()), ...(await articlePages()), ...(await propertyPages())].map(urlBlock).join('\n')}
+${[...(await liveFacets(PAGES)), ...(await contentPages()), ...(await articlePages()), ...(await propertyPages())].filter(stays).map(urlBlock).join('\n')}
 </urlset>
 `;
 

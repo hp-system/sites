@@ -25,7 +25,7 @@ try {
   for (const p of all) check(`${p} no foreign offices / FIABCI / HRADF-administrator claim`, pages[p] && !claims.test(visibleText(pages[p])), pages[p] ? 'clean' : 'page missing');
   check('FAQ uses the 2026 transfer tax 3.09 %', /3\.09\s?%/.test(pages['/en/faq']), '3.09 %');
   check('FAQ no 9–12 % estimate', !/9\s?% and 12\s?%/.test(pages['/en/faq']), 'old estimate gone');
-  check('FAQ links the tax article', pages['/en/faq'].includes('/en/articles/business-news/taxes-foreigners-properties-greece'), 'link');
+  check('FAQ links the taxes and costs guide (the taxes article → P19, D-20261109-SS-3)', pages['/en/faq'].includes('/en/buying-property-in-greece'), 'link');
   for (const p of ['/en/privacy-policy', '/en/terms-of-services']) check(`${p} no .ru / GreekProperties.gr`, pages[p] && !/HalkidikiProperties\.ru|GreekProperties\.gr/i.test(pages[p]), 'only halkidikiproperties.com');
 
   const contact = pages['/en/contact'];

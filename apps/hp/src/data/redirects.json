@@ -4342,12 +4342,12 @@
   },
   {
    "from": "/en/sell/work-with-us-exclusively",
-   "to": "/en/sell",
+   "to": "/en/work-with-us-exclusively",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "override",
    "clicks": 0,
-   "note": "content page"
+   "note": "D7 «the same page»: the exclusive-assignment page exists (P25); the sheet sent it to the Sell hub"
   },
   {
    "from": "/en/services/buyer-services/air-water-and-road-transportation",

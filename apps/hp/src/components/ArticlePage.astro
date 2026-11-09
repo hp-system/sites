@@ -28,6 +28,7 @@ import {
 } from '../lib/articles';
 import { authorOf } from '../content/articles/authors';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
+import { redirectFor } from '../lib/redirects';
 
 interface Props { article: Article }
 const { article } = Astro.props;
@@ -47,6 +48,10 @@ const minutes = readingMinutes(article);
 const updated = dateText(a.updated || a.published);
 const related = await relatedTo(article, 3);
 const areas = AREA_PAGES.filter((p) => p.kind === 'municipality');
+// #152: links point at the final address — the area pages moved to the spec pages (D1); a
+// category the redirect table folds into a guide drops out of the breadcrumb (D-20261109-SS-2).
+const fin = (h: string) => { const r = redirectFor(h); return r?.status === 301 ? r.to : h; };
+const catLive = !redirectFor(categoryUrl(a.category));
 
 const url = articleUrl(article);
 const pathFor = (l: Lang) => (l === 'en' ? url : listUrl(l));
@@ -86,8 +91,8 @@ const jsonLd: unknown[] = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: brand.name, item: `${site}${prefix(lang) || '/'}` },
       { '@type': 'ListItem', position: 2, name: 'Articles', item: `${site}${categoryUrl('all-news')}` },
-      { '@type': 'ListItem', position: 3, name: categoryName(a.category), item: `${site}${categoryUrl(a.category)}` },
-      { '@type': 'ListItem', position: 4, name: a.h1, item: `${site}${url}` },
+      ...(catLive ? [{ '@type': 'ListItem', position: 3, name: categoryName(a.category), item: `${site}${categoryUrl(a.category)}` }] : []),
+      { '@type': 'ListItem', position: catLive ? 4 : 3, name: a.h1, item: `${site}${url}` },
     ],
   },
 ];
@@ -116,8 +121,8 @@ if (a.has_calculator) {
         <a href={prefix(lang) || '/'}>{brand.name}</a>
         <span aria-hidden="true">·</span>
         <a href={categoryUrl('all-news')}>Articles</a>
-        <span aria-hidden="true">·</span>
-        <a href={categoryUrl(a.category)}>{categoryName(a.category)}</a>
+        {catLive && <><span aria-hidden="true">·</span>
+        <a href={categoryUrl(a.category)}>{categoryName(a.category)}</a></>}
       </nav>
       <p class="t-label art-cat">{categoryName(a.category)}</p>
       <h1 class="t-display art-h1">{a.h1}</h1>
@@ -173,7 +178,7 @@ if (a.has_calculator) {
         )}
         <div class="side-box">
           <p class="t-label">Areas of Halkidiki</p>
-          <ul>{areas.map((p) => <li><a href={areaUrl(p.slug)}>{p.name}</a></li>)}</ul>
+          <ul>{areas.map((p) => <li><a href={fin(areaUrl(p.slug))}>{p.name}</a></li>)}</ul>
         </div>
       </aside>
     </div>
@@ -197,7 +202,7 @@ if (a.has_calculator) {
             ))}
           </ul>
           <p class="t-label art-areas-l">Property for sale in Halkidiki</p>
-          <ul class="links">{areas.map((p) => <li><a href={areaUrl(p.slug)}>{p.name}</a></li>)}</ul>
+          <ul class="links">{areas.map((p) => <li><a href={fin(areaUrl(p.slug))}>{p.name}</a></li>)}</ul>
           <p class="art-more"><a href={categoryUrl('all-news')}>All articles</a></p>
         </div>
       </section>

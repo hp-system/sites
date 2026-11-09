@@ -65,6 +65,11 @@ export const onRequest: MiddlewareHandler = async (ctx, next) => {
   // (raw Greek letters in a Location header give HTTP 500, see [...path].astro).
   if (ctx.request.method === 'GET' || ctx.request.method === 'HEAD') {
     const r = redirectFor(ctx.url.pathname);
+    if (r?.status === 410) {
+      // Gone for good (D7: files, the broken row, /currency/*). A plain page: no layout, nothing to index.
+      return new Response('<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><title>410 Gone</title><p>This page has been removed. <a href="/en">Halkidiki Properties</a></p>',
+        { status: 410, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
+    }
     if (r) {
       const [path, hash] = r.to.split('#');
       const loc = encodeURI(path) + ctx.url.search + (hash ? `#${encodeURIComponent(hash)}` : '');

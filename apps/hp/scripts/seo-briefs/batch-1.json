@@ -16,7 +16,8 @@
         "sell house in Greece",
         "sell my property in Greece",
         "real estate agent Halkidiki",
-        "sell property in Greece from abroad"
+        "sell property in Greece from abroad",
+        "exclusive real estate agent Halkidiki"
       ],
       "keywordRationale": "Owners are the site's second audience. Old /en/sell: 19,462 impressions in 16 months, 1,078 GA views in 2026 (export 2026-11-06); Greek seller pages and the Bulgarian «продавам къща в гърция» queries (seo-strategy-keywords) show the intent in every language.",
       "title": "Sell Your Property in Halkidiki",
@@ -28,16 +29,18 @@
         "How we present your property to buyers",
         "Selling while you live abroad",
         "Three ways to work with us",
+        "Exclusive assignment: one agency for your sale",
         "What it costs"
       ],
       "faqQuestions": [
         "How long does it take to sell a property in Halkidiki?",
         "Which documents do I need to sell my property in Greece?",
         "Can I sell my property in Greece without travelling there?",
+        "What is an exclusive assignment?",
         "Do I have to give you an exclusive assignment?"
       ],
       "contentBrief": "For owners who want to sell a home, plot or business property in Halkidiki. Explain the path from first contact to the notary, the documents to prepare (general, lawyer confirms), how the property is presented (own photos and video, our buyer database, partner agencies, Greek and international portals — no names), selling from abroad through a power of attorney, and the three ways to work with us (standard assignment, exclusive assignment, private sale to registered members). Fees and duration: agreed in writing in the assignment, no figures. No promises of speed or price.",
-      "targetWords": 800,
+      "targetWords": 1000,
       "pageType": "content",
       "schema": [
         "Article",
@@ -53,10 +56,6 @@
       "anchor": "sell your property in Halkidiki",
       "linksOut": [
         {
-          "anchor": "exclusive assignment",
-          "href": "/en/work-with-us-exclusively"
-        },
-        {
           "anchor": "add your property",
           "href": "/en/add-your-property"
         },
@@ -67,6 +66,10 @@
         {
           "anchor": "Exclusive",
           "href": "/en/exclusive"
+        },
+        {
+          "anchor": "assignment terms",
+          "href": "/en/assignment-order"
         }
       ],
       "linkedFrom": [
@@ -80,12 +83,23 @@
         "/en/sell",
         "/el/πωληση",
         "/el/εντολη-αναθεσης",
-        "/el/συνεργαστειτε-μαζι-μας"
+        "/el/συνεργαστειτε-μαζι-μας",
+        "/en/work-with-us-exclusively",
+        "/el/συνεργασου-μαζι-μας-αποκλειστικα",
+        "/bg/сътрудничете-изключително-с-нас",
+        "/en/sell/work-with-us-exclusively",
+        "/en/sell/assign-to-halkidiki-real-estate",
+        "/en/sell/advertise-your-property-worldwide",
+        "/en/sell/make-purchase-easy",
+        "/en/sell/real-time-visits",
+        "/en/sell/secret-portfolio",
+        "/en/sell/the-future-of-real-estate",
+        "/en/sell/why-halkidiki-properties"
       ],
-      "lawyerCheck": "YES — the documents list (title deed, topographic plan, energy certificate, legalisation where needed) and the power-of-attorney line.",
+      "lawyerCheck": "YES — the documents list (title deed, topographic plan, energy certificate, legalisation where needed) and the power-of-attorney line. Also the exclusive-assignment line «the agreed fee is due when the property is sold, however the buyer is found».",
       "editorialLine": "Updated November 2026",
       "intro": "<p>Selling a property in Halkidiki starts with a realistic price and the right buyers. We are a local agency that has worked in Northern Greece since 2007 and sells only here. We visit your home or land, agree the price with you, present it to buyers in Greece and abroad, and stay with you until the contract is signed at the notary. You can work with us while you live in Greece or from abroad.</p>",
-      "body": "<h2>How selling with us works</h2><p>Every sale follows the same clear steps, so you always know what happens next:</p><ul><li><strong>You tell us about the property:</strong> type, area, size and the price you have in mind.</li><li><strong>We visit and check it:</strong> an agent sees the property, looks at the documents and gives you a realistic estimate based on recent sales in the area.</li><li><strong>We sign an assignment:</strong> the terms of our cooperation are agreed with you and written down before any marketing starts.</li><li><strong>We present it to buyers:</strong> photos, video and a full listing go to the buyers who are looking for exactly this kind of property.</li><li><strong>Viewings and offers:</strong> we arrange visits in person or by video and bring every serious offer to you.</li><li><strong>From agreement to notary:</strong> once you accept an offer, we coordinate the lawyers, the engineer and the notary until the final contract is signed.</li></ul><h2>What we need from you</h2><p>A sale goes faster when the paperwork is ready before a buyer appears. In most cases the notary asks for:</p><ul><li>the title deed and its registration at the land registry or cadastre</li><li>a topographic plan for plots and for houses on their own land</li><li>an energy certificate for homes</li><li>an engineer's certificate that the building has no unauthorised works, or that they have been legalised</li></ul><p>Every property is different, so your lawyer and engineer confirm the exact list. If something is missing, we tell you early and can recommend professionals who handle it.</p><h2>How we present your property to buyers</h2><p>Buyers decide on photos first. We make our own photos and video of your property, write a clear description and publish it on our site, which is visited by buyers from Greece and many other countries. The property is shown to the registered buyers in our database who are looking for this type and area, to the partner agencies we work with, and on Greek and international property portals.</p><p>Guests on our site see only the municipality of your property, never the exact address. The exact location is shared with a buyer only when a viewing is arranged.</p><h2>Selling while you live abroad</h2><p>Many owners in Halkidiki live in another country. You do not need to travel for every step. With a power of attorney signed at a Greek notary or a Greek consulate, a lawyer or a person you trust can act for you. We organise the viewings, keep you informed after each one and send you every offer in writing, so you decide from home.</p><h2>Three ways to work with us</h2><ul><li><strong>Standard assignment:</strong> we market your property alongside other agencies you may work with.</li><li><strong>Exclusive assignment:</strong> we are your only agency and give your property our full attention. See <strong>exclusive assignment</strong> for what this includes.</li><li><strong>Private sale:</strong> for owners who do not want their property advertised, we show it only to registered buyers we know.</li></ul><h2>What it costs</h2><p>You pay our fee only when your property is sold. The fee and the duration of the assignment are agreed with you in advance and written in the assignment you sign, so there are no surprises at the end. Ask us for the terms that apply to your property.</p>",
+      "body": "<h2>How selling with us works</h2><p>Every sale follows the same clear steps, so you always know what happens next:</p><ul><li><strong>You tell us about the property:</strong> type, area, size and the price you have in mind.</li><li><strong>We visit and check it:</strong> an agent sees the property, looks at the documents and gives you a realistic estimate based on recent sales in the area.</li><li><strong>We sign an assignment:</strong> the terms of our cooperation are agreed with you and written down before any marketing starts.</li><li><strong>We present it to buyers:</strong> photos, video and a full listing go to the buyers who are looking for exactly this kind of property.</li><li><strong>Viewings and offers:</strong> we arrange visits in person or by video and bring every serious offer to you.</li><li><strong>From agreement to notary:</strong> once you accept an offer, we coordinate the lawyers, the engineer and the notary until the final contract is signed.</li></ul><h2>What we need from you</h2><p>A sale goes faster when the paperwork is ready before a buyer appears. In most cases the notary asks for:</p><ul><li>the title deed and its registration at the land registry or cadastre</li><li>a topographic plan for plots and for houses on their own land</li><li>an energy certificate for homes</li><li>an engineer's certificate that the building has no unauthorised works, or that they have been legalised</li></ul><p>Every property is different, so your lawyer and engineer confirm the exact list. If something is missing, we tell you early and can recommend professionals who handle it.</p><h2>How we present your property to buyers</h2><p>Buyers decide on photos first. We make our own photos and video of your property, write a clear description and publish it on our site, which is visited by buyers from Greece and many other countries. The property is shown to the registered buyers in our database who are looking for this type and area, to the partner agencies we work with, and on Greek and international property portals.</p><p>Guests on our site see only the municipality of your property, never the exact address. The exact location is shared with a buyer only when a viewing is arranged.</p><h2>Selling while you live abroad</h2><p>Many owners in Halkidiki live in another country. You do not need to travel for every step. With a power of attorney signed at a Greek notary or a Greek consulate, a lawyer or a person you trust can act for you. We organise the viewings, keep you informed after each one and send you every offer in writing, so you decide from home.</p><h2>Three ways to work with us</h2><ul><li><strong>Standard assignment:</strong> we market your property alongside other agencies you may work with.</li><li><strong>Exclusive assignment:</strong> we are your only agency and give your property our full attention, as described below.</li><li><strong>Private sale:</strong> for owners who do not want their property advertised, we show it only to registered buyers we know.</li></ul><h2>Exclusive assignment: one agency for your sale</h2><p>With an exclusive assignment you give one licensed agency the right to sell your property for an agreed period. Other agencies do not advertise it during that time, and the agreed fee is due when the property is sold, however the buyer is found. In return, the agency commits its time and budget to your property, and buyers see one consistent price instead of the same home listed several times.</p><ul><li><strong>Full marketing:</strong> our own photos and video, a complete listing and promotion on our site, social media and the property portals we use.</li><li><strong>Our buyers first:</strong> we present the property to the registered buyers in our database who are looking for this type and area, and to the partner agencies we work with.</li><li><strong>Priority in viewings</strong> and <strong>one agent</strong> who reports to you after every viewing and offer.</li></ul><p>We accept an exclusive only after we have seen the property and agreed a realistic price with you. An overpriced property stays on the market and loses interest, so if we believe a price cannot sell, we tell you openly rather than take the assignment.</p><h2>What it costs</h2><p>You pay our fee only when your property is sold. The fee and the duration of the assignment are agreed with you in advance and written in the assignment you sign, so there are no surprises at the end. Ask us for the terms that apply to your property.</p>",
       "faq": [
         {
           "q": "How long does it take to sell a property in Halkidiki?",
@@ -98,6 +112,10 @@
         {
           "q": "Can I sell my property in Greece without travelling there?",
           "a": "Yes. With a power of attorney signed at a Greek notary or a Greek consulate, a lawyer or a person you trust can sign for you. We handle the viewings and keep you informed of every offer."
+        },
+        {
+          "q": "What is an exclusive assignment?",
+          "a": "It is a written agreement that gives one licensed agency the right to sell your property for an agreed period. Other agencies do not advertise it during that period, and the agreed fee is due when the property is sold. In return your property gets the agency's full marketing effort and priority with its buyers."
         },
         {
           "q": "Do I have to give you an exclusive assignment?",
@@ -195,7 +213,9 @@
           "a": "The duration is agreed with you and written in the assignment before we start. Ask us for the terms that apply to your property."
         }
       ],
-      "ctaHref": "/en/add-your-property"
+      "ctaHref": "/en/add-your-property",
+      "foldedInto": "P24",
+      "_folded": "D-20261109-SS-5 (Sergei 2026-11-09: «делай»): George's sheet sends every seller page to the one Sell page per language; this text became the Sell section «Exclusive assignment: one agency for your sale»."
     },
     {
       "id": "P52",

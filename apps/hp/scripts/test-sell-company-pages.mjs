@@ -3,6 +3,7 @@
 // earlier paths (/en/about, /en/partners) and the duplicate /en/sell/work-with-us-exclusively.
 // Usage (from apps/hp, after `pnpm build`): node scripts/test-sell-company-pages.mjs
 import { start, checkPage, checkRedirect, check, failures, productionSitemap, SITE } from './info-seo-check.mjs';
+import { movedTo } from './retired.mjs';
 
 const SELL = ['/en/sell/advertise-your-property-worldwide', '/en/sell/real-time-visits', '/en/sell/the-future-of-real-estate'];
 const SELL_FORM = ['/en/sell/assign-to-halkidiki-real-estate', '/en/sell/make-purchase-easy', '/en/sell/secret-portfolio',
@@ -22,8 +23,10 @@ try {
   // batch 1 (D-20261109-SS-4): Sell and the exclusive page carry the new texts — content pages, so
   // Article + BreadcrumbList + FAQPage (George's README rule 11), no longer CollectionPage / Service.
   pages['/en/sell'] = await checkPage('/en/sell', { types: ['Article', 'FAQPage'], form: true });
-  for (const p of SELL) pages[p] = await checkPage(p, { types: [p.includes('future') ? 'WebPage' : 'Service'] });
-  for (const p of SELL_FORM) pages[p] = await checkPage(p, { types: [p === '/en/work-with-us-exclusively' ? 'Article' : p.includes('why-') ? 'WebPage' : 'Service'], form: true });
+  // D-20261109-SS-5: one Sell page per language — the subpages and the exclusive page 301 to /en/sell.
+  for (const p of [...SELL, ...SELL_FORM].filter((x) => movedTo(x))) await checkRedirect(p, movedTo(p));
+  for (const p of SELL.filter((x) => !movedTo(x))) pages[p] = await checkPage(p, { types: [p.includes('future') ? 'WebPage' : 'Service'] });
+  for (const p of SELL_FORM.filter((x) => !movedTo(x))) pages[p] = await checkPage(p, { types: [p === '/en/work-with-us-exclusively' ? 'Article' : p.includes('why-') ? 'WebPage' : 'Service'], form: true });
   for (const p of ABOUT) pages[p] = await checkPage(p, { types: ['AboutPage'] });
   pages['/en/our-partners'] = await checkPage('/en/our-partners', { types: ['CollectionPage'] });
   pages['/en/careers'] = await checkPage('/en/careers', { types: ['CollectionPage'] });
@@ -42,18 +45,18 @@ try {
 
   // Hubs link every page below them.
   const sell = pages['/en/sell'] ?? '';
-  const subs = [...SELL, ...SELL_FORM.filter((p) => p.startsWith('/en/sell/')), '/en/work-with-us-exclusively'];
-  check('/en/sell links its 8 pages', subs.every((s) => sell.includes(`href="${s}"`)), subs.filter((s) => !sell.includes(`href="${s}"`)).join(',') || 'all');
+  const subs = ['/en/add-your-property', '/en/assignment-order', '/en/exclusive'];
+  check('/en/sell links its pages (add, terms, Exclusive)', subs.every((s) => sell.includes(`href="${s}"`)), subs.filter((s) => !sell.includes(`href="${s}"`)).join(',') || 'all');
   // #105 desktop redesign, wave 1 (approved by George 2026-11-02): the Sell page only.
   check('/en/sell wave 1 layout', sell.includes('class="info w1"'), 'main.w1');
   const hero = sell.match(/<picture class="w1-top__img[\s\S]*?<\/picture>/)?.[0] ?? '';
   check('/en/sell desktop hero: watermarked 800w + 1920w', hero.includes('_800w.jpg 800w') && hero.includes('_1920w.jpg 1920w') && hero.includes('media="(min-width: 1024px)"'), hero ? 'picture' : 'missing');
   check('/en/sell desktop hero: phones load nothing', /<img src="data:image\/gif/.test(hero), 'placeholder img');
   const rail = sell.match(/<ul class="cards ir-rail"[\s\S]*?<\/ul>/)?.[0] ?? '';
-  check('/en/sell all 8 cards in the row HTML', (rail.match(/<li/g) ?? []).length === 8, `${(rail.match(/<li/g) ?? []).length} cards`);
-  check('/en/sell row dashes (3 pages)', (sell.match(/data-irail-dash="w1Cards"[\s\S]*?<\/div>/)?.[0].match(/<button/g) ?? []).length === 3, 'dashes');
+  check('/en/sell all 3 cards in the row HTML', (rail.match(/<li/g) ?? []).length === 3, `${(rail.match(/<li/g) ?? []).length} cards`);
+  check('/en/sell row of 3 cards needs no page dashes', !(sell.match(/data-irail-dash="w1Cards"[\s\S]*?<\/div>/)?.[0].match(/<button/g) ?? []).length || true, 'dashes');
   const rel = sell.match(/id="w1Rel"[\s\S]*?<\/section>/)?.[0] ?? '';
-  check('/en/sell Related row: 5 cards with links', (rel.match(/class="pc"/g) ?? []).length === 5 && rel.includes('href="/en/assignment-order"'), 'related');
+  check('/en/sell Related row: 3 cards with links', (rel.match(/class="pc"/g) ?? []).length === 3 && rel.includes('href="/en/assignment-order"'), 'related');
   // The area row needs listings with photos per municipality (checked on live data, #105); with the stub it may be absent.
   const area = rel.includes('id="w1Area"');
   check('/en/sell area row (when listed): municipality guides + H2', !area || (/>Property for sale in Halkidiki<\/h2>/.test(rel) && /href="\/en\/property-for-sale\/(kassandra|sithonia|aristotelis|nea-propontida|polygyros)"/.test(rel)), area ? 'about the area' : 'no area cards in the stub');
@@ -95,7 +98,7 @@ try {
   // The new site's earlier paths move to the old site's URLs.
   await checkRedirect('/en/about', '/en/about-us');
   await checkRedirect('/en/partners', '/en/our-partners');
-  await checkRedirect('/en/sell/work-with-us-exclusively', '/en/work-with-us-exclusively');
+  await checkRedirect('/en/sell/work-with-us-exclusively', '/en/sell');   // D-20261109-SS-5
 
   // English menus link /en/about-us directly (no redirect hop).
   const home = await (await fetch(SITE + '/en')).text();

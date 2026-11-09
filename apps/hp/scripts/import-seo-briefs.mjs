@@ -25,6 +25,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
   const batch = JSON.parse(readFileSync(join(HERE, 'seo-briefs', f), 'utf8'));
   if (batch.status !== 'approved') { console.log(`skip ${f}: status ${batch.status}`); continue; }
   for (const b of batch.pages) {
+    if (b.foldedInto) { console.log(`skip ${b.id}: folded into ${b.foldedInto}`); continue; }
     const err = (m) => errors.push(`${f} ${b.id}/${b.lang}: ${m}`);
     const path = b.url.replace(SITE, '');
     if (!/^P(2[2-9]|[3-9]\d)$/.test(b.id)) err('only pages P22+ live here (P01–P21 come from George\'s spec)');

@@ -45,7 +45,7 @@ try {
   check('pending rows are not redirected by the table', pend.length === 0, pend.slice(0, 3).join(' | ') || 'none');
 
   const live = [];
-  for (const p of R.pages.flatMap((x) => Object.values(x.paths ?? {}))) {
+  for (const p of R.pages.filter((x) => x.status !== 'dropped').flatMap((x) => Object.values(x.paths ?? {}))) {
     const r = await get(p);
     if (r.status === 301 || r.status === 302 || r.status === 410) live.push(`${p} ${r.status} ${loc(r)}`);
   }

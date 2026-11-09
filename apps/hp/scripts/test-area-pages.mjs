@@ -6,6 +6,7 @@
 // Usage (from apps/hp, after `pnpm build`): node scripts/test-area-pages.mjs
 import { spawn } from 'node:child_process';
 import { startStub } from './stub-api.mjs';
+import { movedTo } from './retired.mjs';
 
 const N = 287;   // not a number the page texts use ("300 metres from the beach")
 const SITE = 'http://127.0.0.1:4331';
@@ -31,6 +32,12 @@ const CATS = ['villas', 'apartments', 'maisonettes', 'houses', 'land', 'plots', 
 try {
   for (const slug of [...MUNIS, ...CATS]) {
     const path = `/en/property-for-sale/${slug}`;
+    // D1/D2 (#152): the spec page holds this content now; the old page answers 301 to it.
+    if (movedTo(path)) {
+      const m = await fetch(SITE + path, { redirect: 'manual' });
+      check(`${path} 301 → ${movedTo(path)} (D1/D2)`, m.status === 301 && decodeURIComponent(m.headers.get('location') ?? '') === movedTo(path), `${m.status} ${m.headers.get('location')}`);
+      continue;
+    }
     const r = await fetch(SITE + path);
     const html = await r.text();
     check(`${path} 200`, r.status === 200, `status ${r.status}`);
@@ -48,11 +55,15 @@ try {
     check(`${path} no village inside a card`, !leak, leak ? `found ${leak}` : 'none');
     check(`${path} no count of the catalogue`, !alone(N).test(visible(html)) && !/"numberOfItems"/.test(html), 'text + JSON-LD');
   }
-  const pol = await (await fetch(SITE + '/en/property-for-sale/polygyros')).text();
-  check('polygyros (no stub data) shows the empty state', /data-empty/.test(pol), /data-empty/.test(pol) ? 'empty state' : 'no empty state');
-  const kas = await (await fetch(SITE + '/en/property-for-sale/kassandra')).text();
-  check('kassandra lists villages as general information', /Pefkochori/.test(visible(kas)), 'village chips');
-  check('kassandra "Show properties" opens the filtered list', /href="\/en\/properties\?muni=/.test(kas), 'button');
+  if (!movedTo('/en/property-for-sale/polygyros')) {
+    const pol = await (await fetch(SITE + '/en/property-for-sale/polygyros')).text();
+    check('polygyros (no stub data) shows the empty state', /data-empty/.test(pol), /data-empty/.test(pol) ? 'empty state' : 'no empty state');
+  }
+  if (!movedTo('/en/property-for-sale/kassandra')) {
+    const kas = await (await fetch(SITE + '/en/property-for-sale/kassandra')).text();
+    check('kassandra lists villages as general information', /Pefkochori/.test(visible(kas)), 'village chips');
+    check('kassandra "Show properties" opens the filtered list', /href="\/en\/properties\?muni=/.test(kas), 'button');
+  }
   const bad = await fetch(SITE + '/en/property-for-sale/atlantis');
   check('unknown slug is 404', bad.status === 404, `status ${bad.status}`);
   const el = await fetch(SITE + '/property-for-sale/kassandra');

@@ -14,6 +14,7 @@ import { spawn } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { startStub } from './stub-api.mjs';
+import { movedTo } from './retired.mjs';
 
 const SITE = 'http://127.0.0.1:4331';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -72,17 +73,23 @@ try {
   }
   check('archived near-duplicates found', archived.length >= 1, `${archived.length} files in archive/articles-merged-20261021`);
   for (const r of redirects) {
-    check(`articles.json ${r.from}`, livePaths.has(r.to) && !livePaths.has(r.from), `→ ${r.to} (target live: ${livePaths.has(r.to)}, source not live: ${!livePaths.has(r.from)})`);
+    check(`articles.json ${r.from}`, (livePaths.has(r.to) || !!movedTo(r.to)) && !livePaths.has(r.from), `→ ${r.to} (target live: ${livePaths.has(r.to)}, source not live: ${!livePaths.has(r.from)})`);
   }
   for (const x of archived) {
     check(`archived ${x.clean} is mapped in articles.json`, redirects.some((r) => r.from === x.clean), 'redirect recorded');
     const r = await fetch(SITE + encodeURI(x.clean), { redirect: 'manual' });
     // Since the 301 engine (#56) the old address moves permanently to the kept article; never a page.
-    const to = redirects.find((m) => m.from === x.clean)?.to;
+    const kept = redirects.find((m) => m.from === x.clean)?.to;
+    const to = movedTo(kept ?? '') ?? kept;   // #152: a kept article folded into a guide → straight to the guide (one hop)
     check(`archived ${x.clean} is not served (301 to the kept article)`, r.status === 301 && decodeURIComponent(r.headers.get('location') ?? '') === to, `status ${r.status} ${r.headers.get('location') ?? ''}`);
   }
   for (const a of arts) {
     const path = `/en/articles/${a.cat}/${a.slug}`;
+    if (movedTo(path)) {   // D-20261109-SS-2: folded into a guide — checked as a 301, not as a page
+      const m = await fetch(SITE + encodeURI(path), { redirect: 'manual' });
+      check(`${a.slug} folded → ${movedTo(path)}`, m.status === 301 && decodeURIComponent(m.headers.get('location') ?? '') === movedTo(path), `status ${m.status} ${m.headers.get('location') ?? ''}`);
+      continue;
+    }
     const r = await fetch(SITE + encodeURI(path));
     const html = await r.text();
     const ok200 = r.status === 200;
@@ -113,18 +120,26 @@ try {
   check('/en/articles → 301 all-news', r0.status === 301 && (r0.headers.get('location') ?? '').endsWith('/en/articles/all-news'),
     `${r0.status} ${r0.headers.get('location')}`);
   for (const c of ['all-news', 'business-news', 'buyers', 'constructors-news']) {
+    if (movedTo(`/en/articles/${c}`)) {   // D-20261109-SS-2: a folded category answers 301
+      const m = await fetch(`${SITE}/en/articles/${c}`, { redirect: 'manual' });
+      check(`/en/articles/${c} folded → ${movedTo(`/en/articles/${c}`)}`, m.status === 301, `status ${m.status}`);
+      continue;
+    }
     const r = await fetch(`${SITE}/en/articles/${c}`);
     const html = await r.text();
     const text = html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ');
-    const total = arts.filter((a) => c === 'all-news' || a.cat === c).length;
+    const total = arts.filter((a) => !movedTo(`/en/articles/${a.cat}/${a.slug}`) && (c === 'all-news' || a.cat === c)).length;
     check(`/en/articles/${c} 200`, r.status === 200, `status ${r.status}`);
     check(`/en/articles/${c} no count`, !/\bresults?\b/i.test(text) && !new RegExp(`(?<![\\d.,])${total}(?![\\d.,])\\s*(articles|results|posts)`, 'i').test(text),
       `no "N results"/"${total} articles"`);
   }
-  const p2 = await fetch(`${SITE}/en/articles/all-news?page=2`);
-  const p2h = await p2.text();
-  check('all-news page 2 is 200, noindex, canonical to itself', p2.status === 200 && /noindex/.test(p2h) && /rel="canonical" href="[^"]*all-news\?page=2"/.test(p2h),
-    `status ${p2.status}`);
+  const servedArticles = arts.filter((a) => !movedTo(`/en/articles/${a.cat}/${a.slug}`)).length;
+  if (servedArticles > 10) {   // PER_PAGE = 10; after the folding (D-20261109-SS-2) one page may be all there is
+    const p2 = await fetch(`${SITE}/en/articles/all-news?page=2`);
+    const p2h = await p2.text();
+    check('all-news page 2 is 200, noindex, canonical to itself', p2.status === 200 && /noindex/.test(p2h) && /rel="canonical" href="[^"]*all-news\?page=2"/.test(p2h),
+      `status ${p2.status}`);
+  }
   const p99 = await fetch(`${SITE}/en/articles/all-news?page=99`);
   check('a page past the end is 404', p99.status === 404, `status ${p99.status}`);
   const bad = await fetch(`${SITE}/en/articles/nope`);
@@ -142,7 +157,9 @@ for (let i = 0; i < 40; i++) { try { await fetch(SITE + '/robots.txt'); break; }
 try {
   const sm = await (await fetch(SITE + '/sitemap.xml')).text();
   const locs = new Set([...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname));
-  const missing = [...livePaths].filter((p) => !locs.has(encodeURI(p)));
+  const missing = [...livePaths].filter((p) => !movedTo(p) && !locs.has(encodeURI(p)));
+  const movedListed = [...livePaths].filter((p) => movedTo(p) && locs.has(encodeURI(p)));
+  check('sitemap lists no folded article', movedListed.length === 0, movedListed.join(', ') || 'none');
   check('sitemap lists every live article', missing.length === 0, missing.length ? `missing ${missing.join(', ')}` : `${livePaths.size} articles`);
   const leaked = archived.filter((x) => locs.has(encodeURI(x.clean)) || locs.has(encodeURI(x.old)));
   check('sitemap lists no archived article', leaked.length === 0, leaked.length ? `found ${leaked.map((x) => x.clean).join(', ')}` : 'none');

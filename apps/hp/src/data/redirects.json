@@ -3721,30 +3721,39 @@
   },
   {
    "from": "/en/articles",
-   "to": "/en",
+   "to": "/en/articles/all-news",
    "status": 301,
    "lang": "en",
-   "src": "old-map",
+   "src": "override",
    "clicks": 0,
-   "note": "PENDING-articles"
+   "note": "the blog index stays (registry page, D-20261109-SS-2); the sheet sent /en/articles to the home page"
   },
   {
    "from": "/en/articles/all-news/adventure-abodes:-properties-for-outdoor-enthusiasts-in-halkidiki",
+   "to": "/en/articles/all-news/adventure-abodes-properties-for-outdoor-enthusiasts-in-halkidiki",
+   "status": 301,
+   "lang": "en",
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
+  },
+  {
+   "from": "/en/articles/all-news/buying-a-home-in-halkidiki-a-step-by-step-guide",
    "to": "/en/buying-property-in-greece",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "article-map",
    "clicks": 0,
-   "note": "article index → guide"
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/buying-a-home-in-halkidiki:-a-step-by-step-guide",
    "to": "/en/buying-property-in-greece",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "article-map",
    "clicks": 0,
-   "note": "article index → guide"
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/coronavirus-and-real-estate-in-greece",
@@ -3757,30 +3766,39 @@
   },
   {
    "from": "/en/articles/all-news/digital-transformation:-the-role-of-technology-in-greek-real-estate",
-   "to": "/en/buying-property-in-greece",
+   "to": "/en/articles/all-news/digital-transformation-the-role-of-technology-in-greek-real-estate",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 1,
-   "note": "article index → guide"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/discovering-halkidiki:-embracing-natural-beauty-and-tranquility-in-your-real-estate-investment",
-   "to": "/en/properties",
+   "to": "/en/articles/all-news/discovering-halkidiki-embracing-natural-beauty-and-tranquility-in-your-real-estate-investment",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 1,
-   "note": "topic"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
+  },
+  {
+   "from": "/en/articles/all-news/exploring-the-real-estate-trends-halkidiki-edition",
+   "to": "/en/articles/buyers/halkidiki-real-estate-market-trends-what-to-expect-in-the-coming-years",
+   "status": 301,
+   "lang": "en",
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/exploring-the-real-estate-trends:-halkidiki-edition",
-   "to": "/en/buying-property-in-greece",
+   "to": "/en/articles/buyers/halkidiki-real-estate-market-trends-what-to-expect-in-the-coming-years",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "article-map",
    "clicks": 0,
-   "note": "article index → guide"
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/going-solo-or-working-with-an-agent",
@@ -3820,12 +3838,12 @@
   },
   {
    "from": "/en/articles/all-news/hidden-gems:-lesser-known-villages-in-halkidiki-worth-exploring",
-   "to": "/en/halkidiki",
+   "to": "/en/articles/all-news/hidden-gems-lesser-known-villages-in-halkidiki-worth-exploring",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 48,
-   "note": "topic"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/home-decorating-tips-to-impress-buyers",
@@ -3846,13 +3864,22 @@
    "note": "type"
   },
   {
+   "from": "/en/articles/all-news/investment-opportunities-in-halkidiki-real-estate-a-comprehensive-guide",
+   "to": "/en/properties",
+   "status": 301,
+   "lang": "en",
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
+  },
+  {
    "from": "/en/articles/all-news/investment-opportunities-in-halkidiki-real-estate:-a-comprehensive-guide",
    "to": "/en/properties",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 19,
-   "note": "topic"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/looking-to-buy-a-property-in-halkidiki-your-request-is-safe-with-us",
@@ -3868,9 +3895,9 @@
    "to": "/en/properties",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "article-map",
    "clicks": 0,
-   "note": "topic"
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/real-estate-passive-income-greece",
@@ -3892,12 +3919,12 @@
   },
   {
    "from": "/en/articles/all-news/the-future-of-halkidiki-real-estate",
-   "to": "/en/buying-property-in-greece",
+   "to": "/en/articles/buyers/halkidiki-real-estate-market-trends-what-to-expect-in-the-coming-years",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 9,
-   "note": "article index → guide"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/all-news/the-future-of-smart-home-technology-in-real-estate",
@@ -3967,9 +3994,9 @@
    "to": "/en/buying-property-in-greece",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "article-map",
    "clicks": 0,
-   "note": "article index → guide"
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/buyers/benefits-of-homeownership-in-greece",
@@ -4036,21 +4063,21 @@
   },
   {
    "from": "/en/articles/buyers/halkidiki-real-estate-market-trends:-what-to-expect-in-the-coming-years",
-   "to": "/en/properties",
+   "to": "/en/articles/buyers/halkidiki-real-estate-market-trends-what-to-expect-in-the-coming-years",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 23,
-   "note": "topic"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/buyers/housing-trends-in-greece",
    "to": "/en/buying-property-in-greece",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 2,
-   "note": "article index → guide"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/buyers/how-to-choose-the-right-vacation-property",
@@ -4072,12 +4099,12 @@
   },
   {
    "from": "/en/articles/buyers/navigating-the-legal-landscape:-real-estate-laws-in-halkidiki",
-   "to": "/en/properties/land-for-sale",
+   "to": "/en/articles/buyers/navigating-the-legal-landscape-real-estate-laws-in-halkidiki",
    "status": 301,
    "lang": "en",
-   "src": "spec",
-   "clicks": 1,
-   "note": "type"
+   "src": "article-map",
+   "clicks": 0,
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/buyers/owning-a-vacation-home-in-greece",
@@ -4129,9 +4156,9 @@
    "to": "/en/buying-property-in-greece",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "article-map",
    "clicks": 0,
-   "note": "article index → guide"
+   "note": "same article (archived duplicate or old slug)"
   },
   {
    "from": "/en/articles/buyers/viewing-trip-day",
@@ -4342,12 +4369,12 @@
   },
   {
    "from": "/en/sell/work-with-us-exclusively",
-   "to": "/en/sell",
+   "to": "/en/work-with-us-exclusively",
    "status": 301,
    "lang": "en",
-   "src": "spec",
+   "src": "override",
    "clicks": 0,
-   "note": "content page"
+   "note": "D7 «the same page»: the exclusive-assignment page exists (P25); the sheet sent it to the Sell hub"
   },
   {
    "from": "/en/services/buyer-services/air-water-and-road-transportation",

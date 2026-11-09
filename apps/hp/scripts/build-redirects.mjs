@@ -20,7 +20,7 @@
 // No 302 anywhere. One hop: a target that itself moves is replaced by its final address.
 // Rejected: keying on the query string — the old filter URLs differ only in parameters and all
 // land on the same list page; the engine keeps the query, the list page canonicalises.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { inflateRawSync } from 'node:zlib';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -118,6 +118,22 @@ const put = (key, row) => { if (!rows.has(key)) rows.set(key, row); };
 
 for (const o of overrides.rows) {
   put(keyOf(o.from), { from: keyOf(o.from), to: o.to ? targetOf(o.to) : null, status: o.status, lang: langOf(keyOf(o.from)), src: 'override', clicks: 0, note: o.reason });
+}
+
+// Article maps of the site itself (before the sheet): an archived near-duplicate → the article
+// that kept its content (#48), an old slug with «:» → the same article's clean URL (#22). The
+// same content is the best target; if that article is folded into a guide too
+// (D-20261109-SS-2), the one-hop pass below sends the old URL straight to the guide.
+const artMap = JSON.parse(readFileSync(join(HERE, '../src/content/redirects/articles.json'), 'utf8')).redirects;
+const walkMd = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walkMd(join(d, e.name)) : e.name.endsWith('.md') ? [join(d, e.name)] : []);
+for (const f of walkMd(join(HERE, '../src/content/articles/en'))) {
+  const t = readFileSync(f, 'utf8');
+  const o = /^old_url:\s*['"]?([^'"\n]+)/m.exec(t)?.[1], c = /^clean_url:\s*['"]?([^'"\n]+)/m.exec(t)?.[1];
+  if (o && c) artMap.push({ from: o, to: c });
+}
+for (const a of artMap) {
+  const key = keyOf(a.from), to = targetOf(a.to);
+  if (keyOf(to) !== key) put(key, { from: key, to, status: 301, lang: 'en', src: 'article-map', clicks: 0, note: 'same article (archived duplicate or old slug)' });
 }
 
 // George's sheet: per path, the target with the most clicks (query rows share a path).

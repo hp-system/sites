@@ -1,57 +1,68 @@
-// The 301 engine (#56): every old URL in content/redirects/*.json and every article `old_url`
-// answers with a redirect to a page that answers 200; English → 301, other languages → 302;
-// the query string survives; nothing that is a page today is redirected.
-// Starts the stub API (127.0.0.1:4339) and the BUILT site (127.0.0.1:4331). Exit 1 on any FAIL.
+// The redirect engine v2 (#152, plan stage 2) serves the merged table and the legacy rules:
+// every 301 row of src/data/redirects.json answers 301 with its target, every 410 row answers
+// 410, pending/review rows are served as they are (never redirected), the query string is kept,
+// /rs → /sr, /<lang>/ID123 → the property page, a property that is gone answers 410 (D6), and no
+// page that is live today is redirected away. v1 (#56) tested EN 301 / other 302; D7 retired the
+// 302s. Starts the stub API (127.0.0.1:4339) and the BUILT site (127.0.0.1:4331). Exit 1 on FAIL.
 // Usage (from apps/hp, after `pnpm build`): node scripts/test-redirects.mjs
 import { spawn } from 'node:child_process';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 import { startStub } from './stub-api.mjs';
 
 const SITE = 'http://127.0.0.1:4331';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let fails = 0;
 const check = (name, ok, detail) => { if (!ok) fails++; console.log(`${ok ? 'OK  ' : 'FAIL'} ${name} — ${detail}`); };
-
-const entries = [];
-for (const f of ['listings', 'articles', 'services']) {
-  for (const r of JSON.parse(readFileSync(`src/content/redirects/${f}.json`, 'utf8')).redirects) entries.push(r);
-}
-const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
-for (const f of walk('src/content/articles/en').filter((x) => x.endsWith('.md'))) {
-  const t = readFileSync(f, 'utf8');
-  const o = (t.match(/^old_url:\s*['"]?([^'"\n]+)/m) || [])[1];
-  const c = (t.match(/^clean_url:\s*['"]?([^'"\n]+)/m) || [])[1];
-  if (o && c && o.toLowerCase() !== c.toLowerCase()) entries.push({ from: o, to: c, lang: 'en' });
-}
+const T = JSON.parse(readFileSync('src/data/redirects.json', 'utf8'));
+const R = JSON.parse(readFileSync('src/data/page-registry.json', 'utf8'));
 
 const stub = await startStub({ port: 4339, n: 30 });
 const site = spawn(process.execPath, ['dist/server/entry.mjs'], {
   env: { ...process.env, HOST: '127.0.0.1', PORT: '4331', EALIDA_API: stub.base, SITE_ENV: 'preview' },
 });
 for (let i = 0; i < 40; i++) { try { await fetch(SITE + '/robots.txt'); break; } catch { await sleep(250); } }
-const enc = (p) => encodeURI(p);
+const get = (p) => fetch(SITE + encodeURI(p), { redirect: 'manual' });
+const loc = (r) => decodeURIComponent(r.headers.get('location') ?? '');
 
 try {
-  const bad = [];
-  const targets = new Set();
-  for (const e of entries) {
-    const r = await fetch(SITE + enc(e.from), { redirect: 'manual' });
-    const want = (e.lang ?? e.from.split('/')[1]) === 'en' ? 301 : 302;
-    const loc = decodeURIComponent(r.headers.get('location') ?? '');
-    if (r.status !== want || loc.split('#')[0] !== e.to.split('#')[0]) bad.push(`${e.from} → ${r.status} ${loc}`);
-    targets.add(e.to.split('#')[0]);
+  const bad301 = [];
+  for (const row of T.rows.filter((x) => x.status === 301)) {
+    const r = await get(row.from);
+    if (r.status !== 301 || loc(r) !== row.to) bad301.push(`${row.from} → ${r.status} ${loc(r)}`);
   }
-  check(`all ${entries.length} old URLs redirect to their page (EN 301, others 302)`, bad.length === 0, bad.slice(0, 3).join(' | ') || 'all');
-  const dead = [];
-  for (const t of targets) { const s = (await fetch(SITE + enc(t), { redirect: 'manual' })).status; if (s !== 200) dead.push(`${t} ${s}`); }
-  check(`all ${targets.size} targets answer 200`, dead.length === 0, dead.slice(0, 3).join(' | ') || 'all');
-  const q = await fetch(SITE + '/en/properties-in-halkidiki-greece/land-halkidiki/?utm_source=x', { redirect: 'manual' });
-  check('trailing slash + query string kept', q.status === 301 && q.headers.get('location') === '/en/property-for-sale/land?utm_source=x', `${q.status} ${q.headers.get('location')}`);
-  const h = await fetch(SITE + '/en/services/seller-services/energy-efficiency-certificates-pea', { redirect: 'manual' });
-  check('sub-service → section anchor', h.headers.get('location') === '/en/services/seller-services#energy-efficiency-certificates-pea', h.headers.get('location'));
-  for (const p of ['/en', '/en/properties', '/en/property-for-sale/land', '/en/services/seller-services', '/en/contact']) {
-    const s = (await fetch(SITE + p, { redirect: 'manual' })).status;
+  check(`all ${T.rows.filter((x) => x.status === 301).length} table 301 rows answer 301 with their target`, bad301.length === 0, bad301.slice(0, 3).join(' | ') || 'all');
+
+  const bad410 = [];
+  for (const row of T.rows.filter((x) => x.status === 410)) { const r = await get(row.from); if (r.status !== 410) bad410.push(`${row.from} ${r.status}`); }
+  check('all 410 rows answer 410', bad410.length === 0, bad410.join(' | ') || 'all');
+
+  const pend = [];
+  for (const row of T.rows.filter((x) => x.status === 'pending' || x.status === 'review')) {
+    const r = await get(row.from);
+    const elRoot = row.from.startsWith('/el/') && loc(r) === row.from.slice(3);   // the generic /el/x → /x rule, not the table
+    if (r.status === 301 && !elRoot) pend.push(`${row.from} → ${loc(r)}`);
+  }
+  check('pending rows are not redirected by the table', pend.length === 0, pend.slice(0, 3).join(' | ') || 'none');
+
+  const live = [];
+  for (const p of R.pages.flatMap((x) => Object.values(x.paths ?? {}))) {
+    const r = await get(p);
+    if (r.status === 301 || r.status === 302 || r.status === 410) live.push(`${p} ${r.status} ${loc(r)}`);
+  }
+  check('no registry page is redirected or gone', live.length === 0, live.slice(0, 3).join(' | ') || 'none');
+
+  const q = await get('/en/property-for-sale-in-greece?utm_source=x');
+  check('query string kept', q.status === 301 && (q.headers.get('location') ?? '').endsWith('?utm_source=x'), `${q.status} ${q.headers.get('location')}`);
+  const rs = await get('/rs/nekretnine');
+  check('/rs → /sr (legacy rule)', rs.status === 301 && loc(rs) === '/sr/nekretnine', `${rs.status} ${loc(rs)}`);
+  const id = await get('/en/some-villa-ID10008');
+  check('/<lang>/…-ID123 → the property page (legacy rule)', id.status === 301 && loc(id) === '/en/property/10008', `${id.status} ${loc(id)}`);
+  const gone = await get('/en/property/999999');
+  check('a property that is not published answers 410 (D6)', gone.status === 410, String(gone.status));
+  const there = await get('/en/property/10008');
+  check('a published property answers 200', there.status === 200, String(there.status));
+  for (const p of ['/en', '/en/properties', '/en/services/seller-services', '/en/contact']) {
+    const s = (await get(p)).status;
     check(`live page ${p} not redirected`, s === 200, String(s));
   }
 } finally {

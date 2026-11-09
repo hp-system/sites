@@ -2,7 +2,7 @@
   "_note": "Briefs + new texts for pages outside George's spec, in the spec's 1_Pages form (D-20261106-SS-2). EN only until stage 5; every other language is written later from the brief with its own keyword. Status: draft → Sergei approves → imported and checked by scripts/seo-spec-rules.mjs. Facts only from the site's own pages and decisions; no fee %, no term, no portal names, no «free», no «within 24 hours» (open questions for George), no CRM name (R-005), no counts (README 13).",
   "batch": 1,
   "date": "2026-11-09",
-  "status": "draft",
+  "status": "approved",
   "pages": [
     {
       "id": "P24",
@@ -12,9 +12,14 @@
       "titleFocus": "Owner intent: sell a property in Halkidiki",
       "primaryKeyword": "sell property in Halkidiki",
       "primaryVolume": "pending (GSC queries + keyword tool, D-20261106-SS-2)",
-      "secondaryKeywords": ["sell house in Greece", "sell my property in Greece", "real estate agent Halkidiki", "sell property in Greece from abroad"],
+      "secondaryKeywords": [
+        "sell house in Greece",
+        "sell my property in Greece",
+        "real estate agent Halkidiki",
+        "sell property in Greece from abroad"
+      ],
       "keywordRationale": "Owners are the site's second audience. Old /en/sell: 19,462 impressions in 16 months, 1,078 GA views in 2026 (export 2026-11-06); Greek seller pages and the Bulgarian «продавам къща в гърция» queries (seo-strategy-keywords) show the intent in every language.",
-      "title": "Sell Your Property in Halkidiki | Halkidiki Properties",
+      "title": "Sell Your Property in Halkidiki",
       "meta": "Selling a home or land in Halkidiki? A local agency since 2007 values it, presents it to buyers in Greece and abroad and handles the sale to the notary.",
       "h1": "Sell Your Property in Halkidiki",
       "h2": [
@@ -34,30 +39,72 @@
       "contentBrief": "For owners who want to sell a home, plot or business property in Halkidiki. Explain the path from first contact to the notary, the documents to prepare (general, lawyer confirms), how the property is presented (own photos and video, our buyer database, partner agencies, Greek and international portals — no names), selling from abroad through a power of attorney, and the three ways to work with us (standard assignment, exclusive assignment, private sale to registered members). Fees and duration: agreed in writing in the assignment, no figures. No promises of speed or price.",
       "targetWords": 800,
       "pageType": "content",
-      "schema": ["Article", "BreadcrumbList", "FAQPage"],
-      "breadcrumb": ["Home", "Sell"],
+      "schema": [
+        "Article",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Sell"
+      ],
       "heroAlt": "Seafront house in Halkidiki presented for sale",
       "ogTitle": "Sell Your Property in Halkidiki – Local Agency Since 2007",
       "anchor": "sell your property in Halkidiki",
       "linksOut": [
-        { "anchor": "exclusive assignment", "href": "/en/work-with-us-exclusively" },
-        { "anchor": "add your property", "href": "/en/add-your-property" },
-        { "anchor": "Halkidiki property for sale", "href": "/en/properties" },
-        { "anchor": "Exclusive", "href": "/en/exclusive" }
+        {
+          "anchor": "exclusive assignment",
+          "href": "/en/work-with-us-exclusively"
+        },
+        {
+          "anchor": "add your property",
+          "href": "/en/add-your-property"
+        },
+        {
+          "anchor": "Halkidiki property for sale",
+          "href": "/en/properties"
+        },
+        {
+          "anchor": "Exclusive",
+          "href": "/en/exclusive"
+        }
       ],
-      "linkedFrom": ["P01 Homepage (Sell section)", "P25 Exclusive assignment", "P26 Add your property", "header menu Sell"],
+      "linkedFrom": [
+        "P01 Homepage (Sell section)",
+        "P25 Exclusive assignment",
+        "P26 Add your property",
+        "header menu Sell"
+      ],
       "cta": "Tell us about your property",
-      "oldUrls": ["/en/sell", "/el/πωληση", "/el/εντολη-αναθεσης", "/el/συνεργαστειτε-μαζι-μας"],
+      "oldUrls": [
+        "/en/sell",
+        "/el/πωληση",
+        "/el/εντολη-αναθεσης",
+        "/el/συνεργαστειτε-μαζι-μας"
+      ],
       "lawyerCheck": "YES — the documents list (title deed, topographic plan, energy certificate, legalisation where needed) and the power-of-attorney line.",
       "editorialLine": "Updated November 2026",
       "intro": "<p>Selling a property in Halkidiki starts with a realistic price and the right buyers. We are a local agency that has worked in Northern Greece since 2007 and sells only here. We visit your home or land, agree the price with you, present it to buyers in Greece and abroad, and stay with you until the contract is signed at the notary. You can work with us while you live in Greece or from abroad.</p>",
       "body": "<h2>How selling with us works</h2><p>Every sale follows the same clear steps, so you always know what happens next:</p><ul><li><strong>You tell us about the property:</strong> type, area, size and the price you have in mind.</li><li><strong>We visit and check it:</strong> an agent sees the property, looks at the documents and gives you a realistic estimate based on recent sales in the area.</li><li><strong>We sign an assignment:</strong> the terms of our cooperation are agreed with you and written down before any marketing starts.</li><li><strong>We present it to buyers:</strong> photos, video and a full listing go to the buyers who are looking for exactly this kind of property.</li><li><strong>Viewings and offers:</strong> we arrange visits in person or by video and bring every serious offer to you.</li><li><strong>From agreement to notary:</strong> once you accept an offer, we coordinate the lawyers, the engineer and the notary until the final contract is signed.</li></ul><h2>What we need from you</h2><p>A sale goes faster when the paperwork is ready before a buyer appears. In most cases the notary asks for:</p><ul><li>the title deed and its registration at the land registry or cadastre</li><li>a topographic plan for plots and for houses on their own land</li><li>an energy certificate for homes</li><li>an engineer's certificate that the building has no unauthorised works, or that they have been legalised</li></ul><p>Every property is different, so your lawyer and engineer confirm the exact list. If something is missing, we tell you early and can recommend professionals who handle it.</p><h2>How we present your property to buyers</h2><p>Buyers decide on photos first. We make our own photos and video of your property, write a clear description and publish it on our site, which is visited by buyers from Greece and many other countries. The property is shown to the registered buyers in our database who are looking for this type and area, to the partner agencies we work with, and on Greek and international property portals.</p><p>Guests on our site see only the municipality of your property, never the exact address. The exact location is shared with a buyer only when a viewing is arranged.</p><h2>Selling while you live abroad</h2><p>Many owners in Halkidiki live in another country. You do not need to travel for every step. With a power of attorney signed at a Greek notary or a Greek consulate, a lawyer or a person you trust can act for you. We organise the viewings, keep you informed after each one and send you every offer in writing, so you decide from home.</p><h2>Three ways to work with us</h2><ul><li><strong>Standard assignment:</strong> we market your property alongside other agencies you may work with.</li><li><strong>Exclusive assignment:</strong> we are your only agency and give your property our full attention. See <strong>exclusive assignment</strong> for what this includes.</li><li><strong>Private sale:</strong> for owners who do not want their property advertised, we show it only to registered buyers we know.</li></ul><h2>What it costs</h2><p>You pay our fee only when your property is sold. The fee and the duration of the assignment are agreed with you in advance and written in the assignment you sign, so there are no surprises at the end. Ask us for the terms that apply to your property.</p>",
       "faq": [
-        { "q": "How long does it take to sell a property in Halkidiki?", "a": "It depends mostly on the price, the area and the season. A property priced in line with recent sales and with its documents ready sells faster. We give you a realistic estimate after we see the property." },
-        { "q": "Which documents do I need to sell my property in Greece?", "a": "In most cases the title deed with its registration, a topographic plan for land and houses on their own plot, an energy certificate for homes and an engineer's certificate about unauthorised works. Your lawyer and engineer confirm the exact list for your property." },
-        { "q": "Can I sell my property in Greece without travelling there?", "a": "Yes. With a power of attorney signed at a Greek notary or a Greek consulate, a lawyer or a person you trust can sign for you. We handle the viewings and keep you informed of every offer." },
-        { "q": "Do I have to give you an exclusive assignment?", "a": "No. You can choose a standard assignment, an exclusive assignment or a private sale to registered buyers. The terms of each are agreed with you in writing before we start." }
-      ]
+        {
+          "q": "How long does it take to sell a property in Halkidiki?",
+          "a": "It depends mostly on the price, the area and the season. A property priced in line with recent sales and with its documents ready sells faster. We give you a realistic estimate after we see the property."
+        },
+        {
+          "q": "Which documents do I need to sell my property in Greece?",
+          "a": "In most cases the title deed with its registration, a topographic plan for land and houses on their own plot, an energy certificate for homes and an engineer's certificate about unauthorised works. Your lawyer and engineer confirm the exact list for your property."
+        },
+        {
+          "q": "Can I sell my property in Greece without travelling there?",
+          "a": "Yes. With a power of attorney signed at a Greek notary or a Greek consulate, a lawyer or a person you trust can sign for you. We handle the viewings and keep you informed of every offer."
+        },
+        {
+          "q": "Do I have to give you an exclusive assignment?",
+          "a": "No. You can choose a standard assignment, an exclusive assignment or a private sale to registered buyers. The terms of each are agreed with you in writing before we start."
+        }
+      ],
+      "ctaHref": "/en/add-your-property"
     },
     {
       "id": "P25",
@@ -67,7 +114,11 @@
       "titleFocus": "Owner intent: exclusive mandate with one agency",
       "primaryKeyword": "exclusive real estate agent Halkidiki",
       "primaryVolume": "pending (GSC queries + keyword tool, D-20261106-SS-2)",
-      "secondaryKeywords": ["exclusive listing agreement Greece", "exclusive property mandate Greece", "sell property exclusively"],
+      "secondaryKeywords": [
+        "exclusive listing agreement Greece",
+        "exclusive property mandate Greece",
+        "sell property exclusively"
+      ],
       "keywordRationale": "/el/εντολη-αναθεσης (assignment order) has 203 clicks in 16 months, the strongest seller URL; /en/work-with-us-exclusively 193 GA views in 2026 (export 2026-11-06).",
       "title": "Exclusive Assignment: Sell With One Agency in Halkidiki",
       "meta": "Give one agency an exclusive assignment to sell your Halkidiki property: a realistic price, full marketing, priority with buyers and one person for you.",
@@ -88,28 +139,63 @@
       "contentBrief": "Explain the exclusive assignment to owners: one agency, full marketing effort, priority with our buyers and partner agencies, one contact, honest pricing (we take exclusives only after a realistic estimate). Terms, duration and fee: agreed and written in the assignment, no figures (Sergei 2026-11-09). No «free», no update counts.",
       "targetWords": 650,
       "pageType": "content",
-      "schema": ["Article", "BreadcrumbList", "FAQPage"],
-      "breadcrumb": ["Home", "Sell", "Exclusive assignment"],
+      "schema": [
+        "Article",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Sell",
+        "Exclusive assignment"
+      ],
       "heroAlt": "Owner and agent signing an exclusive assignment for a property in Halkidiki",
       "ogTitle": "Exclusive Assignment – Sell Your Halkidiki Property With One Agency",
       "anchor": "exclusive assignment",
       "linksOut": [
-        { "anchor": "sell your property in Halkidiki", "href": "/en/sell" },
-        { "anchor": "add your property", "href": "/en/add-your-property" }
+        {
+          "anchor": "sell your property in Halkidiki",
+          "href": "/en/sell"
+        },
+        {
+          "anchor": "add your property",
+          "href": "/en/add-your-property"
+        }
       ],
-      "linkedFrom": ["P24 Sell", "header menu Sell"],
+      "linkedFrom": [
+        "P24 Sell",
+        "header menu Sell"
+      ],
       "cta": "Ask for an estimate",
-      "oldUrls": ["/en/work-with-us-exclusively", "/el/συνεργασου-μαζι-μας-αποκλειστικα", "/bg/сътрудничете-изключително-с-нас", "/en/sell/work-with-us-exclusively"],
+      "oldUrls": [
+        "/en/work-with-us-exclusively",
+        "/el/συνεργασου-μαζι-μας-αποκλειστικα",
+        "/bg/сътрудничете-изключително-с-нас",
+        "/en/sell/work-with-us-exclusively"
+      ],
       "lawyerCheck": "YES — the line «the agreed fee is due even if you or another agency sell during the assignment» describes the contract; confirm the wording.",
       "editorialLine": "Updated November 2026",
       "intro": "<p>With an exclusive assignment, one agency takes full responsibility for selling your property. You deal with one person, your property gets our full marketing effort, and buyers see one consistent price instead of the same home listed by several agencies. We accept an exclusive only after we have seen the property and agreed a realistic price with you.</p>",
       "body": "<h2>What an exclusive assignment means</h2><p>An exclusive assignment is a written agreement in which you give one licensed agency the right to sell your property for an agreed period. During that period other agencies do not advertise it, and the agreed fee is due when the property is sold, even if the buyer finds it in another way. In return, the agency commits its time and budget to your property.</p><h2>What you get with an exclusive assignment</h2><ul><li><strong>Full marketing:</strong> our own photos and video, a complete listing and promotion on our site, social media and the property portals we use.</li><li><strong>Our buyers first:</strong> we present your property to the registered buyers in our database who are looking for this type and area.</li><li><strong>Partner agencies:</strong> the agencies we cooperate with can bring their buyers, through us, at the same price.</li><li><strong>Priority in viewings:</strong> exclusive properties come first when we plan viewings.</li><li><strong>One contact:</strong> one agent knows your property and reports to you after every viewing and offer.</li></ul><h2>We start with a realistic price</h2><p>An overpriced property stays on the market and loses interest. Before we sign, we visit the property, compare it with recent sales in the same area and agree a price with you that buyers will consider. If we believe the price cannot sell, we tell you openly rather than take the assignment.</p><h2>How it works, step by step</h2><ul><li>We visit the property and check its documents.</li><li>We agree the price and the terms with you and sign the assignment.</li><li>We prepare the photos, video and listing, and start the marketing.</li><li>We arrange viewings and bring every serious offer to you.</li><li>When you accept an offer, we coordinate the lawyers and the notary until the final contract.</li></ul><h2>Terms, duration and fee</h2><p>The duration of the assignment and our fee are agreed with you in advance and written in the assignment you sign. You pay the fee only when the property is sold. Ask us for the terms that apply to your property.</p>",
       "faq": [
-        { "q": "What is an exclusive assignment in Greece?", "a": "It is a written agreement that gives one licensed agency the right to sell your property for an agreed period. Other agencies do not advertise it during that period, and the agreed fee is due when the property is sold." },
-        { "q": "Why give one agency an exclusive assignment?", "a": "Your property gets the agency's full marketing effort, priority with its buyers and partner agencies, and one consistent price on the market. You also deal with one person instead of several agencies." },
-        { "q": "Can I still sell the property myself?", "a": "The assignment covers the whole sale for its duration, so the agreed fee applies however the buyer is found. If you already know a possible buyer, tell us before signing and we agree how to handle it in writing." },
-        { "q": "How long does an exclusive assignment last?", "a": "The duration is agreed with you and written in the assignment before we start. Ask us for the terms that apply to your property." }
-      ]
+        {
+          "q": "What is an exclusive assignment in Greece?",
+          "a": "It is a written agreement that gives one licensed agency the right to sell your property for an agreed period. Other agencies do not advertise it during that period, and the agreed fee is due when the property is sold."
+        },
+        {
+          "q": "Why give one agency an exclusive assignment?",
+          "a": "Your property gets the agency's full marketing effort, priority with its buyers and partner agencies, and one consistent price on the market. You also deal with one person instead of several agencies."
+        },
+        {
+          "q": "Can I still sell the property myself?",
+          "a": "The assignment covers the whole sale for its duration, so the agreed fee applies however the buyer is found. If you already know a possible buyer, tell us before signing and we agree how to handle it in writing."
+        },
+        {
+          "q": "How long does an exclusive assignment last?",
+          "a": "The duration is agreed with you and written in the assignment before we start. Ask us for the terms that apply to your property."
+        }
+      ],
+      "ctaHref": "/en/add-your-property"
     },
     {
       "id": "P52",
@@ -119,7 +205,11 @@
       "titleFocus": "Buyer intent at the top of the market: luxury property Halkidiki, private access",
       "primaryKeyword": "luxury property Halkidiki",
       "primaryVolume": "pending (GSC queries + keyword tool, D-20261106-SS-2)",
-      "secondaryKeywords": ["off-market property Greece", "luxury villas Halkidiki private", "exclusive real estate Greece"],
+      "secondaryKeywords": [
+        "off-market property Greece",
+        "luxury villas Halkidiki private",
+        "exclusive real estate Greece"
+      ],
       "keywordRationale": "/en/vip had 1,327 GA views in 2026 and /el/vip 919 (export 2026-11-06); Exclusive is its successor (D-20261105-SS-1). Not the villas list P07: this page sells access, not a listing.",
       "title": "Exclusive: Private Access to Luxury Property in Halkidiki",
       "meta": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki: off-market properties, exact locations, documents and one agent for you.",
@@ -140,29 +230,69 @@
       "contentBrief": "Exclusive = our private club for buyers of homes from €1 million (D-20261105-SS-1), successor of VIP. Say clearly who it is for. Members see what guests and members do not: exact location, price history, videos, documents and floor plans (R-006), plus the private collection never advertised, and one agent. Joining: a registered member presses «Join Exclusive», the request is reviewed by our team, access is opened after approval (Sergei 2026-11-09). Discretion. No counts, no CRM name.",
       "targetWords": 550,
       "pageType": "content",
-      "schema": ["Article", "BreadcrumbList", "FAQPage"],
-      "breadcrumb": ["Home", "Exclusive"],
+      "schema": [
+        "Article",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Exclusive"
+      ],
       "heroAlt": "Luxury villa with a private pool by the sea in Halkidiki",
       "ogTitle": "Exclusive – Private Access to Luxury Property in Halkidiki",
       "anchor": "Exclusive",
       "linksOut": [
-        { "anchor": "villas for sale in Halkidiki", "href": "/en/properties/villas-for-sale" },
-        { "anchor": "Greece Golden Visa", "href": "/en/golden-visa-greece" },
-        { "anchor": "sell your property in Halkidiki", "href": "/en/sell" }
+        {
+          "anchor": "villas for sale in Halkidiki",
+          "href": "/en/properties/villas-for-sale"
+        },
+        {
+          "anchor": "Greece Golden Visa",
+          "href": "/en/golden-visa-greece"
+        },
+        {
+          "anchor": "sell your property in Halkidiki",
+          "href": "/en/sell"
+        }
       ],
-      "linkedFrom": ["header menu Exclusive", "P24 Sell", "P07 Villas / luxury properties", "member panel"],
+      "linkedFrom": [
+        "header menu Exclusive",
+        "P24 Sell",
+        "P07 Villas / luxury properties",
+        "member panel"
+      ],
       "cta": "Join Exclusive",
-      "oldUrls": ["/en/vip", "/el/vip", "/sr/vip", "/bg/vip"],
+      "oldUrls": [
+        "/en/vip",
+        "/el/vip",
+        "/sr/vip",
+        "/bg/vip"
+      ],
       "lawyerCheck": "NO",
       "editorialLine": "",
       "intro": "<p>Exclusive is our private club for buyers looking for homes from €1 million in Halkidiki. Members see the full details of every property, including some that are never advertised, and work with one agent who knows what they are looking for. If you are searching at this level and value discretion, Exclusive gives you the complete picture before you travel.</p>",
       "body": "<h2>Who Exclusive is for</h2><p>Exclusive is for buyers of luxury property: seafront villas, estates, large plots by the sea and special properties from €1 million upwards. It is not a general newsletter. If your budget is lower, our member account already shows you more than a guest sees, and our listings cover every price range.</p><h2>What Exclusive members see</h2><p>Guests on our site see the municipality of a property and its public photos. Members see more. Exclusive members see everything we know about the property:</p><ul><li><strong>the exact location</strong> of the property</li><li><strong>the price history</strong></li><li><strong>videos, documents and floor plans</strong></li><li><strong>new properties first</strong>, before they are published</li></ul><h2>Properties that are never advertised</h2><p>Some owners of high-value homes do not want their property on any portal. We keep these properties in a private collection that only Exclusive members can see. Many of the most interesting properties in Halkidiki change hands this way, without ever being advertised.</p><h2>How to join</h2><ul><li><strong>Create a member account</strong> on our site, if you do not have one yet.</li><li><strong>Press «Join Exclusive»</strong> in your account.</li><li><strong>Our team reviews your request</strong> and may contact you briefly to understand what you are looking for.</li><li><strong>We open your access</strong> once the request is approved, and introduce you to your agent.</li></ul><h2>Discretion</h2><p>Your search, your budget and the properties you look at stay between you and our team. The same applies to the owners: details of the private collection are shared only with approved members.</p>",
       "faq": [
-        { "q": "What is Exclusive?", "a": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki. Members see the full details of every property, including a private collection that is never advertised, and work with one agent." },
-        { "q": "Who can join Exclusive?", "a": "Registered members who are looking for property from €1 million. Every request is reviewed by our team before access is opened." },
-        { "q": "How do I join Exclusive?", "a": "Create a member account, press «Join Exclusive» in your account and our team reviews your request. Once it is approved, we open your access and introduce you to your agent." },
-        { "q": "Is my search kept confidential?", "a": "Yes. Your search, your budget and the properties you look at stay between you and our team." }
-      ]
+        {
+          "q": "What is Exclusive?",
+          "a": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki. Members see the full details of every property, including a private collection that is never advertised, and work with one agent."
+        },
+        {
+          "q": "Who can join Exclusive?",
+          "a": "Registered members who are looking for property from €1 million. Every request is reviewed by our team before access is opened."
+        },
+        {
+          "q": "How do I join Exclusive?",
+          "a": "Create a member account, press «Join Exclusive» in your account and our team reviews your request. Once it is approved, we open your access and introduce you to your agent."
+        },
+        {
+          "q": "Is my search kept confidential?",
+          "a": "Yes. Your search, your budget and the properties you look at stay between you and our team."
+        }
+      ],
+      "ctaHref": "/en/login"
     }
-  ]
+  ],
+  "approved": "Sergei 2026-11-09: «так добавляй сразу на локальный сайт»"
 }

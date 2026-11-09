@@ -44,7 +44,7 @@ try {
     check('prices: note "updated continuously"', /updated continuously/.test(v), 'method note');
   }
 
-  for (const p of ['/en/why-register', '/en/why-register/buyer', '/en/why-register/owner', '/en/vip']) {
+  for (const p of ['/en/why-register', '/en/why-register/buyer', '/en/why-register/owner', '/en/vip'].filter((x) => !movedTo(x))) {   // /en/vip → /en/exclusive (batch 1)
     const h = await checkPage(p, { form: p === '/en/vip', types: p === '/en/why-register/buyer' ? ['FAQPage'] : [] });
     if (!h) continue;
     const v = visible(h);
@@ -52,8 +52,8 @@ try {
     check(`${p}: sign-in / register CTA`, /href="\/en\/login"/.test(h), 'CTA to /en/login');
     if (p !== '/en/why-register/owner') check(`${p}: mentions Member and Exclusive`, /member/i.test(v) && /Exclusive/.test(v), 'access model');
   }
-  const vip = await (await fetch('http://127.0.0.1:4331/en/vip')).text();
-  check('/en/vip: no budget threshold or price', !/500[.,]000|€\s?500/.test(visible(vip)), 'no prices');
+  const vipR = await fetch('http://127.0.0.1:4331/en/vip', { redirect: 'manual' });
+  check('/en/vip → 301 to Exclusive (batch 1)', vipR.status === 301 && vipR.headers.get('location') === '/en/exclusive', `${vipR.status} ${vipR.headers.get('location')}`);
 
   const ag = await checkPage('/en/real-estate-agent', { form: true });
   if (ag) {

@@ -40,6 +40,8 @@ import ServicesHub, { type Role } from './ServicesHub.astro';
 import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
+import SpecText from './SpecText.astro';
+import { specByPath, specTitle } from '../lib/seo-pages';
 
 interface Props { page: InfoPage }
 const { page } = Astro.props;
@@ -89,6 +91,11 @@ const { Content, headings } = await render(page);
 const toc = d.toc ? headings.filter((h) => h.depth === 2 && h.text.trim()) : [];
 
 const url = d.path;
+// A page with an approved new text (own page P22+, D-20261106-SS-2) keeps this design (Sergei
+// 2026-11-09: «текст в одобренный дизайн»): title, meta, H1, intro, body and FAQ come from the
+// new text; the old Markdown body and the old FAQ are not shown.
+const ownAt = specByPath(url);
+const fresh = ownAt && Number(ownAt.id.slice(1)) > 21 && ownAt.lang === lang ? ownAt : undefined;
 // An info page that is the English version of an older content page (about, partners,
 // services, contact, sell…) declares that page's translations as its alternates, so every
 // member of the hreflang cluster (and the sitemap) lists the same set. Otherwise: English only.
@@ -105,7 +112,7 @@ const imageAlt = d.image_alt || (d.image ? d.h1 : HERO_SHOTS[0]?.alt.en ?? d.h1)
 // Our watermarked media come in _800w and _1920w (3:2): a hero from there gets a srcset.
 const heroSrcset = /_1920w\.jpg$/.test(d.image)
   ? `${d.image.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${d.image} 1920w` : '';
-const title = `${d.title} | ${brand.name}`;
+const title = fresh ? specTitle(fresh.title, brand.name) : `${d.title} | ${brand.name}`;
 const contact = pageExists('contact') && pageLangs('contact').includes(lang) ? contentUrl('contact', lang) : '/en/contact';
 const terms = '/en/terms-of-services';
 const privacy = privacyPath(lang);
@@ -190,7 +197,7 @@ const org = {
   areaServed: brand.market.areaServed,
   ...(co.foundedYear ? { foundingDate: String(co.foundedYear) } : {}),
 };
-const crumbs = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: d.h1, path: url }];
+const crumbs = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: fresh?.h1 ?? d.h1, path: url }];
 const jsonLd: unknown[] = [
   {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -206,6 +213,8 @@ if (d.schema === 'Service') {
       itemListElement: d.catalog.map((c) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: c.name, url: abs(c.url) } })),
     } } : {}),
   });
+} else if (fresh) {
+  jsonLd.push({ '@context': 'https://schema.org', '@type': 'Article', headline: fresh.h1, description: fresh.meta, url: abs(url), inLanguage: lang, author: org, publisher: org });
 } else if (d.schema !== 'FAQPage') {
   jsonLd.push({
     '@context': 'https://schema.org', '@type': d.schema, name: d.h1, description: d.description, url: abs(url),
@@ -222,14 +231,15 @@ if (d.widget === 'prices') {
     hasPart: t.homes.map((r) => ({ '@type': 'Dataset', name: `${r.name}: median €/m² ${r.perSqm}`, description: `Homes in ${r.name}, median asking price per m²` })),
   });
 }
-if (d.faq.length) {
+const faqItems = fresh ? fresh.faq : d.faq;
+if (faqItems.length) {
   jsonLd.push({
     '@context': 'https://schema.org', '@type': 'FAQPage',
-    mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    mainEntity: faqItems.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   });
 }
 ---
-<Base lang={lang} title={title} description={d.description} pathFor={pathFor} langs={langs} jsonLd={jsonLd}
+<Base lang={lang} title={title} description={fresh?.meta ?? d.description} pathFor={pathFor} langs={langs} jsonLd={jsonLd} ogTitle={fresh?.ogTitle}
       ogImage={image ? abs(image) : undefined} ogImageAlt={imageAlt}>
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
@@ -245,8 +255,8 @@ if (d.faq.length) {
           ))}
           <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
         </nav>
-        <h1 class="t-display info-h1">{d.h1}</h1>
-        {d.lead && <p class="info-lead">{d.lead}</p>}
+        <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+        {fresh ? <SpecText page={fresh} part="intro" lang={lang} /> : d.lead && <p class="info-lead">{d.lead}</p>}
         {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
         {d.form && (
           <p class="w1-acts w1-d">
@@ -270,7 +280,7 @@ if (d.faq.length) {
       <div class="wrap">
         <div class="w1-how__head">
           {howH2 && <h2 id="w1-how-h" class="w1-h2 w1-d">{howH2}</h2>}
-          <div class="prose w1-how__p"><Content /></div>
+          {!fresh && <div class="prose w1-how__p"><Content /></div>}
           {d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
         </div>
         {d.widget && <div class="prose"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} /></div>}
@@ -287,7 +297,7 @@ if (d.faq.length) {
             </ul>
           </div>
         )}
-        {d.faq.length > 0 && (
+        {!fresh && d.faq.length > 0 && (
           <div class="prose">
             <section class="faq" aria-label={ui.faq}>
               {d.faq.map((f, i) => (
@@ -298,6 +308,8 @@ if (d.faq.length) {
         )}
       </div>
     </section>
+
+    {fresh && <SpecText page={fresh} part="rest" lang={lang} />}
 
     {d.form && (
       <section class="w1-form" id="form">

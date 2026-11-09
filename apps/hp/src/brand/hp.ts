@@ -46,6 +46,7 @@ export const hp: Brand = {
       'nea propontida': 'Νέα Προποντίδα',
       'αριστοτελη': 'Αριστοτέλης',         'aristoteli': 'Αριστοτέλης',
       'πολυγυρο': 'Πολύγυρος',             'polygyro': 'Πολύγυρος',
+      'πολυγυρου': 'Πολύγυρος',           // genitive «Δήμος Πολυγύρου» (seen 2026-11-09 on /en/property/6544)
     },
   },
   // George (21/10/2026, by click): AI labels only where the AI Act requires them; articles carry

@@ -33,7 +33,10 @@ type ListResponse = { total: number; page: number; limit: number; items: SitePro
  * may cut first; no limit — the 2026-11-08 hang.
  */
 const REQUEST_MS = 8_000;
-const FETCH_ALL_MS = 15_000;
+// 2026-11-09: the full pull takes ~48 s (CRM: 3.8 s per page of 60, Q-20261109-SS-1), so a 15 s cap
+// meant the cache never filled and every page waited and failed (hp-v0.19.0, rolled back). The pull
+// now runs only in the background (see «Κοινή μνήμη» below); this cap only stops a runaway one.
+const FETCH_ALL_MS = 180_000;
 const DOWN_MS = 30_000;
 let downUntil = 0;
 
@@ -164,13 +167,21 @@ async function fetchAll(memberToken?: string, country?: string): Promise<SitePro
 //    ότι όλα τα μέλη βλέπουν το ίδιο σύνολο· αν αύριο το API δώσει προσωπική
 //    συλλογή ανά μέλος, ένα κοινό cache θα τη διέρρεε **μεταξύ μελών**.
 //    Γι' αυτό το κλειδί είναι **το ίδιο το token**, με φράγμα στο πλήθος.
-const TTL = 60_000;        // μέχρι εδώ: φρέσκο
-const STALE_MAX = 600_000; // πάνω από εδώ: δεν σερβίρουμε παλιό, περιμένουμε
-const MAX_VIEWERS = 40;    // φράγμα μνήμης· ο ανώνυμος δεν εξώνεται ποτέ
+// 2026-11-09 (Sergei: «страница должна загружаться за 2 секунды»): a visitor never waits for the
+// CRM pull. The anonymous sets are pulled at start and kept warm in the background; a stale set is
+// always served at once and refreshed behind it; a cold set is waited for at most WAIT_MS, then the
+// page renders without properties (the callers' `apiDown` path) while the pull goes on.
+// Rejected: STALE_MAX (wait when older than 10 min) — with a 48 s pull that was the 29–48 s hang
+// the 30-min monitor hit every time; a longer per-visit wait — no wait is short enough at 48 s.
+const TTL = 300_000;         // fresher than this: no refresh
+const REFRESH_MS = 240_000;  // the anonymous sets are refreshed this often, visitors or not
+const WAIT_MS = 2_000;       // the longest a visitor waits for a set that is not in memory yet
+const MAX_VIEWERS = 40;      // φράγμα μνήμης· ο ανώνυμος δεν εξώνεται ποτέ
 
 type Entry = { at: number; items: SiteProperty[] };
 const caches = new Map<string, Entry>();
 const inflights = new Map<string, Promise<SiteProperty[]>>();
+const coldFrom = new Map<string, number>();   // when the first visitor started waiting on a cold set
 
 /** Κλειδί θεατή. Ο ανώνυμος είναι σταθερός· κάθε μέλος έχει δικό του.
  *  #18: the country is part of the key — the API answers a visitor from Greece with a shorter
@@ -178,6 +189,15 @@ const inflights = new Map<string, Promise<SiteProperty[]>>();
  *  from everyone else). Anonymous keys are at most one per country code, so they stay bounded. */
 function viewerKey(memberToken?: string, country?: string): string {
   return (memberToken ? `m:${memberToken}` : 'anon') + (country ? `|${country}` : '');
+}
+
+/** The CRM applies one country rule: Greece (energy certificates, D-20261104-GT-2). Every other
+ *  country gets the same set as no country (measured 2026-11-04: DE and none both 23 pages, GR 14;
+ *  CHG-20261104-SS-2). So the site keeps two anonymous sets, not one per country: a visitor from a
+ *  rare country no longer starts a cold 48 s pull of its own (the 30-min monitor did exactly that).
+ *  ⚠ If the CRM ever adds a rule for another country, add it here. */
+export function countryRule(country?: string): string | undefined {
+  return country?.toUpperCase() === 'GR' ? 'GR' : undefined;
 }
 
 /** Κρατά τη μνήμη φραγμένη — πετά την παλαιότερη εγγραφή ΜΕΛΟΥΣ, ποτέ ανώνυμη. */
@@ -213,15 +233,43 @@ function revalidate(memberToken?: string, country?: string): Promise<SitePropert
  *  collection, similar, counter). Leave it out for the property page lookup and ID search (they
  *  open by link or code for everyone), and for the sitemap and feeds. */
 export async function allProperties(memberToken?: string, country?: string): Promise<SiteProperty[]> {
-  const key = viewerKey(memberToken, country);
+  warm();
+  const c = countryRule(country);
+  const key = viewerKey(memberToken, c);
   const hit = caches.get(key);
-  const age = hit ? Date.now() - hit.at : Infinity;
-  if (hit && age < TTL) return hit.items;
-  if (hit && age < STALE_MAX) {
-    void revalidate(memberToken, country).catch(() => {});  // από πίσω· ο καλών δεν περιμένει
+  if (hit) {
+    if (Date.now() - hit.at >= TTL) void revalidate(memberToken, c).catch(() => {});  // από πίσω
     return hit.items;
   }
-  return revalidate(memberToken, country);
+  const pull = revalidate(memberToken, c);
+  pull.catch(() => {});                       // the pull goes on even if this visitor stops waiting
+  // A member whose own set is not in memory yet sees the anonymous set meanwhile: it holds less,
+  // never more (locked cards stay locked), so nothing leaks; the member set arrives behind it.
+  const anon = memberToken ? caches.get(viewerKey(undefined, c)) : undefined;
+  if (anon) return anon.items;
+  // One page asks for the set several times in a row (home + filter sheet): the wait is shared
+  // from the first ask, so a cold page costs WAIT_MS once, not once per block.
+  if (!coldFrom.has(key)) { coldFrom.set(key, Date.now()); void pull.finally(() => coldFrom.delete(key)).catch(() => {}); }
+  const left = Math.max(0, (coldFrom.get(key) ?? Date.now()) + WAIT_MS - Date.now());
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const late = new Promise<never>((_, no) => {
+    timer = setTimeout(() => no(new Error(`property set not in memory yet (waited ${WAIT_MS} ms; the pull goes on)`)), left);
+  });
+  try { return await Promise.race([pull, late]); } finally { clearTimeout(timer); }
+}
+
+/** Pulls both anonymous sets once at start and then every REFRESH_MS, one after the other (two
+ *  parallel 48 s pulls double the CRM load). Started by the first call; the timer never keeps the
+ *  process alive. Rejected: warming per country — see `countryRule`. */
+let warmed = false;
+function warm(): void {
+  if (warmed) return;
+  warmed = true;
+  const cycle = async () => {
+    for (const c of [undefined, 'GR']) await revalidate(undefined, c).catch(() => {});
+  };
+  void cycle();
+  setInterval(() => { void cycle(); }, REFRESH_MS).unref?.();
 }
 
 /** Shape of a public property id in a URL or form: `8075`, `HP-8564` (router and /api/inquiry, B-03). */

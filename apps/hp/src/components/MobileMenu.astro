@@ -110,7 +110,7 @@ const has = (k: string) => pageExists(k as any);
       : <a class="btn" href={`${p}/login`} rel="nofollow" data-ev="register:menu">{t(lang, 'nav.login')}</a>}
       {inside && (
       <form method="post" action="/api/auth/logout" class="mm__out">
-        <button type="submit">Αποσύνδεση</button>
+        <button type="submit">{t(lang, 'pnl.logout')}</button>
       </form>
     )}
     <a class="mm__tel num" href={co.phoneHref} data-ev="call:menu"><bdi dir="ltr">{co.phone}</bdi></a>

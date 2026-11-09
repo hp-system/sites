@@ -30,6 +30,7 @@ const reg = JSON.parse(readFileSync(join(APP, 'src/data/page-registry.json'), 'u
 const targets = [];
 for (const r of reg.pages) {
   if (IDS && !IDS.has(r.id)) continue;
+  if (r.status === 'dropped') continue;   // a page decided against (P49, D-20261109-SS-4) is not a target
   if (r.source === 'spec') for (const p of spec[r.id] ?? []) { if (!LANG || p.lang === LANG) targets.push({ id: r.id, lang: p.lang, path: p.path, page: p }); }
   else for (const [lang, path] of Object.entries(r.paths ?? {})) { if (!LANG || lang === LANG) targets.push({ id: r.id, lang, path }); }
 }

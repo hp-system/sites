@@ -3721,12 +3721,12 @@
   },
   {
    "from": "/en/articles",
-   "to": "/en",
+   "to": "/en/articles/all-news",
    "status": 301,
    "lang": "en",
-   "src": "old-map",
+   "src": "override",
    "clicks": 0,
-   "note": "PENDING-articles"
+   "note": "the blog index stays (registry page, D-20261109-SS-2); the sheet sent /en/articles to the home page"
   },
   {
    "from": "/en/articles/all-news/adventure-abodes:-properties-for-outdoor-enthusiasts-in-halkidiki",

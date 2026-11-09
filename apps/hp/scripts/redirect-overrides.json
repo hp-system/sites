@@ -150,6 +150,12 @@
       "to": "/en/work-with-us-exclusively",
       "status": 301,
       "reason": "D7 «the same page»: the exclusive-assignment page exists (P25); the sheet sent it to the Sell hub"
+    },
+    {
+      "from": "/en/articles",
+      "to": "/en/articles/all-news",
+      "status": 301,
+      "reason": "the blog index stays (registry page, D-20261109-SS-2); the sheet sent /en/articles to the home page"
     }
   ],
   "moves": [],

@@ -285,7 +285,7 @@ if (spec?.faq.length) jsonLd.push({
   <main id="main" data-list-path={new URL(url, "http://x").pathname}>
     {apiDown && (
       <div class="wrap" style="padding:var(--s7) 0">
-        <p class="t-body">Τα ακίνητα δεν είναι διαθέσιμα αυτή τη στιγμή. Δοκίμασε σε λίγο.</p>
+        <p class="t-body">{t(lang, 'home.api_down')}</p>
       </div>
     )}
 

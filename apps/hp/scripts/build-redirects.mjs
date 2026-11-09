@@ -205,7 +205,7 @@ for (const row of [...rows.values()]) {
 // (`forceRedirect`, D1/D2) stays a 301; anything else waits for a decision (`review`), so a live
 // page is never hidden by accident.
 const registry = JSON.parse(readFileSync(join(HERE, '../src/data/page-registry.json'), 'utf8'));
-const regPaths = new Set(registry.pages.flatMap((p) => Object.values(p.paths ?? {})).map((p) => keyOf(p)));
+const regPaths = new Set(registry.pages.filter((p) => p.status !== 'dropped').flatMap((p) => Object.values(p.paths ?? {})).map((p) => keyOf(p)));
 const forced = (k) => overrides.forceRedirect.some((f) => k === keyOf(f.prefix) || k.startsWith(keyOf(f.prefix) + '/') || k.startsWith(keyOf(f.prefix) + '-'));
 let keptRegistry = 0;
 for (const row of [...rows.values()]) {

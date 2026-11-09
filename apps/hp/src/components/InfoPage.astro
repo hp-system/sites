@@ -50,6 +50,7 @@ const { page } = Astro.props;
 const fin = (h?: string) => { if (!h) return h as string; const r = redirectFor(h.split(/[?#]/)[0]); return r?.status === 301 ? r.to : h; };
 const d = { ...page.data,
   related: (page.data.related ?? []).map((r: any) => ({ ...r, href: fin(r.href) })),
+  cards: (page.data.cards ?? []).map((c: any) => ({ ...c, href: fin(c.href) })),
   ...(page.data.cta ? { cta: { ...page.data.cta, href: fin(page.data.cta.href) } } : {}),
 } as typeof page.data;
 const lang: Lang = d.lang;                        // #94: info pages may be in any of the 9 languages

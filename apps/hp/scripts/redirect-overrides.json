@@ -141,9 +141,9 @@
     },
     {
       "from": "/en/sell/work-with-us-exclusively",
-      "to": "/en/work-with-us-exclusively",
+      "to": "/en/sell",
       "status": 301,
-      "reason": "D7 «the same page»: the exclusive-assignment page exists (P25); the sheet sent it to the Sell hub"
+      "reason": "D-20261109-SS-5: one Sell page per language (George's sheet); the exclusive page folded into Sell"
     },
     {
       "from": "/en/articles",
@@ -195,6 +195,38 @@
     {
       "prefix": "/en/articles",
       "reason": "D-20261109-SS-2: the old EN articles fold into the guides as George's sheet says (30 articles, ~200 clicks together); the blog index from the menu stays (registry page)"
+    },
+    {
+      "prefix": "/en/work-with-us-exclusively",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
+    },
+    {
+      "prefix": "/en/sell/assign-to-halkidiki-real-estate",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
+    },
+    {
+      "prefix": "/en/sell/advertise-your-property-worldwide",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
+    },
+    {
+      "prefix": "/en/sell/make-purchase-easy",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
+    },
+    {
+      "prefix": "/en/sell/real-time-visits",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
+    },
+    {
+      "prefix": "/en/sell/secret-portfolio",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
+    },
+    {
+      "prefix": "/en/sell/the-future-of-real-estate",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
+    },
+    {
+      "prefix": "/en/sell/why-halkidiki-properties",
+      "reason": "D-20261109-SS-5: one Sell page per language, as George's sheet says"
     }
   ]
 }

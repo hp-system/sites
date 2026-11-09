@@ -4377,13 +4377,76 @@
    "note": "region"
   },
   {
+   "from": "/en/sell/advertise-your-property-worldwide",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 1,
+   "note": "content page"
+  },
+  {
+   "from": "/en/sell/assign-to-halkidiki-real-estate",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 0,
+   "note": "content page"
+  },
+  {
+   "from": "/en/sell/make-purchase-easy",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 0,
+   "note": "content page"
+  },
+  {
+   "from": "/en/sell/real-time-visits",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 0,
+   "note": "content page"
+  },
+  {
+   "from": "/en/sell/secret-portfolio",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 1,
+   "note": "content page"
+  },
+  {
+   "from": "/en/sell/the-future-of-real-estate",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 0,
+   "note": "content page"
+  },
+  {
+   "from": "/en/sell/why-halkidiki-properties",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 0,
+   "note": "content page"
+  },
+  {
    "from": "/en/sell/work-with-us-exclusively",
-   "to": "/en/work-with-us-exclusively",
+   "to": "/en/sell",
    "status": 301,
    "lang": "en",
    "src": "override",
    "clicks": 0,
-   "note": "D7 «the same page»: the exclusive-assignment page exists (P25); the sheet sent it to the Sell hub"
+   "note": "D-20261109-SS-5: one Sell page per language (George's sheet); the exclusive page folded into Sell"
   },
   {
    "from": "/en/services/buyer-services/air-water-and-road-transportation",
@@ -4798,6 +4861,15 @@
    "src": "override",
    "clicks": 0,
    "note": "D11 + D-20261109-SS-4: VIP became Exclusive P52, now built (batch 1)"
+  },
+  {
+   "from": "/en/work-with-us-exclusively",
+   "to": "/en/sell",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 1,
+   "note": "content page"
   },
   {
    "from": "/public/images/article/60/1706706818.jpg",

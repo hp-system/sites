@@ -36,6 +36,8 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
     const html = [...htmlProblems(b.intro), ...htmlProblems(b.body)];
     if (html.length) err(`HTML not allowed: ${html.join(', ')}`);
     if (JSON.stringify(bodyH2(b.body)) !== JSON.stringify(b.h2)) err('H2 outline ≠ the body\'s H2s');
+    for (const t of b.photoThemes ?? []) if (!b.h2.includes(t.after)) err(`photo theme after «${t.after}»: no such H2`);
+    if (b.standout && !b.h2.includes(b.standout)) err(`standout «${b.standout}»: no such H2`);
     if (b.faq.length !== b.faqQuestions.length || b.faq.some((x, i) => x.q !== b.faqQuestions[i])) err('FAQ answers ≠ FAQ questions');
     const text = [b.title, b.meta, b.h1, b.intro, b.body, ...b.faq.map((x) => x.a)].join(' ').replace(/<[^>]+>/g, ' ');
     if (/\b\d{3,}\s+(properties|homes|listings|villas|plots)\b/i.test(text)) err('a property count (README rule 13)');
@@ -48,6 +50,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
       linksOut: b.linksOut, linkedFrom: b.linkedFrom, cta: b.cta, ctaHref: b.ctaHref ?? '', oldUrls: b.oldUrls,
       words: words(b.intro + b.body + b.faq.map((x) => x.a).join(' ')), editorialLine: b.editorialLine ?? '',
       lawyerCheck: b.lawyerCheck ?? '', source: `brief ${f}`,
+      photoThemes: b.photoThemes ?? [], standout: b.standout ?? '',
     });
   }
 }

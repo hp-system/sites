@@ -42,7 +42,8 @@ import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
 import { specByPath, specTitle } from '../lib/seo-pages';
-import { coverOf, marked, markedSrcSet, altOf, focalStyle } from '../lib/photos';
+import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle } from '../lib/photos';
+import type { MosaicPhoto } from './SpecMosaic.astro';
 
 interface Props { page: InfoPage }
 const { page } = Astro.props;
@@ -234,12 +235,33 @@ if (d.widget === 'prices') {
   });
 }
 const faqItems = fresh ? fresh.faq : d.faq;
-// Mosaic photos: the cover of the first guest properties in the site order that have one (never locked),
-// watermarked (R-007), alt from the photo's own texts; guests see the municipality only (R-006).
-const mosaicPhotos = fresh ? items.filter((p) => !p.locked && coverOf(p.attributes)).slice(0, 4).map((p) => {
-  const c = coverOf(p.attributes)!;
-  return { src: marked(c.url, 1920), srcset: markedSrcSet(c.url), alt: altOf(c, lang, `${p.title}, Halkidiki`), style: focalStyle(c) };
-}) : [];
+// Mosaic photos, one per section by topic (the page's photoThemes, Sergei 2026-11-09: «по тематике,
+// а не рандомно»): the first guest property in the site order whose OPEN photo carries one of the
+// theme's tags (and is land / at least the minimum price, when the theme says so). Never a locked
+// property, never the same property twice; always watermarked (R-007), alt from the photo's own texts.
+const mosaicPhotos: (MosaicPhoto | null)[] = [];
+if (fresh?.photoThemes?.length) {
+  const used = new Set<string>();
+  const secH2 = (fresh.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
+  for (const h of secH2) {
+    const th = fresh.photoThemes.find((t) => t.after === h);
+    let hit: MosaicPhoto | null = null;
+    if (th) {
+      for (const p of items) {
+        if (p.locked || used.has(p.id)) continue;
+        const a = p.attributes ?? {};
+        if (th.category === 'land' && !['land', '2'].includes(String(a.category ?? '').toLowerCase())) continue;
+        if (th.minPrice && !(Number(a.public_price) >= th.minPrice)) continue;
+        const ph = photosOf(a).find((x, i) => isPhotoOpen(x, i) && x.tag && th.tags.includes(x.tag));
+        if (!ph) continue;
+        used.add(p.id);
+        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${p.title}, Halkidiki`), style: focalStyle(ph) };
+        break;
+      }
+    }
+    mosaicPhotos.push(hit);
+  }
+}
 if (faqItems.length) {
   jsonLd.push({
     '@context': 'https://schema.org', '@type': 'FAQPage',

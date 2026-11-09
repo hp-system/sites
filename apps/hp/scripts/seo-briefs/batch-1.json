@@ -122,7 +122,55 @@
           "a": "No. You can choose a standard assignment, an exclusive assignment or a private sale to registered buyers. The terms of each are agreed with you in writing before we start."
         }
       ],
-      "ctaHref": "/en/add-your-property"
+      "ctaHref": "/en/add-your-property",
+      "photoThemes": [
+        {
+          "after": "How selling with us works",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "What we need from you",
+          "tags": [
+            "land_aerial"
+          ],
+          "category": "land"
+        },
+        {
+          "after": "How we present your property to buyers",
+          "tags": [
+            "exterior_pool"
+          ]
+        },
+        {
+          "after": "Selling while you live abroad",
+          "tags": [
+            "view_sea",
+            "view_beach",
+            "view_panoramic"
+          ]
+        },
+        {
+          "after": "Three ways to work with us",
+          "tags": [
+            "exterior_terrace",
+            "exterior_garden"
+          ]
+        },
+        {
+          "after": "Exclusive assignment: one agency for your sale",
+          "tags": [
+            "exterior_aerial",
+            "view_sea",
+            "exterior_pool",
+            "exterior_facade"
+          ],
+          "minPrice": 1000000
+        }
+      ],
+      "standout": "Exclusive assignment: one agency for your sale",
+      "_photoThemes": "Sergei 2026-11-09: «промежутки картинками между блоками по тематике, а не рандомно» — one photo after each section, chosen by the photo's own tag (and land / €1M+ where the topic asks), always watermarked and open to guests."
     },
     {
       "id": "P25",

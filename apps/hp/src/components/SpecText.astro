@@ -17,7 +17,7 @@ interface Props {
    *  pick one (home, Sergei 08/11: «стоять на месте, но перелистывать SEO-текст»). Every section
    *  stays in the HTML, in the spec's order — search engines read all of it. Phones: all shown. */
   body?: 'prose' | 'rotate' | 'mosaic';
-  photos?: import('./SpecMosaic.astro').MosaicPhoto[];   // mosaic only   // mosaic: tiles in the home bento's styles (SpecMosaic, Sergei 2026-11-09)
+  photos?: (import('./SpecMosaic.astro').MosaicPhoto | null)[];   // mosaic only: the photo after each section   // mosaic: tiles in the home bento's styles (SpecMosaic, Sergei 2026-11-09)
   /** 'columns': the spec's links grouped like the footer — properties / areas / guides (home,
    *  Sergei 08/11); `more` adds the block's own guide links to the guides column. */
   links?: 'inline' | 'columns' | 'sections';
@@ -104,7 +104,7 @@ const ui = L[lang] ?? L.en;
 {part === 'intro' && page.intro && <div class="st-intro prose" set:html={page.intro} />}
 
 {part === 'rest' && body === 'mosaic' && page.body && (
-  <div class="st-mo"><div class="wrap"><SpecMosaic html={page.body} photos={photos} /></div></div>
+  <div class="st-mo"><div class="wrap"><SpecMosaic html={page.body} photos={photos} standout={page.standout} /></div></div>
 )}
 {part === 'rest' && (
   <section class="st wrap" aria-label={page.h1}>

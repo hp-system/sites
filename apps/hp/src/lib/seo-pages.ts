@@ -11,6 +11,10 @@ export type SpecPage = {
   anchor: string; anchorVariants: string[];
   linksOut: { anchor: string; href: string }[]; cta: string; editorialLine: string;
   ctaHref?: string;   // own pages (P22+): where the CTA button goes
+  /** own pages: a photo after a section, chosen by the photo's own tag (and land / min price) */
+  photoThemes?: { after: string; tags: string[]; category?: string; minPrice?: number }[];
+  /** own pages: the H2 whose block stands out (black, as the home's fact tiles) */
+  standout?: string;
 };
 
 const files = {

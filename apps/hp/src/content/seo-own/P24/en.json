@@ -117,5 +117,52 @@
   "words": 995,
   "editorialLine": "Updated November 2026",
   "lawyerCheck": "YES — the documents list (title deed, topographic plan, energy certificate, legalisation where needed) and the power-of-attorney line. Also the exclusive-assignment line «the agreed fee is due when the property is sold, however the buyer is found».",
-  "source": "brief batch-1.json"
+  "source": "brief batch-1.json",
+  "photoThemes": [
+    {
+      "after": "How selling with us works",
+      "tags": [
+        "exterior_facade"
+      ]
+    },
+    {
+      "after": "What we need from you",
+      "tags": [
+        "land_aerial"
+      ],
+      "category": "land"
+    },
+    {
+      "after": "How we present your property to buyers",
+      "tags": [
+        "exterior_pool"
+      ]
+    },
+    {
+      "after": "Selling while you live abroad",
+      "tags": [
+        "view_sea",
+        "view_beach",
+        "view_panoramic"
+      ]
+    },
+    {
+      "after": "Three ways to work with us",
+      "tags": [
+        "exterior_terrace",
+        "exterior_garden"
+      ]
+    },
+    {
+      "after": "Exclusive assignment: one agency for your sale",
+      "tags": [
+        "exterior_aerial",
+        "view_sea",
+        "exterior_pool",
+        "exterior_facade"
+      ],
+      "minPrice": 1000000
+    }
+  ],
+  "standout": "Exclusive assignment: one agency for your sale"
 }

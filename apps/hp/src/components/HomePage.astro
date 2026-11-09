@@ -127,7 +127,7 @@ const sub = (a: any) => String(a?.subcategory ?? '').toLowerCase();
 // — filter URLs are noindex + canonical to those pages. Hotels → the P22 list (facet «hotels»).
 // Pool and «above one million» have no spec page and keep their filters.
 const pageOf = (id: string, fallback: string): string =>
-  specOf(id, lang)?.path ?? (REGISTRY.pages.find((r: any) => r.id === id)?.paths?.[lang] as string | undefined) ?? fallback;
+  specOf(id, lang)?.path ?? ((REGISTRY.pages as any[]).find((r) => r.id === id)?.paths?.[lang] as string | undefined) ?? fallback;
 const COLLS: { key: string; title: string; href: string; keep: (a: any) => boolean }[] = [
   { key: 'sea',  title: t(lang, 'coll.sea'),  href: pageOf('P09', `${url}?sea_access=front`), keep: (a) => a.sea_access === 'front' },
   // 🪤 ΤΟ ΠΛΑΚΙΔΙΟ ΕΛΕΓΕ **308** ΕΝΩ Η ΑΛΗΘΕΙΑ ΕΙΝΑΙ **103** (διορθώθηκε 30/7).

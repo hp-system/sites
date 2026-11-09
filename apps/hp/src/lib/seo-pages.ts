@@ -8,6 +8,7 @@ export type SpecPage = {
   title: string; meta: string; h1: string; h2: string[]; ogTitle: string;
   intro: string; body: string; faq: { q: string; a: string }[]; faqQuestions: string[];
   schema: string[]; breadcrumb: string[]; heroAlt: string; galleryAltPattern: string;
+  anchor: string; anchorVariants: string[];
   linksOut: { anchor: string; href: string }[]; cta: string; editorialLine: string;
 };
 

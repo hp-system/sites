@@ -1,0 +1,26 @@
+# Interim sender on rw-core (P3 phase C). Host network: it reaches the CRM API on 10.90.0.1:3020
+# and the public DB on 10.90.0.2:5432 over WireGuard. Secrets only in ./sync.env (chmod 600,
+# never in git): PGPASSWORD for sync_writer.
+name: hp-public-sync
+services:
+  sync:
+    build: .
+    image: hp-public-sync:1
+    container_name: hp-public-sync
+    restart: unless-stopped
+    network_mode: host
+    env_file: ./sync.env
+    environment:
+      API: http://10.90.0.1:3020/api
+      INTERVAL: "120"
+      PGHOST: 10.90.0.2
+      PGPORT: "5432"
+      PGDATABASE: pubdb
+      PGUSER: sync_writer
+      PGSSLMODE: verify-full
+      PGSSLROOTCERT: /run/pki/ca.crt
+    volumes:
+      - ./ca.crt:/run/pki/ca.crt:ro
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "3" }

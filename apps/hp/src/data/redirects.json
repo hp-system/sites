@@ -3749,11 +3749,11 @@
   {
    "from": "/en/articles/all-news/coronavirus-and-real-estate-in-greece",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/all-news/digital-transformation:-the-role-of-technology-in-greek-real-estate",
@@ -3785,29 +3785,29 @@
   {
    "from": "/en/articles/all-news/going-solo-or-working-with-an-agent",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 1,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/all-news/halkidiki-greece",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/all-news/halkidiki-plots-for-sale",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 1,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/all-news/hidden-gems:-lesser-known-villages-halkidiki-worth-exploring",
@@ -3830,20 +3830,20 @@
   {
    "from": "/en/articles/all-news/home-decorating-tips-to-impress-buyers",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/all-news/homes-for-sale-in-halkidiki-greece",
    "to": "/en/properties/homes-for-sale",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 37,
-   "note": "type · REVIEW: the new site serves this URL today (→ /en/properties/homes-for-sale)"
+   "note": "type"
   },
   {
    "from": "/en/articles/all-news/investment-opportunities-in-halkidiki-real-estate:-a-comprehensive-guide",
@@ -3857,11 +3857,11 @@
   {
    "from": "/en/articles/all-news/looking-to-buy-a-property-in-halkidiki-your-request-is-safe-with-us",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/all-news/real-estate-is-a-good-investment",
@@ -3884,11 +3884,11 @@
   {
    "from": "/en/articles/all-news/the-best-greek-cities-to-invest-in-real-estate",
    "to": "/en/properties",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 18,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/properties)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/all-news/the-future-of-halkidiki-real-estate",
@@ -3902,56 +3902,47 @@
   {
    "from": "/en/articles/all-news/the-future-of-smart-home-technology-in-real-estate",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/business-news",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/business-news/digital-nomads-the-ultimate-halkidiki-guide-2022",
    "to": "/en/halkidiki",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 23,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/halkidiki)"
-  },
-  {
-   "from": "/en/articles/business-news/taxes-foreigners-properties-greece",
-   "to": "/en/buying-property-in-greece",
-   "status": "review",
-   "lang": "en",
-   "src": "spec",
-   "clicks": 711,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/business-news/tourism-investment",
    "to": "/en/properties",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/properties)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/buyers",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/buyers/10-reasons-to-buy-property-in-halkidiki",
@@ -3965,11 +3956,11 @@
   {
    "from": "/en/articles/buyers/adjustment-of-objective-prices-all-over-greece",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 1,
-   "note": "topic (price info → guide) · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "topic (price info → guide)"
   },
   {
    "from": "/en/articles/buyers/are-you-looking-to-buy-a-property-in-halkidiki-your-request-is-safe-with-us",
@@ -3983,65 +3974,65 @@
   {
    "from": "/en/articles/buyers/benefits-of-homeownership-in-greece",
    "to": "/en/properties",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 22,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/properties)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/buyers/buy-a-property-and-live-in-greece",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 2,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/buyers/buy-and-create-passive-income-in-halkidiki-2022",
    "to": "/en/properties",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/properties)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/buyers/european-real-estate-market-2023",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/buyers/exploring-the-allure-of-luxury-properties",
    "to": "/en/properties/villas-for-sale",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 1,
-   "note": "type · REVIEW: the new site serves this URL today (→ /en/properties/villas-for-sale)"
+   "note": "type"
   },
   {
    "from": "/en/articles/buyers/exploring-the-key-trends-in-modern-greek-real-estate",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 7,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/buyers/greece-property-transfer-tax-non-eu-buyers-2027",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 6,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/buyers/halkidiki-real-estate-market-trends:-what-to-expect-in-the-coming-years",
@@ -4064,20 +4055,20 @@
   {
    "from": "/en/articles/buyers/how-to-choose-the-right-vacation-property",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/buyers/investing-in-real-estate",
    "to": "/en/properties",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 6,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/properties)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/buyers/navigating-the-legal-landscape:-real-estate-laws-in-halkidiki",
@@ -4091,11 +4082,11 @@
   {
    "from": "/en/articles/buyers/owning-a-vacation-home-in-greece",
    "to": "/en/properties",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 11,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/properties)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/buyers/quick-step-by-step-guide-for-foreigners-who-want-to-buy-a-property-in-halkidiki-2022",
@@ -4109,29 +4100,29 @@
   {
    "from": "/en/articles/buyers/the-new-regulation-relief",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 21,
-   "note": "topic · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "topic"
   },
   {
    "from": "/en/articles/buyers/top-buyer-questions-answered-understanding-halkidikis-real-estate-market",
    "to": "/en/properties/apartments-for-sale",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 3,
-   "note": "type · REVIEW: the new site serves this URL today (→ /en/properties/apartments-for-sale)"
+   "note": "type"
   },
   {
    "from": "/en/articles/buyers/viewing-a-property-at-halkidiki",
@@ -4145,11 +4136,11 @@
   {
    "from": "/en/articles/buyers/viewing-trip-day",
    "to": "/en/buying-property-in-greece",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 9,
-   "note": "article index → guide · REVIEW: the new site serves this URL today (→ /en/buying-property-in-greece)"
+   "note": "article index → guide"
   },
   {
    "from": "/en/articles/buyers/why-invest-in-greece",
@@ -4163,20 +4154,20 @@
   {
    "from": "/en/articles/constructors-news",
    "to": "/en/services/construction-services",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 0,
-   "note": "content page · REVIEW: the new site serves this URL today (→ /en/services/construction-services)"
+   "note": "content page"
   },
   {
    "from": "/en/articles/constructors-news/villla-natalia",
    "to": "/en/services/construction-services",
-   "status": "review",
+   "status": 301,
    "lang": "en",
    "src": "spec",
    "clicks": 25,
-   "note": "content page · REVIEW: the new site serves this URL today (→ /en/services/construction-services)"
+   "note": "content page"
   },
   {
    "from": "/en/halkidiki-apartments",

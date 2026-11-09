@@ -32,8 +32,8 @@ check('one hop: no 301 target is itself a 301 source', r301.every((r) => by.get(
 check('410 rows carry no target', rows.filter((r) => r.status === 410).every((r) => r.to === null));
 check('robots.txt is not redirected (D7)', !by.has('/robots.txt'));
 check('files (.jpg .png .pdf) never 301 to a page (D7)', rows.filter((r) => /\.(jpe?g|png|webp|gif|pdf)$/i.test(r.from)).every((r) => r.status === 410));
-check('no registry page is redirected away (unless decided, D1/D2)', r301.every((r) => !regPaths.has(r.from) || forced(r.from)),
-  r301.filter((r) => regPaths.has(r.from) && !forced(r.from)).map((r) => r.from).slice(0, 5).join(', '));
+check('no registry page is redirected away', r301.every((r) => !regPaths.has(r.from)),
+  r301.filter((r) => regPaths.has(r.from)).map((r) => r.from).slice(0, 5).join(', '));
 check('Greek targets live at the root (no /el/ target)', r301.every((r) => !/^\/el(\/|$)/.test(r.to)));
 check('every override is applied', O.rows.every((o) => {
   const r = by.get(key(o.from.replace(/\/+$/, '')));

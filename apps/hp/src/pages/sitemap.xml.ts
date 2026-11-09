@@ -23,7 +23,7 @@
 import type { APIRoute } from 'astro';
 import { hreflangs, hreflangsBy, propertyUrl, type Lang } from '../lib/i18n';
 import { allProperties, refOf } from '../lib/api';
-import { facetUrl, FACETS, PAIRS } from '../lib/listing';
+import { facetUrl, FACETS, PAIRS, matches, minLive, type Query } from '../lib/listing';
 import { PAGE_KEYS, pageExists, pageLangs, contentUrl } from '../lib/pages';
 import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
@@ -45,6 +45,9 @@ type Page = {
   /** B-16: only these languages (a content page with its own text in some languages only). */
   langs?: Lang[];
   lastmod: string;
+  /** #160 spec rule 10: a listing page (its facet keys) is in the sitemap only when it is
+   *  indexable, i.e. it has enough live listings — the same test as the page's robots tag. */
+  facetKeys?: string[];
 };
 
 const PAGES: Page[] = [
@@ -56,8 +59,8 @@ const PAGES: Page[] = [
   // `noindex` και δεν έχει θέση εδώ: το sitemap είναι πρόταση προς τη Google,
   // και δεν προτείνουμε σελίδες που της λέμε ταυτόχρονα να αγνοήσει.
   { pathFor: (l) => facetUrl(l), lastmod: BUILD_DAY },
-  ...FACETS.map((f) => ({ pathFor: (l: Lang) => facetUrl(l, f.key), lastmod: BUILD_DAY })),
-  ...PAIRS.map(([a, b]) => ({ pathFor: (l: Lang) => facetUrl(l, a, b), lastmod: BUILD_DAY })),
+  ...FACETS.map((f) => ({ pathFor: (l: Lang) => facetUrl(l, f.key), lastmod: BUILD_DAY, facetKeys: [f.key] })),
+  ...PAIRS.map(([a, b]) => ({ pathFor: (l: Lang) => facetUrl(l, a, b), lastmod: BUILD_DAY, facetKeys: [a, b] })),
 
   // B-16: the content pages, each only in the languages where it has its own text (English
   // fallbacks under other prefixes carry a canonical to the original and stay out).
@@ -163,13 +166,25 @@ ${links}
     .join('\n');
 }
 
+/** #160: drop the listing pages below the spec's threshold (anonymous set, no country rule, as on
+ *  the page). If the CRM cannot be reached, the facet pages stay as they are. */
+async function liveFacets(pages: Page[]): Promise<Page[]> {
+  let items: Awaited<ReturnType<typeof allProperties>>;
+  try { items = await allProperties(); } catch { return pages; }
+  return pages.filter((p) => {
+    if (!p.facetKeys) return true;
+    const q: Query = Object.assign({}, ...p.facetKeys.map((k) => FACETS.find((f) => f.key === k)?.q ?? {}));
+    return items.filter((it) => matches(it, q)).length >= minLive(p.facetKeys);
+  });
+}
+
 export const GET: APIRoute = async ({ request, url }) => {
   // Σε προεπισκόπηση δεν υπάρχει sitemap — όχι κρυμμένο, ανύπαρκτο.
   if (!isProd(request, url)) return new Response(null, { status: 404 });
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${[...PAGES, ...(await contentPages()), ...(await articlePages()), ...(await propertyPages())].map(urlBlock).join('\n')}
+${[...(await liveFacets(PAGES)), ...(await contentPages()), ...(await articlePages()), ...(await propertyPages())].map(urlBlock).join('\n')}
 </urlset>
 `;
 

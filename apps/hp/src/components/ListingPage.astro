@@ -30,10 +30,12 @@ import { cmsImage } from '../lib/content';
 import { heroShot } from '../lib/hero';
 import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
+import SpecText from './SpecText.astro';
+import { specByPath, specTitle } from '../lib/seo-pages';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
   facetUrl, ui, FACETS, SORTS, SORT_DEFAULT, PER_PAGE, PER_PAGE_OPTIONS,
-  cardsPerPage, SUBTYPES, MUNIS, SEAS, BED_OPTS, defined,
+  cardsPerPage, SUBTYPES, MUNIS, SEAS, BED_OPTS, defined, matches, minLive,
   type Facet, type Query, type Sort,
 } from '../lib/listing';
 
@@ -78,26 +80,64 @@ const isThemed = facets.length > 0;
 
 // ── SEO ────────────────────────────────────────────────────────────────────
 const pathFor = (l: Lang) => facetUrl(l, ...facets.map((f) => f.key));
-const noindex = !isIndexable(facets.map((f) => f.key), sp);
 
-const title = isThemed
-  ? `${heading} — ${ui(lang, 'all')}`
-  : ui(lang, 'all');
-const desc = isThemed
-  ? `${heading}. ${ui(lang, 'all')}.`
-  : ui(lang, 'all');
+// ── #160 GEORGE'S SPEC (05/11): this URL's title, meta, H1, texts, FAQ and links, word for word.
+const spec = specByPath(pathFor(lang));
+const firstPage = res.page === 1;
+// Spec rule 10: indexed only with ≥ 6 live listings (≥ 12 for apartments / affordable), counted on
+// the anonymous set WITHOUT the country rule — Google must get the same answer from GR and DE.
+// The number is used only for this decision; it is never printed (no counts, George 17/10).
+let liveAnon = res.total;
+try {
+  const anon = await allProperties(undefined, undefined);
+  const fq: Query = Object.assign({}, ...facets.map((f) => f.q));
+  liveAnon = anon.filter((p) => matches(p, fq)).length;
+} catch { /* API down: keep the visitor's own count */ }
+const thin = liveAnon < minLive(facets.map((f) => f.key));
+const noindex = !isIndexable(facets.map((f) => f.key), sp) || thin;
+// Decision D8: page N is self-canonical when nothing but `page` is in the URL.
+const onlyPage = [...sp.keys()].every((k) => k === 'page');
+const selfQuery = !firstPage && onlyPage ? `?page=${res.page}` : '';
+
+// «Page 2», never «2 of 10»: the number of pages would reveal the catalogue size (no counts).
+const pageNote = firstPage ? '' : ` – ${t(lang, 'home.page', { n: res.page })}`;
+const title = spec
+  ? specTitle(spec.title, brand.name) + pageNote
+  : (isThemed ? `${heading} — ${ui(lang, 'all')}` : ui(lang, 'all')) + pageNote;
+const desc = spec
+  ? spec.meta
+  : isThemed ? `${heading}. ${ui(lang, 'all')}.` : ui(lang, 'all');
+const h1 = spec ? spec.h1 : heading;
+// Breadcrumb: the spec's names; links to the home page, the main listing and, on a pair page
+// (Kassandra · Villas), the area page.
+const crumbLinks = [prefix(lang) || '/', facetUrl(lang), facets.length === 2 ? facetUrl(lang, facets[0].key) : undefined];
+const crumbs = spec
+  ? spec.breadcrumb.map((name, i, a) => ({ name, url: i === a.length - 1 ? undefined : crumbLinks[i] }))
+  : null;
 
 // 🪤 ΤΟ URL ΜΕΣΑ ΣΤΟ JSON-LD ΠΕΡΝΑΕΙ ΑΠΟ `propertyUrl(lang, …)`.
 //    Στην αρχική ήταν σκληροκωδικοποιημένο `/ακινητο/<id>` και δήλωνε ΕΛΛΗΝΙΚΟ
 //    URL σε ΚΑΙ ΤΙΣ ΕΝΝΕΑ γλώσσες — URL που στην αγγλική εκδοχή δεν υπάρχει καν.
-const jsonLd = res.items.length ? [{
+const siteRoot = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const itemList = {
   '@context': 'https://schema.org', '@type': 'ItemList',
-  name: heading,
+  name: h1,
   itemListElement: res.items.slice(0, 12).map((p, i) => ({
     '@type': 'ListItem', position: i + 1,
-    url: `${Astro.site?.toString().replace(/\/$/, '') ?? ''}${propertyUrl(lang, refOf(p))}`,
+    url: `${siteRoot}${propertyUrl(lang, refOf(p))}`,
   })),
-}] : [];
+};
+// #160 spec rule 11 for listing pages: CollectionPage + ItemList + BreadcrumbList + FAQPage
+// (the FAQ only where it is shown: page 1). The markup matches what the page shows (Google).
+const abs = (u: string) => siteRoot + encodeURI(u);
+const jsonLd: unknown[] = spec ? [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: abs(spec.path) + selfQuery, inLanguage: lang },
+  itemList,
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: crumbs!.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, ...(c.url ? { item: abs(c.url) } : {}) })) },
+  ...(firstPage && spec.faq.length ? [{ '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: spec.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+] : (res.items.length ? [itemList] : []);
 
 // ── Δήμοι για το υποσέλιδο (ίδιο μοτίβο με την αρχική).
 const munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
@@ -299,7 +339,7 @@ const tilePhoto = (() => {
   return c ? marked(c.url, 400) : '';
 })();
 ---
-<Base lang={lang} title={title} description={desc} pathFor={pathFor} noindex={noindex} jsonLd={jsonLd}>
+<Base lang={lang} title={title} description={desc} pathFor={pathFor} noindex={noindex} jsonLd={jsonLd} ogTitle={spec?.ogTitle} query={selfQuery}>
   {/* 🔴 `solid` — ΑΛΛΙΩΣ Η ΚΕΦΑΛΙΔΑ ΕΙΝΑΙ ΛΕΥΚΗ ΠΑΝΩ ΣΕ ΛΕΥΚΟ.
       Δες το σχόλιο στην κορυφή του Header.astro: εδώ δεν υπάρχει φωτογραφία. */}
   {/* #102 desktop: the header floats on the top strip (white on the photo);
@@ -339,6 +379,11 @@ const tilePhoto = (() => {
         Ακίνητα προς πώληση στη Χαλκιδική» και ΑΜΕΣΩΣ από κάτω ο H1 έλεγε το ίδιο
         ακριβώς — δύο φορές η ίδια φράση, η μία σε αχνό γκρι. Τώρα το τελευταίο
         σκαλί μπαίνει ΜΟΝΟ όταν υπάρχει θέμα, δηλαδή όταν λέει κάτι διαφορετικό. */}
+    {crumbs ? (
+    <nav class="crumb" aria-label="breadcrumb">
+      {crumbs.map((c, i) => (<>{i > 0 && <span aria-hidden="true">·</span>}{c.url ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</>))}
+    </nav>
+    ) : (
     <nav class="crumb" aria-label="breadcrumb">
       <a href={prefix(lang) || '/'}>{brand.name}</a>
       {isThemed && (
@@ -349,6 +394,7 @@ const tilePhoto = (() => {
         </>
       )}
     </nav>
+    )}
 
     {/* ΤΟ ΠΛΗΘΟΣ ΤΕΡΜΑ ΔΕΞΙΑ, ΣΤΗ ΓΡΑΜΜΗ ΤΟΥ ΤΙΤΛΟΥ (George, 30/7: «μπορείς να
         το πας τέρμα δεξιά στη σελίδα, π.χ. πάνω από την ταξινόμηση ή ακόμη πιο
@@ -358,7 +404,7 @@ const tilePhoto = (() => {
         σελίδα». Εδώ δεν το σπρώχνει τίποτα, και διαβάζεται μαζί με τον τίτλο:
         «Ακίνητα προς πώληση στη Χαλκιδική … Βρέθηκαν 527». */}
     <div class="head">
-      <h1 class={isThemed ? 't-display head__h' : 't-h2 head__h'}>{heading}</h1>
+      <h1 class={isThemed || spec ? 't-display head__h' : 't-h2 head__h'}>{h1}</h1>
       {apiDown && <p class="count t-data">—</p>}
     </div>
   </div>
@@ -487,6 +533,16 @@ const tilePhoto = (() => {
   </div>
 
   <div class="wrap list" data-lswap="list">
+    {/* #160 spec rule 9: H1 → intro → grid. Page 1 only. On phones the intro is clamped to a
+        few lines with a «more» switch (no JS), so the grid stays above the fold; the whole
+        text is in the HTML either way (Google: mobile = same content). */}
+    {spec && firstPage && spec.intro && (
+      <div class="lintro">
+        <input type="checkbox" id="lintro-more" class="lintro__t" />
+        <SpecText page={spec} part="intro" lang={lang} />
+        <label for="lintro-more" class="lintro__more t-btn">+</label>
+      </div>
+    )}
 
     {/* ΔΥΟ ΟΜΑΔΕΣ, ΟΧΙ ΠΕΝΤΕ ΣΚΟΡΠΙΑ ΣΤΟΙΧΕΙΑ (George, 30/7):
           ΑΡΙΣΤΕΡΑ  = ΕΝΕΡΓΕΙΕΣ  → φίλτρα · αποθήκευση · κωδικός
@@ -739,6 +795,9 @@ const tilePhoto = (() => {
         υποσέλιδο (Footer.astro), που έτσι κι αλλιώς είναι σε ΚΑΘΕ σελίδα — άρα
         το SEO κερδίζει, όχι μόνο δεν χάνει. */}
   </div>
+  {/* #160 spec rule 9: … grid → the H2 body → FAQ → links. Page 1 only; the box is always
+      there (empty on page N) so the in-place list swap can update it. */}
+  <div data-lswap="spec">{spec && firstPage && <SpecText page={spec} part="rest" lang={lang} />}</div>
   </main>
 
   {/* #102 desktop: back to top — a square that appears after the first screen. */}
@@ -1350,6 +1409,19 @@ const tilePhoto = (() => {
     .acct, .l-totop, .l-totop svg { transition: none; }
     .acct:hover { transform: none; }
   }
+
+  /* #160 spec intro between the H1 and the grid. Phones: four lines and a «+» switch (no JS),
+     so the grid stays above the fold (spec rule 9); desktop: the whole intro. */
+  .lintro { position: relative; margin: var(--s4) 0 var(--s5); max-width: 68ch; }
+  .lintro__t { position: absolute; opacity: 0; pointer-events: none; }
+  .lintro__more { display: none; }
+  @media (max-width: 759px) {
+    .lintro :global(.st-intro) { max-height: 6.8em; overflow: hidden; font-size: 16px;
+      -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
+    .lintro__t:checked ~ :global(.st-intro) { max-height: none; -webkit-mask-image: none; mask-image: none; }
+    .lintro__more { display: inline-block; margin-top: var(--s2); padding: 6px 12px; border: 1px solid var(--line); cursor: pointer; }
+    .lintro__t:checked ~ .lintro__more { display: none; }
+  }
 </style>
 
 <style is:global>
@@ -1533,7 +1605,7 @@ const tilePhoto = (() => {
 
     const hadTags = !!document.querySelector('.ltags');
     const hadSave = !!document.querySelector('[data-lsave]:not([hidden])');
-    for (const k of ['top', 'bar', 'list']) {
+    for (const k of ['top', 'bar', 'list', 'spec']) {
       const a = document.querySelector(`[data-lswap="${k}"]`), b = doc.querySelector(`[data-lswap="${k}"]`);
       if (a && b) a.replaceWith(document.importNode(b, true));
     }

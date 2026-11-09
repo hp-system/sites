@@ -43,11 +43,16 @@ interface Props {
   jsonLd?: unknown[];
   /** The login page inside the sign-in popup (q05): no cookie banner, no second dialog. */
   embed?: boolean;
+  /** #160: og:title when the spec gives its own (column «OG title»); defaults to `title`. */
+  ogTitle?: string;
+  /** #160: query of a self-canonical page (e.g. `?page=2`, decision D8): added to the canonical
+   *  and to every hreflang URL, so page N of each language points to page N. */
+  query?: string;
 }
 const {
   lang, title, description, path = '/',
   ogImage, ogImageW, ogImageH, ogImageAlt, pathFor, noindex = false, jsonLd = [],
-  langs, canonicalLang, embed = false,
+  langs, canonicalLang, embed = false, ogTitle, query = '',
 } = Astro.props;
 
 // 🌍 Το `og:locale` θέλει μορφή γλώσσα_ΧΩΡΑ («el_GR»), όχι σκέτο «el» — αλλιώς
@@ -76,11 +81,11 @@ const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const enc = (u: string) => encodeURI(u);
 const canonical = enc(site + (pathFor
   ? pathFor(canonicalLang ?? lang)
-  : (`${prefix(lang)}${path === '/' ? '' : path}` || '/')));
+  : (`${prefix(lang)}${path === '/' ? '' : path}` || '/'))) + query;
 const alts = (pathFor
   ? hreflangsBy(pathFor, langs)
   : hreflangs(path === '/' ? '/' : path)
-).map((a) => ({ ...a, href: enc(a.href) }));
+).map((a) => ({ ...a, href: enc(a.href) + query }));
 
 // Ευρετηρίαση ΜΟΝΟ στο πραγματικό domain. Ο ίδιος έλεγχος κυβερνά και το
 // robots.txt και το sitemap.xml — δες lib/seo.ts.
@@ -130,7 +135,7 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={brand.name} />
   <meta property="og:locale" content={OG_LOCALE[lang] ?? lang} />
-  <meta property="og:title" content={title} />
+  <meta property="og:title" content={ogTitle ?? title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   {/* Το `twitter:card` δήλωνε μεγάλη εικόνα ενώ δεν υπήρχε `twitter:image` πουθενά —

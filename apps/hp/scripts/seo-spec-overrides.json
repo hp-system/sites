@@ -6,14 +6,73 @@
         "Startseite",
         "Immobilienkauf in Griechenland"
       ],
-      "_why": "The spec has a «Ratgeber» (guides) level only in de and he, and no guides hub page exists, so the crumb would have no URL (invalid BreadcrumbList). Two levels, as in the other 7 languages. 2026-11-06."
+      "_why": "The spec has a «Ratgeber» (guides) level only in de and he, and no guides hub page exists, so the crumb would have no URL (invalid BreadcrumbList). Two levels, as in the other 7 languages. 2026-11-06.",
+      "bodyAppend": {
+        "section": 3,
+        "html": "<p>Mieteinnahmen werden getrennt von Ihren übrigen Einkünften besteuert, nach einem Stufentarif, der bei 15 % beginnt und mit dem Betrag steigt. Ein privater Pool bringt eine jährliche Luxussteuer je Quadratmeter Poolfläche und erhöht das Mindesteinkommen, das das Finanzamt bei Ihnen annimmt. Die Sätze ändern sich mit dem jährlichen Haushalt; die aktuellen bestätigt Ihr Steuerberater.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
     },
     "P19/he": {
       "breadcrumb": [
         "דף הבית",
         "קניית דירה ביוון"
       ],
-      "_why": "Same as P19/de: the «guides» level exists only in de/he and has no page."
+      "_why": "Same as P19/de: the «guides» level exists only in de/he and has no page.",
+      "bodyAppend": {
+        "section": 3,
+        "html": "<p>הכנסה משכירות ממוסה בנפרד משאר ההכנסות שלכם, לפי מדרגות שמתחילות ב-15% ועולות עם הסכום. בריכה פרטית מוסיפה מס שנתי על חיי מותרות לפי כל מטר רבוע של בריכה, ומעלה את ההכנסה המינימלית שרשות המס מניחה שיש לכם. השיעורים משתנים עם התקציב השנתי, ולכן את השיעורים העדכניים מאשר רואה החשבון שלכם.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P19/en": {
+      "bodyAppend": {
+        "section": 5,
+        "html": "<p>Rental income is taxed separately from your other income, on a scale that starts at 15% and rises with the amount. A private pool adds a yearly luxury-living tax charged per square metre of pool, and raises the minimum income the tax office presumes you have. The rates change with the annual budget, so your accountant confirms the current ones.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P19/el": {
+      "bodyAppend": {
+        "section": 3,
+        "html": "<p>Το εισόδημα από ενοίκια φορολογείται χωριστά από τα υπόλοιπα εισοδήματά σας, με κλίμακα που ξεκινά από 15% και αυξάνεται με το ποσό. Μια ιδιωτική πισίνα προσθέτει ετήσιο φόρο πολυτελούς διαβίωσης ανά τετραγωνικό μέτρο πισίνας και ανεβάζει το ελάχιστο εισόδημα που τεκμαίρει η εφορία. Οι συντελεστές αλλάζουν με τον ετήσιο προϋπολογισμό, γι' αυτό τους ισχύοντες τους επιβεβαιώνει ο λογιστής σας.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P19/sr": {
+      "bodyAppend": {
+        "section": 5,
+        "html": "<p>Prihod od izdavanja oporezuje se odvojeno od ostalih prihoda, po skali koja počinje od 15% i raste sa iznosom. Privatni bazen donosi godišnji porez na luksuz po kvadratnom metru bazena i povećava minimalni prihod koji poreska uprava pretpostavlja da imate. Stope se menjaju sa godišnjim budžetom, pa važeće potvrđuje vaš knjigovođa.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P19/bg": {
+      "bodyAppend": {
+        "section": 4,
+        "html": "<p>Доходът от наем се облага отделно от другите ви доходи, по скала, която започва от 15% и расте с размера му. Частният басейн добавя годишен данък „луксозен живот“ на квадратен метър басейн и увеличава минималния доход, който данъчната служба приема, че имате. Ставките се променят с годишния бюджет, затова актуалните ги потвърждава вашият счетоводител.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P19/ro": {
+      "bodyAppend": {
+        "section": 4,
+        "html": "<p>Veniturile din chirii se impozitează separat de celelalte venituri, după o scară care începe de la 15% și crește odată cu suma. O piscină privată aduce un impozit anual pe traiul de lux, calculat pe metru pătrat de piscină, și mărește venitul minim pe care fiscul presupune că îl aveți. Cotele se schimbă odată cu bugetul anual, așa că pe cele în vigoare vi le confirmă contabilul.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P19/ru": {
+      "bodyAppend": {
+        "section": 3,
+        "html": "<p>Доход от аренды облагается отдельно от остальных доходов, по шкале, которая начинается с 15% и растёт вместе с суммой. Частный бассейн добавляет ежегодный налог на роскошь за каждый квадратный метр бассейна и повышает минимальный доход, который налоговая предполагает у вас. Ставки меняются вместе с годовым бюджетом, поэтому действующие подтверждает ваш бухгалтер.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P19/tr": {
+      "bodyAppend": {
+        "section": 2,
+        "html": "<p>Kira geliri diğer gelirlerinizden ayrı olarak, %15'ten başlayıp tutarla birlikte artan dilimlerle vergilendirilir. Özel bir havuz, havuzun metrekaresi başına yıllık bir lüks yaşam vergisi getirir ve vergi dairesinin sizde varsaydığı asgari geliri yükseltir. Oranlar yıllık bütçeyle değişir; güncel oranları muhasebeciniz teyit eder.</p>"
+      },
+      "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
     }
   },
   "allowedLinkTargets": []

@@ -39,10 +39,17 @@ import { areaCards } from '../lib/areacards';
 import ServicesHub, { type Role } from './ServicesHub.astro';
 import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
+import { redirectFor } from '../lib/redirects';
 
 interface Props { page: InfoPage }
 const { page } = Astro.props;
-const d = page.data;
+// #152: every link from the page's data points at the final address (no redirect hop):
+// related links, the CTA and child cards whose target the redirect table moves.
+const fin = (h?: string) => { if (!h) return h as string; const r = redirectFor(h.split(/[?#]/)[0]); return r?.status === 301 ? r.to : h; };
+const d = { ...page.data,
+  related: (page.data.related ?? []).map((r: any) => ({ ...r, href: fin(r.href) })),
+  ...(page.data.cta ? { cta: { ...page.data.cta, href: fin(page.data.cta.href) } } : {}),
+} as typeof page.data;
 const lang: Lang = d.lang;                        // #94: info pages may be in any of the 9 languages
 
 // Page chrome in the page language (#94). Greek in the singular.

@@ -153,8 +153,19 @@ function page(r) {
 
 function applyOverrides(p, overrides) {
   const o = overrides[`${p.id}/${p.lang}`];
+  if (!o) return p;
   // Keys starting with «_» are the reason for the override, kept in the overrides file only.
-  return o ? { ...p, ...Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('_'))) } : p;
+  // `bodyAppend: { section, html }` adds HTML at the end of the body's section N (0 = the first
+  // <h2> section): an addition decided by Sergei, the spec text around it stays word for word.
+  const { bodyAppend, ...rest } = Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('_')));
+  const out = { ...p, ...rest };
+  if (bodyAppend) {
+    const secs = out.body.split(/(?=<h2>)/);
+    if (!secs[bodyAppend.section]) throw new Error(`${p.id}/${p.lang}: bodyAppend section ${bodyAppend.section} does not exist`);
+    secs[bodyAppend.section] += bodyAppend.html;
+    out.body = secs.join('');
+  }
+  return out;
 }
 
 // ── main ─────────────────────────────────────────────────────────────────────

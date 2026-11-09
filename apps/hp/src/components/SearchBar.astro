@@ -53,7 +53,7 @@ import { ui } from '../lib/listing';
 
     {/* Τα φίλτρα ΔΕΝ είναι πεδίο — είναι ενέργεια. Γι' αυτό χωρίς ετικέτα από
         πάνω: αν έμπαινε, θα διαβαζόταν ως τρίτο κριτήριο που δεν συμπληρώσαμε. */}
-    <a class="search__more" href={`${listUrl(lang)}?filters=1`} data-ev="search:filters_open">
+    <a class="search__more" href={`${listUrl(lang)}?filters=1`} rel="nofollow" data-ev="search:filters_open">
       <svg viewBox="0 0 16 16" aria-hidden="true" class="ico">
         <path d="M2 4.5h12M4.5 8h7M6.8 11.5h2.4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" />
       </svg>
@@ -274,7 +274,7 @@ import { ui } from '../lib/listing';
      πέντε στοιχεία σε μία σειρά δεν χωρούν χωρίς να κοπούν οι προεπιλογές. */
   .search__more, .search__id {
     display: flex; align-items: center; gap: 7px;
-    min-height: 34px; padding: 0 13px; font-size: 13px; color: var(--muted);
+    min-height: 34px; padding: 0 13px; font-size: var(--fs-s-1); color: var(--muted);
     border-top: 1px solid var(--line);
   }
   /* 📐 ΣΤΟΙΧΙΣΜΕΝΑ ΜΕ ΤΟ ΠΕΔΙΟ ΑΠΟ ΠΑΝΩ (George, 30/7): «κεντράρισε τα φίλτρα
@@ -294,7 +294,7 @@ import { ui } from '../lib/listing';
   .search__more:hover { color: var(--ink); }
   .search__idin {
     flex: 1; min-width: 0; width: 100%; border: 0; background: transparent; padding: 0;
-    font: inherit; font-size: 16px; color: var(--ink);   /* 16px = χωρίς auto-zoom στο iOS */
+    font: inherit; font-size: var(--fs-s0); color: var(--ink);   /* 16px = χωρίς auto-zoom στο iOS */
   }
   .search__idin::placeholder { color: var(--faint); }
   .search__id:focus-within .ico { color: var(--ink); }
@@ -329,12 +329,18 @@ import { ui } from '../lib/listing';
           ύψος, το κουμπί ζητά ύψος για να βρει πλάτος) και **έσπασε τη σελίδα
           δύο φορές** — ξεχείλιζε 2px και το iOS ζούμαρε ΟΛΗ την αρχική.
           Το κενό ήταν πάντα του ΓΟΝΕΑ. Εκεί λύθηκε. */
-    font: inherit; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
-    cursor: pointer; transition: opacity .18s ease;
+    font: inherit; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+    cursor: pointer; transition: background-color .18s ease, color .18s ease;
   }
   .search__ico { width: 18px; height: 18px; }
   .search__golabel { display: none; }
-  .search__go:hover { opacity: .86; }
+  /* Sergei 08/11: hover swaps to white (ink icon, ink edge) — no grey fade */
+  .search__go:hover { opacity: 1; background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+
+  /* Type canon (Sergei 08/11): on phones the value is 17 px and the cells are ~90 px wide, so a
+     long value («Без ограничение», «Без ограничений») wraps to a second line instead of «Без огр…».
+     It was already cut at 15 px in bg/ru/sr. */
+  @media (max-width: 759px) { .search :global(.sel__val) { white-space: normal; text-overflow: clip; line-height: 1.2; hyphens: auto; overflow-wrap: anywhere; } }
 
   /* Όταν γράφεται κωδικός, τα κριτήρια σβήνουν: δεν ισχύουν πια. */
   .search[data-id-mode] .search__f { opacity: .38; }
@@ -380,7 +386,7 @@ import { ui } from '../lib/listing';
     /* Εδώ ο σύνδεσμος έχει δική του στήλη `auto` — χωράει ολόκληρη η φράση. */
     .search__more--full { display: inline; }
     .search__more--short { display: none; }
-    .search__idin { font-size: 14px; }
+    .search__idin { font-size: var(--fs-s0); }
     .search__go {
       /* 🔲 ΤΕΤΡΑΓΩΝΟ 65×65: το πλάτος το δίνει η στήλη (`var(--bar)`), το ύψος
          το `stretch`. Η λέξη «ΑΝΑΖΗΤΗΣΗ» δεν χωράει σε τόσο πλάτος — μένει το
@@ -411,10 +417,10 @@ import { ui } from '../lib/listing';
     animation: h-ghost 0.95s ease both;
   }
   :global(html.hp-hfrom) .search { animation: h-bar 0.95s ease both; }
-  .sghost__c { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 15px; color: var(--muted); white-space: nowrap; }
+  .sghost__c { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-s0); color: var(--muted); white-space: nowrap; }
   .sghost__c + .sghost__c { border-inline-start: 1px solid var(--line); }
   .sghost__c svg { color: var(--faint); flex: none; }
-  .sghost__c--n { flex: none; padding: 0 18px; font-size: 13px; }
+  .sghost__c--n { flex: none; padding: 0 18px; font-size: var(--fs-s-1); }
   .sghost__c--id { width: 170px; justify-content: flex-start; }
   .sghost__map { flex: none; width: 64px; display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--gold-dk-text); }
   /* mirrored timing of the home → list move (there 15–55 %, here 45–85 %) */

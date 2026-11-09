@@ -1,0 +1,74 @@
+[
+  {
+    "lang": "el",
+    "title": "{Τύπος} προς πώληση {τ.μ.} τ.μ., {Δήμος} Χαλκιδική",
+    "meta": "{Τύπος} {τ.μ.} τ.μ. προς πώληση στον Δήμο {Δήμος}, Χαλκιδική. {Χαρακτηριστικό 1}, {Χαρακτηριστικό 2}. Τιμή €{τιμή}. Δείτε φωτογραφίες και κλείστε υπόδειξη.",
+    "h1": "{Τύπος} προς πώληση στην {Δήμος}, Χαλκιδική",
+    "imageAlt": "{Τύπος} στην {Δήμος}, Χαλκιδική – {χώρος/θέα}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "en",
+    "title": "{Type} for sale in {Municipality}, Halkidiki – {sqm} m²",
+    "meta": "{Type} of {sqm} m² for sale in {Municipality}, Halkidiki, Greece. {Feature 1}, {feature 2}. Price €{price}. See photos and book a viewing.",
+    "h1": "{Type} for sale in {Municipality}, Halkidiki",
+    "imageAlt": "{Type} in {Municipality}, Halkidiki – {room/view}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "de",
+    "title": "{Typ} kaufen in {Gemeinde}, Chalkidiki – {qm} m²",
+    "meta": "{Typ} mit {qm} m² zu verkaufen in {Gemeinde}, Chalkidiki, Griechenland. {Merkmal 1}, {Merkmal 2}. Preis €{Preis}. Fotos ansehen und Besichtigung buchen.",
+    "h1": "{Typ} zu verkaufen in {Gemeinde}, Chalkidiki",
+    "imageAlt": "{Typ} in {Gemeinde}, Chalkidiki – {Raum/Aussicht}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "sr",
+    "title": "{Tip} na prodaju, {Opština}, Halkidiki, Grčka – {m2} m²",
+    "meta": "{Tip} od {m2} m² na prodaju u opštini {Opština}, Halkidiki, Grčka. {Karakteristika 1}, {karakteristika 2}. Cena €{cena}. Pogledajte fotografije i zakažite razgledanje.",
+    "h1": "{Tip} na prodaju u Grčkoj – {Opština}, Halkidiki",
+    "imageAlt": "{Tip} u Grčkoj, {Opština}, Halkidiki – {prostorija/pogled}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "bg",
+    "title": "{Тип} за продажба в Гърция, {Община}, Халкидики – {м2} м²",
+    "meta": "{Тип} {м2} м² за продажба в община {Община}, Халкидики, Гърция. {Характеристика 1}, {характеристика 2}. Цена €{цена}. Вижте снимки и запишете оглед.",
+    "h1": "{Тип} за продажба в Гърция – {Община}, Халкидики",
+    "imageAlt": "{Тип} в {Община}, Халкидики, Гърция – {помещение/изглед}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "ro",
+    "title": "{Tip} de vânzare în Grecia, {Municipiu}, Halkidiki – {mp} m²",
+    "meta": "{Tip} de {mp} m² de vânzare în {Municipiu}, Halkidiki, Grecia. {Caracteristică 1}, {caracteristică 2}. Preț €{preț}. Vezi fotografiile și programează o vizionare.",
+    "h1": "{Tip} de vânzare în Grecia – {Municipiu}, Halkidiki",
+    "imageAlt": "{Tip} în {Municipiu}, Halkidiki, Grecia – {cameră/priveliște}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "ru",
+    "title": "{Тип} в Греции на продажу – {Муниципалитет}, Халкидики, {м2} м²",
+    "meta": "{Тип} {м2} м² на продажу в {Муниципалитет}, Халкидики, Греция. {Особенность 1}, {особенность 2}. Цена €{цена}. Смотрите фото и запишитесь на просмотр.",
+    "h1": "{Тип} на продажу в Греции – {Муниципалитет}, Халкидики",
+    "imageAlt": "{Тип} в {Муниципалитет}, Халкидики, Греция – {комната/вид}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "tr",
+    "title": "Yunanistan'da satılık {tip} – {Belediye}, Halkidiki, {m2} m²",
+    "meta": "{Belediye}, Halkidiki'de (Yunanistan) satılık {m2} m² {tip}. {Özellik 1}, {özellik 2}. Fiyat €{fiyat}. Fotoğrafları görün, gezi randevusu alın.",
+    "h1": "Yunanistan'da satılık {tip} – {Belediye}, Halkidiki",
+    "imageAlt": "{Belediye}, Halkidiki'de {tip} – {oda/manzara}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  },
+  {
+    "lang": "he",
+    "title": "{סוג} למכירה ביוון – {עירייה}, חלקידיקי, {מ\"ר} מ״ר",
+    "meta": "{סוג} של {מ\"ר} מ״ר למכירה ב{עירייה}, חלקידיקי, יוון. {מאפיין 1}, {מאפיין 2}. מחיר €{מחיר}. צפו בתמונות וקבעו סיור בנכס.",
+    "h1": "{סוג} למכירה ביוון – {עירייה}, חלקידיקי",
+    "imageAlt": "{סוג} ב{עירייה}, חלקידיקי, יוון – {חדר/נוף}",
+    "links": "→ type page (exact anchor from 1_Pages) · → municipality page · → P02 main listing · → P03 Greece hub (P01 in sr/bg/ro) · → 4 similar properties"
+  }
+]

@@ -1,0 +1,140 @@
+{
+  "id": "P05",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Apartments for sale",
+  "pageType": "listing",
+  "path": "/en/properties/apartments-for-sale",
+  "keyword": {
+    "primary": "apartments for sale halkidiki",
+    "volume": 160,
+    "secondary": [
+      "halkidiki apartments for sale — 150",
+      "buy apartment halkidiki — 100",
+      "apartments in halkidiki for sale — 40",
+      "apartment for sale halkidiki — 30",
+      "chalkidiki apartments for sale — 30",
+      "apartments for sale in halkidiki — 30"
+    ],
+    "otherGeography": [
+      "apartments for sale greece — 150",
+      "apartments for sale in greece — 100",
+      "greece apartments for sale — 70",
+      "greece apartments for sale halkidiki — 20"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Apartments for Sale in Halkidiki, Greece – Near the Sea",
+  "meta": "Apartments for sale in Halkidiki: studios and flats near the beach in Kassandra, Sithonia and Nea Propontida. An easy base in Greece. View apartments.",
+  "h1": "Apartments for Sale in Halkidiki, Greece",
+  "h2": [
+    "Studios and apartments by the beach",
+    "Apartments for sale by area",
+    "Holiday apartment or year-round home?",
+    "Running costs and building fees",
+    "Buying an apartment in Greece as a foreigner"
+  ],
+  "faqQuestions": [
+    "How much does an apartment in Halkidiki cost?",
+    "Can I rent out my apartment in Halkidiki when I am not there?",
+    "Are there apartments for sale near the beach in Halkidiki?",
+    "What are the running costs of an apartment in Halkidiki?"
+  ],
+  "faq": [
+    {
+      "q": "How much does an apartment in Halkidiki cost?",
+      "a": "Prices depend on the area, the size, the age of the building and the distance to the beach. Studios and small apartments a few streets from the sea are usually the most affordable way into Halkidiki. Use the price filter, or see our affordable page for homes up to €150,000."
+    },
+    {
+      "q": "Can I rent out my apartment in Halkidiki when I am not there?",
+      "a": "Often yes, but short-term letting in Greece has its own rules, including registering the property and paying tax on the income, and Golden Visa properties have extra limits. Ask your lawyer and accountant before you buy. We also offer property management while you are away."
+    },
+    {
+      "q": "Are there apartments for sale near the beach in Halkidiki?",
+      "a": "Yes. Many of our apartments are within walking distance of the sea, and some have a sea view from the balcony. Use the distance-to-sea filter, or see our seafront page for homes on the first line. Seafront apartments are rarer and cost more."
+    },
+    {
+      "q": "What are the running costs of an apartment in Halkidiki?",
+      "a": "Expect electricity, water, internet, common charges in shared buildings, insurance and the annual ENFIA property tax. Common charges vary with the pool, garden or lift, so ask for the actual figures for each apartment before you buy. Insurance is recommended too."
+    }
+  ],
+  "intro": "<p>Apartments for sale in Halkidiki, Greece: studios and flats near the beach that make an easy base in Northern Greece. All apartments below are in Halkidiki, and each listing shows the municipality, the size and the distance to the sea. Filter by area and price, then book a viewing in person or by video. Some have a shared pool, others a balcony with a view of the sea.</p>",
+  "body": "<h2>Studios and apartments by the beach</h2><p>Many apartments are in small buildings or complexes a short walk from the sea, some with a shared pool or a balcony with a sea view. Check parking, the floor and whether the plot in front could be built on later and block the view.</p><h2>Apartments for sale by area</h2><p>Kassandra and Sithonia have the most holiday apartments. Nea Propontida, around Nea Moudania and Nea Kallikratia, has apartments in towns that stay busy all year, close to Thessaloniki.</p><h2>Holiday apartment or year-round home?</h2><p>For holidays, the beach and the location come first. For living all year, look at heating, insulation and services within walking distance, which are easier to find in the larger towns.</p><h2>Running costs and building fees</h2><p>Apart from electricity and water, apartments in shared buildings usually have common charges for cleaning, the garden, the pool or the lift. Ask for the current amounts before you buy. You also pay the annual ENFIA property tax.</p><h2>Buying an apartment in Greece as a foreigner</h2><p>You need a Greek tax number (AFM), a Greek bank account and an independent lawyer. As of November 2026, to be confirmed by our lawyer, transfer tax on a resale is 3.09% and VAT on new builds is suspended until 31/12/2026. Our buying guide explains every step.</p>",
+  "listingFilter": "subcategory=apartment|studio (NEW facet)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/apartments-for-sale",
+  "hreflang": "P05: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Apartments"
+  ],
+  "heroAlt": "Apartment balcony overlooking the sea in Halkidiki – apartments for sale in Halkidiki",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Apartments for Sale in Halkidiki – Studios & Flats by the Sea",
+  "anchor": "apartments for sale in Halkidiki",
+  "anchorVariants": [
+    "Halkidiki apartments for sale",
+    "buy an apartment in Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "cheap houses for sale in Halkidiki",
+      "href": "/en/properties/affordable"
+    },
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P06",
+    "P10",
+    "P13"
+  ],
+  "cta": "See apartments",
+  "oldUrls": [
+    {
+      "path": "/en/properties-in-halkidiki-greece/apartment-for-sale-greece-halkidiki",
+      "clicks": 5
+    },
+    {
+      "path": "/en/articles/buyers/top-buyer-questions-answered-understanding-halkidikis-real-estate-market",
+      "clicks": 3
+    }
+  ],
+  "words": 465,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

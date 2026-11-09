@@ -19,6 +19,8 @@ import { num } from '../lib/format';
 import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
 import { pageExists } from '../lib/pages';
+import { specPathOr, MUNI_SPEC } from '../lib/seo-pages';
+import { FACETS, facetUrl } from '../lib/listing';
 
 interface Props { lang: Lang; munis: { name: string; n: number; key?: string }[]; total: number;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -44,6 +46,14 @@ const KINDS: [string, string][] = [
   [t(lang, 'kinds.apartments'), 'apartment'], [t(lang, 'kinds.land'), 'land'],
   [t(lang, 'kinds.hotels'), 'hotel'],
 ];
+// SEO audit 08/11: each kind / area links its spec page (George's spec rule 4: filter URLs are
+// noindex); a kind or area without one keeps its filter.
+const KIND_SPEC: Record<string, string> = { 'detached house': 'P07', maisonette: 'P06', apartment: 'P05', land: 'P08' };
+const kindHref = (v: string) => v === 'hotel' ? facetUrl(lang, 'hotels')
+  : specPathOr(KIND_SPEC[v] ?? '-', lang, `${url}?subcategory=${encodeURIComponent(v)}`);
+const muniFacet = (key: string) => FACETS.find((f) => f.q.municipality === key);
+const muniHref = (key: string) => specPathOr(MUNI_SPEC[key] ?? '-', lang,
+  muniFacet(key) ? facetUrl(lang, muniFacet(key)!.key) : `${url}?municipality=${encodeURIComponent(key)}`);
 
 // 🛡️ ΔΙΧΤΥ: ΔΕΝ ΔΕΙΧΝΟΥΜΕ ΣΥΝΔΕΣΜΟ ΓΙΑ ΣΕΛΙΔΑ ΠΟΥ ΔΕΝ ΥΠΑΡΧΕΙ.
 //    Έτσι γεννήθηκαν οι 124 νεκροί σύνδεσμοι: τα μενού γράφτηκαν πριν τις σελίδες και
@@ -71,7 +81,7 @@ const has = (k: string) => pageExists(k as any);
     <p class="mm__lab">{t(lang, 'mm.where')}</p>
     <ul class="mm__list">
       {munis.map((m) => (
-        <li><a href={`${url}?municipality=${encodeURIComponent(m.key ?? m.name)}`}>
+        <li><a href={muniHref(m.key ?? m.name)}>
           <span>{m.name}</span>
         </a></li>
       ))}
@@ -81,7 +91,7 @@ const has = (k: string) => pageExists(k as any);
     <p class="mm__lab">{t(lang, 'mm.what')}</p>
     <ul class="mm__list">
       {KINDS.map(([label, v]) => (
-        <li><a href={`${url}?subcategory=${encodeURIComponent(v)}`}><span>{label}</span></a></li>
+        <li><a href={kindHref(v)}><span>{label}</span></a></li>
       ))}
     </ul>
 
@@ -97,7 +107,7 @@ const has = (k: string) => pageExists(k as any);
     <div class="mm__foot">
       {inside
       ? <a class="btn" href={`${p}/panel`} data-ev="panel:menu">{t(lang, 'pnl.title')}</a>
-      : <a class="btn" href={`${p}/login`} data-ev="register:menu">{t(lang, 'nav.login')}</a>}
+      : <a class="btn" href={`${p}/login`} rel="nofollow" data-ev="register:menu">{t(lang, 'nav.login')}</a>}
       {inside && (
       <form method="post" action="/api/auth/logout" class="mm__out">
         <button type="submit">Αποσύνδεση</button>
@@ -152,7 +162,7 @@ const has = (k: string) => pageExists(k as any);
 
   .mm__body { padding: var(--s5) var(--gut) var(--s7); overflow-y: auto; flex: 1; }
   .mm__lab {
-    margin: var(--s5) 0 var(--s2); font-size: 10.5px; font-weight: 600;
+    margin: var(--s5) 0 var(--s2); font-size: var(--fs-s-1); font-weight: 600;
     letter-spacing: .18em; text-transform: uppercase; color: var(--faint);
   }
   .mm__lab:first-child { margin-top: 0; }
@@ -160,13 +170,13 @@ const has = (k: string) => pageExists(k as any);
   .mm__list a {
     display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3);
     padding: 13px 0; min-height: 48px; border-bottom: 1px solid var(--line-soft);
-    font-size: 19px; font-weight: 300; letter-spacing: -.012em;
+    font-size: var(--fs-s0); font-weight: 300; letter-spacing: -.012em;
   }
-  .mm__list b { font-size: 12px; font-weight: 400; color: var(--faint); }
-  .mm__list--plain a { font-size: 16px; }
+  .mm__list b { font-size: var(--fs-s-1); font-weight: 400; color: var(--faint); }
+  .mm__list--plain a { font-size: var(--fs-s0); }
 
   .mm__foot { margin-top: var(--s7); display: flex; flex-direction: column; gap: var(--s4); align-items: flex-start; }
-  .mm__tel { font-size: 15px; color: var(--muted); }
+  .mm__tel { font-size: var(--fs-s0); color: var(--muted); }
 
   /* 🔴🔴 ΤΟ ΚΑΤΩΦΛΙ ΠΡΕΠΕΙ ΝΑ ΤΑΥΤΙΖΕΤΑΙ ΜΕ ΤΟΥ BURGER (Header.astro: 1080px).
      ΗΤΑΝ 760 ΚΑΙ ΠΑΓΩΝΕ ΟΛΟΚΛΗΡΗ ΤΗ ΣΕΛΙΔΑ σε κάθε πλάτος 760-1079:
@@ -187,6 +197,6 @@ const has = (k: string) => pageExists(k as any);
      όποιος θέλει να βγει το θέλει ΤΩΡΑ — συνήθως επειδή δεν είναι δικό του τηλέφωνο. */
   .mm__out { margin-top: 14px; }
   .mm__out button { all: unset; cursor: pointer; text-decoration: underline;
-                    font-size: 14px; opacity: .7; }
+                    font-size: var(--fs-s0); opacity: .7; }
   .mm__out button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 </style>

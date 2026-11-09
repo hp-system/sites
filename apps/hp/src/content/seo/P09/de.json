@@ -1,0 +1,127 @@
+{
+  "id": "P09",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Seafront / by the sea",
+  "pageType": "listing",
+  "path": "/de/immobilien/am-meer",
+  "keyword": {
+    "primary": "haus kaufen griechenland chalkidiki direkt am meer",
+    "volume": 170,
+    "secondary": [
+      "haus kaufen chalkidiki direkt am meer — 60",
+      "haus kaufen chalkidiki am meer — 10",
+      "chalkidiki haus am meer kaufen — 0"
+    ],
+    "otherGeography": [
+      "haus kaufen griechenland direkt am meer — 100",
+      "immobilien griechenland am meer — 100",
+      "griechenland haus am meer kaufen — 90",
+      "haus in griechenland am meer kaufen — 70"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Haus kaufen Chalkidiki direkt am Meer – Griechenland",
+  "meta": "Haus kaufen auf Chalkidiki direkt am Meer: Häuser, Villen und Wohnungen in erster Reihe in Nordgriechenland. Jetzt Immobilien am Meer ansehen.",
+  "h1": "Haus kaufen in Griechenland: Chalkidiki direkt am Meer",
+  "h2": [
+    "Immobilien in Griechenland am Meer: was heißt 'direkt am Meer'?",
+    "Häuser am Meer auf Chalkidiki nach Region",
+    "Küstenzone und Strandrecht in Griechenland",
+    "Haus am Meer: Pflege, Feuchtigkeit und Versicherung"
+  ],
+  "faqQuestions": [
+    "Was kostet ein Haus direkt am Meer auf Chalkidiki?",
+    "Darf man in Griechenland direkt am Strand bauen?",
+    "Was bedeutet 'erste Reihe' bei Immobilien in Griechenland?",
+    "Welche Region auf Chalkidiki hat die schönsten Strände für Hauskäufer?"
+  ],
+  "faq": [
+    {
+      "q": "Was kostet ein Haus direkt am Meer auf Chalkidiki?",
+      "a": "Häuser in erster Reihe gehören zu den teuersten Immobilien auf Chalkidiki. Der Preis hängt von Gemeinde, Größe, Zustand und Strandzugang ab. Auf dieser Seite sehen Sie alle aktuellen Angebote mit Preis. Mit dem Preisfilter grenzen Sie die Auswahl schnell auf Ihr Budget ein."
+    },
+    {
+      "q": "Darf man in Griechenland direkt am Strand bauen?",
+      "a": "Nein, nicht frei. Strände sind in Griechenland öffentlich, und direkt an der Küste gilt eine geschützte Zone mit strengen Bauregeln. Neue Häuser stehen deshalb meist mit Abstand zum Wasser. Stand November 2026; die genauen Regeln für ein bestimmtes Grundstück bestätigt unser Anwalt."
+    },
+    {
+      "q": "Was bedeutet 'erste Reihe' bei Immobilien in Griechenland?",
+      "a": "„Erste Reihe“ heißt, dass zwischen Immobilie und Strand kein anderes Gebäude steht. Oft trennt nur ein Weg oder eine kleine Straße das Haus vom Meer. Sie haben also freien Blick und kurzen Zugang zum Wasser. Der Strand selbst bleibt aber öffentlich. Er bleibt für alle Menschen zugänglich."
+    },
+    {
+      "q": "Welche Region auf Chalkidiki hat die schönsten Strände für Hauskäufer?",
+      "a": "Das ist Geschmackssache. Kassandra bietet lange Sandstrände und viel Leben im Sommer. Sithonia hat ruhige Buchten mit klarem Wasser und Pinienwald. In der Athos-Region ist es besonders ruhig. Am besten sehen Sie sich verschiedene Orte an. Wir planen gern eine Besichtigungstour für Sie."
+    }
+  ],
+  "intro": "<p>Ein Haus kaufen in Griechenland, auf Chalkidiki, direkt am Meer – hier finden Sie alle Immobilien in erster Reihe, die wir aktuell anbieten. Dazu gehören Häuser, Wohnungen und Villen mit direktem Zugang zum Strand oder in der ersten Reihe zum Wasser. Solche Angebote sind selten. Wenn Ihnen eines gefällt, fragen Sie früh eine Besichtigung an, vor Ort oder per Video.</p>",
+  "body": "<h2>Immobilien in Griechenland am Meer: was heißt 'direkt am Meer'?</h2><p>Bei uns bedeutet „direkt am Meer“: Die Immobilie liegt in erster Reihe oder hat direkten Zugang zum Strand. Wir verwenden diese Bezeichnung nur, wenn das wirklich zutrifft. Andere Häuser mit kurzem Fußweg zum Strand finden Sie über den Filter „Entfernung zum Meer“.</p><h2>Häuser am Meer auf Chalkidiki nach Region</h2><p>Kassandra hat lange Sandstrände und lebhafte Orte, besonders an der Ostküste. Sithonia bietet kleine Buchten, Felsen und klares Wasser. In Nea Propontida liegen Häuser am Meer oft in Orten, die das ganze Jahr belebt sind. Aristotelis ist ruhiger und weniger bebaut. Welche Küste zu Ihnen passt, finden Sie am besten bei einer Besichtigungstour heraus. Wir zeigen Ihnen gern mehrere Orte an wenigen Tagen.</p><h2>Küstenzone und Strandrecht in Griechenland</h2><p>In Griechenland sind Strände öffentlich. Einen privaten Strand gibt es deshalb nicht, auch nicht vor einer Villa. Direkt an der Küste gilt eine geschützte Zone, in der man nicht frei bauen darf. Stand November 2026, von unserem Anwalt zu bestätigen. Bei älteren Häusern am Meer prüft der Anwalt die Genehmigungen besonders genau.</p><h2>Haus am Meer: Pflege, Feuchtigkeit und Versicherung</h2><p>Salzige Luft und Feuchtigkeit beanspruchen ein Haus am Meer stärker. Planen Sie regelmäßige Pflege ein:</p><ul><li>Fenster, Türen und Metallteile schützen</li><li>Gut lüften, besonders im Winter</li><li>Fassade und Dach regelmäßig prüfen</li></ul><p>Eine Gebäudeversicherung ist empfehlenswert. Wenn Sie nicht vor Ort sind, kümmern wir uns auf Wunsch um die Kontrolle.</p>",
+  "listingFilter": "sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/am-meer",
+  "hreflang": "P09: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Am Meer"
+  ],
+  "heroAlt": "Haus in erster Reihe am Sandstrand auf Chalkidiki – Haus kaufen Chalkidiki direkt am Meer",
+  "galleryAltPattern": "{type} direkt am Meer in {municipality}, Chalkidiki – {feature}",
+  "ogTitle": "Haus kaufen auf Chalkidiki direkt am Meer – Griechenland",
+  "anchor": "Haus direkt am Meer auf Chalkidiki",
+  "anchorVariants": [
+    "Immobilien am Meer auf Chalkidiki",
+    "Haus in Griechenland am Meer kaufen"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    },
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    },
+    {
+      "anchor": "Häuser am Meer in Kassandra",
+      "href": "/de/immobilien/kassandra/am-meer"
+    },
+    {
+      "anchor": "Häuser am Meer auf Sithonia",
+      "href": "/de/immobilien/sithonia/am-meer"
+    },
+    {
+      "anchor": "Villa auf Chalkidiki kaufen",
+      "href": "/de/immobilien/villen"
+    },
+    {
+      "anchor": "Immobilien in Kassandra",
+      "href": "/de/immobilien/kassandra"
+    },
+    {
+      "anchor": "Immobilien auf Sithonia",
+      "href": "/de/immobilien/sithonia"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P07",
+    "P14",
+    "P17",
+    "P18"
+  ],
+  "cta": "Häuser am Meer ansehen",
+  "oldUrls": [],
+  "words": 469,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

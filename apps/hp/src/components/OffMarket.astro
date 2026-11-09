@@ -59,14 +59,14 @@ if (count < 1) return null;
             («Πάρτε πρόσβαση στο {b}»). Αν γραφόταν το ένα πάνω στο άλλο, το κουμπί
             θα έλεγε «...στο Ξεκλειδώστε το Secret Portfolio». */}
         <p class="t-label off__eyebrow">{t(lang, 'off.eyebrow')}</p>
-        <h2 id="off-h" class="off__h">
+        <p data-h id="off-h" class="off__h">
           <b class="off__adj">{t(lang, 'off.h2a')}</b> {t(lang, 'off.h2b')}
-        </h2>
+        </p>
       </div>
 
       <div class="off__act">
         <p class="off__ask">{t(lang, 'off.ask2')}</p>
-        <a class="btn h-gild" href={`${prefix(lang)}/login`} data-ev="register:off_market">
+        <a class="btn h-gild" href={`${prefix(lang)}/login`} rel="nofollow" data-ev="register:off_market">
           {t(lang, 'off.access', { b: t(lang, 'off.brand') })}
         </a>
       </div>
@@ -88,20 +88,20 @@ if (count < 1) return null;
      κλίμακα (72px) — μια λέξη στα 72px θα φώναζε, και ακριβώς αυτό δεν θέλουμε. */
   .off__h {
     margin: var(--s3) 0 0; font-weight: 300; letter-spacing: -.016em;
-    font-size: clamp(26px, 5vw, 40px); line-height: 1.14; color: #fff; max-width: 20ch;
+    font-size: var(--fs-s4); line-height: 1.14; color: #fff; max-width: 20ch;
   }
   /* Το επίθετο κρατά μόνο το βάρος — καμία αλλαγή μεγέθους, κανένα χρώμα. */
   .off__adj { font-weight: 600; }
 
   .off__act { align-self: end; }
-  .off__ask { margin: 0 0 var(--s4); font-size: 15px; color: rgba(255,255,255,.86); max-width: 40ch; }
+  .off__ask { margin: 0 0 var(--s4); font-size: var(--fs-s0); color: rgba(255,255,255,.86); max-width: 40ch; }
   .off__act .btn { background: #fff; color: var(--ink-deep); border-color: #fff; }
-  .off__fine { margin: var(--s3) 0 0; font-size: 11.5px; color: rgba(255,255,255,.42); }
+  .off__fine { margin: var(--s3) 0 0; font-size: var(--fs-s-1); color: rgba(255,255,255,.42); }
 
   .off__seller {
     margin: var(--s6) 0 0; padding-top: var(--s4);
     border-top: 1px solid rgba(255,255,255,.14);
-    font-size: 13.5px; color: rgba(255,255,255,.55);
+    font-size: var(--fs-s-1); color: rgba(255,255,255,.55);
   }
   .off__seller a { border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 1px; color: rgba(255,255,255,.86); }
 
@@ -119,7 +119,7 @@ if (count < 1) return null;
     .off__lock { display: none; }
     /* Sergei 03/11: the heading in two lines, not three — a wider left column, no ch limit */
     .off__grid { grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 48px; }
-    .off__h { margin-top: var(--s3); max-width: none; text-wrap: balance; font-size: 36px; }
+    .off__h { margin-top: var(--s3); max-width: none; text-wrap: balance; font-size: var(--fs-s3); }
     .off__biglock {
       display: block; position: absolute; left: calc(50% + 13px); top: 0; width: 100px; height: 100px;
       color: #fff; opacity: .07; pointer-events: none; z-index: 0; will-change: transform;

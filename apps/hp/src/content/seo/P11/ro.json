@@ -1,0 +1,132 @@
+{
+  "id": "P11",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "A",
+  "name": "Property in Kassandra",
+  "pageType": "listing",
+  "path": "/ro/proprietati/kassandra",
+  "keyword": {
+    "primary": "case de vanzare kassandra grecia",
+    "volume": 0,
+    "secondary": [
+      "proprietati kassandra — 0",
+      "apartamente de vanzare kassandra — 0",
+      "vile kassandra — 0"
+    ],
+    "otherGeography": [
+      "case de vanzare kassandra halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case de vânzare în Grecia – Kassandra, Halkidiki",
+  "meta": "Case de vânzare în Grecia, în Kassandra (Halkidiki): case, apartamente și vile aproape de plajele cunoscute ale peninsulei. Vedeți ofertele acum.",
+  "h1": "Case de vânzare în Grecia – proprietăți în Kassandra, Halkidiki",
+  "h2": [
+    "De ce Kassandra: plaje și sate animate",
+    "Case și apartamente în Kassandra",
+    "Vile în Kassandra",
+    "Proprietăți la mare în Kassandra",
+    "Viața în Kassandra tot anul"
+  ],
+  "faqQuestions": [
+    "Cum se ajunge în Kassandra din România?",
+    "Kassandra este potrivită pentru locuit tot anul?",
+    "Cât costă o casă în Kassandra, Halkidiki?",
+    "Care este diferența dintre Kassandra și Sithonia?"
+  ],
+  "faq": [
+    {
+      "q": "Cum se ajunge în Kassandra din România?",
+      "a": "Cu mașina, mergeți prin Bulgaria spre Salonic, apoi continuați spre Halkidiki. Cu avionul, zburați la Salonic, iar de la aeroport până la începutul Kassandrei faceți cam o oră cu mașina. Cu mașina proprie vă mișcați ușor între vizionări și puteți vedea mai multe zone în aceeași zi."
+    },
+    {
+      "q": "Kassandra este potrivită pentru locuit tot anul?",
+      "a": "Da, dacă alegeți o localitate mai mare, cu magazine și servicii deschise și iarna. Satele foarte turistice sunt liniștite în afara sezonului, iar multe taverne se închid. Dacă vreți să locuiți aici tot anul, vă arătăm la vizionare zonele care rămân animate și în extrasezon."
+    },
+    {
+      "q": "Cât costă o casă în Kassandra, Halkidiki?",
+      "a": "Prețul depinde de distanța până la plajă, de vedere, de suprafață și de faptul că locuința este nouă sau la revânzare. O casă la prima linie costă mult mai mult decât una în interior. Folosiți filtrul de preț de pe această pagină pentru ofertele actuale."
+    },
+    {
+      "q": "Care este diferența dintre Kassandra și Sithonia?",
+      "a": "Kassandra este mai dezvoltată, cu plaje organizate și sate animate vara, și este mai aproape de Salonic. Sithonia este mai verde și mai liniștită, cu păduri de pin și multe golfuri mici. Alegerea depinde de stilul de vacanță pe care îl preferați."
+    }
+  ],
+  "intro": "<p>Case de vânzare în Grecia, în Kassandra: aici găsiți case, apartamente și vile din municipiul Kassandra, prima peninsulă a Halkidikiului, aproape de plajele ei cunoscute. Lucrăm numai în Halkidiki, așa că toate ofertele sunt în nordul Greciei. Filtrați după tip, preț și distanța până la mare. Când găsiți o proprietate potrivită, programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>De ce Kassandra: plaje și sate animate</h2><p>Kassandra este peninsula de vest a Halkidikiului și cea mai ușor de atins de la aeroportul din Salonic: până la începutul ei faceți cam o oră cu mașina. Are plaje organizate, cu nisip, și sate pline de viață vara, precum Kallithea, Pefkochori sau Hanioti.</p><h2>Case și apartamente în Kassandra</h2><p>În Kassandra găsiți apartamente pentru vacanță, duplexuri în complexe mici și case pentru familie. Gândiți-vă dacă vreți să fiți în centrul satului, aproape de magazine, sau într-o zonă mai liniștită.</p><h2>Vile în Kassandra</h2><p>Vilele din Kassandra au adesea piscină și vedere spre golf. Pentru o selecție, vedeți pagina dedicată vilelor din Kassandra.</p><h2>Proprietăți la mare în Kassandra</h2><p>Coasta Kassandrei are multe plaje cu nisip. Proprietățile la prima linie au o pagină separată, unde explicăm și verificarea zonei de coastă.</p><h2>Viața în Kassandra tot anul</h2><p>Vara, Kassandra este animată. Iarna, multe magazine și taverne din satele turistice se închid, iar viața devine mai liniștită. Localitățile mai mari rămân însă deschise tot anul. Alegeți locul după cum vreți să folosiți casa: doar vara sau tot anul.</p>",
+  "listingFilter": "municipality=kassandra",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/kassandra",
+  "hreflang": "P11: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Kassandra"
+  ],
+  "heroAlt": "Plajă cu nisip și case pe dealul din Kassandra, Halkidiki – case de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Case de vânzare în Grecia – Kassandra, Halkidiki",
+  "anchor": "case de vânzare în Kassandra",
+  "anchorVariants": [
+    "proprietăți în Kassandra, Halkidiki",
+    "case în Kassandra, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "case de vânzare în Grecia",
+      "href": "/ro/proprietati/case"
+    },
+    {
+      "anchor": "vile în Grecia",
+      "href": "/ro/proprietati/vile"
+    },
+    {
+      "anchor": "teren de vânzare în Grecia",
+      "href": "/ro/proprietati/terenuri"
+    },
+    {
+      "anchor": "vile de vânzare în Kassandra",
+      "href": "/ro/proprietati/kassandra/vile"
+    },
+    {
+      "anchor": "case pe plajă în Kassandra",
+      "href": "/ro/proprietati/kassandra/pe-plaja"
+    },
+    {
+      "anchor": "viața în Grecia, în Halkidiki",
+      "href": "/ro/halkidiki"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P04",
+    "P05",
+    "P06",
+    "P08",
+    "P09",
+    "P15",
+    "P17",
+    "P21"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 420,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

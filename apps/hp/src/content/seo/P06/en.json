@@ -1,0 +1,104 @@
+{
+  "id": "P06",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "B",
+  "name": "Maisonettes for sale",
+  "pageType": "listing",
+  "path": "/en/properties/maisonettes",
+  "keyword": {
+    "primary": "maisonettes for sale halkidiki",
+    "volume": 0,
+    "secondary": [],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Maisonettes for Sale in Halkidiki, Greece",
+  "meta": "Maisonettes for sale in Halkidiki: two-level homes with their own entrance, often with garden and sea view, in Kassandra, Sithonia and more. View them.",
+  "h1": "Maisonettes for Sale in Halkidiki, Greece",
+  "h2": [
+    "What is a maisonette?",
+    "Maisonettes for sale by area",
+    "Maisonettes with garden or pool",
+    "Maisonette, apartment or detached house?"
+  ],
+  "faqQuestions": [
+    "What is a maisonette in Greece?",
+    "Is a maisonette in Halkidiki a good holiday home?",
+    "Do maisonettes in Halkidiki have their own garden?"
+  ],
+  "faq": [
+    {
+      "q": "What is a maisonette in Greece?",
+      "a": "A maisonette is a home on two or three levels with its own entrance, usually semi-detached or in a small group of homes. Living areas are typically on the ground floor and bedrooms upstairs. In Greek listings it is called a mezoneta."
+    },
+    {
+      "q": "Is a maisonette in Halkidiki a good holiday home?",
+      "a": "For many buyers, yes. It offers more space than an apartment, its own entrance and often a garden, so it suits families and guests. In a small complex, neighbours and shared maintenance help while you are away, and we can manage the property for you after the purchase."
+    },
+    {
+      "q": "Do maisonettes in Halkidiki have their own garden?",
+      "a": "Many do, either a private garden or a terrace with outdoor space. In some complexes the garden areas are shared. Each listing states what belongs to the home, and your lawyer confirms the exact boundaries in the title documents. Ask us if anything is unclear."
+    }
+  ],
+  "intro": "<p>Maisonettes for sale in Halkidiki, Greece: two-level homes with their own entrance, often with a garden and sometimes a sea view. Every maisonette below is in Halkidiki, Northern Greece. Filter by area and price, and book a viewing in person or by video. In space, privacy and price they sit between an apartment and a detached house, which makes them a popular choice for families.</p>",
+  "body": "<h2>What is a maisonette?</h2><p>In Greece a maisonette is a home on two or three levels, usually with living space downstairs and bedrooms upstairs. It is often semi-detached or part of a small complex, with its own entrance and outdoor space. Buyers from the USA might call it a townhouse.</p><h2>Maisonettes for sale by area</h2><p>Maisonettes are common in the holiday villages of Kassandra and Sithonia and in small complexes along the coast of Nea Propontida and Polygyros. In the resort villages they are mostly holiday homes, while in towns with a permanent population they also suit families who live here all year. Use the area filter to compare.</p><h2>Maisonettes with garden or pool</h2><p>Many maisonettes have a private garden or terrace, and some complexes share a pool. Check who maintains the shared areas and what the yearly common charges are. A garden facing the sea or an upstairs terrace with a view makes a big difference to daily life.</p><h2>Maisonette, apartment or detached house?</h2><p>A maisonette gives you more space and privacy than an apartment, usually at a lower price than a detached house. You look after your own garden, while shared items such as a pool are split with neighbours. For full privacy, see our houses page; for a smaller budget, see apartments.</p>",
+  "listingFilter": "subcategory=maisonette",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/maisonettes",
+  "hreflang": "P06: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Maisonettes"
+  ],
+  "heroAlt": "Two-level maisonette with garden and terrace in Halkidiki, Greece – maisonettes for sale",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Maisonettes for Sale in Halkidiki – Two-Level Homes by the Sea",
+  "anchor": "maisonettes for sale in Halkidiki",
+  "anchorVariants": [
+    "Halkidiki maisonettes",
+    "two-level homes for sale in Halkidiki"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "apartments for sale in Halkidiki",
+      "href": "/en/properties/apartments-for-sale"
+    },
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P04"
+  ],
+  "cta": "See maisonettes",
+  "oldUrls": [],
+  "words": 415,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

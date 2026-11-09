@@ -1,0 +1,99 @@
+{
+  "id": "P17",
+  "lang": "tr",
+  "buildOrder": 4,
+  "priority": "C",
+  "name": "Kassandra seafront",
+  "pageType": "listing",
+  "path": "/tr/emlak/kassandra/denize-sifir",
+  "keyword": {
+    "primary": "kassandra denize sıfır ev",
+    "volume": 0,
+    "secondary": [
+      "kassandra satılık ev — 0",
+      "halkidiki denize sıfır ev — 0"
+    ],
+    "otherGeography": [
+      "yunanistan denize sıfır satılık ev — 0",
+      "yunanistan satılık ev — 800"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Kassandra Denize Sıfır Ev – Halkidiki, Yunanistan",
+  "meta": "Kassandra'da denize sıfır ev ilanları: Halkidiki'de kumsala ilk sıradaki ev ve villalar. Kassandra sahilindeki seçenekleri hemen inceleyin.",
+  "h1": "Kassandra'da Denize Sıfır Satılık Ev: Halkidiki Sahili",
+  "h2": [
+    "Kassandra'da denize sıfır evler ve villalar",
+    "Kumsala ilk sıra: avantajlar ve dikkat edilecekler",
+    "Kassandra sahilinde fiyatları neler belirler?",
+    "Kıyı şeridi kuralları ve yasal kontroller"
+  ],
+  "faqQuestions": [
+    "Kassandra'da denize sıfır ev fiyatları ne kadar?",
+    "Kassandra'da hangi sahiller ev için daha sakin?",
+    "Denize sıfır evlerin yasal durumu nasıl kontrol edilir?"
+  ],
+  "faq": [
+    {
+      "q": "Kassandra'da denize sıfır ev fiyatları ne kadar?",
+      "a": "Kassandra'da denize sıfır evler bölgenin en çok aranan grubudur ve genellikle en yüksek fiyatlılar arasındadır. Fiyatı kumsalın türü, evin büyüklüğü ve bahçesi, mahremiyet ve köyün hareketliliği belirler. Her ilanın güncel fiyatını kendi sayfasında gösteriyoruz; bütçenize göre filtreleyerek seçenekleri görebilirsiniz. Benzer evlerle karşılaştırma yapmanıza da yardımcı oluruz."
+    },
+    {
+      "q": "Kassandra'da hangi sahiller ev için daha sakin?",
+      "a": "Kassandra'da yazın en hareketli yerler, otel ve restoranların yoğun olduğu köylerin kumsallarıdır. Bu merkezlerden biraz uzaktaki sahil şeritleri genellikle daha sakindir. Hangi bölümün size uygun olduğunu, evi nasıl kullanacağınıza göre birlikte değerlendirebilir, gösterimde çevreyi de size gösterebiliriz. Yazın ve kışın aynı kumsalın çok farklı göründüğünü de hesaba katın."
+    },
+    {
+      "q": "Denize sıfır evlerin yasal durumu nasıl kontrol edilir?",
+      "a": "Yasal durum, tapu kayıtları, yapı izinleri ve kıyı çizgisine ilişkin belgeler üzerinden bir avukat ve inşaat mühendisi tarafından kontrol edilir. Kıyıya yakın yapılaşma özel kurallara bağlı olduğu için bu kontroller çok önemlidir. Kontroller tamamlanmadan ön sözleşme imzalamamanızı ve kapora ödememenizi öneririz. Gerekli belgeleri satıcıdan baştan istemek süreci hızlandırır."
+    }
+  ],
+  "intro": "<p>Kassandra denize sıfır ev ilanlarını bu sayfada bulursunuz: Halkidiki'de kumsala ilk sıradaki ev ve villalar. Kassandra'nın uzun kumlu sahillerinde kapıdan çıkıp denize yürüyebileceğiniz evler, en çok aranan ve en az bulunan seçeneklerdir.</p><p>Fiyat ve türe göre filtreleyin, beğendiğiniz ev hakkında bilgi isteyin. Her ilanda evin bulunduğu belediye yazar; tam konumu gösterimde paylaşırız. Gösterimleri yerinde ya da görüntülü yapıyoruz; uzaktaysanız evi ve kumsalı canlı yayında birlikte gezebiliriz.</p>",
+  "body": "<h2>Kassandra'da denize sıfır evler ve villalar</h2><p>Kassandra'nın kıyısı boyunca uzun kumlu plajlar, düzenli ve hareketli kumsallar ile daha sakin bölümler bir arada bulunur. Denize sıfır evler küçük yazlıklardan geniş villalara kadar çeşitlilik gösterir. Halkidiki denize sıfır ev arayanlar için Kassandra, ulaşım kolaylığıyla öne çıkar.</p><h2>Kumsala ilk sıra: avantajlar ve dikkat edilecekler</h2><p>Kumsala ilk sırada olmanın en büyük avantajı denize doğrudan erişimdir. Ancak hareketli kumsallarda yazın gürültü ve kalabalık olabilir. Tuzlu hava ve nem nedeniyle düzenli bakım gerekir. Kışın evi kullanacaksanız ısıtma ve yalıtımı da kontrol edin.</p><h2>Kassandra sahilinde fiyatları neler belirler?</h2><ul><li>Kumsalın türü ve ne kadar kalabalık olduğu</li><li>Evin büyüklüğü, bahçesi ve yaşı</li><li>Mahremiyet ve çevredeki yapılaşma</li><li>Yıl boyu ulaşım</li></ul><p>Her ilanın güncel fiyatı kendi sayfasında yazar.</p><h2>Kıyı şeridi kuralları ve yasal kontroller</h2><p>Yunanistan'da kıyı şeridi koruma altındadır ve kıyıya yakın yapılaşma özel kurallara bağlıdır. Denize sıfır bir evin yasal durumu, izinleri ve kıyı çizgisiyle ilişkisi mutlaka bir avukat ve inşaat mühendisi tarafından kontrol edilmelidir. Bu kontroller bitmeden ön sözleşme imzalamamanızı öneririz. Süreci avukat ve mühendisle birlikte planlıyor, hangi belgelerin isteneceğini size baştan anlatıyoruz.</p>",
+  "listingFilter": "municipality=kassandra & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/tr/emlak/kassandra/denize-sifir",
+  "hreflang": "P17: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Ana Sayfa",
+    "Emlak",
+    "Kassandra",
+    "Denize Sıfır"
+  ],
+  "heroAlt": "Kassandra'da kumsala sıfır, terası denize bakan satılık ev",
+  "galleryAltPattern": "Satılık {type}, {municipality} – Halkidiki, Yunanistan, {feature}",
+  "ogTitle": "Kassandra'da Denize Sıfır Ev – Halkidiki, Yunanistan",
+  "anchor": "Kassandra denize sıfır ev",
+  "anchorVariants": [
+    "Kassandra'da denize sıfır satılık evler",
+    "Kassandra sahilinde satılık ev"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Kassandra satılık ev",
+      "href": "/tr/emlak/kassandra"
+    },
+    {
+      "anchor": "Yunanistan'da denize sıfır satılık ev",
+      "href": "/tr/emlak/denize-sifir"
+    },
+    {
+      "anchor": "Halkidiki satılık ev ilanları",
+      "href": "/tr/emlak"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P11"
+  ],
+  "cta": "İlanları Gör",
+  "oldUrls": [],
+  "words": 382,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

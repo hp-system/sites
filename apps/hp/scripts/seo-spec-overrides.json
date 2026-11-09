@@ -1,0 +1,20 @@
+{
+  "_note": "Corrections to George's spec, applied by scripts/import-seo-spec.mjs. The xlsx itself is never edited. pages: {\"P04/en\": {field: value}}; allowedLinkTargets: link targets outside the spec pages.",
+  "pages": {
+    "P19/de": {
+      "breadcrumb": [
+        "Startseite",
+        "Immobilienkauf in Griechenland"
+      ],
+      "_why": "The spec has a «Ratgeber» (guides) level only in de and he, and no guides hub page exists, so the crumb would have no URL (invalid BreadcrumbList). Two levels, as in the other 7 languages. 2026-11-06."
+    },
+    "P19/he": {
+      "breadcrumb": [
+        "דף הבית",
+        "קניית דירה ביוון"
+      ],
+      "_why": "Same as P19/de: the «guides» level exists only in de/he and has no page."
+    }
+  },
+  "allowedLinkTargets": []
+}

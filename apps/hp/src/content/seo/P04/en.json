@@ -1,0 +1,139 @@
+{
+  "id": "P04",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Houses / homes for sale",
+  "pageType": "listing",
+  "path": "/en/properties/homes-for-sale",
+  "keyword": {
+    "primary": "houses for sale halkidiki",
+    "volume": 250,
+    "secondary": [
+      "halkidiki homes for sale — 230",
+      "buy house halkidiki — 230",
+      "house for sale halkidiki — 110",
+      "halkidiki house for sale — 100",
+      "halkidiki houses for sale — 70",
+      "houses for sale in halkidiki greece — 50"
+    ],
+    "otherGeography": [
+      "homes for sale in greece — 1100",
+      "houses for sale in greece — 900",
+      "houses for sale greece — 500",
+      "house for sale in greece — 200"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Houses for Sale in Halkidiki, Greece – Homes by the Sea",
+  "meta": "Houses for sale in Halkidiki: detached homes and family houses in Kassandra, Sithonia and beyond, a short drive from the sea. See homes for sale.",
+  "h1": "Houses for Sale in Halkidiki, Greece",
+  "h2": [
+    "Homes for sale in Halkidiki by area",
+    "Houses near the beach in Halkidiki",
+    "Family homes for year-round living",
+    "Holiday homes in Halkidiki",
+    "Buying a house in Greece: steps and costs"
+  ],
+  "faqQuestions": [
+    "How much is a house in Halkidiki?",
+    "Can I buy a house in Halkidiki and live there all year?",
+    "Which part of Halkidiki is best for a family home?",
+    "Do houses in Halkidiki come with a garden or pool?"
+  ],
+  "faq": [
+    {
+      "q": "How much is a house in Halkidiki?",
+      "a": "It depends on the area, the size, the age and above all the distance to the sea. Houses in popular parts of Kassandra and near the best beaches cost more, while village houses inland are usually more affordable. Use the price filter to see what fits your budget."
+    },
+    {
+      "q": "Can I buy a house in Halkidiki and live there all year?",
+      "a": "Yes, if you choose the right house and area. Check heating, insulation and winter access, and prefer a town with year-round services such as Nea Moudania or Polygyros. Non-EU citizens also need a residence permit to live in Greece. Many owners in these towns live here all year."
+    },
+    {
+      "q": "Which part of Halkidiki is best for a family home?",
+      "a": "Families living here all year often choose Nea Propontida or the area around Polygyros, for schools, shops and the shorter drive to Thessaloniki. For holiday family homes, Kassandra and Sithonia offer more beaches and summer activities. We can show you options in several areas in one trip."
+    },
+    {
+      "q": "Do houses in Halkidiki come with a garden or pool?",
+      "a": "Many do. Detached houses and maisonettes usually have a garden or yard, and some larger homes have a private pool. Each listing shows the outdoor features, and you can filter for them. Apartments in small complexes may also share a pool with neighbours."
+    }
+  ],
+  "intro": "<p>Houses for sale in Halkidiki, Greece, from village homes to detached family houses with gardens, all a short drive from the sea. Every house below is in Halkidiki, Northern Greece, and each listing shows the municipality and the main features. Filter by area and price, and book a viewing in person or by video. Detached houses, maisonettes and family homes are all here.</p>",
+  "body": "<h2>Homes for sale in Halkidiki by area</h2><p>Kassandra offers the most choice and the shortest drive from Thessaloniki. Sithonia has homes among pine forests and quiet coves. Nea Propontida and Polygyros suit buyers who want towns that stay busy all year, and Aristotelis offers a more local life in the north-east.</p><h2>Houses near the beach in Halkidiki</h2><p>Many Halkidiki homes for sale are within walking distance of the sea. A house on the first line costs more than one a few streets back, so decide how close you really need to be.</p><h2>Family homes for year-round living</h2><p>If you plan to live here all year, look at heating, insulation and winter road access. Larger towns such as Nea Moudania and Polygyros have schools, shops and health services, while smaller resort villages can be very quiet from autumn to spring.</p><h2>Holiday homes in Halkidiki</h2><p>For holidays, location and outdoor space matter most: a terrace, a garden, maybe a pool. Think about who will look after the house while you are away; we offer property management after the purchase.</p><h2>Buying a house in Greece: steps and costs</h2><p>Before you buy, your lawyer and an engineer check the title, the building permit, any legalisation of extra spaces and the energy certificate. As of November 2026, to be confirmed by our lawyer, transfer tax on a resale is 3.09%, VAT on new builds is suspended until 31/12/2026, and other fees typically add several percent. Our buying guide covers each step.</p>",
+  "listingFilter": "category=residency",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/homes-for-sale",
+  "hreflang": "P04: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Houses"
+  ],
+  "heroAlt": "Two-storey house with garden and distant sea view for sale in Halkidiki, Greece",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Houses for Sale in Halkidiki – Homes in Northern Greece",
+  "anchor": "houses for sale in Halkidiki",
+  "anchorVariants": [
+    "homes for sale in Halkidiki",
+    "Halkidiki houses for sale"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "apartments for sale in Halkidiki",
+      "href": "/en/properties/apartments-for-sale"
+    },
+    {
+      "anchor": "maisonettes for sale in Halkidiki",
+      "href": "/en/properties/maisonettes"
+    },
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P05",
+    "P06",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P20"
+  ],
+  "cta": "See houses for sale",
+  "oldUrls": [
+    {
+      "path": "/en/articles/all-news/homes-for-sale-in-halkidiki-greece",
+      "clicks": 37
+    }
+  ],
+  "words": 495,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

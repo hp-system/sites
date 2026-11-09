@@ -1,0 +1,116 @@
+{
+  "id": "P10",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "B",
+  "name": "Affordable property (up to €150,000)",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/jeftine-nekretnine",
+  "keyword": {
+    "primary": "jeftine nekretnine u grckoj",
+    "volume": 70,
+    "secondary": [
+      "nekretnine grcka do 50000e — 700",
+      "nekretnine grcka do 30000e — 450",
+      "jeftini stanovi na moru grcka — 350",
+      "jeftine nekretnine na moru prodaja grcka — 300",
+      "jeftine kuce u grckoj na moru — 50",
+      "jeftine nekretnine grcka — 40"
+    ],
+    "otherGeography": [
+      "halkidiki jeftine nekretnine na moru prodaja — 30"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Jeftine nekretnine u Grčkoj – Halkidiki do 150.000 €",
+  "meta": "Jeftine nekretnine u Grčkoj: stanovi, studiji i kuće na Halkidikiju do 150.000 €, mnoge blizu mora. Pogledajte ponudu i proverite ukupne troškove.",
+  "h1": "Jeftine nekretnine u Grčkoj – ponude na Halkidikiju do 150.000 €",
+  "h2": [
+    "Jeftine nekretnine na moru u Grčkoj – Halkidiki",
+    "Nekretnine u Grčkoj do 50.000 € i do 30.000 €: realna očekivanja",
+    "Jeftini stanovi i studiji blizu mora",
+    "Dodatni troškovi: porez, notar, advokat",
+    "Kako prepoznati dobru priliku"
+  ],
+  "faqQuestions": [
+    "Mogu li se u Grčkoj naći nekretnine do 50.000 €?",
+    "Šta se može kupiti na Halkidikiju do 150.000 €?",
+    "Koji dodatni troškovi idu uz cenu nekretnine u Grčkoj?",
+    "Zašto su neke nekretnine u Grčkoj jeftinije od drugih?"
+  ],
+  "faq": [
+    {
+      "q": "Mogu li se u Grčkoj naći nekretnine do 50.000 €?",
+      "a": "Ponekad da, ali retko i uglavnom kao mali ili stariji studiji, objekti za renoviranje ili nekretnine u unutrašnjosti. Takve ponude nisu česte i nekada imaju nedostatke u dokumentaciji. Recite nam svoj budžet i javićemo vam kada se na Halkidikiju pojavi nešto realno."
+    },
+    {
+      "q": "Šta se može kupiti na Halkidikiju do 150.000 €?",
+      "a": "Za taj budžet na Halkidikiju se najčešće nalaze studiji i manji stanovi, ponekad dupleksi ili starije kuće, posebno u unutrašnjosti ili dalje od plaže. Šta je trenutno dostupno vidite u ponudi na ovoj stranici, filtriranoj na cene do 150.000 €."
+    },
+    {
+      "q": "Koji dodatni troškovi idu uz cenu nekretnine u Grčkoj?",
+      "a": "Prema pravilima od novembra 2026, kod preprodaje se plaća porez na prenos od 3,09% (3% plus opštinski dodatak), a PDV na novogradnju je suspendovan do 31.12.2026. Dodaju se notar, advokat i upis u katastar, obično ukupno nekoliko procenata. Iznose potvrđuje advokat."
+    },
+    {
+      "q": "Zašto su neke nekretnine u Grčkoj jeftinije od drugih?",
+      "a": "Najčešći razlozi su udaljenost od mora, starost objekta, potreba za renoviranjem, manja kvadratura ili lokacija u unutrašnjosti. Ponekad je razlog i nesređena dokumentacija, na primer neupisana dogradnja. Zato kod jeftinijih nekretnina advokat i inženjer proveravaju sve pre nego što date ponudu."
+    }
+  ],
+  "intro": "<p>Jeftine nekretnine u Grčkoj: na ovoj stranici su ponude do 150.000 € na Halkidikiju, na severu Grčke, gde radi naša agencija. To su najčešće studiji, manji stanovi i starije kuće, neke blizu mora, a neke u unutrašnjosti.</p><p>Filtrirajte po opštini i udaljenosti od mora, a kada nešto izdvojite, zakažite razgledanje uživo ili putem video poziva i proverite stanje na licu mesta.</p>",
+  "body": "<h2>Jeftine nekretnine na moru u Grčkoj – Halkidiki</h2><p>Sve ponude na ovoj stranici nalaze se na Halkidikiju i imaju cenu do 150.000 €. Uz svaku je prikazana opština, a tačna lokacija se dogovara pri razgledanju. Nekretnine bliže moru u ovom budžetu su po pravilu manje ili starije.</p><h2>Nekretnine u Grčkoj do 50.000 € i do 30.000 €: realna očekivanja</h2><p>Mnogi traže nekretnine do 50.000 € ili do 30.000 €. Iskreno: za takav budžet obično se nalaze mali ili stari studiji, objekti za renoviranje ili nekretnine u unutrašnjosti, daleko od plaže. Takve ponude nisu česte, pa vredi da nam kažete šta tražite.</p><h2>Jeftini stanovi i studiji blizu mora</h2><p>Studiji i manji stanovi u starijim zgradama najčešći su način da se uz manji budžet kupi nešto blizu mora. Proverite stanje zgrade, zajedničke troškove i koliko je ulaganje u renoviranje potrebno.</p><h2>Dodatni troškovi: porez, notar, advokat</h2><p>Prema pravilima od novembra 2026, kod preprodaje se plaća porez na prenos od 3,09%. Dodaju se notar, advokat i upis u katastar, obično ukupno nekoliko procenata cene. Iznose potvrđuje naš advokat.</p><h2>Kako prepoznati dobru priliku</h2><p>Niska cena ima smisla samo ako su papiri uredni. Obratite pažnju na:</p><ul><li>nedostatak građevinske dozvole</li><li>dograđene delove koji nisu upisani</li><li>veliko potrebno renoviranje</li><li>visoke zajedničke troškove zgrade</li></ul>",
+  "listingFilter": "price_max=150000 (NEW facet)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/jeftine-nekretnine",
+  "hreflang": "P10: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Jeftine nekretnine"
+  ],
+  "heroAlt": "Jeftine nekretnine u Grčkoj – mala stambena zgrada blizu plaže na Halkidikiju",
+  "galleryAltPattern": "{type} na prodaju, {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Jeftine nekretnine u Grčkoj – Halkidiki do 150.000 €",
+  "anchor": "jeftine nekretnine u Grčkoj",
+  "anchorVariants": [
+    "nekretnine na Halkidikiju do 150.000 €",
+    "jeftini stanovi u Grčkoj na moru"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    },
+    {
+      "anchor": "prodaja stanova u Grčkoj",
+      "href": "/sr/nekretnina/stanovi"
+    },
+    {
+      "anchor": "placevi u Grčkoj na prodaju",
+      "href": "/sr/nekretnina/zemljiste"
+    },
+    {
+      "anchor": "kupovina nekretnine u Grčkoj",
+      "href": "/sr/kupovina-nekretnine-u-grckoj"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P05",
+    "P19"
+  ],
+  "cta": "Pogledajte ponude do 150.000 €",
+  "oldUrls": [],
+  "words": 430,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

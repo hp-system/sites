@@ -1,0 +1,99 @@
+{
+  "id": "P18",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "C",
+  "name": "Sithonia seafront",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/sitonija/prva-linija",
+  "keyword": {
+    "primary": "sitonija nekretnine na moru",
+    "volume": 0,
+    "secondary": [
+      "prodaja kuca sitonija — 10",
+      "sitonija kuce na prodaju — 10",
+      "sitonija prvi red do mora — 0"
+    ],
+    "otherGeography": [
+      "nekretnine sitonija halkidiki na moru — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Grčka – Sitonija nekretnine na moru, prvi red do mora",
+  "meta": "Sitonija nekretnine na moru: kuće i vile u prvom redu do mora na Halkidikiju u Grčkoj, iznad mirnih uvala i borove šume. Pogledajte ponudu.",
+  "h1": "Sitonija nekretnine na moru – prvi red do mora, Halkidiki, Grčka",
+  "h2": [
+    "Nekretnine u prvom redu do mora u Sitoniji",
+    "Kuće na prodaju u Sitoniji uz obalu",
+    "Uvale, stene i kristalno more",
+    "Pristup, putevi i život van sezone"
+  ],
+  "faqQuestions": [
+    "Da li u Sitoniji ima nekretnina sa sopstvenim izlazom na uvalu?",
+    "Da li je obala ispred kuće u Sitoniji javna?",
+    "Kako se do nekretnina na moru u Sitoniji stiže zimi?"
+  ],
+  "faq": [
+    {
+      "q": "Da li u Sitoniji ima nekretnina sa sopstvenim izlazom na uvalu?",
+      "a": "Ima kuća sa direktnim izlazom na uvalu, ali su retke. Važno je znati da je i tada obala javna: vlasnik ne sme da je ogradi niti da zabrani prolaz. Uz svaku ponudu jasno navodimo da li je u prvom redu, a pri razgledanju proveravamo pristup moru."
+    },
+    {
+      "q": "Da li je obala ispred kuće u Sitoniji javna?",
+      "a": "Da. U Grčkoj je pojas uz more javno dobro, pa je obala ispred kuće u Sitoniji javna i niko je ne sme ograditi. Za gradnju u blizini obale važe posebna pravila, zato advokat i inženjer pre kupovine proveravaju status svih objekata uz more."
+    },
+    {
+      "q": "Kako se do nekretnina na moru u Sitoniji stiže zimi?",
+      "a": "Do većine nekretnina stiže se glavnim putem koji obilazi poluostrvo, a zatim lokalnim putem do obale. Neki lokalni putevi su strmi ili uski, pa vredi proveriti kako izgledaju po kiši i zimi. Pri razgledanju vam pokazujemo pristup i najbliža mesta sa uslugama."
+    }
+  ],
+  "intro": "<p>Sitonija nekretnine na moru: ovde su kuće, stanovi i vile u prvom redu do mora u opštini Sitonija, na Halkidikiju, na severu Grčke. Prvi red za nas znači da između nekretnine i plaže nema puta ni druge zgrade.</p><p>Uz svaku nekretninu prikazana je samo opština, a tačnu lokaciju dobijate pri razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Nekretnine u prvom redu do mora u Sitoniji</h2><p>Ova stranica prikazuje samo nekretnine u prvom redu u Sitoniji. Takvih ponuda je malo, jer je obala na mnogim mestima strma i neizgrađena.</p><h2>Kuće na prodaju u Sitoniji uz obalu</h2><p>Većina ponuda uz obalu su kuće, često sa baštom i terasom prema moru. Proverite nagib placa, parking, put do kuće i da li je pristup moru lak i za starije članove porodice.</p><h2>Uvale, stene i kristalno more</h2><p>Obala Sitonije je razuđena: male uvale, stene, borova šuma do mora i vrlo bistra voda. Okruženje je mirnije nego u Kasandri, čak i leti.</p><h2>Pristup, putevi i život van sezone</h2><p>Do nekih uvala vode strmi ili uski putevi, pa proverite pristup i zimi. Van sezone radi manje usluga, a veća mesta su najbliži oslonac za kupovinu i lekara.</p>",
+  "listingFilter": "municipality=sithonia & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/sitonija/prva-linija",
+  "hreflang": "P18: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Sitonija",
+    "Prvi red do mora"
+  ],
+  "heroAlt": "Sitonija nekretnine na moru – kuća iznad stenovite uvale sa borovima, Halkidiki",
+  "galleryAltPattern": "{type} u prvom redu do mora, Sitonija, Halkidiki – {feature}",
+  "ogTitle": "Sitonija nekretnine na moru – prvi red do mora",
+  "anchor": "nekretnine na moru u Sitoniji",
+  "anchorVariants": [
+    "Sitonija – prvi red do mora",
+    "kuće na moru u Sitoniji"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine u Sitoniji",
+      "href": "/sr/nekretnina/sitonija"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na moru",
+      "href": "/sr/nekretnina/prva-linija"
+    },
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P12"
+  ],
+  "cta": "Pogledajte ponudu na moru",
+  "oldUrls": [],
+  "words": 339,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

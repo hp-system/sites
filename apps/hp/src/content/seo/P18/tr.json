@@ -1,0 +1,99 @@
+{
+  "id": "P18",
+  "lang": "tr",
+  "buildOrder": 4,
+  "priority": "C",
+  "name": "Sithonia seafront",
+  "pageType": "listing",
+  "path": "/tr/emlak/sithonia/denize-sifir",
+  "keyword": {
+    "primary": "sithonia denize sıfır ev",
+    "volume": 0,
+    "secondary": [
+      "sithonia satılık ev — 0",
+      "halkidiki denize sıfır ev — 0"
+    ],
+    "otherGeography": [
+      "yunanistan denize sıfır satılık ev — 0",
+      "yunanistan satılık ev — 800"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Sithonia Denize Sıfır Ev – Halkidiki, Yunanistan",
+  "meta": "Sithonia'da denize sıfır ev ilanları: Halkidiki'nin berrak koylarında denize ilk sıradaki ev ve villalar. Sithonia sahilindeki ilanları inceleyin.",
+  "h1": "Sithonia'da Denize Sıfır Satılık Ev: Halkidiki Koyları",
+  "h2": [
+    "Sithonia'da denize sıfır evler ve villalar",
+    "Koylarda yaşam: avantajlar ve dikkat edilecekler",
+    "Sithonia sahilinde fiyatları neler belirler?",
+    "Kıyı şeridi kuralları ve yasal kontroller"
+  ],
+  "faqQuestions": [
+    "Sithonia'da denize sıfır ev fiyatları ne kadar?",
+    "Sithonia'da denize sıfır evler kışın kullanılabilir mi?",
+    "Denize sıfır evlerin yasal durumu nasıl kontrol edilir?"
+  ],
+  "faq": [
+    {
+      "q": "Sithonia'da denize sıfır ev fiyatları ne kadar?",
+      "a": "Sithonia'da denize sıfır evler az bulunur ve genellikle bölgenin en yüksek fiyatlı evleri arasındadır. Fiyatı koyun yapısı, mahremiyet, yol erişimi ve evin büyüklüğü belirler. Her ilanın güncel fiyatını kendi sayfasında gösteriyoruz; bütçenize göre filtreleyerek seçenekleri görebilir, sorularınızı bize iletebilirsiniz. Yeni ilanlar çıktığında size haber verebiliriz."
+    },
+    {
+      "q": "Sithonia'da denize sıfır evler kışın kullanılabilir mi?",
+      "a": "Evet, ısıtması ve yalıtımı uygun olan evler kışın da kullanılabilir. Ancak bazı koylara giden yollar dar ve virajlıdır, çevredeki köyler de kışın sakinleşir. Kışın ulaşımı, en yakın market ve sağlık hizmetini satın almadan önce kontrol etmenizi öneririz. Siz yokken bakım için de bir düzen kurun."
+    },
+    {
+      "q": "Denize sıfır evlerin yasal durumu nasıl kontrol edilir?",
+      "a": "Yasal durum, tapu kayıtları, yapı izinleri ve kıyı çizgisine ilişkin belgeler üzerinden bir avukat ve inşaat mühendisi tarafından kontrol edilir. Kıyıya yakın yapılaşma özel kurallara bağlı olduğu için bu kontroller çok önemlidir. Kontroller tamamlanmadan ön sözleşme imzalamamanızı ve kapora ödememenizi öneririz. Gerekli belgeleri satıcıdan baştan istemek süreci hızlandırır."
+    }
+  ],
+  "intro": "<p>Sithonia denize sıfır ev ilanlarını bu sayfada bulursunuz: Halkidiki'nin berrak koylarında denize ilk sıradaki ev ve villalar. Çam ağaçlarının denize kadar indiği küçük koylarda, sakin bir sahil hayatı arayanlar için seçilmiş evler burada.</p><p>Fiyat ve türe göre filtreleyin, beğendiğiniz ev hakkında bilgi isteyin. Her ilanda evin bulunduğu belediye yazar; tam konumu gösterimde paylaşırız. Gösterimleri yerinde ya da görüntülü yapıyoruz; uzaktaysanız evi ve koyu canlı yayında birlikte gezebiliriz.</p>",
+  "body": "<h2>Sithonia'da denize sıfır evler ve villalar</h2><p>Sithonia'nın kıyısı küçük koylar, kumlu ve kayalık plajlar ve berrak sudan oluşur. Denize sıfır evler genellikle bu koyların çevresindedir ve sayıca azdır. Halkidiki denize sıfır ev arayanlar için Sithonia, doğa ve sakinlikle öne çıkar.</p><h2>Koylarda yaşam: avantajlar ve dikkat edilecekler</h2><p>Koyda yaşamak sabah denize girmek, akşam sessizlikte oturmak demektir. Öte yandan bazı koylara giden yollar dar ve virajlıdır; kışın ulaşımı kontrol etmek gerekir. Nem ve tuzlu hava düzenli bakım ister. Kış kullanımı için ısıtma ve yalıtım önemlidir.</p><h2>Sithonia sahilinde fiyatları neler belirler?</h2><ul><li>Koyun yapısı: kum ya da kaya</li><li>Mahremiyet ve koydaki yapılaşma</li><li>Yol erişimi ve kışın ulaşım</li><li>Evin büyüklüğü, bahçesi ve yaşı</li></ul><p>Her ilanın güncel fiyatı kendi sayfasında yazar.</p><h2>Kıyı şeridi kuralları ve yasal kontroller</h2><p>Yunanistan'da kıyı şeridi koruma altındadır ve kıyıya yakın yapılaşma özel kurallara bağlıdır. Denize sıfır bir evin yasal durumu, izinleri ve kıyı çizgisiyle ilişkisi mutlaka bir avukat ve inşaat mühendisi tarafından kontrol edilmelidir. Bu kontroller bitmeden ön sözleşme imzalamamanızı öneririz. Süreci avukat ve mühendisle birlikte planlıyor, hangi belgelerin isteneceğini size baştan anlatıyoruz.</p>",
+  "listingFilter": "municipality=sithonia & sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/tr/emlak/sithonia/denize-sifir",
+  "hreflang": "P18: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Ana Sayfa",
+    "Emlak",
+    "Sithonia",
+    "Denize Sıfır"
+  ],
+  "heroAlt": "Sithonia'da çam ağaçlarının denize indiği koyda satılık ev",
+  "galleryAltPattern": "Satılık {type}, {municipality} – Halkidiki, Yunanistan, {feature}",
+  "ogTitle": "Sithonia'da Denize Sıfır Ev – Halkidiki, Yunanistan",
+  "anchor": "Sithonia denize sıfır ev",
+  "anchorVariants": [
+    "Sithonia'da denize sıfır satılık evler",
+    "Sithonia koylarında satılık ev"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Sithonia satılık ev",
+      "href": "/tr/emlak/sithonia"
+    },
+    {
+      "anchor": "Yunanistan'da denize sıfır satılık ev",
+      "href": "/tr/emlak/denize-sifir"
+    },
+    {
+      "anchor": "Halkidiki satılık ev ilanları",
+      "href": "/tr/emlak"
+    }
+  ],
+  "linkedFrom": [
+    "P09",
+    "P12"
+  ],
+  "cta": "İlanları Gör",
+  "oldUrls": [],
+  "words": 377,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

@@ -1,0 +1,145 @@
+{
+  "id": "P08",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "Land & plots for sale",
+  "pageType": "listing",
+  "path": "/en/properties/land-for-sale",
+  "keyword": {
+    "primary": "land for sale halkidiki",
+    "volume": 30,
+    "secondary": [
+      "land for sale in chalkidiki greece — 30",
+      "land for sale in halkidiki — 20",
+      "land for sale halkidiki greece — 20",
+      "land for sale in chalkidiki — 20",
+      "halkidiki land for sale — 10",
+      "land for sale in halkidiki greece — 10"
+    ],
+    "otherGeography": [
+      "land for sale in greece — 100",
+      "land for sale greece — 100",
+      "beachfront land for sale halkidiki greece — 50"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Land for Sale in Halkidiki, Greece – Plots & Building Land",
+  "meta": "Land for sale in Halkidiki: building plots, sea-view land and olive groves in Kassandra, Sithonia and more of Northern Greece. See plots for sale.",
+  "h1": "Land for Sale in Halkidiki, Greece",
+  "h2": [
+    "Building plots for sale in Halkidiki",
+    "Beachfront and sea-view land",
+    "Land inside or outside the village plan",
+    "Can I build on this plot?",
+    "Buying land in Greece as a foreigner"
+  ],
+  "faqQuestions": [
+    "Can foreigners buy land in Halkidiki?",
+    "Can I build a house on land I buy in Halkidiki?",
+    "How much does a plot of land cost in Halkidiki?",
+    "What is the minimum plot size to build outside a village in Greece?"
+  ],
+  "faq": [
+    {
+      "q": "Can foreigners buy land in Halkidiki?",
+      "a": "Yes. EU citizens buy on the same terms as Greeks, and non-EU buyers can also buy, although some border areas of Greece need extra approval. Your lawyer checks whether this applies to the plot you choose. As of November 2026, you need a Greek tax number and bank account in every case."
+    },
+    {
+      "q": "Can I build a house on land I buy in Halkidiki?",
+      "a": "Often, but not always. Whether you can build, and how much, depends on the zoning, the plot size, road access and any forest or archaeological restrictions. Ask a civil engineer to check the plot and give you a written answer before you sign anything."
+    },
+    {
+      "q": "How much does a plot of land cost in Halkidiki?",
+      "a": "Land prices depend mainly on location, sea view, distance to the beach, size and buildability. A buildable sea-view plot near a popular resort costs far more than an olive grove inland. Use the price filter to see current plots, and ask us about each one."
+    },
+    {
+      "q": "What is the minimum plot size to build outside a village in Greece?",
+      "a": "As a general rule, building outside a town plan has required a plot of about 4,000 m² with access to a public road, with exceptions for some older plots. These rules have changed in recent years and keep evolving, so as of November 2026 an engineer and your lawyer must confirm each plot."
+    }
+  ],
+  "intro": "<p>Land for sale in Halkidiki: building plots, sea-view land and olive groves across Northern Greece's best-known peninsula. Every plot below is in Halkidiki, and each listing shows the municipality, the size and the distance to the sea. Before you buy, have an engineer confirm what you can build. Book a viewing in person or by video. We can also introduce you to local engineers who know the area.</p>",
+  "body": "<h2>Building plots for sale in Halkidiki</h2><p>Plots inside a village or town plan are usually the simplest to build on, with roads and utilities nearby. Larger plots outside the plan give more space and privacy, but the rules are stricter.</p><h2>Beachfront and sea-view land</h2><p>Beachfront land is rare and in demand. The shore in Greece is public, and building is restricted in the zone next to it. Hillside plots with a sea view are more common and often more practical.</p><h2>Land inside or outside the village plan</h2><p>Inside the plan, building terms are set for each area. Outside the plan, buildability depends on the plot size, road access and zoning, and these rules have changed several times in recent years. As of November 2026, to be confirmed by our lawyer, every plot must be checked one by one.</p><h2>Can I build on this plot?</h2><p>Only a civil engineer can answer this for a specific plot, after checking the zoning, the size, the road frontage, any forest or archaeological restrictions and the utility connections. Get this answer in writing before you sign.</p><h2>Buying land in Greece as a foreigner</h2><p>EU and non-EU buyers can buy land in Greece with a Greek tax number (AFM) and a Greek bank account. Some border areas need extra approval for non-EU buyers, to be confirmed by our lawyer. See our buying guide for the full process.</p>",
+  "listingFilter": "category=land",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/land-for-sale",
+  "hreflang": "P08: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Land"
+  ],
+  "heroAlt": "Olive grove plot with sea view for sale in Halkidiki, Greece – land for sale",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – plot with {feature}",
+  "ogTitle": "Land for Sale in Halkidiki – Building Plots & Sea-View Land",
+  "anchor": "land for sale in Halkidiki",
+  "anchorVariants": [
+    "plots for sale in Halkidiki",
+    "Halkidiki land for sale"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "property for sale in Nea Propontida",
+      "href": "/en/properties/nea-propontida"
+    },
+    {
+      "anchor": "real estate in Aristotelis, Halkidiki",
+      "href": "/en/properties/aristotelis"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P03",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P19"
+  ],
+  "cta": "See land for sale",
+  "oldUrls": [
+    {
+      "path": "/en/properties-in-halkidiki-greece/land-halkidiki",
+      "clicks": 52
+    },
+    {
+      "path": "/en/properties-in-halkidiki-greece/island-halkidiki",
+      "clicks": 5
+    },
+    {
+      "path": "/en/articles/buyers/navigating-the-legal-landscape:-real-estate-laws-in-halkidiki",
+      "clicks": 1
+    }
+  ],
+  "words": 493,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

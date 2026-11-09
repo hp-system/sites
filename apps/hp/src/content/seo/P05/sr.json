@@ -1,0 +1,130 @@
+{
+  "id": "P05",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "A",
+  "name": "Apartments for sale",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/stanovi",
+  "keyword": {
+    "primary": "prodaja stanova grcka",
+    "volume": 200,
+    "secondary": [
+      "stanovi grcka — 80",
+      "grcka stanovi prodaja — 50",
+      "grcka prodaja stanova — 40",
+      "prodaja stanova grcka more — 40",
+      "stanovi u grckoj na moru prodaja — 30",
+      "kupovina stana u grckoj — 30"
+    ],
+    "otherGeography": [
+      "prodaja apartmana halkidiki — 30",
+      "prodaja stanova halkidiki — 30",
+      "prodaja apartmana grcka halkidiki — 20",
+      "stanovi halkidiki prodaja — 20"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Prodaja stanova Grčka – stanovi i studiji na Halkidikiju",
+  "meta": "Prodaja stanova u Grčkoj: stanovi i studiji na Halkidikiju, blizu plaže, za odmor ili stalni boravak. Pogledajte ponudu i pitajte nas za obilazak.",
+  "h1": "Prodaja stanova Grčka – stanovi i apartmani na Halkidikiju",
+  "h2": [
+    "Stanovi na prodaju u Grčkoj – ponuda na Halkidikiju",
+    "Stanovi u Grčkoj na moru",
+    "Studio, stan ili apartman: šta dobijate za svoj budžet",
+    "Kupovina stana u Grčkoj korak po korak",
+    "Godišnji troškovi stana: ENFIA, zajednički troškovi, održavanje"
+  ],
+  "faqQuestions": [
+    "Koliko košta stan u Grčkoj na moru?",
+    "Koja je razlika između stana, studija i apartmana u Grčkoj?",
+    "Da li stranac može da kupi stan u Grčkoj?",
+    "Koliki su godišnji troškovi stana u Grčkoj?"
+  ],
+  "faq": [
+    {
+      "q": "Koliko košta stan u Grčkoj na moru?",
+      "a": "Cena zavisi od veličine, pogleda, starosti zgrade i udaljenosti od plaže. Studiji i manji stanovi dalje od mora su najpovoljniji, a stanovi u prvom redu sa pogledom najskuplji. Aktuelne cene na Halkidikiju vidite u ponudi na ovoj stranici, a za manji budžet pogledajte i jeftine nekretnine."
+    },
+    {
+      "q": "Koja je razlika između stana, studija i apartmana u Grčkoj?",
+      "a": "Studio je jedna prostorija sa kuhinjskim delom i kupatilom. Stan ima odvojene sobe. Reč „apartman“ u Grčkoj se često koristi za jedinicu za odmor ili izdavanje, bez obzira na broj soba. Zato je najvažnije gledati kvadraturu, raspored i broj spavaćih soba."
+    },
+    {
+      "q": "Da li stranac može da kupi stan u Grčkoj?",
+      "a": "Da. I državljani zemalja van EU mogu da kupe stan u Grčkoj. Potrebni su grčki poreski broj (AFM) i račun u grčkoj banci, a advokat proverava vlasništvo i dokumentaciju. U nekim pograničnim oblastima traži se posebna dozvola, što advokat takođe proverava."
+    },
+    {
+      "q": "Koliki su godišnji troškovi stana u Grčkoj?",
+      "a": "Glavni su porez na imovinu ENFIA, zajednički troškovi zgrade, struja, voda i održavanje. ENFIA zavisi od lokacije, površine i starosti objekta, a zajednički troškovi od toga da li zgrada ima bazen, lift ili baštu. Za konkretan stan tražite od prodavca poslednje račune."
+    }
+  ],
+  "intro": "<p>Prodaja stanova Grčka: ovde su stanovi, studiji i apartmani na prodaju na Halkidikiju, na severu Grčke, gde radi naša agencija. Mnogi su na nekoliko minuta od plaže i pogodni za letovanje ili duže boravke.</p><p>Filtrirajte ponudu po opštini, ceni i udaljenosti od mora. Kada pronađete stan koji vam odgovara, zakažite razgledanje uživo ili putem video poziva, a mi ćemo vam pokazati i zgradu, okolinu i put do plaže.</p>",
+  "body": "<h2>Stanovi na prodaju u Grčkoj – ponuda na Halkidikiju</h2><p>Svi stanovi u ovoj ponudi nalaze se na Halkidikiju. Uz svaki stan prikazana je opština, a tačna lokacija se dogovara pri razgledanju. Stanovi su najčešće u manjim zgradama ili kompleksima, ponekad sa zajedničkim bazenom i baštom.</p><h2>Stanovi u Grčkoj na moru</h2><p>Kod stanova na moru najviše vrede pogled i udaljenost od plaže. Stan u prvom redu do mora redak je i skuplji, dok je izbor stanova nekoliko minuta hoda od plaže znatno veći.</p><h2>Studio, stan ili apartman: šta dobijate za svoj budžet</h2><p>Studio je jedna prostorija sa kuhinjskim delom i kupatilom, pogodan za letovanje. Stan ima jednu ili više odvojenih spavaćih soba. U grčkim oglasima „apartman“ često znači jedinicu za odmor ili izdavanje, a ne nužno veliki stan, zato uvek proverite kvadraturu i raspored.</p><h2>Kupovina stana u Grčkoj korak po korak</h2><ul><li>izbor i razgledanje, uživo ili putem video poziva</li><li>grčki poreski broj (AFM) i račun u banci</li><li>provera vlasništva i dozvola kod nezavisnog advokata</li><li>potpisivanje ugovora kod notara i upis u katastar</li></ul><h2>Godišnji troškovi stana: ENFIA, zajednički troškovi, održavanje</h2><p>Vlasnik svake godine plaća porez na imovinu ENFIA, čiji iznos zavisi od lokacije, površine i starosti objekta. U zgradama se plaćaju i zajednički troškovi, posebno ako postoji bazen ili lift, a tu su i struja, voda i održavanje.</p>",
+  "listingFilter": "subcategory=apartment|studio (NEW facet)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/stanovi",
+  "hreflang": "P05: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Stanovi"
+  ],
+  "heroAlt": "Prodaja stanova Grčka – stambena zgrada sa terasama blizu plaže na Halkidikiju",
+  "galleryAltPattern": "{type} na prodaju, {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Prodaja stanova Grčka – stanovi na Halkidikiju",
+  "anchor": "prodaja stanova u Grčkoj",
+  "anchorVariants": [
+    "stanovi na prodaju na Halkidikiju",
+    "stanovi u Grčkoj na moru"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    },
+    {
+      "anchor": "prodaja kuća u Grčkoj",
+      "href": "/sr/nekretnina/kuce"
+    },
+    {
+      "anchor": "jeftine nekretnine u Grčkoj",
+      "href": "/sr/nekretnina/jeftine-nekretnine"
+    },
+    {
+      "anchor": "nekretnine u Kasandri",
+      "href": "/sr/nekretnina/kasandra"
+    },
+    {
+      "anchor": "nekretnine u Sitoniji",
+      "href": "/sr/nekretnina/sitonija"
+    },
+    {
+      "anchor": "kupovina nekretnine u Grčkoj",
+      "href": "/sr/kupovina-nekretnine-u-grckoj"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P04",
+    "P06",
+    "P10",
+    "P13"
+  ],
+  "cta": "Pogledajte stanove",
+  "oldUrls": [],
+  "words": 454,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

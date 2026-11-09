@@ -1,0 +1,98 @@
+{
+  "id": "P16",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "C",
+  "name": "Sithonia villas",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/sitonija/vile",
+  "keyword": {
+    "primary": "prodaja vila sitonija",
+    "volume": 0,
+    "secondary": [
+      "vile sitonija — 0",
+      "luksuzne vile sitonija — 0"
+    ],
+    "otherGeography": [
+      "vile sitonija halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Vile Grčka – prodaja vila u Sitoniji, Halkidiki",
+  "meta": "Prodaja vila u Sitoniji, Grčka: luksuzne vile u borovoj šumi i iznad mirnih uvala srednjeg poluostrva Halkidikija. Zatražite detalje i obilazak.",
+  "h1": "Prodaja vila Sitonija – luksuzne vile na Halkidikiju, Grčka",
+  "h2": [
+    "Vile na prodaju u Sitoniji",
+    "Vile iznad uvala i u borovoj šumi",
+    "Sitonija za vlasnike vila: privatnost i priroda",
+    "Vila u Sitoniji i Zlatna viza"
+  ],
+  "faqQuestions": [
+    "Koliko košta vila u Sitoniji?",
+    "Da li u Sitoniji ima vila sa direktnim izlazom na more?",
+    "Da li se vila u Sitoniji može kupiti uz Zlatnu vizu?"
+  ],
+  "faq": [
+    {
+      "q": "Koliko košta vila u Sitoniji?",
+      "a": "Cena zavisi od pogleda, udaljenosti od mora, veličine kuće i placa, bazena i pristupa. Vile sa direktnim izlazom na more su najređe i najskuplje. Aktuelne cene vila u Sitoniji vidite u ponudi na ovoj stranici, a pri razgledanju objašnjavamo šta utiče na cenu konkretne vile."
+    },
+    {
+      "q": "Da li u Sitoniji ima vila sa direktnim izlazom na more?",
+      "a": "Ponekad. Takve vile su retke, jer je obala na mnogim mestima strma, a pojas uz more je javan i ne sme se ograđivati. Uz ponudu jasno navodimo da li je vila u prvom redu ili sa pogledom. Za nekretnine uz samu obalu pogledajte i ponudu na moru u Sitoniji."
+    },
+    {
+      "q": "Da li se vila u Sitoniji može kupiti uz Zlatnu vizu?",
+      "a": "Može, ako vila ispunjava uslove. Prema pravilima od novembra 2026, na Halkidikiju je prag 400.000 € za jednu stambenu nekretninu od najmanje 120 m². Državljanima EU Zlatna viza nije potrebna. Pre kupovine naš advokat proverava sve uslove za konkretnu vilu."
+    }
+  ],
+  "intro": "<p>Prodaja vila Sitonija: ovde su luksuzne vile na prodaju u opštini Sitonija, na srednjem poluostrvu Halkidikija, na severu Grčke. To su vile za one koji traže privatnost, borovu šumu i pogled na uvale, Toronejski ili Singitski zaliv.</p><p>Uz svaku vilu prikazana je samo opština, a tačnu lokaciju dobijate pri diskretnom razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Vile na prodaju u Sitoniji</h2><p>Ponuda obuhvata vile iznad mora i vile u zelenilu, dalje od letnje gužve. Filtrirajte po ceni i udaljenosti od mora, a pri razgledanju uporedite više vila u istom danu.</p><h2>Vile iznad uvala i u borovoj šumi</h2><p>Mnoge vile su na padinama iznad uvala, sa pogledom koji je teško zakloniti. Proverite nagib placa, pristupni put i put do mora.</p><h2>Sitonija za vlasnike vila: privatnost i priroda</h2><p>Prednost je mir i priroda, a cena za to je duža vožnja do Soluna i manje usluga zimi. Posle kupovine možemo da preuzmemo upravljanje vilom dok niste tu.</p><h2>Vila u Sitoniji i Zlatna viza</h2><p>Prema pravilima od novembra 2026, Halkidiki je u zoni od 400.000 €, uz jednu stambenu nekretninu od najmanje 120 m². Da li konkretna vila ispunjava uslove, potvrđuje naš advokat.</p>",
+  "listingFilter": "municipality=sithonia & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/sitonija/vile",
+  "hreflang": "P16: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Sitonija",
+    "Vile"
+  ],
+  "heroAlt": "Prodaja vila Sitonija – kamena vila sa bazenom iznad tirkizne uvale, Halkidiki",
+  "galleryAltPattern": "vila na prodaju, Sitonija, Halkidiki – {feature}",
+  "ogTitle": "Prodaja vila u Sitoniji – luksuzne vile, Halkidiki",
+  "anchor": "prodaja vila u Sitoniji",
+  "anchorVariants": [
+    "vile u Sitoniji",
+    "luksuzne vile u Sitoniji"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine u Sitoniji",
+      "href": "/sr/nekretnina/sitonija"
+    },
+    {
+      "anchor": "prodaja vila u Grčkoj",
+      "href": "/sr/nekretnina/vile"
+    },
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P12"
+  ],
+  "cta": "Pogledajte vile u Sitoniji",
+  "oldUrls": [],
+  "words": 342,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

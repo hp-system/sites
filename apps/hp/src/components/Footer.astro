@@ -55,13 +55,13 @@ import { consentText } from '../lib/consent';
       </div>
 
       <nav aria-label={t(lang, 'foot.properties')}>
-        <h2 class="fcol__h">{t(lang, 'foot.properties')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.properties')}</p>
         {seoLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
         <a href={listUrl(lang)}>{t(lang, 'foot.properties')} →</a>
       </nav>
 
       <nav aria-label={t(lang, 'foot.services')}>
-        <h2 class="fcol__h">{t(lang, 'foot.services')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.services')}</p>
         {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')}</a>}
         {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')}</a>}
         {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')}</a>}
@@ -70,7 +70,7 @@ import { consentText } from '../lib/consent';
 
       {/* Guides, as on the live site (#69): its three most-read articles + the hub. English-only for now. */}
       <nav aria-label={t(lang, 'foot.guides')}>
-        <h2 class="fcol__h">{t(lang, 'foot.guides')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.guides')}</p>
         <a href="/en/articles/all-news/homes-for-sale-in-halkidiki-greece">{t(lang, 'foot.g_houses')}</a>
         <a href="/en/articles/business-news/taxes-foreigners-properties-greece">{t(lang, 'foot.g_tax')}</a>
         <a href="/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki">{t(lang, 'foot.g_buy')}</a>
@@ -78,7 +78,7 @@ import { consentText } from '../lib/consent';
       </nav>
 
       <nav aria-label={t(lang, 'foot.company')}>
-        <h2 class="fcol__h">{t(lang, 'foot.company')}</h2>
+        <p data-h class="fcol__h">{t(lang, 'foot.company')}</p>
         {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
         {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
         {has('projects') && <a href={moved('projects')}>{t(lang, 'foot.projects')}</a>}
@@ -100,24 +100,24 @@ import { consentText } from '../lib/consent';
   .fcols { display: grid; gap: var(--s5); }
   .brand {
     display: inline-flex; align-items: center; gap: 10px;
-    font-size: 15px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink);
+    font-size: var(--fs-s0); letter-spacing: .2em; text-transform: uppercase; color: var(--ink);
   }
   .brand svg { width: 24px; height: 24px; flex: none; }
   /* Κάθε στοιχείο επικοινωνίας σε δική του γραμμή — δεν σπάει σε τυχαίο σημείο. */
   .fbrand__addr {
-    margin: var(--s3) 0 0; color: var(--muted); font-size: 14px; max-width: 34ch; line-height: 1.7;
+    margin: var(--s3) 0 0; color: var(--muted); font-size: var(--fs-s0); max-width: 34ch; line-height: 1.7;
     display: flex; flex-direction: column; align-items: flex-start;
   }
   .fbrand__hq i { font-style: normal; color: var(--faint); }
   .fcol__h {
-    font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
     color: var(--muted); margin: 0 0 var(--s2);
   }
-  .fcols nav a { display: block; padding: 5px 0; font-size: 14px; color: var(--ink-2); min-height: 30px; }
+  .fcols nav a { display: block; padding: 5px 0; font-size: var(--fs-s0); color: var(--ink-2); min-height: 30px; }
   .fcols nav a:hover { color: var(--ink); }
   .fbot {
     margin: var(--s6) 0 0; padding-top: var(--s4); border-top: 1px solid var(--line);
-    font-size: 11.5px; color: var(--faint);
+    font-size: var(--fs-s-1); color: var(--faint);
   }
   .fcookie { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
   @media (min-width: 760px) { .fcols { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: var(--s6); } }

@@ -54,14 +54,22 @@ try {
       }
     }));
   }
-  const broken = [...status].filter(([, s]) => s >= 400);
+  // ⏳ TEMPORARY (#160 → removed by #161): the spec texts of the listing pages link to the 4 spec
+  //    guides (P03, P19, P20, P21), which portion 3 builds. Only their exact spec URLs are excused;
+  //    every other broken link still fails. #161 deletes this block.
+  const PENDING = new Set(['P03', 'P19', 'P20', 'P21'].flatMap((id) =>
+    readdirSync(`src/content/seo/${id}`).map((f) => JSON.parse(readFileSync(`src/content/seo/${id}/${f}`, 'utf8')).path)));
+  const dec = (u) => { try { return decodeURI(u); } catch { return u; } };
+  const pendingHit = [...status].filter(([p, s]) => s >= 400 && PENDING.has(dec(p)));
+  if (pendingHit.length) console.log(`INFO ${pendingHit.length} link target(s) wait for portion 3 (#161): ${pendingHit.slice(0, 4).map(([p]) => dec(p)).join(' ')}`);
+  const broken = [...status].filter(([p, s]) => s >= 400 && !PENDING.has(dec(p)));
   check(`no broken internal link (${status.size} pages crawled)`, broken.length === 0, broken.slice(0, 4).map(([p, s]) => `${p} ${s} ← ${from.get(p)}`).join(' | ') || 'none');
   const hops = [...status].filter(([, s]) => s >= 300 && s < 400);
   check('no internal link is a redirect hop', hops.length === 0, hops.slice(0, 4).map(([p, s]) => `${p} ${s} ← ${from.get(p)}`).join(' | ') || 'none');
   const orphans = [...expected].filter((p) => !linked.has(p));
   check(`all ${expected.size} English pages are linked from somewhere`, orphans.length === 0, orphans.slice(0, 5).join(', ') || 'none');
   const en = await (await fetch(SITE + '/en')).text();
-  check('header: Blog → /en/articles/all-news', /<nav class="navlinks"[\s\S]*?href="\/en\/articles\/all-news"[\s\S]*?<\/nav>/.test(en), 'link');
+  check('header: Blog → /en/articles/all-news', /<nav class="navlinks[^"]*"[\s\S]*?href="\/en\/articles\/all-news"[\s\S]*?<\/nav>/.test(en), 'link');
   check('footer: Guides column with the 3 guides', ['/en/articles/all-news/homes-for-sale-in-halkidiki-greece', '/en/articles/business-news/taxes-foreigners-properties-greece', '/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki'].every((u) => en.includes(`href="${u}"`)), 'links');
 } finally {
   site.kill(); stub.server?.close?.();

@@ -1,0 +1,106 @@
+{
+  "id": "P13",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "B",
+  "name": "Property in Nea Propontida (Nea Moudania, Nea Kallikratia)",
+  "pageType": "listing",
+  "path": "/en/properties/nea-propontida",
+  "keyword": {
+    "primary": "nea moudania property for sale",
+    "volume": 0,
+    "secondary": [],
+    "otherGeography": []
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Nea Moudania Property for Sale – Nea Propontida, Halkidiki",
+  "meta": "Property for sale in Nea Propontida, Halkidiki: homes and apartments around Nea Moudania and Nea Kallikratia, 45 minutes from Thessaloniki. See listings.",
+  "h1": "Nea Moudania Property for Sale: Nea Propontida, Halkidiki",
+  "h2": [
+    "Living in Nea Propontida",
+    "Nea Moudania: a year-round town",
+    "Nea Kallikratia and the western coast",
+    "Apartments and houses for sale in Nea Propontida",
+    "Close to Thessaloniki: commuting and services"
+  ],
+  "faqQuestions": [
+    "What is it like to live in Nea Moudania all year?",
+    "How far is Nea Propontida from Thessaloniki?",
+    "Is Nea Kallikratia a good place to buy a holiday apartment?"
+  ],
+  "faq": [
+    {
+      "q": "What is it like to live in Nea Moudania all year?",
+      "a": "Nea Moudania is a real town, busy in every season. You find supermarkets, banks, pharmacies, schools, cafés and a health centre. It suits people who want everyday life with the sea close by. The port adds life to the seafront, and the town never empties out in winter the way resort villages do."
+    },
+    {
+      "q": "How far is Nea Propontida from Thessaloniki?",
+      "a": "Nea Propontida is the part of Halkidiki closest to Thessaloniki and its airport, closer than any of the three peninsulas. Travel time depends on the village and on traffic, so check the route for the home you are interested in."
+    },
+    {
+      "q": "Is Nea Kallikratia a good place to buy a holiday apartment?",
+      "a": "Many buyers think so. It has a long beach, a promenade, plenty of apartments and a lively summer, and the short drive to Thessaloniki makes weekend trips easy. It is busier than the villages on the peninsulas, so view it in summer before deciding."
+    }
+  ],
+  "intro": "<p>Nea Moudania property for sale, and homes across the wider municipality of Nea Propontida on the western coast of Halkidiki. This is the part of Halkidiki closest to Thessaloniki, with towns that stay busy all year. Every listing below is in the municipality of Nea Propontida. Book a viewing in person or by video. Nea Moudania and Nea Kallikratia are its best-known towns.</p>",
+  "body": "<h2>Living in Nea Propontida</h2><p>Nea Propontida stretches along the western coast, from the area nearest Thessaloniki to the start of Kassandra. Its towns have permanent populations, so shops, schools and cafés stay open in every season. It suits buyers who want to live here, not only spend the summer.</p><h2>Nea Moudania: a year-round town</h2><p>Nea Moudania is the main town of the area, with a port, a high street with shops and banks, supermarkets and a health centre. It has a working-town feel and a long seafront.</p><h2>Nea Kallikratia and the western coast</h2><p>Nea Kallikratia, further north along the coast, has a long beach, a promenade and many apartments. It is popular with families from Thessaloniki, and the coast between the two towns has quieter villages.</p><h2>Apartments and houses for sale in Nea Propontida</h2><p>Apartments in town are the most common homes here, alongside houses on the edges of the villages and in the quieter coastal settlements between the towns. For year-round living, look at heating, parking and the walk to shops and schools; for holidays, the distance to the beach matters most. Filter by type and price to compare.</p><h2>Close to Thessaloniki: commuting and services</h2><p>Being the closest part of Halkidiki to Thessaloniki makes daily life easier: the city's shops, hospitals and airport are within reach for a day trip, and some residents commute. Check the travel time for the exact home you are interested in.</p>",
+  "listingFilter": "municipality=propontida",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties/nea-propontida",
+  "hreflang": "P13: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Nea Propontida"
+  ],
+  "heroAlt": "Seafront promenade and apartment buildings in Nea Moudania, Halkidiki – Nea Moudania property for sale",
+  "galleryAltPattern": "{type} for sale in Nea Propontida, Halkidiki – {feature}",
+  "ogTitle": "Nea Moudania & Nea Propontida Property for Sale – Halkidiki",
+  "anchor": "property for sale in Nea Propontida",
+  "anchorVariants": [
+    "Nea Moudania property for sale",
+    "Nea Kallikratia homes for sale"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "apartments for sale in Halkidiki",
+      "href": "/en/properties/apartments-for-sale"
+    },
+    {
+      "anchor": "land for sale in Halkidiki",
+      "href": "/en/properties/land-for-sale"
+    },
+    {
+      "anchor": "Halkidiki beaches and living guide",
+      "href": "/en/halkidiki"
+    },
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P08",
+    "P21"
+  ],
+  "cta": "See Nea Propontida properties",
+  "oldUrls": [],
+  "words": 437,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

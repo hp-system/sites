@@ -30,10 +30,12 @@ import { cmsImage } from '../lib/content';
 import { heroShot } from '../lib/hero';
 import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
+import SpecText from './SpecText.astro';
+import { specByPath, specTitle } from '../lib/seo-pages';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
   facetUrl, ui, FACETS, SORTS, SORT_DEFAULT, PER_PAGE, PER_PAGE_OPTIONS,
-  cardsPerPage, SUBTYPES, MUNIS, SEAS, BED_OPTS, defined,
+  cardsPerPage, SUBTYPES, MUNIS, SEAS, BED_OPTS, defined, matches, minLive,
   type Facet, type Query, type Sort,
 } from '../lib/listing';
 
@@ -78,26 +80,64 @@ const isThemed = facets.length > 0;
 
 // ── SEO ────────────────────────────────────────────────────────────────────
 const pathFor = (l: Lang) => facetUrl(l, ...facets.map((f) => f.key));
-const noindex = !isIndexable(facets.map((f) => f.key), sp);
 
-const title = isThemed
-  ? `${heading} — ${ui(lang, 'all')}`
-  : ui(lang, 'all');
-const desc = isThemed
-  ? `${heading}. ${ui(lang, 'all')}.`
-  : ui(lang, 'all');
+// ── #160 GEORGE'S SPEC (05/11): this URL's title, meta, H1, texts, FAQ and links, word for word.
+const spec = specByPath(pathFor(lang));
+const firstPage = res.page === 1;
+// Spec rule 10: indexed only with ≥ 6 live listings (≥ 12 for apartments / affordable), counted on
+// the anonymous set WITHOUT the country rule — Google must get the same answer from GR and DE.
+// The number is used only for this decision; it is never printed (no counts, George 17/10).
+let liveAnon = res.total;
+try {
+  const anon = await allProperties(undefined, undefined);
+  const fq: Query = Object.assign({}, ...facets.map((f) => f.q));
+  liveAnon = anon.filter((p) => matches(p, fq)).length;
+} catch { /* API down: keep the visitor's own count */ }
+const thin = liveAnon < minLive(facets.map((f) => f.key));
+const noindex = !isIndexable(facets.map((f) => f.key), sp) || thin;
+// Decision D8: page N is self-canonical when nothing but `page` is in the URL.
+const onlyPage = [...sp.keys()].every((k) => k === 'page');
+const selfQuery = !firstPage && onlyPage ? `?page=${res.page}` : '';
+
+// «Page 2», never «2 of 10»: the number of pages would reveal the catalogue size (no counts).
+const pageNote = firstPage ? '' : ` – ${t(lang, 'home.page', { n: res.page })}`;
+const title = spec
+  ? specTitle(spec.title, brand.name) + pageNote
+  : (isThemed ? `${heading} — ${ui(lang, 'all')}` : ui(lang, 'all')) + pageNote;
+const desc = spec
+  ? spec.meta
+  : isThemed ? `${heading}. ${ui(lang, 'all')}.` : ui(lang, 'all');
+const h1 = spec ? spec.h1 : heading;
+// Breadcrumb: the spec's names; links to the home page, the main listing and, on a pair page
+// (Kassandra · Villas), the area page.
+const crumbLinks = [prefix(lang) || '/', facetUrl(lang), facets.length === 2 ? facetUrl(lang, facets[0].key) : undefined];
+const crumbs = spec
+  ? spec.breadcrumb.map((name, i, a) => ({ name, url: i === a.length - 1 ? undefined : crumbLinks[i] }))
+  : null;
 
 // 🪤 ΤΟ URL ΜΕΣΑ ΣΤΟ JSON-LD ΠΕΡΝΑΕΙ ΑΠΟ `propertyUrl(lang, …)`.
 //    Στην αρχική ήταν σκληροκωδικοποιημένο `/ακινητο/<id>` και δήλωνε ΕΛΛΗΝΙΚΟ
 //    URL σε ΚΑΙ ΤΙΣ ΕΝΝΕΑ γλώσσες — URL που στην αγγλική εκδοχή δεν υπάρχει καν.
-const jsonLd = res.items.length ? [{
+const siteRoot = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const itemList = {
   '@context': 'https://schema.org', '@type': 'ItemList',
-  name: heading,
+  name: h1,
   itemListElement: res.items.slice(0, 12).map((p, i) => ({
     '@type': 'ListItem', position: i + 1,
-    url: `${Astro.site?.toString().replace(/\/$/, '') ?? ''}${propertyUrl(lang, refOf(p))}`,
+    url: `${siteRoot}${propertyUrl(lang, refOf(p))}`,
   })),
-}] : [];
+};
+// #160 spec rule 11 for listing pages: CollectionPage + ItemList + BreadcrumbList + FAQPage
+// (the FAQ only where it is shown: page 1). The markup matches what the page shows (Google).
+const abs = (u: string) => siteRoot + encodeURI(u);
+const jsonLd: unknown[] = spec ? [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', name: h1, url: abs(spec.path) + selfQuery, inLanguage: lang },
+  itemList,
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: crumbs!.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, ...(c.url ? { item: abs(c.url) } : {}) })) },
+  ...(firstPage && spec.faq.length ? [{ '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: spec.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+] : (res.items.length ? [itemList] : []);
 
 // ── Δήμοι για το υποσέλιδο (ίδιο μοτίβο με την αρχική).
 const munis = [...new Set(items.map((p) => muniKey(p.attributes ?? {})).filter(Boolean))]
@@ -299,7 +339,7 @@ const tilePhoto = (() => {
   return c ? marked(c.url, 400) : '';
 })();
 ---
-<Base lang={lang} title={title} description={desc} pathFor={pathFor} noindex={noindex} jsonLd={jsonLd}>
+<Base lang={lang} title={title} description={desc} pathFor={pathFor} noindex={noindex} jsonLd={jsonLd} ogTitle={spec?.ogTitle} query={selfQuery}>
   {/* 🔴 `solid` — ΑΛΛΙΩΣ Η ΚΕΦΑΛΙΔΑ ΕΙΝΑΙ ΛΕΥΚΗ ΠΑΝΩ ΣΕ ΛΕΥΚΟ.
       Δες το σχόλιο στην κορυφή του Header.astro: εδώ δεν υπάρχει φωτογραφία. */}
   {/* #102 desktop: the header floats on the top strip (white on the photo);
@@ -339,6 +379,11 @@ const tilePhoto = (() => {
         Ακίνητα προς πώληση στη Χαλκιδική» και ΑΜΕΣΩΣ από κάτω ο H1 έλεγε το ίδιο
         ακριβώς — δύο φορές η ίδια φράση, η μία σε αχνό γκρι. Τώρα το τελευταίο
         σκαλί μπαίνει ΜΟΝΟ όταν υπάρχει θέμα, δηλαδή όταν λέει κάτι διαφορετικό. */}
+    {crumbs ? (
+    <nav class="crumb" aria-label="breadcrumb">
+      {crumbs.map((c, i) => (<>{i > 0 && <span aria-hidden="true">·</span>}{c.url ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</>))}
+    </nav>
+    ) : (
     <nav class="crumb" aria-label="breadcrumb">
       <a href={prefix(lang) || '/'}>{brand.name}</a>
       {isThemed && (
@@ -349,6 +394,7 @@ const tilePhoto = (() => {
         </>
       )}
     </nav>
+    )}
 
     {/* ΤΟ ΠΛΗΘΟΣ ΤΕΡΜΑ ΔΕΞΙΑ, ΣΤΗ ΓΡΑΜΜΗ ΤΟΥ ΤΙΤΛΟΥ (George, 30/7: «μπορείς να
         το πας τέρμα δεξιά στη σελίδα, π.χ. πάνω από την ταξινόμηση ή ακόμη πιο
@@ -358,7 +404,7 @@ const tilePhoto = (() => {
         σελίδα». Εδώ δεν το σπρώχνει τίποτα, και διαβάζεται μαζί με τον τίτλο:
         «Ακίνητα προς πώληση στη Χαλκιδική … Βρέθηκαν 527». */}
     <div class="head">
-      <h1 class={isThemed ? 't-display head__h' : 't-h2 head__h'}>{heading}</h1>
+      <h1 class={isThemed || spec ? 't-display head__h' : 't-h2 head__h'}>{h1}</h1>
       {apiDown && <p class="count t-data">—</p>}
     </div>
   </div>
@@ -487,6 +533,16 @@ const tilePhoto = (() => {
   </div>
 
   <div class="wrap list" data-lswap="list">
+    {/* #160 spec rule 9: H1 → intro → grid. Page 1 only. On phones the intro is clamped to a
+        few lines with a «more» switch (no JS), so the grid stays above the fold; the whole
+        text is in the HTML either way (Google: mobile = same content). */}
+    {spec && firstPage && spec.intro && (
+      <div class="lintro">
+        <input type="checkbox" id="lintro-more" class="lintro__t" />
+        <SpecText page={spec} part="intro" lang={lang} />
+        <label for="lintro-more" class="lintro__more t-btn">+</label>
+      </div>
+    )}
 
     {/* ΔΥΟ ΟΜΑΔΕΣ, ΟΧΙ ΠΕΝΤΕ ΣΚΟΡΠΙΑ ΣΤΟΙΧΕΙΑ (George, 30/7):
           ΑΡΙΣΤΕΡΑ  = ΕΝΕΡΓΕΙΕΣ  → φίλτρα · αποθήκευση · κωδικός
@@ -667,7 +723,7 @@ const tilePhoto = (() => {
                   {/* #102 desktop: the free-account tile — a blurred, watermarked photo
                       behind, lifts on hover. George's texts unchanged. */}
                   <div class="join__ph">
-                  {tilePhoto && <img class="join__bg" src={tilePhoto} alt="" aria-hidden="true" loading="lazy" decoding="async" width="400" height="267" />}
+                  {tilePhoto && <img class="join__bg" src={tilePhoto} alt={h1} aria-hidden="true" loading="lazy" decoding="async" width="400" height="267" />}
                   {/* 🔐 ΟΣΟ ΨΗΛΟ ΟΣΟ ΜΙΑ ΚΑΡΤΑ, ΟΧΙ ΛΩΡΙΔΑ (George, 30/7).
                       Στέκεται μέσα στη ροή των αποτελεσμάτων, στη θέση όπου ο
                       επισκέπτης έχει ήδη δει τρία ακίνητα και ξέρει τι χάνει —
@@ -739,6 +795,9 @@ const tilePhoto = (() => {
         υποσέλιδο (Footer.astro), που έτσι κι αλλιώς είναι σε ΚΑΘΕ σελίδα — άρα
         το SEO κερδίζει, όχι μόνο δεν χάνει. */}
   </div>
+  {/* #160 spec rule 9: … grid → the H2 body → FAQ → links. Page 1 only; the box is always
+      there (empty on page N) so the in-place list swap can update it. */}
+  <div data-lswap="spec">{spec && firstPage && <SpecText page={spec} part="rest" lang={lang} />}</div>
   </main>
 
   {/* #102 desktop: back to top — a square that appears after the first screen. */}
@@ -762,7 +821,7 @@ const tilePhoto = (() => {
      ΜΙΚΡΟ μέγεθος και κεφαλαία διαβάζεται σαν ξεθωριασμένο. Το ανέβασα σε
      `--muted` (6,50:1) και 13px, και οι σύνδεσμοι παίρνουν υπογράμμιση στο
      πέρασμα ώστε να φαίνεται ότι είναι σύνδεσμοι. */
-  .crumb { font-size: 13px; color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .crumb { font-size: var(--fs-s-1); color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
   .crumb a { color: var(--ink-2); text-decoration: none; }
   .crumb a:hover { text-decoration: underline; }
   /* Τίτλος αριστερά, πλήθος τέρμα δεξιά, στην ίδια οπτική γραμμή.
@@ -806,14 +865,14 @@ const tilePhoto = (() => {
   .idform__l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .idform__i { width: 14px; height: 14px; margin-inline-start: 10px; color: var(--faint); flex: none; }
   .idform__in {
-    border: 0; background: none; color: var(--ink); font: inherit; font-size: 16px;
+    border: 0; background: none; color: var(--ink); font: inherit; font-size: var(--fs-s0);
     padding: 0 8px; width: 104px; min-width: 0;
   }
   .idform__in::placeholder { color: var(--faint); }
   .idform:focus-within { border-color: var(--ink); }
   .idform__go {
     appearance: none; border: 0; background: var(--ink); color: var(--paper);
-    font: inherit; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    font: inherit; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase;
     padding: 0 13px; align-self: stretch; cursor: pointer; white-space: nowrap;
   }
   .idform__go:hover { opacity: .86; }
@@ -828,7 +887,7 @@ const tilePhoto = (() => {
   .tools { --toolh: 44px; }
   .btn {
     appearance: none; border: 1px solid var(--line); background: none; color: var(--ink);
-    font: inherit; font-size: 13px; padding: 0 15px; cursor: pointer; text-decoration: none;
+    font: inherit; font-size: var(--fs-s-1); padding: 0 15px; cursor: pointer; text-decoration: none;
     white-space: nowrap;
     display: inline-flex; align-items: center;
   }
@@ -838,7 +897,7 @@ const tilePhoto = (() => {
   .badge {
     display: inline-grid; place-items: center; min-width: 17px; height: 17px;
     margin-inline-start: 7px; padding: 0 4px; background: var(--ink); color: var(--paper);
-    font-size: 10.5px; font-weight: 700; line-height: 1;
+    font-size: var(--fs-s-1); font-weight: 700; line-height: 1;
   }
   /* 🔴 ΕΙΧΑ ΒΑΛΕΙ ΟΡΙΖΟΝΤΙΑ ΚΥΛΙΣΗ — ΛΑΘΟΣ, ΑΦΑΙΡΕΘΗΚΕ (George, 30/7):
      «δεν μου αρέσει η λογική του scroll δεξιά-αριστερά· φτιάξε 2 σειρές και
@@ -887,14 +946,14 @@ const tilePhoto = (() => {
     list-style: none; background: var(--paper); border: 1px solid var(--line); min-width: 200px;
     box-shadow: 0 8px 26px rgba(14,18,20,.14);
   }
-  .sortbox li a { display: block; padding: 8px 14px; font-size: 13.5px; text-decoration: none; color: var(--ink); }
+  .sortbox li a { display: block; padding: 8px 14px; font-size: var(--fs-s-1); text-decoration: none; color: var(--ink); }
   .sortbox li a[aria-current] { font-weight: 600; }
   .sortbox li a:hover { background: var(--paper-2); }
 
   .fbar { display: flex; gap: var(--s3); flex-wrap: wrap; align-items: end; padding: var(--s4) 0 0; }
   .fbar[hidden] { display: none; }
   .f { display: grid; gap: 4px; }
-  .f span { font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); }
+  .f span { font-size: var(--fs-s-1); letter-spacing: .09em; text-transform: uppercase; color: var(--faint); }
   /* 📏 ΟΛΑ ΤΑ ΦΙΛΤΡΑ ΣΤΟ ΙΔΙΟ ΥΨΟΣ (George, 30/7: «κάποια είναι πιο μεγάλα,
      κάποια πιο μικρά σε ύψος· φαίνονται άσχημα»).
      🪤 Η ΑΙΤΙΑ ΗΤΑΝ ΟΤΙ ΤΟ ΥΨΟΣ ΔΕΝ ΗΤΑΝ ΔΗΛΩΜΕΝΟ ΠΟΥΘΕΝΑ. Με σκέτο padding,
@@ -914,7 +973,7 @@ const tilePhoto = (() => {
   }
   .f input, .f select {
     border: 1px solid var(--line); background: var(--paper); color: var(--ink);
-    font: inherit; font-size: 16px; padding: 0 10px; width: 140px;
+    font: inherit; font-size: var(--fs-s0); padding: 0 10px; width: 140px;
   }
   /* Τα κουμπιά κάθονται στη γραμμή των πεδίων, όχι των ετικετών. */
   .fbar .btn { display: inline-flex; align-items: center; }
@@ -943,13 +1002,13 @@ const tilePhoto = (() => {
   .join__h { margin: 0; color: var(--paper); }
   .join__list {
     margin: 0; padding: 0; list-style: none; display: grid; gap: 7px;
-    font-size: 14px; color: rgba(255,255,255,.82);
+    font-size: var(--fs-s0); color: rgba(255,255,255,.82);
   }
   .join__list li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; }
   .join__list li::before { content: '·'; opacity: .6; }
   .join__b {
     margin-top: var(--s2); border: 1px solid var(--paper); background: var(--paper); color: var(--ink);
-    font-size: 13px; letter-spacing: .05em; text-transform: uppercase; padding: 13px 26px;
+    font-size: var(--fs-s-1); letter-spacing: .05em; text-transform: uppercase; padding: 13px 26px;
     text-decoration: none; white-space: nowrap;
   }
   .join__b:hover { background: transparent; color: var(--paper); }
@@ -984,7 +1043,7 @@ const tilePhoto = (() => {
     .ltop .crumb, .ltop .crumb a { color: rgba(255,255,255,.88); }
     .ltop .head { margin-top: 6px; }
     .ltop .head__h {
-      font-size: 36px; font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: #fff; max-width: none;
+      font-size: var(--fs-s3); font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: #fff; max-width: none;
     }
     .ltop .count { color: rgba(255,255,255,.88); }
 
@@ -1004,7 +1063,7 @@ const tilePhoto = (() => {
     .lc__s, .lc--more {
       list-style: none; height: 63px; box-sizing: border-box; padding: 0 6px; width: 100%;
       display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;
-      cursor: pointer; color: var(--muted); font: inherit; font-size: 15px;
+      cursor: pointer; color: var(--muted); font: inherit; font-size: var(--fs-s0);
       transition: color .15s ease, background .15s ease;
     }
     .lc__s::-webkit-details-marker { display: none; }
@@ -1014,12 +1073,12 @@ const tilePhoto = (() => {
     .lc[open] > .lc__s { background: var(--paper-2); }
     .lc[open] .lc__chev { transform: rotate(180deg); }
     /* a cell with a value: beige, bold, ink */
-    .lc--on > .lc__s, .lc--more.lc--on { background: var(--paper-2); color: var(--ink); font-size: 14px; font-weight: 600; }
+    .lc--on > .lc__s, .lc--more.lc--on { background: var(--paper-2); color: var(--ink); font-size: var(--fs-s0); font-weight: 600; }
     .lc--on .lc__chev { color: var(--ink); }
-    .lc__n { flex: none; font-size: 13px; font-weight: 400; color: var(--muted); }
+    .lc__n { flex: none; font-size: var(--fs-s-1); font-weight: 400; color: var(--muted); }
     .lc--more {
       appearance: none; border: 0; border-inline-start: 1px solid var(--line); background: none;
-      font-size: 13px; gap: 8px; min-height: 0;
+      font-size: var(--fs-s-1); gap: 8px; min-height: 0;
     }
     .lc--more[aria-expanded='true'] { background: var(--paper-2); }
 
@@ -1033,7 +1092,7 @@ const tilePhoto = (() => {
     .lc__m--end { inset-inline-start: auto; inset-inline-end: -1px; min-width: 220px; padding: 6px 0; }
     .lopt {
       all: unset; box-sizing: border-box; cursor: pointer; width: 100%;
-      display: flex; align-items: center; gap: 12px; padding: 9px 16px; font-size: 14px; color: var(--ink);
+      display: flex; align-items: center; gap: 12px; padding: 9px 16px; font-size: var(--fs-s0); color: var(--ink);
     }
     .lopt:hover { background: var(--paper-2); }
     .lopt:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
@@ -1052,11 +1111,11 @@ const tilePhoto = (() => {
     .lrng__io { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
     .lrng__io label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .lrng__l {
-      font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--faint); font-weight: 600;
+      font-size: var(--fs-s-1); letter-spacing: .13em; text-transform: uppercase; color: var(--faint); font-weight: 600;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .lrng__io input {
-      height: 40px; min-height: 40px; border: 1px solid var(--line); padding: 0 10px; font: inherit; font-size: 14px;
+      height: 40px; min-height: 40px; border: 1px solid var(--line); padding: 0 10px; font: inherit; font-size: var(--fs-s0);
       color: var(--ink); background: var(--paper); min-width: 0; width: 100%; box-sizing: border-box;
     }
     /* an empty field shows the end of the scale (€0 · €10,000,000+) as its value does */
@@ -1086,13 +1145,13 @@ const tilePhoto = (() => {
     .lrng__r:focus { outline: none; }
     .lrng__r:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--brand); outline-offset: 2px; }
     .lrng__r:focus-visible::-moz-range-thumb { outline: 2px solid var(--brand); outline-offset: 2px; }
-    .lrng__mm { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; font-size: 11.5px; color: var(--faint); }
+    .lrng__mm { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; font-size: var(--fs-s-1); color: var(--faint); }
     .lc__f { margin-top: 6px; }
     .lc__f { padding: 10px 16px; border-top: 1px solid var(--line-soft); }
-    .lc__f a { font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+    .lc__f a { font-size: var(--fs-s-1); color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
     .lc__f a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
     /* the multi cells: the number of ticked values after the label (not a property count) */
-    .lc--on .lc__n { font-size: 13px; font-weight: 400; color: var(--muted); }
+    .lc--on .lc__n { font-size: var(--fs-s-1); font-weight: 400; color: var(--muted); }
 
     /* in-place filtering: a light busy state (only after ~150 ms, set by the script) */
     .list { transition: opacity .18s ease; }
@@ -1105,14 +1164,14 @@ const tilePhoto = (() => {
     .lc--id { flex: none; width: 170px; display: flex; }
     .lc__idl { flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 18px; cursor: text; min-width: 0; }
     .lc__idin {
-      border: 0; padding: 0; background: none; outline: none; font: inherit; font-size: 14px; color: var(--ink);
+      border: 0; padding: 0; background: none; outline: none; font: inherit; font-size: var(--fs-s0); color: var(--ink);
       min-width: 0; width: 100%; min-height: 0;
     }
     .lc__idin::placeholder { color: var(--faint); transition: color .15s ease; }
     .lc--id:hover .lc__idin::placeholder, .lc--id:hover .lc__ico { color: var(--ink); }
     .lc--sort { flex: none; }
-    .lc--sort > .lc__s { padding: 0 16px; gap: 10px; font-size: 13px; }
-    .lc--sort.lc--on > .lc__s { font-size: 14px; }
+    .lc--sort > .lc__s { padding: 0 16px; gap: 10px; font-size: var(--fs-s-1); }
+    .lc--sort.lc--on > .lc__s { font-size: var(--fs-s0); }
 
     /* under the row, inside the box: the save question, then the tags — sliding down */
     /* Sergei 03/11: same curve as the home → list move, quicker; the box grows to its real height
@@ -1126,10 +1185,10 @@ const tilePhoto = (() => {
     .lsave[hidden] { display: none; }
     .lsave { justify-content: flex-end; }   /* Sergei 03/11: the question sits on the right, next to its buttons */
     .lsave > svg { flex: none; color: var(--ink); }
-    .lsave__q { flex: none; font-size: 14.5px; }
+    .lsave__q { flex: none; font-size: var(--fs-s0); }
     .lsave__no, .lsave__yes {
       box-sizing: border-box; height: 34px; min-height: 34px; padding: 0 18px; display: inline-flex; align-items: center;
-      font: inherit; font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600;
+      font: inherit; font-size: var(--fs-s-1); letter-spacing: .09em; text-transform: uppercase; font-weight: 600;
       cursor: pointer; text-decoration: none;
     }
     .lsave__no { border: 1px solid var(--line); background: var(--paper); color: var(--ink); transition: background .2s ease, border-color .2s ease; }
@@ -1147,7 +1206,7 @@ const tilePhoto = (() => {
     .ltags__l { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
     .ltag {
       display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px 0 12px; box-sizing: border-box;
-      background: var(--paper-2); border: 1px solid var(--paper-2); font-size: 13px; color: var(--ink);
+      background: var(--paper-2); border: 1px solid var(--paper-2); font-size: var(--fs-s-1); color: var(--ink);
       white-space: nowrap; text-decoration: none; transition: border-color .15s ease;
     }
     .ltag svg { color: var(--faint); }
@@ -1160,7 +1219,7 @@ const tilePhoto = (() => {
     .lclr:hover { color: var(--ink); }
     .lclr__tip {
       display: none; position: absolute; top: 50%; inset-inline-end: 40px; transform: translateY(-50%);
-      background: var(--ink); color: var(--paper); font-size: 12px; line-height: 1; padding: 6px 9px; white-space: nowrap; z-index: 50;
+      background: var(--ink); color: var(--paper); font-size: var(--fs-s-1); line-height: 1; padding: 6px 9px; white-space: nowrap; z-index: 50;
     }
     .lclr:hover .lclr__tip, .lclr:focus-visible .lclr__tip { display: block; }
 
@@ -1172,7 +1231,7 @@ const tilePhoto = (() => {
     /* ── results: four columns, the design's rhythm ── */
     .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 20px; margin-top: 0; }
     .grid :global(.row1) { align-items: center; gap: 12px; }
-    .grid :global(.price) { font-size: 20px; line-height: 1.2; }
+    .grid :global(.price) { font-size: var(--fs-s1); line-height: 1.2; }
     .grid :global(.sea) { padding: 4px 8px; letter-spacing: .12em; }
     .grid :global(.title) { margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .grid :global(.facts) { margin-top: 4px; }
@@ -1200,14 +1259,14 @@ const tilePhoto = (() => {
     .join__ph::before { content: ''; position: absolute; inset: 0; background: rgba(10,14,16,.46); z-index: 1; }
     .join__ph > :not(.join__bg) { position: relative; z-index: 2; }
     .join__lock { display: none; }
-    .join__h { font-size: 15px; font-weight: 600; line-height: 1.3; }
-    .join__list { gap: 6px; font-size: 12px; line-height: 1.35; }
+    .join__h { font-size: var(--fs-s0); font-weight: 600; line-height: 1.3; }
+    .join__list { gap: 6px; font-size: var(--fs-s-1); line-height: 1.35; }
     .join__list li { grid-template-columns: 18px 1fr; gap: 9px; }
     .join__list li::before { content: none; }
     .join__ic { display: block; color: #fff; }
     .join__b {
       margin-top: 0; height: 40px; padding: 0 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
-      font-size: 11.5px; letter-spacing: .09em; font-weight: 600; background: transparent; color: var(--gold-lo);
+      font-size: var(--fs-s-1); letter-spacing: .09em; font-weight: 600; background: transparent; color: var(--gold-lo);
       border: 1px solid var(--gold);
       border-image: conic-gradient(from var(--gilda), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
       transition: color .9s ease-in-out;
@@ -1231,7 +1290,7 @@ const tilePhoto = (() => {
     .lpg__nums { display: flex; align-items: center; gap: 2px; margin: 0 18px; }
     .pgn {
       position: relative; min-width: 34px; height: 40px; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; color: var(--faint); font-variant-numeric: tabular-nums; text-decoration: none; transition: color .2s ease;
+      font-size: var(--fs-s0); color: var(--faint); font-variant-numeric: tabular-nums; text-decoration: none; transition: color .2s ease;
     }
     .pgn::after {
       content: ''; position: absolute; left: 50%; bottom: 6px; width: 16px; height: 2px; margin-left: -8px;
@@ -1259,7 +1318,7 @@ const tilePhoto = (() => {
     a.pgw:hover .pga, a.pgw:focus-visible .pga { opacity: 1; }
     .pgw[aria-disabled='true'] .pgd { background: rgba(14,18,20,.12); }
     .lpp { justify-content: flex-end; position: relative; }
-    .ppb { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); }
+    .ppb { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-s-1); color: var(--muted); }
     .ppb::-webkit-details-marker { display: none; }
     .ppb b { font-weight: 600; color: var(--ink); }
     .ppb svg { color: var(--ink); transition: transform .2s ease; }
@@ -1271,7 +1330,7 @@ const tilePhoto = (() => {
     }
     .ppo {
       box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 20px;
-      padding: 8px 14px; font-size: 14px; color: var(--ink); text-decoration: none;
+      padding: 8px 14px; font-size: var(--fs-s0); color: var(--ink); text-decoration: none;
     }
     .ppo svg { visibility: hidden; }
     .ppo[aria-current] { font-weight: 600; }
@@ -1291,10 +1350,11 @@ const tilePhoto = (() => {
       /* E8 brass outline (Sergei 02/11): the gilded edge on the dark ground, turns once on hover */
       border: 1px solid var(--gold-dk);
       border-image: conic-gradient(from var(--gilda), var(--gold-dk-hi), var(--gold-dk) 25%, var(--gold-dk-lo) 50%, var(--gold-dk) 75%, var(--gold-dk-hi)) 1;
-      transition: color .9s ease-in-out;
+      transition: background-color .18s ease, color .18s ease;
     }
     .lc--map svg { width: 20px; height: 20px; }
-    .lc--map:hover, .lc--map:focus-visible { color: var(--gold-dk-hover); }
+    /* Sergei 08/11: hover swaps black to white (ink pin), no grey */
+    .lc--map:hover, .lc--map:focus-visible { background: var(--paper); color: var(--ink); }
     .lc--map:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 3px; }
 
     /* ── every menu slides down when it opens and back up when it closes (Sergei 02/11) ── */
@@ -1317,11 +1377,11 @@ const tilePhoto = (() => {
       grid-template-columns: minmax(0,1fr) minmax(0,1fr) auto 170px 64px; align-items: stretch; pointer-events: none;
       animation: l-ghost 0.95s ease both;
     }
-    .lghost__f { display: grid; grid-template-columns: 1fr auto; align-content: center; column-gap: 8px; padding: 0 22px; color: var(--ink); font-size: 15px; }
-    .lghost__f small { grid-column: 1 / -1; font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+    .lghost__f { display: grid; grid-template-columns: 1fr auto; align-content: center; column-gap: 8px; padding: 0 22px; color: var(--ink); font-size: var(--fs-s0); }
+    .lghost__f small { grid-column: 1 / -1; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
     .lghost__f svg { color: var(--faint); align-self: center; }
     .lghost__f + .lghost__f { border-inline-start: 1px solid var(--line); }
-    .lghost__c { display: flex; align-items: center; gap: 8px; padding: 0 18px; border-inline-start: 1px solid var(--line); font-size: 13px; color: var(--muted); white-space: nowrap; }
+    .lghost__c { display: flex; align-items: center; gap: 8px; padding: 0 18px; border-inline-start: 1px solid var(--line); font-size: var(--fs-s-1); color: var(--muted); white-space: nowrap; }
     .lghost__go { display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--paper); }
     @keyframes l-ghost { 0%, 15% { opacity: 1; } 55%, 100% { opacity: 0; } }
     :global(html.hp-lfrom) .ltop__in { animation: l-in 1.15s ease both; }
@@ -1349,6 +1409,19 @@ const tilePhoto = (() => {
     .lslide { animation: none; }
     .acct, .l-totop, .l-totop svg { transition: none; }
     .acct:hover { transform: none; }
+  }
+
+  /* #160 spec intro between the H1 and the grid. Phones: four lines and a «+» switch (no JS),
+     so the grid stays above the fold (spec rule 9); desktop: the whole intro. */
+  .lintro { position: relative; margin: var(--s4) 0 var(--s5); max-width: 68ch; }
+  .lintro__t { position: absolute; opacity: 0; pointer-events: none; }
+  .lintro__more { display: none; }
+  @media (max-width: 759px) {
+    .lintro :global(.st-intro) { max-height: 6.8em; overflow: hidden; font-size: var(--fs-s0);
+      -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
+    .lintro__t:checked ~ :global(.st-intro) { max-height: none; -webkit-mask-image: none; mask-image: none; }
+    .lintro__more { display: inline-block; margin-top: var(--s2); padding: 6px 12px; border: 1px solid var(--line); cursor: pointer; }
+    .lintro__t:checked ~ .lintro__more { display: none; }
   }
 </style>
 
@@ -1458,7 +1531,8 @@ const tilePhoto = (() => {
       if (!desk.matches || still.matches) return;
       g.classList.remove('grun'); void g.offsetWidth; g.classList.add('grun');
     };
-    (g.closest('.join') ? g : (g.closest('.lsave') ?? g.parentElement))?.addEventListener('mouseenter', run);   // the tile's button turns on its own hover (Sergei 03/11)
+    // the tile's button turns on its own hover (Sergei 03/11); the map button too — on the bar's hover it kept turning (Sergei 08/11)
+    (g.closest('.join') || g.classList.contains('lc--map') ? g : (g.closest('.lsave') ?? g.parentElement))?.addEventListener('mouseenter', run);
   });
 
   // ── Back to top: after one screen.
@@ -1533,7 +1607,7 @@ const tilePhoto = (() => {
 
     const hadTags = !!document.querySelector('.ltags');
     const hadSave = !!document.querySelector('[data-lsave]:not([hidden])');
-    for (const k of ['top', 'bar', 'list']) {
+    for (const k of ['top', 'bar', 'list', 'spec']) {
       const a = document.querySelector(`[data-lswap="${k}"]`), b = doc.querySelector(`[data-lswap="${k}"]`);
       if (a && b) a.replaceWith(document.importNode(b, true));
     }

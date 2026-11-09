@@ -1,0 +1,98 @@
+{
+  "id": "P15",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "C",
+  "name": "Kassandra villas",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/kasandra/vile",
+  "keyword": {
+    "primary": "prodaja vila kasandra",
+    "volume": 0,
+    "secondary": [
+      "vile kasandra — 0",
+      "luksuzne vile kasandra — 0"
+    ],
+    "otherGeography": [
+      "vile kasandra halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Vile Grčka – prodaja vila u Kasandri, Halkidiki",
+  "meta": "Prodaja vila u Kasandri, Grčka: luksuzne vile sa bazenom i pogledom na more na prvom poluostrvu Halkidikija. Zatražite detalje i video obilazak.",
+  "h1": "Prodaja vila Kasandra – luksuzne vile na Halkidikiju, Grčka",
+  "h2": [
+    "Vile na prodaju u Kasandri",
+    "Vile sa pogledom na more i bazenom",
+    "Kasandra za vlasnike vila: plaže, usluge, pristup",
+    "Vila u Kasandri i Zlatna viza"
+  ],
+  "faqQuestions": [
+    "Koliko košta vila u Kasandri?",
+    "Da li vile u Kasandri imaju bazen i pogled na more?",
+    "Da li se vila u Kasandri može kupiti uz Zlatnu vizu?"
+  ],
+  "faq": [
+    {
+      "q": "Koliko košta vila u Kasandri?",
+      "a": "Cena zavisi od udaljenosti od mora, pogleda, veličine kuće i placa, bazena i kvaliteta gradnje. Vile u prvom redu do mora su najređe i najskuplje, a izbor vila sa pogledom na padini je veći. Aktuelne cene vidite u ponudi na ovoj stranici."
+    },
+    {
+      "q": "Da li vile u Kasandri imaju bazen i pogled na more?",
+      "a": "Mnoge vile u Kasandri imaju bazen i pogled na more, ali ne sve. Uz svaku ponudu je navedeno šta vila ima, a pri razgledanju proveravamo i orijentaciju, privatnost i da li pogled može da zakloni buduća gradnja. Filter po udaljenosti od mora pomaže da suzite izbor."
+    },
+    {
+      "q": "Da li se vila u Kasandri može kupiti uz Zlatnu vizu?",
+      "a": "Može, ako vila ispunjava uslove. Prema pravilima od novembra 2026, na Halkidikiju je prag 400.000 € za jednu stambenu nekretninu od najmanje 120 m². Državljanima EU Zlatna viza nije potrebna. Pre kupovine naš advokat proverava sve uslove za konkretnu vilu."
+    }
+  ],
+  "intro": "<p>Prodaja vila Kasandra: ovde su luksuzne vile na prodaju u opštini Kasandra, na zapadnom poluostrvu Halkidikija, na severu Grčke. Mnoge imaju bazen, baštu i pogled na Toronejski ili Termajski zaliv.</p><p>Uz svaku vilu prikazana je samo opština, a tačnu lokaciju dobijate pri diskretnom razgledanju, uživo ili putem video poziva. Kada vam se nešto dopadne, zakažite razgledanje, a mi ćemo vam pokazati i okolinu, plažu i put do nje.</p>",
+  "body": "<h2>Vile na prodaju u Kasandri</h2><p>Ponuda obuhvata vile u blizini letovališta i vile u mirnijim delovima poluostrva. Filtrirajte po ceni i udaljenosti od mora, a pri razgledanju uporedite više vila u istom danu.</p><h2>Vile sa pogledom na more i bazenom</h2><p>Na istočnoj obali pogled je na Toronejski zaliv i Sitoniju, a na zapadnoj na Termajski zaliv i zalazak sunca. Bazen je kod vila čest, ali proverite troškove njegovog održavanja.</p><h2>Kasandra za vlasnike vila: plaže, usluge, pristup</h2><p>Od aerodroma u Solunu do početka Kasandre ima oko sat vremena vožnje, a u sezoni je usluga mnogo. Leto je živo, pa vredi proceniti privatnost i buku. Posle kupovine možemo da preuzmemo upravljanje vilom dok niste tu.</p><h2>Vila u Kasandri i Zlatna viza</h2><p>Prema pravilima od novembra 2026, Halkidiki je u zoni od 400.000 €, uz jednu stambenu nekretninu od najmanje 120 m². Da li konkretna vila ispunjava uslove, potvrđuje naš advokat.</p>",
+  "listingFilter": "municipality=kassandra & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/kasandra/vile",
+  "hreflang": "P15: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Kasandra",
+    "Vile"
+  ],
+  "heroAlt": "Prodaja vila Kasandra – vila sa bazenom na brdu iznad mora, Halkidiki",
+  "galleryAltPattern": "vila na prodaju, Kasandra, Halkidiki – {feature}",
+  "ogTitle": "Prodaja vila u Kasandri – luksuzne vile, Halkidiki",
+  "anchor": "prodaja vila u Kasandri",
+  "anchorVariants": [
+    "vile u Kasandri",
+    "luksuzne vile u Kasandri"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine u Kasandri",
+      "href": "/sr/nekretnina/kasandra"
+    },
+    {
+      "anchor": "prodaja vila u Grčkoj",
+      "href": "/sr/nekretnina/vile"
+    },
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P11"
+  ],
+  "cta": "Pogledajte vile u Kasandri",
+  "oldUrls": [],
+  "words": 344,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

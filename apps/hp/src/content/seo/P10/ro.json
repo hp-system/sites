@@ -1,0 +1,114 @@
+{
+  "id": "P10",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "B",
+  "name": "Affordable property (up to €150,000)",
+  "pageType": "listing",
+  "path": "/ro/proprietati/ieftine",
+  "keyword": {
+    "primary": "case de vanzare in grecia ieftine",
+    "volume": 400,
+    "secondary": [
+      "case de vanzare grecia ieftine la mare — 20",
+      "case ieftine grecia — 0",
+      "apartamente ieftine grecia — 0"
+    ],
+    "otherGeography": [
+      "case ieftine halkidiki — 0",
+      "proprietati ieftine halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case ieftine de vânzare în Grecia – Halkidiki, sub 150.000 €",
+  "meta": "Case ieftine de vânzare în Grecia, în Halkidiki: proprietăți până la 150.000 €, multe aproape de mare. Vedeți ofertele și aflați costurile reale.",
+  "h1": "Case ieftine de vânzare în Grecia – Halkidiki, până la 150.000 €",
+  "h2": [
+    "Case și apartamente până la 150.000 € în Halkidiki",
+    "Case ieftine aproape de mare",
+    "De ce diferă prețurile între zone",
+    "Costurile reale pe lângă preț",
+    "Ce verificați la o proprietate ieftină"
+  ],
+  "faqQuestions": [
+    "Se mai găsesc case ieftine la mare în Grecia?",
+    "Ce costuri apar pe lângă prețul unei case ieftine în Grecia?",
+    "De ce unele case din Grecia sunt mai ieftine?",
+    "Pot cumpăra o casă ieftină în Halkidiki cu credit?"
+  ],
+  "faq": [
+    {
+      "q": "Se mai găsesc case ieftine la mare în Grecia?",
+      "a": "Da, în Halkidiki se găsesc proprietăți până la 150.000 € aproape de mare, mai ales garsoniere, apartamente mici și case mai vechi. De obicei nu sunt la prima linie, ci la câteva minute de plajă. Oferta se schimbă des, așa că vedeți lista actuală de pe această pagină."
+    },
+    {
+      "q": "Ce costuri apar pe lângă prețul unei case ieftine în Grecia?",
+      "a": "La revânzare plătiți taxa de transfer de 3,09%. Se adaugă onorariile notarului și avocatului și taxele de cadastru, de regulă câteva procente în total. La casele mai vechi, socotiți și renovarea. Anual se plătește impozitul ENFIA. Sunt regulile din noiembrie 2026, de confirmat cu avocatul nostru."
+    },
+    {
+      "q": "De ce unele case din Grecia sunt mai ieftine?",
+      "a": "Prețul mai mic vine de obicei din suprafața mai mică, vechimea clădirii, distanța până la mare sau nevoia de renovare. Uneori proprietarul vrea pur și simplu să vândă repede. Verificați întotdeauna actele și starea casei, ca să știți de ce prețul este mai mic."
+    },
+    {
+      "q": "Pot cumpăra o casă ieftină în Halkidiki cu credit?",
+      "a": "Se poate, dacă o bancă vă aprobă finanțarea, fie în România, fie în Grecia. Condițiile depind de bancă, de venituri și de proprietate. Discutați cu banca înainte să faceți o ofertă. Noi vă dăm actele proprietății de care banca are nevoie pentru evaluare."
+    }
+  ],
+  "intro": "<p>Case ieftine de vânzare în Grecia, toate în Halkidiki: aici vedeți proprietățile noastre de până la 150.000 €, multe aproape de mare. Lucrăm numai în Halkidiki, așa că fiecare ofertă din listă se află în nordul Greciei. Vă spunem deschis ce înseamnă un preț mai mic și ce costuri apar pe lângă el. Filtrați după municipiu și tip, apoi programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>Case și apartamente până la 150.000 € în Halkidiki</h2><p>În acest buget găsiți mai ales garsoniere, apartamente mici și case mai vechi. Uneori apar și case care au nevoie de renovare, dar care au un teren bun sau o poziție bună. Apartamentele ieftine din Grecia sunt adesea alegerea potrivită pentru vacanțe.</p><h2>Case ieftine aproape de mare</h2><p>Case ieftine de vânzare în Grecia la mare se găsesc, dar de obicei sunt mai mici, mai vechi sau la câteva minute de mers până la plajă. Prima linie la mare costă de regulă mai mult.</p><h2>De ce diferă prețurile între zone</h2><p>Prețul depinde de distanța până la mare, de vedere, de cât de căutată este zona și de vechimea clădirii. Satele din interior și localitățile locuite tot anul pot avea prețuri mai mici decât satele turistice de pe coastă.</p><h2>Costurile reale pe lângă preț</h2><ul><li>taxa de transfer de 3,09% la revânzare (3% plus taxa municipală)</li><li>onorariul notarului și al avocatului</li><li>taxele de cadastru</li><li>eventualele costuri de renovare</li></ul><p>Sunt valorile din noiembrie 2026, de confirmat cu avocatul nostru.</p><h2>Ce verificați la o proprietate ieftină</h2><p>Un preț mic nu trebuie să ascundă probleme. Verificați autorizația de construire, înregistrarea la cadastru, starea acoperișului și a instalațiilor și certificatul energetic. Avocatul și inginerul vă ajută să știți exact ce cumpărați.</p>",
+  "listingFilter": "price_max=150000 (NEW facet)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/ieftine",
+  "hreflang": "P10: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Ieftine"
+  ],
+  "heroAlt": "Apartament mic cu balcon aproape de mare în Halkidiki – case ieftine de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki, Grecia – {feature}",
+  "ogTitle": "Case ieftine în Grecia – Halkidiki, până la 150.000 €",
+  "anchor": "case ieftine de vânzare în Grecia",
+  "anchorVariants": [
+    "case ieftine în Halkidiki",
+    "proprietăți în Halkidiki până la 150.000 €"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    },
+    {
+      "anchor": "apartamente de vânzare în Grecia",
+      "href": "/ro/proprietati/apartamente"
+    },
+    {
+      "anchor": "teren de vânzare în Grecia",
+      "href": "/ro/proprietati/terenuri"
+    },
+    {
+      "anchor": "cumpărare casă în Grecia",
+      "href": "/ro/cumparare-casa-in-grecia"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P05",
+    "P19"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 460,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

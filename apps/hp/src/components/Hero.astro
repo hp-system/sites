@@ -23,8 +23,18 @@ import MobileMenu from './MobileMenu.astro';
 interface Props {
   lang: Lang; photo: Photo | null; alt: string;
   munis: { name: string; n: number; key?: string }[]; total: number;
+  /** George's SEO spec H1 for the home page (P01, Sergei 08/11); falls back to the i18n H1. */
+  h1?: string;
+  /** The spec intro (P01, HTML), shown as a one-line ticker under the H1 (Sergei 08/11). */
+  intro?: string;
 }
-const { lang, photo: basePhoto, alt, munis, total } = Astro.props;
+const { lang, photo: basePhoto, alt, munis, total, h1, intro } = Astro.props;
+// The ticker carries the spec intro for search engines (Sergei 08/11: «читатели это не читают,
+// это тупо для сео»): the text is in the HTML once, as plain text; the second copy that makes the
+// loop seamless is aria-hidden. Rejected: canvas/image text or display:none — Google would not
+// count it, or would treat it as hidden.
+const introText = (intro ?? '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const H1 = h1 || t(lang, 'hero.h1');
 
 // The message slot (lib/hero-messages.ts): a dated message replaces the default copy, and its
 // own picture / video / plain ground. `?hero=<id>` previews one off production only.
@@ -73,7 +83,7 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
     {msg ? (
       <>
         {/* the H1 never changes (SEO); while a message is on it is the small line above it */}
-        <h1 class="hero__h1s">{t(lang, 'hero.h1')}</h1>
+        <h1 class="hero__h1s">{H1}</h1>
         {msg.eyebrow?.[lang] && <p class="hero__eb">{msg.eyebrow[lang]}</p>}
         <p class="t-display hero__t">{msg.title[lang]}</p>
         {msg.text?.[lang] && <p class="hero__sub">{msg.text[lang]}</p>}
@@ -83,9 +93,17 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
       </>
     ) : (
       <>
-        <h1 class="t-display">{t(lang, 'hero.h1')}</h1>
-        <p class="hero__sub">{t(lang, 'hero.sub')}</p>
+        <h1 class="t-display">{H1}</h1>
+        {/* Sergei 08/11: «hero.sub» («Singular collections…») removed — the ticker below carries the spec intro */}
       </>
+    )}
+    {introText && (
+      <div class="hero__tick">
+        {/* SEO audit 08/11: the text is in the HTML once; the loop's repeat is drawn by CSS from data-copy */}
+        <div class="hero__track" data-copy={introText}>
+          <p class="hero__tx">{introText}</p>
+        </div>
+      </div>
     )}
   </div>
   {video && (
@@ -108,13 +126,13 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
   .hero__bg { position: absolute; inset: 0; background: var(--paper-2); }
   .hero__vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .hero--plain .hero__bg { background: var(--ink-deep); }
-  .hero__h1s { margin: 0 0 var(--s4); font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.78); }
-  .hero__eb { margin: 0 0 var(--s3); font-size: 14px; color: rgba(255,255,255,.82); }
+  .hero__h1s { margin: 0 0 var(--s4); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.78); }
+  .hero__eb { margin: 0 0 var(--s3); font-size: var(--fs-s0); color: rgba(255,255,255,.82); }
   .hero__t { margin: 0; max-width: 20ch; }
   .hero--msg:not(.hero--plain) :is(.hero__h1s, .hero__eb, .hero__sub) { text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.45); }
   .hero__cta {
     display: inline-flex; align-items: center; height: 48px; margin-top: var(--s5); padding: 0 24px;
-    font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
     /* a message button is not a call to register: white outline, never the gilded edge (Sergei 03/11) */
     color: #fff; border: 1px solid rgba(255,255,255,.6); background: rgba(11,14,16,.2);
     transition: background .25s ease, color .25s ease, border-color .25s ease;
@@ -136,14 +154,30 @@ const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSma
   .hero__copy { position: relative; color: #fff; padding: 0 var(--gut) var(--s5); }
   .hero__copy h1 { max-width: 16ch; }
   .hero__sub {
-    margin: var(--s3) 0 0; font-size: 15px; line-height: 1.55;
+    margin: var(--s3) 0 0; font-size: var(--fs-s0); line-height: 1.55;
     color: rgba(255,255,255,.88); max-width: 34ch;
+  }
+
+  /* The spec-intro ticker: one line, moving left, paused on hover; still with reduced motion. */
+  .hero__tick { margin-top: var(--s3); overflow: hidden; white-space: nowrap;
+                -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+                        mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+  .hero__track { display: inline-flex; gap: 4em; animation: hero-tick 70s linear infinite; }
+  .hero__tick:hover .hero__track { animation-play-state: paused; }
+  .hero__tx { margin: 0; flex: none; font-size: var(--fs-s0); line-height: 1.55; color: rgba(255,255,255,.88); }
+  .hero__track::after { content: attr(data-copy); flex: none; font-size: var(--fs-s0); line-height: 1.55; color: rgba(255,255,255,.88); }
+  @keyframes hero-tick { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 2em)); } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__track { animation: none; }
+    .hero__track::after { display: none; }
+    .hero__tx { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .hero__track { display: block; }
   }
 
   @media (min-width: 760px) {
     .hero { min-height: 82vh; }
     .hero__copy { padding-bottom: var(--s6); max-width: var(--max); margin: 0 auto; width: 100%; }
-    .hero__sub { font-size: 17px; }
+    .hero__sub { font-size: var(--fs-s0); }
   }
   /* desktop (Sergei 03/11): the first screen ends at the bottom of the first row of photos
      (the bar, «New properties» and the photos take 344 px under the hero), never below 420 px */

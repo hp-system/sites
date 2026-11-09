@@ -36,6 +36,9 @@ export type Query = {
   pool?: boolean;
   priceMin?: number;
   priceMax?: number;
+  /** #160 P10 «affordable»: a VISIBLE price at most this. Unlike `priceMax`, a price on request
+   *  does not pass — the page promises homes up to €150,000. */
+  priceCap?: number;
   sqmMin?: number;
   sqmMax?: number;
   /** Ελάχιστα υπνοδωμάτια — «3+», όχι ακριβώς 3. Έτσι το εννοεί ο αγοραστής. */
@@ -79,7 +82,8 @@ export type Query = {
 export type Sort = 'rec' | 'price_desc' | 'price_asc' | 'sqm_desc' | 'sqm_asc' | 'new';
 export const SORTS: Sort[] = ['rec', 'price_desc', 'price_asc', 'sqm_desc', 'sqm_asc', 'new'];
 /** Ίδια προεπιλογή με το σημερινό site (`sort=1`). */
-export const SORT_DEFAULT: Sort = 'rec';
+// #160 decision D9 (D-20261106-SS-1) and spec rule 9: newest first.
+export const SORT_DEFAULT: Sort = 'new';
 
 /**
  * ΠΟΣΑ ΑΝΑ ΣΕΛΙΔΑ — επιλογή του επισκέπτη (George, 30/7).
@@ -191,7 +195,36 @@ export const FACETS: Facet[] = [
     name: { el: 'Βίλες', en: 'Villas', bg: 'Вили', sr: 'Vile', de: 'Villen', ro: 'Vile', tr: 'Villalar', he: 'וילות', ru: 'Виллы' },
     slug: { el: 'βιλες', en: 'villas-for-sale', bg: 'vili', sr: 'vile', de: 'villen',
             ro: 'vile', tr: 'villa', he: 'vilot', ru: 'villy' } },
+
+  // ── #160 NEW FACETS OF GEORGE'S SPEC (05/11): slugs exactly as the spec's URLs.
+  //    P05 apartments: «subcategory=apartment|studio». P10 affordable: «price_max=150000».
+  { key: 'apartments', n: 26, q: { subs: ['apartment', 'studio'] },
+    name: { el: 'Διαμερίσματα', en: 'Apartments', bg: 'Апартаменти', sr: 'Stanovi', de: 'Wohnungen', ro: 'Apartamente', tr: 'Daireler', he: 'דירות', ru: 'Квартиры' },
+    slug: { el: 'διαμερισματα', en: 'apartments-for-sale', bg: 'apartamenti', sr: 'stanovi', de: 'wohnungen',
+            ro: 'apartamente', tr: 'daire', he: 'dirot', ru: 'kvartiry' } },
+  { key: 'affordable', n: 0, q: { priceCap: 150000 },
+    name: { el: 'Οικονομικά', en: 'Affordable', bg: 'Евтини имоти', sr: 'Jeftine nekretnine', de: 'Günstig', ro: 'Ieftine', tr: 'Uygun fiyatlı', he: 'בזול', ru: 'Недорого' },
+    slug: { el: 'οικονομικα', en: 'affordable', bg: 'evtini-imoti', sr: 'jeftine-nekretnine', de: 'guenstig',
+            ro: 'ieftine', tr: 'uygun-fiyatli', he: 'bezol', ru: 'nedorogo' } },
+
+  // ── Sergei 08/11: the registry's two missing listing pages, as plain lists (no text yet — their
+  //    briefs are pending, D-20261106-SS-2). P22 hotels & commercial, P58 Polygyros (registry notes:
+  //    noindex below 6 listings, like every list). EN slugs are the registry's; the other 8 follow
+  //    the pattern of the facets above — PROPOSED, Q-20261106-SS-1 (P22+ slugs) is still open.
+  { key: 'hotels', n: 0, q: { category: 'business' },
+    name: { el: 'Ξενοδοχεία & επαγγελματικά', en: 'Hotels & commercial', bg: 'Хотели и търговски имоти', sr: 'Hoteli i poslovni prostori', de: 'Hotels & Gewerbe', ro: 'Hoteluri și spații comerciale', tr: 'Oteller ve ticari mülkler', he: 'מלונות ונכסים מסחריים', ru: 'Отели и коммерческая недвижимость' },
+    slug: { el: 'ξενοδοχεια', en: 'hotels-for-sale', bg: 'hoteli', sr: 'hoteli', de: 'hotels',
+            ro: 'hoteluri', tr: 'oteller', he: 'batei-malon', ru: 'oteli' } },
+  { key: 'polygyros', n: 0, q: { municipality: 'Πολύγυρος' },
+    name: { el: 'Πολύγυρος', en: 'Polygyros', bg: 'Полигирос', sr: 'Poligiros', de: 'Polygyros', ro: 'Polygyros', tr: 'Polygyros', he: 'פוליגירוס', ru: 'Полигирос' },
+    slug: { el: 'πολυγυρος', en: 'polygyros', bg: 'poligiros', sr: 'poligiros', de: 'polygyros',
+            ro: 'polygyros', tr: 'polygyros', he: 'polygyros', ru: 'poligiros' } },
 ];
+
+/** #160 Spec rule 10: a listing page is indexed only with this many live listings, counted on the
+ *  anonymous set without the country rule, so Google sees the same answer from every country. */
+export const MIN_LIVE: Record<string, number> = { apartments: 12, affordable: 12 };
+export const minLive = (keys: string[]): number => Math.max(6, ...keys.map((k) => MIN_LIVE[k] ?? 6));
 
 /** Οι ΜΟΝΟΙ συνδυασμοί δύο θεμάτων που παίρνουν δική τους σελίδα. */
 export const PAIRS: Array<[string, string]> = [
@@ -331,6 +364,7 @@ export function matches(p: SiteProperty, q: Query): boolean {
   // 💰 Η ΤΙΜΗ ΦΙΛΤΡΑΡΕΙ ΜΟΝΟ ΟΤΑΝ ΕΙΝΑΙ ΟΡΑΤΗ. Ακίνητο «κατόπιν συνεννόησης»
   //    δεν πρέπει να εξαφανίζεται επειδή ο επισκέπτης έβαλε ανώτατο όριο — δεν
   //    ξέρουμε αν το ξεπερνά, και το να το κρύψουμε είναι χαμένη ευκαιρία.
+  if (q.priceCap && !(priceVisible(a) && priceOf(a) > 0 && priceOf(a) <= q.priceCap)) return false;
   if ((q.priceMin || q.priceMax) && priceVisible(a)) {
     const v = priceOf(a);
     if (q.priceMin && v < q.priceMin) return false;
@@ -568,7 +602,8 @@ export function paramsOf(q: Query): string {
  * όχι μόνο αυτές.
  */
 export function indexable(facets: string[], sp: URLSearchParams): boolean {
-  for (const k of PARAMS) if (sp.get(k)) return false;
+  // #160 decision D8: `?page=N` alone stays indexable (self-canonical, text only on page 1).
+  for (const k of PARAMS) if (k !== 'page' && sp.get(k)) return false;
   if (facets.length === 0 || facets.length === 1) return true;
   if (facets.length === 2) {
     return PAIRS.some(([a, b]) =>

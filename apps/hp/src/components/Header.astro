@@ -16,6 +16,7 @@ import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
 import { pageExists } from '../lib/pages';
 import { brand } from '../brand/index';
+import { SECTIONS, SECTION_LABEL, menuOf, pathOf } from '../lib/skeleton';
 interface Props {
   lang: Lang; solid?: boolean;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -27,6 +28,23 @@ const p = prefix(lang);
 // English: the old site's URL /en/about-us (the info page); other languages keep /about.
 const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
 const co = await company();
+// Sergei 08/11 — portion 4, English first (plan: languages one by one): the 7-section menu of the
+// page registry (Buy · Sell · Halkidiki · Services · About us · Exclusive · Contact), each section a
+// list of its pages. Pages not built yet stay out (Team P49 and Exclusive P52 wait for their text;
+// a menu link to a 404 is what made the 124 dead links). Other languages keep the old menu until
+// their stage: most new pages have no URL in them yet.
+const NOT_BUILT = new Set(['P49', 'P52']);
+const LABEL: Record<string, string> = {
+  P03: 'Property in Greece', P19: 'Buying property in Greece', P22: 'Hotels & commercial', P04: 'Houses',
+  P23: 'Pre-published', P10: 'Affordable, up to €150,000',
+};
+const menu7 = lang === 'en'
+  ? SECTIONS.map((sec) => ({
+      key: sec, label: SECTION_LABEL[sec],
+      items: menuOf(sec).filter((r) => !NOT_BUILT.has(r.id))
+        .map((r) => ({ href: pathOf(r.id, 'en') ?? '#', label: LABEL[r.id] ?? r.name.replace(/\s*\(.*\)\s*$/, '') })),
+    })).filter((s) => s.items.length)
+  : null;
 
 // ── ΕΙΝΑΙ ΜΕΣΑ; ────────────────────────────────────────────────────────────
 // 🔴 ΤΟ ΚΕΝΟ ΠΟΥ ΚΛΕΙΝΕΙ ΕΔΩ: η κεφαλίδα έλεγε **πάντα** «Σύνδεση», ακόμη και σε
@@ -58,6 +76,20 @@ const has = (k: string) => pageExists(k as any);
     <span class="brandlink__md"><Logo variant="mono" size="md" /></span>
   </a>
 
+  {menu7 ? (
+  <nav class="navlinks nav7" aria-label={t(lang, 'a11y.nav')}>
+    {menu7.map((sec) => sec.items.length === 1 ? (
+      <a href={sec.items[0].href}>{sec.label}</a>
+    ) : (
+      <div class="nav7__s">
+        <a class="nav7__t" href={sec.items[0].href} aria-haspopup="true">{sec.label}</a>
+        <ul class="nav7__dd">{sec.items.map((it) => <li><a href={it.href}>{it.label}</a></li>)}</ul>
+      </div>
+    ))}
+    {/* Blog stays in the header (#69, as on the live site): the articles' only link from the top */}
+    <a href="/en/articles/all-news">{t(lang, 'nav.blog')}</a>
+  </nav>
+  ) : (
   <nav class="navlinks" aria-label={t(lang, 'a11y.nav')}>
     <a href={listUrl(lang)}>{t(lang, 'nav.properties')}</a>
     {has('halkidiki') && <a href={`${p}/halkidiki`}>{t(lang, 'nav.halkidiki')}</a>}
@@ -67,6 +99,7 @@ const has = (k: string) => pageExists(k as any);
     {/* Blog, as on the live site (#69). Articles are English-only for now → the English hub. */}
     <a href="/en/articles/all-news">{t(lang, 'nav.blog')}</a>
   </nav>
+  )}
 
   <div class="navright">
     {/* 🪤 ΤΟ ΤΗΛΕΦΩΝΟ ΕΙΝΑΙ ΠΡΩΤΟ ΣΤΟ ΚΙΝΗΤΟ.
@@ -87,7 +120,7 @@ const has = (k: string) => pageExists(k as any);
         δεν μπορέσαμε να απαντήσουμε ποιο σημείο αποδίδει. Δες lib/track.ts. */}
     {inside
       ? <a class="acct" href={`${p}/panel`} data-ev="panel:header">{who || t(lang, 'pnl.title')}</a>
-      : <a href={`${p}/login`} data-ev="register:header">{t(lang, 'nav.login')}</a>}
+      : <a href={`${p}/login`} rel="nofollow" data-ev="register:header">{t(lang, 'nav.login')}</a>}
     <button class="burger" type="button" data-menu-open
             aria-label={t(lang, 'ui.menu')} aria-expanded="false" aria-controls="mobile-menu">
       <i></i><i></i><i></i>
@@ -129,7 +162,7 @@ const has = (k: string) => pageExists(k as any);
   .navlinks { display: none; }
   .navright {
     display: flex; align-items: center; gap: var(--s3); flex: none;
-    font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+    font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
   }
   .langslot { display: none; }
   /* Ο αριθμός φαίνεται ΚΑΙ στο κινητό: ένα εικονίδιο ακουστικού 17px δεν λέει
@@ -141,7 +174,7 @@ const has = (k: string) => pageExists(k as any);
   }
   .tel svg { width: 17px; height: 17px; flex: none; }
   /* Sergei 03/11: a phone number is read, not compared in a column — proportional digits (tabular ones left gaps around each «1») */
-  .tel__n { display: inline; font-size: 11px; letter-spacing: .04em; font-variant-numeric: lining-nums proportional-nums; }
+  .tel__n { display: inline; font-size: var(--fs-s-1); letter-spacing: .04em; font-variant-numeric: lining-nums proportional-nums; }
   /* Στόχος αφής 44×44 (μετρήθηκε 20×12): οι γραμμές μένουν 20×12 οπτικά, αλλά η
      περιοχή που δέχεται το δάχτυλο είναι ολόκληρη. Αρνητικό margin ώστε να μην
      αλλάξει η στοίχιση της κεφαλίδας. */
@@ -160,17 +193,31 @@ const has = (k: string) => pageExists(k as any);
     .site-header__in { padding: 22px var(--gut); }
     .brandlink__sm { display: none; }
     .brandlink__md { display: inline-flex; }
-    .navright { gap: var(--s5); font-size: 12px; letter-spacing: .1em; }
+    .navright { gap: var(--s5); font-size: var(--fs-s-1); letter-spacing: .1em; }
     .langslot { display: inline-flex; }
-    .tel__n { font-size: 12px; letter-spacing: .06em; }
+    .tel__n { font-size: var(--fs-s-1); letter-spacing: .06em; }
   }
 
   @media (min-width: 1080px) {
     .navlinks {
       display: flex; gap: var(--s6);
-      font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+      font-size: var(--fs-s-1); letter-spacing: .1em; text-transform: uppercase;
     }
     .burger { display: none; }
+    /* the 7-section menu (en): a section opens its list on hover or keyboard focus */
+    .nav7 { gap: var(--s5); align-items: center; }
+    .nav7__s { position: relative; }
+    .nav7__dd {
+      position: absolute; top: 100%; left: calc(-1 * var(--s4)); z-index: 30; min-width: 260px;
+      list-style: none; margin: 0; padding: var(--s3) 0; background: var(--paper);
+      box-shadow: 0 18px 40px rgba(14, 18, 20, .16); text-transform: none; letter-spacing: 0;
+      opacity: 0; visibility: hidden; transform: translateY(6px);
+      transition: opacity .15s ease, transform .15s ease, visibility 0s .15s;
+    }
+    .nav7__s:is(:hover, :focus-within) .nav7__dd { opacity: 1; visibility: visible; transform: none; transition: opacity .15s ease, transform .15s ease; }
+    .nav7__dd a { display: block; padding: 9px var(--s4); color: var(--ink-2); font-size: var(--fs-s0); white-space: nowrap; text-decoration: none; }
+    .nav7__dd a:hover, .nav7__dd a:focus-visible { color: var(--ink); background: var(--paper-2); }
+    .nav7__s::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }   /* hover bridge */
   }
 </style>
 

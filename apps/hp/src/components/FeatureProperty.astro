@@ -80,7 +80,7 @@ const rent = rentalUrl(id);
         το ακίνητο των 12 εκατ. έδειχνε την τιμή του πιο αδύναμα από μια κάρτα
         των 470.000: η μεγαλύτερη θέση της σελίδας με τη μικρότερη ιεραρχία. */}
     {priceVisible(a) && <p class="t-price feature__price">{money(priceOf(a), lang)}</p>}
-    <h2 id="week-h" class="t-h2 feature__title">{title}</h2>
+    <p data-h id="week-h" class="t-h2 feature__title">{title}</p>
     <p class="feature__facts">
       {sea && <span class="feature__sea" data-sea={a.sea_access}>{sea}</span>}
       <span>{facts}</span>
@@ -110,24 +110,24 @@ const rent = rentalUrl(id);
   .feature__copy { position: relative; width: 100%; color: #fff; padding: 0 var(--gut) var(--s6); }
   .feature__eyebrow { color: rgba(255,255,255,.72); }
   /* Ένα σκαλί πάνω από την κάρτα (26px): είναι το μεγαλύτερο ακίνητο της σελίδας. */
-  .feature__price { margin: var(--s3) 0 0; font-size: clamp(30px, 6vw, 40px); line-height: 1.04; }
+  .feature__price { margin: var(--s3) 0 0; font-size: var(--fs-s4); line-height: 1.04; }
   /* ΤΡΕΙΣ ΣΕΙΡΕΣ ΣΥΝΟΛΟ: τιμή · τίτλος · στοιχεία (George, 28/7).
      Ο τίτλος είχε `max-width: 17ch` και το «detached house — Σιθωνία» έσπαγε σε
      δύο γραμμές, χαλώντας τη στοίχιση με τις κάρτες από πάνω. */
   .feature__title {
     color: #fff; margin: var(--s2) 0 0; max-width: 34ch;
-    font-size: clamp(19px, 3.4vw, 25px);   /* υπότιτλος της τιμής, όχι αντίπαλός της */
+    font-size: var(--fs-s2);   /* υπότιτλος της τιμής, όχι αντίπαλός της */
     text-wrap: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .feature__facts {
-    margin: var(--s2) 0 var(--s5); font-size: 13px; color: rgba(255,255,255,.86);
+    margin: var(--s2) 0 var(--s5); font-size: var(--fs-s-1); color: rgba(255,255,255,.86);
     font-variant-numeric: lining-nums tabular-nums;
     display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
   }
   /* Το ίδιο σήμα με την κάρτα, στην παλέτα της φωτογραφίας. */
   .feature__sea {
     flex: none; border: 1px solid rgba(255,255,255,.42); padding: 2px 7px;
-    font-size: 10.5px; font-weight: 600; letter-spacing: .08em;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .08em;
     text-transform: uppercase; white-space: nowrap;
   }
   .feature__sea[data-sea='front'] { background: rgba(255,255,255,.16); border-color: transparent; color: #fff; }
@@ -146,6 +146,8 @@ const rent = rentalUrl(id);
     /* Sergei 02/11: less ceiling — without a focal point from the photo, the window shows its lower part */
     .feature__bg img { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-position: var(--focal, 50% 90%); }
     .feature__sea, .feature__sea[data-sea] { border: 0; background: rgba(255,255,255,.16); color: #fff; }
+    /* Sergei 08/11 (type canon page): the price block centred on the lower golden line, 0.618 of the band */
+    .feature__copy { position: absolute; left: 0; right: 0; top: 61.8%; transform: translateY(-50%); padding-bottom: 0; }
   }
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
     .feature__bg { clip-path: none; }

@@ -1,0 +1,95 @@
+{
+  "id": "P15",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "C",
+  "name": "Kassandra villas",
+  "pageType": "listing",
+  "path": "/de/immobilien/kassandra/villen",
+  "keyword": {
+    "primary": "kassandra villa",
+    "volume": 50,
+    "secondary": [],
+    "otherGeography": [
+      "villa in griechenland kaufen — 100"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Villa kaufen Kassandra – Luxusvillen auf Chalkidiki",
+  "meta": "Villa kaufen in Kassandra, Chalkidiki: Luxusvillen mit Pool und Meerblick auf dem ersten Finger, nah an Thessaloniki. Jetzt Villen ansehen und anfragen.",
+  "h1": "Kassandra Villa kaufen – Luxusvillen auf Chalkidiki",
+  "h2": [
+    "Villen in Kassandra mit Pool und Meerblick",
+    "Ostküste oder Westküste von Kassandra?",
+    "Vermietung und Verwaltung Ihrer Villa",
+    "Villa in Kassandra und Golden Visa"
+  ],
+  "faqQuestions": [
+    "Was kostet eine Villa in Kassandra?",
+    "Welche Villen in Kassandra haben Meerblick und Pool?",
+    "Kann ich eine Villa in Kassandra vermieten?"
+  ],
+  "faq": [
+    {
+      "q": "Was kostet eine Villa in Kassandra?",
+      "a": "Der Preis hängt von Lage, Größe, Grundstück, Meerblick und Ausstattung ab. Villen in erster Reihe oder mit weitem Blick aufs Meer kosten deutlich mehr als Villen im Hinterland. Mit dem Preisfilter sehen Sie sofort, welche Angebote in Ihr Budget passen. Rechnen Sie außerdem mit den Kaufnebenkosten."
+    },
+    {
+      "q": "Welche Villen in Kassandra haben Meerblick und Pool?",
+      "a": "Viele unserer Villen in Kassandra haben beides. In jedem Angebot finden Sie die Ausstattung genau beschrieben, mit Fotos. Wenn Sie nur Villen mit Pool und Meerblick sehen möchten, sagen Sie es uns. Wir stellen Ihnen eine passende Auswahl zusammen. Gern auch per Video."
+    },
+    {
+      "q": "Kann ich eine Villa in Kassandra vermieten?",
+      "a": "Ja, das ist möglich, und Villen sind im Sommer gefragt. Für die Kurzzeitvermietung brauchen Sie eine Registrierung, und die Einnahmen müssen versteuert werden. Stand November 2026; die aktuellen Regeln bestätigt unser Anwalt. Auf Wunsch übernehmen wir die Verwaltung Ihrer Villa."
+    }
+  ],
+  "intro": "<p>Eine Kassandra Villa verbindet Meer, Privatsphäre und kurze Wege. Hier finden Sie alle Villen, die wir aktuell in der Gemeinde Kassandra auf Chalkidiki verkaufen. Viele haben einen eigenen Pool, Meerblick und einen gepflegten Garten. Restaurants, Geschäfte und der Flughafen Thessaloniki sind gut erreichbar. Fragen Sie eine Besichtigung an, vor Ort oder per Video. Wir nehmen uns Zeit für Ihre Fragen.</p>",
+  "body": "<h2>Villen in Kassandra mit Pool und Meerblick</h2><p>Die meisten Käufer suchen in Kassandra eine Villa mit Pool und freiem Blick aufs Meer. Achten Sie auch auf die Zufahrt, die Lage zum nächsten Ort und den Schatten im Sommer. Wir zeigen Ihnen bei der Besichtigung, was die jeweilige Villa besonders macht.</p><h2>Ostküste oder Westküste von Kassandra?</h2><p>An der Ostküste ist mehr los, und Sie sehen die Sonne über dem Meer aufgehen. Die Westküste ist ruhiger, mit Sonnenuntergängen über dem Wasser. Beide Seiten haben schöne Sandstrände.</p><h2>Vermietung und Verwaltung Ihrer Villa</h2><p>Villen in Kassandra sind im Sommer gefragt. Für die Kurzzeitvermietung ist eine Registrierung nötig; die Regeln ändern sich öfter. Auf Wunsch kümmern wir uns um Kontrolle, Pflege und Handwerker, wenn Sie nicht vor Ort sind.</p><h2>Villa in Kassandra und Golden Visa</h2><p>Für Nicht-EU-Bürger kann eine Villa zu einer Aufenthaltserlaubnis führen. Stand November 2026, von unserem Anwalt zu bestätigen: In Kassandra gilt die 400.000-€-Grenze für eine einzige Wohnimmobilie ab 120 m².</p>",
+  "listingFilter": "municipality=kassandra & luxury=true",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien/kassandra/villen",
+  "hreflang": "P15: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien",
+    "Kassandra",
+    "Villen"
+  ],
+  "heroAlt": "Villa mit Pool über dem Meer in Kassandra, Chalkidiki – Kassandra Villa kaufen",
+  "galleryAltPattern": "Villa zum Kauf in Kassandra, Chalkidiki – {feature}",
+  "ogTitle": "Kassandra Villa kaufen – Luxusvillen auf Chalkidiki",
+  "anchor": "Villen in Kassandra",
+  "anchorVariants": [
+    "Kassandra Villa kaufen",
+    "Luxusvillen in Kassandra"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien in Kassandra",
+      "href": "/de/immobilien/kassandra"
+    },
+    {
+      "anchor": "Villa auf Chalkidiki kaufen",
+      "href": "/de/immobilien/villen"
+    },
+    {
+      "anchor": "Immobilien auf Chalkidiki kaufen",
+      "href": "/de/immobilien"
+    }
+  ],
+  "linkedFrom": [
+    "P07",
+    "P11"
+  ],
+  "cta": "Villen in Kassandra ansehen",
+  "oldUrls": [],
+  "words": 348,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

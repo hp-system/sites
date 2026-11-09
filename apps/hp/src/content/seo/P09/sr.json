@@ -1,0 +1,128 @@
+{
+  "id": "P09",
+  "lang": "sr",
+  "buildOrder": 1,
+  "priority": "A",
+  "name": "Seafront / by the sea",
+  "pageType": "listing",
+  "path": "/sr/nekretnina/prva-linija",
+  "keyword": {
+    "primary": "grcka nekretnine na moru",
+    "volume": 70,
+    "secondary": [
+      "nekretnine u grckoj na moru prodaja — 60",
+      "kuce u grckoj na moru prodaja — 50",
+      "nekretnine u grckoj na moru — 40",
+      "grcka kuca na plazi prodaja — 40",
+      "nekretnine grcka prvi red do mora — 30",
+      "kuca na moru grcka — 30"
+    ],
+    "otherGeography": [
+      "nekretnine halkidiki na moru — 0",
+      "halkidiki prvi red do mora — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Grčka – nekretnine na moru, prvi red do mora na Halkidikiju",
+  "meta": "Grčka nekretnine na moru: kuće, stanovi i vile u prvom redu do mora na Halkidikiju, sa pogledom i izlazom na plažu. Pogledajte ponudu.",
+  "h1": "Grčka nekretnine na moru – prvi red do mora na Halkidikiju",
+  "h2": [
+    "Nekretnine u Grčkoj na moru – ponuda na Halkidikiju",
+    "Prvi red do mora: šta to tačno znači",
+    "Kuće na plaži u Kasandri i Sitoniji",
+    "Obala u Grčkoj je javna: pravila o pojasu uz more",
+    "Na šta pazite pri kupovini nekretnine na moru"
+  ],
+  "faqQuestions": [
+    "Šta znači „prvi red do mora“ kod nekretnina u Grčkoj?",
+    "Da li se u Grčkoj sme graditi uz samu obalu?",
+    "Koliko košta kuća na moru u Grčkoj?",
+    "Da li je plaža ispred kuće u Grčkoj privatna?"
+  ],
+  "faq": [
+    {
+      "q": "Šta znači „prvi red do mora“ kod nekretnina u Grčkoj?",
+      "a": "Kod nas to znači da između nekretnine i plaže nema puta, zgrade ni druge nekretnine. Ako treba preći ulicu ili prošetati nekoliko minuta, nekretnina je blizu mora, ali nije u prvom redu. Ovaj pojam koristimo strogo, da biste tačno znali šta kupujete."
+    },
+    {
+      "q": "Da li se u Grčkoj sme graditi uz samu obalu?",
+      "a": "Gradnja uz samu obalu je ograničena. Pojas uz more je javno dobro i ne sme se ograđivati ni zauzimati, a za gradnju u njegovoj blizini važe posebna pravila. Kod postojećih objekata advokat i inženjer proveravaju da li su legalni pre nego što date ponudu."
+    },
+    {
+      "q": "Koliko košta kuća na moru u Grčkoj?",
+      "a": "Kuće u prvom redu do mora spadaju u najskuplje nekretnine, jer ih je malo. Cena zavisi od opštine, veličine, stanja, pogleda i plaže ispred kuće. Aktuelne cene na Halkidikiju vidite u ponudi na ovoj stranici, a za širi izbor pogledajte i kuće blizu mora."
+    },
+    {
+      "q": "Da li je plaža ispred kuće u Grčkoj privatna?",
+      "a": "Ne. U Grčkoj su plaže i pojas uz more javni, pa i ispred kuće u prvom redu svako može da prođe i da se kupa. Vlasnik ne sme da ogradi plažu. Prednost prvog reda je direktan izlaz na more i pogled, a ne privatna plaža."
+    }
+  ],
+  "intro": "<p>Grčka nekretnine na moru: ovde su kuće, stanovi i vile u prvom redu do mora na Halkidikiju, na severu Grčke. Kod nas „prvi red“ znači da između nekretnine i plaže nema puta ni druge zgrade.</p><p>Sve ponude nalaze se na Halkidikiju, gde radi naša agencija. Pogledajte ponudu, a zatim zakažite razgledanje uživo ili putem video poziva, da vidite i obalu i put do nje.</p>",
+  "body": "<h2>Nekretnine u Grčkoj na moru – ponuda na Halkidikiju</h2><p>Ova stranica prikazuje samo nekretnine u prvom redu do mora. Uz svaku je navedena opština, a tačna lokacija dogovara se pri razgledanju. Ako vam je dovoljna blizina plaže, pogledajte i celu ponudu sa filterom za udaljenost od mora.</p><h2>Prvi red do mora: šta to tačno znači</h2><p>Nekretninu označavamo kao prvi red samo kada između nje i plaže nema puta ni druge zgrade. Kuća sa pogledom preko puta ili na nekoliko minuta hoda nije prvi red, ma koliko blizu bila.</p><h2>Kuće na plaži u Kasandri i Sitoniji</h2><p>U Kasandri su obale uglavnom peščane, a more plitko, uz živa letnja mesta. Sitonija ima više stenovitih uvala i borove šume do mora, uz mirnije okruženje.</p><h2>Obala u Grčkoj je javna: pravila o pojasu uz more</h2><p>U Grčkoj je pojas uz more (aigialos) javno dobro: ne sme se ograđivati ni zatvarati, a gradnja u njegovoj blizini je ograničena. Zato ni plaža ispred kuće u prvom redu nije privatna.</p><h2>Na šta pazite pri kupovini nekretnine na moru</h2><ul><li>da li je bilo erozije obale ili plavljenja</li><li>pravni status objekata blizu obale</li><li>da li pogled može da zakloni nova gradnja</li><li>vlaga i održavanje zbog blizine mora</li></ul>",
+  "listingFilter": "sea=front",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/sr/nekretnina/prva-linija",
+  "hreflang": "P09: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Početna",
+    "Nekretnine",
+    "Prvi red do mora"
+  ],
+  "heroAlt": "Grčka nekretnine na moru – kuća u prvom redu do peščane plaže na Halkidikiju",
+  "galleryAltPattern": "{type} na prodaju, {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Grčka nekretnine na moru – prvi red do mora, Halkidiki",
+  "anchor": "nekretnine u Grčkoj na moru",
+  "anchorVariants": [
+    "nekretnine u prvom redu do mora na Halkidikiju",
+    "kuće na moru u Grčkoj"
+  ],
+  "linksOut": [
+    {
+      "anchor": "nekretnine na Halkidikiju – prodaja",
+      "href": "/sr/nekretnina"
+    },
+    {
+      "anchor": "nekretnine u Grčkoj na Halkidikiju",
+      "href": "/sr"
+    },
+    {
+      "anchor": "nekretnine na moru u Kasandri",
+      "href": "/sr/nekretnina/kasandra/prva-linija"
+    },
+    {
+      "anchor": "nekretnine na moru u Sitoniji",
+      "href": "/sr/nekretnina/sitonija/prva-linija"
+    },
+    {
+      "anchor": "prodaja vila u Grčkoj",
+      "href": "/sr/nekretnina/vile"
+    },
+    {
+      "anchor": "nekretnine u Kasandri",
+      "href": "/sr/nekretnina/kasandra"
+    },
+    {
+      "anchor": "nekretnine u Sitoniji",
+      "href": "/sr/nekretnina/sitonija"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P02",
+    "P07",
+    "P14",
+    "P17",
+    "P18"
+  ],
+  "cta": "Pogledajte nekretnine na moru",
+  "oldUrls": [],
+  "words": 437,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

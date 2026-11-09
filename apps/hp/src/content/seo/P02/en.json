@@ -1,0 +1,241 @@
+{
+  "id": "P02",
+  "lang": "en",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "All properties for sale in Halkidiki (main listing)",
+  "pageType": "listing",
+  "path": "/en/properties",
+  "keyword": {
+    "primary": "halkidiki property for sale",
+    "volume": 130,
+    "secondary": [
+      "property for sale halkidiki — 120",
+      "halkidiki properties for sale — 80",
+      "properties for sale in halkidiki — 60",
+      "property for sale in halkidiki — 50",
+      "halkidiki real estate for sale — 50",
+      "property for sale in chalkidiki — 30"
+    ],
+    "otherGeography": [
+      "property for sale in halkidiki greece — 20",
+      "property for sale halkidiki greece — 10",
+      "properties for sale in halkidiki greece — 10",
+      "greek property for sale — 350"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Property for Sale in Halkidiki, Greece – All Listings",
+  "meta": "Halkidiki property for sale: houses, apartments, villas and land in Kassandra, Sithonia and beyond. Filter by area and price, then send an enquiry.",
+  "h1": "Halkidiki Property for Sale",
+  "h2": [
+    "Houses and apartments for sale in Halkidiki",
+    "Villas and luxury property in Halkidiki",
+    "Land and plots for sale in Halkidiki",
+    "Property for sale by area: Kassandra, Sithonia, Nea Propontida, Aristotelis",
+    "Seafront property for sale in Halkidiki",
+    "What buying costs on top of the price"
+  ],
+  "faqQuestions": [
+    "How much does property cost in Halkidiki?",
+    "Can I buy property in Halkidiki without being in Greece?",
+    "What extra costs are there when buying property in Halkidiki?",
+    "Which areas of Halkidiki have property close to the beach?"
+  ],
+  "faq": [
+    {
+      "q": "How much does property cost in Halkidiki?",
+      "a": "Prices depend on the area, the distance to the sea, the size and the condition of the property. Seafront homes and villas in the busiest parts of Kassandra and Sithonia cost the most, while village houses further from the sea are more affordable. Filter by price to see what fits your budget."
+    },
+    {
+      "q": "Can I buy property in Halkidiki without being in Greece?",
+      "a": "Yes. We arrange video viewings, and with a power of attorney your lawyer can sign on your behalf. You still need a Greek tax number (AFM) and a Greek bank account, which your lawyer can usually help you arrange remotely."
+    },
+    {
+      "q": "What extra costs are there when buying property in Halkidiki?",
+      "a": "As of November 2026: transfer tax of 3.09% on a resale (VAT on new builds is suspended until 31/12/2026), plus lawyer, notary and land-registry fees, typically several percent in total. After the purchase you pay the annual ENFIA property tax. Our lawyer confirms the figures for each case."
+    },
+    {
+      "q": "Which areas of Halkidiki have property close to the beach?",
+      "a": "Every part of Halkidiki has coastal property. Kassandra and Sithonia have the most homes near the beach, but Nea Propontida, Polygyros and Aristotelis also have houses and apartments a short walk from the sea. Use the distance-to-sea filter or see our seafront page."
+    }
+  ],
+  "intro": "<p>Halkidiki property for sale, all in one place: houses, apartments, maisonettes, villas and land. Every listing below is in Halkidiki, Northern Greece, and shows the municipality, the main features and the distance to the sea. Use the filters to narrow by type, area and price, then book a viewing in person or by video. Prices, photos and features are kept up to date as homes come and go.</p>",
+  "body": "<h2>Houses and apartments for sale in Halkidiki</h2><p>Most buyers start here: family houses, maisonettes with a garden, and apartments or studios close to the beach. Filter by property type to see the homes that suit how you plan to use them, for holidays or for living all year.</p><h2>Villas and luxury property in Halkidiki</h2><p>Villas with a private pool, large plots and open sea views are found mainly in Kassandra and Sithonia. Ask us for a private viewing.</p><h2>Land and plots for sale in Halkidiki</h2><p>Building plots, sea-view land and olive groves are listed too. Before you buy, an engineer should confirm what can be built.</p><h2>Property for sale by area: Kassandra, Sithonia, Nea Propontida, Aristotelis</h2><p>Prices broadly follow location. Homes in the popular parts of Kassandra and close to the sea tend to cost more, while inland villages and quieter areas are usually more affordable. Sithonia, Nea Propontida and Aristotelis each have their own mix, from seafront villas to village houses.</p><h2>Seafront property for sale in Halkidiki</h2><p>First-line homes, with nothing between you and the beach, are the most sought after. Use the distance-to-sea filter to find them.</p><h2>What buying costs on top of the price</h2><p>As of November 2026, to be confirmed by our lawyer: transfer tax on a resale is 3.09%, VAT on new builds is suspended until 31/12/2026, and lawyer, notary and land-registry costs typically add several percent in total. Our buying guide explains each cost.</p>",
+  "listingFilter": "none (all live listings)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/en/properties",
+  "hreflang": "P02: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties"
+  ],
+  "heroAlt": "Stone house with sea view and olive trees for sale in Halkidiki, Greece",
+  "galleryAltPattern": "{type} for sale in {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Halkidiki Property for Sale – Houses, Villas, Apartments & Land",
+  "anchor": "Halkidiki property for sale",
+  "anchorVariants": [
+    "property for sale in Halkidiki",
+    "all Halkidiki properties for sale"
+  ],
+  "linksOut": [
+    {
+      "anchor": "property for sale in Greece",
+      "href": "/en/property-in-greece"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "apartments for sale in Halkidiki",
+      "href": "/en/properties/apartments-for-sale"
+    },
+    {
+      "anchor": "maisonettes for sale in Halkidiki",
+      "href": "/en/properties/maisonettes"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "land for sale in Halkidiki",
+      "href": "/en/properties/land-for-sale"
+    },
+    {
+      "anchor": "beachfront property for sale in Halkidiki",
+      "href": "/en/properties/seafront"
+    },
+    {
+      "anchor": "cheap houses for sale in Halkidiki",
+      "href": "/en/properties/affordable"
+    },
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "property for sale in Nea Propontida",
+      "href": "/en/properties/nea-propontida"
+    },
+    {
+      "anchor": "real estate in Aristotelis, Halkidiki",
+      "href": "/en/properties/aristotelis"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15",
+    "P16",
+    "P17",
+    "P18",
+    "P19",
+    "P20",
+    "P21"
+  ],
+  "cta": "See all properties",
+  "oldUrls": [
+    {
+      "path": "/en/articles/all-news/real-estate-passive-income-greece",
+      "clicks": 28
+    },
+    {
+      "path": "/en/properties-in-halkidiki-greece",
+      "clicks": 26
+    },
+    {
+      "path": "/en/articles/buyers/halkidiki-real-estate-market-trends:-what-to-expect-in-the-coming-years",
+      "clicks": 23
+    },
+    {
+      "path": "/en/articles/buyers/benefits-of-homeownership-in-greece",
+      "clicks": 22
+    },
+    {
+      "path": "/en/articles/all-news/investment-opportunities-in-halkidiki-real-estate:-a-comprehensive-guide",
+      "clicks": 19
+    },
+    {
+      "path": "/en/articles/all-news/the-best-greek-cities-to-invest-in-real-estate",
+      "clicks": 18
+    },
+    {
+      "path": "/en/articles/buyers/10-reasons-to-buy-property-in-halkidiki",
+      "clicks": 15
+    },
+    {
+      "path": "/en/articles/buyers/owning-a-vacation-home-in-greece",
+      "clicks": 11
+    },
+    {
+      "path": "/en/articles/buyers/why-invest-in-greece",
+      "clicks": 7
+    },
+    {
+      "path": "/en/articles/buyers/investing-in-real-estate",
+      "clicks": 6
+    },
+    {
+      "path": "/en/services/investor-services/hellenic-republic-assets-development-fund-hradf-tenders",
+      "clicks": 3
+    },
+    {
+      "path": "/en/properties-in-halkidiki-greece/halkidiki-hotels-for-sale",
+      "clicks": 3
+    },
+    {
+      "path": "/en/properties-in-halkidiki-greece/halkidiki-plots",
+      "clicks": 2
+    },
+    {
+      "path": "/en/pre-published-properties",
+      "clicks": 1
+    },
+    {
+      "path": "/en/properties-in-halkidiki-greece/house-halkidiki",
+      "clicks": 1
+    },
+    {
+      "path": "/en/services/investor-services/ports-and-marinas-design",
+      "clicks": 1
+    },
+    {
+      "path": "/en/articles/all-news/discovering-halkidiki:-embracing-natural-beauty-and-tranquility-in-your-real-estate-investment",
+      "clicks": 1
+    },
+    {
+      "path": "/en/articles/business-news/tourism-investment",
+      "clicks": 0
+    }
+  ],
+  "words": 491,
+  "editorialLine": "",
+  "lawyerCheck": "Approved by George Tsigaras 05/11/2026"
+}

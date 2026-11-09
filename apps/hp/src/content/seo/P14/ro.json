@@ -1,0 +1,117 @@
+{
+  "id": "P14",
+  "lang": "ro",
+  "buildOrder": 2,
+  "priority": "B",
+  "name": "Property in Aristotelis (Ierissos, Ouranoupoli, Mount Athos area)",
+  "pageType": "listing",
+  "path": "/ro/proprietati/aristotelis",
+  "keyword": {
+    "primary": "case de vanzare aristotelis grecia",
+    "volume": 0,
+    "secondary": [
+      "case de vanzare ierissos — 0",
+      "case de vanzare ouranoupoli — 0",
+      "proprietati muntele athos — 0"
+    ],
+    "otherGeography": [
+      "case de vanzare aristotelis halkidiki — 0"
+    ]
+  },
+  "titleFocus": "Greece first, Halkidiki second",
+  "title": "Case de vânzare în Grecia – Aristotelis, Halkidiki",
+  "meta": "Case de vânzare în Grecia, în Aristotelis (Halkidiki): case și terenuri lângă mare, în zona Muntelui Athos, cu sate liniștite. Vedeți ofertele.",
+  "h1": "Case de vânzare în Grecia – proprietăți în Aristotelis, Halkidiki",
+  "h2": [
+    "De ce Aristotelis: liniște și natură",
+    "Case și terenuri în Aristotelis",
+    "Proprietăți la mare în zona Athos",
+    "Ierissos și Ouranoupoli, pe scurt",
+    "Cum se ajunge în Aristotelis"
+  ],
+  "faqQuestions": [
+    "Unde se află municipiul Aristotelis în Halkidiki?",
+    "Ce sate se află în zona Aristotelis?",
+    "Se găsesc case la mare lângă Muntele Athos?",
+    "Este zona Aristotelis liniștită și în sezon?"
+  ],
+  "faq": [
+    {
+      "q": "Unde se află municipiul Aristotelis în Halkidiki?",
+      "a": "Aristotelis se află în partea de est a Halkidikiului, la baza peninsulei Athos. Se învecinează cu Sithonia prin golful dintre ele. Cuprinde localități de pe coastă și sate din interior, cu dealuri împădurite. Pentru cumpărători, înseamnă o zonă mai retrasă, cu natură și sate mici."
+    },
+    {
+      "q": "Ce sate se află în zona Aristotelis?",
+      "a": "Printre localitățile cunoscute se numără Ierissos, Nea Roda și Ouranoupoli pe coastă, precum și sate din interior, pe dealuri. Ouranoupoli este ultimul sat înainte de Muntele Athos. Pe pagina proprietăților afișăm doar municipiul, nu satul exact. Localizarea exactă v-o spunem când programați vizionarea."
+    },
+    {
+      "q": "Se găsesc case la mare lângă Muntele Athos?",
+      "a": "Da, în localitățile de coastă din jurul Athosului se găsesc case și apartamente aproape de mare. Oferta este mai mică decât în Kassandra sau Sithonia și se schimbă des. Vedeți lista actuală de pe această pagină sau cereți-ne o selecție."
+    },
+    {
+      "q": "Este zona Aristotelis liniștită și în sezon?",
+      "a": "În general, da. Chiar și vara, Aristotelis este mai puțin aglomerat decât Kassandra. Ouranoupoli are mulți vizitatori datorită excursiilor spre Athos, dar satele și plajele din jur rămân mai liniștite. Este o alegere bună pentru cine evită mulțimea și vrea o vacanță mai tihnită."
+    }
+  ],
+  "intro": "<p>Case de vânzare în Grecia, în Aristotelis: aici găsiți case și terenuri din municipiul Aristotelis, în estul Halkidikiului, lângă peninsula Muntelui Athos. Lucrăm numai în Halkidiki, așa că toate ofertele sunt în nordul Greciei. Zona are coastă liniștită, dealuri verzi și sate de pescari. Filtrați după tip și preț, apoi programați o vizionare la fața locului sau prin apel video.</p>",
+  "body": "<h2>De ce Aristotelis: liniște și natură</h2><p>Aristotelis este mai retras decât Kassandra și Sithonia. Are dealuri împădurite, plaje mai puțin aglomerate și sate care își păstrează ritmul și vara. Este potrivit pentru cine caută liniște și natură, plimbări pe dealuri și pește proaspăt în tavernele din port.</p><h2>Case și terenuri în Aristotelis</h2><p>Găsiți case în sate, locuințe de vacanță aproape de mare și terenuri cu vedere. Multe proprietăți sunt în sate mici, unde vecinii se cunosc și viața are un ritm mai lent. Pentru terenuri, inginerul verifică întotdeauna ce se poate construi.</p><h2>Proprietăți la mare în zona Athos</h2><p>Coasta din jurul Athosului are ape limpezi și golfuri liniștite. Muntele Athos este un stat monahal pe care îl pot vizita doar bărbații, cu permis. Din zonă pleacă excursii cu barca de-a lungul coastei sale.</p><h2>Ierissos și Ouranoupoli, pe scurt</h2><p>Ierissos este o localitate de pescari, cu plajă lungă și viață tot anul. Ouranoupoli este ultimul sat înainte de Athos, de unde pleacă bărcile spre mănăstiri.</p><h2>Cum se ajunge în Aristotelis</h2><p>Drumul de la Salonic este mai lung decât spre Kassandra sau Nea Propontida, pentru că zona se află în estul Halkidikiului. Recompensa este o coastă mai puțin aglomerată. Cu mașina din România, ajungeți prin Bulgaria spre Salonic și continuați spre estul Halkidikiului. Cu avionul, zburați la Salonic și închiriați o mașină de la aeroport.</p>",
+  "listingFilter": "municipality=aristotelis",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/ro/proprietati/aristotelis",
+  "hreflang": "P14: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Acasă",
+    "Proprietăți",
+    "Aristotelis"
+  ],
+  "heroAlt": "Coastă verde și sat pescăresc în Aristotelis, lângă Muntele Athos – case de vânzare în Grecia",
+  "galleryAltPattern": "{type} de vânzare în {municipality}, Halkidiki – {feature}",
+  "ogTitle": "Case de vânzare în Grecia – Aristotelis, Halkidiki",
+  "anchor": "case de vânzare în Aristotelis",
+  "anchorVariants": [
+    "proprietăți în Aristotelis, Halkidiki",
+    "case în Aristotelis, Grecia"
+  ],
+  "linksOut": [
+    {
+      "anchor": "imobiliare Halkidiki",
+      "href": "/ro/proprietati"
+    },
+    {
+      "anchor": "case de vânzare în Grecia",
+      "href": "/ro/proprietati/case"
+    },
+    {
+      "anchor": "teren de vânzare în Grecia",
+      "href": "/ro/proprietati/terenuri"
+    },
+    {
+      "anchor": "case de vânzare în Grecia pe malul mării",
+      "href": "/ro/proprietati/pe-plaja"
+    },
+    {
+      "anchor": "viața în Grecia, în Halkidiki",
+      "href": "/ro/halkidiki"
+    },
+    {
+      "anchor": "imobiliare Grecia – Halkidiki",
+      "href": "/ro"
+    }
+  ],
+  "linkedFrom": [
+    "P02",
+    "P08",
+    "P21"
+  ],
+  "cta": "Vezi proprietățile",
+  "oldUrls": [],
+  "words": 455,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

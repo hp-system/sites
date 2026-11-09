@@ -37,6 +37,8 @@ import { areaPage, type AreaPage as AreaContent } from '../content/areas/en';
 import ArticlePage from '../components/ArticlePage.astro';
 import ArticleListPage from '../components/ArticleListPage.astro';
 import InfoPageView from '../components/InfoPage.astro';
+import GuidePage from '../components/GuidePage.astro';
+import { specByPath } from '../lib/seo-pages';
 import { findInfoPage, EN_MOVED, type InfoPage } from '../lib/infopages';
 import { findArticle, isCategory, categoryUrl, inCategory, PER_PAGE, type Article } from '../lib/articles';
 import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, pageLangs, contentUrl, type PageKey } from '../lib/pages';
@@ -287,10 +289,18 @@ if (pageKey && !content) notFound = true;
 // 🪤 Ο ΚΩΔΙΚΑΣ ΜΕΝΕΙ 404, Η ΟΘΟΝΗ ΓΙΝΕΤΑΙ ΣΕΛΙΔΑ. Δελεαστικό να γυρίσει 200 «για
 //    να φαίνεται ωραία» — τότε όμως η Google ευρετηριάζει ανύπαρκτες σελίδες ως
 //    έγκυρες (soft 404). Φιλική σελίδα, αυστηρός κωδικός.
+// Sergei 08/11: a spec content page with no template yet (P03, P19, P20, P21) opens in the plain
+// GuidePage instead of a 404 — George's text, every language the spec has.
+const GUIDE_IDS = new Set(['P03', 'P19', 'P20', 'P21']);
+const guideSpec = notFound ? specByPath(Astro.url.pathname) : undefined;
+const guide = guideSpec && GUIDE_IDS.has(guideSpec.id) && guideSpec.lang === lang ? guideSpec : undefined;
+if (guide) notFound = false;
+
 if (notFound) Astro.response.status = 404;
 if (crmDown) { Astro.response.status = 503; Astro.response.headers.set('Retry-After', '120'); }
 ---
-{notFound ? <NotFoundPage lang={lang} />
+{guide ? <GuidePage page={guide} />
+  : notFound ? <NotFoundPage lang={lang} />
   : info ? <InfoPageView page={info} />
   : pageKey && content ? (
       <ContentPage lang={lang} page={content} langs={pageLangs(pageKey)}

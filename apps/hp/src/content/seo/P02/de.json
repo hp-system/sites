@@ -1,0 +1,173 @@
+{
+  "id": "P02",
+  "lang": "de",
+  "buildOrder": 3,
+  "priority": "A",
+  "name": "All properties for sale in Halkidiki (main listing)",
+  "pageType": "listing",
+  "path": "/de/immobilien",
+  "keyword": {
+    "primary": "chalkidiki immobilien kaufen",
+    "volume": 50,
+    "secondary": [
+      "immobilien chalkidiki kaufen — 40",
+      "immobilien in chalkidiki kaufen — 0",
+      "chalkidiki immobilien — 30",
+      "halkidiki immobilien — 10"
+    ],
+    "otherGeography": [
+      "immobilien griechenland chalkidiki — 20",
+      "immobilie in griechenland kaufen — 90",
+      "immobilien in griechenland kaufen — 50"
+    ]
+  },
+  "titleFocus": "Halkidiki first, Greece second",
+  "title": "Chalkidiki Immobilien kaufen – Angebote in Griechenland",
+  "meta": "Chalkidiki Immobilien kaufen: alle aktuellen Häuser, Wohnungen, Villen und Grundstücke mit Filtern nach Region und Preis. Jetzt Besichtigung anfragen.",
+  "h1": "Immobilien auf Chalkidiki kaufen – alle aktuellen Angebote",
+  "h2": [
+    "Immobilien in Chalkidiki kaufen: nach Region filtern",
+    "Häuser, Wohnungen, Villen und Grundstücke",
+    "Immobilien direkt am Meer auf Chalkidiki",
+    "Preise: was bekommen Sie für Ihr Budget?",
+    "Besichtigung und Kaufablauf mit unserem Team"
+  ],
+  "faqQuestions": [
+    "Welche Immobilien auf Chalkidiki stehen aktuell zum Verkauf?",
+    "Was kostet eine Immobilie auf Chalkidiki?",
+    "Kann ich Immobilien auf Chalkidiki vor Ort besichtigen?",
+    "Welche Unterlagen brauche ich, um eine Immobilie in Griechenland zu kaufen?"
+  ],
+  "faq": [
+    {
+      "q": "Welche Immobilien auf Chalkidiki stehen aktuell zum Verkauf?",
+      "a": "Auf dieser Seite sehen Sie alle Immobilien, die wir aktuell auf Chalkidiki anbieten: Häuser, Wohnungen, Maisonetten, Villen und Grundstücke in allen fünf Gemeinden. Die Liste wird laufend aktualisiert. Verkaufte Objekte nehmen wir heraus, neue Angebote kommen dazu. Speichern Sie die Seite und schauen Sie regelmäßig vorbei."
+    },
+    {
+      "q": "Was kostet eine Immobilie auf Chalkidiki?",
+      "a": "Das hängt stark von Lage, Größe, Zustand und Meerblick ab. Eine kleine Wohnung im Ort kostet deutlich weniger als eine Villa in erster Reihe. Mit dem Preisfilter sehen Sie sofort, welche Angebote in Ihr Budget passen. Planen Sie zusätzlich die Kaufnebenkosten ein."
+    },
+    {
+      "q": "Kann ich Immobilien auf Chalkidiki vor Ort besichtigen?",
+      "a": "Ja, sehr gern. Sagen Sie uns, wann Sie auf Chalkidiki sind, und wir stellen eine Besichtigungstour zusammen. Wenn Sie nicht anreisen können, machen wir eine Besichtigung per Video. So sehen Sie die Immobilie und die Umgebung live und können Fragen direkt stellen."
+    },
+    {
+      "q": "Welche Unterlagen brauche ich, um eine Immobilie in Griechenland zu kaufen?",
+      "a": "Sie brauchen einen gültigen Ausweis oder Reisepass, eine griechische Steuernummer und ein griechisches Bankkonto. Ihr Anwalt prüft die Unterlagen der Immobilie, etwa Grundbuch und Genehmigungen. Den Kaufvertrag unterschreiben Sie beim Notar, auf Wunsch auch per Vollmacht. Stand November 2026; die genaue Liste bestätigt unser Anwalt für Ihren Fall."
+    }
+  ],
+  "intro": "<p>Sie möchten auf Chalkidiki Immobilien kaufen? Hier finden Sie alle Häuser, Wohnungen, Villen und Grundstücke, die wir aktuell auf Chalkidiki verkaufen. Filtern Sie nach Gemeinde, Art der Immobilie, Preis und Entfernung zum Meer. Gefällt Ihnen ein Angebot, fragen Sie einfach eine Besichtigung an – vor Ort oder per Video.</p><p>Wir sind ein Maklerbüro auf Chalkidiki und verkaufen nur hier, in Nordgriechenland. Deshalb kennen wir jede Gegend aus eigener Erfahrung und sagen Ihnen ehrlich, was zu Ihnen passt.</p>",
+  "body": "<h2>Immobilien in Chalkidiki kaufen: nach Region filtern</h2><p>Jede Gemeinde hat ihren eigenen Charakter. Kassandra ist lebhaft und gut erschlossen, Sithonia ruhiger und naturnah. Nea Propontida und Polygyros sind ganzjährig belebt und nah an Thessaloniki. Aristotelis rund um die Athos-Region ist am ursprünglichsten. Auch das Preisniveau unterscheidet sich je nach Lage.</p><h2>Häuser, Wohnungen, Villen und Grundstücke</h2><p>Wohnungen eignen sich gut für Ferien und kurze Aufenthalte. Häuser und Maisonetten bieten mehr Platz, oft mit Garten. Villen stehen für Pool, Meerblick und Privatsphäre. Grundstücke sind für alle, die selbst bauen möchten.</p><h2>Immobilien direkt am Meer auf Chalkidiki</h2><p>Viele Käufer suchen eine Immobilie in erster Reihe. Solche Angebote sind selten und gefragt. Mit dem Filter „Entfernung zum Meer“ sehen Sie schnell, was direkt am Strand oder wenige Gehminuten entfernt liegt.</p><h2>Preise: was bekommen Sie für Ihr Budget?</h2><p>Der Preis hängt vor allem von Lage, Meerblick, Zustand und Größe ab. Nutzen Sie den Preisfilter, um Ihr Budget einzugrenzen. Wir sagen Ihnen offen, was in Ihrer Preisklasse realistisch ist.</p><h2>Besichtigung und Kaufablauf mit unserem Team</h2><p>Wir planen Ihre Besichtigungsreise so, dass Sie an wenigen Tagen mehrere Immobilien sehen. Wenn Sie nicht anreisen können, zeigen wir Ihnen die Immobilie per Video. Nach Ihrer Entscheidung begleiten wir Sie mit Anwalt und Notar bis zur Unterschrift.</p>",
+  "listingFilter": "none (all live listings)",
+  "indexing": "index, follow if ≥ 6 live listings (≥ 12 for P05 apartments and P10 affordable); otherwise noindex, follow and drop from sitemap automatically. Page 2+ (?page=N): self-canonical, text only on page 1.",
+  "canonical": "/de/immobilien",
+  "hreflang": "P02: el, en, de, sr, bg, ro, ru, tr, he + x-default = en",
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Startseite",
+    "Immobilien"
+  ],
+  "heroAlt": "Neubau mit Terrasse und Meerblick auf Chalkidiki – Chalkidiki Immobilien kaufen",
+  "galleryAltPattern": "{type} zum Kauf in {municipality}, Chalkidiki – {feature}",
+  "ogTitle": "Chalkidiki Immobilien kaufen – alle aktuellen Angebote",
+  "anchor": "Immobilien auf Chalkidiki kaufen",
+  "anchorVariants": [
+    "alle Immobilien auf Chalkidiki",
+    "Chalkidiki Immobilien zum Kauf"
+  ],
+  "linksOut": [
+    {
+      "anchor": "Immobilien in Griechenland",
+      "href": "/de/immobilien-griechenland"
+    },
+    {
+      "anchor": "Haus kaufen auf Chalkidiki",
+      "href": "/de/immobilien/haeuser"
+    },
+    {
+      "anchor": "Wohnung kaufen auf Chalkidiki",
+      "href": "/de/immobilien/wohnungen"
+    },
+    {
+      "anchor": "Maisonette kaufen auf Chalkidiki",
+      "href": "/de/immobilien/maisonetten"
+    },
+    {
+      "anchor": "Villa auf Chalkidiki kaufen",
+      "href": "/de/immobilien/villen"
+    },
+    {
+      "anchor": "Grundstück auf Chalkidiki kaufen",
+      "href": "/de/immobilien/grundstuecke"
+    },
+    {
+      "anchor": "Haus direkt am Meer auf Chalkidiki",
+      "href": "/de/immobilien/am-meer"
+    },
+    {
+      "anchor": "günstige Häuser auf Chalkidiki",
+      "href": "/de/immobilien/guenstig"
+    },
+    {
+      "anchor": "Immobilien in Kassandra",
+      "href": "/de/immobilien/kassandra"
+    },
+    {
+      "anchor": "Immobilien auf Sithonia",
+      "href": "/de/immobilien/sithonia"
+    },
+    {
+      "anchor": "Immobilien in Nea Propontida",
+      "href": "/de/immobilien/nea-propontida"
+    },
+    {
+      "anchor": "Immobilien in Aristotelis",
+      "href": "/de/immobilien/aristotelis"
+    },
+    {
+      "anchor": "als Deutscher ein Haus in Griechenland kaufen",
+      "href": "/de/immobilienkauf-griechenland"
+    }
+  ],
+  "linkedFrom": [
+    "P01",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15",
+    "P16",
+    "P17",
+    "P18",
+    "P19",
+    "P20",
+    "P21"
+  ],
+  "cta": "Besichtigung anfragen",
+  "oldUrls": [
+    {
+      "path": "/de/vorveroffentlichte-immobilien",
+      "clicks": 7
+    },
+    {
+      "path": "/de/dienstleistungen/dienstleistungen-fur-investoren/ausschreibungen-des-fonds-für-die-entwicklung-des-vermögens-der-hellenischen-republik",
+      "clicks": 3
+    }
+  ],
+  "words": 462,
+  "editorialLine": "",
+  "lawyerCheck": ""
+}

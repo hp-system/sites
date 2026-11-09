@@ -3954,6 +3954,15 @@
    "note": "topic"
   },
   {
+   "from": "/en/articles/business-news/taxes-foreigners-properties-greece",
+   "to": "/en/buying-property-in-greece",
+   "status": 301,
+   "lang": "en",
+   "src": "spec",
+   "clicks": 711,
+   "note": "topic"
+  },
+  {
    "from": "/en/articles/business-news/tourism-investment",
    "to": "/en/properties",
    "status": 301,

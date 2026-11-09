@@ -140,12 +140,6 @@
       "reason": "D11: VIP becomes Exclusive P52 (/en/exclusive), not built yet; until then /en/vip stays as it is"
     },
     {
-      "from": "/en/articles/business-news/taxes-foreigners-properties-greece",
-      "to": null,
-      "status": "keep",
-      "reason": "D-20261109-SS-2: the one strong article (731 of 928 blog clicks in 16 months, 68k impressions, position 8.9, 191 backlinks) keeps its URL and becomes a new page «Property taxes for foreigners in Greece» written to the spec rules"
-    },
-    {
       "from": "/en/sell/work-with-us-exclusively",
       "to": "/en/work-with-us-exclusively",
       "status": 301,

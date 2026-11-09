@@ -7,6 +7,7 @@
 // rendered as is. Links come only from the spec's «links out», with their exact anchors (rule 15).
 import { specSections, specByPath, type SpecPage } from '../lib/seo-pages';
 import type { Lang } from '../lib/i18n';
+import SpecMosaic from './SpecMosaic.astro';
 
 interface Props {
   page: SpecPage; part: 'intro' | 'rest'; lang: Lang;
@@ -15,7 +16,7 @@ interface Props {
   /** 'rotate': the H2 sections in one block of fixed height, one at a time every 3 s, dashes to
    *  pick one (home, Sergei 08/11: «стоять на месте, но перелистывать SEO-текст»). Every section
    *  stays in the HTML, in the spec's order — search engines read all of it. Phones: all shown. */
-  body?: 'prose' | 'rotate';
+  body?: 'prose' | 'rotate' | 'mosaic';   // mosaic: tiles in the home bento's styles (SpecMosaic, Sergei 2026-11-09)
   /** 'columns': the spec's links grouped like the footer — properties / areas / guides (home,
    *  Sergei 08/11); `more` adds the block's own guide links to the guides column. */
   links?: 'inline' | 'columns' | 'sections';
@@ -101,6 +102,9 @@ const ui = L[lang] ?? L.en;
 ---
 {part === 'intro' && page.intro && <div class="st-intro prose" set:html={page.intro} />}
 
+{part === 'rest' && body === 'mosaic' && page.body && (
+  <div class="st-mo"><div class="wrap"><SpecMosaic html={page.body} /></div></div>
+)}
 {part === 'rest' && (
   <section class="st wrap" aria-label={page.h1}>
     {page.body && body === 'prose' && <div class="prose" set:html={page.body} />}
@@ -245,6 +249,7 @@ const ui = L[lang] ?? L.en;
   @media (min-width: 760px) { .st-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .st-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); }
   .st-links a { color: var(--ink); font-size: var(--fs-s0); text-underline-offset: 3px; }
+  .st-mo { background: var(--paper-3); padding-block: var(--s7); }
 </style>
 
 <script>

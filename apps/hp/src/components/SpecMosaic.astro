@@ -1,0 +1,76 @@
+---
+// The spec body as a mosaic of tiles (Sergei 2026-11-09: «поделить их на более рандомные блоки …
+// но с нашими стилями», then «добавляй ето локально»; mockup https://claude.ai/artifact/YAhNYUsa8GcELs9PaS5qHB).
+// Tile styles are the home bento's (Construction.astro): white tiles (17/600 title, ink-2 text) and
+// black fact tiles (28/300 title, white .72 text) on the beige --paper-3 band, 12 px gap.
+//
+// Built from any spec body, so every page can use it:
+//   · each H2 with its first paragraph → a black fact tile (the H2 stays an H2, in the spec order);
+//   · each list item → a white tile («<strong>X:</strong> rest» → title X + text);
+//   · every other paragraph → a white tile.
+// Width (of 6 columns) follows the length of the text; every row is filled to 6 by widening its
+// last tile, so there is no hole and the reading order is the HTML order (no dense packing).
+// Every word of the body stays in the HTML, so search engines read the same text.
+// Rejected: CSS dense packing — it reorders the tiles and cut long texts (variant 1 of the mockup).
+interface Props { html: string }
+const { html } = Astro.props;
+
+type Tile = { kind: 'fact' | 'tile'; w: number; h2?: string; h3?: string; body: string };
+const tiles: Tile[] = [];
+const text = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const widthOf = (s: string, min = 1) => Math.max(min, text(s).length > 200 ? 3 : text(s).length > 90 ? 2 : 1);
+
+for (const sec of html.split(/(?=<h2>)/).filter((s) => s.trim())) {
+  const h2 = sec.match(/<h2>([\s\S]*?)<\/h2>/)?.[1];
+  const blocks = [...sec.replace(/<h2>[\s\S]*?<\/h2>/, '').matchAll(/<p>([\s\S]*?)<\/p>|<ul>([\s\S]*?)<\/ul>/g)];
+  let first = true;
+  for (const b of blocks) {
+    if (b[1] !== undefined) {
+      if (first && h2) { tiles.push({ kind: 'fact', w: widthOf(b[1], 2), h2, body: `<p>${b[1]}</p>` }); }
+      else tiles.push({ kind: 'tile', w: widthOf(b[1]), body: `<p>${b[1]}</p>` });
+    } else {
+      if (first && h2) tiles.push({ kind: 'fact', w: 2, h2, body: '' });
+      for (const li of b[2].matchAll(/<li>([\s\S]*?)<\/li>/g)) {
+        const m = li[1].match(/^<strong>([\s\S]*?):?<\/strong>:?\s*([\s\S]*)$/);
+        tiles.push(m ? { kind: 'tile', w: widthOf(m[2]), h3: m[1], body: `<p>${m[2]}</p>` } : { kind: 'tile', w: widthOf(li[1]), body: `<p>${li[1]}</p>` });
+      }
+    }
+    first = false;
+  }
+  if (first && h2) tiles.push({ kind: 'fact', w: 2, h2, body: '' });
+}
+// fill every row to 6: a tile that does not fit widens the previous one to the row's end
+let used = 0;
+for (let i = 0; i < tiles.length; i++) {
+  if (used + tiles[i].w > 6) { tiles[i - 1].w += 6 - used; used = 0; }
+  used = (used + tiles[i].w) % 6;
+}
+if (used && tiles.length) tiles[tiles.length - 1].w += 6 - used;
+---
+<div class="sm">
+  {tiles.map((t) => (
+    <div class:list={['sm__t', `sm__w${t.w}`, t.kind === 'fact' && 'sm__t--fact']}>
+      {t.h2 && <h2 set:html={t.h2} />}
+      {t.h3 && <h3 set:html={t.h3} />}
+      {t.body && <Fragment set:html={t.body} />}
+    </div>
+  ))}
+</div>
+
+<style>
+  .sm { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; background: var(--paper-3); padding: 12px; }
+  .sm__t { min-width: 0; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: var(--s2); grid-column: span 2; }
+  .sm__w1 { grid-column: span 1; }
+  .sm__t :global(h2), .sm__t :global(h3) { margin: auto 0 0; font-size: var(--fs-s0); font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+  .sm__t :global(p) { margin: 0; font-size: var(--fs-s0); line-height: 1.45; color: var(--ink-2); }
+  .sm__t :global(p)::first-letter { text-transform: uppercase; }   /* as the home bento (.cd p) */
+  .sm__t--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; padding: 24px 26px; }
+  .sm__t--fact :global(h2) { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
+  .sm__t--fact :global(p) { color: rgba(255,255,255,.72); line-height: 1.55; }
+  @media (min-width: 1024px) {
+    .sm { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: minmax(160px, auto); padding: 0; background: none; }
+    .sm__w1 { grid-column: span 1; } .sm__w2 { grid-column: span 2; } .sm__w3 { grid-column: span 3; }
+    .sm__w4 { grid-column: span 4; } .sm__w5 { grid-column: span 5; } .sm__w6 { grid-column: span 6; }
+    .sm__t--fact :global(h2) { font-size: var(--fs-s3); }
+  }
+</style>

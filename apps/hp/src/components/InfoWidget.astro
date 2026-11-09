@@ -113,13 +113,13 @@ const priceText = (p: SiteProperty) => (priceVisible(p.attributes ?? {}) ? eur(p
   .pw-scroll { overflow-x: auto; }
   .pw table { display: table; width: 100%; margin: 0; border-collapse: collapse; font-variant-numeric: tabular-nums; }
   .pw th, .pw td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line, #e5e3de); }
-  .pw thead th { font-size: 13px; font-weight: 600; color: var(--ink-2, #3c4247); }
+  .pw thead th { font-size: var(--fs-s-1); font-weight: 600; color: var(--ink-2, #3c4247); }
   .pw-areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px 32px; }
   .pw-areas ul { list-style: none; padding: 0; margin: 6px 0 0; }
   .pw-areas li { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--line, #e5e3de); font-variant-numeric: tabular-nums; }
   .pw-guide { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
   .pw-guide li { display: grid; gap: 4px; border-top: 1px solid var(--ink, #0e1214); padding-top: 10px; }
-  .pw-from { font-size: 20px; font-variant-numeric: tabular-nums; }
-  .pw-note, .pw-empty { color: var(--ink-2, #3c4247); font-size: 15px; }
+  .pw-from { font-size: var(--fs-s1); font-variant-numeric: tabular-nums; }
+  .pw-note, .pw-empty { color: var(--ink-2, #3c4247); font-size: var(--fs-s0); }
   .pw-pre { list-style: none; padding: 0; }
 </style>

@@ -43,6 +43,11 @@ const STRIP = ['s1', 's2', 's3', 's4'];
 // #101: the heading breaks after its first sentence on desktop (one line each).
 const [h2a, ...h2rest] = t(lang, 'cx.h2').split(/(?<=[.!?])\s+/);
 const h2b = h2rest.join(' ');
+// Sergei 08/11 (desktop): when both sentences open with the same word («The … / The …»), that word
+// is set once, large, beside the two lines. Layout only — the full heading stays for screen readers.
+const lead = (x: string) => x.match(/^(\S+)\s+([\s\S]*)$/);
+const la = lead(h2a), lb = h2b ? lead(h2b) : null;
+const pair = la && lb && la[1] === lb[1] ? { w: la[1], a: la[2], b: lb[2] } : null;
 
 // Desktop redesign (Sergei 03/11, mockup «two home blocks»): the four key words of the heading
 // in bold (land · begins · house · build, in each language), and a row of cards you page through.
@@ -76,7 +81,10 @@ const ICON: Record<string, string> = {
   c5: '<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
   c6: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
 };
-const ROW = ['s1', 'c1', 'c2', 's2', 'c3', 'c4', 's3', 'c5', 'c6', 's4'];
+const ROW = ['s1', 'c1', 'c2', 'c3', 'c4', 'c5', 's2', 's3', 'c6', 's4'];
+// Sergei 08/11 (canvas «HP Construction bento», v3): the row becomes a bento under the page, seen
+// through a full-width window; the tiles slide past faster than the page while the window crosses
+// the screen. Placement is by grid area (cd--<key>), so the order above is only the reading order.
 
 const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
 ---
@@ -89,7 +97,16 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     <div class="cx__top">
       <div class="cx__lead">
         <p class="t-label cx__eyebrow">{t(lang, 'cx.eyebrow')}</p>
-        <h2 id="cx-h" class="cx__h">{bolden(h2a).map((x) => (x.b ? <b>{x.s}</b> : x.s))}{h2b && <><br class="cx__br" /> {bolden(h2b).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</>}</h2>
+        <h2 id="cx-h" class:list={['cx__h', pair && 'cx__h--pair']}>
+          <span class="cx__hx">{bolden(h2a).map((x) => (x.b ? <b>{x.s}</b> : x.s))}{h2b && <><br class="cx__br" /> {bolden(h2b).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</>}</span>
+          {pair && (
+            <span class="cx__pair" aria-hidden="true">
+              <span class="cx__pw">{pair.w}</span>
+              <span class="cx__pl">{bolden(pair.a).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</span>
+              <span class="cx__pl">{bolden(pair.b).map((x) => (x.b ? <b>{x.s}</b> : x.s))}</span>
+            </span>
+          )}
+        </h2>
         <p class="cx__p">{t(lang, 'cx.p')}</p>
       </div>
 
@@ -107,19 +124,18 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
       </p>
 
       {/* desktop: the row of cards (the same texts as the boxes below, which stay for phones) */}
-      <div class="cx__rw">
-        <button type="button" class="cx__arw cx__arw--l" data-cx-prev aria-label="‹" hidden>‹</button>
-        <button type="button" class="cx__arw cx__arw--r" data-cx-next aria-label="›">›</button>
+      <div class="cx__rw" data-cx-win>
         <div class="cx__rail" data-cx-rail>
           {ROW.map((k) => k.startsWith('s') ? (
-            <article class="cd cd--fact"><h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p></article>
+            <article class={`cd cd--fact cd--${k}`}><h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p></article>
           ) : (
-            <article class="cd">
+            <article class={`cd cd--${k}`}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICON[k]}></svg>
               <h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p>
             </article>
           ))}
         </div>
+        <div class="cx__shade" aria-hidden="true"></div>
       </div>
 
       <div class="cx__caps" data-acc>
@@ -156,20 +172,13 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
 </section>
 
 <script>
-  // Desktop row: the arrows page by two cards and hide at the ends; the row's left edge sits on
-  // the page's left line (the window's scrollbar width is measured for that).
-  document.querySelectorAll<HTMLElement>('[data-cx-rail]').forEach((rail) => {
-    const box = rail.parentElement!;
-    const prev = box.querySelector<HTMLButtonElement>('[data-cx-prev]')!;
-    const next = box.querySelector<HTMLButtonElement>('[data-cx-next]')!;
-    const sbw = () => document.documentElement.style.setProperty('--sbw', `${window.innerWidth - document.documentElement.clientWidth}px`);
-    const step = () => ((rail.querySelector('.cd')?.getBoundingClientRect().width ?? 300) + 16) * 2;
-    const ends = () => { prev.hidden = rail.scrollLeft < 4; next.hidden = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 4; };
-    prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
-    rail.addEventListener('scroll', ends, { passive: true });
-    window.addEventListener('resize', () => { sbw(); ends(); });
-    sbw(); ends();
+  // Desktop window onto the bento (Sergei 08/11): the same «window» as the property of the week —
+  // the bento is fixed to the screen (CSS) and the page scrolls the window across it. Only the
+  // page's width without the scrollbar is measured here; no scroll handler is needed.
+  document.querySelectorAll<HTMLElement>('[data-cx-win]').forEach((win) => {
+    const sbw = () => win.style.setProperty('--pw', `${document.documentElement.clientWidth}px`);
+    window.addEventListener('resize', sbw);
+    sbw();
   });
 </script>
 
@@ -181,11 +190,11 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   .cx__eyebrow { color: rgba(255,255,255,.5); }
   .cx__h {
     margin: var(--s2) 0 0; font-weight: 300; letter-spacing: -.02em; line-height: 1.08;
-    font-size: clamp(28px, 5.4vw, 44px); max-width: 16ch;
+    font-size: var(--fs-s4); max-width: 16ch;
   }
   .cx__br { display: none; }
   .cx__p {
-    margin: var(--s4) 0 0; font-size: 15.5px; line-height: 1.6;
+    margin: var(--s4) 0 0; font-size: var(--fs-s0); line-height: 1.6;
     color: rgba(255,255,255,.78); max-width: 48ch;
   }
   /* Phone: the buttons stay right under the text, as before. */
@@ -200,9 +209,9 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
   .cap { background: var(--ink-deep); padding: var(--s4); min-width: 0; }
   /* Phone: every box open — the title is a label, not a control. */
   .cap__b { all: unset; display: block; pointer-events: none; }
-  .cap__t { display: block; font-size: 14px; font-weight: 600; }
+  .cap__t { display: block; font-size: var(--fs-s0); font-weight: 600; }
   .cap__chev { display: none; }
-  .cap__d { display: block; margin-top: 3px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
+  .cap__d { display: block; margin-top: 3px; font-size: var(--fs-s-1); color: rgba(255,255,255,.5); line-height: 1.45; }
 
   .h-stack {
     display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
@@ -215,8 +224,8 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
      γραμμή αριστερά (George, 28/7: «δεν τα έχεις κεντρίσει καλά, να μην
      ακουμπάνε τέρμα αριστερά»). Ίσο padding σε όλες τις πλευρές. */
   .st { background: var(--ink-deep); padding: var(--s4); min-width: 0; }
-  .st b { display: block; font-size: clamp(18px, 3.4vw, 24px); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; }
-  .st span { display: block; margin-top: 5px; font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.45; }
+  .st b { display: block; font-size: var(--fs-s1); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; }
+  .st span { display: block; margin-top: 5px; font-size: var(--fs-s-1); color: rgba(255,255,255,.5); line-height: 1.45; }
 
   @media (min-width: 760px) and (max-width: 1023px) {
     .cx { padding: 74px 0; }
@@ -239,7 +248,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     .cx__strip { grid-area: facts; align-self: start; margin-top: 30px; }
     .cx__caps { grid-area: acc; }
     .cx__acts { grid-area: acts; justify-content: center; margin: 32px 0 0; }
-    .cx__h { margin-top: 14px; font-size: 38px; line-height: 1.14; max-width: none; }
+    .cx__h { margin-top: 14px; font-size: var(--fs-s3); line-height: 1.14; max-width: none; }
     .cx__br { display: inline; }
     .cx__p { margin-top: 22px; line-height: 1.65; max-width: 50ch; }
 
@@ -253,7 +262,7 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
       color: rgba(255,255,255,.6);
     }
     .cap__b:focus-visible { outline: 2px solid var(--gold-dk); outline-offset: 2px; }
-    .cap__t { font-size: 20px; font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: #fff; }
+    .cap__t { font-size: var(--fs-s1); font-weight: 300; letter-spacing: -.012em; line-height: 1.2; color: #fff; }
     .cap__b:hover .cap__t { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
     .cap__chev { display: block; flex: none; transition: transform .4s ease; }
     .cap.on .cap__chev { transform: rotate(180deg); }
@@ -263,13 +272,13 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     }
     .cap.on .cap__w { grid-template-rows: 1fr; opacity: 1; }
     .cap__w > div { overflow: hidden; min-height: 0; }
-    .cap__d { margin: 0; padding: 0 36px 16px 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.72); }
+    .cap__d { margin: 0; padding: 0 36px 16px 0; font-size: var(--fs-s0); line-height: 1.6; color: rgba(255,255,255,.72); }
 
     /* the four facts: one at a time (stack, dashes and clock are in HomePage.astro) */
     .h-stack { background: none; border: 0; gap: 0; grid-template-columns: 1fr; justify-items: start; }
     .st { background: none; padding: 0; }
-    .st b { font-size: 26px; font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
-    .st span { margin-top: 8px; font-size: 14.5px; color: rgba(255,255,255,.6); line-height: 1.55; }
+    .st b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
+    .st span { margin-top: 8px; font-size: var(--fs-s0); color: rgba(255,255,255,.6); line-height: 1.55; }
     .st span::first-letter { text-transform: uppercase; }
     .h-bars { display: flex; }
   }
@@ -285,42 +294,62 @@ const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await c
     }
     .cx .cx__lead { display: contents; }
     .cx .cx__eyebrow { grid-area: eb; color: var(--muted); }
-    .cx .cx__h { grid-area: h; margin-top: 14px; font-size: 42px; line-height: 1.1; color: var(--ink); }
+    .cx .cx__h { grid-area: h; margin-top: 14px; font-size: var(--fs-s4); line-height: 1.1; color: var(--ink); }
     .cx .cx__h b { font-weight: 600; }
-    .cx .cx__p { grid-area: p; margin: 10px 0 0; max-width: none; font-size: 16px; line-height: 1.65; color: var(--muted); }   /* the grey of the area links (Sergei 03/11) */
-    .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 0; }
+    /* Sergei 08/11: one shared first word for the two lines («The» once, two lines high) */
+    .cx__pair { display: none; }
+    .cx .cx__h--pair .cx__hx { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .cx .cx__h--pair .cx__pair { display: grid; grid-template-columns: auto auto; justify-content: start; column-gap: .22em; align-items: center; }
+    .cx__pw { grid-row: 1 / span 2; font-size: 2.35em;   /* Sergei 08/11: a little bigger · canon-exception (side case, sized to its two lines) */
+       line-height: .9; font-weight: 300; letter-spacing: -.03em; }
+    .cx__pl { display: block; }
+    .cx .cx__p { grid-area: p; margin: 10px 0 0; max-width: none; font-size: var(--fs-s0); line-height: 1.65; color: var(--muted); }   /* the grey of the area links (Sergei 03/11) */
+    .cx .cx__acts { grid-area: acts; justify-content: flex-end; margin: 14px 0 0; align-self: center; }   /* Sergei 08/11: centred on the heading's height */
     .cx .cx__btn { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
-    .cx .cx__btn:hover { background: var(--ink-hover); border-color: var(--ink-hover); }
+    /* Sergei 08/11: hovers swap black and white — no grey, no fade */
+    .cx .cx__btn:hover { opacity: 1; background: var(--paper); color: var(--ink); border-color: var(--ink); }
     .cx .cx__btn--ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
-    .cx .cx__btn--ghost:hover { background: var(--ink); color: #fff; }
+    .cx .cx__btn--ghost:hover { opacity: 1; background: var(--ink); color: #fff; border-color: var(--ink); }
     .cx .cx__caps, .cx .cx__strip { display: none; }
 
-    /* the row bleeds to the window's right edge and starts on the page's left line */
-    .cx__rw { --off: max(var(--gut), calc((100vw - var(--sbw, 0px) - var(--max)) / 2 + var(--gut)));
-              display: block; grid-area: rail; position: relative; margin: 22px 0 0 calc(-1 * var(--off)); width: calc(100vw - var(--sbw, 0px)); }
-    .cx__rail { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-                padding: 4px var(--off) 12px; scroll-padding-inline: var(--off); }
-    .cx__rail::-webkit-scrollbar { display: none; }
-    .cd { flex: none; width: 300px; min-height: 250px; scroll-snap-align: start;
-          background: var(--paper-2); padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;
-          transition: transform .35s cubic-bezier(.4,0,.2,1), box-shadow .35s ease; }
-    .cd:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(10,14,16,.10); }
-    .cd svg { width: 34px; height: 34px; color: var(--ink); flex: none; }
-    .cd h3 { margin: 6px 0 0; font-size: 21px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
-    .cd p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+    /* Sergei 08/11: a full-width window onto a bento fixed to the screen — the technique of the
+       property of the week (FeatureProperty.astro): `clip-path` makes the band the frame of a fixed
+       layer, so the page moves and the tiles stay, which reads as depth. The bento fills the screen
+       (3 equal rows), so whatever part the window crosses, it shows tiles. */
+    /* --pw = the page's width without the scrollbar, measured by the script (some browsers already
+       leave the scrollbar out of 100vw, so 100vw − scrollbar came out 15 px short). */
+    .cx__rw { --pw: calc(100vw - var(--sbw, 0px)); --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
+              display: block; grid-area: rail; position: relative; margin: 40px 0 0 calc(-1 * var(--off)); width: var(--pw);
+              height: 480px; overflow: hidden; clip-path: inset(0); background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles */
+    /* Sergei 08/11: the tiles as wide as the text (the page's text lines), and lower to match;
+       centred on the screen's height, the beige window around them. */
+    .cx__rail { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(600px, calc(var(--tw) * .6), 100vh);
+                box-sizing: border-box; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 12px;
+                position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
+                grid-template-areas: "s1 s1 c1 c2 c3" "c4 c5 c1 s2 s2" "s3 s3 c6 s4 s4"; }
+    .cx__shade { position: absolute; inset: 0; pointer-events: none;
+                 box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
+    /* Sergei 08/11: tiles only white (services) and black (facts) */
+    .cd { min-width: 0; overflow: hidden; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+    .cd svg { width: 40px; height: 40px; color: var(--ink); flex: none; stroke-width: 1.2; }   /* Sergei 08/11: bigger icons */
+    .cd h3 { margin: auto 0 0; font-size: var(--fs-s0); font-weight: 600; letter-spacing: -.01em; line-height: 1.25; }
+    .cd p { margin: 0; font-size: var(--fs-s0); line-height: 1.45; color: var(--ink-2); }
     .cd p::first-letter { text-transform: uppercase; }
-    .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; }
-    .cd--fact h3 { font-size: 26px; font-weight: 300; }
-    .cd--fact p { color: rgba(255,255,255,.72); }
-    .cx__arw { all: unset; box-sizing: border-box; position: absolute; z-index: 3; top: calc(50% - 7px); transform: translateY(-50%);
-               width: 48px; height: 48px; display: grid; place-items: center; cursor: pointer; color: var(--ink); font-size: 22px;
-               background: rgba(255,255,255,.92); border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(10,14,16,.14);
-               transition: border-color .2s ease; }
-    .cx__arw[hidden] { display: none; }
-    .cx__arw--l { left: 24px; }
-    .cx__arw--r { right: 24px; }
-    .cx__arw:hover { border-color: var(--ink); }
-    .cx__arw:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .cd--c1 { grid-area: c1; padding: 28px 26px; gap: 14px; }
+    .cd--c1 svg { width: 76px; height: 76px; stroke-width: .9; }
+    .cd--c1 h3 { font-size: var(--fs-s1); line-height: 1.2; }
+    .cd--c1 p { font-size: var(--fs-s0); line-height: 1.55; }
+    .cd--c2 { grid-area: c2; } .cd--c3 { grid-area: c3; } .cd--c4 { grid-area: c4; } .cd--c5 { grid-area: c5; }
+    .cd--c6 { grid-area: c6; }
+    .cd--s1 { grid-area: s1; } .cd--s2 { grid-area: s2; } .cd--s3 { grid-area: s3; } .cd--s4 { grid-area: s4; }
+    .cd--fact { background: var(--ink-deep); color: #fff; justify-content: flex-end; padding: 24px 26px; }
+    .cd--fact h3 { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
+    .cd--fact p { max-width: 40ch; font-size: var(--fs-s0); line-height: 1.55; color: rgba(255,255,255,.72); }
   }
-  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .cd { transition: none; } }
+  /* Reduced motion (as the property of the week): no fixed layer; the window is an ordinary scroll box. */
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .cx__rw { overflow-y: auto; clip-path: none; }
+    .cx__rail { position: static; width: auto; height: auto; grid-template-rows: none; grid-auto-rows: 250px; }
+  }
 </style>

@@ -147,7 +147,7 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
   .card { min-width: 0; }
 
   .ph { position: relative; overflow: hidden; background: var(--paper-2); }
-  .luxtag { position: absolute; top: 10px; left: 10px; z-index: 2; font-size: 10px; font-weight: 600; letter-spacing: .14em;
+  .luxtag { position: absolute; top: 10px; left: 10px; z-index: 2; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em;
             text-transform: uppercase; padding: 4px 8px; background: var(--ink); color: var(--paper); pointer-events: none; }
   .heart { position: absolute; top: 10px; right: 10px; z-index: 2; width: 36px; height: 36px; display: grid; place-items: center;
            background: rgba(255,255,255,.92); color: var(--ink); border: 0; border-radius: 50%; cursor: pointer; padding: 0; }
@@ -187,8 +187,8 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
     display: grid; place-content: center; gap: 6px; text-align: center;
     background: var(--ink); color: var(--paper); text-decoration: none;
   }
-  .more__n { font-size: 26px; font-weight: 300; letter-spacing: -.02em; }
-  .more__t { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+  .more__n { font-size: var(--fs-s2); font-weight: 300; letter-spacing: -.02em; }
+  .more__t { font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
 
   .dots {
     position: absolute; inset: auto 0 9px 0; display: flex; gap: 5px;
@@ -214,7 +214,7 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
   .price { flex: 1 1 auto; min-width: 0; }
   .sea {
     flex: 0 0 auto; border: 1px solid var(--line); padding: 2px 7px;
-    font-size: 10.5px; font-weight: 600; letter-spacing: .08em;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .08em;
     text-transform: uppercase; color: var(--ink-2); white-space: nowrap;
   }
   /* 🌊 Η ΠΡΩΤΗ ΓΡΑΜΜΗ ΤΟΝΙΖΕΤΑΙ — «κάτι πολύ αχνό» (George, 28/7).

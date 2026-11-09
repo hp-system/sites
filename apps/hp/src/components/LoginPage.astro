@@ -262,39 +262,39 @@ const JS_T = {
   .auth { min-height: 70vh; display: grid; place-items: start center; padding: var(--s6) var(--gut) var(--s9); }
   .box { width: 100%; max-width: 420px; }
   .auth__h { margin: 10px 0 6px; }
-  .h2 { font-size: clamp(19px, 3vw, 22px); font-weight: 300; margin: 0 0 6px; line-height: 1.2; }
-  .say { color: var(--muted); font-size: 13.5px; margin: 0 0 18px; }
-  .q { font-size: 14px; color: var(--ink-2); margin: 0 0 12px; }
+  .h2 { font-size: var(--fs-s1); font-weight: 300; margin: 0 0 6px; line-height: 1.2; }
+  .say { color: var(--muted); font-size: var(--fs-s-1); margin: 0 0 18px; }
+  .q { font-size: var(--fs-s0); color: var(--ink-2); margin: 0 0 12px; }
 
   .picks { display: grid; gap: 9px; }
   .pick { all: unset; cursor: pointer; box-sizing: border-box; display: block; width: 100%;
           min-height: 66px; padding: 13px 16px; border: 1px solid var(--line); }
   .pick:hover { border-color: var(--ink); }
   .pick:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .pick b { display: block; font-size: 15.5px; font-weight: 600; }
-  .pick small { display: block; font-size: 12px; color: var(--faint); margin-top: 2px; }
+  .pick b { display: block; font-size: var(--fs-s0); font-weight: 600; }
+  .pick small { display: block; font-size: var(--fs-s-1); color: var(--faint); margin-top: 2px; }
 
-  .fl { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .18em;
+  .fl { display: block; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .18em;
         text-transform: uppercase; color: var(--faint); margin: 0 0 6px; }
   /* 🪤 16px ΑΚΡΙΒΩΣ. Κάτω από αυτό, το Safari του iPhone ΜΕΓΕΘΥΝΕΙ μόνο του τη
      σελίδα μόλις ο χρήστης πατήσει το πεδίο — και δεν ξαναμικραίνει ποτέ. */
   .fi { width: 100%; min-height: 52px; box-sizing: border-box; padding: 0 14px;
         border: 1px solid var(--line); background: var(--paper); color: var(--ink);
-        font-size: 16px; font-family: var(--f); border-radius: var(--r); }
+        font-size: var(--fs-s0); font-family: var(--f); border-radius: var(--r); }
   .fi:focus-visible { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(3,109,172,.16); }
   .fi--cc { width: 122px; flex: none; padding-inline: 10px; }
-  .fi--code { font-size: 26px; letter-spacing: .34em; text-align: center; font-variant-numeric: tabular-nums; }
+  .fi--code { font-size: var(--fs-s2); letter-spacing: .34em; text-align: center; font-variant-numeric: tabular-nums; }
   .row { display: flex; gap: 8px; }
 
   .btn { width: 100%; margin-top: 14px; }
   .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--ink-2); }
   .lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .fine { font-size: 11.5px; line-height: 1.6; color: var(--faint); margin: 12px 0 0; }
+  .fine { font-size: var(--fs-s-1); line-height: 1.6; color: var(--faint); margin: 12px 0 0; }
   .fine a { color: var(--ink-2); }
-  .err { margin: 12px 0 0; padding: 10px 12px; border: 1px solid #A3312B; color: #A3312B; font-size: 13px; }
+  .err { margin: 12px 0 0; padding: 10px 12px; border: 1px solid #A3312B; color: #A3312B; font-size: var(--fs-s-1); }
 
   .gains { list-style: none; margin: 22px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line-soft); }
-  .gains li { font-size: 13.5px; color: var(--ink-2); padding: 5px 0; }
+  .gains li { font-size: var(--fs-s-1); color: var(--ink-2); padding: 5px 0; }
   [hidden] { display: none !important; }
 </style>
 

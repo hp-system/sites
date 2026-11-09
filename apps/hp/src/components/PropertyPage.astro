@@ -942,10 +942,10 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 <style>
   .strip.strip6 { display: none; }
 
-  .lux { display: inline-block; margin-left: 10px; vertical-align: 6px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em;
+  .lux { display: inline-block; margin-left: 10px; vertical-align: 6px; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em;
          text-transform: uppercase; padding: 4px 9px; background: var(--ink); color: var(--paper); }
-  .muni__p { margin: 0 0 12px; color: var(--ink-2); font-size: 15px; max-width: 64ch; }
-  .muni__l { margin: 0 0 8px; padding-left: 18px; display: grid; gap: 4px; font-size: 14.5px; }
+  .muni__p { margin: 0 0 12px; color: var(--ink-2); font-size: var(--fs-s0); max-width: 64ch; }
+  .muni__l { margin: 0 0 8px; padding-left: 18px; display: grid; gap: 4px; font-size: var(--fs-s0); }
   .muni__l a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 
   /* ── ΤΑ ΣΤΟΙΧΕΙΑ ΤΗΣ ΓΗΣ ─────────────────────────────────────────────── */
@@ -953,8 +953,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
   .lfact { display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
            padding: 11px 0; border-bottom: 1px solid var(--line-soft); min-width: 0; }
-  .lfact dt { font-size: 12.5px; color: var(--faint); flex: none; }
-  .lfact dd { margin: 0; font-size: 14.5px; text-align: right; min-width: 0;
+  .lfact dt { font-size: var(--fs-s-1); color: var(--faint); flex: none; }
+  .lfact dd { margin: 0; font-size: var(--fs-s0); text-align: right; min-width: 0;
               overflow-wrap: anywhere; }
   /* Δύο στήλες θέλουν κενό ανάμεσα, αλλιώς οι τιμές της αριστερής ακουμπούν
      τις ετικέτες της δεξιάς. */
@@ -962,7 +962,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
   .prop { padding-block: var(--s5) 0; }
   .wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gut); }
-  .crumb { font-size: 13px; color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .crumb { font-size: var(--fs-s-1); color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
   .crumb a { color: var(--ink-2); text-decoration: none; }
   .crumb a:hover { text-decoration: underline; }
 
@@ -972,11 +972,11 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .tt__l { min-width: 0; }
   .tt__r { display: flex; gap: var(--s2); flex: none; }
   .chip { display: inline-flex; align-items: center; gap: 6px; margin-top: 7px;
-          border: 1px solid var(--line); padding: 4px 10px; font-size: 11.5px; color: var(--ink-2); }
+          border: 1px solid var(--line); padding: 4px 10px; font-size: var(--fs-s-1); color: var(--ink-2); }
   .chip svg { width: 12px; height: 12px; flex: none; }
 
   .btn { appearance: none; border: 1px solid var(--line); background: none; color: var(--ink);
-         font: inherit; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;
+         font: inherit; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase;
          padding: 0 14px; height: 44px; box-sizing: border-box; cursor: pointer; text-decoration: none;
          display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
   .btn svg { width: 13px; height: 13px; flex: none; }
@@ -1010,8 +1010,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .lockover { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px;
               text-align: center; color: #fff; background: rgba(10,14,16,.46); padding: 14px; }
   .lockover svg { width: 24px; height: 24px; margin: 0 auto; }
-  .lockover b { font-size: 15px; font-weight: 600; text-wrap: balance; }
-  .lockover em { font-style: normal; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  .lockover b { font-size: var(--fs-s0); font-weight: 600; text-wrap: balance; }
+  .lockover em { font-style: normal; font-size: var(--fs-s-1); letter-spacing: .1em; text-transform: uppercase;
                  border: 1px solid rgba(255,255,255,.75); padding: 8px 13px; margin: 2px auto 0; }
 
   .dots { position: absolute; inset: auto 0 12px 0; display: flex; gap: 6px;
@@ -1051,18 +1051,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .strip { display: flex; flex-wrap: wrap; border: 1px solid var(--line-soft); }
   .strip div { flex: 1 1 auto; padding: 12px 16px; border-inline-end: 1px solid var(--line-soft); min-width: 92px; }
   .strip div:last-child { border-inline-end: 0; }
-  .strip b { display: block; font-size: 15.5px; font-weight: 600; }
-  .strip span { font-size: 10px; letter-spacing: .11em; text-transform: uppercase; color: var(--faint); }
+  .strip b { display: block; font-size: var(--fs-s0); font-weight: 600; }
+  .strip span { font-size: var(--fs-s-1); letter-spacing: .11em; text-transform: uppercase; color: var(--faint); }
 
-  .sec { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint);
+  .sec { font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase; color: var(--faint);
          margin: var(--s6) 0 var(--s3); font-weight: 600; }
-  .desc { margin: 0; font-size: 15px; color: var(--ink-2); max-width: 70ch; white-space: pre-line; }
+  .desc { margin: 0; font-size: var(--fs-s0); color: var(--ink-2); max-width: 70ch; white-space: pre-line; }
   .dsc__more { overflow: hidden; max-height: 3.2em; margin-top: 1em;   /* Sergei 03/11: a shorter fade */
                
                -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, transparent 100%);
                transition: max-height .6s cubic-bezier(.4,0,.2,1); }
   .dsc.open .dsc__more { -webkit-mask-image: none; mask-image: none; }
-  .dsc__t { margin-top: 10px; padding: 6px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11.5px; font-weight: 600;
+  .dsc__t { margin-top: 10px; padding: 6px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: var(--fs-s-1); font-weight: 600;
             letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-decoration: underline; text-underline-offset: 4px; }
   .dsc__t:hover { color: var(--ink); }   /* the grey of the area links (Sergei 03/11) */
   @media (prefers-reduced-motion: reduce) { .dsc__more { transition: none; } }
@@ -1070,25 +1070,25 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   /* Χαρακτηριστικά με εικονίδια — «αισθητικά πολύ γλυκό» (George). */
   .feats { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px var(--s4);
            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
-  .feats li { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--ink-2); }
+  .feats li { display: flex; gap: 10px; align-items: center; font-size: var(--fs-s0); color: var(--ink-2); }
   .feats svg { width: 19px; height: 19px; flex: none; color: var(--ink); }
 
   .floors { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
   .fl { border: 1px solid var(--line-soft); padding: 14px 16px; }
-  .fl__h { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
-  .fl dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 13px; }
+  .fl__h { display: block; font-size: var(--fs-s-1); font-weight: 600; margin-bottom: 8px; }
+  .fl dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: var(--fs-s-1); }
   .fl dt { color: var(--muted); }
   .fl dd { margin: 0; text-align: end; }
   .fl__a, .fl__s { display: none; }
 
-  .place { margin: 0; font-size: 15px; color: var(--ink-2); }
+  .place { margin: 0; font-size: var(--fs-s0); color: var(--ink-2); }
   .pmap { margin: 12px 0 0; }
   .pmap__map { height: 300px; background: var(--line); }
-  .pmap__cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .pmap__cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: var(--fs-s-1); color: var(--muted); }
   .pmap__cap a { color: var(--ink); text-decoration: underline; }
   .xcl { margin-top: 8px; }
-  .xcl__h { font-size: 15px; font-weight: 600; margin: 18px 0 8px; }
-  .xcl__addr { margin: 0; font-size: 15px; }
+  .xcl__h { font-size: var(--fs-s0); font-weight: 600; margin: 18px 0 8px; }
+  .xcl__addr { margin: 0; font-size: var(--fs-s0); }
   .xcl__vid { position: relative; aspect-ratio: 16 / 9; }
   .xcl__vid iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .xcl__docs { margin: 0; padding-left: 18px; }
@@ -1104,16 +1104,16 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .maplock__in { position: absolute; inset: 0; display: grid; place-content: center; gap: 9px;
                  text-align: center; padding: 16px; }
   .maplock__in svg { width: 25px; height: 25px; margin: 0 auto; color: var(--ink); }
-  .maplock__in b { font-size: 16px; font-weight: 600; }
-  .maplock__in em { font-style: normal; font-size: 13px; color: var(--muted); max-width: 42ch; }
+  .maplock__in b { font-size: var(--fs-s0); font-weight: 600; }
+  .maplock__in em { font-style: normal; font-size: var(--fs-s-1); color: var(--muted); max-width: 42ch; }
   .maplock__in .btn { margin: 4px auto 0; }
 
   .dists { list-style: none; margin: var(--s4) 0 0; padding: 0; display: grid; gap: 10px var(--s4);
-           grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); font-size: 13.5px; }
+           grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); font-size: var(--fs-s-1); }
   .dists li { display: flex; align-items: baseline; gap: 8px; border-bottom: 1px solid var(--line-soft); padding-bottom: 7px; }
   .dists span { color: var(--ink-2); flex: 1 1 auto; min-width: 0; }
   .dists b { font-weight: 600; }
-  .dists em { font-style: normal; font-size: 11px; color: var(--faint); }
+  .dists em { font-style: normal; font-size: var(--fs-s-1); color: var(--faint); }
 
   .full { background: var(--ink); color: var(--paper); padding: var(--s5);
           display: grid; gap: var(--s3); align-items: center; margin-top: var(--s6); }
@@ -1123,9 +1123,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .full__i svg { width: 22px; height: 22px; }
   .full__h { margin: 0; color: var(--paper); display: block; }
   .full__l { margin: 6px 0 0; padding: 0; list-style: none; display: flex; gap: var(--s4);
-             flex-wrap: wrap; font-size: 13px; color: rgba(255,255,255,.82); }
+             flex-wrap: wrap; font-size: var(--fs-s-1); color: rgba(255,255,255,.82); }
   .full__l li::before { content: '· '; opacity: .6; }
-  .full__b { background: var(--paper); color: var(--ink); padding: 13px 24px; font-size: 11.5px;
+  .full__b { background: var(--paper); color: var(--ink); padding: 13px 24px; font-size: var(--fs-s-1);
              letter-spacing: .09em; text-transform: uppercase; text-decoration: none; white-space: nowrap;
              justify-self: start; }
   .full__b:hover { background: transparent; color: var(--paper); box-shadow: inset 0 0 0 1px var(--paper); }
@@ -1136,19 +1136,19 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   /* ═══ Η ΚΑΡΤΑ ΕΝΕΡΓΕΙΩΝ ═══ */
   .card { border: 1px solid var(--line); padding: var(--s4); background: var(--paper); }
   @media (min-width: 900px) { .card { position: sticky; top: var(--s3); } }
-  .old { font-size: 13px; color: var(--faint); text-decoration: line-through; }
+  .old { font-size: var(--fs-s-1); color: var(--faint); text-decoration: line-through; }
   .price { margin: 0; }
-  .per { margin: 2px 0 var(--s3); font-size: 12px; color: var(--muted); }
+  .per { margin: 2px 0 var(--s3); font-size: var(--fs-s-1); color: var(--muted); }
   .cta { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
          box-sizing: border-box; padding: 13px; margin-bottom: 7px; cursor: pointer;
          border: 1px solid var(--ink); background: var(--ink); color: var(--paper);
-         font: inherit; font-size: 11.5px; font-weight: 600; letter-spacing: .09em;
+         font: inherit; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .09em;
          text-transform: uppercase; text-decoration: none; }
   .cta svg { width: 15px; height: 15px; flex: none; }
   .cta:hover { opacity: .88; }
   .cta--wa { background: none; color: #1faa53; border-color: #1faa53; }
   .cta--sec { background: none; color: var(--ink); }
-  .tel { display: block; text-align: center; font-size: 13px; color: var(--ink-2); margin: 9px 0 0; }
+  .tel { display: block; text-align: center; font-size: var(--fs-s-1); color: var(--ink-2); margin: 9px 0 0; }
   .tel a { color: inherit; text-decoration: none; }
   .tel__ic { display: none; }
   .cb-open { border: 0; background: none; padding: 4px 2px; font: inherit; color: var(--brand); cursor: pointer;
@@ -1157,18 +1157,18 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .qf { border-top: 1px solid var(--line-soft); margin-top: var(--s4); padding-top: var(--s3);
         display: grid; gap: 7px; }
   .qf__h { display: block; }
-  .lab { font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
+  .lab { font-size: var(--fs-s-1); letter-spacing: .13em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
   .qf input, .tf input { border: 1px solid var(--line); background: var(--paper); color: var(--ink);
-    font: inherit; font-size: 16px; padding: 0 11px; height: 44px; box-sizing: border-box; width: 100%; }
+    font: inherit; font-size: var(--fs-s0); padding: 0 11px; height: 44px; box-sizing: border-box; width: 100%; }
   .qf input:focus-visible, .tf input:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
-  .qf__int { margin: 0; font-size: 12px; color: var(--muted); background: var(--paper-2);
+  .qf__int { margin: 0; font-size: var(--fs-s-1); color: var(--muted); background: var(--paper-2);
              border: 1px dashed var(--line); padding: 9px 11px; }
   .qf button, .tf button { border: 0; background: var(--ink); color: var(--paper); font: inherit;
-    font-size: 11.5px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
     padding: 13px; cursor: pointer; }
-  .qf__fine { margin: 0; font-size: 10.5px; color: var(--faint); }
+  .qf__fine { margin: 0; font-size: var(--fs-s-1); color: var(--faint); }
   .qf__priv a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-  .qf__ok, .tf__ok { margin: 0; font-size: 13px; color: var(--ink); }
+  .qf__ok, .tf__ok { margin: 0; font-size: var(--fs-s-1); color: var(--ink); }
   /* Η παγίδα-μέλι φεύγει από την ΟΘΟΝΗ αλλά όχι από το DOM — τα ρομπότ
      διαβάζουν HTML, δεν κοιτούν pixel. `display:none` το προσπερνούν πολλά. */
   /* B-23: no physical offset — `left: -9999px` widened every RTL (he) page to ~11,000 px.
@@ -1182,7 +1182,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
          box-shadow: 0 -8px 30px rgba(10,14,16,.10);
          padding-bottom: env(safe-area-inset-bottom); }
   .bar__go, .bar__i { flex: 1; display: grid; place-items: center; gap: 3px; padding: 9px 6px;
-    font: inherit; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase;
+    font: inherit; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase;
     border: 0; border-inline-end: 1px solid var(--line-soft); background: none;
     color: var(--ink); text-decoration: none; cursor: pointer; min-height: 56px; }
   .bar__i:last-child { border-inline-end: 0; }
@@ -1198,15 +1198,15 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
            background: var(--paper); color: var(--ink); box-shadow: 0 24px 70px rgba(10,14,16,.22); }
   .modal::backdrop { background: rgba(10,14,16,.45); }
   .modal__x { display: flex; justify-content: flex-end; margin: calc(-1 * var(--s3)) calc(-1 * var(--s3)) 0 0; }
-  .modal__x button { border: 0; background: none; font-size: 22px; line-height: 1; cursor: pointer;
+  .modal__x button { border: 0; background: none; font-size: var(--fs-s1); line-height: 1; cursor: pointer;
                      color: var(--muted); padding: 4px 8px; }
   .modal__h { display: block; margin: 0; }
-  .modal__s { margin: 4px 0 var(--s3); font-size: 13px; color: var(--muted); }
+  .modal__s { margin: 4px 0 var(--s3); font-size: var(--fs-s-1); color: var(--muted); }
   .tf { display: grid; gap: 8px; }
   .when { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 2px; }
   .when label { cursor: pointer; }
   .when input { position: absolute; opacity: 0; pointer-events: none; }
-  .when span { display: inline-block; border: 1px solid var(--line); padding: 8px 13px; font-size: 12.5px; }
+  .when span { display: inline-block; border: 1px solid var(--line); padding: 8px 13px; font-size: var(--fs-s-1); }
   .when input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .when input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
 
@@ -1217,11 +1217,11 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .sheet[open] { display: grid; gap: 9px; }
   .sheet::backdrop { background: rgba(10,14,16,.45); }
   .sheet__x { display: flex; justify-content: flex-end; margin: -6px -8px -6px 0; }
-  .sheet__x button { border: 0; background: none; font-size: 22px; line-height: 1; cursor: pointer;
+  .sheet__x button { border: 0; background: none; font-size: var(--fs-s1); line-height: 1; cursor: pointer;
                      color: var(--muted); padding: 4px 8px; }
   .sheet__now { border: 1px solid var(--ink); padding: 13px 12px; display: flex; justify-content: space-between;
-                align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 15px; }
-  .sheet__now small { color: var(--muted); font-size: 13px; }
+                align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: var(--fs-s0); }
+  .sheet__now small { color: var(--muted); font-size: var(--fs-s-1); }
 
   /* ═══════════════════════════════════════════════════════════════════════
      #103 — DESKTOP REDESIGN of the property page (approved by George 2026-11-02).
@@ -1241,12 +1241,12 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .crumb a { color: var(--muted); }
     .tt { align-items: flex-end; margin: 12px 0 16px; }
     .tt__l { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 10px; }
-    .tt__h { flex: 1 0 100%; font-size: 36px; font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
+    .tt__h { flex: 1 0 100%; font-size: var(--fs-s3); font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
     .lux { margin: 0; vertical-align: 0; padding: 5px 9px; }
-    .chip { margin: 0 0 0 6px; padding: 4px 8px; gap: 6px; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+    .chip { margin: 0 0 0 6px; padding: 4px 8px; gap: 6px; font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
     .chip svg { width: 11px; height: 11px; }
     .tt__r { align-self: flex-end; gap: 8px; }
-    .tt__r .btn { height: auto; min-height: 0; padding: 4px 8px; gap: 6px; font-size: 10.5px; letter-spacing: .14em; font-weight: 500; line-height: 1.6;
+    .tt__r .btn { height: auto; min-height: 0; padding: 4px 8px; gap: 6px; font-size: var(--fs-s-1); letter-spacing: .14em; font-weight: 500; line-height: 1.6;
                   border-color: rgba(14,18,20,.30); background: var(--paper); transition: background .2s ease, border-color .2s ease; }
     .tt__r .btn svg { width: 11px; height: 11px; transition: transform .25s ease; }
     .tt__r .btn:hover { opacity: 1; background: var(--paper-2); border-color: var(--ink); }
@@ -1280,7 +1280,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     /* highlights + facts: fixed heights, so the price box lines up (chips 40 · facts 77) */
     .hl { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; margin-bottom: 10px; }
     .hl__c { display: inline-flex; align-items: center; gap: 8px; height: 40px; box-sizing: border-box; padding: 7px 12px;
-             border: 1px solid var(--line); font-size: 13.5px; font-weight: 600; }
+             border: 1px solid var(--line); font-size: var(--fs-s-1); font-weight: 600; }
     .hl__c svg { width: 18px; height: 18px; flex: none; }
     .strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); border: 0;
              border-top: 1px solid var(--line); border-inline-end: 1px solid var(--line); }
@@ -1304,7 +1304,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .feats--more:not(.feats--all) li:nth-child(n + 12):not(.feats__all) { display: none; }
     .feats .feats__all { display: flex; }
     .fall { appearance: none; display: flex; gap: 10px; align-items: center; background: none; border: 0; padding: 0; margin: 0;
-            font: inherit; font-size: 14px; color: var(--muted); cursor: pointer; text-align: start; transition: color .15s ease; }
+            font: inherit; font-size: var(--fs-s0); color: var(--muted); cursor: pointer; text-align: start; transition: color .15s ease; }
     .fall svg { color: currentColor; }
     .fall span { text-decoration: underline; text-underline-offset: 4px; }
     .fall:hover { color: var(--ink); font-weight: 600; }
@@ -1314,9 +1314,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .floors { display: flex; flex-direction: row-reverse; gap: 0; border: 1px solid var(--line); border-inline-start: 0; }
     .fl { flex: 1 1 0; min-width: 0; border: 0; border-inline-start: 1px solid var(--line); padding: 20px 16px 22px; text-align: center;
           display: flex; flex-direction: column; align-items: center; gap: 10px; }
-    .fl__h { margin: 0; font-size: 15px; }
-    .fl__a { display: block; font-size: 19px; font-weight: 600; font-variant-numeric: lining-nums proportional-nums; }
-    .fl__s { display: block; font-size: 14px; color: var(--muted); font-variant-numeric: lining-nums proportional-nums; }
+    .fl__h { margin: 0; font-size: var(--fs-s0); }
+    .fl__a { display: block; font-size: var(--fs-s0); font-weight: 600; font-variant-numeric: lining-nums proportional-nums; }
+    .fl__s { display: block; font-size: var(--fs-s0); color: var(--muted); font-variant-numeric: lining-nums proportional-nums; }
     .fl dl { display: none; }
 
     /* ── location: map / lock with the «Nearby» panel ── */
@@ -1336,7 +1336,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .loc--near.is-open .near { transform: none; }
     .loc--nomap .near { position: static; width: auto; transform: none; border: 1px solid var(--line); }
     .near__h { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 8px 18px; border-bottom: 1px solid var(--line);
-               font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+               font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
     .loc--nomap .near__h { display: none; }
     .near__x { appearance: none; width: 28px; height: 28px; display: grid; place-items: center; background: none; border: 0; cursor: pointer; padding: 0; color: var(--ink); }
     .near__x svg { width: 11px; height: 11px; }
@@ -1346,7 +1346,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .near .dists span { color: var(--muted); }
     .near__open { position: absolute; inset-inline-end: 12px; top: 12px; z-index: 600;   /* Sergei 03/11: top corner */
                   display: none; gap: 8px; align-items: center; height: 36px;
-                  padding: 0 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 13px;
+                  padding: 0 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: var(--fs-s-1);
                   font-weight: 600; cursor: pointer; }
     .near__open svg { width: 16px; height: 16px; }
     .loc--near:not(.is-open):not(.loc--nomap) .near__open { display: flex; }
@@ -1367,31 +1367,31 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
       box-shadow: 0 10px 30px rgba(10,30,40,.16);
     }
     .muni__card { flex: 54 1 0; padding: 18px 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
-    .muni .sec { background: none; height: auto; padding: 0; margin: 0 0 8px; font-size: 24px; font-weight: 300; line-height: 1.14;
+    .muni .sec { background: none; height: auto; padding: 0; margin: 0 0 8px; font-size: var(--fs-s1); font-weight: 300; line-height: 1.14;
                  letter-spacing: -.016em; text-transform: none; }
-    .muni__p { margin: 0; font-size: 14px; line-height: 1.6; max-width: none; }
-    .muni__l { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13.5px; }
+    .muni__p { margin: 0; font-size: var(--fs-s0); line-height: 1.6; max-width: none; }
+    .muni__l { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: var(--fs-s-1); }
     .muni__l a { color: var(--muted); text-decoration: none; transition: color .15s ease; }
     .muni__l a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
     .muni__go { order: -1; flex: 1 0 100%; }
     .muni__go a { display: flex; align-items: center; justify-content: center; height: 38px; background: var(--ink); color: var(--paper);
-                  font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 600; transition: background .2s ease; }
+                  font-size: var(--fs-s-1); letter-spacing: .09em; text-transform: uppercase; font-weight: 600; transition: background .2s ease; }
     .muni__go a:hover { background: var(--ink-hover); color: var(--paper); text-decoration: none; }
     .muni__pr { display: flex; flex: 46 1 0; padding: 16px 22px; flex-direction: column; gap: 9px; }
-    .pr__h { margin: 0; font-size: 24px; font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
-    .pr__h span { font-size: 14px; color: var(--muted); }
+    .pr__h { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.14; letter-spacing: -.016em; }
+    .pr__h span { font-size: var(--fs-s0); color: var(--muted); }
     .pr__big { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .pr__big div { display: flex; flex-direction: column; gap: 2px; }
-    .pr__big b { font-size: 26px; font-weight: 600; line-height: 1.05; letter-spacing: -.012em; }
-    .pr__big span, .pr__line { font-size: 13.5px; color: var(--muted); }
-    .pr__line { margin: 0; color: var(--ink-2); font-size: 14px; }
+    .pr__big b { font-size: var(--fs-s2); font-weight: 600; line-height: 1.05; letter-spacing: -.012em; }
+    .pr__big span, .pr__line { font-size: var(--fs-s-1); color: var(--muted); }
+    .pr__line { margin: 0; color: var(--ink-2); font-size: var(--fs-s0); }
     .pr__bars { display: flex; flex-direction: column; gap: 3px; padding-top: 8px; border-top: 1px solid rgba(14,18,20,.10); }
-    .pr__bar { display: grid; grid-template-columns: 124px 1fr 72px; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+    .pr__bar { display: grid; grid-template-columns: 124px 1fr 72px; align-items: center; gap: 8px; font-size: var(--fs-s0); color: var(--muted); }
     .pr__bar i { display: block; height: 6px; width: var(--w); background: rgba(14,18,20,.16); }
     .pr__bar span:last-child { text-align: end; }
     .pr__bar--on { color: var(--ink); font-weight: 600; }
     .pr__bar--on i { background: var(--ink); }
-    .pr__all { margin-top: auto; align-self: flex-end; font-size: 13.5px; color: var(--ink); white-space: nowrap; }
+    .pr__all { margin-top: auto; align-self: flex-end; font-size: var(--fs-s-1); color: var(--ink); white-space: nowrap; }
     :global([dir='rtl']) .pr__all span { display: inline-block; transform: scaleX(-1); }
 
     /* ── Free account: black, flush under the band, big faint lock ── */
@@ -1401,13 +1401,13 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .full__i { display: none; }
     .full__lock { display: block; position: absolute; inset-inline-end: 218px; top: 0; width: 100px; height: 100px; opacity: .07;
                   color: var(--paper); pointer-events: none; will-change: transform; }
-    .full__k { display: block; grid-column: 1; margin-bottom: 8px; font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+    .full__k { display: block; grid-column: 1; margin-bottom: 8px; font-size: var(--fs-s-1); letter-spacing: .13em; text-transform: uppercase;
                font-weight: 600; color: rgba(255,255,255,.62); position: relative; }
-    .full__h { grid-column: 1; font-size: 26px; font-weight: 300; line-height: 1.2; letter-spacing: -.012em; position: relative; }
+    .full__h { grid-column: 1; font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; position: relative; }
     .full__b { grid-column: 2; grid-row: 1 / 3; position: relative; display: inline-flex; align-items: center; height: 46px; padding: 0 22px;
                font-weight: 600; justify-self: end; }
     .full__l { grid-column: 1 / -1; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12);
-               display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 20px; font-size: 13.5px; position: relative; }
+               display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 20px; font-size: var(--fs-s-1); position: relative; }
 
     /* ── similar: three columns, the hover of the cards on home and the list ── */
     .sim { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 20px; }
@@ -1426,7 +1426,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .zone { display: block; position: relative; background: var(--paper-2); padding: 20px 24px 16px; margin-top: 40px; flex: 1 0 auto;
             box-shadow: 0 0 0 100vmax var(--paper-2); clip-path: inset(0 -100vmax); }
     .zone__h { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }
-    .zone__t { margin: 0; font-size: 24px; font-weight: 300; letter-spacing: -.014em; }
+    .zone__t { margin: 0; font-size: var(--fs-s1); font-weight: 300; letter-spacing: -.014em; }
     .rdash { display: flex; gap: 6px; flex: none; }
     .rdash button { all: unset; cursor: pointer; padding: 10px 0; }
     .rdash button span { display: block; width: 6px; height: 2px; background: rgba(14,18,20,.2);
@@ -1441,13 +1441,13 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .pci img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
     .pc:hover .pci img { transform: scale(1.03); }
     .pct { display: flex; align-items: flex-start; justify-content: center; color: var(--ink); text-decoration: none; margin: 14px 0 0;
-           min-height: 45px; font-size: 18px; font-weight: 600; line-height: 1.25; letter-spacing: -.012em; max-width: 280px; }
+           min-height: 45px; font-size: var(--fs-s0); font-weight: 600; line-height: 1.25; letter-spacing: -.012em; max-width: 280px; }
     .pca { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: auto; padding-top: 10px; }
     .pcb { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; background: var(--paper); color: var(--ink);
-           border: 1px solid var(--line); font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+           border: 1px solid var(--line); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
            text-decoration: none; white-space: nowrap; transition: border-color .15s ease; }
     .pcb:hover { border-color: var(--ink); }
-    .pcl { font-size: 13px; color: var(--ink); text-decoration: none; white-space: nowrap; }
+    .pcl { font-size: var(--fs-s-1); color: var(--ink); text-decoration: none; white-space: nowrap; }
     .pcl:hover { text-decoration: underline; text-underline-offset: 3px; }
 
     /* ── the price box: frosted glass, sticky, lands on the bottom of the area zone ── */
@@ -1457,11 +1457,11 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%); }
     .pbp { display: flex; align-items: baseline; gap: 10px; height: 30px; white-space: nowrap; }
     .pbp .price, .pbp .per { font-variant-numeric: lining-nums proportional-nums; }   /* Sergei 03/11: price digits read normally */
-    .pbp .price { font-size: 30px; font-weight: 600; line-height: 1; letter-spacing: -.012em; }   /* Sergei 03/11: a little larger */
-    .pbp .price.t-h3 { font-size: 20px; }
-    .pbp .per { margin: 0; font-size: 15px; }   /* half the price */
+    .pbp .price { font-size: var(--fs-s2); font-weight: 600; line-height: 1; letter-spacing: -.012em; }   /* Sergei 03/11: a little larger */
+    .pbp .price.t-h3 { font-size: var(--fs-s1); }
+    .pbp .per { margin: 0; font-size: var(--fs-s0); }   /* half the price */
     .side .tel { display: none; }   /* Sergei 03/11: no phone button in the price box (the number is in the header) */
-    .pbp .old { order: 3; font-size: 12px; }
+    .pbp .old { order: 3; font-size: var(--fs-s-1); }
     .cta { height: 40px; padding: 0 12px; margin: 0; transition: background .2s ease, color .2s ease, border-color .2s ease; }
     .card > .cta[data-tour] { margin-top: 2px; }
     .cta:hover { opacity: 1; background: var(--paper-2); color: var(--ink); border-color: var(--ink); }
@@ -1476,7 +1476,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     /* Sergei 03/11: the number is a button shaped like WhatsApp, in the colours of «Send» */
     .tel { margin: 0; }
     .tel a { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 40px; box-sizing: border-box;
-             font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--ink); background: var(--paper);
+             font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .08em; color: var(--ink); background: var(--paper);
              border: 1px solid transparent; font-variant-numeric: lining-nums proportional-nums;
              transition: background .2s ease, border-color .2s ease; }
     .tel a:hover { background: var(--paper-2); border-color: transparent; opacity: 1; }   /* no black edge (Sergei 03/11) */
@@ -1489,31 +1489,31 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .qf #qf-n, .qf__int { display: none; }
     .qf__d { display: block; }
     .qf__msg { width: 100%; box-sizing: border-box; height: auto; min-height: 72px; padding: 8px 11px; border: 1px solid var(--line); background: var(--paper);
-               color: var(--ink); font: inherit; font-size: 14px; line-height: 1.5; resize: vertical; }
+               color: var(--ink); font: inherit; font-size: var(--fs-s0); line-height: 1.5; resize: vertical; }
     .qf__msg:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
     .qf__ph { position: relative; display: flex; height: 38px; border: 1px solid var(--line); background: var(--paper); box-sizing: border-box; }
     .qf__ph #qf-p { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; }
     .qf .dial { display: flex; flex: none; width: 88px; height: 100%; align-items: center; justify-content: space-between; gap: 4px; padding: 0 8px;
-            background: transparent; border: 0; border-inline-end: 1px solid var(--line); font: inherit; font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); cursor: pointer; }
+            background: transparent; border: 0; border-inline-end: 1px solid var(--line); font: inherit; font-size: var(--fs-s-1); font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); cursor: pointer; }
     .qf .dial svg { width: 10px; height: 10px; flex: none; }
     .qf .dial:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
     .dial__pop:not([hidden]) { display: block; position: absolute; left: -1px; right: -1px; top: calc(100% + 4px); z-index: 40; background: var(--paper);
                                border: 1px solid rgba(14,18,20,.16); box-shadow: 0 12px 28px rgba(10,14,16,.14); }
     .dial__s { display: flex; align-items: center; gap: 8px; padding: 0 10px; height: 38px; border-bottom: 1px solid rgba(14,18,20,.10); }
     .dial__s svg { width: 15px; height: 15px; color: var(--muted); flex: none; }
-    .qf .dial__s input { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0; outline: none; font-size: 14px; background: transparent; }
+    .qf .dial__s input { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0; outline: none; font-size: var(--fs-s0); background: transparent; }
     .dial__l { max-height: 228px; overflow-y: auto; }
     .dial__l button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--paper); border: 0;
-                      font: inherit; font-size: 13.5px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); text-align: start; cursor: pointer; }
+                      font: inherit; font-size: var(--fs-s-1); font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); text-align: start; cursor: pointer; }
     .dial__l button:hover, .dial__l button[aria-selected='true'] { background: var(--paper-2); }
     .dial__f { width: 22px; }
     .dial__n { flex: 1; }
     .dial__c { color: var(--muted); }
-    .dial__none { margin: 0; padding: 10px; font-size: 13px; color: var(--muted); }
+    .dial__none { margin: 0; padding: 10px; font-size: var(--fs-s-1); color: var(--muted); }
     .qf button[type='submit'] { background: var(--paper); color: var(--ink); border: 1px solid transparent;
                                 transition: background .2s ease, border-color .2s ease; }
     .qf button[type='submit']:hover { background: var(--paper-2); border-color: transparent; }   /* no black edge (Sergei 03/11) */
-    .qf__fine { font-size: 11px; color: var(--muted); line-height: 1.5; }
+    .qf__fine { font-size: var(--fs-s-1); color: var(--muted); line-height: 1.5; }
     /* Sergei 03/11: the two small lines read as one note — 12 px under Send, 4 px apart, 20 px to the box's edge */
     .qf button[type='submit'] + .qf__fine, .qf .hp + .qf__fine { margin-top: 2px; }
     .qf__fine + .qf__fine { margin-top: -10px; }   /* Sergei 03/11: one even block — no gap between the two notes (the form gap is 10 px) */
@@ -1526,7 +1526,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .gpop::backdrop { background: var(--paper); }
     .gpop__bar { flex: none; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px 0 40px;
                  border-bottom: 1px solid var(--line-soft); }
-    .gpop__t { font-size: 15px; font-weight: 600; }
+    .gpop__t { font-size: var(--fs-s0); font-weight: 600; }
     .gpop__t span { font-weight: 400; color: var(--muted); }
     .gpop__x { appearance: none; width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; cursor: pointer;
                color: var(--ink); transition: background .15s ease; padding: 0; }

@@ -143,17 +143,17 @@ const privacyHref = privacyPath(lang);
   }
   /* `hidden` must win over the display rules below (settings panel, Save button). */
   .cc[hidden], .cc [hidden] { display: none !important; }
-  .cc__t { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
-  .cc__b { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2, #3c4247); }
+  .cc__t { margin: 0 0 6px; font-size: var(--fs-s0); font-weight: 600; }
+  .cc__b { margin: 0; font-size: var(--fs-s0); line-height: 1.55; color: var(--ink-2, #3c4247); }
   .cc__b a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
   .cc__set { display: grid; gap: 10px; margin: 14px 0 0; padding: 12px 0 0; border-top: 1px solid var(--line, rgba(14, 18, 20, .13)); }
-  .cc__opt { display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; font-size: 14px; line-height: 1.45; color: var(--ink-2, #3c4247); }
+  .cc__opt { display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; font-size: var(--fs-s0); line-height: 1.45; color: var(--ink-2, #3c4247); }
   .cc__opt input { margin: 3px 0 0; width: 16px; height: 16px; accent-color: var(--ink, #0e1214); }
   .cc__opt b { color: var(--ink, #0e1214); font-weight: 600; margin-right: 4px; }
   .cc__btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; justify-content: flex-end; }
   .cc__btn {
     appearance: none; border: 1px solid var(--ink, #0e1214); background: var(--ink, #0e1214); color: #fff;
-    font: inherit; font-size: 13px; letter-spacing: .04em; padding: 11px 18px; min-height: 44px; cursor: pointer;
+    font: inherit; font-size: var(--fs-s-1); letter-spacing: .04em; padding: 11px 18px; min-height: 44px; cursor: pointer;
   }
   .cc__btn--line { background: transparent; color: var(--ink, #0e1214); }
   .cc__btn:focus-visible { outline: 2px solid var(--brand, #036dac); outline-offset: 2px; }

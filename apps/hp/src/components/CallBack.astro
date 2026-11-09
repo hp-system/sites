@@ -52,31 +52,31 @@ const privacyHref = privacyPath(lang);            // the policy in the page lang
         background: var(--paper); text-align: start; }
   .cb[hidden], .cb [hidden] { display: none !important; }   /* the parts' own display would win over [hidden] */
   .cb__h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-  .cb__h b { font-size: 14px; }
-  .cb__x { border: 0; background: none; font-size: 20px; line-height: 1; color: var(--faint); cursor: pointer;
+  .cb__h b { font-size: var(--fs-s0); }
+  .cb__x { border: 0; background: none; font-size: var(--fs-s1); line-height: 1; color: var(--faint); cursor: pointer;
            min-width: 32px; min-height: 32px; }
   .cb__ph { display: grid; grid-template-columns: 96px 1fr; gap: 6px; }
-  .cb__ph select, .cb__ph input { font: inherit; font-size: 16px; padding: 10px; border: 1px solid var(--line);
+  .cb__ph select, .cb__ph input { font: inherit; font-size: var(--fs-s0); padding: 10px; border: 1px solid var(--line);
            background: var(--paper); color: var(--ink); min-width: 0; border-radius: 0; }
   .cb__ph input[aria-invalid='true'] { border-color: #B3261E; box-shadow: inset 0 0 0 1px #B3261E; }
-  .cb__err { margin: -4px 0 0; color: #B3261E; font-size: 12.5px; }
+  .cb__err { margin: -4px 0 0; color: #B3261E; font-size: var(--fs-s-1); }
   .cb__when { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .cb__when legend { width: 100%; margin-bottom: 6px; padding: 0; font-size: 10.5px; letter-spacing: .13em;
+  .cb__when legend { width: 100%; margin-bottom: 6px; padding: 0; font-size: var(--fs-s-1); letter-spacing: .13em;
                      text-transform: uppercase; color: var(--faint); font-weight: 600; }
   .cb__when label { position: relative; }
   .cb__when input { position: absolute; opacity: 0; inset: 0; }
-  .cb__when span { display: block; border: 1px solid var(--line); padding: 7px 10px; font-size: 13px; cursor: pointer; }
+  .cb__when span { display: block; border: 1px solid var(--line); padding: 7px 10px; font-size: var(--fs-s-1); cursor: pointer; }
   .cb__when input:checked + span { border-color: var(--ink); background: var(--ink); color: var(--paper); }
   .cb__when input:focus-visible + span { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .cb__go { padding: 12px; border: 0; background: var(--brand); color: #fff; font: inherit; font-size: 11.5px;
+  .cb__go { padding: 12px; border: 0; background: var(--brand); color: #fff; font: inherit; font-size: var(--fs-s-1);
             font-weight: 600; letter-spacing: .09em; text-transform: uppercase; cursor: pointer; }
   .cb__go:disabled { opacity: .6; }
   .cb { position: relative; }
   .hp { position: absolute; inset-inline-start: 0; top: 0; width: 1px; height: 1px;
     padding: 0; margin: 0; border: 0; opacity: 0; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
-  .cb__fine { margin: 0; font-size: 11px; color: var(--faint); }
+  .cb__fine { margin: 0; font-size: var(--fs-s-1); color: var(--faint); }
   .cb__fine a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .cb__done { display: grid; gap: 4px; border-inline-start: 3px solid #2E7D4F; padding-inline-start: 12px; }
   .cb__done b { color: #2E7D4F; }
-  .cb__hurry { font-size: 13px; color: var(--brand); }
+  .cb__hurry { font-size: var(--fs-s-1); color: var(--brand); }
 </style>

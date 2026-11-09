@@ -71,13 +71,13 @@ const LINKS = [
     background: linear-gradient(0deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,0) 100%);
   }
   .atile__t b {
-    display: block; font-size: 19px; font-weight: 300;
+    display: block; font-size: var(--fs-s0); font-weight: 300;
     text-shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 22px rgba(0,0,0,.55); transition: transform .35s ease;
   }
-  .atile__t span { font-size: 11.5px; letter-spacing: .06em; opacity: .95;
+  .atile__t span { font-size: var(--fs-s-1); letter-spacing: .06em; opacity: .95;
                    text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.5); }
   .atile:hover .atile__t b { transform: translateY(-2px); }
-  .alinks { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: var(--s4); font-size: 14px; }
+  .alinks { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: var(--s4); font-size: var(--fs-s0); }
   .alinks a { color: var(--muted); transition: color .15s ease; }
   .alinks a:hover { color: var(--ink); }
   .alinks span { display: inline-block; }
@@ -86,7 +86,7 @@ const LINKS = [
   @media (min-width: 1024px) {
     .atiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .atile__t { padding: 56px var(--s4) var(--s4); }
-    .atile__t b { font-size: 21px; }
-    .alinks { justify-content: space-between; font-size: 15px; }
+    .atile__t b { font-size: var(--fs-s1); }
+    .alinks { justify-content: space-between; font-size: var(--fs-s0); }
   }
 </style>

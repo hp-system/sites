@@ -1,0 +1,178 @@
+{
+  "_note": "Fixes to George's redirect sheet and the legacy rules (sites#152). Each row records its reason. Decisions: D-20261106-SS-1 D7 (Sergei: «Если ето правильно, то джордж согласен. Ето должно быть лучшее решение.») and D6. Status: 301 | 410 | pending (target page not built yet) | keep (no redirect: the URL itself is served).",
+  "rows": [
+    {
+      "from": "/robots.txt",
+      "to": null,
+      "status": "keep",
+      "reason": "D7: robots.txt is never redirected (the sheet sent it to the listing)"
+    },
+    {
+      "from": "/sr/pravila-o-privatnosti",
+      "to": null,
+      "status": "keep",
+      "reason": "D7: legal page in the same language — the Serbian privacy page exists (the sheet sent it to the listing)"
+    },
+    {
+      "from": "/el/προ-δημιοσιευμενα-ακινητα",
+      "to": null,
+      "status": "pending",
+      "reason": "D7: → P23 Pre-published in Greek; its Greek URL waits for Q-20261106-SS-1"
+    },
+    {
+      "from": "/sr/uslovi-usluga",
+      "to": null,
+      "status": "pending",
+      "reason": "D7: legal → P62 Terms in Serbian; page not built in sr yet (stage 5)"
+    },
+    {
+      "from": "/de/leistungsbedingungen",
+      "to": null,
+      "status": "pending",
+      "reason": "D7: legal → P62 Terms in German; page not built in de yet (stage 5)"
+    },
+    {
+      "from": "/de/arbeiten-sie-exklusiv-mit-uns",
+      "to": null,
+      "status": "pending",
+      "reason": "D7: service page → P25 Exclusive assignment in German; URL waits for Q-20261106-SS-1"
+    },
+    {
+      "from": "/de/konstruktion",
+      "to": null,
+      "status": "pending",
+      "reason": "D7: service page → P41 Construction in German; URL waits for Q-20261106-SS-1"
+    },
+    {
+      "from": "/bg/добавете-своя-имот",
+      "to": null,
+      "status": "pending",
+      "reason": "D7: → P26 Add your property in Bulgarian; URL waits for Q-20261106-SS-1"
+    },
+    {
+      "from": "/el/υπησιευ/υπησιευ-κασκευαστευ/εγκατασταση-φωτοβολταικων-συστιματων",
+      "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες/εγκατασταση-φωτοβολταικων-συστηματων",
+      "status": 301,
+      "reason": "D7: misspelled copy of the Greek photovoltaics service page → the same page as its correct spelling"
+    },
+    {
+      "from": "/el/οδηγοι/εξοχικη-κατοικια-ελλαδα-πλεονεκτηματα-μειονεκτηματα",
+      "to": "/αγορα-ακινητου-στην-ελλαδα",
+      "status": 301,
+      "reason": "D7: the holiday-home guide (el) → the buying guide P19 in Greek"
+    },
+    {
+      "from": "/el/αρψρα/ειδησεισ-επιχειρησεω�α/",
+      "to": null,
+      "status": 410,
+      "reason": "D7: row with broken characters → 410"
+    },
+    {
+      "from": "/public/images/article/60/1706706818.jpg",
+      "to": null,
+      "status": 410,
+      "reason": "D7: files → 410 (an image is never redirected to a page)"
+    },
+    {
+      "from": "/public/images/article/61/1707230958.jpg",
+      "to": null,
+      "status": 410,
+      "reason": "D7: files → 410"
+    },
+    {
+      "from": "/public/images/Οδηγός_Σωστής_Φωτογράφισης_του_Ακινήτου_σας.pdf",
+      "to": null,
+      "status": 410,
+      "reason": "D7: files → 410 (the photography guide becomes a page later, then this row may 301 to it)"
+    },
+    {
+      "from": "/currency/GBP",
+      "to": null,
+      "status": 410,
+      "reason": "sheet: «drop (410)» but pointed to itself"
+    },
+    {
+      "from": "/currency/RSD",
+      "to": null,
+      "status": 410,
+      "reason": "sheet: «drop (410)» but pointed to itself"
+    },
+    {
+      "from": "/en/halkidiki-real-estate",
+      "to": "/en",
+      "status": 301,
+      "reason": "legacy .htaccess rule"
+    },
+    {
+      "from": "/el/akinhta-xalkidikh-katoikies-xalkidikh",
+      "to": "/",
+      "status": 301,
+      "reason": "legacy .htaccess rule"
+    },
+    {
+      "from": "/de/griechenland-immobilien-chalkidiki",
+      "to": "/de",
+      "status": 301,
+      "reason": "legacy .htaccess rule"
+    },
+    {
+      "from": "/bg/халкидики-имоти-гърция",
+      "to": "/bg",
+      "status": 301,
+      "reason": "legacy .htaccess rule"
+    },
+    {
+      "from": "/en/halkidiki-villas",
+      "to": "/en/properties/villas-for-sale",
+      "status": 301,
+      "reason": "legacy .htaccess rule"
+    },
+    {
+      "from": "/en/halkidiki-apartments",
+      "to": "/en/properties/apartments-for-sale",
+      "status": 301,
+      "reason": "legacy .htaccess rule (was → homes; the apartments page P05 exists now)"
+    },
+    {
+      "from": "/en/vip",
+      "to": null,
+      "status": "pending",
+      "reason": "D11: VIP becomes Exclusive P52 (/en/exclusive), not built yet; until then /en/vip stays as it is"
+    }
+  ],
+  "moves": [],
+  "oldMapTypes": {},
+  "rules": [
+    {
+      "re": "^/el(/.*)?$",
+      "to": "$1",
+      "note": "legacy .htaccess: Greek lives at the root (/el/x → /x, /el → /)"
+    },
+    {
+      "re": "^/rs(/.*)?$",
+      "to": "/sr$1",
+      "note": "legacy .htaccess: old Serbian prefix"
+    },
+    {
+      "re": "^/(en|de|sr|bg|el)/id(\\d+)$",
+      "to": "property:$2",
+      "note": "legacy .htaccess: /<lang>/ID123 → that property's page in the same language, or 410 if it is gone (D6)"
+    },
+    {
+      "re": "^/(en|de|sr|bg|el)/.*-id(\\d+)$",
+      "to": "property:$2",
+      "note": "legacy .htaccess: /<lang>/<slug>-ID123 → that property's page, or 410 (D6)"
+    },
+    {
+      "re": "property-page",
+      "to": "property-or-410",
+      "note": "D6: an old property URL whose property is no longer published answers 410 at once; exceptions with traffic/backlinks get a 301 to their type × area page (list waits for the GSC/Ahrefs export, D15)"
+    }
+  ],
+  "forceRedirect": [
+    {
+      "prefix": "/en/property-for-sale",
+      "reason": "D1/D2: the spec URLs win; /en/property-for-sale/<area> and /en/property-for-sale-in-greece 301 to them (George's sheet)"
+    }
+  ]
+}

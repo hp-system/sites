@@ -136,7 +136,15 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
     if (m) {
       const id = decodeURIComponent(m[1]);
       const p = items.find((x) => x.attributes.onsea_id === id || x.reference === id || x.id === id);
-      return p ? send(200, p) : send(404, { message: 'not found' });
+      if (!p) return send(404, { message: 'not found' });
+      // the same publicAttrs view as the list (#171: the property page asks for one property with
+      // the member's token while that member's own set is still loading)
+      if (!p.attributes.x_exact) return send(200, p);
+      const excl = req.headers['x-member-token'] === 'stub-exclusive';
+      const { x_exact, x_private, ...rest } = p.attributes;
+      return send(200, { ...p, attributes: excl
+        ? { ...rest, ...x_exact, ...x_private, location_precision: 'exact' }
+        : { ...rest, lat: x_exact.lat + 0.0071, lng: x_exact.lng - 0.0049, location_precision: 'approx' } });
     }
     return send(404, { message: 'stub: not implemented', path: url.pathname });
   });

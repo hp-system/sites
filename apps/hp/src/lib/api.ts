@@ -258,6 +258,13 @@ export async function allProperties(memberToken?: string, country?: string): Pro
   try { return await Promise.race([pull, late]); } finally { clearTimeout(timer); }
 }
 
+/** True when this member's own set is in memory. While it is not, `allProperties` hands the member
+ *  the anonymous set, which lacks the member-tier fields (approximate point, exclusive data), so
+ *  the property page asks the CRM for that one property with the member's token instead (~2 s). */
+export function hasViewerSet(memberToken: string): boolean {
+  return caches.has(viewerKey(memberToken, undefined));
+}
+
 /** Pulls both anonymous sets once at start and then every REFRESH_MS, one after the other (two
  *  parallel 48 s pulls double the CRM load). Started by the first call; the timer never keeps the
  *  process alive. Rejected: warming per country — see `countryRule`. */

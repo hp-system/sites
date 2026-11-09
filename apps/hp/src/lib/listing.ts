@@ -206,6 +206,19 @@ export const FACETS: Facet[] = [
     name: { el: 'Οικονομικά', en: 'Affordable', bg: 'Евтини имоти', sr: 'Jeftine nekretnine', de: 'Günstig', ro: 'Ieftine', tr: 'Uygun fiyatlı', he: 'בזול', ru: 'Недорого' },
     slug: { el: 'οικονομικα', en: 'affordable', bg: 'evtini-imoti', sr: 'jeftine-nekretnine', de: 'guenstig',
             ro: 'ieftine', tr: 'uygun-fiyatli', he: 'bezol', ru: 'nedorogo' } },
+
+  // ── Sergei 08/11: the registry's two missing listing pages, as plain lists (no text yet — their
+  //    briefs are pending, D-20261106-SS-2). P22 hotels & commercial, P58 Polygyros (registry notes:
+  //    noindex below 6 listings, like every list). EN slugs are the registry's; the other 8 follow
+  //    the pattern of the facets above — PROPOSED, Q-20261106-SS-1 (P22+ slugs) is still open.
+  { key: 'hotels', n: 0, q: { category: 'business' },
+    name: { el: 'Ξενοδοχεία & επαγγελματικά', en: 'Hotels & commercial', bg: 'Хотели и търговски имоти', sr: 'Hoteli i poslovni prostori', de: 'Hotels & Gewerbe', ro: 'Hoteluri și spații comerciale', tr: 'Oteller ve ticari mülkler', he: 'מלונות ונכסים מסחריים', ru: 'Отели и коммерческая недвижимость' },
+    slug: { el: 'ξενοδοχεια', en: 'hotels-for-sale', bg: 'hoteli', sr: 'hoteli', de: 'hotels',
+            ro: 'hoteluri', tr: 'oteller', he: 'batei-malon', ru: 'oteli' } },
+  { key: 'polygyros', n: 0, q: { municipality: 'Πολύγυρος' },
+    name: { el: 'Πολύγυρος', en: 'Polygyros', bg: 'Полигирос', sr: 'Poligiros', de: 'Polygyros', ro: 'Polygyros', tr: 'Polygyros', he: 'פוליגירוס', ru: 'Полигирос' },
+    slug: { el: 'πολυγυρος', en: 'polygyros', bg: 'poligiros', sr: 'poligiros', de: 'polygyros',
+            ro: 'polygyros', tr: 'polygyros', he: 'polygyros', ru: 'poligiros' } },
 ];
 
 /** #160 Spec rule 10: a listing page is indexed only with this many live listings, counted on the

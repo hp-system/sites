@@ -1,0 +1,61 @@
+---
+// A spec content page with no template of its own yet (Sergei 08/11: «пусть у них нет дизайна, зато
+// есть контент»): P03 Greece hub, P19 buying guide, P20 Golden Visa, P21 Halkidiki guide — George's
+// spec word for word, in every language the spec has, in the plain type of the content pages.
+// It is replaced page by page when the guide template (portion 3, sites#161) gets its design.
+// Rejected: an empty «coming soon» page (a soft 404) or leaving the home page's links on 404s.
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import SpecText from './SpecText.astro';
+import { specOf, specTitle, type SpecPage } from '../lib/seo-pages';
+import { prefix, type Lang } from '../lib/i18n';
+import { brand } from '../brand/index';
+
+interface Props { page: SpecPage }
+const { page } = Astro.props;
+const lang = page.lang as Lang;
+
+const LANGS: Lang[] = ['el', 'en', 'de', 'sr', 'bg', 'ro', 'tr', 'he', 'ru'];
+const own = LANGS.filter((l) => specOf(page.id, l)?.id === page.id);   // P03 has no sr/bg/ro of its own
+const pathFor = (l: Lang) => specOf(page.id, l)?.path ?? page.path;
+
+const siteRoot = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const abs = (u: string) => siteRoot + encodeURI(u);
+const crumbs = page.breadcrumb.map((name, i, a) => ({ name, url: i === 0 ? (prefix(lang) || '/') : i === a.length - 1 ? undefined : undefined }));
+
+const jsonLd: unknown[] = [
+  ...(page.schema.includes('CollectionPage') ? [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: page.h1, url: abs(page.path), inLanguage: lang }] : []),
+  { '@context': 'https://schema.org', '@type': 'Article', headline: page.h1, inLanguage: lang, url: abs(page.path),
+    author: { '@type': 'Organization', name: brand.name, url: siteRoot }, publisher: { '@type': 'Organization', name: brand.name } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, ...(c.url ? { item: abs(c.url) } : {}) })) },
+  ...(page.faq.length ? [{ '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: page.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : []),
+];
+---
+<Base lang={lang} title={specTitle(page.title, brand.name)} description={page.meta} pathFor={pathFor} langs={own}
+      ogTitle={page.ogTitle} jsonLd={jsonLd}>
+  <Header lang={lang} solid pathFor={pathFor} />
+  <main id="main" class="gp">
+    <div class="wrap gp__head">
+      <nav class="gp__crumb" aria-label="breadcrumb">
+        {crumbs.map((c, i) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{c.url ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</>))}
+      </nav>
+      <h1 class="t-display gp__h1">{page.h1}</h1>
+      {page.editorialLine && <p class="gp__ed">{page.editorialLine}</p>}
+      <SpecText page={page} part="intro" lang={lang} />
+    </div>
+    <SpecText page={page} part="rest" lang={lang} />
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .gp__head { padding-block: var(--s7) 0; display: grid; gap: var(--s4); }
+  .gp__crumb { font-size: var(--fs-s-1); color: var(--muted); }
+  .gp__crumb a { color: var(--muted); }
+  .gp__h1 { max-width: 22ch; }
+  .gp__ed { margin: 0; font-size: var(--fs-s-1); color: var(--muted); }
+  .gp :global(.st-intro) { max-width: 68ch; }
+</style>

@@ -75,7 +75,7 @@ const img = (a: (typeof all)[number]) => a.data.hero_image || a.data.og_image;
         <>
           {first && (
             <a class="feat" href={articleUrl(first)}>
-              {img(first) && <img src={img(first)} alt="" width="1200" height="675" fetchpriority="high" decoding="async" />}
+              {img(first) && <img src={img(first)} alt={first.data.h1} width="1200" height="675" fetchpriority="high" decoding="async" />}
               <span class="feat__b">
                 <span class="t-label">{categoryName(first.data.category)}</span>
                 <span class="feat__t">{first.data.h1}</span>
@@ -88,7 +88,7 @@ const img = (a: (typeof all)[number]) => a.data.hero_image || a.data.og_image;
             {rest.filter(Boolean).map((a) => (
               <li>
                 <a class="card" href={articleUrl(a!)}>
-                  {img(a!) && <img src={img(a!)} alt="" width="600" height="400" loading="lazy" decoding="async" />}
+                  {img(a!) && <img src={img(a!)} alt={a!.data.h1} width="600" height="400" loading="lazy" decoding="async" />}
                   <span class="t-label">{categoryName(a!.data.category)}</span>
                   <span class="card__t">{a!.data.h1}</span>
                   <span class="card__x">{excerptOf(a!)}</span>

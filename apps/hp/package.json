@@ -22,7 +22,7 @@
   "dependencies": {
     "@astrojs/node": "^9.0.0",
     "astro": "^5.1.0",
-    "pg": "8.13.1",
+    "pg": "8.23.1",
     "sharp": "^0.35.3"
   },
   "pnpm": {
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.11",
     "@types/node": "^22.20.5",
-    "@types/pg": "8.11.10",
+    "@types/pg": "8.23.1",
     "typescript": "^5.9.3"
   }
 }

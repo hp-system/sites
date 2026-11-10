@@ -45,7 +45,7 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
       </a>
     </aside>
     {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} /></div>}
-    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} /></div>
+    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} /></div>
   </div>
 </section>
 

@@ -11,15 +11,15 @@
 // Every word of the body stays in the HTML, in the spec order.
 import { h2Id } from '../lib/seo-pages';
 export type MosaicPhoto = { src: string; srcset: string; alt: string; style: string };
-interface Props { html: string; photos?: (MosaicPhoto | null)[]; standout?: string }
-const { html, photos = [], standout = '' } = Astro.props;
+interface Props { html: string; photos?: (MosaicPhoto | null)[]; standout?: string; marks?: string[] }
+const { html, photos = [], standout = '', marks = [] } = Astro.props;
 
 const text = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   const h2 = s.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '';
   const photo = photos[i] ?? null;
   const dark = !!standout && text(h2) === standout;
-  return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, wide: i === 0 || dark || !photo };
+  return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, ask: marks.includes(text(h2)), wide: i === 0 || dark || !photo };
 });
 // two per row: a post left alone in its row (an odd run between wide ones) becomes wide, so no row has a hole
 let run: typeof posts = [];
@@ -39,7 +39,7 @@ for (const p of [...posts, null]) {
         </div>
       )}
       <div class="sp__b">
-        <h2 set:html={p.h2} />
+        <div class="sp__hd"><h2 set:html={p.h2} />{p.ask && <span class="sp__q" aria-hidden="true">?</span>}</div>
         <div class="sp__tx" set:html={p.rest} />
       </div>
     </article>
@@ -70,6 +70,11 @@ for (const p of [...posts, null]) {
     z-index: -1; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; pointer-events: none;
     color: transparent; -webkit-text-stroke: 1px var(--ink); }   /* outline only: thin, the text over it stays readable */
   .sp__post--fact .sp__tx :global(li)::after { -webkit-text-stroke-color: var(--paper); }
+  /* a decorative «?» beside the heading (Sergei 2026-11-10): beige, bolder, tilted; out of the flow, so the
+     heading and the post keep their size; aria-hidden, not part of the H2 */
+  .sp__hd { position: relative; width: fit-content; max-width: calc(100% - 48px); }
+  .sp__q { position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-58%) rotate(12deg);
+    font-size: var(--fs-s5); font-weight: 600; line-height: 1; color: var(--paper-2); pointer-events: none; user-select: none; }
   .sp__post--fact { background: var(--ink-deep); }
   .sp__post--fact .sp__b :global(h2), .sp__post--fact .sp__tx :global(strong) { color: var(--paper); }
   .sp__post--fact .sp__tx :global(p), .sp__post--fact .sp__tx :global(li) { color: var(--paper); }

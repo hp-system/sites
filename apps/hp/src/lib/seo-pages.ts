@@ -17,6 +17,8 @@ export type SpecPage = {
   standout?: string;
   /** own pages: a fixed photo per post (CC0 stock, public/pages/…/<file>_640w|_960w.webp); wins over photoThemes */
   postPhotos?: { after: string; file: string; alt: string }[];
+  /** own pages: the posts whose heading gets a decorative «?» beside it (not part of the heading) */
+  questionMarks?: string[];
 };
 
 const files = {

@@ -136,7 +136,9 @@ for (const p of [...posts, null]) {
 <script>
   // One post at a time: the row follows its scroll (swipe, trackpad, keys, the dashes, the side menu).
   // Events: listens to «spc:go» {detail: post id}; tells «spc:change» {detail: post id} after a turn.
-  document.querySelectorAll<HTMLElement>('[data-spc]').forEach((box) => {
+  // Runs at load and again after the listing page swaps its parts in place (event «hp:swap», #193).
+  const initSpc = () => document.querySelectorAll<HTMLElement>('[data-spc]:not([data-on])').forEach((box) => {
+    box.dataset.on = '1';
     const row = box.querySelector<HTMLElement>('.sp__grid');
     if (!row) return;
     const posts = Array.from(row.children) as HTMLElement[];
@@ -166,4 +168,6 @@ for (const p of [...posts, null]) {
     const fromHash = posts.findIndex((p) => `#${p.id}` === location.hash);
     go(fromHash >= 0 ? fromHash : 0, false);
   });
+  initSpc();
+  document.addEventListener('hp:swap', initSpc);
 </script>

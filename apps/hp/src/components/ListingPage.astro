@@ -24,14 +24,18 @@ import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
-import { prefix, propertyUrl, t, type Lang } from '../lib/i18n';
+import { prefix, propertyUrl, t, listUrl, type Lang } from '../lib/i18n';
 import { num, seaLabel, money, moneyShort, sqm } from '../lib/format';
 import { cmsImage } from '../lib/content';
 import { heroShot } from '../lib/hero';
 import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
 import SpecText from './SpecText.astro';
-import { specByPath, specTitle } from '../lib/seo-pages';
+import SpecPosts from './SpecPosts.astro';
+import Areas from './Areas.astro';
+import { postPhotos } from '../lib/post-photos';
+import { buildAreaTiles } from '../lib/area-tiles';
+import { specByPath, specTitle, FAQ_H } from '../lib/seo-pages';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
   facetUrl, ui, FACETS, SORTS, SORT_DEFAULT, PER_PAGE, PER_PAGE_OPTIONS,
@@ -197,6 +201,12 @@ const seaOpts = SEAS.map((x) => ({ v: x.v, label: seaLabel(x.v, lang) || x.v }))
 const lockedBy = (k: keyof Query) => facets.some((f) => f.q[k] !== undefined);
 // Η τρέχουσα διεύθυνση με τις παραμέτρους της, για την επιστροφή μετά τη σύνδεση.
 const here = `${pathFor(lang)}${paramsOf(q)}`;
+// #193: the spec posts take photos of the listings on this page; the by-area block as on the home page;
+// guests get the sign-in call of the list (the same text and event as the join tile), members none.
+const specPhotos = spec && firstPage ? postPhotos(res.items as any, (spec.body.match(/<h2>/g) ?? []).length, lang) : [];
+const byArea = spec && firstPage ? buildAreaTiles(items as any, lang, undefined, 5) : { tiles: [], from: 0 };
+const specCta = viewer.member ? null
+  : { text: ui(lang, 'joinCta'), href: `${prefix(lang)}/login?next=${encodeURIComponent(here)}`, ev: 'member:join_from_list', gild: true };
 
 // Άλλα θέματα για γρήγορη μετάβαση — μόνο όσα δεν είναι ήδη ενεργά.
 
@@ -797,7 +807,16 @@ const tilePhoto = (() => {
   </div>
   {/* #160 spec rule 9: … grid → the H2 body → FAQ → links. Page 1 only; the box is always
       there (empty on page N) so the in-place list swap can update it. */}
-  <div data-lswap="spec">{spec && firstPage && <SpecText page={spec} part="rest" lang={lang} />}</div>
+  {/* #193 (D-20261110-SS-1): the spec text in the Sell layout — posts with photos of this page's own listings,
+      the side menu of the sections, a sign-in call for guests, the FAQ after the text (rule 9), then the spec's
+      links out in columns (anchors word for word, rule 15) and the home's by-area block. Same words, same H2s. */}
+  <div data-lswap="spec">{spec && firstPage && (
+    <>
+      <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} />
+      <SpecText page={spec} part="rest" lang={lang} body="none" faq="none" links="columns" />
+      {byArea.tiles.length > 0 && <Areas lang={lang} items={byArea.tiles} from={byArea.from} headHref={listUrl(lang)} />}
+    </>
+  )}</div>
   </main>
 
   {/* #102 desktop: back to top — a square that appears after the first screen. */}
@@ -1611,6 +1630,7 @@ const tilePhoto = (() => {
       const a = document.querySelector(`[data-lswap="${k}"]`), b = doc.querySelector(`[data-lswap="${k}"]`);
       if (a && b) a.replaceWith(document.importNode(b, true));
     }
+    document.dispatchEvent(new Event('hp:swap'));   // the spec posts, side menu and FAQ start on the new parts (#193)
     // the language links follow the page (a «More filters» search can change the path)
     const olds = document.querySelectorAll('details.lsw'), news = doc.querySelectorAll('details.lsw');
     olds.forEach((x, i) => { if (news[i]) x.replaceWith(document.importNode(news[i], true)); });

@@ -22,14 +22,20 @@ import { prefix, t, type Lang } from '../lib/i18n';
 interface Props {
   page: SpecPage; lang: Lang; photos: (MosaicPhoto | null)[]; faqH: string;
   /** a member is signed in: the button goes straight to the add-property form */
-  member: boolean;
+  member?: boolean;
+  /** another call to action (listings: sign in / register for buyers); null = none. Default: Sell's
+   *  «Add your property» (guests → sign-up → the form, gilded; members → the form). */
+  cta?: { text: string; href: string; ev: string; gild: boolean; plus?: boolean } | null;
 }
-const { page, lang, photos, faqH, member } = Astro.props;
+const { page, lang, photos, faqH, member = false } = Astro.props;
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
 // the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
 const nav = heads.map((h) => ({ id: h2Id(h), text: h, ask: (page.questionMarks ?? []).includes(h) }));
 const submit = `${prefix(lang)}/panel/submit`;
 const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(submit)}`;
+const cta = Astro.props.cta === undefined
+  ? { text: t(lang, 'svc.add_cta'), href: go, ev: member ? 'content:sell' : 'register:info', gild: !member, plus: true }
+  : Astro.props.cta;
 ---
 <section class="pn">
   <div class="wrap pn__in">
@@ -38,24 +44,26 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
         <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
         <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true">?</i>}</a></li>)}</ul>
       </nav>
-      <a class:list={['k-act pn__go', !member && 'k-gild']} href={go} rel={member ? undefined : 'nofollow'}
-         data-ev={member ? 'content:sell' : 'register:info'}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
-        {t(lang, 'svc.add_cta')}
-      </a>
+      {cta && (
+        <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev}>
+          {cta.plus && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>}
+          {cta.text}
+        </a>
+      )}
     </aside>
     {/* phones (no side panel): the same button in a bar that sticks to the bottom while this block is on
         screen (SEO/design audit 2026-11-10: no conversion button on phones) */}
     <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang} /></div>
     {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
     {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
-    <div class="pn__bar">
-      <a class:list={['k-act pn__go', !member && 'k-gild']} href={go} rel={member ? undefined : 'nofollow'}
-         data-ev={member ? 'content:sell' : 'register:info'}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
-        {t(lang, 'svc.add_cta')}
-      </a>
-    </div>
+    {cta && <div class="pn__bar">
+      {cta && (
+        <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev}>
+          {cta.plus && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>}
+          {cta.text}
+        </a>
+      )}
+    </div>}
   </div>
 </section>
 
@@ -93,7 +101,8 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
   // The side menu and the posts carousel (SpecMosaic): a click turns the carousel to that post and brings the
   // block into view; the menu marks the post on show. Without the carousel: the post whose top passed a third
   // of the screen.
-  document.querySelectorAll<HTMLElement>('[data-pn]').forEach((box) => {
+  const initPn = () => document.querySelectorAll<HTMLElement>('[data-pn]:not([data-on])').forEach((box) => {
+    box.dataset.on = '1';
     const links = Array.from(box.querySelectorAll<HTMLAnchorElement>('[data-pn-to]'));
     const mark = (id?: string) => links.forEach((a) => a.classList.toggle('on', a.dataset.pnTo === id));
     const car = box.closest('.pn')?.querySelector<HTMLElement>('[data-spc]');
@@ -125,4 +134,6 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
     addEventListener('resize', scan);
     scan();
   });
+  initPn();
+  document.addEventListener('hp:swap', initPn);   // the listing page swaps its parts in place (#193)
 </script>

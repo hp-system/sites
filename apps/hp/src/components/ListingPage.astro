@@ -32,9 +32,8 @@ import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
-import Areas from './Areas.astro';
+import SpecLinks from './SpecLinks.astro';
 import { postPhotos } from '../lib/post-photos';
-import { buildAreaTiles } from '../lib/area-tiles';
 import { specByPath, specTitle, FAQ_H } from '../lib/seo-pages';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
@@ -204,7 +203,6 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
 // #193: the spec posts take photos of the listings on this page; the by-area block as on the home page;
 // guests get the sign-in call of the list (the same text and event as the join tile), members none.
 const specPhotos = spec && firstPage ? postPhotos(res.items as any, (spec.body.match(/<h2>/g) ?? []).length, lang) : [];
-const byArea = spec && firstPage ? buildAreaTiles(items as any, lang, undefined, 5) : { tiles: [], from: 0 };
 const specCta = viewer.member ? null
   : { text: ui(lang, 'joinCta'), href: `${prefix(lang)}/login?next=${encodeURIComponent(here)}`, ev: 'member:join_from_list' as const, gild: true };
 
@@ -809,12 +807,11 @@ const tilePhoto = (() => {
       there (empty on page N) so the in-place list swap can update it. */}
   {/* #193 (D-20261110-SS-1): the spec text in the Sell layout — posts with photos of this page's own listings,
       the side menu of the sections, a sign-in call for guests, the FAQ after the text (rule 9), then the spec's
-      links out in columns (anchors word for word, rule 15) and the home's by-area block. Same words, same H2s. */}
+      links out as photo tiles like the home Collections and by-area (anchors word for word, rule 15). Same words, same H2s. */}
   <div data-lswap="spec">{spec && firstPage && (
     <>
       <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} />
-      <SpecText page={spec} part="rest" lang={lang} body="none" faq="none" links="columns" />
-      {byArea.tiles.length > 0 && <Areas lang={lang} items={byArea.tiles} from={byArea.from} headHref={listUrl(lang)} />}
+      <SpecLinks page={spec} lang={lang} items={items as any} />
     </>
   )}</div>
   </main>

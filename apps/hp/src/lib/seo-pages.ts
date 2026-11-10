@@ -91,3 +91,10 @@ export const FAQ_H: Record<Lang, string> = {
   en: 'Frequently asked questions', el: 'Συχνές ερωτήσεις', de: 'Häufige Fragen', sr: 'Česta pitanja', bg: 'Често задавани въпроси',
   ro: 'Întrebări frecvente', ru: 'Частые вопросы', tr: 'Sık sorulan sorular', he: 'שאלות נפוצות',
 };
+
+/** The three groups of a spec page's links out (properties · areas · guides), in every language. */
+export const LINK_GROUPS: Record<Lang, [string, string, string]> = {
+  en: ['Properties', 'Areas', 'Guides'], el: ['Ακίνητα', 'Περιοχές', 'Οδηγοί'], de: ['Immobilien', 'Regionen', 'Ratgeber'],
+  sr: ['Nekretnine', 'Oblasti', 'Vodiči'], bg: ['Имоти', 'Райони', 'Наръчници'], ro: ['Proprietăți', 'Zone', 'Ghiduri'],
+  ru: ['Недвижимость', 'Районы', 'Гиды'], tr: ['Emlak', 'Bölgeler', 'Rehberler'], he: ['נכסים', 'אזורים', 'מדריכים'],
+};

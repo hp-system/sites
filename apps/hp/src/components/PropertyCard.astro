@@ -16,6 +16,7 @@ import { priceOf, priceVisible, refOf } from '../lib/api';
 import { coverOf, photosOf, marked, cardSrcSet, altOf } from '../lib/photos';
 import { money, sqm, seaLabel, factLine } from '../lib/format';
 import { t, propertyUrl, type Lang } from '../lib/i18n';
+import { isLuxury } from '../lib/listing';
 import { placeOf, municipalityOf, type Viewer } from '../lib/gate';
 import { memberOf } from '../lib/member';
 import { prefix } from '../lib/i18n';
@@ -70,7 +71,7 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
       Το σύρσιμο γίνεται με scroll-snap: δουλεύει ΧΩΡΙΣ JavaScript, με το
       δάχτυλο στο κινητό και με το trackpad στο desktop. */}
   <div class="ph" id={uid}>
-    {a.luxury === true && <span class="luxtag">{pui(lang, 'luxury')}</span>}
+    {isLuxury(a) && <span class="luxtag">{pui(lang, 'luxury')}</span>}
     {me ? (
       <button class="heart" type="button" data-fav={id} aria-pressed={saved ? 'true' : 'false'}
               aria-label={pui(lang, saved ? 'saved' : 'favorite')} data-on={pui(lang, 'saved')} data-off={pui(lang, 'favorite')}

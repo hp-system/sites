@@ -35,7 +35,7 @@ import { money, num, sqm as sqmFmt, seaLabel, clamp } from '../lib/format';
 import { prefix, propertyUrl, listUrl, t, type Lang } from '../lib/i18n';
 import { rentalUrl } from '../lib/contact';
 import { company } from '../lib/company';
-import { ui, facetUrl, FACETS, PAIRS, catKey } from '../lib/listing';
+import { ui, facetUrl, FACETS, PAIRS, catKey, isLuxury } from '../lib/listing';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { brand } from '../brand/index';
 import {
@@ -119,7 +119,7 @@ const similar = [
 ].slice(0, 6);
 
 // ── Luxury badge and the municipality block (#79) ──────────────────────────
-const luxury = a.luxury === true;
+const luxury = isLuxury(a);
 const muniArea = AREA_PAGES.find((x) => x.kind === 'municipality' && x.q.municipality === myMuni);
 const muniList = FACETS.find((f) => f.q.municipality === myMuni);
 // the facet carries the name in every language; the CRM's own translation may be missing.
@@ -281,7 +281,7 @@ for (const [m, k] of PAIRS) {
   if (muniFacet && m === muniFacet.key) {
     const f = FACETS.find((x) => x.key === k);
     const q = f?.q ?? {};
-    const photo = pickPhoto((p) => inMuni(myMuni)(p) && (q.luxury ? p.attributes?.luxury === true : p.attributes?.sea_access === 'front'));
+    const photo = pickPhoto((p) => inMuni(myMuni)(p) && (q.luxury ? isLuxury(p.attributes) : p.attributes?.sea_access === 'front'));
     if (f && photo) zone.push({ t: `${f.name[lang]} — ${muniFacet.name[lang]}`, href: facetUrl(lang, m, k), photo });
   }
 }

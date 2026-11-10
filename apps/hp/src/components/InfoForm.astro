@@ -21,8 +21,10 @@ import { brand } from '../brand/index';
 // `extra`, sent in front of the message), Cancel · phone · WhatsApp · Send at the bottom. On success the
 // form fires `iform:sent` so the window can show its thank-you view.
 interface Props { source: string; title?: string; message?: boolean; terms: string; privacy: string;
-  look?: 'wave1' | 'pop'; lang?: Lang; eyebrow?: string }
-const { source, title = 'Send us a message', message = true, terms, privacy, look, lang = 'en', eyebrow = '' } = Astro.props;
+  look?: 'wave1' | 'pop'; lang?: Lang; eyebrow?: string; headTag?: 'h2' | 'p' }
+const { source, title = 'Send us a message', message = true, terms, privacy, look, lang = 'en', eyebrow = '', headTag = 'h2' } = Astro.props;
+// own pages (Sell): the form title is a design heading, not part of the H2 outline (SEO audit 2026-11-10)
+const HT = headTag;
 const w1 = look === 'wave1';
 const pop = look === 'pop';
 // A signed-in member sees their own details already filled in (#64). Guests: empty fields.
@@ -89,7 +91,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
 <section class="iform iform--w1" aria-labelledby={`${id}-h`} data-lang={lang}>
   <div class="iform__intro">
     {eyebrow && <p class="iform__eb">{eyebrow}</p>}
-    <h2 id={`${id}-h`}>{title}</h2>
+    <HT id={`${id}-h`} class="iform__h" data-h>{title}</HT>
     <p class="iform__note">{`${t(lang, 'info.form_note')} `}<b>{t(lang, 'info.form_priv')}</b>{` ${t(lang, 'info.form_priv2')}`}</p>
     <p class="iform__ct"><a href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a><WaLink dark /></p>
   </div>
@@ -134,7 +136,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
 </section>
 ) : (
 <section class="iform" aria-labelledby={`${id}-h`}>
-  <h2 id={`${id}-h`}>{title}</h2>
+  <HT id={`${id}-h`} class="iform__h" data-h>{title}</HT>
   <form class="iform__f" data-source={source} novalidate>
     <label>Name<input name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></label>
     <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200" value={mine?.email || undefined} /></label>
@@ -202,14 +204,14 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
 
 <style>
   .iform { border-top: 1px solid var(--ink); padding-top: var(--s4); margin-top: var(--s7); max-width: 68ch; }
-  .iform h2 { font-size: var(--fs-s2); font-weight: 400; color: var(--ink); margin: 0 0 var(--s4); }
+  .iform .iform__h { font-size: var(--fs-s2); font-weight: 400; color: var(--ink); margin: 0 0 var(--s4); }
   .iform__f { display: grid; gap: 14px 16px; }
   @media (min-width: 640px) { .iform__f { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .iform__f label { display: grid; gap: 4px; font-size: var(--fs-s-1); color: var(--muted); min-width: 0; }
   .iform__f input, .iform__f textarea { font: inherit; font-size: var(--fs-s0); color: var(--ink); background: var(--paper); border: 1px solid var(--line); padding: 10px; width: 100%; min-width: 0; border-radius: 0; }
   .iform__f .wide { grid-column: 1 / -1; margin: 0; }
   .consent { font-size: var(--fs-s-1); color: var(--muted); }
-  .consent a { color: var(--ink); }
+  .consent a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }   /* links in a sentence are not told by colour alone (a11y, Lighthouse) */
   .hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; padding: 0; }
   /* The honeypot must stay 1 px in every look. The scoped .hp rule above never reached the field
      (it was 1425 px wide), so the absolutely placed field widened Sell and Contact sideways.
@@ -227,7 +229,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     .iform--w1 { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 64px; align-items: start;
                  border-top: 0; padding: 0; margin: 0; max-width: none; color: #fff; }
     .iform--w1 .iform__eb { display: block; font-size: var(--fs-s-1); font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.55); }
-    .iform--w1 h2 { margin: 14px 0 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: #fff; }
+    .iform--w1 .iform__h { margin: 14px 0 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: #fff; }
     .iform--w1 .iform__intro p.iform__note { display: block; margin: 18px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: rgba(255,255,255,.75); max-width: 40ch; }
     .iform__note b { color: #fff; font-weight: 600; }
     .iform--w1 .iform__intro p.iform__ct { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 0; font-size: var(--fs-s0); }

@@ -16,7 +16,7 @@ const { href, title, text = '', button, img = '', srcset, alt, link } = Astro.pr
   <h3 class="pc__t">{title}</h3>
   {text && <p class="pc__p">{text}</p>}
   <p class="pc__a">
-    <a class="pc__b" href={href}>{button}</a>
+    <a class="pc__b" href={href} aria-label={`${button}: ${title}`}>{button}</a>
     {link && <a class="pc__l" href={link.href}>{link.label} <span aria-hidden="true">›</span></a>}
   </p>
 </div>

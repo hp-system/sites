@@ -108,13 +108,16 @@ for (const p of [...posts, null]) {
   }
   /* ── carousel ── */
   .sp--car .sp__grid { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory;
-    scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; align-items: stretch; }   /* one fixed height: the tallest post (Sergei 2026-11-10: the block must not change size) */
+    scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; align-items: flex-start; transition: height .3s ease; }
+  /* phones: the row takes the height of the post on show (a fixed tallest height left 1,000 px of white under
+     short posts at 390 px); from 700 px one fixed height, the tallest post (Sergei 2026-11-10) */
   .sp--car .sp__grid::-webkit-scrollbar { display: none; }
   .sp--car .sp__grid:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   .sp--car .sp__post { flex: none; width: 100%; scroll-snap-align: start; align-content: stretch; }   /* the photo fills the fixed height */
   .sp--car .sp__post--text { align-content: start; }
   .sp--car .sp__ph { aspect-ratio: 16 / 9; }
   @container (min-width: 700px) {
+    .sp--car .sp__grid { align-items: stretch; height: auto !important; }
     .sp--car .sp__post:not(.sp__post--text) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: stretch; }
     .sp--car .sp__ph { aspect-ratio: auto; min-height: 100%; }
     /* the photo left, then right, then left … (Sergei 2026-11-10) */
@@ -123,8 +126,8 @@ for (const p of [...posts, null]) {
     .sp--car .sp__b :global(h2) { font-size: var(--fs-s2); }
   }
   /* the dashes of the home carousels: short marks, the current one long; hovering the group makes them taller */
-  .sp__dash { display: flex; gap: 6px; margin-top: var(--s4); }
-  .sp__dash button { all: unset; cursor: pointer; padding: 10px 0; }
+  .sp__dash { display: flex; gap: 0; margin-top: var(--s4); margin-left: -9px; }
+  .sp__dash button { all: unset; cursor: pointer; padding: 11px 9px; }   /* a 24 px target round each dash (touch, Lighthouse target-size) */
   .sp__dash button span { display: block; width: 6px; height: 2px; background: var(--line);
     transition: width .35s cubic-bezier(.4,0,.2,1), transform .25s ease-out, background .2s ease; }
   .sp__dash button.on span { width: 22px; background: var(--ink); }
@@ -147,11 +150,13 @@ for (const p of [...posts, null]) {
     const posts = Array.from(row.children) as HTMLElement[];
     const dashes = Array.from(box.querySelectorAll<HTMLButtonElement>('[data-spc-go]'));
     let cur = -1;
+    const fit = () => { const p = posts[Math.max(0, cur)]; row.style.height = p && row.clientWidth < 700 ? `${p.offsetHeight}px` : ''; };
     const step = () => (posts[1] ? posts[1].offsetLeft - posts[0].offsetLeft : row.clientWidth) || 1;
     const show = (k: number) => {
-      if (k === cur) return;
+      if (k === cur) return fit();
       cur = k;
       dashes.forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-pressed', String(i === k)); });
+      fit();
       box.dispatchEvent(new CustomEvent('spc:change', { detail: posts[k]?.id, bubbles: true }));
     };
     const at = () => Math.max(0, Math.min(posts.length - 1, Math.round(Math.abs(row.scrollLeft) / step())));
@@ -164,7 +169,8 @@ for (const p of [...posts, null]) {
     row.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; show(at()); }); }, { passive: true });
     dashes.forEach((b, i) => b.addEventListener('click', () => go(i)));
     box.addEventListener('spc:go', (e) => { const k = posts.findIndex((p) => p.id === (e as CustomEvent).detail); if (k >= 0) go(k); });
-    addEventListener('resize', () => go(Math.max(0, cur), false));
+    addEventListener('resize', () => { go(Math.max(0, cur), false); fit(); });
+    if ('ResizeObserver' in window) { const ro = new ResizeObserver(fit); posts.forEach((p) => ro.observe(p)); }
     const fromHash = posts.findIndex((p) => `#${p.id}` === location.hash);
     go(fromHash >= 0 ? fromHash : 0, false);
   });

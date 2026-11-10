@@ -45,7 +45,7 @@ import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
 import { specByPath, specTitle } from '../lib/seo-pages';
-import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle } from '../lib/photos';
+import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
 
 interface Props { page: InfoPage }
@@ -114,6 +114,9 @@ const pathFor = (l: Lang) => (key ? contentUrl(key, l) : own.get(l) ?? listUrl(l
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const abs = (p: string) => (p.startsWith('http') ? p : `${site}${p}`);
 const image = d.image || HERO_SHOTS[0]?.url || '';
+// The share image when the page has none of its own: the hero shot at 800 × 533 with its size (as the home
+// page), never the full original (684 KB: messengers drop the preview). SEO audit 2026-11-10.
+const ogFallback = !d.image && HERO_SHOTS[0] ? shareImage({ url: HERO_SHOTS[0].url, tag: 'hero' } as any) : undefined;
 const imageAlt = d.image_alt || (d.image ? d.h1 : HERO_SHOTS[0]?.alt.en ?? d.h1);
 // Our watermarked media come in _800w and _1920w (3:2): a hero from there gets a srcset.
 const heroSrcset = /_1920w\.jpg$/.test(d.image)
@@ -155,6 +158,10 @@ const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', s
 const short = NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
 const HOW_KEY: Partial<Record<typeof d.section, string>> = { sell: 'info.sell_how' };
 const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
+// Own pages (Sell): H2 only for the text sections of the brief; the design headings (how, cards, related,
+// form, closing call) become p / h3 with the same look (SEO audit 2026-11-10: 15 H2 against 7).
+const HT = fresh ? 'p' : 'h2';
+const CT = fresh ? 'p' : 'h2';   // the card titles come before the first H2: a design heading, not h3 (heading order)
 const deskImg = d.desk_image;
 const deskSet = /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
 const relCards = w1 ? d.related.map((r) => ({
@@ -282,7 +289,7 @@ if (faqItems.length) {
 }
 ---
 <Base lang={lang} title={title} description={fresh?.meta ?? d.description} pathFor={pathFor} langs={langs} jsonLd={jsonLd} ogTitle={fresh?.ogTitle}
-      ogImage={image ? abs(image) : undefined} ogImageAlt={imageAlt}>
+      ogImage={ogFallback ?? (image ? abs(image) : undefined)} ogImageW={ogFallback ? SHARE_W : undefined} ogImageH={ogFallback ? SHARE_H : undefined} ogImageAlt={imageAlt}>
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={0} />
 
@@ -321,7 +328,7 @@ if (faqItems.length) {
     <section class="w1-how" aria-labelledby={howH2 ? 'w1-how-h' : undefined}>
       <div class="wrap">
         <div class="w1-how__head">
-          {howH2 && <h2 id="w1-how-h" class="w1-h2 w1-d">{howH2}</h2>}
+          {howH2 && <HT id="w1-how-h" class="w1-h2 w1-d" data-h>{howH2}</HT>}
           {!fresh && <div class="prose w1-how__p"><Content /></div>}
           {d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
         </div>
@@ -332,7 +339,7 @@ if (faqItems.length) {
               {d.cards.map((c, i) => (
                 <li>
                   {c.image && <img src={c.image} alt={c.image_alt || c.title} width={c.width || 800} height={c.height || 500} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />}
-                  <h2><a href={c.href}>{c.title}</a></h2>
+                  <CT class="cards__t" data-h><a href={c.href}>{c.title}</a></CT>
                   <p>{c.text}</p>
                 </li>
               ))}
@@ -360,7 +367,7 @@ if (faqItems.length) {
     {d.form && (
       <section class="w1-form" id="form">
         <div class="wrap"><div class="prose w1-form__in">
-          <InfoForm source={d.form.source} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+          <InfoForm source={d.form.source} headTag={fresh ? 'p' : 'h2'} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
                     look="wave1" lang={lang} eyebrow={short} />
         </div></div>
       </section>
@@ -370,7 +377,7 @@ if (faqItems.length) {
     <section class="w1-more w1-d" aria-label={ui.side}>
       {relCards.length > 0 && (
         <div class="wrap w1-more__blk">
-          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{ui.related}</h2><RailDash for="w1Rel" count={relCards.length} lang={lang} /></div>
+          <div class="ir-head"><HT class="w1-h2 w1-h2--sm" data-h>{ui.related}</HT><RailDash for="w1Rel" count={relCards.length} lang={lang} /></div>
           <div class="ir-rail" id="w1Rel" data-irail data-gap="20">
             {relCards.map((r) => (
               <PageCard href={r.href} title={r.label} text={r.text} button={r.button} img={r.image || undefined} alt={r.image_alt || r.label} />
@@ -409,7 +416,7 @@ if (faqItems.length) {
 
     <section class="info-cta w1-m">
       <div class="wrap">
-        <h2 class="t-h2">{ui.ctaH}</h2>
+        <HT class="t-h2" data-h>{ui.ctaH}</HT>
         <p>{ui.ctaP}</p>
         <p class="row">
           <a class="btn btn--onphoto" href={contact} data-ev="content:phone">{ui.adviser}</a>
@@ -564,7 +571,7 @@ if (faqItems.length) {
 
     <section class:list={['info-cta', { 'w1-m': hubLike }]}>
       <div class="wrap">
-        <h2 class="t-h2">{ui.ctaH}</h2>
+        <HT class="t-h2" data-h>{ui.ctaH}</HT>
         <p>{ui.ctaP}</p>
         <p class="row">
           <a class="btn btn--onphoto" href={contact} data-ev="content:phone">{ui.adviser}</a>
@@ -634,10 +641,10 @@ if (faqItems.length) {
   @media (min-width: 640px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .cards li { min-width: 0; }
   .prose .cards :global(img), .cards img { margin: 0 0 var(--s3); width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
-  .prose .cards h2 { font-size: var(--fs-s1); margin: 0 0 var(--s2); }
-  .cards h2 a { text-decoration: none; }
-  .cards h2 a:hover { text-decoration: underline; }
-  .cards p { font-size: var(--fs-s0); line-height: 1.55; margin: 0; }
+  .prose .cards :is(h2, .cards__t) { font-size: var(--fs-s1); margin: 0 0 var(--s2); }
+  .cards :is(h2, .cards__t) a { text-decoration: none; }
+  .cards :is(h2, .cards__t) a:hover { text-decoration: underline; }
+  .cards p:not(.cards__t) { font-size: var(--fs-s0); line-height: 1.55; margin: 0; }
 
   .prose :global(.steps) { list-style: none; padding: 0; display: grid; gap: var(--s3); }
   .prose :global(.steps li) { display: flex; gap: var(--s3); align-items: center; }
@@ -694,11 +701,11 @@ if (faqItems.length) {
                                     display: flex; flex-direction: column; position: relative; background: var(--paper); overflow: hidden;
                                     transition: box-shadow .25s ease; }
     .w1 .w1-how__cards .cards li:hover { box-shadow: 0 18px 40px rgba(11,14,16,.12); }
-    .w1 .w1-how__cards .cards h2 { order: 1; margin: 0; padding: 28px 28px 0; font-size: var(--fs-s1); font-weight: 600; line-height: 1.2; letter-spacing: -.012em; }
-    .w1 .w1-how__cards .cards h2 a { color: var(--ink); text-decoration: none; }
-    .w1 .w1-how__cards .cards h2 a::after { content: ''; position: absolute; inset: 0; }
+    .w1 .w1-how__cards .cards :is(h2, .cards__t) { order: 1; margin: 0; padding: 28px 28px 0; font-size: var(--fs-s1); font-weight: 600; line-height: 1.2; letter-spacing: -.012em; }
+    .w1 .w1-how__cards .cards :is(h2, .cards__t) a { color: var(--ink); text-decoration: none; }
+    .w1 .w1-how__cards .cards :is(h2, .cards__t) a::after { content: ''; position: absolute; inset: 0; }
     .w1 .w1-how__cards .cards li:hover h2 a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-    .w1 .w1-how__cards .cards p { order: 2; margin: 10px 0 0; padding: 0 28px; font-size: var(--fs-s0); line-height: 1.55; color: var(--muted); }
+    .w1 .w1-how__cards .cards p:not(.cards__t) { order: 2; margin: 10px 0 0; padding: 0 28px; font-size: var(--fs-s0); line-height: 1.55; color: var(--muted); }
     .w1 .w1-how__cards .cards img { order: 3; margin: auto 0 0; width: 100%; height: 220px; aspect-ratio: auto; object-fit: cover; flex: none; transition: transform .45s ease; }
     .w1 .w1-how__cards .cards li:hover img { transform: scale(1.03); }
 

@@ -29,7 +29,7 @@ const { lang, items, from, headHref } = Astro.props;
   <div class="wrap">
     <div class="shead hz-head">
       <div>
-        <p data-h id="area-h" class="t-h2">{headHref ? <a class="area-ha" href={headHref}>{t(lang, 'home.area_h2')}</a> : t(lang, 'home.area_h2')}</p>
+        <h2 data-h id="area-h" class="t-h2">{headHref ? <a class="area-ha" href={headHref}>{t(lang, 'home.area_h2')}</a> : t(lang, 'home.area_h2')}</h2>
         {from > 0 && <p>{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
       </div>
     </div>
@@ -60,6 +60,8 @@ const { lang, items, from, headHref } = Astro.props;
 <style>
   .areas { padding: var(--s7) 0; }
   .atiles { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* an odd last tile on the two-column phone grid takes the whole row (five areas, Sergei 2026-11-10) */
+  .atiles > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .atile { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: var(--paper-2); }
   .atile img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
   .atile:hover img { transform: scale(1.03); }
@@ -84,6 +86,7 @@ const { lang, items, from, headHref } = Astro.props;
 
   @media (min-width: 1024px) {
     .atiles { grid-template-columns: repeat(var(--acols, 4), minmax(0, 1fr)); }
+    .atiles > li:last-child:nth-child(odd) { grid-column: auto; }
     .atile__t { padding: 56px var(--s4) var(--s4); }
     .atile__t b { font-size: var(--fs-s1); }
     .alinks { justify-content: space-between; font-size: var(--fs-s0); }

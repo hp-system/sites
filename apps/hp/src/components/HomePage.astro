@@ -164,7 +164,8 @@ const collections = COLLS
 // English links the area pages (/en/property-for-sale/…), other languages the
 // municipality facet of the list. Guests see only the municipality — never the area.
 // the same tiles on the Sell page (lib/area-tiles.ts); the home passes its own picker so no photo repeats
-const { tiles: areaTiles, from: areasFrom } = buildAreaTiles(items, lang, pickPhoto);
+// SEO (Sergei 2026-11-10, as on Sell): all five municipalities, and the heading links the property list
+const { tiles: areaTiles, from: areasFrom } = buildAreaTiles(items, lang, pickPhoto, 5);
 
 // ── Structured data — σήμερα το site έχει ΜΟΝΟ microdata ImageObject ──────
 // 🛡️ Η εικόνα κοινοποίησης ΔΕΝ χτίζεται εδώ. Το `shareImage()` κρίνει μόνο του
@@ -296,7 +297,7 @@ if (spec?.faq.length) jsonLd.push({
     <Collections items={collections} lang={lang} />
 
     {/* 7a #101: by area — the four municipality pages with «from €» (SEO). */}
-    {areaTiles.length > 0 && <Areas lang={lang} items={areaTiles} from={areasFrom} />}
+    {areaTiles.length > 0 && <Areas lang={lang} items={areaTiles} from={areasFrom} headHref={url} />}
 
     {/* 7b ΜΕΛΕΤΗ & ΚΑΤΑΣΚΕΥΗ — μπαίνει ΑΜΕΣΩΣ μετά τις συλλογές επίτηδες:
         η μία από τις τέσσερις είναι «Γη & οικόπεδα» (207 από τα 527), και η

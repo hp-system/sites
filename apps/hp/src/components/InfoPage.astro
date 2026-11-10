@@ -350,7 +350,8 @@ if (faqItems.length) {
     {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
         them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
     {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} />}
-    {fresh && <SpecText page={fresh} part="rest" lang={lang} body="none" faq="none" />}
+    {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
+        menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 
     {d.form && (
       <section class="w1-form" id="form">
@@ -375,7 +376,7 @@ if (faqItems.length) {
       )}
       {areas.length > 0 && (
         <div class="wrap w1-more__blk">
-          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
+          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{fresh ? <a class="w1-h2a" href={listUrl(lang)}>{ui.forSale}</a> : ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
           <div class="ir-rail" id="w1Area" data-irail data-gap="20">
             {areas.map((a) => (
               <PageCard href={a.href} title={a.name} button={ui.seeAll} img={a.img} srcset={a.srcset} alt={a.alt}
@@ -460,7 +461,7 @@ if (faqItems.length) {
     {coHub && areas.length > 0 && (
       <section class="w1-more w1-d" aria-label={ui.side}>
         <div class="wrap w1-more__blk">
-          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
+          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{fresh ? <a class="w1-h2a" href={listUrl(lang)}>{ui.forSale}</a> : ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
           <div class="ir-rail" id="w1Area" data-irail data-gap="20">
             {areas.map((a) => (
               <PageCard href={a.href} title={a.name} button={ui.seeAll} img={a.img} srcset={a.srcset} alt={a.alt}
@@ -650,6 +651,8 @@ if (faqItems.length) {
   .faq details p { margin: var(--s2) 0 0; white-space: pre-line; }
 
   .info-band { background: var(--paper-2); padding: var(--s6) 0; }
+  .w1-h2a { color: inherit; text-decoration: none; }
+  .w1-h2a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
   .links { list-style: none; margin: var(--s2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
   .links a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   .info-areas-l { margin: var(--s5) 0 0; }

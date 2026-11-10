@@ -65,7 +65,7 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
           documents: [{ url: 'https://media.example.com/docs/10008-topographic.pdf', title: 'Topographic plan' }],
           price_history: [{ date: '2025-06-01', price: 480000 }, { date: '2026-03-15', price: 450000 }] } } : {}),
       // Property 10012: a luxury house in Kassandra (variety) — badge + municipality block (#79).
-      ...(i === 12 ? { luxury: true } : {}),
+      ...(i === 12 ? { lux_prop: true } : {}),   // the CRM field (#190: the feed has no `luxury` key)
       // Property 10015 (#88): floors, a Greek energy letter, CRM distance labels, a type the CRM has only in el/en/bg.
       ...(i === 15 ? { energy_class: 'Δ', subcategory_i18n: { el: 'Μονοκατοικία', en: 'Detached house', bg: 'Самостоятелна къща' },
         spaces: [{ level: 1, level_sqm: 60, rooms: 2 }, { level: 0, level_sqm: 80, living_rooms: 1 }],

@@ -106,7 +106,12 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
   .pn__go--gild { background: transparent; color: var(--gold-lo); border-color: var(--gold);
     border-image: conic-gradient(from var(--gilda, 315deg), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
     transition: color .9s ease-in-out; }
-  .pn__go--gild:hover { opacity: 1; color: var(--gold); }
+  /* E8 «gilded edge · turning gradient» of the mockup (Sergei 2026-11-10): on hover the brass gradient of the
+     hairline turns one full lap in 0.9 s and turns back the same way when the pointer leaves */
+  @property --gilda { syntax: '<angle>'; inherits: false; initial-value: 315deg; }
+  .pn__go--gild { transition: color .9s ease-in-out, --gilda .9s ease-in-out; }
+  .pn__go--gild:hover, .pn__go--gild:focus-visible { opacity: 1; color: var(--gold); --gilda: 675deg; }
+  @media (prefers-reduced-motion: reduce) { .pn__go--gild { transition: color .9s ease-in-out; } .pn__go--gild:hover, .pn__go--gild:focus-visible { --gilda: 315deg; } }
   .pn__go--gild:focus-visible { outline-color: var(--gold-dk); outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { .pn__it > span, .pn__side { transition: none; } }
   .pn :global([data-spc]), .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }

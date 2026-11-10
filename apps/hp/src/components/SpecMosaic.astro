@@ -27,7 +27,7 @@ const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   const h2 = s.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '';
   // a section with links shows them as tiles across the whole post, without the big photo (Sergei 2026-11-10:
   // «убери большие картинки из блоков где много текста и много ссылок»)
-  const photo = (sectionLinks[i] ?? []).some((l) => isListLink(l.href)) ? null : photos[i] ?? null;
+  const photo = (sectionLinks[i] ?? []).filter((l) => isListLink(l.href)).length >= 2 ? null : photos[i] ?? null;   // one list link keeps the photo
   const dark = [standout].flat().filter(Boolean).includes(text(h2));
   return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, links: sectionLinks[i] ?? [], ask: marks.includes(text(h2)), wide: i === 0 || dark || !photo };
 });

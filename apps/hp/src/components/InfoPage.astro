@@ -44,7 +44,8 @@ import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
-import { specByPath, specTitle } from '../lib/seo-pages';
+import SectionCards from './SectionCards.astro';
+import { specByPath, specTitle, specSections, linksBySection } from '../lib/seo-pages';
 import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
 
@@ -251,17 +252,48 @@ const faqItems = fresh ? fresh.faq : d.faq;
 // а не рандомно»): the first guest property in the site order whose OPEN photo carries one of the
 // theme's tags (and is land / at least the minimum price, when the theme says so). Never a locked
 // property, never the same property twice; always watermarked (R-007), alt from the photo's own texts.
+// Own pages (Sell): the SEO sections whose link is one of the page cards become those cards — photo, the
+// section's H2 and text, the link with its spec anchor (Sergei 2026-11-10: «слить с карточками»); they leave
+// the posts. The brief puts these sections first, so the H2 order holds (rule 8).
+const pathKey = (h: string) => { try { return decodeURI(new URL(h, 'https://x').pathname).replace(/\/+$/, ''); } catch { return h; } };
+const secCards: { h2: string; html: string; href: string; anchor: string; img?: string; alt?: string; w?: number; h?: number; dark?: boolean; ask?: boolean }[] = [];
+let postsPage = fresh;
+let postLinks: { href: string; text: string }[][] | undefined;
+if (fresh) {
+  const secs = specSections(fresh.body);
+  const bySec = linksBySection(fresh);
+  const used = new Set<number>(), usedLinks = new Set<string>();
+  for (const c of d.cards) {
+    const i = bySec.findIndex((ls, k) => !used.has(k) && ls.some((l) => pathKey(l.href) === pathKey(c.href)));
+    if (i < 0) continue;
+    const l = bySec[i].find((x) => pathKey(x.href) === pathKey(c.href))!;
+    used.add(i); usedLinks.add(pathKey(l.href));
+    const plain = secs[i].h2.replace(/<[^>]+>/g, '').trim();
+    secCards.push({ h2: secs[i].h2, html: secs[i].html, href: l.href, anchor: l.text, img: c.image || undefined, alt: c.image_alt || undefined, w: c.width, h: c.height,
+      dark: [fresh.standout].flat().includes(plain), ask: (fresh.questionMarks ?? []).includes(plain) });
+  }
+  // the cards in the order of the brief (rule 8)
+  secCards.sort((a, b) => secs.findIndex((x) => x.h2 === a.h2) - secs.findIndex((x) => x.h2 === b.h2));
+  if (secCards.length) {
+    const keep = secs.filter((_, k) => !used.has(k));
+    postLinks = bySec.filter((_, k) => !used.has(k));   // assigned on the whole page, so a link stays with its own section
+    postsPage = { ...fresh,
+      body: keep.map((x) => `<h2>${x.h2}</h2>${x.html}`).join(''),
+      h2: keep.map((x) => x.h2.replace(/<[^>]+>/g, '')),
+      linksOut: fresh.linksOut.filter((l) => !usedLinks.has(pathKey(l.href))) };
+  }
+}
 const mosaicPhotos: (MosaicPhoto | null)[] = [];
 // Fixed photos per post win (Sergei 2026-11-10: every post has a picture «найди в интернете»): CC0
 // stock photos of the topic (not properties, so no watermark), sources in public/pages/sell/posts/SOURCES.json.
 if (fresh?.postPhotos?.length) {
-  for (const h of (fresh.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((x) => x.replace(/<[^>]+>/g, '').trim())) {
+  for (const h of (postsPage!.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((x) => x.replace(/<[^>]+>/g, '').trim())) {
     const pp = fresh.postPhotos.find((t) => t.after === h);
     mosaicPhotos.push(pp ? { src: `${pp.file}_960w.webp`, srcset: `${pp.file}_640w.webp 640w, ${pp.file}_960w.webp 960w`, alt: pp.alt, style: '' } : null);
   }
 } else if (fresh?.photoThemes?.length) {
   const used = new Set<string>();
-  const secH2 = (fresh.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
+  const secH2 = (postsPage!.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
   for (const h of secH2) {
     const th = fresh.photoThemes.find((t) => t.after === h);
     let hit: MosaicPhoto | null = null;
@@ -330,10 +362,11 @@ if (faqItems.length) {
         <div class="w1-how__head">
           {howH2 && <HT id="w1-how-h" class="w1-h2 w1-d" data-h>{howH2}</HT>}
           {!fresh && <div class="prose w1-how__p"><Content /></div>}
-          {d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
+          {secCards.length === 0 && d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
         </div>
         {d.widget && <div class="prose"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} /></div>}
-        {d.cards.length > 0 && (
+        {secCards.length > 0 && <div class="w1-how__sc" style={`--n: ${secCards.length}`}><SectionCards cards={secCards} /></div>}
+        {secCards.length === 0 && d.cards.length > 0 && (
           <div class="prose w1-how__cards">
             <ul class="cards ir-rail" id="w1Cards" data-irail data-gap="20">
               {d.cards.map((c, i) => (
@@ -360,7 +393,7 @@ if (faqItems.length) {
 
     {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
         them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
-    {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} />}
+    {fresh && postsPage && <SpecPosts page={postsPage} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={postLinks} />}
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
         menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 

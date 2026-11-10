@@ -1,0 +1,63 @@
+---
+// SEO sections that carry a link, as big interactive cards (Sergei 2026-11-10: «максимальное количество ссылок
+// с сео блока превратить в такие интерактивные блоки … текст … помещать сразу под заголовком»; on Sell: «слить
+// с карточками»). Each card: the photo of the page card for that link, the section's H2, the section's whole
+// text, and the link with its exact spec anchor (rule 15). The photo links there too (aria-hidden, no tab
+// stop), so the whole top of the card clicks; the text stays selectable.
+// The cards come in the brief's H2 order (rule 8 checks the outline order).
+interface Props {
+  /** dark: the page's stand-out section (black, as the fact tiles); ask: the decorative beige «?» beside the H2 */
+  cards: { h2: string; html: string; href: string; anchor: string; img?: string; alt?: string; w?: number; h?: number; dark?: boolean; ask?: boolean }[];
+}
+const { cards } = Astro.props;
+---
+<ul class="sc">
+  {cards.map((c, i) => (
+    <li class:list={['sc__c', c.dark && 'sc__c--dark']}>
+      {c.img && (
+        <a class="sc__ph" href={c.href} tabindex="-1" aria-hidden="true">
+          <img src={c.img} alt={c.alt || c.anchor} width={c.w || 800} height={c.h || 500} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+        </a>
+      )}
+      <div class="sc__b">
+        <div class="sc__hd"><h2 set:html={c.h2} />{c.ask && <span class="sc__q" aria-hidden="true">?</span>}</div>
+        <div class="sc__tx" set:html={c.html} />
+        <p class="sc__go"><a href={c.href}>{c.anchor}</a></p>
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .sc { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+  @media (min-width: 900px) { .sc { grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); } }
+  .sc__c { display: flex; flex-direction: column; min-width: 0; background: var(--paper); transition: box-shadow .3s ease; }
+  .sc__c:hover { box-shadow: 0 18px 40px rgba(11,14,16,.12); }
+  .sc__ph { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--paper-2); }
+  .sc__ph img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+  .sc__c:hover .sc__ph img { transform: scale(1.03); }
+  .sc__b { display: flex; flex-direction: column; gap: var(--s3); padding: 28px; flex: 1; }
+  .sc__b h2 { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; color: var(--ink); }
+  .sc__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink); }
+  .sc__tx :global(p:last-child) { margin-bottom: 0; }
+  .sc__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; counter-reset: scn; }
+  .sc__tx :global(ul:last-child) { margin-bottom: 0; }
+  .sc__tx :global(li) { position: relative; padding: var(--s2) 40px var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); counter-increment: scn; }
+  /* the posts' big thin outline numbers, smaller here */
+  .sc__tx :global(li)::after { content: counter(scn); position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: var(--fs-s3);
+    font-weight: 300; line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--ink); pointer-events: none; }
+  .sc__tx :global(strong) { color: var(--ink); font-weight: 600; }
+  .sc__go { margin: auto 0 0; padding-top: var(--s2); }
+  .sc__go a { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 600; text-decoration: underline;
+    text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .sc__go a::before { content: '→'; text-decoration: none; display: inline-block; }
+  .sc__go a:hover { text-decoration-thickness: 2px; }
+  .sc__hd { position: relative; width: fit-content; max-width: calc(100% - 40px); }
+  .sc__q { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-58%) rotate(12deg);
+    font-size: var(--fs-s4); font-weight: 600; line-height: 1; color: var(--paper-2); pointer-events: none; user-select: none; }
+  .sc__c--dark { background: var(--ink-deep); }
+  .sc__c--dark .sc__b h2, .sc__c--dark .sc__tx :global(p), .sc__c--dark .sc__tx :global(li), .sc__c--dark .sc__tx :global(strong), .sc__c--dark .sc__go a { color: var(--paper); }
+  .sc__c--dark .sc__tx :global(li) { border-top: 0; }
+  .sc__c--dark .sc__tx :global(li)::after { -webkit-text-stroke-color: var(--paper); }
+  @media (prefers-reduced-motion: reduce) { .sc__c, .sc__ph img { transition: none; } }
+</style>

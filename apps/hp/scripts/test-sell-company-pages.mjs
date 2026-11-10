@@ -52,8 +52,12 @@ try {
   const hero = sell.match(/<picture class="w1-top__img[\s\S]*?<\/picture>/)?.[0] ?? '';
   check('/en/sell desktop hero: watermarked 800w + 1920w', hero.includes('_800w.jpg 800w') && hero.includes('_1920w.jpg 1920w') && hero.includes('media="(min-width: 1024px)"'), hero ? 'picture' : 'missing');
   check('/en/sell desktop hero: phones load nothing', /<img src="data:image\/gif/.test(hero), 'placeholder img');
-  const rail = sell.match(/<ul class="cards ir-rail"[\s\S]*?<\/ul>/)?.[0] ?? '';
-  check('/en/sell all 3 cards in the row HTML', (rail.match(/<li/g) ?? []).length === 3, `${(rail.match(/<li/g) ?? []).length} cards`);
+  // Since 2026-11-10 the three Sell cards are the SEO sections that carry their link (SectionCards: the
+  // section H2 + text + the link with its spec anchor), in the brief's H2 order.
+  const rail = sell.split('class="w1-how__sc"')[1]?.split('</section>')[0] ?? '';   // the cards hold lists: cut at the section end
+  const cardN = (rail.match(/<li class="sc__c/g) ?? []).length;
+  check('/en/sell all 3 cards in the HTML (section cards)', cardN === 3
+    && ['/en/add-your-property', '/en/exclusive', '/en/assignment-order'].every((h) => rail.includes(`href="${h}"`)), `${cardN} cards`);
   check('/en/sell row of 3 cards needs no page dashes', !(sell.match(/data-irail-dash="w1Cards"[\s\S]*?<\/div>/)?.[0].match(/<button/g) ?? []).length || true, 'dashes');
   const rel = sell.match(/id="w1Rel"[\s\S]*?<\/section>/)?.[0] ?? '';
   check('/en/sell Related row: 3 cards with links', (rel.match(/class="pc"/g) ?? []).length === 3 && rel.includes('href="/en/assignment-order"'), 'related');

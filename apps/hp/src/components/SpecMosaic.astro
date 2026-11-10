@@ -48,7 +48,7 @@ for (const p of [...posts, null]) {
 
 <style>
   .sp { container-type: inline-size; }
-  .sp__grid { display: grid; gap: 12px; }
+  .sp__grid { display: grid; gap: 12px; align-items: start; }   /* each post as tall as its text (Sergei 2026-11-10) */
   .sp__post { min-width: 0; display: grid; align-content: start; background: var(--paper); }
   .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-2); }
   .sp__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focal, 50% 50%);
@@ -56,12 +56,20 @@ for (const p of [...posts, null]) {
   .sp__post:hover .sp__ph img { transform: scale(1.03); }
   .sp__b { display: grid; gap: var(--s3); align-content: start; padding: var(--s5); }
   .sp__b :global(h2) { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.12; letter-spacing: -.02em; color: var(--ink); }
-  .sp__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink); max-width: 68ch; }
+  .sp__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink); }
   .sp__tx :global(p:last-child) { margin-bottom: 0; }
-  .sp__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; max-width: 68ch; }
+  .sp__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; }
   .sp__tx :global(ul:last-child) { margin-bottom: 0; }
   .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); }
   .sp__tx :global(strong) { color: var(--ink); font-weight: 600; }
+  /* big thin numbers on the list items (Sergei 2026-11-10: «большие тонкие цифры, но так чтоб не изменять
+     размер самого блока»): out of the flow, behind the text at the right edge, so no line or post grows */
+  .sp__tx :global(ul) { counter-reset: spn; }
+  .sp__tx :global(li) { position: relative; isolation: isolate; counter-increment: spn; padding-right: 76px; }   /* room for the number: it never covers the text */
+  .sp__tx :global(li)::after { content: counter(spn, decimal-leading-zero); position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    z-index: -1; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; pointer-events: none;
+    color: transparent; -webkit-text-stroke: 1px var(--ink); }   /* outline only: thin, the text over it stays readable */
+  .sp__post--fact .sp__tx :global(li)::after { -webkit-text-stroke-color: var(--paper); }
   .sp__post--fact { background: var(--ink-deep); }
   .sp__post--fact .sp__b :global(h2), .sp__post--fact .sp__tx :global(strong) { color: var(--paper); }
   .sp__post--fact .sp__tx :global(p), .sp__post--fact .sp__tx :global(li) { color: var(--paper); }
@@ -78,7 +86,6 @@ for (const p of [...posts, null]) {
     .sp__post--wide:not(.sp__post--text) { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: stretch; }
     .sp__post--wide .sp__ph { aspect-ratio: auto; min-height: 100%; }
     .sp__post--wide .sp__b :global(h2) { font-size: var(--fs-s3); }
-    .sp__post--text .sp__tx :global(p) { max-width: 76ch; }
   }
   @media (prefers-reduced-motion: reduce) {
     .sp__ph img { transition: none; }

@@ -51,7 +51,7 @@ for (const p of [...posts, null]) {
   ))}
 </div>
 {carousel && posts.length > 1 && (
-  <div class="sp__dash" role="group" aria-label={t(lang, 'home.pages')}>
+  <div class="k-dash sp__dash" role="group" aria-label={t(lang, 'home.pages')}>
     {posts.map((p, i) => (
       <button type="button" class={i === 0 ? 'on' : undefined} aria-pressed={i === 0 ? 'true' : 'false'} data-spc-go={i}
               aria-label={p.h2.replace(/<[^>]+>/g, '')}><span></span></button>
@@ -125,17 +125,9 @@ for (const p of [...posts, null]) {
     .sp--car .sp__post:nth-child(even) .sp__ph { order: 2; }
     .sp--car .sp__b :global(h2) { font-size: var(--fs-s2); }
   }
-  /* the dashes of the home carousels: short marks, the current one long; hovering the group makes them taller */
-  .sp__dash { display: flex; gap: 0; margin-top: var(--s4); margin-left: -9px; }
-  .sp__dash button { all: unset; cursor: pointer; padding: 11px 9px; }   /* a 24 px target round each dash (touch, Lighthouse target-size) */
-  .sp__dash button span { display: block; width: 6px; height: 2px; background: var(--line);
-    transition: width .35s cubic-bezier(.4,0,.2,1), transform .25s ease-out, background .2s ease; }
-  .sp__dash button.on span { width: 22px; background: var(--ink); }
-  .sp__dash:hover button span { transform: scaleY(4); }
-  .sp__dash button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .sp__dash { margin-top: var(--s4); }   /* the dashes: kit .k-dash (home carousels) */
   @media (prefers-reduced-motion: reduce) {
     .sp--car .sp__grid { scroll-behavior: auto; }
-    .sp__dash button span { transition: none; }
     .sp__ph img { transition: none; }
     .sp__post:hover .sp__ph img { transform: none; }
   }

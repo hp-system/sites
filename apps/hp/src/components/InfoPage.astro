@@ -41,6 +41,7 @@ import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
+import FaqSearch from './FaqSearch.astro';
 import { specByPath, specTitle } from '../lib/seo-pages';
 import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
@@ -339,7 +340,10 @@ if (faqItems.length) {
       </div>
     </section>
 
-    {fresh && <SpecText page={fresh} part="rest" lang={lang} body="mosaic" faq="tiles" photos={mosaicPhotos} />}
+    {/* The Sell FAQ as on the services hub, right after «Get to know how we sell» (Sergei 2026-11-10) */}
+    {fresh && <FaqSearch lang={lang} h={ui.faq} items={fresh.faq} />}
+
+    {fresh && <SpecText page={fresh} part="rest" lang={lang} body="mosaic" faq="none" photos={mosaicPhotos} />}
 
     {d.form && (
       <section class="w1-form" id="form">

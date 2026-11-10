@@ -12,7 +12,8 @@ import SpecMosaic from './SpecMosaic.astro';
 interface Props {
   page: SpecPage; part: 'intro' | 'rest'; lang: Lang;
   /** 'tiles': the FAQ as open blocks side by side across the text width (home, Sergei 08/11). */
-  faq?: 'list' | 'tiles';
+  /** 'none': the template places the FAQ itself (Sell: FaqSearch, as on the services hub). */
+  faq?: 'list' | 'tiles' | 'none';
   /** 'rotate': the H2 sections in one block of fixed height, one at a time every 3 s, dashes to
    *  pick one (home, Sergei 08/11: «стоять на месте, но перелистывать SEO-текст»). Every section
    *  stays in the HTML, in the spec's order — search engines read all of it. Phones: all shown. */

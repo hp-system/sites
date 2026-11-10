@@ -135,7 +135,25 @@ export type CleanSize = (typeof CLEAN_SIZES)[number];
  *    ΚΕΝΟ το hero και το μεγάλο ακίνητο στο κινητό — ο browser ΔΕΝ επιστρέφει
  *    στο `src` όταν αποτύχει υποψήφιο του srcset.
  */
+/**
+ * WebP / AVIF through Cloudflare Image Transformations (SEO audit 2026-11-10: about 500 KB of JPEG on the home
+ * page, LCP 4.4 s on mobile). Off unless the deployment sets PHOTO_FORMAT_AUTO=1, which is done only after
+ * Transformations are enabled on the zone of media.onsea.gr (George's Cloudflare). The source stays the same
+ * file (the watermarked `_800w` for a card), so the watermark and the size are unchanged; only the format
+ * follows the browser's Accept header. The share image (og:image) never goes through it: crawlers want JPEG.
+ */
+const FORMAT_AUTO = typeof process !== 'undefined' && process.env?.PHOTO_FORMAT_AUTO === '1';
+const CDN_HOST = /^(https:\/\/media\.onsea\.gr)\/(?!cdn-cgi\/)(.+)$/;
+export function viaCdn(u: string): string {
+  if (!FORMAT_AUTO || !u) return u;
+  const m = u.match(CDN_HOST);
+  return m ? `${m[1]}/cdn-cgi/image/format=auto,quality=82/${m[2]}` : u;
+}
+
 export function clean(url: string, size?: number): string {
+  return viaCdn(cleanRaw(url, size));
+}
+function cleanRaw(url: string, size?: number): string {
   if (!url) return '';
   const ok = size && (CLEAN_SIZES as readonly number[]).includes(size);
   return encodeURI(ok ? url.replace(/\.(jpe?g|png)$/i, (m) => `_${size}${m}`) : url);
@@ -166,6 +184,9 @@ export function cleanSrcSetSmall(url: string): string {
 
 /** Υδατογραφημένη εκδοχή — για κάρτες και πλακίδια. */
 export function marked(url: string, size: 400 | 800 | 1920 = 800): string {
+  return viaCdn(markedRaw(url, size));
+}
+function markedRaw(url: string, size: 400 | 800 | 1920 = 800): string {
   if (!url) return '';
   return encodeURI(url.replace(/\.(jpe?g|png)$/i, (m) => `_${size}w${m}`));
 }
@@ -214,7 +235,7 @@ export const SHARE_H = 533;
 
 export function shareImage(p: Photo | null): string | undefined {
   if (!p?.url) return undefined;
-  return p.tag === 'hero' ? clean(p.url, SHARE_W) : marked(p.url, SHARE_W);
+  return p.tag === 'hero' ? cleanRaw(p.url, SHARE_W) : markedRaw(p.url, SHARE_W);   // always JPEG for crawlers
 }
 
 /**

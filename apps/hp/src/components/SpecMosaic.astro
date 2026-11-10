@@ -1,0 +1,177 @@
+---
+// The spec body as posts (Sergei 2026-11-10: «делай все на селл, как посты»). One post per H2
+// section: the photo chosen for its topic on top, then the heading and the whole section text.
+// History: 2026-11-09 one block per section with the photo beside it («текста не разбрасывались
+// на разные блоки … промежутки картинками по тематике»); 2026-11-10 posts, all on the page (SEO:
+// separate pages would be thin and compete with Sell for the same query).
+// Styles are the blog's (ArticleListPage.astro): .feat for the wide post (photo 1.4fr + text),
+// .card for the others (photo 3:2 on top), on the home bento's beige band with white posts and
+// the stand-out post black (as the fact tiles). Wide: the first post and the stand-out one; the
+// others two per row; a section without a photo is a wide text post.
+// Every word of the body stays in the HTML, in the spec order.
+// carousel (Sergei 2026-11-10: «весь длинный блок постов сделать каруселью … страница капец какой длинной»):
+// one post at a time in a horizontal row (photo beside the text), swiped / scrolled sideways, dashes under it
+// as the home carousels; the side menu turns it. No autoplay (text is read) and the wheel is never taken: the
+// page scrolls down as usual. The row has one height, the tallest post's. All posts stay in the HTML.
+import { h2Id } from '../lib/seo-pages';
+import { t, type Lang } from '../lib/i18n';
+export type MosaicPhoto = { src: string; srcset: string; alt: string; style: string };
+interface Props { html: string; photos?: (MosaicPhoto | null)[]; standout?: string | string[]; marks?: string[]; carousel?: boolean; lang?: Lang }
+const { html, photos = [], standout = '', marks = [], carousel = false, lang = 'en' } = Astro.props;
+
+const text = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
+  const h2 = s.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '';
+  const photo = photos[i] ?? null;
+  const dark = [standout].flat().filter(Boolean).includes(text(h2));
+  return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, ask: marks.includes(text(h2)), wide: i === 0 || dark || !photo };
+});
+// two per row: a post left alone in its row (an odd run between wide ones) becomes wide, so no row has a hole
+let run: typeof posts = [];
+for (const p of [...posts, null]) {
+  if (p && !p.wide) { run.push(p); continue; }
+  if (run.length % 2) run[run.length - 1].wide = true;
+  run = [];
+}
+---
+<div class:list={['sp', carousel && 'sp--car']} data-spc={carousel ? '' : undefined}><div class="sp__grid" tabindex={carousel ? 0 : undefined}>
+  {posts.map((p) => (
+    <article id={h2Id(p.h2)} class:list={['sp__post', p.wide && 'sp__post--wide', p.dark && 'sp__post--fact', !p.photo && 'sp__post--text']}>
+      {p.photo && (
+        <div class="sp__ph" style={p.photo.style}>
+          <img src={p.photo.src} srcset={p.photo.srcset} sizes={p.wide ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 760px) 600px, 100vw'}
+               alt={p.photo.alt} width="1920" height="1280" loading="lazy" decoding="async" />
+        </div>
+      )}
+      <div class="sp__b">
+        <div class="sp__hd"><h2 set:html={p.h2} />{p.ask && <span class="sp__q" aria-hidden="true">?</span>}</div>
+        <div class="sp__tx" set:html={p.rest} />
+      </div>
+    </article>
+  ))}
+</div>
+{carousel && posts.length > 1 && (
+  <div class="sp__dash" role="group" aria-label={t(lang, 'home.pages')}>
+    {posts.map((p, i) => (
+      <button type="button" class={i === 0 ? 'on' : undefined} aria-pressed={i === 0 ? 'true' : 'false'} data-spc-go={i}
+              aria-label={p.h2.replace(/<[^>]+>/g, '')}><span></span></button>
+    ))}
+  </div>
+)}
+</div>
+
+<style>
+  .sp { container-type: inline-size; }
+  .sp__grid { display: grid; gap: 12px; align-items: start; }   /* each post as tall as its text (Sergei 2026-11-10) */
+  .sp__post { min-width: 0; display: grid; align-content: start; background: var(--paper); }
+  .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-2); }
+  .sp__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focal, 50% 50%);
+    transition: transform .6s ease; }
+  .sp__post:hover .sp__ph img { transform: scale(1.03); }
+  .sp__b { display: grid; gap: var(--s3); align-content: start; padding: var(--s5); }
+  .sp__b :global(h2) { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.12; letter-spacing: -.02em; color: var(--ink); }
+  .sp__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink); }
+  .sp__tx :global(p:last-child) { margin-bottom: 0; }
+  .sp__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; }
+  .sp__tx :global(ul:last-child) { margin-bottom: 0; }
+  .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); }
+  .sp__tx :global(strong) { color: var(--ink); font-weight: 600; }
+  /* big thin numbers on the list items (Sergei 2026-11-10: «большие тонкие цифры, но так чтоб не изменять
+     размер самого блока»): out of the flow, behind the text at the right edge, so no line or post grows */
+  .sp__tx :global(ul) { counter-reset: spn; }
+  .sp__tx :global(li) { position: relative; isolation: isolate; counter-increment: spn; padding-right: 56px; }   /* room for the number: it never covers the text */
+  .sp__tx :global(li)::after { content: counter(spn); position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    z-index: -1; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; pointer-events: none;
+    color: transparent; -webkit-text-stroke: 1px var(--ink); }   /* outline only: thin, the text over it stays readable */
+  .sp__post--fact .sp__tx :global(li)::after { -webkit-text-stroke-color: var(--paper); }
+  /* a decorative «?» beside the heading (Sergei 2026-11-10): beige, bolder, tilted; out of the flow, so the
+     heading and the post keep their size; aria-hidden, not part of the H2 */
+  .sp__hd { position: relative; width: fit-content; max-width: calc(100% - 48px); }
+  .sp__q { position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-58%) rotate(12deg);
+    font-size: var(--fs-s5); font-weight: 600; line-height: 1; color: var(--paper-2); pointer-events: none; user-select: none; }
+  .sp__post--fact { background: var(--ink-deep); }
+  .sp__post--fact .sp__b :global(h2), .sp__post--fact .sp__tx :global(strong) { color: var(--paper); }
+  .sp__post--fact .sp__tx :global(p), .sp__post--fact .sp__tx :global(li) { color: var(--paper); }
+  .sp__post--fact .sp__tx :global(li) { border-top: 0; }   /* white, black and beige only (Sergei 2026-11-10): no grey rule on black */
+  /* sized by the room the posts get (beside the navigator they are narrower than the page) */
+  @container (min-width: 700px) {
+    .sp__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sp__post--wide { grid-column: 1 / -1; }
+    .sp__post--wide .sp__ph { aspect-ratio: 16 / 9; }
+    .sp__b { padding: var(--s6); }
+  }
+  @container (min-width: 1000px) {
+    /* the wide post as the blog's lead article: photo 1.4fr beside the text */
+    .sp__post--wide:not(.sp__post--text) { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: stretch; }
+    .sp__post--wide .sp__ph { aspect-ratio: auto; min-height: 100%; }
+    .sp__post--wide .sp__b :global(h2) { font-size: var(--fs-s3); }
+  }
+  /* ── carousel ── */
+  .sp--car .sp__grid { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory;
+    scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; align-items: flex-start; transition: height .3s ease; }
+  /* phones: the row takes the height of the post on show (a fixed tallest height left 1,000 px of white under
+     short posts at 390 px); from 700 px one fixed height, the tallest post (Sergei 2026-11-10) */
+  .sp--car .sp__grid::-webkit-scrollbar { display: none; }
+  .sp--car .sp__grid:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .sp--car .sp__post { flex: none; width: 100%; scroll-snap-align: start; align-content: stretch; }   /* the photo fills the fixed height */
+  .sp--car .sp__post--text { align-content: start; }
+  .sp--car .sp__ph { aspect-ratio: 16 / 9; }
+  @container (min-width: 700px) {
+    .sp--car .sp__grid { align-items: stretch; height: auto !important; }
+    .sp--car .sp__post:not(.sp__post--text) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: stretch; }
+    .sp--car .sp__ph { aspect-ratio: auto; min-height: 100%; }
+    /* the photo left, then right, then left … (Sergei 2026-11-10) */
+    .sp--car .sp__post:nth-child(even):not(.sp__post--text) { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+    .sp--car .sp__post:nth-child(even) .sp__ph { order: 2; }
+    .sp--car .sp__b :global(h2) { font-size: var(--fs-s2); }
+  }
+  /* the dashes of the home carousels: short marks, the current one long; hovering the group makes them taller */
+  .sp__dash { display: flex; gap: 0; margin-top: var(--s4); margin-left: -9px; }
+  .sp__dash button { all: unset; cursor: pointer; padding: 11px 9px; }   /* a 24 px target round each dash (touch, Lighthouse target-size) */
+  .sp__dash button span { display: block; width: 6px; height: 2px; background: var(--line);
+    transition: width .35s cubic-bezier(.4,0,.2,1), transform .25s ease-out, background .2s ease; }
+  .sp__dash button.on span { width: 22px; background: var(--ink); }
+  .sp__dash:hover button span { transform: scaleY(4); }
+  .sp__dash button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .sp--car .sp__grid { scroll-behavior: auto; }
+    .sp__dash button span { transition: none; }
+    .sp__ph img { transition: none; }
+    .sp__post:hover .sp__ph img { transform: none; }
+  }
+</style>
+
+<script>
+  // One post at a time: the row follows its scroll (swipe, trackpad, keys, the dashes, the side menu).
+  // Events: listens to «spc:go» {detail: post id}; tells «spc:change» {detail: post id} after a turn.
+  document.querySelectorAll<HTMLElement>('[data-spc]').forEach((box) => {
+    const row = box.querySelector<HTMLElement>('.sp__grid');
+    if (!row) return;
+    const posts = Array.from(row.children) as HTMLElement[];
+    const dashes = Array.from(box.querySelectorAll<HTMLButtonElement>('[data-spc-go]'));
+    let cur = -1;
+    const fit = () => { const p = posts[Math.max(0, cur)]; row.style.height = p && row.clientWidth < 700 ? `${p.offsetHeight}px` : ''; };
+    const step = () => (posts[1] ? posts[1].offsetLeft - posts[0].offsetLeft : row.clientWidth) || 1;
+    const show = (k: number) => {
+      if (k === cur) return fit();
+      cur = k;
+      dashes.forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-pressed', String(i === k)); });
+      fit();
+      box.dispatchEvent(new CustomEvent('spc:change', { detail: posts[k]?.id, bubbles: true }));
+    };
+    const at = () => Math.max(0, Math.min(posts.length - 1, Math.round(Math.abs(row.scrollLeft) / step())));
+    const go = (k: number, smooth = true) => {
+      const x = k * step();
+      row.scrollTo({ left: getComputedStyle(row).direction === 'rtl' ? -x : x, behavior: smooth ? 'smooth' : 'auto' });
+      show(k);
+    };
+    let raf = 0;
+    row.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; show(at()); }); }, { passive: true });
+    dashes.forEach((b, i) => b.addEventListener('click', () => go(i)));
+    box.addEventListener('spc:go', (e) => { const k = posts.findIndex((p) => p.id === (e as CustomEvent).detail); if (k >= 0) go(k); });
+    addEventListener('resize', () => { go(Math.max(0, cur), false); fit(); });
+    if ('ResizeObserver' in window) { const ro = new ResizeObserver(fit); posts.forEach((p) => ro.observe(p)); }
+    const fromHash = posts.findIndex((p) => `#${p.id}` === location.hash);
+    go(fromHash >= 0 ? fromHash : 0, false);
+  });
+</script>

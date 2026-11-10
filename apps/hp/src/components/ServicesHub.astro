@@ -17,6 +17,7 @@
 // The window posts through InfoForm (look="pop") to the same /api/inquiry with the same
 // protections (honeypot, 3-second timer; Origin check + rate limit on the server).
 // ═══════════════════════════════════════════════════════════════════════════
+import FaqSearch from './FaqSearch.astro';
 import InfoForm from './InfoForm.astro';
 import WaLink from './WaLink.astro';
 import { brand } from '../brand/index';
@@ -117,31 +118,7 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     </div>
   </section>
 
-  {faq && faq.items.length > 0 && (
-    <section class="svc-faq" aria-labelledby="svcFaqH">
-      <div class="wrap svc-faq__in">
-        <h2 id="svcFaqH" class="svc-faq__h"><a href={faq.href}>{faq.h}</a></h2>
-        <label class="svc-srch">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
-          <input type="search" id="svcQ" placeholder={tt('svc.faq_search')} aria-label={tt('svc.faq_search_l')} autocomplete="off" />
-        </label>
-        <p class="svc-cnt" id="svcCnt" aria-live="polite" data-n={tt('svc.faq_n')} data-q1={tt('svc.faq_1q')} data-qn={tt('svc.faq_nq')}>
-          {tt('svc.faq_n', { n: faq.items.length })}
-        </p>
-        <div class="svc-fqs" id="svcFqs">
-          {faq.items.map((f, i) => (
-            <details class:list={['svc-fq', { 'svc-fq--more': i >= FAQ_SHOW }]} name="svcfaq">
-              <summary><h3>{f.q}</h3><i aria-hidden="true"></i></summary>
-              <p class="svc-fqa">{f.a}</p>
-            </details>
-          ))}
-        </div>
-        {faq.items.length > FAQ_SHOW && (
-          <p class="svc-all"><button type="button" class="btnw" id="svcAll">{tt('svc.faq_all', { n: faq.items.length })}</button></p>
-        )}
-      </div>
-    </section>
-  )}
+  {faq && <FaqSearch lang={lang} h={faq.h} href={faq.href} items={faq.items} show={FAQ_SHOW} />}
 
   <section class="svc-tiles">
     <div class="wrap svc-tiles__in">
@@ -255,30 +232,6 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     .svc-door .ar { font-size: var(--fs-s0); letter-spacing: 0; transition: transform .3s ease; }
     .svc-door.on .ar { transform: translateX(6px); }
     .svc-door:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-
-    /* ── George's FAQ, searchable ── */
-    .svc-faq { padding: 56px 0; }
-    .svc-faq__in { max-width: 900px; }
-    .svc-faq__h { margin: 0 0 18px; font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; text-align: center; color: var(--ink); }
-    .svc-faq__h a { color: inherit; text-decoration: none; }
-    .svc-faq__h a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-    .svc-srch { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 18px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
-    .svc-srch:focus-within { border-color: var(--ink); }
-    .svc-srch input { flex: 1; min-width: 0; border: 0; outline: 0; font: inherit; font-size: var(--fs-s0); color: var(--ink); background: transparent; }
-    .svc-srch input::placeholder { color: var(--muted); opacity: 1; }
-    .svc-cnt { margin: 10px 0 18px; font-size: var(--fs-s-1); color: var(--muted); }
-    .svc-fq { border-top: 1px solid var(--line); }
-    .svc-fq:last-of-type { border-bottom: 1px solid var(--line); }
-    .svc-fqs.cut .svc-fq--more, .svc-fq.off { display: none; }
-    .svc-fq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; padding: 14px 2px; }
-    .svc-fq summary::-webkit-details-marker { display: none; }
-    .svc-fq summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-    .svc-fq h3 { flex: 1; margin: 0; font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; color: var(--ink); }
-    .svc-fq i { font-style: normal; font-weight: 300; font-size: var(--fs-s1); line-height: 1; color: var(--ink); }
-    .svc-fq i::before { content: '+'; }
-    .svc-fq[open] i::before { content: '−'; }
-    .svc-fqa { margin: 0 0 16px; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); white-space: pre-line; max-width: 70ch; }
-    .svc-all { margin: 18px 0 0; text-align: center; }
 
     /* ── two tiles ── */
     .svc-tiles { padding: 0 0 56px; }
@@ -406,33 +359,7 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     doors.forEach((d, i) => { d.addEventListener('mouseenter', () => door(i)); d.addEventListener('focus', () => door(i)); });
     document.getElementById('svcDoors')?.addEventListener('mouseleave', () => door(0));
 
-    // ── FAQ: six questions, then all; the search filters every question and answer ──
-    const fqs = document.getElementById('svcFqs');
-    const items = Array.from(root.querySelectorAll<HTMLDetailsElement>('.svc-fq'));
-    const q = document.getElementById('svcQ') as HTMLInputElement | null;
-    const cnt = document.getElementById('svcCnt');
-    const all = document.getElementById('svcAll');
-    fqs?.classList.add('cut');
-    const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
-    const filter = () => {
-      const raw = (q?.value ?? '').trim();
-      const words = raw.toLowerCase().split(/\s+/).filter(Boolean);
-      let n = 0;
-      items.forEach((d) => {
-        const hit = !words.length || words.every((w) => (d.textContent ?? '').toLowerCase().includes(w));
-        d.classList.toggle('off', !hit);
-        if (hit) n++;
-      });
-      fqs?.classList.toggle('cut', !words.length && !fqs.dataset.all);
-      if (all) all.parentElement!.hidden = !!words.length || !!fqs?.dataset.all;
-      if (cnt) cnt.textContent = words.length
-        ? fill(n === 1 ? cnt.dataset.q1 ?? '' : cnt.dataset.qn ?? '', { n, q: raw })
-        : fill(cnt.dataset.n ?? '', { n: items.length });
-    };
-    q?.addEventListener('input', () => { items.forEach((d) => { d.open = false; }); filter(); });
-    all?.addEventListener('click', () => { if (fqs) fqs.dataset.all = '1'; filter(); });
-    // one answer open at a time (also where `<details name>` is not supported)
-    items.forEach((d) => d.addEventListener('toggle', () => { if (d.open) items.forEach((x) => { if (x !== d) x.open = false; }); }));
+    // ── FAQ: FaqSearch.astro has its own script ──
 
     // ── gilded button: the edge turns once when the pointer comes into its tile, once more on it ──
     root.querySelectorAll<HTMLElement>('.svc-gild').forEach((g) => {

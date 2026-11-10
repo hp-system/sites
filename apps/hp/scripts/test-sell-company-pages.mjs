@@ -62,7 +62,10 @@ try {
   check('/en/sell area row (when listed): municipality guides + H2', !area || (/>Property for sale in Halkidiki<\/h2>/.test(rel) && /href="\/en\/property-for-sale\/(kassandra|sithonia|aristotelis|nea-propontida|polygyros)"/.test(rel)), area ? 'about the area' : 'no area cards in the stub');
   check('/en/sell area photos watermarked', [...rel.matchAll(/<img [^>]*src="(https?:[^"]+)"/g)].every((m) => /_(400|800|1920)w\./.test(m[1])), 'marked');
   check('/en/sell dark form: wave 1, picker, consent', /class="iform iform--w1"/.test(sell) && /data-w1/.test(sell) && sell.includes('data-cc="GR"') && sell.includes('name="first"') && sell.includes('name="last"'), 'form');
-  check('/en/sell H2 «Get to know how we sell.» + Related', sell.includes('Get to know how we sell.') && />Related<\/h2>/.test(sell), 'h2');
+  // Sell is an own page (P24): its H2 outline is the brief's 7 sections; «Get to know how we sell.» and «Related»
+  // stay as design headings (p[data-h]) with the same look (SEO audit 2026-11-10).
+  check('/en/sell «Get to know how we sell.» + Related as design headings, not H2', sell.includes('Get to know how we sell.')
+    && /<p[^>]*data-h[^>]*>Related<\/p>/.test(sell) && !/>Related<\/h2>/.test(sell), 'h2');
   check('/en/sell back to top', sell.includes('id="w1Top"'), 'button');
   check('/en/contact keeps the old layout', !(pages['/en/contact'] ?? '').includes('class="info w1"') && !(pages['/en/contact'] ?? '').includes('class="iform iform--w1"'), 'unchanged');
 

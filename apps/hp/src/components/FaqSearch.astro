@@ -1,0 +1,105 @@
+---
+// The searchable FAQ of the services hub (#106, design «ServicesHelp» approved by George
+// 2026-11-02), as one block for every page that needs it: the services hub (George's FAQ page)
+// and the Sell page (its own FAQ, Sergei 2026-11-10: «вот ету секцию сделай вот так (как на
+// странице services) и помести её после Get to know how we sell»).
+//   centred H2 (a link when `href` is given) · search field · count · questions as <details>
+//   · the first `show` questions, then «All questions · n».
+// SEO: every question and answer is in the HTML; the search and the button only show / hide.
+// Several blocks on one page work independently (each script run is scoped to its own block).
+import { t, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang; h: string; href?: string;
+  items: { q: string; a: string }[];
+  /** questions shown before «All questions» (the services hub shows 6) */
+  show?: number;
+  /** the section anchor (default: generated) */
+  id?: string;
+  /** a white panel without its own band and width (inside another layout: Sell posts) */
+  bare?: boolean;
+  /** the search field and the count (off for a short list: Sell, 5 questions, Sergei 2026-11-10) */
+  search?: boolean;
+  /** the heading tag: p on own pages, whose H2 outline is the brief's text sections only */
+  headTag?: 'h2' | 'p';
+}
+const { lang, h, href, items, show = 6, bare = false, search = true, headTag = 'h2' } = Astro.props;
+const HT = headTag;
+const tt = (k: string, v?: Record<string, string | number>) => t(lang, k, v);
+const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
+---
+{items.length > 0 && (
+  <section class:list={['fqs', bare && 'fqs--bare']} id={id} aria-labelledby={`${id}h`} data-fqs>
+    <div class:list={[!bare && 'wrap', 'fqs__in']}>
+      <HT id={`${id}h`} class="fqs__h" data-h>{href ? <a href={href}>{h}</a> : h}</HT>
+      {search && <label class="fqs-srch">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+        <input type="search" placeholder={tt('svc.faq_search')} aria-label={tt('svc.faq_search_l')} autocomplete="off" data-fqs-q />
+      </label>}
+      {search && <p class="fqs-cnt" aria-live="polite" data-fqs-cnt data-n={tt('svc.faq_n')} data-q1={tt('svc.faq_1q')} data-qn={tt('svc.faq_nq')}>
+        {tt('svc.faq_n', { n: items.length })}
+      </p>}
+      <div class="fqs-list" data-fqs-list>
+        {items.map((f, i) => (
+          <details class:list={['k-faq__q fqs-fq', { 'fqs-fq--more': i >= show }]} name={id}>
+            <summary><h3>{f.q}</h3><i aria-hidden="true"></i></summary>
+            {f.a.includes('<') ? <div class="k-faq__a" set:html={f.a} /> : <p class="k-faq__a">{f.a}</p>}
+          </details>
+        ))}
+      </div>
+      {items.length > show && (
+        <p class="fqs-all"><button type="button" class="k-line" data-fqs-all>{tt('svc.faq_all', { n: items.length })}</button></p>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  .fqs { padding: 56px 0; }
+  .fqs__in { max-width: 900px; }
+  .fqs--bare { padding: 0; }
+  .fqs--bare .fqs__in { max-width: none; }
+  .fqs__h { margin: 0 0 18px; font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; text-align: center; color: var(--ink); }
+  .fqs__h a { color: inherit; text-decoration: none; }
+  .fqs__h a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .fqs-srch { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 18px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+  .fqs-srch:focus-within { border-color: var(--ink); }
+  .fqs-srch input { flex: 1; min-width: 0; border: 0; outline: 0; font: inherit; font-size: var(--fs-s0); color: var(--ink); background: transparent; }
+  .fqs-srch input::placeholder { color: var(--ink); opacity: 1; }
+  .fqs-cnt { margin: 10px 0 18px; font-size: var(--fs-s-1); color: var(--ink); }
+  /* questions: kit .k-faq__q / .k-faq__a; the button: kit .k-line */
+  .fqs-list.cut .fqs-fq--more, .fqs-fq.off { display: none; }
+  .fqs-all { margin: 18px 0 0; text-align: center; }
+</style>
+
+<script>
+  // The first questions, then all; the search filters every question and answer.
+  const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+  document.querySelectorAll<HTMLElement>('[data-fqs]').forEach((box) => {
+    const list = box.querySelector<HTMLElement>('[data-fqs-list]');
+    const items = Array.from(box.querySelectorAll<HTMLDetailsElement>('.fqs-fq'));
+    const q = box.querySelector<HTMLInputElement>('[data-fqs-q]');
+    const cnt = box.querySelector<HTMLElement>('[data-fqs-cnt]');
+    const all = box.querySelector<HTMLElement>('[data-fqs-all]');
+    list?.classList.add('cut');
+    const filter = () => {
+      const raw = (q?.value ?? '').trim();
+      const words = raw.toLowerCase().split(/\s+/).filter(Boolean);
+      let n = 0;
+      items.forEach((d) => {
+        const hit = !words.length || words.every((w) => (d.textContent ?? '').toLowerCase().includes(w));
+        d.classList.toggle('off', !hit);
+        if (hit) n++;
+      });
+      list?.classList.toggle('cut', !words.length && !list.dataset.all);
+      if (all) all.parentElement!.hidden = !!words.length || !!list?.dataset.all;
+      if (cnt) cnt.textContent = words.length
+        ? fill(n === 1 ? cnt.dataset.q1 ?? '' : cnt.dataset.qn ?? '', { n, q: raw })
+        : fill(cnt.dataset.n ?? '', { n: items.length });
+    };
+    q?.addEventListener('input', () => { items.forEach((d) => { d.open = false; }); filter(); });
+    all?.addEventListener('click', () => { if (list) list.dataset.all = '1'; filter(); });
+    // one answer open at a time (also where `<details name>` is not supported)
+    items.forEach((d) => d.addEventListener('toggle', () => { if (d.open) items.forEach((x) => { if (x !== d) x.open = false; }); }));
+  });
+</script>

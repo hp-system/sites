@@ -15,7 +15,7 @@ const rows = T.rows;
 const by = new Map(rows.map((r) => [r.from, r]));
 const key = (p) => p.normalize('NFC').toLowerCase().replace(/\/+$/, '') || '/';
 const forced = (k) => O.forceRedirect.some((f) => k === key(f.prefix) || k.startsWith(key(f.prefix) + '/') || k.startsWith(key(f.prefix) + '-'));
-const regPaths = new Set(R.pages.flatMap((p) => Object.values(p.paths ?? {})).map(key));
+const regPaths = new Set(R.pages.filter((p) => p.status !== 'dropped').flatMap((p) => Object.values(p.paths ?? {})).map(key));
 
 check('the table has rows', rows.length > 500, String(rows.length));
 check('statuses are 301 / 410 / pending / review only (never 302)', rows.every((r) => [301, 410, 'pending', 'review'].includes(r.status)),

@@ -39,7 +39,7 @@ try {
   for (const s of ['/en/book-an-online-appointment', '/en/add-your-property', '/en/services/buyer-services/full-property-management', '/en/faq']) {
     check(`/en/services hub links ${s}`, hub.includes(`href="${s}"`), 'door / faq');
   }
-  const qs = (hub.match(/<details class="svc-fq/g) ?? []).length;
+  const qs = (hub.match(/<details class="k-faq__q/g) ?? []).length;   // kit FAQ list (#186)
   check('/en/services hub: FAQ questions in the HTML', qs >= 20, `${qs}`);
   check('/en/services hub: window form posts through the shared form', hub.includes('id="svcPop"') && hub.includes('data-in-pop'), 'dialog');
   check('/en/services phones: George\'s text and cards kept', hub.includes('One team for the whole property') && hub.includes('info-grid w1-m'), 'w1-m');

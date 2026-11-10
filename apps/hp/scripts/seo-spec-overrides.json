@@ -73,6 +73,10 @@
         "html": "<p>Kira geliri diğer gelirlerinizden ayrı olarak, %15'ten başlayıp tutarla birlikte artan dilimlerle vergilendirilir. Özel bir havuz, havuzun metrekaresi başına yıllık bir lüks yaşam vergisi getirir ve vergi dairesinin sizde varsaydığı asgari geliri yükseltir. Oranlar yıllık bütçeyle değişir; güncel oranları muhasebeciniz teyit eder.</p>"
       },
       "_why_bodyAppend": "D-20261109-SS-3 (Sergei 2026-11-09: «просто делаем»): the old taxes article 301s to P19 (George's README rule 17); this paragraph keeps its topics — rental income and pool tax — on P19. Rates other than the 15% start are left to the accountant. Lawyer check per README rule 23."
+    },
+    "P01/en": {
+      "intro": "<p>Halkidiki real estate is all we do: Halkidiki Properties is a local agency based in Halkidiki (also spelled Chalkidiki), Northern Greece, and every home, villa and plot we sell is here. Browse the selection below, or tell us what you are looking for and we will arrange a viewing, in person or by video. We cover all five municipalities: Kassandra, Sithonia, Nea Propontida, Aristotelis and Polygyros.</p>",
+      "_why": "SEO audit 2026-11-10: the spelling «Chalkidiki» appeared on no EN page while Search Console shows about 3,700 impressions for it (11 queries: «chalkidiki real estate» 782, «real estate in chalkidiki» 636, «real estate chalkidiki» 600 …; seo-spec-text-audit-2026-11 gap 1). One natural mention in the intro, not in the title or H1. George: «делать что нужно» (via Sergei, 2026-11-10)."
     }
   },
   "allowedLinkTargets": []

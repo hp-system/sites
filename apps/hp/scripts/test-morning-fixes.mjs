@@ -4,6 +4,7 @@
 // and enough text on the pages that were thin. Usage (from apps/hp, after `pnpm build`):
 //   node scripts/test-morning-fixes.mjs
 import { start, checkPage, check, failures, SITE } from './info-seo-check.mjs';
+import { movedTo } from './retired.mjs';
 
 const visibleText = (html) => html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<style[\s\S]*?<\/style>/g, ' ')
   .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
@@ -43,7 +44,7 @@ try {
   // Pages that were thin now carry enough text (SEO checks run on each).
   const thin = ['/en/contact', '/en/careers', '/en/our-partners', '/en/services', '/en/construction', '/en/book-an-online-appointment',
     '/en/sell/advertise-your-property-worldwide', '/en/sell/real-time-visits', '/en/sell/the-future-of-real-estate'];
-  for (const p of thin) {
+  for (const p of thin.filter((x) => !movedTo(x))) {   // folded into Sell (D-20261109-SS-5)
     const h = await checkPage(p, { allowNoH2: false });
     const w = h ? mainWords(h) : 0;
     check(`${p} ≥ 250 words`, w >= 250, `${w} words`);

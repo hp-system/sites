@@ -8,7 +8,7 @@
 // (title ≤ 60 before the brand, meta 130–155, intro ≤ 120 words, HTML only p h2 h3 ul li strong,
 // H2 outline = the body's H2s, FAQ questions = answers, no counts). Exit 1 writes nothing.
 // EN only until stage 5: each other language is written later from the brief with its own keyword.
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { htmlProblems, bodyH2, TITLE_MAX, META_MIN, META_MAX, INTRO_MAX_WORDS } from './seo-spec-rules.mjs';
@@ -25,6 +25,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
   const batch = JSON.parse(readFileSync(join(HERE, 'seo-briefs', f), 'utf8'));
   if (batch.status !== 'approved') { console.log(`skip ${f}: status ${batch.status}`); continue; }
   for (const b of batch.pages) {
+    if (b.foldedInto) { console.log(`skip ${b.id}: folded into ${b.foldedInto}`); continue; }
     const err = (m) => errors.push(`${f} ${b.id}/${b.lang}: ${m}`);
     const path = b.url.replace(SITE, '');
     if (!/^P(2[2-9]|[3-9]\d)$/.test(b.id)) err('only pages P22+ live here (P01–P21 come from George\'s spec)');
@@ -35,6 +36,14 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
     const html = [...htmlProblems(b.intro), ...htmlProblems(b.body)];
     if (html.length) err(`HTML not allowed: ${html.join(', ')}`);
     if (JSON.stringify(bodyH2(b.body)) !== JSON.stringify(b.h2)) err('H2 outline ≠ the body\'s H2s');
+    for (const t of b.photoThemes ?? []) if (!b.h2.includes(t.after)) err(`photo theme after «${t.after}»: no such H2`);
+    for (const h of [b.standout ?? []].flat()) if (!b.h2.includes(h)) err(`standout «${h}»: no such H2`);
+    for (const h of b.questionMarks ?? []) if (!b.h2.includes(h)) err(`question mark on «${h}»: no such H2`);
+    for (const t of b.postPhotos ?? []) {
+      if (!b.h2.includes(t.after)) err(`post photo after «${t.after}»: no such H2`);
+      for (const w of [640, 960]) if (!existsSync(join(APP, 'public', `${t.file}_${w}w.webp`))) err(`post photo ${t.file}_${w}w.webp: no such file`);
+      if (!t.alt) err(`post photo after «${t.after}»: no alt`);
+    }
     if (b.faq.length !== b.faqQuestions.length || b.faq.some((x, i) => x.q !== b.faqQuestions[i])) err('FAQ answers ≠ FAQ questions');
     const text = [b.title, b.meta, b.h1, b.intro, b.body, ...b.faq.map((x) => x.a)].join(' ').replace(/<[^>]+>/g, ' ');
     if (/\b\d{3,}\s+(properties|homes|listings|villas|plots)\b/i.test(text)) err('a property count (README rule 13)');
@@ -47,6 +56,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
       linksOut: b.linksOut, linkedFrom: b.linkedFrom, cta: b.cta, ctaHref: b.ctaHref ?? '', oldUrls: b.oldUrls,
       words: words(b.intro + b.body + b.faq.map((x) => x.a).join(' ')), editorialLine: b.editorialLine ?? '',
       lawyerCheck: b.lawyerCheck ?? '', source: `brief ${f}`,
+      photoThemes: b.photoThemes ?? [], standout: [b.standout ?? []].flat(), postPhotos: b.postPhotos ?? [], questionMarks: b.questionMarks ?? [],
     });
   }
 }

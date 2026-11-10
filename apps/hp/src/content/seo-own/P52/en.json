@@ -95,5 +95,9 @@
   "words": 407,
   "editorialLine": "",
   "lawyerCheck": "NO",
-  "source": "brief batch-1.json"
+  "source": "brief batch-1.json",
+  "photoThemes": [],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
 }

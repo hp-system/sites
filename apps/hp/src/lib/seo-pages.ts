@@ -11,6 +11,14 @@ export type SpecPage = {
   anchor: string; anchorVariants: string[];
   linksOut: { anchor: string; href: string }[]; cta: string; editorialLine: string;
   ctaHref?: string;   // own pages (P22+): where the CTA button goes
+  /** own pages: a photo after a section, chosen by the photo's own tag (and land / min price) */
+  photoThemes?: { after: string; tags: string[]; category?: string; minPrice?: number }[];
+  /** own pages: the H2 whose block stands out (black, as the home's fact tiles) */
+  standout?: string | string[];   // one H2 or several (Sergei 2026-11-10: «Three ways» black too)
+  /** own pages: a fixed photo per post (CC0 stock, public/pages/…/<file>_640w|_960w.webp); wins over photoThemes */
+  postPhotos?: { after: string; file: string; alt: string }[];
+  /** own pages: the posts whose heading gets a decorative «?» beside it (not part of the heading) */
+  questionMarks?: string[];
 };
 
 const files = {
@@ -71,3 +79,9 @@ export function specPathOr(id: string, lang: Lang, fallback: string): string {
 export const MUNI_SPEC: Record<string, string> = {
   'Κασσάνδρα': 'P11', 'Σιθωνία': 'P12', 'Νέα Προποντίδα': 'P13', 'Αριστοτέλης': 'P14',
 };
+
+/** The anchor of a section heading (on-page navigator, Sell posts): its words in lower case,
+ *  joined by hyphens; letters of every script are kept. */
+export function h2Id(h: string): string {
+  return h.replace(/<[^>]+>/g, ' ').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
+}

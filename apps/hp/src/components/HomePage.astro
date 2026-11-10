@@ -28,6 +28,7 @@ import { hasPool, catKey, facetUrl, FACETS } from '../lib/listing';
 import { fromPrice } from '../lib/prices';
 import { muniKey } from '../lib/gate';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
+import { buildAreaTiles } from '../lib/area-tiles';
 import { money } from '../lib/format';
 import { t, listUrl, DEFAULT_LANG, type Lang } from '../lib/i18n';
 import { num } from '../lib/format';
@@ -162,26 +163,9 @@ const collections = COLLS
 // ── By area (#101): the four municipality pages with their «from €» ──────────
 // English links the area pages (/en/property-for-sale/…), other languages the
 // municipality facet of the list. Guests see only the municipality — never the area.
-const areaTiles = AREA_PAGES.filter((p) => p.kind === 'municipality')
-  .map((p) => {
-    const facet = FACETS.find((f) => f.q.municipality === p.q.municipality);
-    const keep = (a: any) => muniKey(a) === p.q.municipality;
-    const from = fromPrice(items, keep);
-    const name = facet?.name[lang] ?? p.name;
-    return {
-      key: p.slug, name, from,
-      // Sergei 08/11: the spec's area pages P11–P14 where they exist (one URL per area, as for the
-      // collections); the old area page / facet stays the fallback (e.g. Polygyros has no spec page).
-      href: pageOf(({ kassandra: 'P11', sithonia: 'P12', 'nea-propontida': 'P13', aristotelis: 'P14' } as Record<string, string>)[p.slug] ?? '-',
-        lang === 'en' ? areaUrl(p.slug) : (facet ? facetUrl(lang, facet.key) : url)),
-      alt: t(lang, 'home.area_alt', { name }),
-      keep,
-    };
-  })
-  .filter((x) => x.from > 0)
-  .slice(0, 4)
-  .map(({ keep, ...x }) => ({ ...x, fromText: t(lang, 'home.from', { price: money(x.from, lang) }), photo: pickPhoto(keep) }));
-const areasFrom = areaTiles.length ? Math.min(...areaTiles.map((x) => x.from)) : 0;
+// the same tiles on the Sell page (lib/area-tiles.ts); the home passes its own picker so no photo repeats
+// SEO (Sergei 2026-11-10, as on Sell): all five municipalities, and the heading links the property list
+const { tiles: areaTiles, from: areasFrom } = buildAreaTiles(items, lang, pickPhoto, 5);
 
 // ── Structured data — σήμερα το site έχει ΜΟΝΟ microdata ImageObject ──────
 // 🛡️ Η εικόνα κοινοποίησης ΔΕΝ χτίζεται εδώ. Το `shareImage()` κρίνει μόνο του
@@ -313,7 +297,7 @@ if (spec?.faq.length) jsonLd.push({
     <Collections items={collections} lang={lang} />
 
     {/* 7a #101: by area — the four municipality pages with «from €» (SEO). */}
-    {areaTiles.length > 0 && <Areas lang={lang} items={areaTiles} from={areasFrom} />}
+    {areaTiles.length > 0 && <Areas lang={lang} items={areaTiles} from={areasFrom} headHref={url} />}
 
     {/* 7b ΜΕΛΕΤΗ & ΚΑΤΑΣΚΕΥΗ — μπαίνει ΑΜΕΣΩΣ μετά τις συλλογές επίτηδες:
         η μία από τις τέσσερις είναι «Γη & οικόπεδα» (207 από τα 527), και η

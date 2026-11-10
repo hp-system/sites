@@ -27,7 +27,7 @@ interface Props {
 const { page, lang, photos, faqH, member } = Astro.props;
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
 // the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
-const nav = heads.map((h) => ({ id: h2Id(h), text: h }));
+const nav = heads.map((h) => ({ id: h2Id(h), text: h, ask: (page.questionMarks ?? []).includes(h) }));
 const submit = `${prefix(lang)}/panel/submit`;
 const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(submit)}`;
 ---
@@ -36,7 +36,7 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
         <p class="t-label">{t(lang, 'info.on_page')}</p>
-        <ul>{nav.map((n) => <li><a class="pn__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span></a></li>)}</ul>
+        <ul>{nav.map((n) => <li><a class="pn__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true">?</i>}</a></li>)}</ul>
       </nav>
       <a class:list={['pn__go', !member && 'pn__go--gild']} href={go} rel={member ? undefined : 'nofollow'}
          data-ev={member ? 'content:sell' : 'register:info'}>
@@ -73,6 +73,11 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
   .pn__it:hover, .pn__it.on { background: var(--paper-2); color: var(--ink); }
   .pn__it:hover > span, .pn__it.on > span { transform: scale(1); }
   .pn__it.on { font-weight: 600; }
+  /* the posts' beige «?», small, beside the item (Sergei 2026-11-10) */
+  .pn__it { gap: 8px; }
+  .pn__q { margin-left: auto; flex: none; font-style: normal; font-size: var(--fs-s1); font-weight: 600; line-height: 1; letter-spacing: 0;
+    color: var(--paper-2); transform: rotate(12deg); }
+  .pn__it:hover .pn__q, .pn__it.on .pn__q { color: var(--paper); }
   .pn__it:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   /* never under the site header: while the header bar is shown the panel sits below it (as the article side) */
   :global(html.hdr-up) .pn__side { top: calc(var(--hdr-h, 88px) + 12px); }

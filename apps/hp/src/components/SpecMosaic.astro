@@ -12,7 +12,7 @@
 // carousel (Sergei 2026-11-10: «весь длинный блок постов сделать каруселью … страница капец какой длинной»):
 // one post at a time in a horizontal row (photo beside the text), swiped / scrolled sideways, dashes under it
 // as the home carousels; the side menu turns it. No autoplay (text is read) and the wheel is never taken: the
-// page scrolls down as usual. The row takes the height of the post on show. All posts stay in the HTML.
+// page scrolls down as usual. The row has one height, the tallest post's. All posts stay in the HTML.
 import { h2Id } from '../lib/seo-pages';
 import { t, type Lang } from '../lib/i18n';
 export type MosaicPhoto = { src: string; srcset: string; alt: string; style: string };
@@ -108,10 +108,11 @@ for (const p of [...posts, null]) {
   }
   /* ── carousel ── */
   .sp--car .sp__grid { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory;
-    scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; align-items: flex-start; transition: height .35s ease; }
+    scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; align-items: stretch; }   /* one fixed height: the tallest post (Sergei 2026-11-10: the block must not change size) */
   .sp--car .sp__grid::-webkit-scrollbar { display: none; }
   .sp--car .sp__grid:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .sp--car .sp__post { flex: none; width: 100%; scroll-snap-align: start; }
+  .sp--car .sp__post { flex: none; width: 100%; scroll-snap-align: start; align-content: stretch; }   /* the photo fills the fixed height */
+  .sp--car .sp__post--text { align-content: start; }
   .sp--car .sp__ph { aspect-ratio: 16 / 9; }
   @container (min-width: 700px) {
     .sp--car .sp__post:not(.sp__post--text) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: stretch; }
@@ -127,7 +128,7 @@ for (const p of [...posts, null]) {
   .sp__dash:hover button span { transform: scaleY(4); }
   .sp__dash button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) {
-    .sp--car .sp__grid { scroll-behavior: auto; transition: none; }
+    .sp--car .sp__grid { scroll-behavior: auto; }
     .sp__dash button span { transition: none; }
     .sp__ph img { transition: none; }
     .sp__post:hover .sp__ph img { transform: none; }
@@ -144,12 +145,10 @@ for (const p of [...posts, null]) {
     const dashes = Array.from(box.querySelectorAll<HTMLButtonElement>('[data-spc-go]'));
     let cur = -1;
     const step = () => (posts[1] ? posts[1].offsetLeft - posts[0].offsetLeft : row.clientWidth) || 1;
-    const fit = () => { const p = posts[Math.max(0, cur)]; if (p) row.style.height = `${p.offsetHeight}px`; };
     const show = (k: number) => {
-      if (k === cur) return fit();
+      if (k === cur) return;
       cur = k;
       dashes.forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-pressed', String(i === k)); });
-      fit();
       box.dispatchEvent(new CustomEvent('spc:change', { detail: posts[k]?.id, bubbles: true }));
     };
     const at = () => Math.max(0, Math.min(posts.length - 1, Math.round(Math.abs(row.scrollLeft) / step())));
@@ -163,8 +162,6 @@ for (const p of [...posts, null]) {
     dashes.forEach((b, i) => b.addEventListener('click', () => go(i)));
     box.addEventListener('spc:go', (e) => { const k = posts.findIndex((p) => p.id === (e as CustomEvent).detail); if (k >= 0) go(k); });
     addEventListener('resize', () => go(Math.max(0, cur), false));
-    // late images change a post's height: keep the row on the post on show
-    if ('ResizeObserver' in window) { const ro = new ResizeObserver(fit); posts.forEach((p) => ro.observe(p)); }
     const fromHash = posts.findIndex((p) => `#${p.id}` === location.hash);
     go(fromHash >= 0 ? fromHash : 0, false);
   });

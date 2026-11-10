@@ -380,7 +380,7 @@ if (faqItems.length) {
           <div class="ir-head"><HT class="w1-h2 w1-h2--sm" data-h>{ui.related}</HT><RailDash for="w1Rel" count={relCards.length} lang={lang} /></div>
           <div class="ir-rail" id="w1Rel" data-irail data-gap="20">
             {relCards.map((r) => (
-              <PageCard href={r.href} title={r.label} text={r.text} button={r.button} img={r.image || undefined} alt={r.image_alt || r.label} />
+              <PageCard href={r.href} title={r.label} text={r.text} button={fresh ? undefined : r.button} img={r.image || undefined} alt={r.image_alt || r.label} />
             ))}
           </div>
         </div>

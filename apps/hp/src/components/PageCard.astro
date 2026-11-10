@@ -3,7 +3,9 @@
 // (info pages wave 1, #105; Services and Company reuse it): picture, title, an optional line,
 // a white button and an optional grey link. Styles: InfoKit.astro (`.pc*`).
 interface Props {
-  href: string; title: string; text?: string; button: string;
+  href: string; title: string; text?: string;
+  /** the button; without it the title is the link (Sell, Sergei 2026-11-10: no generic «Learn more» anchors) */
+  button?: string;
   img?: string; srcset?: string; alt: string; link?: { href: string; label: string };
 }
 const { href, title, text = '', button, img = '', srcset, alt, link } = Astro.props;
@@ -13,10 +15,12 @@ const { href, title, text = '', button, img = '', srcset, alt, link } = Astro.pr
     {img && <img src={img} srcset={srcset} sizes={srcset ? '(min-width: 1280px) 387px, calc((100vw - 120px) / 3)' : undefined}
                  alt={alt} width="800" height="500" loading="lazy" decoding="async" />}
   </a>
-  <h3 class="pc__t">{title}</h3>
+  <h3 class="pc__t">{button ? title : <a class="pc__tl" href={href}>{title}</a>}</h3>
   {text && <p class="pc__p">{text}</p>}
-  <p class="pc__a">
-    <a class="pc__b" href={href} aria-label={`${button}: ${title}`}>{button}</a>
-    {link && <a class="pc__l" href={link.href}>{link.label} <span aria-hidden="true">›</span></a>}
-  </p>
+  {(button || link) && (
+    <p class="pc__a">
+      {button && <a class="pc__b" href={href} aria-label={`${button}: ${title}`}>{button}</a>}
+      {link && <a class="pc__l" href={link.href}>{link.label} <span aria-hidden="true">›</span></a>}
+    </p>
+  )}
 </div>

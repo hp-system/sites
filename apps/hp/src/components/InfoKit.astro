@@ -59,6 +59,9 @@ const { lang } = Astro.props;
     .w1 .pc__i img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
     .w1 .pc:hover .pc__i img { transform: scale(1.03); }
     .w1 .pc__t { margin: 22px 0 0; font-size: var(--fs-s1); font-weight: 600; line-height: 1.25; letter-spacing: -.012em; max-width: 300px; color: var(--ink); }
+    .w1 .pc__tl { color: inherit; text-decoration: none; }
+    .w1 .pc__tl::after { content: ''; position: absolute; inset: 0; }   /* the whole card clicks through its title */
+    .w1 .pc:has(.pc__tl) { position: relative; }
     .w1 .pc:hover .pc__t { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
     .w1 .pc__p { margin: 6px 0 0; font-size: var(--fs-s0); line-height: 1.5; color: var(--ink-2); max-width: 290px; min-height: 44px; }
     .w1 .pc__a { display: flex; align-items: center; justify-content: center; gap: 22px; margin: auto 0 0; padding-top: 12px; }   /* Sergei 03/11: a little closer to the text (was 20) */

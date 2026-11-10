@@ -44,10 +44,11 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
         {t(lang, 'svc.add_cta')}
       </a>
     </aside>
-    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     {/* phones (no side panel): the same button in a bar that sticks to the bottom while this block is on
         screen (SEO/design audit 2026-11-10: no conversion button on phones) */}
     <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang} /></div>
+    {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
+    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     <div class="pn__bar">
       <a class:list={['pn__go', !member && 'pn__go--gild']} href={go} rel={member ? undefined : 'nofollow'}
          data-ev={member ? 'content:sell' : 'register:info'}>

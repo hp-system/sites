@@ -206,7 +206,7 @@ const here = `${pathFor(lang)}${paramsOf(q)}`;
 const specPhotos = spec && firstPage ? postPhotos(res.items as any, (spec.body.match(/<h2>/g) ?? []).length, lang) : [];
 const byArea = spec && firstPage ? buildAreaTiles(items as any, lang, undefined, 5) : { tiles: [], from: 0 };
 const specCta = viewer.member ? null
-  : { text: ui(lang, 'joinCta'), href: `${prefix(lang)}/login?next=${encodeURIComponent(here)}`, ev: 'member:join_from_list', gild: true };
+  : { text: ui(lang, 'joinCta'), href: `${prefix(lang)}/login?next=${encodeURIComponent(here)}`, ev: 'member:join_from_list' as const, gild: true };
 
 // Άλλα θέματα για γρήγορη μετάβαση — μόνο όσα δεν είναι ήδη ενεργά.
 

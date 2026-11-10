@@ -161,7 +161,8 @@ const relCards = w1 ? d.related.map((r) => ({
   ...r, text: r.text.replaceAll('{phone}', brand.contact.phoneText), button: r.button || t(lang, 'info.more'),
 })) : [];
 const areas = w1 ? areaCards(items, lang) : [];
-const homeAreas = fresh ? buildAreaTiles(items, lang) : { tiles: [], from: 0 };
+// SEO (Sergei 2026-11-10: «этот блок там для этого»): every municipality, Polygyros too, and the heading links the list
+const homeAreas = fresh ? buildAreaTiles(items, lang, undefined, 5) : { tiles: [], from: 0 };
 // ── SERVICES HUB, desktop (#106, approved by George 2026-11-02) ─────────────
 // A `wave1` page of the services section with cards = the services hub: George's page stays as it
 // is on phones (the classic layout below, hidden from 1024px), the desktop draws ServicesHub. Every
@@ -392,7 +393,7 @@ if (faqItems.length) {
 
     {/* Own pages (Sell): «Property for sale in Halkidiki» exactly as on the home page (Areas.astro, white),
         Sergei 2026-11-10 */}
-    {fresh && homeAreas.tiles.length > 0 && <Areas lang={lang} items={homeAreas.tiles} from={homeAreas.from} />}
+    {fresh && homeAreas.tiles.length > 0 && <Areas lang={lang} items={homeAreas.tiles} from={homeAreas.from} headHref={listUrl(lang)} />}
 
     {/* Phones: George's link band and closing call to action. */}
     {d.related.length > 0 && (

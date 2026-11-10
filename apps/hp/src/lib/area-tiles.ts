@@ -27,7 +27,7 @@ export function pickCover(items: Item[], f: (a: any) => boolean, used = new Set<
 }
 
 /** The four municipality tiles and the lowest «from» among them. */
-export function buildAreaTiles(items: Item[], lang: Lang, pick: (f: (a: any) => boolean) => Photo | null = (f) => pickCover(items, f)):
+export function buildAreaTiles(items: Item[], lang: Lang, pick: (f: (a: any) => boolean) => Photo | null = (f) => pickCover(items, f), max = 4):
   { tiles: AreaTile[]; from: number } {
   const url = listUrl(lang);
   // Sergei 08/11: the spec's area pages P11–P14 where they exist (one URL per area); the old area page /
@@ -49,7 +49,7 @@ export function buildAreaTiles(items: Item[], lang: Lang, pick: (f: (a: any) => 
       };
     })
     .filter((x) => x.from > 0)
-    .slice(0, 4)
+    .slice(0, max)
     .map(({ keep, ...x }) => ({ ...x, fromText: t(lang, 'home.from', { price: money(x.from, lang) }), photo: pick(keep) }));
   return { tiles, from: tiles.length ? Math.min(...tiles.map((x) => x.from)) : 0 };
 }

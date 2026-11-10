@@ -33,22 +33,22 @@ cards:
 - title: Add your property
   href: /en/add-your-property
   text: Tell us the type, area and size of your property and the price you have in mind. An agent checks the details and calls you.
-  image: /pages/sell/5382f593-1634546117-card.webp
-  image_alt: Owner adding a property for sale on a laptop
+  image: /pages/sell/cards/add-your-property.webp
+  image_alt: A modern family house with its lights on at dusk
   width: 800
   height: 500
 - title: The terms of the assignment
   href: /en/assignment-order
   text: Read what you sign when you assign your property to us, before you decide.
-  image: /pages/sell/5e8abf29-outer-image-exclusivity-card.webp
-  image_alt: Assignment for the sale of a property in Halkidiki on two phones
+  image: /pages/sell/cards/terms-of-the-assignment.webp
+  image_alt: An owner signing an assignment with a pen
   width: 800
   height: 500
 - title: Exclusive, for luxury homes
   href: /en/exclusive
   text: Our private club for buyers of homes from €1 million. Owners of high-value homes can sell here without advertising.
-  image: /pages/sell/6a3758c4-1623746003-card.webp
-  image_alt: Halkidiki coastline seen from a luxury home
+  image: /pages/sell/cards/exclusive-luxury-homes.webp
+  image_alt: The infinity pool of a modern luxury home at dusk
   width: 800
   height: 500
 contact_card: false

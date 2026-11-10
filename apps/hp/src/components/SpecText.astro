@@ -17,7 +17,7 @@ interface Props {
   /** 'rotate': the H2 sections in one block of fixed height, one at a time every 3 s, dashes to
    *  pick one (home, Sergei 08/11: «стоять на месте, но перелистывать SEO-текст»). Every section
    *  stays in the HTML, in the spec's order — search engines read all of it. Phones: all shown. */
-  body?: 'prose' | 'rotate' | 'mosaic';
+  body?: 'prose' | 'rotate' | 'mosaic' | 'none';   // none: the template renders the body itself (Sell: SpecPosts)
   photos?: (import('./SpecMosaic.astro').MosaicPhoto | null)[];   // mosaic only: the photo after each section   // mosaic: tiles in the home bento's styles (SpecMosaic, Sergei 2026-11-09)
   /** 'columns': the spec's links grouped like the footer — properties / areas / guides (home,
    *  Sergei 08/11); `more` adds the block's own guide links to the guides column. */

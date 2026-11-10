@@ -1,0 +1,77 @@
+---
+// The Sell FAQ and posts with an on-page navigator beside them (Sergei 2026-11-10: «сделаем
+// етот блок который станет вместе с Frequently asked questions, и будет ехать вниз с скролом.
+// Там мы разметим все заголовки статей … навигатор между ними»).
+// The navigator is the article page's «On this page» box (ArticlePage.astro .art-side /
+// .side-box: right column 300 px, ink top rule, label, ink-2 links, sticky under the header);
+// the current post is bold ink, as the chosen item of the services menu. Under it the page's
+// adviser button (.btn) to the page form. Phones (< 1000 px): no navigator, as on articles.
+// SEO: every heading, question and answer stays in the HTML in the spec order; the links are
+// plain #anchors.
+import FaqSearch from './FaqSearch.astro';
+import SpecMosaic, { type MosaicPhoto } from './SpecMosaic.astro';
+import { h2Id, type SpecPage } from '../lib/seo-pages';
+import { t, type Lang } from '../lib/i18n';
+
+interface Props {
+  page: SpecPage; lang: Lang; photos: (MosaicPhoto | null)[];
+  faqH: string; cta?: { text: string; href: string };
+}
+const { page, lang, photos, faqH, cta } = Astro.props;
+const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
+const nav = [...(page.faq.length ? [{ id: 'faq', text: faqH }] : []), ...heads.map((h) => ({ id: h2Id(h), text: h }))];
+---
+<section class="pn">
+  <div class="wrap pn__in">
+    <div class="pn__main">
+      {page.faq.length > 0 && <FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare />}
+      <SpecMosaic html={page.body} photos={photos} standout={page.standout} />
+    </div>
+    <aside class="art-side pn__side" aria-label={t(lang, 'info.on_page')}>
+      <nav class="side-box" data-pn>
+        <p class="t-label">{t(lang, 'info.on_page')}</p>
+        <ul>{nav.map((n) => <li><a href={`#${n.id}`} data-pn-to={n.id}>{n.text}</a></li>)}</ul>
+        {cta && <p class="pn__cta"><a class="btn" href={cta.href}>{cta.text}</a></p>}
+      </nav>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .pn { background: var(--paper-3); padding-block: var(--s7); }
+  .pn__in { display: grid; gap: var(--s6); }
+  .pn__main { min-width: 0; display: grid; gap: 12px; align-content: start; }
+  .pn__side { display: none; }
+  @media (min-width: 1000px) {
+    .pn__in { grid-template-columns: minmax(0, 1fr) 300px; }
+    .pn__side { display: block; position: sticky; top: var(--s5); align-self: start; }
+  }
+  .side-box { border-top: 1px solid var(--ink); padding: var(--s3) 0 var(--s5); }
+  .side-box ul { list-style: none; margin: var(--s2) 0 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-s0); }
+  .side-box a:not(.btn) { color: var(--ink); text-decoration: none; }
+  .side-box a:not(.btn):hover { text-decoration: underline; }
+  .side-box a.on { color: var(--ink); font-weight: 600; }
+  .side-box .t-label { color: var(--ink); }
+  .pn__cta { margin: var(--s5) 0 0; }
+  .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
+</style>
+
+<script>
+  // The current post: the last one whose top has passed a third of the screen.
+  document.querySelectorAll<HTMLElement>('[data-pn]').forEach((box) => {
+    const links = Array.from(box.querySelectorAll<HTMLAnchorElement>('[data-pn-to]'));
+    const targets = links.map((a) => document.getElementById(a.dataset.pnTo ?? '')).filter((x): x is HTMLElement => !!x);
+    if (!targets.length) return;
+    let raf = 0;
+    const mark = () => {
+      raf = 0;
+      const line = window.innerHeight / 3;
+      let k = -1;
+      targets.forEach((el, i) => { if (el.getBoundingClientRect().top <= line) k = i; });
+      links.forEach((a, i) => a.classList.toggle('on', i === k));
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(mark); }, { passive: true });
+    addEventListener('resize', mark);
+    mark();
+  });
+</script>

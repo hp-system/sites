@@ -9,6 +9,7 @@
 // the stand-out post black (as the fact tiles). Wide: the first post and the stand-out one; the
 // others two per row; a section without a photo is a wide text post.
 // Every word of the body stays in the HTML, in the spec order.
+import { h2Id } from '../lib/seo-pages';
 export type MosaicPhoto = { src: string; srcset: string; alt: string; style: string };
 interface Props { html: string; photos?: (MosaicPhoto | null)[]; standout?: string }
 const { html, photos = [], standout = '' } = Astro.props;
@@ -21,9 +22,9 @@ const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, wide: i === 0 || dark || !photo };
 });
 ---
-<div class="sp">
+<div class="sp"><div class="sp__grid">
   {posts.map((p) => (
-    <article class:list={['sp__post', p.wide && 'sp__post--wide', p.dark && 'sp__post--fact', !p.photo && 'sp__post--text']}>
+    <article id={h2Id(p.h2)} class:list={['sp__post', p.wide && 'sp__post--wide', p.dark && 'sp__post--fact', !p.photo && 'sp__post--text']}>
       {p.photo && (
         <div class="sp__ph" style={p.photo.style}>
           <img src={p.photo.src} srcset={p.photo.srcset} sizes={p.wide ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 760px) 600px, 100vw'}
@@ -36,33 +37,36 @@ const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
       </div>
     </article>
   ))}
-</div>
+</div></div>
 
 <style>
-  .sp { display: grid; gap: 12px; }
+  .sp { container-type: inline-size; }
+  .sp__grid { display: grid; gap: 12px; }
   .sp__post { min-width: 0; display: grid; align-content: start; background: var(--paper); }
-  .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-2); }
+  .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-3); }
   .sp__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focal, 50% 50%);
     transition: transform .6s ease; }
   .sp__post:hover .sp__ph img { transform: scale(1.03); }
   .sp__b { display: grid; gap: var(--s3); align-content: start; padding: var(--s5); }
   .sp__b :global(h2) { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.12; letter-spacing: -.02em; color: var(--ink); }
-  .sp__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink-2); max-width: 68ch; }
+  .sp__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink); max-width: 68ch; }
   .sp__tx :global(p:last-child) { margin-bottom: 0; }
   .sp__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; max-width: 68ch; }
   .sp__tx :global(ul:last-child) { margin-bottom: 0; }
-  .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink-2); }
+  .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); }
   .sp__tx :global(strong) { color: var(--ink); font-weight: 600; }
   .sp__post--fact { background: var(--ink-deep); }
-  .sp__post--fact .sp__b :global(h2), .sp__post--fact .sp__tx :global(strong) { color: #fff; }
-  .sp__post--fact .sp__tx :global(p), .sp__post--fact .sp__tx :global(li) { color: rgba(255,255,255,.72); }
-  .sp__post--fact .sp__tx :global(li) { border-top-color: rgba(255,255,255,.14); }
-  @media (min-width: 760px) {
-    .sp { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sp__post--fact .sp__b :global(h2), .sp__post--fact .sp__tx :global(strong) { color: var(--paper); }
+  .sp__post--fact .sp__tx :global(p), .sp__post--fact .sp__tx :global(li) { color: var(--paper); }
+  .sp__post--fact .sp__tx :global(li) { border-top: 0; }   /* white, black and beige only (Sergei 2026-11-10): no grey rule on black */
+  /* sized by the room the posts get (beside the navigator they are narrower than the page) */
+  @container (min-width: 700px) {
+    .sp__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .sp__post--wide { grid-column: 1 / -1; }
+    .sp__post--wide .sp__ph { aspect-ratio: 16 / 9; }
     .sp__b { padding: var(--s6); }
   }
-  @media (min-width: 1024px) {
+  @container (min-width: 1000px) {
     /* the wide post as the blog's lead article: photo 1.4fr beside the text */
     .sp__post--wide:not(.sp__post--text) { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: stretch; }
     .sp__post--wide .sp__ph { aspect-ratio: auto; min-height: 100%; }

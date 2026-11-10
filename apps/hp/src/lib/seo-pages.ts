@@ -75,3 +75,9 @@ export function specPathOr(id: string, lang: Lang, fallback: string): string {
 export const MUNI_SPEC: Record<string, string> = {
   'Κασσάνδρα': 'P11', 'Σιθωνία': 'P12', 'Νέα Προποντίδα': 'P13', 'Αριστοτέλης': 'P14',
 };
+
+/** The anchor of a section heading (on-page navigator, Sell posts): its words in lower case,
+ *  joined by hyphens; letters of every script are kept. */
+export function h2Id(h: string): string {
+  return h.replace(/<[^>]+>/g, ' ').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
+}

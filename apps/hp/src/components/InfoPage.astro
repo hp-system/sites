@@ -41,7 +41,7 @@ import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
-import FaqSearch from './FaqSearch.astro';
+import SpecPosts from './SpecPosts.astro';
 import { specByPath, specTitle } from '../lib/seo-pages';
 import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
@@ -340,10 +340,11 @@ if (faqItems.length) {
       </div>
     </section>
 
-    {/* The Sell FAQ as on the services hub, right after «Get to know how we sell» (Sergei 2026-11-10) */}
-    {fresh && <FaqSearch lang={lang} h={ui.faq} items={fresh.faq} />}
-
-    {fresh && <SpecText page={fresh} part="rest" lang={lang} body="mosaic" faq="none" photos={mosaicPhotos} />}
+    {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
+        them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
+    {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq}
+                         cta={{ text: ui.adviser, href: d.form ? '#form' : (fresh.ctaHref || `${prefix(lang)}/contact`) }} />}
+    {fresh && <SpecText page={fresh} part="rest" lang={lang} body="none" faq="none" />}
 
     {d.form && (
       <section class="w1-form" id="form">

@@ -85,3 +85,9 @@ export const MUNI_SPEC: Record<string, string> = {
 export function h2Id(h: string): string {
   return h.replace(/<[^>]+>/g, ' ').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
 }
+
+/** The FAQ heading of a spec page in every language (as SpecText shows it). */
+export const FAQ_H: Record<Lang, string> = {
+  en: 'Frequently asked questions', el: 'Συχνές ερωτήσεις', de: 'Häufige Fragen', sr: 'Česta pitanja', bg: 'Често задавани въпроси',
+  ro: 'Întrebări frecvente', ru: 'Частые вопросы', tr: 'Sık sorulan sorular', he: 'שאלות נפוצות',
+};

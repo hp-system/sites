@@ -52,7 +52,7 @@ export async function startStub({ port = 4339, n = 1200, content = { t: {}, medi
         category: i % 4 === 0 ? 'land' : 'residency',
         subcategory: i % 4 === 0 ? 'plot' : ['detached house', 'maisonette', 'apartment'][i % 3],
         municipality: ['Κασσάνδρα', 'Σιθωνία', 'Αριστοτέλης', 'Νέα Προποντίδα'][i % 4],
-        sea_access: ['front', 'walking', 'nearby'][i % 3],
+        sea_access: ['2', '7', '10'][i % 3],   // Onsea codes as the CRM sends them since 07/11 (#195): front / walking / nearby
         // A village per municipality: members-only on cards, so the area pages must never print it there.
         area: ['Pefkochori', 'Nikiti', 'Ierissos', 'Nea Kallikratia'][i % 4],
       } : {}),

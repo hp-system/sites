@@ -35,7 +35,7 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
         <p class="t-label">{t(lang, 'info.on_page')}</p>
-        <ul>{nav.map((n) => <li><a href={`#${n.id}`} data-pn-to={n.id}>{n.text}</a></li>)}</ul>
+        <ul>{nav.map((n) => <li><a class="pn__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span></a></li>)}</ul>
       </nav>
       <a class:list={['pn__go', !member && 'pn__go--gild']} href={go} rel={member ? undefined : 'nofollow'}
          data-ev={member ? 'content:sell' : 'register:info'}>
@@ -43,7 +43,7 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
         {t(lang, 'svc.add_cta')}
       </a>
     </aside>
-    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare /></div>}
+    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} /></div>}
     <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} /></div>
   </div>
 </section>
@@ -60,13 +60,22 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
     .pn__faq, .pn__posts { grid-column: 2; }
     .pn__side { display: flex; flex-direction: column; gap: 14px; grid-column: 1; grid-row: 1 / span 2;
       position: sticky; top: var(--s5); align-self: start; z-index: 1;
-      margin-block: var(--s7); padding: 4px 28px 4px 0; border-right: 1px solid var(--line-soft); }
+      margin-block: var(--s7); padding: 16px; background: var(--paper); border-right: 1px solid var(--line-soft); }   /* white as the panel page, so the beige of the current item shows on the beige band */
   }
-  .pn__nav ul { list-style: none; margin: var(--s2) 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); display: grid; gap: 6px; font-size: var(--fs-s0); }
-  .pn__nav a { color: var(--ink); text-decoration: none; }
-  .pn__nav a:hover { text-decoration: underline; }
-  .pn__nav a.on { font-weight: 600; }
-  .pn__nav .t-label { margin: 0; color: var(--ink); }
+  /* the side menu of the member panel mockup (PanelE3 .bmr / .lbl), copied with its colours and hovers:
+     grey caps, the rest a touch smaller; hover and the current one: light beige, ink, full size */
+  .pn__nav .t-label { margin: 0; color: var(--faint); }
+  .pn__nav ul { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pn__it { display: flex; align-items: center; width: 100%; box-sizing: border-box; padding: 11px 14px; text-decoration: none;
+    font-size: var(--fs-s-1); line-height: 1.35; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); transition: background .15s; }
+  .pn__it > span { display: inline-block; transform: scale(.92); transform-origin: 0 50%; transition: transform .18s ease; }
+  .pn__it:hover, .pn__it.on { background: var(--paper-2); color: var(--ink); }
+  .pn__it:hover > span, .pn__it.on > span { transform: scale(1); }
+  .pn__it.on { font-weight: 600; }
+  .pn__it:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  /* never under the site header: while the header bar is shown the panel sits below it (as the article side) */
+  :global(html.hdr-up) .pn__side { top: calc(var(--hdr-h, 88px) + 12px); }
+  .pn__side { transition: top .25s ease; }
   /* the member panel's big black button */
   .pn__go { display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; margin-top: var(--s2); padding: 0 16px;
     box-sizing: border-box; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); text-decoration: none;
@@ -79,6 +88,7 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
     transition: color .9s ease-in-out; }
   .pn__go--gild:hover { opacity: 1; color: var(--gold); }
   .pn__go--gild:focus-visible { outline-color: var(--gold-dk); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .pn__it > span, .pn__side { transition: none; } }
   .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
 </style>
 

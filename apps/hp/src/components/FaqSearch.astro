@@ -18,8 +18,10 @@ interface Props {
   id?: string;
   /** a white panel without its own band and width (inside another layout: Sell posts) */
   bare?: boolean;
+  /** the search field and the count (off for a short list: Sell, 5 questions, Sergei 2026-11-10) */
+  search?: boolean;
 }
-const { lang, h, href, items, show = 6, bare = false } = Astro.props;
+const { lang, h, href, items, show = 6, bare = false, search = true } = Astro.props;
 const tt = (k: string, v?: Record<string, string | number>) => t(lang, k, v);
 const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
 ---
@@ -27,13 +29,13 @@ const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
   <section class:list={['fqs', bare && 'fqs--bare']} id={id} aria-labelledby={`${id}h`} data-fqs>
     <div class:list={[!bare && 'wrap', 'fqs__in']}>
       <h2 id={`${id}h`} class="fqs__h">{href ? <a href={href}>{h}</a> : h}</h2>
-      <label class="fqs-srch">
+      {search && <label class="fqs-srch">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
         <input type="search" placeholder={tt('svc.faq_search')} aria-label={tt('svc.faq_search_l')} autocomplete="off" data-fqs-q />
-      </label>
-      <p class="fqs-cnt" aria-live="polite" data-fqs-cnt data-n={tt('svc.faq_n')} data-q1={tt('svc.faq_1q')} data-qn={tt('svc.faq_nq')}>
+      </label>}
+      {search && <p class="fqs-cnt" aria-live="polite" data-fqs-cnt data-n={tt('svc.faq_n')} data-q1={tt('svc.faq_1q')} data-qn={tt('svc.faq_nq')}>
         {tt('svc.faq_n', { n: items.length })}
-      </p>
+      </p>}
       <div class="fqs-list" data-fqs-list>
         {items.map((f, i) => (
           <details class:list={['fqs-fq', { 'fqs-fq--more': i >= show }]} name={id}>

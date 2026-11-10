@@ -5,9 +5,10 @@
 //   part="rest"  → the H2 body, the FAQ (questions as H3, answers in the HTML) and the links block
 // The HTML comes from the importer's allowlist (p h2 h3 ul li strong, no attributes), so it is
 // rendered as is. Links come only from the spec's «links out», with their exact anchors (rule 15).
-import { specSections, specByPath, type SpecPage } from '../lib/seo-pages';
+import { specSections, specByPath, linksBySection, type SpecPage } from '../lib/seo-pages';
 import type { Lang } from '../lib/i18n';
 import SpecMosaic from './SpecMosaic.astro';
+import LinkTiles from './LinkTiles.astro';
 
 interface Props {
   page: SpecPage; part: 'intro' | 'rest'; lang: Lang;
@@ -26,8 +27,10 @@ interface Props {
   /** 'sections': links that join the section of the first link pointing at one of `withId`'s pages
    *  (home: the area pages P13/P14 the spec's list leaves out go next to Kassandra and Sithonia). */
   join?: { href: string; text: string; withId: string }[];
+  /** the listings, for the photos of the link tiles (D-20261110-SS-3) */
+  items?: { id: string | number; attributes?: any }[];
 }
-const { page, part, lang, faq = 'list', body = 'prose', links = 'inline', more = [], join = [], photos = [] } = Astro.props;
+const { page, part, lang, faq = 'list', body = 'prose', links = 'inline', more = [], join = [], photos = [], items = [] } = Astro.props;
 // Group a spec link by the spec page it points to: P02, P04–P10 property lists; P03, P11–P18 areas
 // and the Greece hub; anything else (P19+ guides, other pages) → guides. Anchors stay word for word.
 const G: Record<Lang, [string, string, string]> = {
@@ -46,43 +49,11 @@ const secs = body === 'rotate' ? specSections(page.body) : [];
 // 'sections' (home, Sergei 08/11): each link goes under the rotating section it belongs to — the one
 // sharing the most distinctive words with its anchor (words found in most sections, like the place
 // name, do not count; works in every language). No match → the first section.
-const words = (x: string) => x.toLowerCase().replace(/<[^>]+>/g, ' ').match(/[\p{L}\p{N}]{4,}/gu) ?? [];
-const secWords = secs.map((x) => new Set(words(x.h2 + ' ' + x.html)));
-const common = new Set([...new Set(secWords.flatMap((w) => [...w]))].filter((w) => secWords.filter((sw) => sw.has(w)).length > secs.length / 2));
-const stem = (w: string) => w.slice(0, 5);
-const headStems = secs.map((x) => new Set(words(x.h2).map(stem)));
-const bodyStems = secWords.map((sw) => new Set([...sw].map(stem)));
-const bySec: { href: string; text: string }[][] = secs.map(() => []);
-// score = 2 × words shared with the section's heading + 1 × with its text; a tie goes to the section
-// with fewer links so far; no match at all → `fallback`
-// words in most anchors («sale», «Halkidiki», «property») say nothing about where a link belongs
-const anchorWords = page.linksOut.map((l) => new Set(words(l.anchor).map(stem)));
-const anchorCommon = new Set([...new Set(anchorWords.flatMap((w) => [...w]))].filter((w) => anchorWords.filter((aw) => aw.has(w)).length > anchorWords.length / 3));
-const secOf = (anchor: string, fallback = 0): number => {
-  const a = words(anchor).filter((w) => !common.has(w)).map(stem).filter((w) => !anchorCommon.has(w));
-  let best = -1, score = 0;
-  secs.forEach((_, i) => {
-    const n = a.reduce((t, w) => t + (headStems[i].has(w) ? 2 : bodyStems[i].has(w) ? 1 : 0), 0);
-    if (n > score || (n === score && n > 0 && bySec[i].length < bySec[best].length)) { score = n; best = i; }
-  });
-  return best < 0 ? fallback : best;
-};
-if (links === 'sections' && secs.length) {
-  let guideSec = 0;
-  const secById = new Map<string, number>();
-  page.linksOut.forEach((l) => {
-    const k = secOf(l.anchor);
-    bySec[k].push({ href: l.href, text: l.anchor });
-    let path = l.href; try { path = new URL(l.href, 'https://x').pathname; } catch {}
-    const id = specByPath(path)?.id;
-    if (id && !secById.has(id)) secById.set(id, k);
-    if (id === 'P19') guideSec = k;          // the buying guide's section
-  });
-  const have = new Set(page.linksOut.map((l) => { try { return decodeURI(new URL(l.href, 'https://x').pathname); } catch { return l.href; } }));
-  join.filter((l) => !have.has(decodeURI(l.href)))   // the spec may already link it in this language
-    .forEach((l) => bySec[secById.get(l.withId) ?? secOf(l.text)].push({ href: l.href, text: l.text }));
-  more.forEach((l) => bySec[secOf(l.text, guideSec)].push(l));   // our guides join it unless they match better
-}
+// 'sections' (home, Sergei 08/11): each link goes under the rotating section it belongs to
+// (lib linksBySection: the section sharing the most distinctive words with its anchor). Since
+// D-20261110-SS-3 the links show as tiles (LinkTiles «section»).
+const bySec: { href: string; text: string }[][] = links === 'sections' && secs.length
+  ? linksBySection(page, { join, more }) : secs.map(() => []);
 const cols: { href: string; text: string }[][] = [[], [], []];
 if (links === 'columns') {
   page.linksOut.forEach((l) => cols[groupOf(l.href)].push({ href: l.href, text: l.anchor }));
@@ -123,7 +94,7 @@ const ui = L[lang] ?? L.en;
               <h2 set:html={x.h2} />
               <div class="st-rot__tx">
                 <div class="prose" set:html={x.html} />
-                {bySec[i]?.length > 0 && <ul class="st-rot__links">{bySec[i].map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>}
+                {bySec[i]?.length > 0 && <LinkTiles lang={lang} links={bySec[i]} items={items} self={page.path} />}
               </div>
             </article>
           ))}

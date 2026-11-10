@@ -95,3 +95,35 @@
 .k-band--white { background: var(--paper); }
 .k-band--beige { background: var(--paper-2); }
 .k-band--dark { background: var(--ink-deep); color: var(--paper); }
+
+/* ── Photo tile with a caption over a dark fade (home Collections and by-area #101) ───────────────────
+   The link is the caption only (its text = the anchor), stretched over the whole tile; the photo is
+   decoration. Extra lines (e.g. «from €») sit outside the link so the anchor text stays exact. */
+.k-tiles { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 760px) { .k-tiles { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
+.k-tile { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--paper-2); }
+.k-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
+.k-tile:hover img { transform: scale(1.03); }
+.k-tile__t {
+  position: absolute; inset: auto 0 0 0; padding: 40px var(--s3) var(--s3); color: var(--paper);
+  background: linear-gradient(0deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,0) 100%);
+}
+.k-tile__l { display: block; color: var(--paper); text-decoration: none; font-size: var(--fs-s0); font-weight: 300; line-height: 1.25;
+  text-shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 22px rgba(0,0,0,.55); transition: transform .35s ease; }
+.k-tile__l::first-letter { text-transform: uppercase; }
+.k-tile__l::after { content: ''; position: absolute; inset: 0; }   /* the whole tile clicks through the caption */
+.k-tile__l:focus-visible { outline: none; }
+.k-tile:has(.k-tile__l:focus-visible) { outline: 2px solid var(--brand); outline-offset: 2px; }
+.k-tile:hover .k-tile__l { transform: translateY(-2px); }
+.k-tile__s { display: block; margin-top: 2px; font-size: var(--fs-s-1); letter-spacing: .06em; opacity: .95; text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.5); }
+@media (min-width: 1024px) { .k-tile__t { padding: 56px var(--s4) var(--s4); } .k-tile__l { font-size: var(--fs-s1); } }
+@media (prefers-reduced-motion: reduce) { .k-tile img, .k-tile__l { transition: none; } }
+
+/* ── Tile row: four tiles a page on desktop (home Collections #101), two on phones; scrolled, every tile
+   in the HTML. Turned by a .k-dash group. ─────────────────────────────────────────────────────────── */
+.k-rail { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s3); overflow-x: auto; scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; }
+.k-rail::-webkit-scrollbar { display: none; }
+.k-rail > * { flex: none; width: calc((100% - var(--s3)) / 2); scroll-snap-align: start; }
+@media (min-width: 1024px) { .k-rail > * { width: calc((100% - 3 * var(--s3)) / 4); } }
+@media (prefers-reduced-motion: reduce) { .k-rail { scroll-behavior: auto; } }

@@ -91,3 +91,56 @@ export const FAQ_H: Record<Lang, string> = {
   en: 'Frequently asked questions', el: 'Συχνές ερωτήσεις', de: 'Häufige Fragen', sr: 'Česta pitanja', bg: 'Често задавани въпроси',
   ro: 'Întrebări frecvente', ru: 'Частые вопросы', tr: 'Sık sorulan sorular', he: 'שאלות נפוצות',
 };
+
+/** The three groups of a spec page's links out (properties · areas · guides), in every language. */
+export const LINK_GROUPS: Record<Lang, [string, string, string]> = {
+  en: ['Properties', 'Areas', 'Guides'], el: ['Ακίνητα', 'Περιοχές', 'Οδηγοί'], de: ['Immobilien', 'Regionen', 'Ratgeber'],
+  sr: ['Nekretnine', 'Oblasti', 'Vodiči'], bg: ['Имоти', 'Райони', 'Наръчници'], ro: ['Proprietăți', 'Zone', 'Ghiduri'],
+  ru: ['Недвижимость', 'Районы', 'Гиды'], tr: ['Emlak', 'Bölgeler', 'Rehberler'], he: ['נכסים', 'אזורים', 'מדריכים'],
+};
+
+/**
+ * Which H2 section each link out belongs to (the home rotator, Sergei 08/11; every SEO block since
+ * D-20261110-SS-3): the section sharing the most distinctive words with the link's anchor — 2 × words of
+ * its heading + 1 × of its text; words found in most sections or most anchors (place name, «sale») do not
+ * count; a tie goes to the section with fewer links; no match → the first section. Works in every language.
+ * `join`: links that go with the section of the first spec link to page `withId`; `more`: extra guides,
+ * by default with the section of the buying guide (P19). Anchors stay word for word.
+ */
+export function linksBySection(page: SpecPage, opts: { join?: { href: string; text: string; withId: string }[]; more?: { href: string; text: string }[] } = {}): { href: string; text: string }[][] {
+  const secs = specSections(page.body);
+  const bySec: { href: string; text: string }[][] = secs.map(() => []);
+  if (!secs.length) return bySec;
+  const words = (x: string) => x.toLowerCase().replace(/<[^>]+>/g, ' ').match(/[\p{L}\p{N}]{4,}/gu) ?? [];
+  const secWords = secs.map((x) => new Set(words(x.h2 + ' ' + x.html)));
+  const common = new Set([...new Set(secWords.flatMap((w) => [...w]))].filter((w) => secWords.filter((sw) => sw.has(w)).length > secs.length / 2));
+  const stem = (w: string) => w.slice(0, 5);
+  const headStems = secs.map((x) => new Set(words(x.h2).map(stem)));
+  const bodyStems = secWords.map((sw) => new Set([...sw].map(stem)));
+  const anchorWords = page.linksOut.map((l) => new Set(words(l.anchor).map(stem)));
+  const anchorCommon = new Set([...new Set(anchorWords.flatMap((w) => [...w]))].filter((w) => anchorWords.filter((aw) => aw.has(w)).length > anchorWords.length / 3));
+  const secOf = (anchor: string, fallback = 0): number => {
+    const a = words(anchor).filter((w) => !common.has(w)).map(stem).filter((w) => !anchorCommon.has(w));
+    let best = -1, score = 0;
+    secs.forEach((_, i) => {
+      const n = a.reduce((t, w) => t + (headStems[i].has(w) ? 2 : bodyStems[i].has(w) ? 1 : 0), 0);
+      if (n > score || (n === score && n > 0 && bySec[i].length < bySec[best].length)) { score = n; best = i; }
+    });
+    return best < 0 ? fallback : best;
+  };
+  let guideSec = 0;
+  const secById = new Map<string, number>();
+  const pathOf = (href: string) => { try { return new URL(href, 'https://x').pathname; } catch { return href; } };
+  page.linksOut.forEach((l) => {
+    const k = secOf(l.anchor);
+    bySec[k].push({ href: l.href, text: l.anchor });
+    const id = specByPath(pathOf(l.href))?.id;
+    if (id && !secById.has(id)) secById.set(id, k);
+    if (id === 'P19') guideSec = k;
+  });
+  const have = new Set(page.linksOut.map((l) => { try { return decodeURI(pathOf(l.href)); } catch { return l.href; } }));
+  (opts.join ?? []).filter((l) => !have.has(decodeURI(l.href)))
+    .forEach((l) => bySec[secById.get(l.withId) ?? secOf(l.text)].push({ href: l.href, text: l.text }));
+  (opts.more ?? []).forEach((l) => bySec[secOf(l.text, guideSec)].push(l));
+  return bySec;
+}

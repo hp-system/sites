@@ -1,0 +1,183 @@
+---
+// The spec's links out as tiles — the SEO blocks standard (D-20261110-SS-3, Sergei 2026-11-10: «нам нужны
+// клики … ссылки как картинки»). Used under each SEO section (variant «section») and at the end of a page
+// (variant «page»).
+//   · a link to a property list (types P02, P04–P10, pairs P15–P18, municipality pages) → a photo tile
+//     like the home Collections / by-area: the cover of a listing that page shows (watermarked), the
+//     spec anchor as the caption; a municipality tile also carries «from €»;
+//   · «page»: the type tiles in a row of four with dashes, then the five municipalities (the spec anchor
+//     where the spec links that area), then the other links as text;
+//   · «section»: only the section's own links, small tiles in a row, others as text.
+// SEO (rule 15): the caption link is the link's only text = the exact anchor, to the exact target; it is
+// stretched over the tile; the photo is decoration; «from €» sits outside the link.
+import { specByPath, LINK_GROUPS } from '../lib/seo-pages';
+import { facetBySlug, matches } from '../lib/listing';
+import { pickCover, buildAreaTiles } from '../lib/area-tiles';
+import { marked, markedSrcSetSmall, altOf, type Photo } from '../lib/photos';
+import { t, listUrl, type Lang } from '../lib/i18n';
+import { money } from '../lib/format';
+
+type Link = { href: string; text: string };
+interface Props {
+  lang: Lang; links: Link[]; items: { id: string | number; attributes?: any }[];
+  variant?: 'page' | 'section';
+  /** the page's own path, never linked to itself */
+  self?: string;
+}
+const { lang, links: raw, items, variant = 'section', self = '' } = Astro.props;
+
+const pathOf = (href: string) => { try { return decodeURI(new URL(href, 'https://x').pathname); } catch { return href; } };
+const links = raw.filter((l) => pathOf(l.href) !== pathOf(self));
+const idOf = (href: string) => specByPath(pathOf(href))?.id ?? '';
+const base = pathOf(listUrl(lang));
+// the facets a list URL shows: its slugs after the list base (/en/properties/kassandra/villas-for-sale)
+const facetsOf = (href: string) => {
+  const p = pathOf(href);
+  if (p !== base && !p.startsWith(base + '/')) return null;
+  const segs = p.slice(base.length).split('/').filter(Boolean);
+  const fs = segs.map((s) => facetBySlug(lang, s));
+  return fs.every(Boolean) ? fs.map((f) => f!) : null;
+};
+const used = new Set<string>();
+const photoFor = (fs: { q: object }[]) => {
+  const q = Object.assign({}, ...fs.map((f) => f.q));
+  return pickCover(items as any, (a) => matches({ attributes: a } as any, q as any), used as any);
+};
+// the five municipalities with «from €»; their tile URLs are the area pages
+const { tiles: munis, from } = buildAreaTiles(items as any, lang, (f) => pickCover(items as any, f, used as any), 5);
+const muniOf = (href: string) => munis.find((m) => pathOf(m.href) === pathOf(href));
+
+type Tile = { href: string; text: string; sub?: string; photo: Photo | null };
+const typeTiles: Tile[] = [], areaTiles: Tile[] = [], text: Link[] = [];
+for (const l of links) {
+  const m = muniOf(l.href);
+  if (m) { areaTiles.push({ href: l.href, text: l.text, sub: m.fromText, photo: m.photo }); continue; }
+  const fs = facetsOf(l.href);
+  if (fs || idOf(l.href) === 'P02') { typeTiles.push({ href: l.href, text: l.text, photo: photoFor(fs ?? []) }); continue; }
+  text.push(l);
+}
+// «page»: all five municipalities, the spec's anchor where it links the area, else the name
+const pageAreas: Tile[] = variant === 'page'
+  ? munis.map((m) => areaTiles.find((x) => pathOf(x.href) === pathOf(m.href)) ?? { href: m.href, text: m.name, sub: m.fromText, photo: m.photo })
+  : areaTiles;
+const G = LINK_GROUPS[lang] ?? LINK_GROUPS.en;
+const rail = `lt${Math.random().toString(36).slice(2, 8)}`;
+const pages = Math.ceil(typeTiles.length / 4);
+const tile = (x: Tile, sizes: string) => ({ x, sizes });
+---
+{variant === 'section' ? (
+  (areaTiles.length + typeTiles.length + text.length > 0) && (
+    <div class="lt lt--sec">
+      {(typeTiles.length + areaTiles.length) > 0 && (
+        <ul class="k-tiles lt__sm" style={`--n: ${Math.min(4, typeTiles.length + areaTiles.length)}`}>
+          {[...typeTiles, ...areaTiles].map((x) => (
+            <li class="k-tile">
+              {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="200px" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
+              <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {text.length > 0 && <ul class="lt__links">{text.map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>}
+    </div>
+  )
+) : (
+  <section class="lt lt--page" aria-label={G.join(' · ')}>
+    <div class="wrap lt__in">
+      {typeTiles.length > 0 && (
+        <div class="lt__grp">
+          <div class="lt__head">
+            <p data-h class="t-h2 lt__h">{G[0]}</p>
+            {pages > 1 && (
+              <div class="k-dash" role="group" aria-label={t(lang, 'home.pages')} data-lt-dash={rail}>
+                {Array.from({ length: pages }).map((_, i) => (
+                  <button type="button" class={i === 0 ? 'on' : undefined} aria-pressed={i === 0 ? 'true' : 'false'}
+                          aria-label={t(lang, 'home.page', { n: i + 1 })}><span></span></button>
+                ))}
+              </div>
+            )}
+          </div>
+          <ul class="k-rail" id={rail} data-lt-rail>
+            {typeTiles.map((x) => (
+              <li class="k-tile">
+                {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 300px, 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+                <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {pageAreas.length > 0 && (
+        <div class="lt__grp">
+          <div class="lt__head lt__head--col">
+            <h2 data-h class="t-h2 lt__h"><a class="lt__ha" href={listUrl(lang)}>{t(lang, 'home.area_h2')}</a></h2>
+            {from > 0 && <p class="lt__sub">{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
+          </div>
+          <ul class="k-tiles lt__areas">
+            {pageAreas.map((x) => (
+              <li class="k-tile">
+                {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 240px, 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+                <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {text.length > 0 && (
+        <div class="lt__grp">
+          <p class="t-label lt__lbl">{G[2]}</p>
+          <ul class="lt__links">{text.map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  .lt--sec { display: grid; gap: var(--s3); margin-top: var(--s4); container-type: inline-size; }
+  .lt__sm { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* by the room the block gets: two a row in a narrow text column, up to four where there is space */
+  @container (min-width: 560px) { .lt__sm { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); } }
+  .lt__sm :global(.k-tile__t) { padding: 28px 10px 10px; }
+  .lt__sm :global(.k-tile__l) { font-size: var(--fs-s-1); }
+  .lt--page { padding-block: var(--s7); background: var(--paper); }
+  .lt__in { display: grid; gap: var(--s7); }
+  .lt__grp { display: grid; gap: var(--s4); }
+  .lt__head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s4); }
+  .lt__head--col { display: grid; gap: var(--s2); }
+  .lt__h { margin: 0; }
+  .lt__sub { margin: 0; font-size: var(--fs-s0); color: var(--muted); }
+  .lt__ha { color: inherit; text-decoration: none; }
+  .lt__ha:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .lt__lbl { margin: 0; color: var(--faint); }
+  .lt__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: var(--fs-s0); }
+  .lt__links a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  @media (min-width: 1024px) { .lt__areas { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  .lt__areas > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  @media (min-width: 760px) { .lt__areas > li:last-child:nth-child(odd) { grid-column: auto; } }
+</style>
+
+<script>
+  // The type row: four tiles a page, the dashes turn it and follow it; no autoplay. Starts again after the
+  // listing page swaps its parts in place (hp:swap).
+  const initLt = () => document.querySelectorAll<HTMLElement>('[data-lt-rail]:not([data-on])').forEach((rail) => {
+    rail.dataset.on = '1';
+    const dash = document.querySelector<HTMLElement>(`[data-lt-dash="${rail.id}"]`);
+    if (!dash) return;
+    const btns = Array.from(dash.querySelectorAll<HTMLButtonElement>('button'));
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const max = () => Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const sync = () => {
+      const m = max(); const k = m ? Math.round((Math.abs(rail.scrollLeft) / m) * (btns.length - 1)) : 0;
+      btns.forEach((b, i) => { b.classList.toggle('on', i === k); b.setAttribute('aria-pressed', String(i === k)); });
+    };
+    rail.addEventListener('scroll', sync, { passive: true });
+    btns.forEach((b, i) => b.addEventListener('click', () => {
+      const x = Math.min(max(), i * rail.clientWidth);
+      rail.scrollTo({ left: getComputedStyle(rail).direction === 'rtl' ? -x : x, behavior: still ? 'auto' : 'smooth' });
+    }));
+    sync();
+  });
+  initLt();
+  document.addEventListener('hp:swap', initLt);
+</script>

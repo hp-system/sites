@@ -16,7 +16,7 @@
 // plain #anchors.
 import FaqSearch from './FaqSearch.astro';
 import SpecMosaic, { type MosaicPhoto } from './SpecMosaic.astro';
-import { h2Id, type SpecPage } from '../lib/seo-pages';
+import { h2Id, linksBySection, type SpecPage } from '../lib/seo-pages';
 import { prefix, t, type Lang } from '../lib/i18n';
 
 interface Props {
@@ -25,9 +25,12 @@ interface Props {
   member?: boolean;
   /** another call to action (listings: sign in / register for buyers); null = none. Default: Sell's
    *  «Add your property» (guests → sign-up → the form, gilded; members → the form). */
+  /** the listings, for the photos of the link tiles (D-20261110-SS-3) */
+  items?: { id: string | number; attributes?: any }[];
   cta?: { text: string; href: string; ev: 'member:join_from_list' | 'content:sell' | 'register:info'; gild: boolean; plus?: boolean } | null;   // events from the closed list (B-11)
 }
-const { page, lang, photos, faqH, member = false } = Astro.props;
+const { page, lang, photos, faqH, member = false, items = [] } = Astro.props;
+const sectionLinks = linksBySection(page);
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
 // the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
 const nav = heads.map((h) => ({ id: h2Id(h), text: h, ask: (page.questionMarks ?? []).includes(h) }));
@@ -53,7 +56,8 @@ const cta = Astro.props.cta === undefined
     </aside>
     {/* phones (no side panel): the same button in a bar that sticks to the bottom while this block is on
         screen (SEO/design audit 2026-11-10: no conversion button on phones) */}
-    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang} /></div>
+    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang}
+                                     sectionLinks={sectionLinks} items={items} self={page.path} /></div>
     {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
     {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     {cta && <div class="pn__bar">

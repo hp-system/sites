@@ -15,16 +15,19 @@
 // page scrolls down as usual. The row has one height, the tallest post's. All posts stay in the HTML.
 import { h2Id } from '../lib/seo-pages';
 import { t, type Lang } from '../lib/i18n';
+import LinkTiles from './LinkTiles.astro';
 export type MosaicPhoto = { src: string; srcset: string; alt: string; style: string };
-interface Props { html: string; photos?: (MosaicPhoto | null)[]; standout?: string | string[]; marks?: string[]; carousel?: boolean; lang?: Lang }
-const { html, photos = [], standout = '', marks = [], carousel = false, lang = 'en' } = Astro.props;
+interface Props { html: string; photos?: (MosaicPhoto | null)[]; standout?: string | string[]; marks?: string[]; carousel?: boolean; lang?: Lang;
+  /** per section: its links out, shown as tiles under the text (D-20261110-SS-3) */
+  sectionLinks?: { href: string; text: string }[][]; items?: { id: string | number; attributes?: any }[]; self?: string }
+const { html, photos = [], standout = '', marks = [], carousel = false, lang = 'en', sectionLinks = [], items = [], self = '' } = Astro.props;
 
 const text = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   const h2 = s.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '';
   const photo = photos[i] ?? null;
   const dark = [standout].flat().filter(Boolean).includes(text(h2));
-  return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, ask: marks.includes(text(h2)), wide: i === 0 || dark || !photo };
+  return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, links: sectionLinks[i] ?? [], ask: marks.includes(text(h2)), wide: i === 0 || dark || !photo };
 });
 // two per row: a post left alone in its row (an odd run between wide ones) becomes wide, so no row has a hole
 let run: typeof posts = [];
@@ -46,6 +49,7 @@ for (const p of [...posts, null]) {
       <div class="sp__b">
         <div class="sp__hd"><h2 set:html={p.h2} />{p.ask && <span class="sp__q" aria-hidden="true">?</span>}</div>
         <div class="sp__tx" set:html={p.rest} />
+        {p.links.length > 0 && <LinkTiles lang={lang} links={p.links} items={items} self={self} />}
       </div>
     </article>
   ))}

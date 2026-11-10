@@ -41,14 +41,14 @@ const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
       </p>}
       <div class="fqs-list" data-fqs-list>
         {items.map((f, i) => (
-          <details class:list={['fqs-fq', { 'fqs-fq--more': i >= show }]} name={id}>
+          <details class:list={['k-faq__q fqs-fq', { 'fqs-fq--more': i >= show }]} name={id}>
             <summary><h3>{f.q}</h3><i aria-hidden="true"></i></summary>
-            {f.a.includes('<') ? <div class="fqs-a" set:html={f.a} /> : <p class="fqs-a">{f.a}</p>}
+            {f.a.includes('<') ? <div class="k-faq__a" set:html={f.a} /> : <p class="k-faq__a">{f.a}</p>}
           </details>
         ))}
       </div>
       {items.length > show && (
-        <p class="fqs-all"><button type="button" class="fqs-btn" data-fqs-all>{tt('svc.faq_all', { n: items.length })}</button></p>
+        <p class="fqs-all"><button type="button" class="k-line" data-fqs-all>{tt('svc.faq_all', { n: items.length })}</button></p>
       )}
     </div>
   </section>
@@ -67,25 +67,9 @@ const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
   .fqs-srch input { flex: 1; min-width: 0; border: 0; outline: 0; font: inherit; font-size: var(--fs-s0); color: var(--ink); background: transparent; }
   .fqs-srch input::placeholder { color: var(--ink); opacity: 1; }
   .fqs-cnt { margin: 10px 0 18px; font-size: var(--fs-s-1); color: var(--ink); }
-  .fqs-fq { border-top: 1px solid var(--line); }
-  .fqs-fq:last-of-type { border-bottom: 1px solid var(--line); }
+  /* questions: kit .k-faq__q / .k-faq__a; the button: kit .k-line */
   .fqs-list.cut .fqs-fq--more, .fqs-fq.off { display: none; }
-  .fqs-fq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; padding: 14px 2px; }
-  .fqs-fq summary::-webkit-details-marker { display: none; }
-  .fqs-fq summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .fqs-fq h3 { flex: 1; margin: 0; font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; color: var(--ink); }
-  .fqs-fq i { font-style: normal; font-weight: 300; font-size: var(--fs-s1); line-height: 1; color: var(--ink); }
-  .fqs-fq i::before { content: '+'; }
-  .fqs-fq[open] i::before { content: '−'; }
-  .fqs-a { margin: 0 0 16px; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink); white-space: pre-line; max-width: 70ch; }
-  .fqs-a :global(p) { margin: 0 0 var(--s2); white-space: normal; }
-  .fqs-a :global(p:last-child) { margin-bottom: 0; }
   .fqs-all { margin: 18px 0 0; text-align: center; }
-  .fqs-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 20px; box-sizing: border-box; background: var(--paper);
-    color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
-    cursor: pointer; transition: background .2s ease, border-color .2s ease; }
-  .fqs-btn:hover { background: var(--paper-2); border-color: var(--ink); }
-  .fqs-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 </style>
 
 <script>

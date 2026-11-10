@@ -35,10 +35,10 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
   <div class="wrap pn__in">
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
-        <p class="t-label">{t(lang, 'info.on_page')}</p>
-        <ul>{nav.map((n) => <li><a class="pn__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true">?</i>}</a></li>)}</ul>
+        <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
+        <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true">?</i>}</a></li>)}</ul>
       </nav>
-      <a class:list={['pn__go', !member && 'pn__go--gild']} href={go} rel={member ? undefined : 'nofollow'}
+      <a class:list={['k-act pn__go', !member && 'k-gild']} href={go} rel={member ? undefined : 'nofollow'}
          data-ev={member ? 'content:sell' : 'register:info'}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
         {t(lang, 'svc.add_cta')}
@@ -50,7 +50,7 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
     {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
     {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     <div class="pn__bar">
-      <a class:list={['pn__go', !member && 'pn__go--gild']} href={go} rel={member ? undefined : 'nofollow'}
+      <a class:list={['k-act pn__go', !member && 'k-gild']} href={go} rel={member ? undefined : 'nofollow'}
          data-ev={member ? 'content:sell' : 'register:info'}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
         {t(lang, 'svc.add_cta')}
@@ -67,8 +67,8 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
   .pn__faq { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
   .pn__side { display: none; }
   .pn__bar { position: sticky; bottom: 0; z-index: 5; padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper-2); }
-  .pn__bar .pn__go { margin: 0; height: 48px; background-color: var(--ink); }
-  .pn__bar .pn__go--gild { background: var(--paper); }
+  .pn__bar .k-act { margin: 0; height: 48px; }
+  .pn__bar .k-gild { background: var(--paper); }
   @media (min-width: 1000px) {
     .pn__in { grid-template-columns: 260px minmax(0, 1fr); column-gap: var(--s6); }
     .pn__faq, .pn__posts { grid-column: 2; }
@@ -77,43 +77,15 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
       position: sticky; top: var(--s5); align-self: start; z-index: 1;
       margin-block: var(--s7); padding: 16px; background: var(--paper); border-right: 1px solid var(--line-soft); }   /* white as the panel page, so the beige of the current item shows on the beige band */
   }
-  /* the side menu of the member panel mockup (PanelE3 .bmr / .lbl), copied with its colours and hovers:
-     grey caps, the rest a touch smaller; hover and the current one: light beige, ink, full size */
-  .pn__nav .t-label { margin: 0; color: var(--faint); }
-  .pn__nav ul { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
-  .pn__it { display: flex; align-items: center; width: 100%; box-sizing: border-box; padding: 11px 14px; text-decoration: none;
-    font-size: var(--fs-s-1); line-height: 1.35; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); transition: background .15s; }
-  .pn__it > span { display: inline-block; transform: scale(.92); transform-origin: 0 50%; transition: transform .18s ease; }
-  .pn__it:hover, .pn__it.on { background: var(--paper-2); color: var(--ink); }
-  .pn__it:hover > span, .pn__it.on > span { transform: scale(1); }
-  .pn__it.on { font-weight: 600; }
   /* the posts' beige «?», small, beside the item (Sergei 2026-11-10) */
-  .pn__it { gap: 8px; }
   .pn__q { margin-left: auto; flex: none; font-style: normal; font-size: var(--fs-s1); font-weight: 600; line-height: 1; letter-spacing: 0;
     color: var(--paper-2); transform: rotate(12deg); }
-  .pn__it:hover .pn__q, .pn__it.on .pn__q { color: var(--paper); }
-  .pn__it:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  :global(.k-side__it:hover) .pn__q, :global(.k-side__it.on) .pn__q { color: var(--paper); }
   /* never under the site header: while the header bar is shown the panel sits below it (as the article side) */
   :global(html.hdr-up) .pn__side { top: calc(var(--hdr-h, 88px) + 12px); }
   .pn__side { transition: top .25s ease; }
-  /* the member panel's big black button */
-  .pn__go { display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; margin-top: var(--s2); padding: 0 16px;
-    box-sizing: border-box; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); text-decoration: none;
-    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; transition: opacity .15s ease; }
-  .pn__go:hover { opacity: .84; }
-  .pn__go:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  /* guests: a call to register → the gilded edge (same accent as home, list and property) */
-  .pn__go--gild { background: transparent; color: var(--gold-lo); border-color: var(--gold);
-    border-image: conic-gradient(from var(--gilda, 315deg), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
-    transition: color .9s ease-in-out; }
-  /* E8 «gilded edge · turning gradient» of the mockup (Sergei 2026-11-10): on hover the brass gradient of the
-     hairline turns one full lap in 0.9 s and turns back the same way when the pointer leaves */
-  @property --gilda { syntax: '<angle>'; inherits: false; initial-value: 315deg; }
-  .pn__go--gild { transition: color .9s ease-in-out, --gilda .9s ease-in-out; }
-  .pn__go--gild:hover, .pn__go--gild:focus-visible { opacity: 1; color: var(--gold); --gilda: 675deg; }
-  @media (prefers-reduced-motion: reduce) { .pn__go--gild { transition: color .9s ease-in-out; } .pn__go--gild:hover, .pn__go--gild:focus-visible { --gilda: 315deg; } }
-  .pn__go--gild:focus-visible { outline-color: var(--gold-dk); outline-offset: 3px; }
-  @media (prefers-reduced-motion: reduce) { .pn__it > span, .pn__side { transition: none; } }
+  .pn__side .k-act { margin-top: var(--s2); }   /* the button: kit .k-act (+ .k-gild for guests) */
+  @media (prefers-reduced-motion: reduce) { .pn__side { transition: none; } }
   .pn :global([data-spc]), .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
 </style>
 

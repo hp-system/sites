@@ -1,74 +1,76 @@
 ---
-// The spec body as blocks with photos between them (Sergei 2026-11-09: «нужно что б текста не
-// разбрасывались на разные блоки; нужно сделать промежутки картинками между блоками по тематике, а не
-// рандомно»). One block per H2 section: its heading, paragraphs and lists stay together. After a
-// section, the photo chosen for its topic (the page's `photoThemes`, resolved by the caller from the
-// photos' own tags). Rows alternate: text 4 columns + photo 2, then photo 2 + text 4.
-// Styles are the home bento's (Construction.astro): white blocks, the stand-out block black
-// (as the fact tiles), beige --paper-3 band, 12 px gap; the photo is the property-of-the-week
-// «window» on desktop (FeatureProperty.astro).
+// The spec body as posts (Sergei 2026-11-10: «делай все на селл, как посты»). One post per H2
+// section: the photo chosen for its topic on top, then the heading and the whole section text.
+// History: 2026-11-09 one block per section with the photo beside it («текста не разбрасывались
+// на разные блоки … промежутки картинками по тематике»); 2026-11-10 posts, all on the page (SEO:
+// separate pages would be thin and compete with Sell for the same query).
+// Styles are the blog's (ArticleListPage.astro): .feat for the wide post (photo 1.4fr + text),
+// .card for the others (photo 3:2 on top), on the home bento's beige band with white posts and
+// the stand-out post black (as the fact tiles). Wide: the first post and the stand-out one; the
+// others two per row; a section without a photo is a wide text post.
 // Every word of the body stays in the HTML, in the spec order.
-// Rejected: one tile per paragraph or list item (variant B of the mockup) — Sergei: the text of a
-// section must not be scattered; random photos — they must follow the topic.
 export type MosaicPhoto = { src: string; srcset: string; alt: string; style: string };
 interface Props { html: string; photos?: (MosaicPhoto | null)[]; standout?: string }
 const { html, photos = [], standout = '' } = Astro.props;
 
 const text = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-const secs = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
+const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   const h2 = s.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '';
-  return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo: photos[i] ?? null, dark: !!standout && text(h2) === standout };
+  const photo = photos[i] ?? null;
+  const dark = !!standout && text(h2) === standout;
+  return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, wide: i === 0 || dark || !photo };
 });
-// alternate the side of the photo only among sections that have one
-let k = 0;
-const rows = secs.map((s) => ({ ...s, flip: s.photo ? (k++ % 2 === 1) : false }));
 ---
-<div class="sm">
-  {rows.map((r) => (
-    <div class:list={['sm__row', r.photo && 'sm__row--ph', r.flip && 'sm__row--flip']}>
-      <div class:list={['sm__t', r.dark && 'sm__t--fact']}>
-        <h2 set:html={r.h2} />
-        <div class="sm__tx" set:html={r.rest} />
-      </div>
-      {r.photo && (
-        <div class="sm__ph" style={r.photo.style}>
-          <img src={r.photo.src} srcset={r.photo.srcset} sizes="100vw" alt={r.photo.alt}
-               width="1920" height="1280" loading="lazy" decoding="async" />
+<div class="sp">
+  {posts.map((p) => (
+    <article class:list={['sp__post', p.wide && 'sp__post--wide', p.dark && 'sp__post--fact', !p.photo && 'sp__post--text']}>
+      {p.photo && (
+        <div class="sp__ph" style={p.photo.style}>
+          <img src={p.photo.src} srcset={p.photo.srcset} sizes={p.wide ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 760px) 600px, 100vw'}
+               alt={p.photo.alt} width="1920" height="1280" loading="lazy" decoding="async" />
         </div>
       )}
-    </div>
+      <div class="sp__b">
+        <h2 set:html={p.h2} />
+        <div class="sp__tx" set:html={p.rest} />
+      </div>
+    </article>
   ))}
 </div>
 
 <style>
-  .sm { display: grid; gap: 12px; }
-  .sm__row { display: grid; gap: 12px; }
-  .sm__t { min-width: 0; background: var(--paper); padding: var(--s5); display: grid; gap: var(--s3); align-content: start; }
-  .sm__t :global(h2) { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.12; letter-spacing: -.02em; }
-  .sm__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink-2); max-width: 68ch; }
-  .sm__tx :global(p:last-child) { margin-bottom: 0; }
-  .sm__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; max-width: 68ch; }
-  .sm__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink-2); }
-  .sm__tx :global(strong) { color: var(--ink); font-weight: 600; }
-  .sm__t--fact { background: var(--ink-deep); color: #fff; }
-  .sm__t--fact .sm__tx :global(p), .sm__t--fact .sm__tx :global(li) { color: rgba(255,255,255,.72); }
-  .sm__t--fact .sm__tx :global(li) { border-top-color: rgba(255,255,255,.14); }
-  .sm__t--fact .sm__tx :global(strong) { color: #fff; }
-  .sm__ph { position: relative; overflow: hidden; min-height: 240px; background: var(--paper-2); }
-  .sm__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focal, 50% 50%); }
-  @media (min-width: 1024px) {
-    .sm__row--ph { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
-    .sm__row--flip { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
-    .sm__row--flip .sm__ph { order: -1; }
-    .sm__t { padding: var(--s6); }
-    .sm__t :global(h2) { font-size: var(--fs-s3); }
-    .sm__ph { min-height: 100%; }
-    /* the «window» of the property of the week (#101): the tile frames a fixed photo */
-    .sm__ph { clip-path: inset(0); }
-    .sm__ph img { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; }
+  .sp { display: grid; gap: 12px; }
+  .sp__post { min-width: 0; display: grid; align-content: start; background: var(--paper); }
+  .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-2); }
+  .sp__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focal, 50% 50%);
+    transition: transform .6s ease; }
+  .sp__post:hover .sp__ph img { transform: scale(1.03); }
+  .sp__b { display: grid; gap: var(--s3); align-content: start; padding: var(--s5); }
+  .sp__b :global(h2) { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.12; letter-spacing: -.02em; color: var(--ink); }
+  .sp__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink-2); max-width: 68ch; }
+  .sp__tx :global(p:last-child) { margin-bottom: 0; }
+  .sp__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; max-width: 68ch; }
+  .sp__tx :global(ul:last-child) { margin-bottom: 0; }
+  .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink-2); }
+  .sp__tx :global(strong) { color: var(--ink); font-weight: 600; }
+  .sp__post--fact { background: var(--ink-deep); }
+  .sp__post--fact .sp__b :global(h2), .sp__post--fact .sp__tx :global(strong) { color: #fff; }
+  .sp__post--fact .sp__tx :global(p), .sp__post--fact .sp__tx :global(li) { color: rgba(255,255,255,.72); }
+  .sp__post--fact .sp__tx :global(li) { border-top-color: rgba(255,255,255,.14); }
+  @media (min-width: 760px) {
+    .sp { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sp__post--wide { grid-column: 1 / -1; }
+    .sp__b { padding: var(--s6); }
   }
-  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
-    .sm__ph { clip-path: none; }
-    .sm__ph img { position: absolute; width: 100%; height: 100%; }
+  @media (min-width: 1024px) {
+    /* the wide post as the blog's lead article: photo 1.4fr beside the text */
+    .sp__post--wide:not(.sp__post--text) { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: stretch; }
+    .sp__post--wide .sp__ph { aspect-ratio: auto; min-height: 100%; }
+    .sp__post--wide .sp__b :global(h2) { font-size: var(--fs-s3); }
+    .sp__post--text .sp__tx :global(p) { max-width: 76ch; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sp__ph img { transition: none; }
+    .sp__post:hover .sp__ph img { transform: none; }
   }
 </style>

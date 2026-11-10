@@ -32,7 +32,6 @@ import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
-import LinkTiles from './LinkTiles.astro';
 import { postPhotos } from '../lib/post-photos';
 import { specByPath, specTitle, FAQ_H } from '../lib/seo-pages';
 import {
@@ -811,7 +810,6 @@ const tilePhoto = (() => {
   <div data-lswap="spec">{spec && firstPage && (
     <>
       <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} items={items as any} />
-      <LinkTiles lang={lang} links={spec.linksOut.map((l) => ({ href: l.href, text: l.anchor }))} items={items as any} variant="page" self={spec.path} />
     </>
   )}</div>
   </main>

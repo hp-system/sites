@@ -144,3 +144,10 @@ export function linksBySection(page: SpecPage, opts: { join?: { href: string; te
   (opts.more ?? []).forEach((l) => bySec[secOf(l.text, guideSec)].push(l));
   return bySec;
 }
+
+/** A link out that shows as a photo tile: a property list (P02, P04–P18, P58) or an old area page. */
+export function isListLink(href: string): boolean {
+  let path = href; try { path = decodeURI(new URL(href, 'https://x').pathname); } catch {}
+  const n = Number((specByPath(path)?.id ?? '').slice(1));
+  return n === 2 || (n >= 4 && n <= 18) || n === 58 || /\/property-for-sale\//.test(path);
+}

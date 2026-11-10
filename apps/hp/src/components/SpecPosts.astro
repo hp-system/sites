@@ -45,7 +45,7 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
       </a>
     </aside>
     {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} /></div>}
-    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} /></div>
+    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang} /></div>
   </div>
 </section>
 
@@ -90,25 +90,43 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
   .pn__go--gild:hover { opacity: 1; color: var(--gold); }
   .pn__go--gild:focus-visible { outline-color: var(--gold-dk); outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { .pn__it > span, .pn__side { transition: none; } }
-  .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
+  .pn :global([data-spc]), .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
 </style>
 
 <script>
-  // The current post: the last one whose top has passed a third of the screen.
+  // The side menu and the posts carousel (SpecMosaic): a click turns the carousel to that post and brings the
+  // block into view; the menu marks the post on show. Without the carousel: the post whose top passed a third
+  // of the screen.
   document.querySelectorAll<HTMLElement>('[data-pn]').forEach((box) => {
     const links = Array.from(box.querySelectorAll<HTMLAnchorElement>('[data-pn-to]'));
+    const mark = (id?: string) => links.forEach((a) => a.classList.toggle('on', a.dataset.pnTo === id));
+    const car = box.closest('.pn')?.querySelector<HTMLElement>('[data-spc]');
+    if (car) {
+      car.addEventListener('spc:change', (e) => mark((e as CustomEvent).detail));
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      links.forEach((a) => a.addEventListener('click', (e) => {
+        e.preventDefault();
+        car.dispatchEvent(new CustomEvent('spc:go', { detail: a.dataset.pnTo }));
+        const top = car.getBoundingClientRect().top;
+        if (top < 0 || top > innerHeight * 0.6) car.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${a.dataset.pnTo}`);
+      }));
+      const first = car.querySelector<HTMLElement>('.sp__post')?.id;
+      mark(links.some((l) => `#${l.dataset.pnTo}` === location.hash) ? location.hash.slice(1) : first);
+      return;
+    }
     const targets = links.map((a) => document.getElementById(a.dataset.pnTo ?? '')).filter((x): x is HTMLElement => !!x);
     if (!targets.length) return;
     let raf = 0;
-    const mark = () => {
+    const scan = () => {
       raf = 0;
       const line = window.innerHeight / 3;
       let k = -1;
       targets.forEach((el, i) => { if (el.getBoundingClientRect().top <= line) k = i; });
-      links.forEach((a, i) => a.classList.toggle('on', i === k));
+      mark(targets[k]?.id);
     };
-    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(mark); }, { passive: true });
-    addEventListener('resize', mark);
-    mark();
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(scan); }, { passive: true });
+    addEventListener('resize', scan);
+    scan();
   });
 </script>

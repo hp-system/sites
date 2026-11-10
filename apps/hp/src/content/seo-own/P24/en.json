@@ -164,7 +164,10 @@
       "minPrice": 1000000
     }
   ],
-  "standout": "Exclusive assignment: one agency for your sale",
+  "standout": [
+    "Three ways to work with us",
+    "Exclusive assignment: one agency for your sale"
+  ],
   "postPhotos": [
     {
       "after": "How selling with us works",

@@ -14,7 +14,7 @@ export type SpecPage = {
   /** own pages: a photo after a section, chosen by the photo's own tag (and land / min price) */
   photoThemes?: { after: string; tags: string[]; category?: string; minPrice?: number }[];
   /** own pages: the H2 whose block stands out (black, as the home's fact tiles) */
-  standout?: string;
+  standout?: string | string[];   // one H2 or several (Sergei 2026-11-10: «Three ways» black too)
   /** own pages: a fixed photo per post (CC0 stock, public/pages/…/<file>_640w|_960w.webp); wins over photoThemes */
   postPhotos?: { after: string; file: string; alt: string }[];
   /** own pages: the posts whose heading gets a decorative «?» beside it (not part of the heading) */

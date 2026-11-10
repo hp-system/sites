@@ -169,7 +169,10 @@
           "minPrice": 1000000
         }
       ],
-      "standout": "Exclusive assignment: one agency for your sale",
+      "standout": [
+        "Three ways to work with us",
+        "Exclusive assignment: one agency for your sale"
+      ],
       "_photoThemes": "Sergei 2026-11-09: «промежутки картинками между блоками по тематике, а не рандомно» — one photo after each section, chosen by the photo's own tag (and land / €1M+ where the topic asks), always watermarked and open to guests.",
       "postPhotos": [
         {

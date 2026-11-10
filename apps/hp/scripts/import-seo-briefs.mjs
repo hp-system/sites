@@ -37,7 +37,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
     if (html.length) err(`HTML not allowed: ${html.join(', ')}`);
     if (JSON.stringify(bodyH2(b.body)) !== JSON.stringify(b.h2)) err('H2 outline ≠ the body\'s H2s');
     for (const t of b.photoThemes ?? []) if (!b.h2.includes(t.after)) err(`photo theme after «${t.after}»: no such H2`);
-    if (b.standout && !b.h2.includes(b.standout)) err(`standout «${b.standout}»: no such H2`);
+    for (const h of [b.standout ?? []].flat()) if (!b.h2.includes(h)) err(`standout «${h}»: no such H2`);
     for (const h of b.questionMarks ?? []) if (!b.h2.includes(h)) err(`question mark on «${h}»: no such H2`);
     for (const t of b.postPhotos ?? []) {
       if (!b.h2.includes(t.after)) err(`post photo after «${t.after}»: no such H2`);
@@ -56,7 +56,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
       linksOut: b.linksOut, linkedFrom: b.linkedFrom, cta: b.cta, ctaHref: b.ctaHref ?? '', oldUrls: b.oldUrls,
       words: words(b.intro + b.body + b.faq.map((x) => x.a).join(' ')), editorialLine: b.editorialLine ?? '',
       lawyerCheck: b.lawyerCheck ?? '', source: `brief ${f}`,
-      photoThemes: b.photoThemes ?? [], standout: b.standout ?? '', postPhotos: b.postPhotos ?? [], questionMarks: b.questionMarks ?? [],
+      photoThemes: b.photoThemes ?? [], standout: [b.standout ?? []].flat(), postPhotos: b.postPhotos ?? [], questionMarks: b.questionMarks ?? [],
     });
   }
 }

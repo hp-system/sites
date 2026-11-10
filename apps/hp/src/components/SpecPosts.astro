@@ -26,7 +26,8 @@ interface Props {
 }
 const { page, lang, photos, faqH, member } = Astro.props;
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
-const nav = [...(page.faq.length ? [{ id: 'faq', text: faqH }] : []), ...heads.map((h) => ({ id: h2Id(h), text: h }))];
+// the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
+const nav = heads.map((h) => ({ id: h2Id(h), text: h }));
 const submit = `${prefix(lang)}/panel/submit`;
 const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(submit)}`;
 ---

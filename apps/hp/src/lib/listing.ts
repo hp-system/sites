@@ -101,6 +101,11 @@ export const PER_PAGE = 24;
  * Ο μη συνδεδεμένος βλέπει μία κάρτα λιγότερη — τη θέση της παίρνει η προτροπή
  * εγγραφής, που έτσι δεν χαλάει τη σειρά.
  */
+/** A luxury property: the CRM flag `lux_prop` (the old feed called it `luxury`; #190). */
+export function isLuxury(a: any): boolean {
+  return a?.lux_prop === true || a?.luxury === true;
+}
+
 export function cardsPerPage(per: number, withJoinTile: boolean): number {
   return withJoinTile ? per - 1 : per;
 }
@@ -354,11 +359,11 @@ export function matches(p: SiteProperty, q: Query): boolean {
   //    πτυχώνει και τις έντεκα γραφές.
   if (q.municipality && muniKey(a) !== q.municipality) return false;
   if (q.sea && a.sea_access !== q.sea) return false;
-  // ⚠️ `luxury` είναι boolean στη βάση (108 ακίνητα). ΜΗΝ το μπερδέψεις με το
-  //    `lux_prop`, που έχει και 2 `false` — δηλαδή δεν είναι το ίδιο πεδίο.
+  // ⚠️ 2026-11-10 (#190): the CRM feed has NO `luxury` key any more; the luxury flag is `lux_prop`
+  //    (true 103 / false 579 in the public mirror). Reading `a.luxury` emptied the villas pages. Use isLuxury().
   //    ⛔ ΚΑΙ ΠΟΤΕ ΜΕΣΩ API: το EALIDA API **αγνοεί σιωπηλά** ό,τι δεν ξέρει, και
   //       δεν ξέρει `luxury` — ένα `?luxury=1` γυρίζει **και τα 527**, χωρίς σφάλμα.
-  if (q.luxury && a.luxury !== true) return false;
+  if (q.luxury && !isLuxury(a)) return false;
   if (q.pool && !hasPool(a)) return false;
 
   // 💰 Η ΤΙΜΗ ΦΙΛΤΡΑΡΕΙ ΜΟΝΟ ΟΤΑΝ ΕΙΝΑΙ ΟΡΑΤΗ. Ακίνητο «κατόπιν συνεννόησης»
@@ -450,7 +455,7 @@ export function sortItems(items: SiteProperty[], sort: Sort = SORT_DEFAULT): Sit
        */
       const score = (p: SiteProperty) => {
         const a = p.attributes ?? {};
-        return (priceVisible(a) ? 2 : 0) + (a.luxury ? 1 : 0);
+        return (priceVisible(a) ? 2 : 0) + (isLuxury(a) ? 1 : 0);
       };
       out.sort((p, q) => (score(q) - score(p)) || (fresh(q) - fresh(p)));
     }

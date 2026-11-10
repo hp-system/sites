@@ -117,6 +117,9 @@ for (const p of [...posts, null]) {
   @container (min-width: 700px) {
     .sp--car .sp__post:not(.sp__post--text) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: stretch; }
     .sp--car .sp__ph { aspect-ratio: auto; min-height: 100%; }
+    /* the photo left, then right, then left … (Sergei 2026-11-10) */
+    .sp--car .sp__post:nth-child(even):not(.sp__post--text) { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+    .sp--car .sp__post:nth-child(even) .sp__ph { order: 2; }
     .sp--car .sp__b :global(h2) { font-size: var(--fs-s2); }
   }
   /* the dashes of the home carousels: short marks, the current one long; hovering the group makes them taller */

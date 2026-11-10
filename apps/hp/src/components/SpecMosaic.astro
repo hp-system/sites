@@ -65,8 +65,8 @@ for (const p of [...posts, null]) {
   /* big thin numbers on the list items (Sergei 2026-11-10: «большие тонкие цифры, но так чтоб не изменять
      размер самого блока»): out of the flow, behind the text at the right edge, so no line or post grows */
   .sp__tx :global(ul) { counter-reset: spn; }
-  .sp__tx :global(li) { position: relative; isolation: isolate; counter-increment: spn; padding-right: 76px; }   /* room for the number: it never covers the text */
-  .sp__tx :global(li)::after { content: counter(spn, decimal-leading-zero); position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  .sp__tx :global(li) { position: relative; isolation: isolate; counter-increment: spn; padding-right: 56px; }   /* room for the number: it never covers the text */
+  .sp__tx :global(li)::after { content: counter(spn); position: absolute; right: 0; top: 50%; transform: translateY(-50%);
     z-index: -1; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; pointer-events: none;
     color: transparent; -webkit-text-stroke: 1px var(--ink); }   /* outline only: thin, the text over it stays readable */
   .sp__post--fact .sp__tx :global(li)::after { -webkit-text-stroke-color: var(--paper); }

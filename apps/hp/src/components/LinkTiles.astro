@@ -56,8 +56,9 @@ for (const l of links) {
   if (fs || idOf(l.href) === 'P02') { typeTiles.push({ href: l.href, text: l.text, photo: photoFor(fs ?? []) }); continue; }
   text.push(l);
 }
-// «page»: all five municipalities, the spec's anchor where it links the area, else the name
-const pageAreas: Tile[] = variant === 'page'
+// where areas show at all, all five municipalities (Sergei 2026-11-10: each link once, next to its text — the
+// section about areas carries Polygyros too); the spec's anchor where it links the area, else the name
+const pageAreas: Tile[] = variant === 'page' || areaTiles.length > 0
   ? munis.map((m) => areaTiles.find((x) => pathOf(x.href) === pathOf(m.href)) ?? { href: m.href, text: m.name, sub: m.fromText, photo: m.photo })
   : areaTiles;
 const G = LINK_GROUPS[lang] ?? LINK_GROUPS.en;
@@ -66,11 +67,11 @@ const pages = Math.ceil(typeTiles.length / 4);
 const tile = (x: Tile, sizes: string) => ({ x, sizes });
 ---
 {variant === 'section' ? (
-  (areaTiles.length + typeTiles.length + text.length > 0) && (
+  (pageAreas.length + typeTiles.length + text.length > 0) && (
     <div class="lt lt--sec">
-      {(typeTiles.length + areaTiles.length) > 0 && (
-        <ul class="k-tiles lt__sm" style={`--n: ${Math.min(4, typeTiles.length + areaTiles.length)}`}>
-          {[...typeTiles, ...areaTiles].map((x) => (
+      {(typeTiles.length + pageAreas.length) > 0 && (
+        <ul class="k-tiles lt__sm" style={`--n: ${Math.min(5, typeTiles.length + pageAreas.length)}`}>
+          {[...typeTiles, ...pageAreas].map((x) => (
             <li class="k-tile">
               {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="200px" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
               <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>

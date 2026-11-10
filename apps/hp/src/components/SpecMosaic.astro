@@ -13,7 +13,7 @@
 // one post at a time in a horizontal row (photo beside the text), swiped / scrolled sideways, dashes under it
 // as the home carousels; the side menu turns it. No autoplay (text is read) and the wheel is never taken: the
 // page scrolls down as usual. The row has one height, the tallest post's. All posts stay in the HTML.
-import { h2Id } from '../lib/seo-pages';
+import { h2Id, isListLink } from '../lib/seo-pages';
 import { t, type Lang } from '../lib/i18n';
 import LinkTiles from './LinkTiles.astro';
 export type MosaicPhoto = { src: string; srcset: string; alt: string; style: string };
@@ -25,7 +25,9 @@ const { html, photos = [], standout = '', marks = [], carousel = false, lang = '
 const text = (s: string) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   const h2 = s.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '';
-  const photo = photos[i] ?? null;
+  // a section with links shows them as tiles across the whole post, without the big photo (Sergei 2026-11-10:
+  // «убери большие картинки из блоков где много текста и много ссылок»)
+  const photo = (sectionLinks[i] ?? []).some((l) => isListLink(l.href)) ? null : photos[i] ?? null;
   const dark = [standout].flat().filter(Boolean).includes(text(h2));
   return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, links: sectionLinks[i] ?? [], ask: marks.includes(text(h2)), wide: i === 0 || dark || !photo };
 });

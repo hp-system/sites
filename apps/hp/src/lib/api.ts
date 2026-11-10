@@ -73,6 +73,30 @@ export function visitorCountry(request: Request): string | undefined {
   return /^[A-Z]{2}$/.test(c) && c !== 'XX' && c !== 'T1' ? c : undefined;
 }
 
+/**
+ * WHERE A PROPERTY ENTERS THE SITE, ITS FIELDS ARE BROUGHT TO THE NAMES THE SITE USES (#190, #195).
+ * The CRM changed two public fields without the site knowing; both failed silently (empty pages):
+ *   · `luxury` → `lux_prop` (boolean): the villas pages were empty.
+ *   · `sea_access` since 2026-11-07 holds the Onsea codes instead of front/walking/nearby/none
+ *     (`field_definitions.config.previous_options_20261107` in the CRM): the seafront pages were empty.
+ * Codes → the site's groups (CRM labels, read 2026-11-10):
+ *   front:   1 private beach · 2 waterfront without interruption · 5 waterfront with road between ·
+ *            6 waterfront without beach access
+ *   walking: 7 up to 5 min walk · 8 up to 10 min · 9 up to 15 min · 3 complex at walking distance
+ *   nearby:  10 non-walkable distance · 4 complex not in walking distance
+ * The code itself is kept as `sea_access_code`. Idempotent: a word stays as it is.
+ */
+const SEA_GROUP: Record<string, string> = { '1': 'front', '2': 'front', '5': 'front', '6': 'front',
+  '7': 'walking', '8': 'walking', '9': 'walking', '3': 'walking', '10': 'nearby', '4': 'nearby' };
+export function normalizeProperty<T extends { attributes?: Attrs }>(p: T): T {
+  const a = p?.attributes as any;
+  if (!a) return p;
+  const sea = a.sea_access == null ? '' : String(a.sea_access);
+  if (SEA_GROUP[sea]) { a.sea_access_code = sea; a.sea_access = SEA_GROUP[sea]; }
+  if (a.luxury === undefined && typeof a.lux_prop === 'boolean') a.luxury = a.lux_prop;
+  return p;
+}
+
 export const api = {
   properties: (q: Record<string, string | number | undefined> = {}, memberToken?: string, country?: string) => {
     const p = new URLSearchParams();
@@ -81,7 +105,7 @@ export const api = {
     return get<ListResponse>(`/site/properties${qs ? '?' + qs : ''}`, memberToken, country);
   },
   property: (id: string, memberToken?: string, country?: string) =>
-    get<SiteProperty>(`/site/property/${encodeURIComponent(id)}`, memberToken, country),
+    get<SiteProperty>(`/site/property/${encodeURIComponent(id)}`, memberToken, country).then(normalizeProperty),
 };
 
 /** Το API δίνει 60 ανά σελίδα — μαζεύουμε όσα χρειάζονται για τα σύνολα της αρχικής. */
@@ -138,7 +162,7 @@ async function fetchAll(memberToken?: string, country?: string): Promise<SitePro
   }
   // B-26: a property without a public id (empty `reference`, no `onsea_id`) has no URL — it was
   // counted, missing from the list and declared in the sitemap as `/<lang>/property/` (404 × 9).
-  return out.filter((p) => isRealProperty(p) && REF_RE.test(refOf(p)));
+  return out.filter((p) => isRealProperty(p) && REF_RE.test(refOf(p))).map(normalizeProperty);
 }
 
 // ── ΚΟΙΝΗ ΜΝΗΜΗ ───────────────────────────────────────────────────────────
@@ -265,7 +289,7 @@ export async function allProperties(memberToken?: string, country?: string): Pro
 let publicAt: string | null = null;
 async function fromPublicDb(country?: string): Promise<SiteProperty[]> {
   try {
-    const keep = (xs: SiteProperty[]) => xs.filter((p) => isRealProperty(p) && REF_RE.test(refOf(p)));
+    const keep = (xs: SiteProperty[]) => xs.filter((p) => isRealProperty(p) && REF_RE.test(refOf(p))).map(normalizeProperty);
     const { all, gr, changedAt } = await publicSets<SiteProperty>();
     if (!all.length) throw new Error('public DB has no properties yet');
     const now = Date.now();

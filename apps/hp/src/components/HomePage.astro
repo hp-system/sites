@@ -325,7 +325,7 @@ if (spec?.faq.length) jsonLd.push({
 
     {/* SEO portion 2: George's H2 body, FAQ and links — at the very bottom, after the close and
         before the footer (Sergei 08/11). Still «below the grid» as the spec's rule 9 asks. */}
-    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" links="sections"
+    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" links="sections" items={items}
       join={(['P13', 'P14'] as const).map((id) => specOf(id, lang)).filter((x) => !!x)
         .map((x) => ({ href: x!.path, text: x!.anchor, withId: 'P11' }))}
       more={[

@@ -360,7 +360,7 @@ if (faqItems.length) {
 
     {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
         them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
-    {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} />}
+    {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} />}
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
         menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 

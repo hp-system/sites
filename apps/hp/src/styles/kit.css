@@ -118,3 +118,12 @@
 .k-tile__s { display: block; margin-top: 2px; font-size: var(--fs-s-1); letter-spacing: .06em; opacity: .95; text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.5); }
 @media (min-width: 1024px) { .k-tile__t { padding: 56px var(--s4) var(--s4); } .k-tile__l { font-size: var(--fs-s1); } }
 @media (prefers-reduced-motion: reduce) { .k-tile img, .k-tile__l { transition: none; } }
+
+/* ── Tile row: four tiles a page on desktop (home Collections #101), two on phones; scrolled, every tile
+   in the HTML. Turned by a .k-dash group. ─────────────────────────────────────────────────────────── */
+.k-rail { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s3); overflow-x: auto; scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; }
+.k-rail::-webkit-scrollbar { display: none; }
+.k-rail > * { flex: none; width: calc((100% - var(--s3)) / 2); scroll-snap-align: start; }
+@media (min-width: 1024px) { .k-rail > * { width: calc((100% - 3 * var(--s3)) / 4); } }
+@media (prefers-reduced-motion: reduce) { .k-rail { scroll-behavior: auto; } }

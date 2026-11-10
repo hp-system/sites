@@ -15,6 +15,8 @@ export type SpecPage = {
   photoThemes?: { after: string; tags: string[]; category?: string; minPrice?: number }[];
   /** own pages: the H2 whose block stands out (black, as the home's fact tiles) */
   standout?: string;
+  /** own pages: a fixed photo per post (CC0 stock, public/pages/…/<file>_640w|_960w.webp); wins over photoThemes */
+  postPhotos?: { after: string; file: string; alt: string }[];
 };
 
 const files = {

@@ -241,7 +241,14 @@ const faqItems = fresh ? fresh.faq : d.faq;
 // theme's tags (and is land / at least the minimum price, when the theme says so). Never a locked
 // property, never the same property twice; always watermarked (R-007), alt from the photo's own texts.
 const mosaicPhotos: (MosaicPhoto | null)[] = [];
-if (fresh?.photoThemes?.length) {
+// Fixed photos per post win (Sergei 2026-11-10: every post has a picture «найди в интернете»): CC0
+// stock photos of the topic (not properties, so no watermark), sources in public/pages/sell/posts/SOURCES.json.
+if (fresh?.postPhotos?.length) {
+  for (const h of (fresh.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((x) => x.replace(/<[^>]+>/g, '').trim())) {
+    const pp = fresh.postPhotos.find((t) => t.after === h);
+    mosaicPhotos.push(pp ? { src: `${pp.file}_960w.webp`, srcset: `${pp.file}_640w.webp 640w, ${pp.file}_960w.webp 960w`, alt: pp.alt, style: '' } : null);
+  }
+} else if (fresh?.photoThemes?.length) {
   const used = new Set<string>();
   const secH2 = (fresh.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
   for (const h of secH2) {
@@ -342,8 +349,7 @@ if (faqItems.length) {
 
     {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
         them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
-    {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq}
-                         cta={{ text: ui.adviser, href: d.form ? '#form' : (fresh.ctaHref || `${prefix(lang)}/contact`) }} />}
+    {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} />}
     {fresh && <SpecText page={fresh} part="rest" lang={lang} body="none" faq="none" />}
 
     {d.form && (

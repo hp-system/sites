@@ -2,57 +2,83 @@
 // The Sell FAQ and posts with an on-page navigator beside them (Sergei 2026-11-10: «сделаем
 // етот блок который станет вместе с Frequently asked questions, и будет ехать вниз с скролом.
 // Там мы разметим все заголовки статей … навигатор между ними»).
-// The navigator is the article page's «On this page» box (ArticlePage.astro .art-side /
-// .side-box: right column 300 px, ink top rule, label, ink-2 links, sticky under the header);
-// the current post is bold ink, as the chosen item of the services menu. Under it the page's
-// adviser button (.btn) to the page form. Phones (< 1000 px): no navigator, as on articles.
+// Sergei 2026-11-10, second pass:
+//   · the FAQ on a white band across the whole width, apart from the posts below;
+//   · the posts on the light beige of the home page (--paper-2), never the dark beige;
+//   · the side panel styled as the member panel's (prototype PanelV4: left column, a soft
+//     rule on its right, sections split by a rule, sticky; the big black «Add your property»);
+//   · a conversion button instead of «Contact an adviser»: guests go to sign-up and then
+//     straight to the add-property form (/login?next=/panel/submit, gilded edge: a call to
+//     register); members go to the form.
+// The current post in the list is bold ink, as the chosen item of the services menu.
+// Phones (< 1000 px): no side panel, as on the article page.
 // SEO: every heading, question and answer stays in the HTML in the spec order; the links are
 // plain #anchors.
 import FaqSearch from './FaqSearch.astro';
 import SpecMosaic, { type MosaicPhoto } from './SpecMosaic.astro';
 import { h2Id, type SpecPage } from '../lib/seo-pages';
-import { t, type Lang } from '../lib/i18n';
+import { prefix, t, type Lang } from '../lib/i18n';
 
 interface Props {
-  page: SpecPage; lang: Lang; photos: (MosaicPhoto | null)[];
-  faqH: string; cta?: { text: string; href: string };
+  page: SpecPage; lang: Lang; photos: (MosaicPhoto | null)[]; faqH: string;
+  /** a member is signed in: the button goes straight to the add-property form */
+  member: boolean;
 }
-const { page, lang, photos, faqH, cta } = Astro.props;
+const { page, lang, photos, faqH, member } = Astro.props;
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
 const nav = [...(page.faq.length ? [{ id: 'faq', text: faqH }] : []), ...heads.map((h) => ({ id: h2Id(h), text: h }))];
+const submit = `${prefix(lang)}/panel/submit`;
+const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(submit)}`;
 ---
 <section class="pn">
   <div class="wrap pn__in">
-    <div class="pn__main">
-      {page.faq.length > 0 && <FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare />}
-      <SpecMosaic html={page.body} photos={photos} standout={page.standout} />
-    </div>
-    <aside class="art-side pn__side" aria-label={t(lang, 'info.on_page')}>
-      <nav class="side-box" data-pn>
+    <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
+      <nav class="pn__nav" data-pn>
         <p class="t-label">{t(lang, 'info.on_page')}</p>
         <ul>{nav.map((n) => <li><a href={`#${n.id}`} data-pn-to={n.id}>{n.text}</a></li>)}</ul>
-        {cta && <p class="pn__cta"><a class="btn" href={cta.href}>{cta.text}</a></p>}
       </nav>
+      <a class:list={['pn__go', !member && 'pn__go--gild']} href={go} rel={member ? undefined : 'nofollow'}
+         data-ev={member ? 'content:sell' : 'register:info'}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+        {t(lang, 'svc.add_cta')}
+      </a>
     </aside>
+    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare /></div>}
+    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} /></div>
   </div>
 </section>
 
 <style>
-  .pn { background: var(--paper-3); padding-block: var(--s7); }
-  .pn__in { display: grid; gap: var(--s6); }
-  .pn__main { min-width: 0; display: grid; gap: 12px; align-content: start; }
+  .pn { background: var(--paper-2); overflow-x: clip; }
+  .pn__in { display: grid; }
+  .pn__faq, .pn__posts { min-width: 0; padding-block: var(--s7); }
+  /* the FAQ band: white across the whole width */
+  .pn__faq { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
   .pn__side { display: none; }
   @media (min-width: 1000px) {
-    .pn__in { grid-template-columns: minmax(0, 1fr) 300px; }
-    .pn__side { display: block; position: sticky; top: var(--s5); align-self: start; }
+    .pn__in { grid-template-columns: 260px minmax(0, 1fr); column-gap: var(--s6); }
+    .pn__faq, .pn__posts { grid-column: 2; }
+    .pn__side { display: flex; flex-direction: column; gap: 14px; grid-column: 1; grid-row: 1 / span 2;
+      position: sticky; top: var(--s5); align-self: start; z-index: 1;
+      margin-block: var(--s7); padding: 4px 28px 4px 0; border-right: 1px solid var(--line-soft); }
   }
-  .side-box { border-top: 1px solid var(--ink); padding: var(--s3) 0 var(--s5); }
-  .side-box ul { list-style: none; margin: var(--s2) 0 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-s0); }
-  .side-box a:not(.btn) { color: var(--ink); text-decoration: none; }
-  .side-box a:not(.btn):hover { text-decoration: underline; }
-  .side-box a.on { color: var(--ink); font-weight: 600; }
-  .side-box .t-label { color: var(--ink); }
-  .pn__cta { margin: var(--s5) 0 0; }
+  .pn__nav ul { list-style: none; margin: var(--s2) 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); display: grid; gap: 6px; font-size: var(--fs-s0); }
+  .pn__nav a { color: var(--ink); text-decoration: none; }
+  .pn__nav a:hover { text-decoration: underline; }
+  .pn__nav a.on { font-weight: 600; }
+  .pn__nav .t-label { margin: 0; color: var(--ink); }
+  /* the member panel's big black button */
+  .pn__go { display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; margin-top: var(--s2); padding: 0 16px;
+    box-sizing: border-box; background: var(--ink); color: var(--paper); border: 1px solid var(--ink); text-decoration: none;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; transition: opacity .15s ease; }
+  .pn__go:hover { opacity: .84; }
+  .pn__go:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  /* guests: a call to register → the gilded edge (same accent as home, list and property) */
+  .pn__go--gild { background: transparent; color: var(--gold-lo); border-color: var(--gold);
+    border-image: conic-gradient(from var(--gilda, 315deg), var(--gold-hi), var(--gold) 25%, var(--gold-lo) 50%, var(--gold) 75%, var(--gold-hi)) 1;
+    transition: color .9s ease-in-out; }
+  .pn__go--gild:hover { opacity: 1; color: var(--gold); }
+  .pn__go--gild:focus-visible { outline-color: var(--gold-dk); outline-offset: 3px; }
   .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
 </style>
 

@@ -170,7 +170,44 @@
         }
       ],
       "standout": "Exclusive assignment: one agency for your sale",
-      "_photoThemes": "Sergei 2026-11-09: «промежутки картинками между блоками по тематике, а не рандомно» — one photo after each section, chosen by the photo's own tag (and land / €1M+ where the topic asks), always watermarked and open to guests."
+      "_photoThemes": "Sergei 2026-11-09: «промежутки картинками между блоками по тематике, а не рандомно» — one photo after each section, chosen by the photo's own tag (and land / €1M+ where the topic asks), always watermarked and open to guests.",
+      "postPhotos": [
+        {
+          "after": "How selling with us works",
+          "file": "/pages/sell/posts/how-selling-with-us-works",
+          "alt": "A key in the lock of a front door"
+        },
+        {
+          "after": "What we need from you",
+          "file": "/pages/sell/posts/what-we-need-from-you",
+          "alt": "A signed document and a pen on a wooden desk"
+        },
+        {
+          "after": "How we present your property to buyers",
+          "file": "/pages/sell/posts/how-we-present-your-property-to-buyers",
+          "alt": "A photographer holding a camera to the eye"
+        },
+        {
+          "after": "Selling while you live abroad",
+          "file": "/pages/sell/posts/selling-while-you-live-abroad",
+          "alt": "A traveller at an airport window watching the planes"
+        },
+        {
+          "after": "Three ways to work with us",
+          "file": "/pages/sell/posts/three-ways-to-work-with-us",
+          "alt": "An adviser and clients talking at a table"
+        },
+        {
+          "after": "Exclusive assignment: one agency for your sale",
+          "file": "/pages/sell/posts/exclusive-assignment-one-agency-for-your-sale",
+          "alt": "A luxury villa with a pool above the sea"
+        },
+        {
+          "after": "What it costs",
+          "file": "/pages/sell/posts/what-it-costs",
+          "alt": "A calculator next to a small model house"
+        }
+      ]
     },
     {
       "id": "P25",

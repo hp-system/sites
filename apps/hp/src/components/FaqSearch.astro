@@ -52,9 +52,8 @@ const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
 <style>
   .fqs { padding: 56px 0; }
   .fqs__in { max-width: 900px; }
-  .fqs--bare { padding: var(--s5); background: var(--paper); }
+  .fqs--bare { padding: 0; }
   .fqs--bare .fqs__in { max-width: none; }
-  @media (min-width: 760px) { .fqs--bare { padding: var(--s6); } }
   .fqs__h { margin: 0 0 18px; font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; text-align: center; color: var(--ink); }
   .fqs__h a { color: inherit; text-decoration: none; }
   .fqs__h a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
@@ -80,7 +79,7 @@ const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
   .fqs-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 20px; box-sizing: border-box; background: var(--paper);
     color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
     cursor: pointer; transition: background .2s ease, border-color .2s ease; }
-  .fqs-btn:hover { background: var(--paper-3); border-color: var(--ink); }
+  .fqs-btn:hover { background: var(--paper-2); border-color: var(--ink); }
   .fqs-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 </style>
 

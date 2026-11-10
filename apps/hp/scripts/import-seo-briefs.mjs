@@ -8,7 +8,7 @@
 // (title ≤ 60 before the brand, meta 130–155, intro ≤ 120 words, HTML only p h2 h3 ul li strong,
 // H2 outline = the body's H2s, FAQ questions = answers, no counts). Exit 1 writes nothing.
 // EN only until stage 5: each other language is written later from the brief with its own keyword.
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { htmlProblems, bodyH2, TITLE_MAX, META_MIN, META_MAX, INTRO_MAX_WORDS } from './seo-spec-rules.mjs';
@@ -38,6 +38,11 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
     if (JSON.stringify(bodyH2(b.body)) !== JSON.stringify(b.h2)) err('H2 outline ≠ the body\'s H2s');
     for (const t of b.photoThemes ?? []) if (!b.h2.includes(t.after)) err(`photo theme after «${t.after}»: no such H2`);
     if (b.standout && !b.h2.includes(b.standout)) err(`standout «${b.standout}»: no such H2`);
+    for (const t of b.postPhotos ?? []) {
+      if (!b.h2.includes(t.after)) err(`post photo after «${t.after}»: no such H2`);
+      for (const w of [640, 960]) if (!existsSync(join(APP, 'public', `${t.file}_${w}w.webp`))) err(`post photo ${t.file}_${w}w.webp: no such file`);
+      if (!t.alt) err(`post photo after «${t.after}»: no alt`);
+    }
     if (b.faq.length !== b.faqQuestions.length || b.faq.some((x, i) => x.q !== b.faqQuestions[i])) err('FAQ answers ≠ FAQ questions');
     const text = [b.title, b.meta, b.h1, b.intro, b.body, ...b.faq.map((x) => x.a)].join(' ').replace(/<[^>]+>/g, ' ');
     if (/\b\d{3,}\s+(properties|homes|listings|villas|plots)\b/i.test(text)) err('a property count (README rule 13)');
@@ -50,7 +55,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
       linksOut: b.linksOut, linkedFrom: b.linkedFrom, cta: b.cta, ctaHref: b.ctaHref ?? '', oldUrls: b.oldUrls,
       words: words(b.intro + b.body + b.faq.map((x) => x.a).join(' ')), editorialLine: b.editorialLine ?? '',
       lawyerCheck: b.lawyerCheck ?? '', source: `brief ${f}`,
-      photoThemes: b.photoThemes ?? [], standout: b.standout ?? '',
+      photoThemes: b.photoThemes ?? [], standout: b.standout ?? '', postPhotos: b.postPhotos ?? [],
     });
   }
 }

@@ -21,6 +21,13 @@ const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   const dark = !!standout && text(h2) === standout;
   return { h2, rest: s.replace(/<h2>[\s\S]*?<\/h2>/, ''), photo, dark, wide: i === 0 || dark || !photo };
 });
+// two per row: a post left alone in its row (an odd run between wide ones) becomes wide, so no row has a hole
+let run: typeof posts = [];
+for (const p of [...posts, null]) {
+  if (p && !p.wide) { run.push(p); continue; }
+  if (run.length % 2) run[run.length - 1].wide = true;
+  run = [];
+}
 ---
 <div class="sp"><div class="sp__grid">
   {posts.map((p) => (
@@ -43,7 +50,7 @@ const posts = html.split(/(?=<h2>)/).filter((s) => s.trim()).map((s, i) => {
   .sp { container-type: inline-size; }
   .sp__grid { display: grid; gap: 12px; }
   .sp__post { min-width: 0; display: grid; align-content: start; background: var(--paper); }
-  .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-3); }
+  .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-2); }
   .sp__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focal, 50% 50%);
     transition: transform .6s ease; }
   .sp__post:hover .sp__ph img { transform: scale(1.03); }

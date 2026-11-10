@@ -30,7 +30,13 @@ const { cards } = Astro.props;
 
 <style>
   .sc { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
-  @media (min-width: 900px) { .sc { grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); } }
+  /* two cards side by side across the width; an odd last card under them, across the width, photo left and
+     text right (Sergei 2026-11-10: «2 блока в всю ширину и третий блок под ними горизонтальный») */
+  @media (min-width: 900px) {
+    .sc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sc__c:last-child:nth-child(odd) { grid-column: 1 / -1; flex-direction: row; }
+    .sc__c:last-child:nth-child(odd) .sc__ph { flex: 0 0 42%; aspect-ratio: auto; min-height: 260px; }
+  }
   .sc__c { display: flex; flex-direction: column; min-width: 0; background: var(--paper); transition: box-shadow .3s ease; }
   .sc__c:hover { box-shadow: 0 18px 40px rgba(11,14,16,.12); }
   .sc__ph { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--paper-2); }

@@ -42,7 +42,7 @@ try {
   }
   const qs = (hub.match(/<details class="k-faq__q/g) ?? []).length;   // kit FAQ list (#186)
   // the brief's FAQ (P35) replaced George's 20+ questions here; his FAQ page stays linked
-  check('/en/services hub: the brief's FAQ questions in the HTML', qs >= 5, `${qs}`);
+  check('/en/services hub: the FAQ questions of the brief in the HTML', qs >= 5, `${qs}`);
   check('/en/services hub: window form posts through the shared form', hub.includes('id="svcPop"') && hub.includes('data-in-pop'), 'dialog');
   check('/en/services phones: George\'s text and cards kept', hub.includes('One team for the whole property') && hub.includes('info-grid w1-m'), 'w1-m');
 

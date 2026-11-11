@@ -77,7 +77,8 @@ const TIMES = [pui(lang, 'cbAsap'), pui(lang, 'cbMorning'), pui(lang, 'cbAfterno
 const FAQ_SHOW = 6;
 const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 ---
-<div class="w1-d svc" data-lang={lang}>
+{/* with the brief's sections the hub is the page on phones too: the panels stack as cards (svc--m) */}
+<div class:list={['w1-d svc', { 'svc--m': roles.some((r) => r.sec) }]} data-lang={lang} data-contact={contact}>
   <section class="svc-top">
     <p class="svc-lead">{tt('svc.lead_a')} <a class="lk2" href={contact} data-pop="speak">{tt('svc.talk')}</a> {tt('svc.lead_b')}</p>
     <div class="svc-nav" id="svcNav" role="tablist" aria-label={tt('svc.menu')}>
@@ -97,6 +98,8 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
         <div class:list={['svc-panel', { on: i === 0 }]} role="tabpanel" id={`svcPanel${i}`} aria-labelledby={`svcTab${i}`} hidden={i !== 0}>
           <picture class="svc-panel__img">
             <source media="(min-width: 1024px)" srcset={r.srcset || r.img} sizes="(min-width: 1280px) 576px, 45vw" />
+            {/* phones see the panels only with the brief's sections (svc--m): then the 800w photo, lazy */}
+            {r.sec && <source media="(max-width: 1023px)" srcset={r.img.replace(/_1920w\.jpg$/, '_800w.jpg')} />}
             <img src={GIF} alt={r.alt} width="1920" height="1080" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
           </picture>
           <div>
@@ -327,6 +330,62 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
   }
 </style>
 
+<style>
+  /* ── phones, a hub with the brief's sections (Sergei 2026-11-11 «да»): the page in one column, app-like —
+     the roles a row of chips that scrolls sideways and leads to each card, every panel a card (photo, H2,
+     folding text, anchor), the doors and tiles stacked. Same HTML as the desktop: only the CSS differs. ── */
+  @media (max-width: 1023px) {
+    :global(.w1) .svc.svc--m { display: block; }
+    .svc--m .svc-top { padding: 0 16px; }
+    .svc--m .svc-lead { margin: 4px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); }
+    .svc--m .lk2 { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+    .svc--m .svc-nav { display: flex; gap: 8px; overflow-x: auto; margin: 16px -16px 0; padding: 0 16px 14px; scroll-padding-inline: 16px; scroll-snap-type: x proximity; scrollbar-width: none; }
+    .svc--m .svc-nav::-webkit-scrollbar { display: none; }
+    .svc--m .svc-role { all: unset; flex: none; display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; box-sizing: border-box;
+      border: 1px solid var(--line); background: var(--paper); color: var(--ink); font-size: var(--fs-s-1); line-height: 1.2; white-space: nowrap; cursor: pointer; scroll-snap-align: start; }
+    .svc--m .svc-role svg { width: 22px; height: 22px; flex: none; }
+    .svc--m .svc-role:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+    .svc--m .svc-panels { background: var(--paper-2); padding: 16px 0 24px; }
+    .svc--m .svc-panels .wrap { display: flex; flex-direction: column; gap: 16px; }
+    .svc--m .svc-panel, .svc--m .svc-panel[hidden] { display: flex; flex-direction: column; visibility: visible; background: var(--paper); animation: none;
+      scroll-margin-top: calc(var(--hdr-h, 64px) + 12px); }
+    .svc--m .svc-panel__img { display: block; overflow: hidden; }
+    .svc--m .svc-panel__img img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+    .svc--m .svc-panel > div { padding: 20px 16px 22px; min-width: 0; }
+    .svc--m .svc-lbl { margin: 0; font-size: var(--fs-s-1); font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+    .svc--m .svc-h { margin: 8px 0 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; color: var(--ink); }
+    .svc--m .svc-ft { margin: 14px 0 0; }
+    .svc--m .svc-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin: 18px 0 0; }
+    .svc--m .svc-go { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; color: var(--ink); font-weight: 600; text-decoration: underline;
+      text-underline-offset: 4px; text-decoration-thickness: 1px; }
+    .svc--m .svc-go::before { content: '→'; text-decoration: none; display: inline-block; }
+    .svc--m .btnw { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 16px; box-sizing: border-box; background: var(--paper);
+      color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+
+    .svc--m .svc-doors-s { background: var(--paper-2); padding: 8px 0 24px; }
+    .svc--m .svc-doors { display: flex; flex-direction: column; gap: 12px; }
+    .svc--m .svc-door { display: flex; flex-direction: column; gap: 16px; padding: 22px 16px 18px; background: var(--paper); color: var(--ink); text-decoration: none; }
+    .svc--m .svc-door b { display: block; font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; }
+    .svc--m .svc-door .dp { display: block; margin-top: 8px; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
+    .svc--m .svc-door .dl { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+
+    .svc--m .svc-tiles { padding: 24px 0; }
+    .svc--m .svc-tiles__in { display: flex; flex-direction: column; gap: 12px; }
+    .svc--m .svc-tile { display: flex; flex-direction: column; gap: 20px; padding: 24px 16px; background: var(--paper-2); }
+    .svc--m .svc-tile p { margin: 0; }
+    .svc--m .svc-tile h3 { margin: 8px 0 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; color: var(--ink); }
+    .svc--m .svc-tile--dk { background: var(--ink-deep); color: var(--paper); }
+    .svc--m .svc-tile--dk h3 { color: var(--paper); }
+    .svc--m .svc-tile .svc-acts { margin: 0; }
+
+    .svc--m .svc-ct { border-top: 1px solid var(--line-soft); padding: 28px 0 32px; }
+    .svc--m .svc-ct__in { display: flex; flex-direction: column; gap: 18px; }
+    .svc--m .svc-ct h2 { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; color: var(--ink); }
+    .svc--m .svc-ct__s { margin: 8px 0 0; font-size: var(--fs-s0); color: var(--muted); }
+  }
+</style>
+
 <style is:global>
   /* The shared top of the info page (InfoPage.astro) as the design draws it on the services hub:
      a centred eyebrow and H1, no breadcrumb (it is in the bar above the footer). Desktop only. */
@@ -363,7 +422,11 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
       panels.forEach((p, k) => { p.hidden = k !== cur; p.classList.toggle('on', k === cur); });
       if (focus) tabs[cur]?.focus();
     };
-    tabs.forEach((b, i) => b.addEventListener('click', () => { t0 = Date.now(); show(i); }));
+    // phones (stacked panels): a role goes to its card
+    tabs.forEach((b, i) => b.addEventListener('click', () => {
+      if (!desk.matches) { panels[i]?.scrollIntoView({ behavior: still.matches ? 'auto' : 'smooth', block: 'start' }); return; }
+      t0 = Date.now(); show(i);
+    }));
     document.getElementById('svcNav')?.addEventListener('keydown', (e) => {
       const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
       if (!step) return;
@@ -474,7 +537,10 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     });
     pop.addEventListener('iform:sent', () => { if (view) view.hidden = true; if (done) done.hidden = false; done?.querySelector<HTMLElement>('.btn')?.focus(); });
     root.querySelectorAll<HTMLElement>('[data-pop]').forEach((b) => b.addEventListener('click', (e) => {
-      if (!desk.matches) return;                 // phones: the links go to their pages
+      if (!desk.matches) {                       // phones: the links go to their pages, a button to the contact page
+        if (b.tagName === 'BUTTON' && root.dataset.contact) window.location.href = root.dataset.contact;
+        return;
+      }
       if (open(b.dataset.pop ?? 'speak', b.dataset.src)) e.preventDefault();
     }));
   }

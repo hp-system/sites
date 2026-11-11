@@ -25,6 +25,8 @@ related:
   href: /en/services/seller-services
 toc: false
 old_url: /en/why-register/owner
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «да»)
+look: wave1
 ---
 
 <!-- widget: video FNnOjtkpciA | The Owner’s Panel | Halkidiki Properties -->

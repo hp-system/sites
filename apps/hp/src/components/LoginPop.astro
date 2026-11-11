@@ -277,6 +277,8 @@ const JS_T = {
   /* Phone with the country-code picker — the property page's look (#103). */
   .ph { position: relative; display: flex; height: 46px; margin-top: 8px; border: 1px solid var(--line); background: var(--paper); box-sizing: border-box; }
   .ph:focus-within { border-color: var(--ink); }
+  /* a missing or wrong field: the error colour of this window, without a message box */
+  .fi.is-bad, .ph.is-bad { border-color: #A3312B; box-shadow: inset 0 0 0 1px #A3312B; }
   .ph #ph { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0 11px; font: inherit; font-size: var(--fs-s0); color: var(--ink); background: transparent; outline: none; }
   .dial { display: flex; flex: none; width: 88px; height: 100%; align-items: center; justify-content: space-between; gap: 4px; padding: 0 8px;
           background: transparent; border: 0; border-inline-end: 1px solid var(--line); font: inherit; font-size: var(--fs-s-1); color: var(--ink); cursor: pointer; }
@@ -435,17 +437,34 @@ const JS_T = {
   agree.addEventListener('change', syncAgree); syncAgree();
 
   let first = '', last = '', phone = '', email = '', needs: string[] = [], busy = false;
+  // a field that is missing or wrong lights up until the visitor types in it
+  const mark = (els: HTMLElement[]) => {
+    els.forEach((el) => { el.classList.add('is-bad'); (el.matches('input') ? el : el.querySelector('input'))?.setAttribute('aria-invalid', 'true'); });
+    const first0 = els[0];
+    ((first0.matches('input') ? first0 : first0.querySelector('input[type=tel]')) as HTMLInputElement | null)?.focus();
+  };
+  [$('fn'), $('sn'), $('ph')].forEach((inp) => inp.addEventListener('input', () => {
+    const box = inp.id === 'ph' ? $('ph-w') : inp;
+    box.classList.remove('is-bad'); inp.removeAttribute('aria-invalid');
+    if (inp.id === 'ph') clear('e0');
+  }));
   ($('f0') as HTMLFormElement).addEventListener('submit', (ev) => {
     ev.preventDefault(); clear('e0');
     if (!agree.checked) return;
     first = ($('fn') as HTMLInputElement).value.trim();
     last = ($('sn') as HTMLInputElement).value.trim();
-    if (first.length < 2) return fail('e0', L.e_first);
-    if (last.length < 2) return fail('e0', L.e_last);
-    const p = checkPhone(dial?.code() ?? '30', ($('ph') as HTMLInputElement).value);
+    // Sergei 2026-11-11: no «Please enter your first name» box — the empty fields light up, the cursor goes to
+    // the first one. A phone that is there but wrong keeps a short line, so the visitor knows what to fix.
+    const raw = ($('ph') as HTMLInputElement).value.trim();
+    const bad: HTMLElement[] = [];
+    if (first.length < 2) bad.push($('fn'));
+    if (last.length < 2) bad.push($('sn'));
+    if (!raw) bad.push($('ph-w'));
+    if (bad.length) { mark(bad); return; }
+    const p = checkPhone(dial?.code() ?? '30', raw);
     // Mobiles only (George 6/8): a Greek number must be 69…, checked before anything is sent.
-    if (!p.ok) return fail('e0', p.code === 'gr' ? L.e_gr_mobile : L.e_phone);
-    if (p.e164.startsWith('+30') && !/^\+3069\d{8}$/.test(p.e164)) return fail('e0', L.e_gr_mobile);
+    if (!p.ok) { mark([$('ph-w')]); return fail('e0', p.code === 'gr' ? L.e_gr_mobile : L.e_phone); }
+    if (p.e164.startsWith('+30') && !/^\+3069\d{8}$/.test(p.e164)) { mark([$('ph-w')]); return fail('e0', L.e_gr_mobile); }
     phone = p.e164;
     show('p1', 'em');
   });

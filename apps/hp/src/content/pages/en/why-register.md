@@ -33,6 +33,8 @@ cards:
 - title: Real estate agent
   href: /en/real-estate-agent
   text: A profitable partnership. We register the client in your name and work for you.
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «да»)
+look: wave1
 ---
 
 ## Three levels of access

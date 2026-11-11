@@ -74,7 +74,7 @@ const { html, dark = false } = Astro.props;
     transition: max-height .26s cubic-bezier(.2,.7,.2,1); outline-offset: 2px;
     -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 70%, transparent); }
   /* a list row fades before its number column, the number stays whole */
-  .ft.is-fold > :global(ul) > :global(li:not(.is-open)) { --m: linear-gradient(90deg, #000 calc(100% - 140px), transparent calc(100% - 48px), #000 calc(100% - 40px));
+  .ft.is-fold > :global(ul) > :global(li:not(.is-open)) { --m: linear-gradient(90deg, #000 calc(100% - 100px), transparent calc(100% - 44px), #000 calc(100% - 40px));
     -webkit-mask-image: var(--m); mask-image: var(--m); }
   .ft.is-fold > :global(p.is-open), .ft.is-fold > :global(ul) > :global(li.is-open) { max-height: var(--full); cursor: auto;
     -webkit-mask-image: none; mask-image: none; }

@@ -44,7 +44,8 @@ try {
   // the brief's FAQ (P35) replaced George's 20+ questions here; his FAQ page stays linked
   check('/en/services hub: the FAQ questions of the brief in the HTML', qs >= 5, `${qs}`);
   check('/en/services hub: window form posts through the shared form', hub.includes('id="svcPop"') && hub.includes('data-in-pop'), 'dialog');
-  check('/en/services phones: George\'s text and cards kept', hub.includes('One team for the whole property') && hub.includes('info-grid w1-m'), 'w1-m');
+  // since the own brief (2026-11-11) the hub is the page on phones too (svc--m); George's phone layout would repeat it
+  check('/en/services phones: the hub (svc--m), no second copy of the links', hub.includes('svc--m') && !hub.includes('info-grid w1-m'), 'svc--m');
 
   // Section pages: one H2 per sub-service with the old slug as id, a jump list, the offer catalogue.
   for (const s of SECTIONS) {

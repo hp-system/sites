@@ -545,6 +545,9 @@ if (faqItems.length) {
       </figure>
     )}
 
+    {/* a hub with an own brief shows the hub on phones too (Sergei 2026-11-11): George's phone layout below would
+        repeat its links and texts */}
+    {!(hub && fresh) && <>
     <div class:list={['wrap info-grid', { 'w1-m': hubLike }]}>
       <article class="prose">
         {d.contact_card && (
@@ -627,6 +630,7 @@ if (faqItems.length) {
         </p>
       </div>
     </section>
+    </>}
   </>
   )}
 

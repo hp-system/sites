@@ -31,6 +31,8 @@ old_url: /en/about-us/our-story
 needs_content: false
 cards: []
 contact_card: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 ## 2007–2010: the journey begins

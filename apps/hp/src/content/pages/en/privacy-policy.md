@@ -18,6 +18,8 @@ related:
 toc: true
 old_url: /en/privacy-policy
 needs_content: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 Welcome to HalkidikiProperties.com

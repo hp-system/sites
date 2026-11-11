@@ -31,6 +31,8 @@ old_url: /en/our-partners
 needs_content: false
 cards: []
 contact_card: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 One of our primary principles in Halkidiki Properties is the careful choice of our partners, driven by their professionalism and high-quality services. We believe that the only way to produce the desired results is through proper collaboration, and we are very proud of them.

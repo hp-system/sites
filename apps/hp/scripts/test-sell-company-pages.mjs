@@ -71,7 +71,8 @@ try {
   check('/en/sell «Get to know how we sell.» + Related as design headings, not H2', sell.includes('Get to know how we sell.')
     && /<p[^>]*data-h[^>]*>Related<\/p>/.test(sell) && !/>Related<\/h2>/.test(sell), 'h2');
   check('/en/sell back to top', sell.includes('id="w1Top"'), 'button');
-  check('/en/contact keeps the old layout', !(pages['/en/contact'] ?? '').includes('class="info w1"') && !(pages['/en/contact'] ?? '').includes('class="iform iform--w1"'), 'unchanged');
+  // on the kit since 2026-11-11 (Sergei «все остальное да»): the reading layout, the contact card in its side panel
+  check('/en/contact on the kit: reading layout with the contact card', (pages['/en/contact'] ?? '').includes('class="rp"') && (pages['/en/contact'] ?? '').includes('rp-card'), 'rp');
 
   const about = pages['/en/about-us'] ?? '';
   const kids = ['/en/about-us/values', '/en/about-us/our-story', '/en/about-us/philosophy', '/en/about-us/company-social-responsibility', '/en/our-partners', '/en/careers'];

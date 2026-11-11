@@ -27,9 +27,10 @@ await up();
 try {
   const en = await page('/en/property/10015');
   check('floors: ground floor and floor 1, no basement', /class="fl__h"[^>]*>Floor 1</.test(en.html) && /class="fl__h"[^>]*>Ground floor</.test(en.html) && !en.html.includes('>Basement<'), 'fl');
-  check('title as the old site (en)', titleOf(en.html) === 'Detached house for sale in Nea Propontida, Halkidiki, Greece | #10015', titleOf(en.html));
+  // George's sheet 4 since 2026-11-11 (Sergei «Таблица Джорджа»), no longer the old-site title of #88
+  check('title by the sheet 4 pattern (en)', titleOf(en.html) === 'Detached house for sale in Nea Propontida, Halkidiki – 65 m²', titleOf(en.html));
   const el = await page('/' + encodeURIComponent('ακινητο') + '/10015');
-  check('title in Greek', titleOf(el.html) === 'Μονοκατοικία προς πώληση — Νέα Προποντίδα, Χαλκιδική | #10015', titleOf(el.html));
+  check('title in Greek (sheet 4)', titleOf(el.html) === 'Μονοκατοικία προς πώληση 65 τ.μ., Νέα Προποντίδα Χαλκιδική', titleOf(el.html));
   const ru = await page('/ru/obekt/10015');
   check('ru: Russian type, not Bulgarian', ru.html.includes('Отдельный дом') && !ru.html.includes('Самостоятелна'), titleOf(ru.html));
   const he = await page('/he/neches/10015');

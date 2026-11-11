@@ -38,6 +38,8 @@ import { company } from '../lib/company';
 import { ui, facetUrl, FACETS, PAIRS, catKey, isLuxury } from '../lib/listing';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { brand } from '../brand/index';
+import { propertySeo, bedsText } from '../lib/property-seo';
+import { specOf, MUNI_SPEC } from '../lib/seo-pages';
 import {
   conditionOf, plotSqmOf,
   descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
@@ -128,11 +130,27 @@ const muniName = muniList?.name[lang] || muni;
 // ── SEO ────────────────────────────────────────────────────────────────────
 const pathFor = (l: Lang) => propertyUrl(l, id);
 const privacyHref = privacyPath(lang);            // the policy in the page language (#94)
-// #88: as the old site — "Detached house for sale in Kassandra, Halkidiki, Greece | #7729" — per language.
-const title = muniOwn ? pui(lang, 'seoTitle', { t: sub, m: muniOwn, id }) : pui(lang, 'seoTitleNoM', { t: sub, id });
+// George's spec, sheet 4 (Sergei 2026-11-11 «Таблица Джорджа», replaces the old-site titles of #88):
+// title, meta, H1 and the cover alt from the patterns of src/data/seo-property-template.json.
+// Two features for the meta: the sea, then the bedrooms (a plot: its first land fact, e.g. buildable).
+const bedsN = Number(a.bedrooms) || 0;
+const seoFeatures = [
+  seaLabel(a.sea_access, lang),
+  isLand(a) ? (landFactsOf(a, lang)[0]?.value ?? '') : bedsN > 0 ? bedsText(bedsN, lang, t(lang, 'list.bed1'), t(lang, 'list.bedn', { n: '{n}' })) : '',
+].filter(Boolean);
+const seo = propertySeo({
+  lang, type: sub, muniKey: FACETS.find((f) => f.q.municipality === muniKey(a))?.key, muni: muniOwn,
+  sqm: sqmN > 0 ? num(Math.round(sqmN), lang) : '', features: seoFeatures,
+  price: priceOk && price > 0 ? num(price, lang) : '', priceRequest: t(lang, 'card.price_request'),
+  view: seaLabel(a.sea_access, lang),
+});
+// without a municipality the patterns cannot be filled: the old-site title (#88) and the description stay
+const title = muniOwn ? seo.title : pui(lang, 'seoTitleNoM', { t: sub, id });
+const h1Text = muniOwn ? seo.h1 : heading;
+const coverAlt = muniOwn ? seo.alt : altOf(cover, lang, heading);
 // 🪤 ΤΟ ΙΔΙΟ STRING ΠΑΕΙ ΚΑΙ ΣΤΟ JSON-LD παρακάτω — άρα το κόψιμο πρέπει να είναι
 //    σωστό ΜΙΑ φορά, εδώ. Το σκέτο `.slice()` έκοβε στη μέση λέξης («…newly built co»).
-const metaDesc = clamp(desc || heading, 155);
+const metaDesc = muniOwn ? clamp(seo.meta, 160) : clamp(desc || heading, 155);
 const share = shareImage(cover);
 const here = pathFor(lang);
 
@@ -277,27 +295,40 @@ const bandPhoto = myMuni ? pickPhoto((p) => inMuni(myMuni)(p) && (p.attributes?.
 // the municipality's two topic pages, the other municipalities, homes / land, Greece.
 type ZoneCard = { t: string; href: string; photo: ReturnType<typeof coverOf>; about?: string };
 const zone: ZoneCard[] = [];
+// George's sheet 4: → type page · → municipality page · → P02 · → P03 (P01 in sr/bg/ro), exact anchors from 1_Pages.
+{
+  const subKey = String(a.subcategory ?? '').toLowerCase().trim();
+  const typeId = isLand(a) ? 'P08' : subKey === 'apartment' || subKey === 'studio' ? 'P05' : subKey === 'maisonette' ? 'P06'
+    : subKey === 'villa' ? 'P07' : catKey(a) === 'residency' ? 'P04' : '';
+  const muniId = MUNI_SPEC[String(muniKey(a) ?? '')] ?? '';
+  for (const sid of [typeId, muniId, 'P02', 'P03']) {
+    const sp = sid ? specOf(sid, lang) : undefined;
+    if (!sp?.anchor || zone.some((z) => z.href === sp.path)) continue;
+    // the spec links are always there, with a photo when one is open (rule 15 does not wait for photos)
+    zone.push({ t: sp.anchor, href: sp.path, photo: pickPhoto(() => true) });
+  }
+}
 for (const [m, k] of PAIRS) {
   if (muniFacet && m === muniFacet.key) {
     const f = FACETS.find((x) => x.key === k);
     const q = f?.q ?? {};
     const photo = pickPhoto((p) => inMuni(myMuni)(p) && (q.luxury ? isLuxury(p.attributes) : p.attributes?.sea_access === 'front'));
-    if (f && photo) zone.push({ t: `${f.name[lang]} — ${muniFacet.name[lang]}`, href: facetUrl(lang, m, k), photo });
+    if (f && photo && !zone.some((z) => z.href === facetUrl(lang, m, k))) zone.push({ t: `${f.name[lang]} — ${muniFacet.name[lang]}`, href: facetUrl(lang, m, k), photo });
   }
 }
 for (const f of FACETS.filter((x) => x.q.municipality && x.q.municipality !== myMuni)) {
   const ap = AREA_PAGES.find((x) => x.kind === 'municipality' && x.q.municipality === f.q.municipality);
   const photo = pickPhoto(inMuni(f.q.municipality as string));
-  if (photo) zone.push({ t: f.name[lang], href: facetUrl(lang, f.key), photo, about: lang === 'en' && ap ? areaUrl(ap.slug) : undefined });
+  if (photo && !zone.some((z) => z.href === facetUrl(lang, f.key))) zone.push({ t: f.name[lang], href: facetUrl(lang, f.key), photo, about: lang === 'en' && ap ? areaUrl(ap.slug) : undefined });
 }
 for (const k of ['homes', 'land']) {
   const f = FACETS.find((x) => x.key === k);
   const photo = f && pickPhoto((p) => catKey(p.attributes ?? {}) === f.q.category);
-  if (f && photo) zone.push({ t: f.name[lang], href: facetUrl(lang, k), photo });
+  if (f && photo && !zone.some((z) => z.href === facetUrl(lang, k))) zone.push({ t: f.name[lang], href: facetUrl(lang, k), photo });
 }
 {
   const photo = pickPhoto(() => true);
-  if (photo) zone.push({ t: t(lang, 'home.greece'), href: '/en/property-in-greece', photo });
+  if (photo && !zone.some((z) => z.href === '/en/property-in-greece')) zone.push({ t: t(lang, 'home.greece'), href: '/en/property-in-greece', photo });
 }
 const zonePages = Math.max(1, Math.ceil(zone.length / 3));
 // Το WhatsApp ανοίγει με έτοιμο μήνυμα — ο agent ξέρει αμέσως για ποιο μιλάμε.
@@ -306,7 +337,7 @@ const waText = encodeURIComponent(pui(lang, 'interest', { id }));
 const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}`;
 ---
 <Base lang={lang} title={title} description={metaDesc} pathFor={pathFor} jsonLd={jsonLd}
-      ogImage={share} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={altOf(cover, lang, heading)}>
+      ogImage={share} ogImageW={SHARE_W} ogImageH={SHARE_H} ogImageAlt={coverAlt}>
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={all.length} />
 
@@ -324,7 +355,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
       <div class="tt">
         <div class="tt__l">
-          <h1 class="t-h2 tt__h">{heading}</h1>
+          <h1 class="t-h2 tt__h">{h1Text}</h1>
           {luxury && <span class="lux">{pui(lang, 'luxury')}</span>}
           {/* Ο κλειδωμένος τόπος δηλώνεται ΡΗΤΑ — ο επισκέπτης πρέπει να ξέρει
               ότι υπάρχει κάτι πιο συγκεκριμένο, αλλιώς νομίζει ότι αυτό είναι όλο. */}
@@ -385,7 +416,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                    sizes={i === 0
                      ? '(min-width: 1024px) 50vw, (min-width: 900px) calc(50vw - 48px), 100vw'
                      : '(min-width: 1024px) 25vw, (min-width: 900px) calc(25vw - 24px), 100vw'}
-                   alt={i === 0 ? altOf(p, lang, heading) : ''} width="800" height="533"
+                   alt={i === 0 ? coverAlt : ''} width="800" height="533"
                    loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
             ) : (
               /* 24 pixel από τον δικό μας διακομιστή. Καμία διεύθυνση της
@@ -1440,8 +1471,11 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .pci { display: block; width: 100%; height: 160px; overflow: hidden; background: var(--paper); }
     .pci img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s ease; }
     .pc:hover .pci img { transform: scale(1.03); }
-    .pct { display: flex; align-items: flex-start; justify-content: center; color: var(--ink); text-decoration: none; margin: 14px 0 0;
+    .pct { display: block; text-align: center; color: var(--ink); text-decoration: none; margin: 14px auto 0;
            min-height: 45px; font-size: var(--fs-s0); font-weight: 600; line-height: 1.25; letter-spacing: -.012em; max-width: 280px; }
+    /* the spec anchors are lower case («land for sale in Halkidiki»); the text stays exact (rule 15), only the look
+       starts with a capital, as the other cards (needs a block box: ::first-letter does not apply to flex) */
+    .pct::first-letter { text-transform: uppercase; }
     .pca { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: auto; padding-top: 10px; }
     .pcb { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; background: var(--paper); color: var(--ink);
            border: 1px solid var(--line); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase;

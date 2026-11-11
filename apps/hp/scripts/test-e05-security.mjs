@@ -57,7 +57,8 @@ await withSite({ PUBLIC_ORIGIN: 'https://hp.rewize.app' }, async () => {
   const none = await form({ ...tunnel });
   check('B-24 form without Origin still 403', none.status === 403, `status ${none.status}`);
   const json = await fetch(SITE + '/api/inquiry', { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example' }, body: '{}' });
-  check('B-24 JSON is left to CORS, as before', json.status !== 403, `status ${json.status}`);
+  // since 2026-11-11 (forms audit) the lead endpoint refuses another site itself, no longer only CORS
+  check('B-24 JSON lead from another site: refused by /api/inquiry', json.status === 403, `status ${json.status}`);
 });
 await withSite({ PUBLIC_ORIGIN: null }, async () => {
   const ok = await form({ ...tunnel, origin: 'https://hp.rewize.app' });

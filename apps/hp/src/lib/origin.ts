@@ -34,3 +34,20 @@ export function originHeader(request: Request, url: URL): Record<string, string>
   const proto = (request.headers.get('x-forwarded-proto') ?? 'https').split(',')[0].trim();
   return { origin: `${proto}://${requestHost(request, url)}` };
 }
+
+/**
+ * Did the browser send this from our own site? (the lead endpoints; forms audit 2026-11-11: /api/inquiry had
+ * no such check). The same rule as the consent beacon (pages/api/consent-stat.ts): behind the Cloudflare tunnel
+ * the container sees `hp-site:4331`, so our hosts are the request host, the Host header and PUBLIC_ORIGIN.
+ * No Origin header (some same-page posts omit it): accepted — the honeypot, the timer and the limit still apply.
+ */
+export function sameSite(request: Request, url: URL): boolean {
+  const origin = request.headers.get('origin');
+  if (!origin) return true;
+  let host = '';
+  try { host = new URL(origin).hostname; } catch { return false; }
+  const ours = new Set([requestHost(request, url), (request.headers.get('host') ?? '').replace(/:\d+$/, '').toLowerCase()]);
+  const pub = originHeader(request, url).origin;
+  if (pub) { try { ours.add(new URL(pub).hostname); } catch { /* ignore */ } }
+  return ours.has(host);
+}

@@ -22,7 +22,16 @@ import { brand } from '../brand/index';
 // form fires `iform:sent` so the window can show its thank-you view.
 interface Props { source: string; title?: string; message?: boolean; terms: string; privacy: string;
   look?: 'wave1' | 'pop'; lang?: Lang; eyebrow?: string; headTag?: 'h2' | 'p' }
-const { source, title = 'Send us a message', message = true, terms, privacy, look, lang = 'en', eyebrow = '', headTag = 'h2' } = Astro.props;
+const { source, title: titleIn, message = true, terms, privacy, look, lang = 'en', eyebrow = '', headTag = 'h2' } = Astro.props;
+const title = titleIn ?? t(lang, 'form.title');
+const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const consent = t(lang, 'form.consent', {
+  terms: `<a href="${terms}">${esc(t(lang, 'auth.terms_link'))}</a>`, privacy: `<a href="${privacy}">${esc(t(lang, 'auth.privacy_link'))}</a>`,
+});
+// without JavaScript the form posts here (never a GET with the details in the address); the server returns
+// the visitor to the page. The timer starts when the page is made, the source rides in a hidden field.
+const openedAt = Date.now();
+const MSG = { need: t(lang, 'form.need'), thanks: t(lang, 'svc.thanks'), fail: t(lang, 'form.fail') };
 // own pages (Sell): the form title is a design heading, not part of the H2 outline (SEO audit 2026-11-10)
 const HT = headTag;
 const w1 = look === 'wave1';
@@ -43,7 +52,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
 ---
 {pop ? (
 <section class="iform iform--pop" data-lang={lang}>
-  <form class="iform__f" data-source={source} data-w1 data-in-pop novalidate>
+  <form class="iform__f" data-source={source} method="post" action="/api/inquiry" data-msg={JSON.stringify(MSG)} data-w1 data-in-pop novalidate>
     <div class="pop__body">
       <slot />
       <div class="pop__g">
@@ -75,8 +84,9 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
       {message && <textarea class="pop__i" name="message" rows="3" maxlength="1900" placeholder={pui(lang, 'msgL')} aria-label={pui(lang, 'msgL')}></textarea>}
       <input type="hidden" name="extra" value="" />
       <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <input type="hidden" name="source" value={source} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={openedAt} />
       <p class="consent">
-        By sending this form you accept the <a href={terms}>Terms of Services</a> and the <a href={privacy}>Privacy Policy</a>.
+        <Fragment set:html={consent} />
       </p>
       <p class="iform__msg" role="status" aria-live="polite"></p>
     </div>
@@ -95,12 +105,12 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     <p class="iform__note">{`${t(lang, 'info.form_note')} `}<b>{t(lang, 'info.form_priv')}</b>{` ${t(lang, 'info.form_priv2')}`}</p>
     <p class="iform__ct"><a href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a><WaLink dark /></p>
   </div>
-  <form class="iform__f" data-source={source} data-w1 novalidate>
-    <div class="iform__fld iform__m"><label for={`${id}-n`}>Name</label><input id={`${id}-n`} name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></div>
+  <form class="iform__f" data-source={source} method="post" action="/api/inquiry" data-msg={JSON.stringify(MSG)} data-w1 novalidate>
+    <div class="iform__fld iform__m"><label for={`${id}-n`}>{pui(lang, 'fName')}</label><input id={`${id}-n`} name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></div>
     <input class="iform__d" name="first" autocomplete="given-name" maxlength="60" placeholder={pui(lang, 'fFirst')} aria-label={pui(lang, 'fFirst')} value={first} />
     <input class="iform__d" name="last" autocomplete="family-name" maxlength="60" placeholder={pui(lang, 'fSurname')} aria-label={pui(lang, 'fSurname')} value={last} />
-    <div class="iform__fld"><label class="iform__l" for={`${id}-e`}>Email</label><input id={`${id}-e`} name="email" type="email" autocomplete="email" required maxlength="200" placeholder={pui(lang, 'fEmail')} value={mine?.email || undefined} /></div>
-    <div class="iform__fld"><label class="iform__l" for={`${id}-p`}>Phone</label>
+    <div class="iform__fld"><label class="iform__l" for={`${id}-e`}>{pui(lang, 'fEmail')}</label><input id={`${id}-e`} name="email" type="email" autocomplete="email" required maxlength="200" placeholder={pui(lang, 'fEmail')} value={mine?.email || undefined} /></div>
+    <div class="iform__fld"><label class="iform__l" for={`${id}-p`}>{pui(lang, 'fPhone')}</label>
       <div class="iform__ph">
         <button type="button" class="dial" aria-haspopup="listbox" aria-expanded="false" aria-controls={`${id}-dp`} aria-label={pui(lang, 'cbCountry')}>
           <span data-dial-l>🇬🇷 +30</span>
@@ -123,30 +133,32 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
         </div>
       </div>
     </div>
-    {message && <div class="iform__fld wide"><label class="iform__l" for={`${id}-m`}>Message</label><textarea id={`${id}-m`} name="message" rows="5" maxlength="1900" placeholder={pui(lang, 'msgL')}></textarea></div>}
+    {message && <div class="iform__fld wide"><label class="iform__l" for={`${id}-m`}>{pui(lang, 'msgL')}</label><textarea id={`${id}-m`} name="message" rows="5" maxlength="1900" placeholder={pui(lang, 'msgL')}></textarea></div>}
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <input type="hidden" name="source" value={source} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={openedAt} />
     <div class="wide iform__end">
       <p class="consent">
-        By sending this form you accept the <a href={terms}>Terms of Services</a> and the <a href={privacy}>Privacy Policy</a>.
+        <Fragment set:html={consent} />
       </p>
-      <p class="iform__go"><button class="btn" type="submit" data-ev="lead:form_submit">Send</button></p>
+      <p class="iform__go"><button class="btn" type="submit" data-ev="lead:form_submit">{t(lang, 'svc.send')}</button></p>
     </div>
     <p class="wide iform__msg" role="status" aria-live="polite"></p>
   </form>
 </section>
 ) : (
-<section class="iform" aria-labelledby={`${id}-h`}>
+<section class="iform" aria-labelledby={`${id}-h`} data-lang={lang}>
   <HT id={`${id}-h`} class="iform__h" data-h>{title}</HT>
-  <form class="iform__f" data-source={source} novalidate>
-    <label>Name<input name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></label>
-    <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200" value={mine?.email || undefined} /></label>
-    <label>Phone<input name="phone" type="tel" autocomplete="tel" maxlength="40" value={mine?.phone || undefined} /></label>
-    {message && <label class="wide">Message<textarea name="message" rows="5" maxlength="1900"></textarea></label>}
+  <form class="iform__f" data-source={source} method="post" action="/api/inquiry" data-msg={JSON.stringify(MSG)} novalidate>
+    <label>{pui(lang, 'fName')}<input name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></label>
+    <label>{pui(lang, 'fEmail')}<input name="email" type="email" autocomplete="email" required maxlength="200" value={mine?.email || undefined} /></label>
+    <label>{pui(lang, 'fPhone')}<input name="phone" type="tel" autocomplete="tel" maxlength="40" value={mine?.phone || undefined} /></label>
+    {message && <label class="wide">{pui(lang, 'msgL')}<textarea name="message" rows="5" maxlength="1900"></textarea></label>}
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <input type="hidden" name="source" value={source} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={openedAt} />
     <p class="wide consent">
-      By sending this form you accept the <a href={terms}>Terms of Services</a> and the <a href={privacy}>Privacy Policy</a>.
+      <Fragment set:html={consent} />
     </p>
-    <p class="wide"><button class="btn" type="submit" data-ev="lead:form_submit">Send</button></p>
+    <p class="wide"><button class="btn" type="submit" data-ev="lead:form_submit">{t(lang, 'svc.send')}</button></p>
     <p class="wide iform__msg" role="status" aria-live="polite"></p>
   </form>
 </section>
@@ -158,11 +170,12 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
   document.querySelectorAll<HTMLFormElement>('.iform__f').forEach((f) => {
     const opened = Date.now();
     const msg = f.querySelector<HTMLElement>('.iform__msg')!;
+    const M: Record<string, string> = JSON.parse(f.dataset.msg || '{}');
+    const lang = f.closest<HTMLElement>('.iform')?.dataset.lang ?? 'en';
     // #105 wave 1, desktop: Name + Surname (sent together as `name`), the dialling code in front of the number.
     let dialW: Dial | null = null;
     if (f.dataset.w1 !== undefined) {
       const ph = f.querySelector<HTMLElement>('.iform__ph');
-      const lang = f.closest<HTMLElement>('.iform')?.dataset.lang ?? 'en';
       dialW = initDial(ph, guessCc(lang), () => ph?.querySelector<HTMLInputElement>('input[name=phone]')?.focus());
     }
     f.addEventListener('submit', async (e) => {
@@ -175,7 +188,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
       const email = String(d.get('email') ?? '').trim();
       let phone = String(d.get('phone') ?? '').trim();
       if (w1 && phone && !/^(\+|00)/.test(phone)) phone = `+${dialW?.code() ?? '30'} ${phone}`;
-      if (!name || !/.+@.+\..+/.test(email)) { msg.textContent = 'Please write your name and a valid email.'; return; }
+      if (!name || !/.+@.+\..+/.test(email)) { msg.textContent = M.need; return; }
       const btn = f.querySelector<HTMLButtonElement>('button[type=submit]')!;
       btn.disabled = true;
       try {
@@ -186,15 +199,15 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
             name, email, phone,
             // #106: the window's extra fields (kind, area, size, day…) go in front of the message.
             message: `[${f.dataset.source}] ${[String(d.get('extra') ?? '').trim(), String(d.get('message') ?? '')].filter(Boolean).join(' · ')}`.trim(),
-            website: String(d.get('website') ?? ''), t: opened, lang: 'en',
+            website: String(d.get('website') ?? ''), t: opened, lang,
           }),
         });
         if (!r.ok) throw new Error(String(r.status));
         f.reset();
-        msg.textContent = 'Thank you — an adviser will reply soon.';
+        msg.textContent = M.thanks;
         if (popF) f.dispatchEvent(new CustomEvent('iform:sent', { bubbles: true }));
       } catch {
-        msg.textContent = 'Sending failed. Please call us or try again in a minute.';
+        msg.textContent = M.fail;
       } finally {
         btn.disabled = false;
       }

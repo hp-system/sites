@@ -20,20 +20,27 @@
 //    only from a signed-in member (complete.ts — account takeover otherwise), and a new phone
 //    is verified on its own. Nothing typed in step 1 is written for an account that already
 //    has it: we send only the fields in `needs`.
+// 0 (design LoginRole, Sergei 2026-11-11 «sign-up asks the role first: buy / sell / agent»): the role. The CRM's
+//    site API has no field for it, and the site keeps no roles (Sergei: «роли и доступы должна хранить СРМ»): the
+//    choice lives only in this window and decides the welcome and where Continue leads — buy: back to the page,
+//    sell: the submit form, agent: Cooperation. When the CRM stores the role, the choice is sent there.
 // «Continue with Google»: there is no Google sign-in in the CRM's site API, so the button is
 // behind GOOGLE (off) and is not rendered.
 // ═══════════════════════════════════════════════════════════════════════════
 import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
 import { privacyPath } from '../lib/legal';
-import { t, T, type Lang } from '../lib/i18n';
+import { t, T, prefix, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
 import { brand } from '../brand/index';
 import { DIAL, flag } from '../lib/callback';
 import { pui } from '../lib/property';
 import MARK from './_mark_paths.json';
 
-interface Props { lang: Lang; next?: string }
-const { lang, next = '/' } = Astro.props;
+/** embed: inside the sign-in window (no header, banner or dialog of its own); false: /login opened directly —
+ *  the same window as a card on the page, with the site header and the cookie banner (2026-11-11) */
+interface Props { lang: Lang; next?: string; embed?: boolean }
+const { lang, next = '/', embed = true } = Astro.props;
 const co = await company();
 // Same rule as LoginPage: the return target never leaves our site.
 const safeNext = /^\/(?!\/)/.test(next) ? next : '/';
@@ -52,7 +59,15 @@ const agree = t(lang, 'auth.agree', {
   privacy: `<a href="${privacyPath(lang)}" target="_blank">${esc(t(lang, 'auth.privacy_link'))}</a>`,
 });
 const un = [1, 2, 3].map((i) => t(lang, `auth.un${i}`, { b: `<b>${esc(t(lang, `auth.un${i}_b`))}</b>` }));
+const ROLES = [
+  { id: 'buy', h: t(lang, 'auth.role_buy'), s: t(lang, 'auth.role_buy_s') },
+  { id: 'sell', h: t(lang, 'auth.role_sell'), s: t(lang, 'auth.role_sell_s') },
+  { id: 'agent', h: t(lang, 'auth.role_agent'), s: t(lang, 'auth.role_agent_s') },
+];
+const roleTo = { sell: `${prefix(lang)}/panel/submit`, agent: `${prefix(lang)}/panel?tab=coop` };
 const JS_T = {
+  done_buy: t(lang, 'auth.done_s'), done_sell: t(lang, 'auth.done_sell'), done_agent: t(lang, 'auth.done_agent'),
+  go_buy: t(lang, 'auth.continue'), go_sell: t(lang, 'svc.add_cta'), go_agent: t(lang, 'pnl.tab_coop'),
   cont: t(lang, 'auth.continue'), sending: t(lang, 'auth.sending'), checking: t(lang, 'auth.checking'),
   verify: t(lang, 'auth.verify'),
   sent: raw('auth.sent'), sent_hint: raw('auth.sent_hint'), sent2: raw('auth.sent2'), sent2_hint: raw('auth.sent2_hint'),
@@ -70,8 +85,9 @@ const JS_T = {
   e_fill: t(lang, 'auth.e.fill'), e_offline: t(lang, 'sb.e.offline'),
 };
 ---
-<Base lang={lang} title={t(lang, 'auth.meta_title')} noindex embed description={t(lang, 'auth.meta_desc')}>
-  <main id="main" class="lp" data-next={safeNext} data-lang={lang} data-i18n={JSON.stringify(JS_T)}>
+<Base lang={lang} title={t(lang, 'auth.meta_title')} noindex embed={embed} description={t(lang, 'auth.meta_desc')}>
+  {!embed && <Header lang={lang} solid />}
+  <main id="main" class:list={['lp', { 'lp--page': !embed }]} data-next={safeNext} data-lang={lang} data-sell={roleTo.sell} data-agent={roleTo.agent} data-i18n={JSON.stringify(JS_T)}>
     <div class="lp__body">
       <div class="lp__in">
         <div class="lp__hd">
@@ -86,8 +102,21 @@ const JS_T = {
         </div>
 
         <div class="stps">
+          {/* 0 — the role (LoginRole) */}
+          <div class="stp stp--first on" id="pr">
+            <h2 class="h2">{t(lang, 'auth.role_h')}</h2>
+            <div class="rl" role="radiogroup" aria-label={t(lang, 'auth.role_h')}>
+              {ROLES.map((r) => (
+                <button type="button" class="rl__o" role="radio" aria-checked="false" data-role={r.id}>
+                  <b>{r.h}</b><span>{r.s}</span>
+                </button>
+              ))}
+            </div>
+            <button class="btn" type="button" id="gor" disabled aria-disabled="true">{t(lang, 'auth.continue')}</button>
+          </div>
+
           {/* 1 — name, surname, mobile, consent */}
-          <div class="stp stp--first on" id="p0">
+          <div class="stp off" id="p0" aria-hidden="true">
             <form id="f0" novalidate>
               <div class="lp__2">
                 <input class="fi" id="fn" autocomplete="given-name" maxlength="40" placeholder={t(lang, 'auth.first')} aria-label={t(lang, 'auth.first')} />
@@ -121,8 +150,7 @@ const JS_T = {
               <label class="agr"><input type="checkbox" id="agree" /><span class="agr-b" aria-hidden="true"></span><span set:html={agree}></span></label>
               <p class="err" id="e0" role="alert" aria-live="assertive" hidden></p>
               <button class="btn" type="submit" id="go0" disabled aria-disabled="true">{t(lang, 'auth.continue')}</button>
-              {/* Holds the place of «Back» so Continue sits where it sits on step 2. */}
-              <p class="fine fine--start" aria-hidden="true" style="visibility:hidden"><span class="bkl">← {t(lang, 'auth.back')}</span></p>
+              <p class="fine fine--start"><button type="button" class="bkl" id="back0">← {t(lang, 'auth.back')}</button></p>
             </form>
           </div>
 
@@ -172,7 +200,7 @@ const JS_T = {
           {/* 4 — welcome */}
           <div class="stp off" id="p4" aria-hidden="true">
             <h2 class="h2">{t(lang, 'auth.done_h')}</h2>
-            <p class="say">{t(lang, 'auth.done_s')}</p>
+            <p class="say" id="p4s">{t(lang, 'auth.done_s')}</p>
             <p class="err" id="e4" role="alert" aria-live="assertive" hidden></p>
             <button class="btn" type="button" id="go">{t(lang, 'auth.continue')}</button>
           </div>
@@ -207,6 +235,9 @@ const JS_T = {
   :global(html:has(main.lp)), :global(body.embed) { background: var(--paper); }
   :global(html:has(main.lp)) { overflow: hidden; scrollbar-width: none; }
   .lp { display: flex; flex-direction: column; color: var(--ink); }
+  /* /login opened directly: the window as a white card on the beige band, under the site header */
+  .lp--page { background: var(--paper-2); padding: var(--s6) 16px var(--s8); align-items: center; }
+  .lp--page > * { width: 100%; max-width: 500px; background: var(--paper); }
   .lp__body { display: flex; justify-content: center; padding: 28px 40px 22px; }
   .lp__in { width: 100%; max-width: 420px; position: relative; }
 
@@ -262,6 +293,14 @@ const JS_T = {
   .dial__l button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--paper); border: 0;
                     font: inherit; font-size: var(--fs-s-1); color: var(--ink); text-align: start; cursor: pointer; }
   .dial__l button[hidden] { display: none; }
+  .rl { display: grid; gap: 8px; margin: 14px 0 18px; }
+  .rl__o { display: grid; gap: 2px; padding: 14px 16px; text-align: start; background: var(--paper); border: 1px solid var(--line); cursor: pointer;
+    font: inherit; color: var(--ink); transition: border-color .15s ease, background .15s ease; }
+  .rl__o b { font-size: var(--fs-s0); font-weight: 600; }
+  .rl__o span { font-size: var(--fs-s-1); color: var(--muted); }
+  .rl__o:hover { border-color: var(--ink); }
+  .rl__o[aria-checked='true'] { border-color: var(--ink); background: var(--paper-2); box-shadow: inset 2px 0 0 var(--ink); }
+  .rl__o:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   .dial__l button:hover, .dial__l button[aria-selected='true'] { background: var(--paper-2); }
   .dial__f { width: 22px; }
   .dial__n { flex: 1; }
@@ -357,7 +396,7 @@ const JS_T = {
   tellH();
 
   // ── Steps: all stacked in one grid cell; only the current one is visible.
-  const steps = ['p0', 'p1', 'p2', 'p3', 'p4'].map((id) => $(id));
+  const steps = ['pr', 'p0', 'p1', 'p2', 'p3', 'p4'].map((id) => $(id));
   const show = (id: string, focus?: string) => {
     steps.forEach((el) => {
       const on = el.id === id;
@@ -365,10 +404,24 @@ const JS_T = {
       el.setAttribute('aria-hidden', String(!on));
       el.toggleAttribute('inert', !on);
     });
-    root.classList.toggle('is-small', id !== 'p0');
+    root.classList.toggle('is-small', id !== 'pr');
     if (focus) ($(focus) as HTMLInputElement).focus({ preventScroll: true });
   };
   steps.slice(1).forEach((el) => el.toggleAttribute('inert', true));
+
+  // ── 0: the role — only for this window (the CRM keeps no role yet): the welcome and Continue follow it
+  let role: 'buy' | 'sell' | 'agent' = 'buy';
+  const opts = Array.from(document.querySelectorAll<HTMLButtonElement>('.rl__o'));
+  const gor = $('gor') as HTMLButtonElement;
+  opts.forEach((b) => b.addEventListener('click', () => {
+    role = (b.dataset.role as typeof role) || 'buy';
+    opts.forEach((x) => x.setAttribute('aria-checked', String(x === b)));
+    gor.disabled = false; gor.removeAttribute('aria-disabled');
+    $('p4s').textContent = (L as Record<string, string>)[`done_${role}`];
+    $('go').textContent = (L as Record<string, string>)[`go_${role}`];
+  }));
+  gor.addEventListener('click', () => show('p0', 'fn'));
+  $('back0').addEventListener('click', () => { clear('e0'); show('pr'); });
 
   // Esc closes the popup (focus is inside this frame, so the dialog does not see the key).
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !e.defaultPrevented) tell({ type: 'hp-login-close' }); });
@@ -478,7 +531,7 @@ const JS_T = {
 
   // ── 4: Continue closes the popup; the page behind reloads (or goes to `next`) as a member.
   $('go').addEventListener('click', () => {
-    const u = new URL(root.dataset.next || '/', location.href);
+    const u = new URL((role === 'sell' ? root.dataset.sell : role === 'agent' ? root.dataset.agent : root.dataset.next) || '/', location.href);
     if (EMBED) tell({ type: 'hp-login', next: u.pathname + u.search }); else location.href = u.pathname + u.search;
   });
 

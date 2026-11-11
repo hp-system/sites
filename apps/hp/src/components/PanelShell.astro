@@ -1,0 +1,169 @@
+---
+// ═══════════════════════════════════════════════════════════════════════════
+// THE MEMBER PANEL'S FRAME — design «AFTER main v3» (PanelE3 on the prototype canvas; Sergei 2026-11-11:
+// «для админ панели мы берем AFTER main v3 — no Home page: you land where something waits; «Now» at the bottom
+// of the side box»). Every panel page (saved, compare, closed collection, request, add a property, my details,
+// cooperation) sits in it: on the left the kit side panel — «Welcome», the name with the account menu, the
+// level badge, Buy / Sell (Cooperation for agents), the sections with their counts, the adviser, the Exclusive
+// door; on the right the page.
+//
+// 🛡️ THE CRM DECIDES. The level and the favourites come from `/site/member/me` on every load (lib/member.ts,
+//    30 s), never from the cookie: what the side panel opens (the closed collection, cooperation) follows the
+//    CRM. A section whose data the CRM does not hold yet (searches, trips, messages, owner statistics) is not
+//    shown: the site neither invents nor stores it (Sergei 2026-11-11: «роли и доступы должна хранить СРМ»).
+// ═══════════════════════════════════════════════════════════════════════════
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import WaLink from './WaLink.astro';
+import { prefix, t, type Lang } from '../lib/i18n';
+import type { Member } from '../lib/member';
+import { company } from '../lib/company';
+
+export type PanelSection = 'fav' | 'compare' | 'collection' | 'request' | 'profile' | 'submit' | 'coop' | 'exclusive';
+interface Props { lang: Lang; me: Member; current: PanelSection; title: string; description?: string }
+const { lang, me, current, title, description } = Astro.props;
+const p = prefix(lang);
+const co = await company();
+
+const isAgent = me.level === 'agent';
+const isExclusive = me.level === 'exclusive';
+const first = (me.name || '').trim().split(/\s+/)[0] || t(lang, 'pnl.welcome');
+const favN = me.favorites.length;
+const badge = isExclusive ? t(lang, 'lvl.exclusive') : isAgent ? t(lang, 'lvl.agent') : t(lang, 'lvl.member');
+// the tab follows the page (no state of its own): selling pages → Sell, cooperation → the agent's tab
+const tab: 'buy' | 'sell' | 'coop' = current === 'submit' ? 'sell' : current === 'coop' ? 'coop' : 'buy';
+
+type Item = { id: PanelSection; href: string; label: string; n?: number };
+const buy: Item[] = [
+  { id: 'fav', href: `${p}/panel/favorites`, label: t(lang, 'pnl.fav'), n: favN },
+  ...(favN >= 2 ? [{ id: 'compare' as const, href: `${p}/panel/compare`, label: t(lang, 'pnl.compare') }] : []),
+  ...(isExclusive ? [{ id: 'collection' as const, href: `${p}/panel/collection`, label: t(lang, 'pnl.collection') }] : []),
+  { id: 'request', href: `${p}/panel/request`, label: t(lang, 'pnl.searches') },
+  { id: 'profile', href: `${p}/panel/profile`, label: t(lang, 'pnl.profile') },
+];
+const sell: Item[] = [
+  { id: 'submit', href: `${p}/panel/submit`, label: t(lang, 'pnl.submit') },
+  { id: 'profile', href: `${p}/panel/profile`, label: t(lang, 'pnl.profile') },
+];
+const coop: Item[] = [
+  { id: 'coop', href: `${p}/panel?tab=coop`, label: t(lang, 'pnl.tab_coop') },
+  { id: 'profile', href: `${p}/panel/profile`, label: t(lang, 'pnl.profile') },
+];
+const items = tab === 'sell' ? sell : tab === 'coop' ? coop : buy;
+const tabs = isAgent
+  ? [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'coop', href: `${p}/panel?tab=coop`, label: t(lang, 'pnl.tab_coop') }]
+  : [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'sell', href: `${p}/panel/submit`, label: t(lang, 'pnl.tab_sell') }];
+---
+<Base lang={lang} title={title} noindex description={description ?? t(lang, 'pnl.meta_desc')}>
+  <Header lang={lang} solid />
+
+  <main id="main" class="ps">
+    <div class="wrap ps__in">
+      <aside class="ps__side" aria-label={t(lang, 'pnl.title')}>
+        <div class="ps__who">
+          <p class="t-label ps__hi">{t(lang, 'pnl.welcome')} <span class="ps__lvl">{badge}</span></p>
+          {/* the account menu: a plain <details>, so it works without JavaScript */}
+          <details class="ps__acct">
+            <summary class="ps__name">{first}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+            <div class="ps__menu">
+              <a href={`${p}/panel/profile`}>{t(lang, 'pnl.profile')}</a>
+              <form method="post" action="/api/auth/logout"><button type="submit">{t(lang, 'pnl.logout')}</button></form>
+              <form method="post" action="/api/auth/logout"><input type="hidden" name="scope" value="all" /><button type="submit" class="ps__dim">{t(lang, 'pnl.logout_all')}</button></form>
+            </div>
+          </details>
+        </div>
+
+        <nav class="ps__tabs" aria-label={t(lang, 'pnl.title')}>
+          {tabs.map((x) => <a href={x.href} aria-current={x.id === tab ? 'page' : undefined}>{x.label}</a>)}
+        </nav>
+
+        <ul class="k-side__list ps__nav">
+          {items.map((it) => (
+            <li><a class:list={['k-side__it', { on: it.id === current }]} href={it.href} aria-current={it.id === current ? 'page' : undefined}>
+              <span>{it.label}</span>{it.n ? <b class="ps__n">{it.n}</b> : null}
+            </a></li>
+          ))}
+        </ul>
+
+        {tab === 'buy' && !isAgent && (
+          <a class="ps__sell" href={`${p}/panel/submit`}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+            {t(lang, 'pnl.submit')}
+          </a>
+        )}
+
+        <div class="ps__adv">
+          <p class="t-label">{t(lang, 'pnl.adv')}</p>
+          <a class="ps__tel" href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a>
+          <p class="ps__ways"><WaLink /> <a href={`mailto:${co.email}`}>{t(lang, 'pf.email')}</a></p>
+        </div>
+
+        {!isExclusive && !isAgent && (
+          /* the Exclusive door (E3): dark, at the bottom of the panel; it asks, it does not register */
+          <a class="ps__ex" href={`${p}/panel/exclusive`}>
+            <span class="t-label">Exclusive</span>
+            <b>{t(lang, 'pnl.up_h')}</b>
+            <span class="ps__ex-go">{t(lang, 'pnl.up_cta')} →</span>
+          </a>
+        )}
+      </aside>
+
+      <div class="ps__main"><slot /></div>
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .ps { background: var(--paper); }
+  .ps__in { display: grid; gap: var(--s5); padding-block: var(--s5) var(--s8); }
+  .ps__main { min-width: 0; }
+  .ps__side { display: flex; flex-direction: column; gap: 16px; }
+  @media (min-width: 1000px) {
+    .ps__in { grid-template-columns: 260px minmax(0, 1fr); column-gap: var(--s6); padding-block: var(--s6) var(--s8); }
+    .ps__side { position: sticky; top: var(--s5); align-self: start; padding: 4px 28px 4px 0; border-right: 1px solid var(--line-soft);
+      max-height: calc(100vh - var(--s5) - 24px); overflow-y: auto; transition: top .25s ease; }
+  }
+  :global(html.hdr-up) .ps__side { top: calc(var(--hdr-h, 88px) + 12px); }
+
+  .ps__hi { margin: 0; display: flex; align-items: center; gap: 10px; color: var(--faint); }
+  .ps__lvl { padding: 3px 7px; border: 1px solid var(--line); font-size: var(--fs-s-1); letter-spacing: .14em; color: var(--ink); }
+  .ps__acct { position: relative; margin-top: 6px; }
+  .ps__name { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; font-size: var(--fs-s3); font-weight: 600;
+    line-height: 1.1; letter-spacing: -.016em; color: var(--ink); }
+  .ps__name::-webkit-details-marker { display: none; }
+  .ps__name:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .ps__menu { position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; min-width: 240px; padding: 6px 0; background: var(--paper);
+    border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(11,14,16,.12); }
+  .ps__menu a, .ps__menu button { display: block; width: 100%; padding: 10px 16px; text-align: start; font: inherit; font-size: var(--fs-s0);
+    color: var(--ink); text-decoration: none; background: none; border: 0; cursor: pointer; }
+  .ps__menu a:hover, .ps__menu button:hover { background: var(--paper-2); }
+  .ps__menu form { margin: 0; }
+  .ps__dim { color: var(--muted) !important; border-top: 1px solid var(--line-soft) !important; }
+
+  .ps__tabs { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
+  .ps__tabs a { display: flex; align-items: center; justify-content: center; min-height: 40px; font-size: var(--fs-s-1); font-weight: 400;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .ps__tabs a[aria-current='page'] { background: var(--paper-2); color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--ink); }
+  .ps__nav { margin: 0; }
+  .ps__n { margin-left: auto; font-size: var(--fs-s-1); font-weight: 600; color: var(--ink); letter-spacing: 0; }
+
+  .ps__sell { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border: 1px solid var(--ink); color: var(--ink);
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; }
+  .ps__sell:hover { background: var(--paper-2); }
+
+  .ps__adv { display: grid; gap: 6px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  .ps__adv .t-label { margin: 0; color: var(--faint); }
+  .ps__tel { color: var(--ink); font-weight: 600; text-decoration: none; }
+  .ps__ways { margin: 0; display: flex; align-items: center; gap: 16px; font-size: var(--fs-s-1); }
+  .ps__ways > a { color: var(--ink); }
+
+  .ps__ex { display: grid; gap: 8px; padding: 18px; background: var(--ink-deep); color: var(--paper); text-decoration: none; }
+  .ps__ex .t-label { color: var(--paper); opacity: .6; }
+  .ps__ex b { font-size: var(--fs-s1); font-weight: 300; line-height: 1.25; }
+  .ps__ex-go { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+  .ps__ex:hover .ps__ex-go { text-decoration: underline; text-underline-offset: 4px; }
+  @media (prefers-reduced-motion: reduce) { .ps__side { transition: none; } }
+</style>

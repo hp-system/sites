@@ -79,10 +79,14 @@ try {
   check('hidden price: Exclusive sees it, member does not', /€109,000/.test(hx) && !/€109,000/.test(hm), 'exclusive only');
   // #74 — panel tabs, request + Exclusive request through the CRM, compare inside favourites, logout scopes.
   const pb = await (await fetch(SITE + '/en/panel', { headers: M })).text();
-  check('panel: tabs I buy / I sell, buy open', /aria-current="page"[^>]*>I buy</.test(pb) && pb.includes('href="/en/panel?tab=sell"') && !pb.includes('?tab=coop'), 'tabs');
+  // design E3 since 2026-11-11 (Sergei «AFTER main v3»): /panel sends the member where something waits; the side
+  // panel carries the Buy / Sell tabs (Buy current), the sections, no cooperation for a member
+  check('panel E3: lands on a section, tabs Buy / Sell, buy open', /class="ps__tabs"/.test(pb) && /aria-current="page"[^>]*>I buy</.test(pb)
+    && pb.includes('href="/en/panel/submit"') && !pb.includes('?tab=coop'), 'tabs');
   check('panel: request + Exclusive rows, no compare row', pb.includes('href="/en/panel/request"') && pb.includes('href="/en/panel/exclusive"') && !pb.includes('href="/en/panel/compare"'), 'rows');
   const ps = await (await fetch(SITE + '/en/panel?tab=sell', { headers: M })).text();
-  check('panel sell tab: my properties + send a property', ps.includes('My properties') && ps.includes('href="/en/panel/submit"'), 'sell');
+  // the Sell tab lands on «send a property» (the owner statistics wait for the CRM: not shown, not invented)
+  check('panel sell tab: the submit form, Sell current', /aria-current="page"[^>]*>I sell</.test(ps) && ps.includes('class="sb'), 'sell');
   const before = (await (await fetch(stub.base.replace('/api', '') + '/__captured')).json()).length;
   const rq = (b) => fetch(SITE + '/api/panel/request', { method: 'POST', headers: { ...M, 'content-type': 'application/json', origin: SITE }, body: JSON.stringify(b) }).then((r) => r.json());
   const r1 = await rq({ type: 'request', kind: 'home', where: 'Sithonia', maxPrice: '450,000', lang: 'en' });

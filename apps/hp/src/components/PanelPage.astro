@@ -1,200 +1,48 @@
 ---
 // ═══════════════════════════════════════════════════════════════════════════
-// Ο ΠΙΝΑΚΑΣ ΕΛΕΓΧΟΥ ΤΟΥ ΜΕΛΟΥΣ — «Η σελίδα μου».
+// /panel for an agent: the cooperation section, in the panel frame (PanelShell, design E3 — Sergei 2026-11-11
+// «AFTER main v3 — no Home page: you land where something waits»). A buyer or a seller never stays on /panel:
+// the router sends them where something waits (saved homes, the closed collection, a request, the submit form).
+// Before 11/11 this page was the member's home with tabs (Buy / Sell / Cooperation) — see git history.
 //
-// 🔬 ΑΠΟ ΤΗΝ ΕΡΕΥΝΑ ΣΤΟ ΣΗΜΕΡΙΝΟ SITE (6/8): ο πίνακας του halkidikiproperties
-//    έχει ΤΡΕΙΣ χωριστούς κόσμους (`panel/buyer/*`, `panel/owner/*`, `panel/agent/*`)
-//    και **καμία αρχική σελίδα** — ο ιδιοκτήτης προσγειώνεται στα «στοιχεία πελάτη»,
-//    όλοι οι άλλοι στις «αποθηκευμένες αιτήσεις». Το rewize έχει ΕΝΑΝ πίνακα.
-//    Κρατάμε το δεύτερο: **ένα σπίτι, ο ρόλος προσθέτει σελίδες**.
-//
-// 🎯 ΤΡΙΑ ΕΠΙΠΕΔΑ, ΤΡΕΙΣ ΟΨΕΙΣ (George 6/8):
-//    · agent      → βλέπει ό,τι ο επισκέπτης· εδώ παίρνει ΑΛΛΟ προϊόν (συνεργασία)
-//    · member     → περιοχές, φωτογραφίες, αγαπημένα + η πόρτα για το exclusive
-//    · exclusive  → + ακριβές σημείο, κρυφές τιμές, ιστορικό, ultra secret
-//
-// 🪤 ΤΟ ΕΠΙΠΕΔΟ ΔΕΝ ΕΡΧΕΤΑΙ ΑΠΟ ΤΟ COOKIE. Διαβάζεται από τη βάση σε κάθε φόρτωση
-//    (`memberOf`, μνήμη 30΄΄). Γι' αυτό, όταν ο George πατά «κόψ' τον», ισχύει
-//    μέσα σε μισό λεπτό — και ο μεσίτης βρίσκει ΑΥΤΗ τη σελίδα αλλαγμένη.
+// 🎚️ THE LEVEL COMES FROM THE CRM (lib/member.ts, `/site/member/me`, 30 s), never from the cookie: when George
+//    turns an agent into a member, this page is no longer his within half a minute.
 // ═══════════════════════════════════════════════════════════════════════════
-import Base from '../layouts/Base.astro';
-import Header from './Header.astro';
-import Footer from './Footer.astro';
-import { listUrl, prefix, t, type Lang } from '../lib/i18n';
+import PanelShell from './PanelShell.astro';
+import { t, type Lang } from '../lib/i18n';
 import type { Member } from '../lib/member';
 import { company } from '../lib/company';
-import { brand } from '../brand/index';
 
 interface Props { lang: Lang; me: Member }
-const { lang } = Astro.props;
-
-// 🪤 Ο ΕΛΕΓΧΟΣ «ΕΙΝΑΙ ΜΕΛΟΣ;» ΓΙΝΕΤΑΙ ΣΤΟΝ ΔΡΟΜΟΛΟΓΗΤΗ, ΟΧΙ ΕΔΩ.
-//    Το `Astro.redirect()` μέσα σε **component** δεν κάνει τίποτα — η σελίδα
-//    αποδίδεται κανονικά και γυρίζει 200. Το μέτρησα: `/panel` χωρίς εισιτήριο
-//    έδινε 200 αντί για ανακατεύθυνση. Ανακατεύθυνση δουλεύει ΜΟΝΟ από σελίδα
-//    ή endpoint. Δες `[...path].astro`.
-const me = Astro.props.me;
-// 🪤 ΤΟ ΠΡΟΘΕΜΑ ΓΛΩΣΣΑΣ ΕΛΕΙΠΕ. Οι σύνδεσμοι ήταν σκέτοι `/panel/favorites`, οπότε
-//    το γερμανικό μέλος πεταγόταν στην ελληνική εκδοχή — ή σε 404.
-const p = prefix(lang);
+const { lang, me } = Astro.props;
 const co = await company();
-
-const isAgent = me.level === 'agent';
-const isExclusive = me.level === 'exclusive';
-const first = (me.name || '').trim().split(/\s+/)[0] || '';
-const favN = me.favorites.length;
-const q = Astro.url.searchParams.get('tab');
-const tab: 'buy' | 'sell' | 'coop' = q === 'sell' ? 'sell' : q === 'coop' && isAgent ? 'coop' : 'buy';
-
-const badge = isExclusive ? t(lang, 'lvl.exclusive') : isAgent ? t(lang, 'lvl.agent') : t(lang, 'lvl.member');
-
-// Ο αριθμός των αγαπημένων γράφεται αλλιώς στον ενικό — «1 ακίνητα» δεν λέγεται
-// σε καμία από τις εννέα γλώσσες.
-const favLabel = favN === 1 ? t(lang, 'ui.one_prop') : t(lang, 'pnl.n_props', { n: favN });
 ---
-
-<Base lang={lang} title={t(lang, 'pnl.title')} noindex
-      description={t(lang, 'pnl.meta_desc')}>
-  <Header lang={lang} solid />
-
-  <main id="main" class="pnl">
-    <div class="wrap">
-      <p class="t-label">{t(lang, 'pnl.welcome')}</p>
-      <div class="hd">
-        <h1 class="t-h2 hd__h">{first || t(lang, 'pnl.title')}</h1>
-        <span class:list={['badge', isExclusive && 'badge--gold', isAgent && 'badge--muted']}>{badge}</span>
-      </div>
-
-      {/* ── Tabs «I buy · I sell (· Cooperation)» (George 21/10/2026, q09). The agent also gets the
-             buyer panel (q21). The tab is a plain link (?tab=), so it works without JavaScript. ── */}
-      <nav class="tabs" aria-label={t(lang, 'pnl.title')}>
-        <a href={`${p}/panel`} aria-current={tab === 'buy' ? 'page' : undefined}>{t(lang, 'pnl.tab_buy')}</a>
-        <a href={`${p}/panel?tab=sell`} aria-current={tab === 'sell' ? 'page' : undefined}>{t(lang, 'pnl.tab_sell')}</a>
-        {isAgent && <a href={`${p}/panel?tab=coop`} aria-current={tab === 'coop' ? 'page' : undefined}>{t(lang, 'pnl.tab_coop')}</a>}
-      </nav>
-
-      {tab === 'buy' && (<>
-        <div class="rows">
-          <a class="row" href={`${p}/panel/favorites`}>
-            <span>{t(lang, 'pnl.fav')}<small>{favN ? favLabel : t(lang, 'pnl.fav_none')}</small></span><i>›</i></a>
-          <a class="row" href={listUrl(lang)}>
-            <span>{t(lang, 'pnl.my_searches')}<small>{t(lang, 'pnl.searches_s')}</small></span><i>›</i></a>
-          <a class="row" href={`${p}/panel/request`}>
-            <span>{t(lang, 'pnl.req')}<small>{t(lang, 'pnl.req_s')}</small></span><i>›</i></a>
-          {!isAgent && (
-            <a class="row" href={`${p}/panel/collection`}>
-              <span>{t(lang, 'pnl.collection')}<small>{t(lang, 'pnl.collection_s')}</small></span><i>›</i></a>
-          )}
-          <a class="row" href={`${p}/panel/profile`}>
-            <span>{t(lang, 'pnl.profile')}<small>{me.email}{me.phone ? ` · ${me.phone}` : ''}</small></span><i>›</i></a>
-        </div>
-        {isExclusive ? (
-          <div class="ask">
-            <p class="ask__h">{t(lang, 'pnl.have_h')}</p>
-            <p class="ask__s">{t(lang, 'pnl.have_s')}</p>
-            <a class="btn btn--ghost" href={co.phoneHref}>{t(lang, 'pnl.have_cta')}</a>
-          </div>
-        ) : !isAgent && (
-          /* Exclusive is a request George answers (q15): it now lands in EALIDA, not only a phone link. */
-          <div class="ask ask--deep">
-            <p class="ask__h">{t(lang, 'pnl.up_h')}</p>
-            <p class="ask__s">{t(lang, 'pnl.up_s')}</p>
-            <a class="btn btn--onphoto" href={`${p}/panel/exclusive`}>{t(lang, 'pnl.up_cta')}</a>
-          </div>
-        )}
-      </>)}
-
-      {tab === 'sell' && (
-        <div class="rows">
-          <div class="row row--static">
-            <span>{t(lang, 'pnl.myprops')}<small>{t(lang, 'pnl.myprops_none')}</small></span></div>
-          <div class="row row--static">
-            <span>{t(lang, 'pnl.stats')}<small>{t(lang, 'pnl.stats_soon')}</small></span></div>
-          <a class="row" href={`${p}/panel/submit`}>
-            <span>{t(lang, 'pnl.submit')}<small>{t(lang, 'pnl.submit_s')}</small></span><i>›</i></a>
-        </div>
-      )}
-
-      {tab === 'coop' && isAgent && (<>
-        <p class="say">{t(lang, 'pnl.ag_say')}</p>
-        <div class="rows">
-          <a class="row" href="/en/collaboration-order"><span>{t(lang, 'pnl.coop_order')}</span><i>›</i></a>
-          <a class="row" href={co.phoneHref}><span>{t(lang, 'pnl.ag_talk')}<small><bdi dir="ltr">{co.phone}</bdi></small></span><i>›</i></a>
-        </div>
-      </>)}
-
-      {/* «Προσωπικός Σύμβουλος» — υπάρχει στο rewize, λείπει από το HP.
-          Για το exclusive είναι το μισό προϊόν. */}
-      <div class="adv">
-        <div class="adv__pic" aria-hidden="true"></div>
-        <div class="adv__t">
-          <p class="tiny">{t(lang, 'pnl.adv')}</p>
-          <p class="adv__n">{brand.name}</p>
-        </div>
-        <a class="btn btn--ghost adv__b" href={co.phoneHref}>{t(lang, 'pnl.call')}</a>
-      </div>
-
-      <form method="post" action="/api/auth/logout" class="out">
-        <button class="lnk" type="submit">{t(lang, 'pnl.logout')}</button>
-        <span class="tiny">{t(lang, 'pnl.logout_here_s')}</span>
-      </form>
-      <form method="post" action="/api/auth/logout" class="out out--all">
-        <input type="hidden" name="scope" value="all" />
-        <button class="lnk" type="submit">{t(lang, 'pnl.logout_all')}</button>
-        <span class="tiny">{t(lang, 'pnl.logout_all_s')}</span>
-      </form>
+<PanelShell lang={lang} me={me} current="coop" title={t(lang, 'pnl.tab_coop')}>
+  <section class="cp">
+    <h1 class="t-h2 cp__h">{t(lang, 'pnl.tab_coop')}</h1>
+    <p class="cp__say">{t(lang, 'pnl.ag_say')}</p>
+    <div class="cp__rows">
+      <a class="cp__row" href="/en/collaboration-order"><span>{t(lang, 'pnl.coop_order')}</span><i aria-hidden="true">›</i></a>
+      <a class="cp__row" href={co.phoneHref}><span>{t(lang, 'pnl.ag_talk')}<small><bdi dir="ltr">{co.phone}</bdi></small></span><i aria-hidden="true">›</i></a>
     </div>
-  </main>
-
-  <Footer lang={lang} />
-</Base>
+    <div class="cp__ask">
+      <p class="cp__ask-h">{t(lang, 'pnl.ag_ask_h')}</p>
+      <p class="cp__say">{t(lang, 'pnl.ag_ask_s')}</p>
+      <a class="k-act cp__go" href={co.phoneHref}>{t(lang, 'pnl.ag_cta')}</a>
+    </div>
+  </section>
+</PanelShell>
 
 <style>
-  .pnl { padding: var(--s6) 0 var(--s9); }
-  .pnl .wrap { max-width: 620px; }
-  .hd { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 8px 0 20px; }
-  .hd__h { margin: 0; }
-  .badge { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; padding: 6px 10px;
-           border: 1px solid var(--line); color: var(--ink-2); }
-  .badge--gold { border-color: var(--ink); background: var(--ink); color: var(--paper); }
-  .badge--muted { color: var(--faint); }
-  .say { font-size: var(--fs-s0); color: var(--ink-2); margin: 0 0 20px; max-width: 52ch; }
-
-  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-           background: var(--line-soft); border: 1px solid var(--line-soft); margin-bottom: 22px; }
-  .tile { background: var(--paper); padding: 16px 18px; display: block; }
-  .tile b { display: block; font-size: var(--fs-s2); font-weight: 600; line-height: 1; }
-  .tile span { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em;
-               text-transform: uppercase; color: var(--faint); }
-
-  .rows { border-top: 1px solid var(--line-soft); }
-  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px;
-         padding: 16px 0; border-bottom: 1px solid var(--line-soft); font-size: var(--fs-s0); }
-  .row small { display: block; font-size: var(--fs-s-1); color: var(--faint); margin-top: 2px; }
-  .row i { font-style: normal; color: var(--faint); }
-
-  .ask { border: 1px solid var(--line); padding: 18px; margin-top: 24px; }
-  .ask--deep { background: var(--ink-deep); border-color: var(--ink-deep); color: #fff; }
-  .ask__h { margin: 0 0 6px; font-size: var(--fs-s0); font-weight: 600; }
-  .ask--deep .ask__h { font-weight: 300; font-size: var(--fs-s1); }
-  .ask__s { margin: 0 0 14px; font-size: var(--fs-s-1); color: var(--muted); }
-  .ask--deep .ask__s { color: rgba(255,255,255,.72); }
-
-  .adv { display: flex; align-items: center; gap: 13px; margin-top: 26px;
-         border: 1px solid var(--line-soft); padding: 13px 14px; }
-  .adv__pic { width: 44px; height: 44px; border-radius: 50%; background: var(--paper-2); flex: none; }
-  .adv__t { flex: 1; min-width: 0; }
-  .adv__n { margin: 1px 0 0; font-size: var(--fs-s0); font-weight: 600; }
-  .adv__b { min-height: 38px; padding: 0 14px; }
-  .tiny { margin: 0; font-size: var(--fs-s-1); color: var(--faint); }
-
-  .out { margin-top: 30px; display: grid; gap: 2px; }
-  .out--all { margin-top: 14px; }
-  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin: 0 0 18px; overflow-x: auto; }
-  .tabs a { padding: 10px 16px; font-size: var(--fs-s-1); letter-spacing: .12em; text-transform: uppercase; color: var(--faint);
-            border-bottom: 2px solid transparent; white-space: nowrap; }
-  .tabs a[aria-current='page'] { color: var(--ink); border-color: var(--ink); font-weight: 600; }
-  .row--static { color: var(--ink-2); }
-  .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--muted); font-size: var(--fs-s-1); }
-  .lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .cp { display: grid; gap: var(--s4); max-width: 720px; }
+  .cp__h { margin: 0; }
+  .cp__say { margin: 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
+  .cp__rows { display: grid; border-top: 1px solid var(--line); }
+  .cp__row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line);
+    color: var(--ink); text-decoration: none; font-size: var(--fs-s0); }
+  .cp__row small { display: block; margin-top: 2px; color: var(--muted); font-size: var(--fs-s-1); }
+  .cp__row:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  .cp__ask { display: grid; gap: 10px; padding: 24px; background: var(--paper-2); }
+  .cp__ask-h { margin: 0; font-size: var(--fs-s1); font-weight: 400; color: var(--ink); }
+  .cp__go { width: auto; justify-self: start; padding: 0 24px; }
 </style>

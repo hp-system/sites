@@ -11,21 +11,20 @@ parents:
   path: /en/services
 image: https://media.onsea.gr/properties/ums_4761/land-sea-view-halkidiki-2986326863_1920w.jpg
 image_alt: Turquoise bay and pine-covered coast in Halkidiki, Greece
+desk_image: https://media.onsea.gr/properties/ums_4761/land-sea-view-halkidiki-2986326863_1920w.jpg
+desk_image_alt: Turquoise bay and pine-covered coast in Halkidiki, Greece
+# Related: sibling pages the brief's text does not link (Sergei 2026-11-11: no link twice)
 related:
-- label: Real estate services in Halkidiki
-  href: /en/services
 - label: Seller services
   href: /en/services/seller-services
-- label: Investor services
-  href: /en/services/investor-services
+  text: Photos, drone video, 360° views, the PEA and ads abroad.
+  image: /pages/services/8840faf0-1624603637-card.webp
+  image_alt: Drone filming a seaside villa with a pool in Halkidiki
 - label: Construction services
   href: /en/services/construction-services
-- label: Construction projects
-  href: /en/construction
-- label: Full property management
-  href: /en/services/buyer-services/full-property-management
-- label: Contact an adviser
-  href: /en/contact
+  text: Studies, licence, building, pools, renovation, 10-year warranty.
+  image: /pages/services/76855af3-1624604213-card.webp
+  image_alt: Concrete frame of a new house under construction
 toc: false
 old_url: /en/services/buyer-services
 needs_content: false
@@ -56,6 +55,8 @@ catalog:
   url: /en/services/buyer-services#enquiry-viewing-trip-and-selection-of-property
 - name: Full support for any legal and financial services
   url: /en/services/buyer-services#full-support-for-any-legal-and-financial-services
+# On the kit with its own brief P36 (Sergei 2026-11-11 «Да»)
+look: wave1
 form:
   source: 'Services: buyer services'
   title: Ask about these services

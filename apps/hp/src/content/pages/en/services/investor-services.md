@@ -11,21 +11,20 @@ parents:
   path: /en/services
 image: https://media.onsea.gr/properties/ums_8535/land-beach-view-halkidiki-2973826451_1920w.jpg
 image_alt: Sandy beach and land with sea view in Halkidiki, Greece
+desk_image: https://media.onsea.gr/properties/ums_8535/land-beach-view-halkidiki-2973826451_1920w.jpg
+desk_image_alt: Sandy beach and land with sea view in Halkidiki, Greece
+# Related: sibling pages the brief's text does not link (Sergei 2026-11-11: no link twice)
 related:
-- label: Real estate services in Halkidiki
-  href: /en/services
-- label: Buyer services
-  href: /en/services/buyer-services
-- label: Seller services
-  href: /en/services/seller-services
-- label: Construction services
-  href: /en/services/construction-services
 - label: Construction projects
   href: /en/construction
-- label: Full property management
-  href: /en/services/buyer-services/full-property-management
-- label: Contact an adviser
-  href: /en/contact
+  text: Villa Natalia in Sithonia, renovated homes and villas.
+  image: /pages/construction/villa-natalia-7010-wm.jpg
+  image_alt: Villa Natalia in Sithonia at night, seen from above
+- label: Buyer services
+  href: /en/services/buyer-services
+  text: From the search and the viewings to the notary and after.
+  image: /pages/services/01596b1d-1624545055-card.webp
+  image_alt: Advisers showing a villa in Halkidiki to a couple of buyers
 toc: false
 old_url: /en/services/investor-services
 needs_content: false
@@ -38,6 +37,8 @@ catalog:
   url: /en/services/investor-services#hellenic-republic-assets-development-fund-hradf-tenders
 - name: Hotel designs and constructions
   url: /en/services/investor-services#hotel-designs-and-constructions
+# On the kit with its own brief P38 (Sergei 2026-11-11 «Да»)
+look: wave1
 form:
   source: 'Services: investor services'
   title: Ask about these services

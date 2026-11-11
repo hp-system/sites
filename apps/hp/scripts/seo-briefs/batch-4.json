@@ -1,0 +1,616 @@
+{
+  "_note": "Briefs + new texts for pages outside George's spec (D-20261106-SS-2), batch 4: the four services section pages (Sergei 2026-11-11 «Да»: the other services pages on the kit with own briefs). George's 7–25 sub-service sections become 6–7 real services each; facts only from George's own pages and guides (D-20261111-SS-1: no lines outside his texts). EN only until stage 5. Status draft until Sergei approves the texts.",
+  "batch": 4,
+  "date": "2026-11-11",
+  "status": "draft",
+  "approved": "",
+  "pages": [
+    {
+      "id": "P36",
+      "lang": "en",
+      "page": "Buyer services",
+      "url": "https://www.halkidikiproperties.com/en/services/buyer-services",
+      "titleFocus": "Buyers: one team from the search to the keys",
+      "primaryKeyword": "buyer services Halkidiki",
+      "primaryVolume": "pending (keyword tool); old sub-pages: VIP concierge 213, appraisals 93, negotiation 33 impressions in 12 months",
+      "secondaryKeywords": [
+        "buying property in Halkidiki",
+        "property viewing trip Greece",
+        "buy property in Greece from abroad",
+        "real estate agent for buyers Halkidiki"
+      ],
+      "keywordRationale": "The buyer side of the hub. The old sub-pages had little traffic (services.json, 12 months), so the page groups them into the real steps of a purchase; the buying guide P19 keeps the legal how-to, this page the services.",
+      "title": "Buyer Services for Property in Halkidiki",
+      "meta": "Buying property in Halkidiki with one team: selection and viewing trip, negotiation, checks before you buy, the purchase to the notary, papers and after.",
+      "h1": "Buyer services in Halkidiki",
+      "h2": [
+        "Tell us what you are looking for",
+        "Viewing trip and selection of property",
+        "Negotiation with the seller",
+        "Checks before you buy",
+        "From the deposit to the notary",
+        "Translations, a company and other papers",
+        "After the purchase"
+      ],
+      "faqQuestions": [
+        "Can I buy property in Halkidiki without travelling to Greece?",
+        "Do I need my own lawyer?",
+        "How does a viewing trip work?",
+        "Can you set up a Greek company for my purchase?",
+        "How much do your buyer services cost?"
+      ],
+      "contentBrief": "The services around a purchase, in the order a buyer needs them. Facts from George's buyer-services page and his guides (P19, buyer articles): shortlist by criteria, viewings in person or by video, negotiation, appraisal and legal and accounting audit, independent lawyer, tax number in one day at the Polygyros tax office, pre-contract with a deposit of about 10 %, transfer tax before the deed, notary, land registry, translations and apostille, company set-up to the operating licence, property management, VIP concierge partner. No prices, no counts.",
+      "targetWords": 750,
+      "pageType": "service",
+      "schema": [
+        "Service",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Services",
+        "Buyer services"
+      ],
+      "heroAlt": "Turquoise bay and pine-covered coast in Halkidiki, Greece",
+      "ogTitle": "Buyer Services in Halkidiki – From the Search to the Keys",
+      "anchor": "buyer services",
+      "linksOut": [
+        {
+          "anchor": "Halkidiki property for sale",
+          "href": "/en/properties"
+        },
+        {
+          "anchor": "book an online appointment",
+          "href": "/en/book-an-online-appointment"
+        },
+        {
+          "anchor": "buying property in Greece",
+          "href": "/en/buying-property-in-greece"
+        },
+        {
+          "anchor": "full property management",
+          "href": "/en/services/buyer-services/full-property-management"
+        },
+        {
+          "anchor": "real estate services in Halkidiki",
+          "href": "/en/services"
+        }
+      ],
+      "linkedFrom": [
+        "P35 Services hub (buyers panel)",
+        "P40 Property management"
+      ],
+      "cta": "Tell us what you are looking for",
+      "oldUrls": [
+        "/en/services/buyer-services"
+      ],
+      "lawyerCheck": "No new legal lines: the purchase steps are George's (P19 and the buyer guides).",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Buying a home in another country raises many questions at once: which area, which property, which papers, which costs. Our buyer services in Halkidiki answer them with one team, from the first enquiry to the keys and after: the search, the viewings, the negotiation, the checks, the purchase at the notary and the papers around it.</p>",
+      "body": "<h2>Tell us what you are looking for</h2><p>Give us some information about the kind of property you want, your criteria and the amount you plan to invest. We create a list for you with the best properties that have these characteristics, and you see it before any trip is planned.</p><h2>Viewing trip and selection of property</h2><p>When the list is ready, we plan the viewings with you. You can see the properties in person on a viewing trip, with an adviser who accompanies you and knows each house, or live by video call from home. You can start with a video call and travel only for the properties you liked.</p><h2>Negotiation with the seller</h2><p>When you have chosen, we negotiate the price and the terms with the seller on your behalf. We know the local market and recent sales, so the offer is realistic, and we handle the communication and the paperwork of the negotiation, so that you reach a fair price without the stress.</p><h2>Checks before you buy</h2><p>Before you pay anything, the property is checked:</p><ul><li><strong>Appraisal:</strong> an estimate of the true value of the property.</li><li><strong>Legal audit:</strong> an independent lawyer checks the title at the land registry, mortgages or other encumbrances, the building permit and the energy certificate.</li><li><strong>Accounting audit:</strong> the taxes and costs that come with the purchase.</li></ul><h2>From the deposit to the notary</h2><p>We conduct the whole purchase with you. You need a Greek tax number (AFM), issued in one day at the tax office in Polygyros with your passport; we accompany you, or your lawyer arranges it with a power of attorney. A pre-contract is signed with a deposit of about 10 %, the transfer tax is paid before the deed, the final deed is signed before a notary and the property is registered at the land registry.</p><h2>Translations, a company and other papers</h2><p>When you are not Greek, papers multiply. We arrange the translation of official documents, the apostille and interpreters in all languages. If you buy through a company, we carry out the whole procedure of its establishment and management, and represent you at the public services until the operating licence is issued.</p><h2>After the purchase</h2><p>Our work does not stop at the keys. We can look after the home while you are away, find tenants and pay its bills. For customers who need special attention, a dedicated service partner can accompany you and act on your behalf during your stay. And if you want to change the house, our engineers prepare the architectural designs and 3D views.</p>",
+      "faq": [
+        {
+          "q": "Can I buy property in Halkidiki without travelling to Greece?",
+          "a": "Yes, for most steps. You can see properties by video call, and with a power of attorney your lawyer can apply for your tax number, deal with the bank and sign the final deed for you."
+        },
+        {
+          "q": "Do I need my own lawyer?",
+          "a": "Yes. An independent Greek lawyer checks the title, the permits and any debts before you pay, and represents you at the notary."
+        },
+        {
+          "q": "How does a viewing trip work?",
+          "a": "We send you a list of properties that match your criteria, plan the viewings with you and accompany you to each property. You can also see them by video call first."
+        },
+        {
+          "q": "Can you set up a Greek company for my purchase?",
+          "a": "Yes. We carry out the whole procedure of establishing the company and represent you at the public services until the operating licence is issued."
+        },
+        {
+          "q": "How much do your buyer services cost?",
+          "a": "It depends on the services you need. The terms are agreed with you in writing before we start."
+        }
+      ],
+      "ctaHref": "/en/contact",
+      "questionMarks": [],
+      "photoThemes": [
+        {
+          "after": "Tell us what you are looking for",
+          "tags": [
+            "view_sea",
+            "view_panoramic"
+          ]
+        },
+        {
+          "after": "Viewing trip and selection of property",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "Negotiation with the seller",
+          "tags": [
+            "exterior_terrace"
+          ]
+        },
+        {
+          "after": "Checks before you buy",
+          "tags": [
+            "exterior_garden"
+          ]
+        },
+        {
+          "after": "From the deposit to the notary",
+          "tags": [
+            "view_beach",
+            "view_sea"
+          ]
+        },
+        {
+          "after": "Translations, a company and other papers",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "After the purchase",
+          "tags": [
+            "exterior_pool"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "P37",
+      "lang": "en",
+      "page": "Seller services",
+      "url": "https://www.halkidikiproperties.com/en/services/seller-services",
+      "titleFocus": "Sellers: how the property is presented and promoted",
+      "primaryKeyword": "seller services Halkidiki",
+      "primaryVolume": "pending (keyword tool); the PEA sub-page (now P67) had most of the impressions",
+      "secondaryKeywords": [
+        "property photography Halkidiki",
+        "drone video property Greece",
+        "advertise property in Greece abroad",
+        "360 virtual tour property"
+      ],
+      "keywordRationale": "The Sell page (P24) targets «sell property in Halkidiki»; this page keeps the presentation services (photos, drone, 360, PEA, portals) and links Sell and PEA, so the two do not compete.",
+      "title": "Seller Services: Photos, Video, PEA and Ads",
+      "meta": "Seller services in Halkidiki: professional photos and drone video, 360° views, the PEA energy certificate and ads on portals in Greece and abroad.",
+      "h1": "Seller services in Halkidiki",
+      "h2": [
+        "Professional photos and video",
+        "Aerial photos and drone video",
+        "Photorealistic designs and 360° views",
+        "Energy certificate (PEA)",
+        "Advertising in Greece and abroad",
+        "Assign your property online",
+        "Selling with us"
+      ],
+      "faqQuestions": [
+        "Do you photograph my property?",
+        "Can you film my property with a drone?",
+        "Do I need an energy certificate to sell?",
+        "Where do you advertise my property?",
+        "How do I assign my property to you?"
+      ],
+      "contentBrief": "What we do so that a property is seen by the right buyers. Facts from George's seller-services page: professional architectural photography and video, drone photos and video, photorealistic designs and 360 views, PEA (now its own page P67), ad packages on portals in Greece and abroad with manual translation, online assignment with a qualified associate who calls. No portal names, no prices.",
+      "targetWords": 700,
+      "pageType": "service",
+      "schema": [
+        "Service",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Services",
+        "Seller services"
+      ],
+      "heroAlt": "Aerial view of a seafront house with a large garden in Halkidiki",
+      "ogTitle": "Seller Services in Halkidiki – Your Property Seen by the Right Buyers",
+      "anchor": "seller services",
+      "linksOut": [
+        {
+          "anchor": "energy certificate (PEA)",
+          "href": "/en/services/seller-services/energy-efficiency-certificates-pea"
+        },
+        {
+          "anchor": "add your property",
+          "href": "/en/add-your-property"
+        },
+        {
+          "anchor": "sell your property in Halkidiki",
+          "href": "/en/sell"
+        },
+        {
+          "anchor": "real estate services in Halkidiki",
+          "href": "/en/services"
+        }
+      ],
+      "linkedFrom": [
+        "P35 Services hub (sellers panel)",
+        "P67 Energy certificate (PEA)"
+      ],
+      "cta": "Add your property",
+      "oldUrls": [
+        "/en/services/seller-services"
+      ],
+      "lawyerCheck": "No new legal lines (the PEA facts are George's, on P67).",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>A buyer decides on the photos first. Our seller services in Halkidiki make sure your property is presented at its best and seen by the right buyers: professional photos and video, aerial views, 360° tours, the energy certificate the sale needs and advertising in Greece and abroad.</p>",
+      "body": "<h2>Professional photos and video</h2><p>As a Greek proverb says, one picture is worth a thousand words. The photos of a property have to be professional and in high resolution, taken in the right light by a photographer experienced in architectural photography, so that they show the interior and the exterior at their best. We can go one step further with a video of the property and its surroundings, which shows the house as a visitor would walk through it.</p><h2>Aerial photos and drone video</h2><p>With drone technology we capture high-resolution aerial images of the property from different angles and heights. They show what the ground cannot: the plot, the view, the distance to the sea and the village around it. For a villa, a plot or a house with a large garden, the aerial view is especially useful.</p><h2>Photorealistic designs and 360° views</h2><p>Some properties are best shown before they are finished or changed. Photorealistic designs and three-dimensional 360° views let a buyer walk through the house on a screen, see a renovation that is still on paper or understand the layout of a new build.</p><h2>Energy certificate (PEA)</h2><p>Every sale of a building over 50 m² in Greece needs an energy performance certificate. Our energy inspectors handle the documents, the visit and the certificate, so that it is ready before a buyer appears.</p><h2>Advertising in Greece and abroad</h2><p>With our advertising packages, your property is promoted on property portals in Greece and abroad, several of which reach buyers in many countries. Our company works with many property advertising websites in Greece and abroad. Each listing is translated by hand and presented in full, so that the property looks as good in another language as in Greek, and you can be sure it gets the full benefit of its promotion.</p><h2>Assign your property online</h2><p>You can assign your property through our website. If you have pictures of it and know its details, you register it in a few minutes and can change the price, the description or any other detail later. A qualified associate then contacts you directly to discuss the presentation and the promotion of the property and to answer your questions.</p><p>If you prefer, a simple assignment form gives us the whole task: we promote and advertise the property, suggest it to interested buyers, show it to them and bring the two parties to an agreement. This works for properties for sale and for rent.</p><h2>Selling with us</h2><p>These services are part of how we sell. The whole process, from the first visit and the price to the notary, the documents you need and the three ways to work with us, is on our page for owners who want to sell.</p>",
+      "faq": [
+        {
+          "q": "Do you photograph my property?",
+          "a": "Yes. A photographer experienced in architectural photography takes professional, high-resolution photos of the interior and the exterior, and we can add a video."
+        },
+        {
+          "q": "Can you film my property with a drone?",
+          "a": "Yes. We take aerial photos and video of the property from different angles and heights, which show the plot, the view and the surroundings."
+        },
+        {
+          "q": "Do I need an energy certificate to sell?",
+          "a": "Yes. A sale of a building over 50 m² in Greece needs an energy performance certificate (PEA). Our inspectors arrange it for you."
+        },
+        {
+          "q": "Where do you advertise my property?",
+          "a": "On property portals in Greece and abroad, several of which reach buyers in many countries, with a listing translated by hand."
+        },
+        {
+          "q": "How do I assign my property to you?",
+          "a": "Register it through our website with its pictures and details. A qualified associate then contacts you to discuss the presentation and the promotion."
+        }
+      ],
+      "ctaHref": "/en/add-your-property",
+      "questionMarks": [],
+      "photoThemes": [
+        {
+          "after": "Professional photos and video",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "Aerial photos and drone video",
+          "tags": [
+            "exterior_aerial"
+          ]
+        },
+        {
+          "after": "Photorealistic designs and 360° views",
+          "tags": [
+            "exterior_pool"
+          ]
+        },
+        {
+          "after": "Energy certificate (PEA)",
+          "tags": [
+            "exterior_terrace"
+          ]
+        },
+        {
+          "after": "Advertising in Greece and abroad",
+          "tags": [
+            "view_sea",
+            "view_panoramic"
+          ]
+        },
+        {
+          "after": "Assign your property online",
+          "tags": [
+            "exterior_garden"
+          ]
+        },
+        {
+          "after": "Selling with us",
+          "tags": [
+            "view_beach",
+            "view_sea"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "P38",
+      "lang": "en",
+      "page": "Investor services",
+      "url": "https://www.halkidikiproperties.com/en/services/investor-services",
+      "titleFocus": "Investors: HRADF tenders, hotels, ports and marinas",
+      "primaryKeyword": "HRADF tenders",
+      "primaryVolume": "pending (keyword tool); the old HRADF sub-page: 1,163 impressions, 3 clicks in 12 months",
+      "secondaryKeywords": [
+        "real estate investment services Greece",
+        "hotel design and construction Greece",
+        "hotel for sale due diligence Greece",
+        "marina design Greece"
+      ],
+      "keywordRationale": "HRADF is the only investor theme with real search demand (services.json). Ports and marinas draw off-topic queries («marina luka», seo-real-data-2026-11), so they keep one short section; hotels link to the hotels-for-sale demand of the Professional page later.",
+      "title": "Real Estate Investor Services in Greece",
+      "meta": "Investor services in Greece: HRADF tenders for state-owned property, hotel design, construction and audits, feasibility studies, ports and marinas.",
+      "h1": "Investor services in Greece",
+      "h2": [
+        "HRADF tenders for state-owned property",
+        "How we support you in a tender",
+        "Hotels: design, construction and management",
+        "Buying an existing hotel",
+        "Feasibility studies and business plans",
+        "Ports and marinas"
+      ],
+      "faqQuestions": [
+        "What is the HRADF?",
+        "How do you help in an HRADF tender?",
+        "Do you design and build hotels?",
+        "Can you check a hotel before I buy it?",
+        "Do you design ports and marinas?",
+        "How much do your investor services cost?"
+      ],
+      "contentBrief": "Investment projects that generate a stable income. Facts from George's investor-services page and the feasibility/business-plan and cost-estimation sections of his buyer and construction pages: HRADF sells and leases state-owned property by public tenders; we gather, manage and submit the documents, due diligence, legal support, property management, construction supervision; hotel study, design, construction, supervision, development and management; legal controls and audits of existing units and companies for sale; viability and feasibility studies; business plans for 5–10 years; port and marina study, design and supervision. No prices, no project names.",
+      "targetWords": 650,
+      "pageType": "service",
+      "schema": [
+        "Service",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Services",
+        "Investor services"
+      ],
+      "heroAlt": "Sandy beach and land with sea view in Halkidiki, Greece",
+      "ogTitle": "Real Estate Investor Services in Greece – HRADF, Hotels, Marinas",
+      "anchor": "investor services",
+      "linksOut": [
+        {
+          "anchor": "construction services",
+          "href": "/en/services/construction-services"
+        },
+        {
+          "anchor": "Halkidiki property for sale",
+          "href": "/en/properties"
+        },
+        {
+          "anchor": "real estate services in Halkidiki",
+          "href": "/en/services"
+        },
+        {
+          "anchor": "talk to an adviser",
+          "href": "/en/contact"
+        }
+      ],
+      "linkedFrom": [
+        "P35 Services hub (investors panel)"
+      ],
+      "cta": "Talk to an adviser",
+      "oldUrls": [
+        "/en/services/investor-services"
+      ],
+      "lawyerCheck": "No new legal lines: the HRADF description is George's.",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Some investments are not a home but a source of stable income: state-owned property, a hotel, a port. Our investor services support you through these projects in Greece, from the first study and the tender documents to the design, the construction and the management.</p>",
+      "body": "<h2>HRADF tenders for state-owned property</h2><p>The Hellenic Republic Asset Development Fund (HRADF) sells and leases state-owned property through public tenders. For an investor these tenders are an opportunity, but also a demanding legal and administrative process, with strict documents and deadlines. Our experience in managing and developing properties, and our knowledge of the legal and administrative procedures, make us a useful partner for those who take part.</p><h2>How we support you in a tender</h2><p>We support interested investors through the whole process, from the first inquiry to the final acquisition:</p><ul><li><strong>Documents:</strong> gathering, managing and submitting the documents the tender requires.</li><li><strong>Due diligence and legal support:</strong> the checks of the property and the procedures of the tender.</li><li><strong>After the tender:</strong> property management and construction supervision, when the property is developed.</li></ul><p>Every investor has different needs, so the support is shaped around your project and the property you are interested in.</p><h2>Hotels: design, construction and management</h2><p>Our offices undertake the study, the design, the construction, the supervision and the development of hotel units, from the construction up to their full management. Our engineers bring the same experience they use for homes: licences, structural and electro-mechanical studies, cost estimation and supervision on site. We also provide consultant services to all sectors of tourism investment.</p><h2>Buying an existing hotel</h2><p>When you buy a hotel that already operates, the company behind it matters as much as the building. We perform legal controls and audits of existing units and of the companies that are for sale, so that you know what you buy before you sign.</p><h2>Feasibility studies and business plans</h2><p>To be sure about the efficiency of an investment, a viability and feasibility study is necessary. We prepare it, together with the business plan an investor, an inspector or a senior partner asks for, which shows the working plan of the company for the next years, usually five to ten, and the full cost estimation of the project.</p><h2>Ports and marinas</h2><p>We also undertake the study, the design and the supervision of port projects: commercial and passenger ports, marinas, fishing and tourist harbours. We act as technical consultant and infrastructure project manager and give expert opinions on technical and environmental issues. Our engineers use computer models to simulate the behaviour of the coast, such as waves, water flows and the transport of sediment, and the environmental impact of a port or a marina, such as the dispersion of pollutants and the level of noise.</p>",
+      "faq": [
+        {
+          "q": "What is the HRADF?",
+          "a": "The Hellenic Republic Asset Development Fund, which sells and leases state-owned property in Greece through public tenders."
+        },
+        {
+          "q": "How do you help in an HRADF tender?",
+          "a": "We gather, manage and submit the documents the tender requires, carry out the due diligence and give legal support, from the first inquiry to the final acquisition. We guide you through each step of the legal and administrative procedure."
+        },
+        {
+          "q": "Do you design and build hotels?",
+          "a": "Yes. We undertake the study, design, construction, supervision and development of hotel units, up to their full management."
+        },
+        {
+          "q": "Can you check a hotel before I buy it?",
+          "a": "Yes. We perform legal controls and audits of existing hotel units and of the companies that are for sale."
+        },
+        {
+          "q": "Do you design ports and marinas?",
+          "a": "Yes. We undertake the study, the design and the supervision of commercial and passenger ports, marinas and tourist harbours, and act as technical consultant and infrastructure project manager."
+        },
+        {
+          "q": "How much do your investor services cost?",
+          "a": "It depends on the project. The scope and the terms are agreed with you in writing before we start. Tell us about the project and we send you an offer."
+        }
+      ],
+      "ctaHref": "/en/contact",
+      "questionMarks": [],
+      "photoThemes": [
+        {
+          "after": "HRADF tenders for state-owned property",
+          "tags": [
+            "exterior_aerial"
+          ]
+        },
+        {
+          "after": "How we support you in a tender",
+          "tags": [
+            "land_aerial"
+          ],
+          "category": "land"
+        },
+        {
+          "after": "Hotels: design, construction and management",
+          "tags": [
+            "exterior_pool"
+          ]
+        },
+        {
+          "after": "Buying an existing hotel",
+          "tags": [
+            "view_sea"
+          ]
+        },
+        {
+          "after": "Feasibility studies and business plans",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "Ports and marinas",
+          "tags": [
+            "view_beach",
+            "view_panoramic"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "P39",
+      "lang": "en",
+      "page": "Construction services",
+      "url": "https://www.halkidikiproperties.com/en/services/construction-services",
+      "titleFocus": "Owners of land or a house: build or renovate in Halkidiki",
+      "primaryKeyword": "construction services Halkidiki",
+      "primaryVolume": "pending (keyword tool); the page had 9,453 impressions and 2 clicks (off-topic queries, seo-real-data-2026-11); the cost-estimation sub-page 285 impressions",
+      "secondaryKeywords": [
+        "build a house in Halkidiki",
+        "building licence Greece",
+        "construction cost Halkidiki",
+        "renovation Halkidiki",
+        "swimming pool construction Halkidiki"
+      ],
+      "keywordRationale": "George's 24 sub-service sections drew technology queries unrelated to buying (geothermal, photorealism). The page is rebuilt around what an owner of land or a house in Halkidiki asks: studies and licence, cost, building, energy systems, pools, renovation, supervision and warranty.",
+      "title": "Construction Services in Halkidiki",
+      "meta": "Build or renovate in Halkidiki: studies and licence, cost estimate, the house and its systems, pools, live video supervision and a 10-year warranty.",
+      "h1": "Construction services in Halkidiki",
+      "h2": [
+        "Studies and the building licence",
+        "What it will cost",
+        "Building your house",
+        "Energy and comfort",
+        "Pools and the garden",
+        "Renovation",
+        "Supervision, live video and a 10-year warranty"
+      ],
+      "faqQuestions": [
+        "Can you build a house on my land in Halkidiki?",
+        "Do you handle the building licence?",
+        "Can I follow the construction from abroad?",
+        "What warranty do you give?",
+        "How much does it cost to build a house?"
+      ],
+      "contentBrief": "For owners of land or of a house who want to build or renovate. Facts from George's construction-services page: structural and electro-mechanical studies, environmental impact study (Law 4014/2011), building licences with full representation at the public services, full cost estimation and analysis, concrete / stone / brick / panel / metal constructions, excavation and foundation, bioclimatic passive homes, thermal insulation, underfloor heating-cooling, hybrid systems, photovoltaics, geothermal, pools (gunite or concrete, pebble / mosaic / plaster, chlorine or oxygen, overflow / waterfall / skimmer), landscaping, renovation of any property, CCTV supervision with live video, 10-year warranty on the works under our responsibility. No prices, no lead times.",
+      "targetWords": 800,
+      "pageType": "service",
+      "schema": [
+        "Service",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Services",
+        "Construction services"
+      ],
+      "heroAlt": "Modern stone house with a wooden deck and pool in Halkidiki",
+      "ogTitle": "Construction Services in Halkidiki – From the Study to the Keys",
+      "anchor": "construction services",
+      "linksOut": [
+        {
+          "anchor": "land for sale in Halkidiki",
+          "href": "/en/properties/land-for-sale"
+        },
+        {
+          "anchor": "construction projects",
+          "href": "/en/construction"
+        },
+        {
+          "anchor": "full property management",
+          "href": "/en/services/buyer-services/full-property-management"
+        },
+        {
+          "anchor": "real estate services in Halkidiki",
+          "href": "/en/services"
+        }
+      ],
+      "linkedFrom": [
+        "P35 Services hub (construction panel)",
+        "P38 Investor services",
+        "P40 Property management (Related)"
+      ],
+      "cta": "I have land",
+      "oldUrls": [
+        "/en/services/construction-services"
+      ],
+      "lawyerCheck": "No new legal lines: the environmental impact study and the licence representation are George's.",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Whether you have a finished design or only an idea for your home, our construction services in Halkidiki take it from the first study to the keys. Our engineers handle the studies and the licence, the cost, the building and its systems, the pool and the garden, and they stay with you after the delivery.</p>",
+      "body": "<h2>Studies and the building licence</h2><p>Every project starts on paper. Our engineers prepare the complete structural studies and the electro-mechanical studies: heating, air conditioning and ventilation, water supply and sewage, lifts and all the electrical installations. Where the law asks for it (Law 4014/2011 on the environmental licensing of projects), they prepare the environmental impact study. For the building licence we represent you entirely at the public services, whether it is a private house, a hotel or a workplace.</p><h2>What it will cost</h2><p>Before the first stone, you need to know the cost. Our professionals carry out the full analysis and cost estimation of each project: the studies, the construction, the materials and the systems. You decide with the numbers in front of you.</p><h2>Building your house</h2><p>We design and build in the material that suits the place and your plans: a solid house of concrete or brick, a stone house in a traditional settlement, a prefabricated house of panels or a metal construction, which is quicker to complete. We undertake the design and the construction completely. The work starts with cleaning the plot, removing the topsoil, the excavation and the foundation. For the lowest energy needs, we build bioclimatic passive homes.</p><h2>Energy and comfort</h2><p>The systems decide how a house lives and what it costs to run:</p><ul><li><strong>Insulation:</strong> thermal insulation studies and installations, new or in a reconstruction.</li><li><strong>Heating and cooling:</strong> underfloor heating and cooling, which spreads the heat evenly in the room, individual systems and hybrid systems, the most economical way to produce energy for the house.</li><li><strong>Installations:</strong> the electrical and plumbing studies and installations by qualified partners, biological sewage treatment systems and remote monitoring systems for the house.</li><li><strong>Renewable energy:</strong> photovoltaic systems, which in a sunny country cover a large part of the power needs, and geothermal applications.</li></ul><h2>Pools and the garden</h2><p>We build swimming pools in gunite or concrete, lined with pebbles, mosaic or plaster, with chlorine or oxygen, and with overflow, waterfall or skimmer technology. Architects specialised in landscaping design the garden and the surrounding area, so that the house and its land work together.</p><h2>Renovation</h2><p>An older house in a good location can become the home you want. We offer complete solutions for the structural renovation of any property, from an apartment to a large building: the study, the licence where needed, the works and the new systems.</p><h2>Supervision, live video and a 10-year warranty</h2><p>With CCTV cameras on the construction site, you follow the works live from wherever you are and always know the state of the project. After the delivery we stay with you: the works carried out under our responsibility have a 10-year warranty. When the house is ready, we can also look after it for you.</p>",
+      "faq": [
+        {
+          "q": "Can you build a house on my land in Halkidiki?",
+          "a": "Yes. Our engineers take the project from the studies and the building licence to the construction, the systems and the delivery."
+        },
+        {
+          "q": "Do you handle the building licence?",
+          "a": "Yes. We prepare the studies and represent you entirely at the public services until the licence is issued."
+        },
+        {
+          "q": "Can I follow the construction from abroad?",
+          "a": "Yes. CCTV cameras on the site let you follow the works live, wherever you are."
+        },
+        {
+          "q": "What warranty do you give?",
+          "a": "A 10-year warranty on the works carried out under our responsibility."
+        },
+        {
+          "q": "How much does it cost to build a house?",
+          "a": "It depends on the land, the size, the materials and the systems. We carry out the full cost estimation of your project before the contract."
+        }
+      ],
+      "ctaHref": "/en/contact",
+      "questionMarks": [],
+      "photoThemes": [
+        {
+          "after": "Studies and the building licence",
+          "tags": [
+            "land_aerial"
+          ],
+          "category": "land"
+        },
+        {
+          "after": "What it will cost",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "Building your house",
+          "tags": [
+            "exterior_terrace"
+          ]
+        },
+        {
+          "after": "Energy and comfort",
+          "tags": [
+            "exterior_garden"
+          ]
+        },
+        {
+          "after": "Pools and the garden",
+          "tags": [
+            "exterior_pool"
+          ]
+        },
+        {
+          "after": "Renovation",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "Supervision, live video and a 10-year warranty",
+          "tags": [
+            "view_sea",
+            "view_panoramic"
+          ]
+        }
+      ]
+    }
+  ]
+}

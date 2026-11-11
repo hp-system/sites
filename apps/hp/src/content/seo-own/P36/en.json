@@ -1,0 +1,159 @@
+{
+  "id": "P36",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Buyer services",
+  "pageType": "service",
+  "path": "/en/services/buyer-services",
+  "keyword": "buyer services Halkidiki",
+  "titleFocus": "Buyers: one team from the search to the keys",
+  "title": "Buyer Services for Property in Halkidiki",
+  "meta": "Buying property in Halkidiki with one team: selection and viewing trip, negotiation, checks before you buy, the purchase to the notary, papers and after.",
+  "h1": "Buyer services in Halkidiki",
+  "h2": [
+    "Tell us what you are looking for",
+    "Viewing trip and selection of property",
+    "Negotiation with the seller",
+    "Checks before you buy",
+    "From the deposit to the notary",
+    "Translations, a company and other papers",
+    "After the purchase"
+  ],
+  "faqQuestions": [
+    "Can I buy property in Halkidiki without travelling to Greece?",
+    "Do I need my own lawyer?",
+    "How does a viewing trip work?",
+    "Can you set up a Greek company for my purchase?",
+    "How much do your buyer services cost?"
+  ],
+  "faq": [
+    {
+      "q": "Can I buy property in Halkidiki without travelling to Greece?",
+      "a": "Yes, for most steps. You can see properties by video call, and with a power of attorney your lawyer can apply for your tax number, deal with the bank and sign the final deed for you."
+    },
+    {
+      "q": "Do I need my own lawyer?",
+      "a": "Yes. An independent Greek lawyer checks the title, the permits and any debts before you pay, and represents you at the notary."
+    },
+    {
+      "q": "How does a viewing trip work?",
+      "a": "We send you a list of properties that match your criteria, plan the viewings with you and accompany you to each property. You can also see them by video call first."
+    },
+    {
+      "q": "Can you set up a Greek company for my purchase?",
+      "a": "Yes. We carry out the whole procedure of establishing the company and represent you at the public services until the operating licence is issued."
+    },
+    {
+      "q": "How much do your buyer services cost?",
+      "a": "It depends on the services you need. The terms are agreed with you in writing before we start."
+    }
+  ],
+  "intro": "<p>Buying a home in another country raises many questions at once: which area, which property, which papers, which costs. Our buyer services in Halkidiki answer them with one team, from the first enquiry to the keys and after: the search, the viewings, the negotiation, the checks, the purchase at the notary and the papers around it.</p>",
+  "body": "<h2>Tell us what you are looking for</h2><p>Give us some information about the kind of property you want, your criteria and the amount you plan to invest. We create a list for you with the best properties that have these characteristics, and you see it before any trip is planned.</p><h2>Viewing trip and selection of property</h2><p>When the list is ready, we plan the viewings with you. You can see the properties in person on a viewing trip, with an adviser who accompanies you and knows each house, or live by video call from home. You can start with a video call and travel only for the properties you liked.</p><h2>Negotiation with the seller</h2><p>When you have chosen, we negotiate the price and the terms with the seller on your behalf. We know the local market and recent sales, so the offer is realistic, and we handle the communication and the paperwork of the negotiation, so that you reach a fair price without the stress.</p><h2>Checks before you buy</h2><p>Before you pay anything, the property is checked:</p><ul><li><strong>Appraisal:</strong> an estimate of the true value of the property.</li><li><strong>Legal audit:</strong> an independent lawyer checks the title at the land registry, mortgages or other encumbrances, the building permit and the energy certificate.</li><li><strong>Accounting audit:</strong> the taxes and costs that come with the purchase.</li></ul><h2>From the deposit to the notary</h2><p>We conduct the whole purchase with you. You need a Greek tax number (AFM), issued in one day at the tax office in Polygyros with your passport; we accompany you, or your lawyer arranges it with a power of attorney. A pre-contract is signed with a deposit of about 10 %, the transfer tax is paid before the deed, the final deed is signed before a notary and the property is registered at the land registry.</p><h2>Translations, a company and other papers</h2><p>When you are not Greek, papers multiply. We arrange the translation of official documents, the apostille and interpreters in all languages. If you buy through a company, we carry out the whole procedure of its establishment and management, and represent you at the public services until the operating licence is issued.</p><h2>After the purchase</h2><p>Our work does not stop at the keys. We can look after the home while you are away, find tenants and pay its bills. For customers who need special attention, a dedicated service partner can accompany you and act on your behalf during your stay. And if you want to change the house, our engineers prepare the architectural designs and 3D views.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/services/buyer-services",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "Service",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Services",
+    "Buyer services"
+  ],
+  "heroAlt": "Turquoise bay and pine-covered coast in Halkidiki, Greece",
+  "galleryAltPattern": "",
+  "ogTitle": "Buyer Services in Halkidiki – From the Search to the Keys",
+  "anchor": "buyer services",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "book an online appointment",
+      "href": "/en/book-an-online-appointment"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    },
+    {
+      "anchor": "full property management",
+      "href": "/en/services/buyer-services/full-property-management"
+    },
+    {
+      "anchor": "real estate services in Halkidiki",
+      "href": "/en/services"
+    }
+  ],
+  "linkedFrom": [
+    "P35 Services hub (buyers panel)",
+    "P40 Property management"
+  ],
+  "cta": "Tell us what you are looking for",
+  "ctaHref": "/en/contact",
+  "oldUrls": [
+    "/en/services/buyer-services"
+  ],
+  "words": 612,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "No new legal lines: the purchase steps are George's (P19 and the buyer guides).",
+  "source": "brief batch-4.json",
+  "photoThemes": [
+    {
+      "after": "Tell us what you are looking for",
+      "tags": [
+        "view_sea",
+        "view_panoramic"
+      ]
+    },
+    {
+      "after": "Viewing trip and selection of property",
+      "tags": [
+        "exterior_facade"
+      ]
+    },
+    {
+      "after": "Negotiation with the seller",
+      "tags": [
+        "exterior_terrace"
+      ]
+    },
+    {
+      "after": "Checks before you buy",
+      "tags": [
+        "exterior_garden"
+      ]
+    },
+    {
+      "after": "From the deposit to the notary",
+      "tags": [
+        "view_beach",
+        "view_sea"
+      ]
+    },
+    {
+      "after": "Translations, a company and other papers",
+      "tags": [
+        "exterior_facade"
+      ]
+    },
+    {
+      "after": "After the purchase",
+      "tags": [
+        "exterior_pool"
+      ]
+    }
+  ],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

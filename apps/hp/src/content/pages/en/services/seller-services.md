@@ -11,21 +11,20 @@ parents:
   path: /en/services
 image: https://media.onsea.gr/properties/ums_4494/detached-house-aerial-halkidiki-2980294460_1920w.jpg
 image_alt: Aerial view of a seafront house with a large garden in Halkidiki
+desk_image: https://media.onsea.gr/properties/ums_4494/detached-house-aerial-halkidiki-2980294460_1920w.jpg
+desk_image_alt: Aerial view of a seafront house with a large garden in Halkidiki
+# Related: sibling pages the brief's text does not link (Sergei 2026-11-11: no link twice)
 related:
-- label: Real estate services in Halkidiki
-  href: /en/services
 - label: Buyer services
   href: /en/services/buyer-services
-- label: Investor services
-  href: /en/services/investor-services
-- label: Construction services
-  href: /en/services/construction-services
-- label: Construction projects
-  href: /en/construction
+  text: From the search and the viewings to the notary and after.
+  image: /pages/services/01596b1d-1624545055-card.webp
+  image_alt: Advisers showing a villa in Halkidiki to a couple of buyers
 - label: Full property management
   href: /en/services/buyer-services/full-property-management
-- label: Contact an adviser
-  href: /en/contact
+  text: Tenants, rent, bills and inspections while you are away.
+  image: https://media.onsea.gr/properties/ums_4494/detached-house-garden-halkidiki-2980293835_800w.jpg
+  image_alt: Well-kept garden with palm trees around a house in Halkidiki
 toc: false
 old_url: /en/services/seller-services
 needs_content: false
@@ -46,6 +45,8 @@ catalog:
   url: /en/services/seller-services#energy-efficiency-certificates-pea
 - name: Photorealistic and 360 view
   url: /en/services/seller-services#photorealistic-and-360-view
+# On the kit with its own brief P37 (Sergei 2026-11-11 «Да»)
+look: wave1
 form:
   source: 'Services: seller services'
   title: Ask about these services

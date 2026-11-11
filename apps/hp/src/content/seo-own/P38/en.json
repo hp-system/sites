@@ -1,0 +1,152 @@
+{
+  "id": "P38",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Investor services",
+  "pageType": "service",
+  "path": "/en/services/investor-services",
+  "keyword": "HRADF tenders",
+  "titleFocus": "Investors: HRADF tenders, hotels, ports and marinas",
+  "title": "Real Estate Investor Services in Greece",
+  "meta": "Investor services in Greece: HRADF tenders for state-owned property, hotel design, construction and audits, feasibility studies, ports and marinas.",
+  "h1": "Investor services in Greece",
+  "h2": [
+    "HRADF tenders for state-owned property",
+    "How we support you in a tender",
+    "Hotels: design, construction and management",
+    "Buying an existing hotel",
+    "Feasibility studies and business plans",
+    "Ports and marinas"
+  ],
+  "faqQuestions": [
+    "What is the HRADF?",
+    "How do you help in an HRADF tender?",
+    "Do you design and build hotels?",
+    "Can you check a hotel before I buy it?",
+    "Do you design ports and marinas?",
+    "How much do your investor services cost?"
+  ],
+  "faq": [
+    {
+      "q": "What is the HRADF?",
+      "a": "The Hellenic Republic Asset Development Fund, which sells and leases state-owned property in Greece through public tenders."
+    },
+    {
+      "q": "How do you help in an HRADF tender?",
+      "a": "We gather, manage and submit the documents the tender requires, carry out the due diligence and give legal support, from the first inquiry to the final acquisition. We guide you through each step of the legal and administrative procedure."
+    },
+    {
+      "q": "Do you design and build hotels?",
+      "a": "Yes. We undertake the study, design, construction, supervision and development of hotel units, up to their full management."
+    },
+    {
+      "q": "Can you check a hotel before I buy it?",
+      "a": "Yes. We perform legal controls and audits of existing hotel units and of the companies that are for sale."
+    },
+    {
+      "q": "Do you design ports and marinas?",
+      "a": "Yes. We undertake the study, the design and the supervision of commercial and passenger ports, marinas and tourist harbours, and act as technical consultant and infrastructure project manager."
+    },
+    {
+      "q": "How much do your investor services cost?",
+      "a": "It depends on the project. The scope and the terms are agreed with you in writing before we start. Tell us about the project and we send you an offer."
+    }
+  ],
+  "intro": "<p>Some investments are not a home but a source of stable income: state-owned property, a hotel, a port. Our investor services support you through these projects in Greece, from the first study and the tender documents to the design, the construction and the management.</p>",
+  "body": "<h2>HRADF tenders for state-owned property</h2><p>The Hellenic Republic Asset Development Fund (HRADF) sells and leases state-owned property through public tenders. For an investor these tenders are an opportunity, but also a demanding legal and administrative process, with strict documents and deadlines. Our experience in managing and developing properties, and our knowledge of the legal and administrative procedures, make us a useful partner for those who take part.</p><h2>How we support you in a tender</h2><p>We support interested investors through the whole process, from the first inquiry to the final acquisition:</p><ul><li><strong>Documents:</strong> gathering, managing and submitting the documents the tender requires.</li><li><strong>Due diligence and legal support:</strong> the checks of the property and the procedures of the tender.</li><li><strong>After the tender:</strong> property management and construction supervision, when the property is developed.</li></ul><p>Every investor has different needs, so the support is shaped around your project and the property you are interested in.</p><h2>Hotels: design, construction and management</h2><p>Our offices undertake the study, the design, the construction, the supervision and the development of hotel units, from the construction up to their full management. Our engineers bring the same experience they use for homes: licences, structural and electro-mechanical studies, cost estimation and supervision on site. We also provide consultant services to all sectors of tourism investment.</p><h2>Buying an existing hotel</h2><p>When you buy a hotel that already operates, the company behind it matters as much as the building. We perform legal controls and audits of existing units and of the companies that are for sale, so that you know what you buy before you sign.</p><h2>Feasibility studies and business plans</h2><p>To be sure about the efficiency of an investment, a viability and feasibility study is necessary. We prepare it, together with the business plan an investor, an inspector or a senior partner asks for, which shows the working plan of the company for the next years, usually five to ten, and the full cost estimation of the project.</p><h2>Ports and marinas</h2><p>We also undertake the study, the design and the supervision of port projects: commercial and passenger ports, marinas, fishing and tourist harbours. We act as technical consultant and infrastructure project manager and give expert opinions on technical and environmental issues. Our engineers use computer models to simulate the behaviour of the coast, such as waves, water flows and the transport of sediment, and the environmental impact of a port or a marina, such as the dispersion of pollutants and the level of noise.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/services/investor-services",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "Service",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Services",
+    "Investor services"
+  ],
+  "heroAlt": "Sandy beach and land with sea view in Halkidiki, Greece",
+  "galleryAltPattern": "",
+  "ogTitle": "Real Estate Investor Services in Greece – HRADF, Hotels, Marinas",
+  "anchor": "investor services",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "construction services",
+      "href": "/en/services/construction-services"
+    },
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    },
+    {
+      "anchor": "real estate services in Halkidiki",
+      "href": "/en/services"
+    },
+    {
+      "anchor": "talk to an adviser",
+      "href": "/en/contact"
+    }
+  ],
+  "linkedFrom": [
+    "P35 Services hub (investors panel)"
+  ],
+  "cta": "Talk to an adviser",
+  "ctaHref": "/en/contact",
+  "oldUrls": [
+    "/en/services/investor-services"
+  ],
+  "words": 604,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "No new legal lines: the HRADF description is George's.",
+  "source": "brief batch-4.json",
+  "photoThemes": [
+    {
+      "after": "HRADF tenders for state-owned property",
+      "tags": [
+        "exterior_aerial"
+      ]
+    },
+    {
+      "after": "How we support you in a tender",
+      "tags": [
+        "land_aerial"
+      ],
+      "category": "land"
+    },
+    {
+      "after": "Hotels: design, construction and management",
+      "tags": [
+        "exterior_pool"
+      ]
+    },
+    {
+      "after": "Buying an existing hotel",
+      "tags": [
+        "view_sea"
+      ]
+    },
+    {
+      "after": "Feasibility studies and business plans",
+      "tags": [
+        "exterior_facade"
+      ]
+    },
+    {
+      "after": "Ports and marinas",
+      "tags": [
+        "view_beach",
+        "view_panoramic"
+      ]
+    }
+  ],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

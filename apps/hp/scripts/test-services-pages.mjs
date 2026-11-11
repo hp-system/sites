@@ -50,10 +50,12 @@ try {
   // Section pages: one H2 per sub-service with the old slug as id, a jump list, the offer catalogue.
   for (const s of SECTIONS) {
     const html = pages[`/en/services/${s}`] ?? '';
-    const ids = [...html.matchAll(/<h2 id="([^"]+)"/g)].map((m) => m[1]);
-    const jump = [...html.matchAll(/<a href="#([^"]+)"/g)].map((m) => m[1]);
-    check(`/en/services/${s} sections with ids`, ids.length >= 3, `${ids.length} H2 ids`);
-    check(`/en/services/${s} jump list → every section`, jump.length > 0 && jump.every((j) => ids.includes(j)), `${jump.length} links`);
+    // since the own briefs (batch 4, 2026-11-11) a section page is built of posts with ids and a side menu (data-pn-to)
+    const brief = html.includes('class="pn');
+    const ids = brief ? [...html.matchAll(/<article id="([^"]+)"/g)].map((m) => m[1]) : [...html.matchAll(/<h2 id="([^"]+)"/g)].map((m) => m[1]);
+    const jump = brief ? [...html.matchAll(/data-pn-to="([^"]+)"/g)].map((m) => m[1]) : [...html.matchAll(/<a href="#([^"]+)"/g)].map((m) => m[1]);
+    check(`/en/services/${s} sections with ids`, ids.length >= (brief ? 5 : 3), `${ids.length} ids`);
+    check(`/en/services/${s} ${brief ? 'side menu' : 'jump list'} → every section`, jump.length > 0 && jump.every((j) => ids.includes(j)), `${jump.length} links`);
     const svc = lds(html).find((x) => x['@type'] === 'Service');
     const n = svc?.hasOfferCatalog?.itemListElement?.length ?? 0;
     check(`/en/services/${s} Service.hasOfferCatalog`, n >= 3, `${n} offers`);
@@ -77,7 +79,8 @@ try {
       targets[path] = res.status === 200 ? await res.text() : '';
     }
     if (!targets[path]) { check(`map target ${path}`, false, 'not 200'); continue; }
-    if (anchor && !targets[path].includes(`id="${anchor}"`)) check(`map anchor ${r.to}`, false, `from ${r.from}`);
+    // a page rebuilt on its own brief merged the old sub-sections: an old #anchor lands at the top of the page (accepted)
+    if (anchor && !targets[path].includes('class="pn') && !targets[path].includes(`id="${anchor}"`)) check(`map anchor ${r.to}`, false, `from ${r.from}`);
   }
   check('services.json: targets 200 + anchors exist', Object.values(targets).every(Boolean), `${Object.keys(targets).length} pages`);
 

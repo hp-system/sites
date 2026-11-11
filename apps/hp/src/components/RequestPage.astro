@@ -1,10 +1,9 @@
 ---
+// In the panel frame (PanelShell, design E3 — Sergei 2026-11-11 «AFTER main v3»)
+import PanelShell from './PanelShell.astro';
 // "Tell us what you look for" (q12) and "Ask for Exclusive access" (q15), George 21/10/2026.
 // One screen each. The member is known from the token; the form never asks for contact details.
 // Both post to /api/panel/request (→ CRM requests until EALIDA has its own endpoints).
-import Base from '../layouts/Base.astro';
-import Header from './Header.astro';
-import Footer from './Footer.astro';
 import { prefix, t, type Lang } from '../lib/i18n';
 import type { Member } from '../lib/member';
 import { FACETS } from '../lib/listing';
@@ -18,13 +17,8 @@ const KINDS: [string, string][] = [['home', t(lang, 'req.k_home')], ['apartment'
 const JS_T = { sent: t(lang, isEx ? 'ex.sent' : 'req.sent'), need_email: t(lang, 'req.need_email'), fail: t(lang, 'sb.e.fail'), expired: t(lang, 'auth.e.expired') };
 const title = t(lang, isEx ? 'ex.h1' : 'req.h1');
 ---
-<Base lang={lang} title={title} noindex description={t(lang, isEx ? 'ex.sub' : 'req.sub')}>
-  <Header lang={lang} solid />
-  <main id="main" class="rq">
-    <div class="wrap">
-      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
-        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{title}</b>
-      </nav>
+<PanelShell lang={lang} me={me} current={kind === 'exclusive' ? 'exclusive' : 'request'} title={title} description={t(lang, isEx ? 'ex.sub' : 'req.sub')}>
+  <div class="rq">
       <h1 class="t-h2 rq__h">{title}</h1>
       <p class="rq__s">{t(lang, isEx ? 'ex.sub' : 'req.sub')}</p>
       {isEx && me.level === 'exclusive' ? (
@@ -50,9 +44,7 @@ const title = t(lang, isEx ? 'ex.h1' : 'req.h1');
         </form>
       )}
     </div>
-  </main>
-  <Footer lang={lang} />
-</Base>
+</PanelShell>
 
 <style>
   .rq { padding: var(--s6) 0 var(--s9); }

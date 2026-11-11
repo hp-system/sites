@@ -1,4 +1,6 @@
 ---
+// In the panel frame (PanelShell, design E3 — Sergei 2026-11-11 «AFTER main v3»)
+import PanelShell from './PanelShell.astro';
 // ═══════════════════════════════════════════════════════════════════════════
 // ΤΑ ΑΓΑΠΗΜΕΝΑ ΤΟΥ ΜΕΛΟΥΣ — `/panel/favorites`
 //
@@ -18,9 +20,6 @@
 //    ψέματα. Ο `viewer` περνάει αυτούσιος, ώστε το μέλος να βλέπει εδώ ό,τι ακριβώς
 //    βλέπει και στη λίστα.
 // ═══════════════════════════════════════════════════════════════════════════
-import Base from '../layouts/Base.astro';
-import Header from './Header.astro';
-import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import { listUrl, prefix, t, type Lang } from '../lib/i18n';
 import { allProperties, refOf, type SiteProperty } from '../lib/api';
@@ -53,15 +52,8 @@ try {
 const missing = failed ? 0 : Math.max(0, me.favorites.length - items.length);
 ---
 
-<Base lang={lang} title={t(lang, 'pnl.fav')} noindex
-      description={t(lang, 'fav.meta_desc')}>
-  <Header lang={lang} solid />
-
-  <main id="main" class="fav">
-    <div class="wrap">
-      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
-        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.fav')}</b>
-      </nav>
+<PanelShell lang={lang} me={me} current={'fav'} title={t(lang, 'pnl.fav')} description={t(lang, 'fav.meta_desc')}>
+  <div class="fav">
 
       <h1 class="t-h2 fav__h">{t(lang, 'pnl.fav')}</h1>
 
@@ -97,10 +89,7 @@ const missing = failed ? 0 : Math.max(0, me.favorites.length - items.length);
         </>
       )}
     </div>
-  </main>
-
-  <Footer lang={lang} />
-</Base>
+</PanelShell>
 
 <style>
   .fav { padding: var(--s6) 0 var(--s9); }

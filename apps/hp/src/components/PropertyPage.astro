@@ -819,7 +819,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             <CallBack lang={lang} id={id} k="d" phone={meFav?.phone} tel={co.phone} telHref={co.phoneHref} hidden />
 
             {/* Η ΑΠΛΗ ΦΟΡΜΑ — τέσσερα πεδία, χωρίς βήματα, πάντα ορατή. */}
-            <form class="qf" id="qf" data-ev="lead:form_submit" data-ev-defer>
+            <form class="qf" id="qf" method="post" action="/api/inquiry" data-ev="lead:form_submit" data-ev-defer>
               <span class="qf__h lab">{pui(lang, 'reqInfo')}</span>
               <label class="sr-only" for="qf-n">{pui(lang, 'fName')}</label>
               <input id="qf-n" name="name" required maxlength="120" autocomplete="name" placeholder={pui(lang, 'fName')} value={meFav?.name || undefined} />
@@ -857,8 +857,10 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
               <textarea class="qf__d qf__msg" id="qf-m" name="message" rows="3" maxlength="2000" aria-label={pui(lang, 'msgL')}>{pui(lang, 'interest', { id }) + '. '}</textarea>
               {/* 🛡️ Παγίδα-μέλι: κρυφό για άνθρωπο, ορατό για ρομπότ. Δες api/inquiry.ts */}
               <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <input type="hidden" name="propertyId" value={id} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={Date.now()} />
               <button type="submit">{pui(lang, 'send')}</button>
               <p class="qf__ok" hidden>{pui(lang, 'sent')}</p>
+              <p class="qf__err" role="alert" hidden>{pui(lang, 'cbErr')}</p>
               <p class="qf__fine">{pui(lang, 'answers')}</p>
               <p class="qf__fine qf__priv">{pui(lang, 'privNote')} <a href={privacyHref}>{pui(lang, 'privLink')}</a></p>
             </form>
@@ -903,6 +905,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <button type="submit">{pui(lang, 'reqTour')}</button>
         <p class="tf__ok" hidden>{pui(lang, 'sent')}</p>
+        <p class="qf__err" role="alert" hidden>{pui(lang, 'cbErr')}</p>
         <p class="qf__fine">{pui(lang, 'answers')}</p>
         <p class="qf__fine qf__priv">{pui(lang, 'privNote')} <a href={privacyHref}>{pui(lang, 'privLink')}</a></p>
       </form>
@@ -1200,6 +1203,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .qf__fine { margin: 0; font-size: var(--fs-s-1); color: var(--faint); }
   .qf__priv a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
   .qf__ok, .tf__ok { margin: 0; font-size: var(--fs-s-1); color: var(--ink); }
+  .qf__err { margin: 0; font-size: var(--fs-s-1); font-weight: 600; color: var(--ink); }
   /* Η παγίδα-μέλι φεύγει από την ΟΘΟΝΗ αλλά όχι από το DOM — τα ρομπότ
      διαβάζουν HTML, δεν κοιτούν pixel. `display:none` το προσπερνούν πολλά. */
   /* B-23: no physical offset — `left: -9999px` widened every RTL (he) page to ~11,000 px.
@@ -1782,6 +1786,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         body.message = `${body.message}; phone=${body.phone}`;
       }
       if (btn) btn.disabled = true;
+      const err = form.querySelector('.qf__err') as HTMLElement | null;
+      if (err) err.hidden = true;
       try {
         const r = await fetch('/api/inquiry', {
           method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
@@ -1796,6 +1802,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         if (ev && track) track(ev, { ev_page: location.pathname, property_id: propertyId });
       } catch {
         if (btn) { btn.disabled = false; }
+        if (err) err.hidden = false;   // the visitor sees it did not go through (cbErr, 9 languages)
       }
     });
   };

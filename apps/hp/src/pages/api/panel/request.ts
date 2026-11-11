@@ -3,12 +3,12 @@
 // through the CRM's /site/inquiry as a structured message, so they land in Requests today.
 // The person comes from the token, never from the body.
 import type { APIRoute } from 'astro';
+import { sendLead } from '../../../lib/lead-outbox';
 import { memberOf } from '../../../lib/member';
 import { forwardIp } from '../../../lib/clientip';
 import { originHeader } from '../../../lib/origin';
 
 export const prerender = false;
-const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 const json = (d: unknown) => new Response(JSON.stringify(d), {
   status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
 });
@@ -39,17 +39,10 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
     message = `[Exclusive request] ${clean(b.note, 600)}`.trim();
   }
   if (limited(me.email)) return json({ ok: false, code: 'too_many' });
-  try {
-    const r = await fetch(`${API}/site/inquiry`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', ...forwardIp(request, clientAddress), ...originHeader(request, url) },
-      body: JSON.stringify({ name: me.name || me.email, email: me.email, phone: me.phone, message, lang: clean(b.lang, 5) }),
-      signal: AbortSignal.timeout(10_000),
-    });
-    return json(r.ok ? { ok: true } : { ok: false, code: 'save' });
-  } catch {
-    return json({ ok: false, code: 'save' });
-  }
+  // never lost: kept in the outbox and resent when the CRM cannot take it now (lib/lead-outbox, 2026-11-11)
+  const sent = await sendLead('/site/inquiry', { ...forwardIp(request, clientAddress), ...originHeader(request, url) },
+    { name: me.name || me.email, email: me.email, phone: me.phone, message, lang: clean(b.lang, 5) });
+  return json(sent.ok ? { ok: true } : { ok: false, code: 'save' });
 };
 
 export const ALL: APIRoute = () => new Response(null, { status: 405, headers: { allow: 'POST' } });

@@ -30,6 +30,8 @@ faq:
   a: No. Membership is free and asks only for your name, e-mail and phone. There is no credit card and no commitment.
 - q: What is the difference between a member and Exclusive access?
   a: A free member sees the village or area, the map at village level and the secret portfolio. Exclusive access is granted by our office on request and adds the exact location, price history, videos, documents and the most discreet listings.
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «да»)
+look: wave1
 ---
 
 <!-- widget: video lcJbuRY1zDY | Why register at Halkidiki Properties? -->

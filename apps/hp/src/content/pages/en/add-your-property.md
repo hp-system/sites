@@ -31,6 +31,8 @@ form:
   source: Add your property
   title: Send us your property's details
   message: true
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «да»)
+look: wave1
 ---
 
 ## How it works

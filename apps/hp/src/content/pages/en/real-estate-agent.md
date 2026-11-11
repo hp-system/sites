@@ -26,6 +26,8 @@ form:
   source: Agent partnership
   title: Collaborate with us now
   message: true
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «да»)
+look: wave1
 ---
 
 ## We register the client in your name and work for you

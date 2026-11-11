@@ -352,7 +352,7 @@ if (faqItems.length) {
         </nav>
         <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
         {fresh ? <SpecText page={fresh} part="intro" lang={lang} /> : d.lead && <p class="info-lead">{d.lead}</p>}
-        {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
+        {d.cta && <p class="info-cta-top"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
         {d.form && (
           <p class="w1-acts w1-d">
             <a class="btn" href="#form" data-ev="content:sell">{d.form.title || ui.adviser}</a>
@@ -688,6 +688,7 @@ if (faqItems.length) {
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .info-lead { font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); max-width: 64ch; margin: 0; }
   .info-cta-top { margin: var(--s4, 24px) 0 0; }
+  .w1-top .info-cta-top .k-act { display: inline-flex; width: auto; padding: 0 28px; }
   .info-hero { margin: 0 auto; }
   .info-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; }
 

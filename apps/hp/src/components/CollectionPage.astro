@@ -1,4 +1,6 @@
 ---
+// In the panel frame (PanelShell, design E3 — Sergei 2026-11-11 «AFTER main v3»)
+import PanelShell from './PanelShell.astro';
 // ═══════════════════════════════════════════════════════════════════════════
 // Η ΚΛΕΙΣΤΗ ΣΥΛΛΟΓΗ — `/panel/collection`
 //
@@ -20,9 +22,6 @@
 //    checkbox). Με `=== true` αυτή η σελίδα θα έδειχνε **άδεια** σε πελάτη που
 //    δικαιούται να δει — και θα φαινόταν ότι δεν έχουμε τίποτα κρυφό.
 // ═══════════════════════════════════════════════════════════════════════════
-import Base from '../layouts/Base.astro';
-import Header from './Header.astro';
-import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import { prefix, t, type Lang } from '../lib/i18n';
 import { allProperties, visitorCountry, type SiteProperty } from '../lib/api';
@@ -53,15 +52,8 @@ try {
 const total = secret.length + ultra.length;
 ---
 
-<Base lang={lang} title={t(lang, 'pnl.collection')} noindex
-      description={t(lang, 'cl.meta_desc')}>
-  <Header lang={lang} solid />
-
-  <main id="main" class="cl">
-    <div class="wrap">
-      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
-        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.collection')}</b>
-      </nav>
+<PanelShell lang={lang} me={me} current={'collection'} title={t(lang, 'pnl.collection')} description={t(lang, 'cl.meta_desc')}>
+  <div class="cl">
 
       <h1 class="t-h2 cl__h">{t(lang, 'pnl.collection')}</h1>
       <p class="cl__s">{t(lang, 'cl.sub')}</p>
@@ -95,10 +87,7 @@ const total = secret.length + ultra.length;
         </div>
       )}
     </div>
-  </main>
-
-  <Footer lang={lang} />
-</Base>
+</PanelShell>
 
 <style>
   .cl { padding: var(--s6) 0 var(--s9); }

@@ -15,12 +15,13 @@
 //    ο ιδιοκτήτης νομίζει ότι τα έστειλε.
 // ═══════════════════════════════════════════════════════════════════════════
 import type { APIRoute } from 'astro';
+import { sendLead } from '../../../lib/lead-outbox';
 import { memberOf } from '../../../lib/member';
 import { forwardIp } from '../../../lib/clientip';
+import { originHeader } from '../../../lib/origin';
 
 export const prerender = false;
 
-const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
 // B-15: the site's own errors go out as a `code`; the page shows its translation (all 9 languages).
 // A `message` is only the CRM's own text, passed through unchanged.
@@ -41,7 +42,7 @@ const KIND: Record<string, { category: string; subcategory: string }> = {
   commercial: { category: 'commercial',  subcategory: 'commercial' },
 };
 
-export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
+export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) => {
   const token = cookies.get('member_token')?.value;
   const me = await memberOf(token);
   if (!me || me.blocked) {
@@ -69,19 +70,9 @@ export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
     description: clean(b.desc, 3000) || undefined,
   };
 
-  try {
-    const r = await fetch(`${API}/site/property-submission`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', ...forwardIp(request, clientAddress) },
-      body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(12000),
-    });
-    if (!r.ok) {
-      // 404 εδώ σημαίνει «λείπει name/email», όχι «χάθηκε η σελίδα».
-      return json({ ok: false, code: 'fail' });
-    }
-    return json({ ok: true });
-  } catch {
-    return json({ ok: false, code: 'offline' });
-  }
+  // never lost: kept in the outbox and resent when the CRM cannot take it now (lib/lead-outbox, 2026-11-11);
+  // the site origin goes with it as with every other form (forms audit: it was missing here)
+  const sent = await sendLead('/site/property-submission', { ...forwardIp(request, clientAddress), ...originHeader(request, url) }, payload, 12_000);
+  // a 4xx here means «name/email missing», not «page gone»
+  return json(sent.ok ? { ok: true } : { ok: false, code: sent.status >= 500 ? 'offline' : 'fail' });
 };

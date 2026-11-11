@@ -1,4 +1,6 @@
 ---
+// In the panel frame (PanelShell, design E3 — Sergei 2026-11-11 «AFTER main v3»)
+import PanelShell from './PanelShell.astro';
 // ═══════════════════════════════════════════════════════════════════════════
 // ΣΥΓΚΡΙΣΗ ΑΓΑΠΗΜΕΝΩΝ — `/panel/compare`
 //
@@ -15,9 +17,6 @@
 // 🪤 ΤΙΜΗ «ΚΑΤΟΠΙΝ ΑΙΤΗΜΑΤΟΣ»: `priceVisible` κρίνει, ΟΧΙ «αν price > 0». Ακίνητο
 //    με κρυφή τιμή έχει κανονικά νούμερο στη βάση — σκέτος έλεγχος θα το τύπωνε.
 // ═══════════════════════════════════════════════════════════════════════════
-import Base from '../layouts/Base.astro';
-import Header from './Header.astro';
-import Footer from './Footer.astro';
 import { listUrl, prefix, propertyUrl, t, type Lang } from '../lib/i18n';
 import { allProperties, refOf, priceOf, priceVisible, pick, type SiteProperty } from '../lib/api';
 import { viewerFor, placeOf } from '../lib/gate';
@@ -80,15 +79,8 @@ const rows: Row[] = [
 ];
 ---
 
-<Base lang={lang} title={t(lang, 'pnl.compare')} noindex description={t(lang, 'cmp.meta_desc')}>
-  <Header lang={lang} solid />
-
-  <main id="main" class="cmp">
-    <div class="wrap">
-      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
-        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span>
-        <a href={`${p}/panel/favorites`}>{t(lang, 'pnl.fav')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.compare')}</b>
-      </nav>
+<PanelShell lang={lang} me={me} current={'compare'} title={t(lang, 'pnl.compare')} description={t(lang, 'cmp.meta_desc')}>
+  <div class="cmp">
 
       <h1 class="t-h2 cmp__h">{t(lang, 'pnl.compare')}</h1>
 
@@ -144,10 +136,7 @@ const rows: Row[] = [
         </>
       )}
     </div>
-  </main>
-
-  <Footer lang={lang} />
-</Base>
+</PanelShell>
 
 <style>
   .cmp { padding: var(--s6) 0 var(--s9); }

@@ -53,7 +53,7 @@ ENV PORT=4331
 # Persistent anonymous consent counts (#52): docker-compose mounts a named volume here. The folder
 # exists in the image owned by `node`, so a new volume starts with the right owner.
 ENV CONSENT_STAT_DIR=/data/consent-stats
-RUN mkdir -p /data/consent-stats && chown -R node:node /data
+RUN mkdir -p /data/consent-stats /data/lead-outbox && chmod 700 /data/lead-outbox && chown -R node:node /data
 COPY --from=build /app/scripts/consent-report.mjs ./scripts/consent-report.mjs
 EXPOSE 4331
 USER node

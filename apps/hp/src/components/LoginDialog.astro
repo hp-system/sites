@@ -68,9 +68,10 @@ const { lang } = Astro.props;
       if (!u.searchParams.get('next')) u.searchParams.set('next', here());
       target = u.searchParams.get('next')!;
       u.searchParams.set('embed', '1');
-      const pop = desk.matches;
-      if (pop) u.searchParams.set('pop', '1');
-      dlg.classList.toggle('lgd--pop', pop);
+      // the new steps (LoginPop, with the role first — Sergei 2026-11-11) on every width; the white popup look from 1024 px,
+      // full screen on phones (.lgd at 560 px and below)
+      u.searchParams.set('pop', '1');
+      dlg.classList.toggle('lgd--pop', desk.matches);
       dlg.classList.remove('is-ready');
       signedIn = false;
       frame.src = u.pathname + u.search;

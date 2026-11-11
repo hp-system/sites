@@ -1,4 +1,6 @@
 ---
+// In the panel frame (PanelShell, design E3 — Sergei 2026-11-11 «AFTER main v3»)
+import PanelShell from './PanelShell.astro';
 // ═══════════════════════════════════════════════════════════════════════════
 // ΤΑ ΣΤΟΙΧΕΙΑ ΜΟΥ — `/panel/profile`
 //
@@ -16,9 +18,6 @@
 // 🪤 Η ΜΟΝΗ ΕΞΟΔΟΣ ΑΠΟ ΤΟΝ ΛΟΓΑΡΙΑΣΜΟ ΖΟΥΣΕ ΜΟΝΟ ΜΕΣΑ ΣΤΟΝ ΠΙΝΑΚΑ. Την κρατάμε
 //    και εδώ: όποιος ψάχνει «πώς βγαίνω» κοιτάζει τα στοιχεία του, όχι την αρχική.
 // ═══════════════════════════════════════════════════════════════════════════
-import Base from '../layouts/Base.astro';
-import Header from './Header.astro';
-import Footer from './Footer.astro';
 import { prefix, t, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
 import type { Member } from '../lib/member';
@@ -44,15 +43,8 @@ if (!me.email) missing.push(t(lang, 'pf.m_email'));
 if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
 ---
 
-<Base lang={lang} title={t(lang, 'pnl.profile')} noindex
-      description={t(lang, 'pf.meta_desc')}>
-  <Header lang={lang} solid />
-
-  <main id="main" class="pf">
-    <div class="wrap">
-      <nav class="crumb" aria-label={t(lang, 'ui.breadcrumb')}>
-        <a href={`${p}/panel`}>{t(lang, 'pnl.title')}</a><span aria-hidden="true">›</span><b>{t(lang, 'pnl.profile')}</b>
-      </nav>
+<PanelShell lang={lang} me={me} current={'profile'} title={t(lang, 'pnl.profile')} description={t(lang, 'pf.meta_desc')}>
+  <div class="pf">
 
       <div class="hd">
         <h1 class="t-h2 pf__h">{t(lang, 'pnl.profile')}</h1>
@@ -102,10 +94,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
         <button class="lnk" type="submit">{t(lang, 'pnl.logout')}</button>
       </form>
     </div>
-  </main>
-
-  <Footer lang={lang} />
-</Base>
+</PanelShell>
 
 <style>
   .pf { padding: var(--s6) 0 var(--s9); }

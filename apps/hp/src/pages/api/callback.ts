@@ -3,6 +3,7 @@
 // property, the number and the time that suits.
 // Same anti-robot treatment as api/inquiry.ts: honeypot + 3-second timer, then a per-visitor limit.
 import type { APIRoute } from 'astro';
+import { sendLead } from '../../lib/lead-outbox';
 import { REF_RE } from '../../lib/api';
 import { forwardIp, clientIpOf } from '../../lib/clientip';
 import { originHeader } from '../../lib/origin';
@@ -10,7 +11,6 @@ import { memberOf } from '../../lib/member';
 import { checkPhone, phoneLeadEmail } from '../../lib/callback';
 
 export const prerender = false;
-const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), {
   status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
 });
@@ -45,15 +45,8 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   const email = member?.email || phoneLeadEmail(chk.e164);
   const message = `[Call back] when=${when}; phone=${chk.e164}`;
 
-  try {
-    const r = await fetch(`${API}/site/inquiry`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', ...forwardIp(request, clientAddress), ...originHeader(request, url) },
-      body: JSON.stringify({ name, email, phone: chk.e164, message, propertyId, lang }),
-      signal: AbortSignal.timeout(10_000),
-    });
-    return r.ok ? json({ ok: true, phone: chk.e164 }) : json({ ok: false, code: 'upstream' }, 502);
-  } catch {
-    return json({ ok: false, code: 'upstream' }, 502);
-  }
+  // never lost: kept in the outbox and resent when the CRM cannot take it now (lib/lead-outbox, 2026-11-11)
+  const sent = await sendLead('/site/inquiry', { ...forwardIp(request, clientAddress), ...originHeader(request, url) },
+    { name, email, phone: chk.e164, message, propertyId, lang });
+  return sent.ok ? json({ ok: true, phone: chk.e164 }) : json({ ok: false, code: 'upstream' }, 502);
 };

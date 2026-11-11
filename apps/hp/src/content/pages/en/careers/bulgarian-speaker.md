@@ -39,6 +39,8 @@ form:
   source: 'Careers: Bulgarian speaker'
   title: Apply for this job
   message: true
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 ## We are looking for

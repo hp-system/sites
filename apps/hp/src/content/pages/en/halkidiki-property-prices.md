@@ -23,6 +23,8 @@ related:
   href: /en/articles/business-news/taxes-foreigners-properties-greece
 toc: false
 old_url: /en/halkidiki-property-prices
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 ## How to read these prices

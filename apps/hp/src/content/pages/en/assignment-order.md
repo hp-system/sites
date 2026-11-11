@@ -22,6 +22,8 @@ related:
 toc: true
 old_url: /en/assignment-order
 needs_content: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 The above signatories here and after referred to as "OWNER" with full details listed in the table "owner details" I declare that I am the sole OWNER of the property described in the table above called "property details" and

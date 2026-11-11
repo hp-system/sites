@@ -11,6 +11,8 @@ parents:
   path: /en/services
 image: https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736545_1920w.jpg
 image_alt: Villa terrace and infinity pool overlooking the sea in Halkidiki
+desk_image: https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736545_1920w.jpg
+desk_image_alt: Villa terrace and infinity pool overlooking the sea in Halkidiki
 related:
 - label: Real estate services in Halkidiki
   href: /en/services
@@ -36,6 +38,8 @@ form:
   source: Construction
   title: Tell us about your project
   message: true
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 We don’t use words, we prefer to act. Our projects are our stories, and every one of our achievements is a word that writes our history.

@@ -25,6 +25,8 @@ form:
   source: E-viewing
   title: Book a video viewing or a call
   message: true
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 ## E-viewings: see properties by video call

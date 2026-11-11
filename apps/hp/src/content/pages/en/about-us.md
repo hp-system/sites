@@ -73,6 +73,7 @@ cards:
 contact_card: false
 # Desktop redesign, wave 1 (#107, approved by George 2026-11-02): CompanyHub on desktop, George's layout on phones.
 look: wave1
+hub: company
 desk_image: /pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp
 desk_image_alt: Offices of Halkidiki Properties, the story since 2007
 ---

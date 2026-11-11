@@ -33,6 +33,8 @@ form:
   source: Contact
   title: I am interested in…
   message: true
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 We are ready to guide you in any process, whether you are interested in buying or selling a property, or are looking for a real estate adviser in Halkidiki.

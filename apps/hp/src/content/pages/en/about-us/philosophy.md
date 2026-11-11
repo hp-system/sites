@@ -31,6 +31,8 @@ old_url: /en/about-us/philosophy
 needs_content: false
 cards: []
 contact_card: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 ## Our company's philosophy

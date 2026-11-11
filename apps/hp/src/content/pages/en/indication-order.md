@@ -22,6 +22,8 @@ related:
 toc: false
 old_url: /en/indication-order
 needs_content: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 ## REAL ESTATE CONTRACT -INSTRUCTED TO SUGGEST PROPERTIES

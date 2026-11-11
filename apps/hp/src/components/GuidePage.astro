@@ -1,9 +1,10 @@
 ---
-// A spec content page with no template of its own yet (Sergei 08/11: «пусть у них нет дизайна, зато
-// есть контент»): P03 Greece hub, P19 buying guide, P20 Golden Visa, P21 Halkidiki guide — George's
-// spec word for word, in every language the spec has, in the plain type of the content pages.
-// It is replaced page by page when the guide template (portion 3, sites#161) gets its design.
-// Rejected: an empty «coming soon» page (a soft 404) or leaving the home page's links on 404s.
+// The guides (P03 Greece hub, P19 buying guide, P20 Golden Visa, P21 Halkidiki guide) and the own pages served
+// here (P52 Exclusive…) — George's spec word for word, in every language the spec has.
+// On the kit since 2026-11-11 (D-20261110-SS-1 order; before: plain text, Sergei 08/11 «пусть у них нет дизайна,
+// зато есть контент»): the Sell / listing canon — the top (crumbs, H1, intro, the call, a photo), the H2 sections
+// as posts with the side panel, open property photos and the links as tiles, the FAQ after the text (rule 9), then
+// the sub pages, the form and the by-area block. Same words, H1/H2, schema and links: only the layout changed.
 import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
@@ -16,6 +17,13 @@ import { findInfoPage } from '../lib/infopages';
 import { HERO_SHOTS } from '../lib/hero';
 import { privacyPath } from '../lib/legal';
 import registry from '../data/page-registry.json';
+import SpecPosts from './SpecPosts.astro';
+import Areas from './Areas.astro';
+import { FAQ_H } from '../lib/seo-pages';
+import { allProperties, visitorCountry, type SiteProperty } from '../lib/api';
+import { postPhotos } from '../lib/post-photos';
+import { buildAreaTiles } from '../lib/area-tiles';
+import { listUrl } from '../lib/i18n';
 
 interface Props { page: SpecPage }
 const { page } = Astro.props;
@@ -41,6 +49,19 @@ const kids = (await Promise.all(kidsReg.map(async (r) => {
   return d ? { href: r.paths![lang], name: d.h1 || d.title } : null;
 }))).filter((k): k is { href: string; name: string } => !!k);
 const abs = (u: string) => siteRoot + encodeURI(u);
+// the listings: open photos for the posts and the tiles, the by-area block (none when the CRM is down)
+const memberToken = Astro.cookies.get('member_token')?.value;
+let items: SiteProperty[] = [];
+try { items = await allProperties(memberToken, visitorCountry(Astro.request)); } catch { items = []; }
+const photos = postPhotos(items as any, (page.body.match(/<h2>/g) ?? []).length, lang);
+const areas = buildAreaTiles(items as any, lang, undefined, 5);
+// the page's call in the side panel: the club page asks to register (gold edge, B-11 event), the others call
+// their own page (no gold: it is not a registration)
+const cta = page.ctaHref && page.cta
+  ? page.id === 'P52'
+    ? { text: page.cta, href: page.ctaHref, ev: 'register:info' as const, gild: true }
+    : { text: page.cta, href: form ? '#gp-form' : page.ctaHref, ev: 'content:sell' as const, gild: false }
+  : null;
 const crumbs = page.breadcrumb.map((name, i, a) => ({ name, url: i === 0 ? (prefix(lang) || '/') : i === a.length - 1 ? page.path : crumbPath(name, lang) }));
 
 const jsonLd: unknown[] = [
@@ -57,18 +78,26 @@ const jsonLd: unknown[] = [
       ogTitle={page.ogTitle} jsonLd={jsonLd} ogImage={image ? (image.startsWith('/') ? siteRoot + image : image) : undefined} ogImageAlt={imageAlt}>
   <Header lang={lang} solid pathFor={pathFor} />
   <main id="main" class="gp">
-    <div class="wrap gp__head">
-      <nav class="gp__crumb" aria-label="breadcrumb">
-        {crumbs.map((c, i, a) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{c.url && i < a.length - 1 ? <a href={c.url}>{c.name}</a> : <span aria-current={i === a.length - 1 ? 'page' : undefined}>{c.name}</span>}</>))}
-      </nav>
-      <h1 class="t-display gp__h1">{page.h1}</h1>
-      {page.editorialLine && <p class="gp__ed">{page.editorialLine}</p>}
-      <SpecText page={page} part="intro" lang={lang} />
-      {/* existing event names only (B-11, lib/track.ts): the club page is a sign-in call, the sell pages a seller call */}
-      {page.ctaHref && page.id === 'P52' && <p class="gp__cta"><a class="btn" href={page.ctaHref} data-ev="register:info">{page.cta}</a></p>}
-      {page.ctaHref && page.id !== 'P52' && <p class="gp__cta"><a class="btn" href={form ? '#gp-form' : page.ctaHref} data-ev="content:sell">{page.cta}</a></p>}
-    </div>
-    <SpecText page={page} part="rest" lang={lang} />
+    <header class="wrap gp__top">
+      <div class="gp__txt">
+        <nav class="gp__crumb" aria-label="breadcrumb">
+          {crumbs.map((c, i, a) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{c.url && i < a.length - 1 ? <a href={c.url}>{c.name}</a> : <span aria-current={i === a.length - 1 ? 'page' : undefined}>{c.name}</span>}</>))}
+        </nav>
+        <h1 class="t-display gp__h1">{page.h1}</h1>
+        {page.editorialLine && <p class="gp__ed">{page.editorialLine}</p>}
+        <SpecText page={page} part="intro" lang={lang} />
+        {/* existing event names only (B-11, lib/track.ts): the club page is a sign-in call, the sell pages a seller call */}
+        {cta && <p class="gp__cta"><a class:list={['k-act', cta.gild && 'k-gild']} href={cta.href} data-ev={cta.ev === 'register:info' ? 'register:info' : 'content:sell'}>{cta.text}</a></p>}
+      </div>
+      {image && (
+        /* desktop only: phones get a 1-pixel placeholder and never download the photo */
+        <picture class="gp__img">
+          <source media="(min-width: 1024px)" srcset={image} />
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" />
+        </picture>
+      )}
+    </header>
+    <SpecPosts page={page} lang={lang} photos={photos} faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={cta} />
     {kids.length > 0 && (
       <section class="wrap gp__kids" aria-labelledby="gp-kids-h">
         <p data-h id="gp-kids-h" class="gp__label">{page.name}</p>
@@ -80,12 +109,22 @@ const jsonLd: unknown[] = [
         <InfoForm source={form.source} title={form.title || undefined} message={form.message} terms="/en/terms-of-services" privacy={privacyPath(lang)} />
       </section>
     )}
+    {areas.tiles.length > 0 && <Areas lang={lang} items={areas.tiles} from={areas.from} headHref={listUrl(lang)} />}
   </main>
   <Footer lang={lang} />
 </Base>
 
 <style>
-  .gp__head { padding-block: var(--s7) 0; display: grid; gap: var(--s4); }
+  .gp__top { display: grid; gap: var(--s4); padding-block: var(--s6); }
+  .gp__txt { display: grid; gap: var(--s4); align-content: center; min-width: 0; }
+  .gp__img { display: none; overflow: hidden; }
+  .gp__img img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+  @media (min-width: 1024px) {
+    .gp__top { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; padding-block: 40px 56px; }
+    .gp__img { display: block; }
+    .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.06; letter-spacing: -.021em; }
+  }
+  .gp__cta .k-act { width: auto; display: inline-flex; padding: 0 24px; }
   .gp__crumb { font-size: var(--fs-s-1); color: var(--muted); }
   .gp__crumb a { color: var(--muted); }
   .gp__h1 { max-width: 22ch; }

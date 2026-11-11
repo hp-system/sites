@@ -10,16 +10,16 @@ parents: []
 image: ''
 image_alt: ''
 related:
-- label: Add your property for sale
-  href: /en/add-your-property
-  text: Send us the essentials — an agent calls you.
-  image: /pages/sell/5382f593-1634546117-card.webp
-- label: Assignment terms
-  href: /en/assignment-order
-  text: What you sign when you assign your property to us.
-  image: /pages/add-your-property/fa96a485-last-img-min.webp
-  image_alt: Owner statistics of Halkidiki Properties on a laptop
-  button: Read the terms
+- label: Halkidiki property prices
+  href: /en/halkidiki-property-prices
+  text: Median asking price per m² by municipality and village.
+  image: /pages/sell/6a3758c4-1623746003-card.webp
+  image_alt: The Halkidiki coast from above
+- label: Book an online appointment
+  href: /en/book-an-online-appointment
+  text: Wherever you live — a video or phone call with an adviser.
+  image: /pages/book-an-online-appointment/dc998456-e-viewings.webp
+  image_alt: Two people on a video call with an adviser
 - label: Contact an adviser
   href: /en/contact
   text: "{phone} · WhatsApp"

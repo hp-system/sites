@@ -3,6 +3,7 @@
 // them like the spec pages (same template, same SEO head, same checker).
 //
 //   node scripts/import-seo-briefs.mjs            (all batches in scripts/seo-briefs/)
+//   node scripts/import-seo-briefs.mjs --draft    (also draft batches: local preview only)
 //
 // Only pages of a batch with status «approved» are written. The spec's own text rules apply
 // (title ≤ 60 before the brand, meta 130–155, intro ≤ 120 words, HTML only p h2 h3 ul li strong,
@@ -19,11 +20,13 @@ const SITE = 'https://www.halkidikiproperties.com';
 const len = (s) => [...(s ?? '')].length;
 const words = (h) => (h ?? '').replace(/<[^>]+>/g, ' ').trim().split(/\s+/).filter(Boolean).length;
 
+const DRAFT = process.argv.includes('--draft');
 const errors = [];
 const out = [];
 for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('.json'))) {
   const batch = JSON.parse(readFileSync(join(HERE, 'seo-briefs', f), 'utf8'));
-  if (batch.status !== 'approved') { console.log(`skip ${f}: status ${batch.status}`); continue; }
+  // --draft: also a draft batch, to see its texts on the local site before Sergei approves them (never commit that output)
+  if (batch.status !== 'approved' && !(DRAFT && batch.status === 'draft')) { console.log(`skip ${f}: status ${batch.status}`); continue; }
   for (const b of batch.pages) {
     if (b.foldedInto) { console.log(`skip ${b.id}: folded into ${b.foldedInto}`); continue; }
     const err = (m) => errors.push(`${f} ${b.id}/${b.lang}: ${m}`);
@@ -51,7 +54,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
       id: b.id, lang: b.lang, buildOrder: '', priority: '', name: b.page, pageType: b.pageType, path,
       keyword: b.primaryKeyword, titleFocus: b.titleFocus, title: b.title, meta: b.meta, h1: b.h1, h2: b.h2,
       faqQuestions: b.faqQuestions, faq: b.faq, intro: b.intro, body: b.body, listingFilter: '',
-      indexing: 'index', canonical: SITE + path, hreflang: [b.lang], schema: b.schema, breadcrumb: b.breadcrumb,
+      indexing: 'index', canonical: path, hreflang: [b.lang], schema: b.schema, breadcrumb: b.breadcrumb,
       heroAlt: b.heroAlt, galleryAltPattern: '', ogTitle: b.ogTitle, anchor: b.anchor, anchorVariants: [],
       linksOut: b.linksOut, linkedFrom: b.linkedFrom, cta: b.cta, ctaHref: b.ctaHref ?? '', oldUrls: b.oldUrls,
       words: words(b.intro + b.body + b.faq.map((x) => x.a).join(' ')), editorialLine: b.editorialLine ?? '',

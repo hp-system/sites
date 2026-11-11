@@ -44,7 +44,8 @@ import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
-import { specByPath, specTitle } from '../lib/seo-pages';
+import SectionCards from './SectionCards.astro';
+import { specByPath, specTitle, specSections, linksBySection } from '../lib/seo-pages';
 import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
 
@@ -155,7 +156,8 @@ try {
 const w1 = d.look === 'wave1';
 // The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
 const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services', company: 'nav.company' };
-const short = NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
+// a sub page with an own brief names itself (its brief's last breadcrumb), not its section
+const short = fresh && d.parents.length && fresh.breadcrumb?.length ? fresh.breadcrumb[fresh.breadcrumb.length - 1] : NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
 const HOW_KEY: Partial<Record<typeof d.section, string>> = { sell: 'info.sell_how' };
 const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
 // Own pages (Sell): H2 only for the text sections of the brief; the design headings (how, cards, related,
@@ -212,7 +214,9 @@ const org = {
   areaServed: brand.market.areaServed,
   ...(co.foundedYear ? { foundingDate: String(co.foundedYear) } : {}),
 };
-const crumbs = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: fresh?.h1 ?? d.h1, path: url }];
+const crumbs0 = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: fresh?.h1 ?? d.h1, path: url }];
+// an own brief names its breadcrumb (rule 15, as George's spec pages: «Home > Services»)
+const crumbs = fresh && fresh.breadcrumb?.length === crumbs0.length ? crumbs0.map((c, i) => ({ ...c, name: fresh.breadcrumb[i] })) : crumbs0;
 const jsonLd: unknown[] = [
   {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -228,11 +232,11 @@ if (d.schema === 'Service') {
       itemListElement: d.catalog.map((c) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: c.name, url: abs(c.url) } })),
     } } : {}),
   });
-} else if (fresh) {
+} else if (fresh && ![fresh.schema].flat().includes('CollectionPage')) {
   jsonLd.push({ '@context': 'https://schema.org', '@type': 'Article', headline: fresh.h1, description: fresh.meta, url: abs(url), inLanguage: lang, author: org, publisher: org });
 } else if (d.schema !== 'FAQPage') {
   jsonLd.push({
-    '@context': 'https://schema.org', '@type': d.schema, name: d.h1, description: d.description, url: abs(url),
+    '@context': 'https://schema.org', '@type': d.schema, name: fresh?.h1 ?? d.h1, description: fresh?.meta ?? d.description, url: abs(url),
     inLanguage: lang, ...(d.schema === 'AboutPage' || d.schema === 'ContactPage' ? { mainEntity: org } : {}),
   });
 }
@@ -251,17 +255,54 @@ const faqItems = fresh ? fresh.faq : d.faq;
 // а не рандомно»): the first guest property in the site order whose OPEN photo carries one of the
 // theme's tags (and is land / at least the minimum price, when the theme says so). Never a locked
 // property, never the same property twice; always watermarked (R-007), alt from the photo's own texts.
+// Own pages (Sell): the SEO sections whose link is one of the page cards become those cards — photo, the
+// section's H2 and text, the link with its spec anchor (Sergei 2026-11-10: «слить с карточками»); they leave
+// the posts. The brief puts these sections first, so the H2 order holds (rule 8).
+const pathKey = (h: string) => { try { return decodeURI(new URL(h, 'https://x').pathname).replace(/\/+$/, ''); } catch { return h; } };
+const secCards: { h2: string; html: string; href: string; anchor: string; img?: string; alt?: string; w?: number; h?: number; dark?: boolean; ask?: boolean }[] = [];
+let postsPage = fresh;
+let postLinks: { href: string; text: string }[][] | undefined;
+if (fresh) {
+  const secs = specSections(fresh.body);
+  const bySec = linksBySection(fresh);
+  const used = new Set<number>(), usedLinks = new Set<string>();
+  for (const c of d.cards) {
+    const i = bySec.findIndex((ls, k) => !used.has(k) && ls.some((l) => pathKey(l.href) === pathKey(c.href)));
+    if (i < 0) continue;
+    const l = bySec[i].find((x) => pathKey(x.href) === pathKey(c.href))!;
+    used.add(i); usedLinks.add(pathKey(l.href));
+    const plain = secs[i].h2.replace(/<[^>]+>/g, '').trim();
+    secCards.push({ h2: secs[i].h2, html: secs[i].html, href: l.href, anchor: l.text, img: c.image || undefined, alt: c.image_alt || undefined, w: c.width, h: c.height,
+      dark: [fresh.standout].flat().includes(plain), ask: (fresh.questionMarks ?? []).includes(plain) });
+  }
+  // the cards in the order of the brief (rule 8)
+  secCards.sort((a, b) => secs.findIndex((x) => x.h2 === a.h2) - secs.findIndex((x) => x.h2 === b.h2));
+  if (secCards.length) {
+    const keep = secs.filter((_, k) => !used.has(k));
+    postLinks = bySec.filter((_, k) => !used.has(k));   // assigned on the whole page, so a link stays with its own section
+    postsPage = { ...fresh,
+      body: keep.map((x) => `<h2>${x.h2}</h2>${x.html}`).join(''),
+      h2: keep.map((x) => x.h2.replace(/<[^>]+>/g, '')),
+      linksOut: fresh.linksOut.filter((l) => !usedLinks.has(pathKey(l.href))) };
+  }
+}
+// Services hub with an own brief (P35, Sergei 2026-11-11 «берем первый вариант»): the sections become the service
+// panels instead of cards — the same match by link, the panel shows the section's H2, text and anchor.
+if (hub) for (const r of roles) {
+  const c = secCards.find((x) => pathKey(x.href) === pathKey(r.href));
+  if (c) r.sec = { h2: c.h2, html: c.html, anchor: c.anchor };
+}
 const mosaicPhotos: (MosaicPhoto | null)[] = [];
 // Fixed photos per post win (Sergei 2026-11-10: every post has a picture «найди в интернете»): CC0
 // stock photos of the topic (not properties, so no watermark), sources in public/pages/sell/posts/SOURCES.json.
 if (fresh?.postPhotos?.length) {
-  for (const h of (fresh.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((x) => x.replace(/<[^>]+>/g, '').trim())) {
+  for (const h of (postsPage!.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((x) => x.replace(/<[^>]+>/g, '').trim())) {
     const pp = fresh.postPhotos.find((t) => t.after === h);
     mosaicPhotos.push(pp ? { src: `${pp.file}_960w.webp`, srcset: `${pp.file}_640w.webp 640w, ${pp.file}_960w.webp 960w`, alt: pp.alt, style: '' } : null);
   }
 } else if (fresh?.photoThemes?.length) {
   const used = new Set<string>();
-  const secH2 = (fresh.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
+  const secH2 = (postsPage!.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
   for (const h of secH2) {
     const th = fresh.photoThemes.find((t) => t.after === h);
     let hit: MosaicPhoto | null = null;
@@ -325,15 +366,18 @@ if (faqItems.length) {
       )}
     </header>
 
+    {/* nothing to show (an own brief without cards, heading or widget): no empty band */}
+    {(!fresh || howH2 || d.widget || d.cards.length > 0) && (
     <section class="w1-how" aria-labelledby={howH2 ? 'w1-how-h' : undefined}>
       <div class="wrap">
         <div class="w1-how__head">
           {howH2 && <HT id="w1-how-h" class="w1-h2 w1-d" data-h>{howH2}</HT>}
           {!fresh && <div class="prose w1-how__p"><Content /></div>}
-          {d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
+          {secCards.length === 0 && d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
         </div>
         {d.widget && <div class="prose"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} /></div>}
-        {d.cards.length > 0 && (
+        {secCards.length > 0 && <div class="w1-how__sc" style={`--n: ${secCards.length}`}><SectionCards cards={secCards} /></div>}
+        {secCards.length === 0 && d.cards.length > 0 && (
           <div class="prose w1-how__cards">
             <ul class="cards ir-rail" id="w1Cards" data-irail data-gap="20">
               {d.cards.map((c, i) => (
@@ -357,10 +401,12 @@ if (faqItems.length) {
         )}
       </div>
     </section>
+    )}
 
     {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
         them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
-    {fresh && <SpecPosts page={fresh} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} />}
+    {fresh && postsPage && <SpecPosts page={postsPage} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={postLinks}
+                                    cta={d.section === 'sell' ? undefined : null} />}
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
         menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 
@@ -465,8 +511,8 @@ if (faqItems.length) {
         ))}
       </nav>
       {hub && <p class="w1-d svc-eb">{short}</p>}
-      <h1 class="t-display info-h1">{d.h1}</h1>
-      {d.lead && <p class="info-lead">{d.lead}</p>}
+      <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+      {fresh ? <div class="svc-intro"><SpecText page={fresh} part="intro" lang={lang} /></div> : d.lead && <p class="info-lead">{d.lead}</p>}
       {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
     </header>
     )}
@@ -488,8 +534,13 @@ if (faqItems.length) {
     )}
 
     {/* #106 Services hub, desktop only (phones keep everything below). */}
-    {hub && <ServicesHub lang={lang} roles={roles} faq={faqPage ? { h: faqPage.h1, href: faqPage.path, items: faqPage.faq } : null}
-                         terms={terms} privacy={privacy} contact={contact} />}
+    {hub && (
+      <ServicesHub lang={lang} roles={roles} faq={faqPage ? { h: faqPage.h1, href: faqPage.path, items: faqPage.faq } : null}
+                   terms={terms} privacy={privacy} contact={contact}>
+        {fresh && postsPage && <SpecPosts slot="posts" page={postsPage} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)}
+                                          items={items} sectionLinks={postLinks} cta={null} faqHref={faqPage?.path} />}
+      </ServicesHub>
+    )}
 
     {d.image && (
       <figure class="wrap info-hero">
@@ -499,6 +550,9 @@ if (faqItems.length) {
       </figure>
     )}
 
+    {/* a hub with an own brief shows the hub on phones too (Sergei 2026-11-11): George's phone layout below would
+        repeat its links and texts */}
+    {!(hub && fresh) && <>
     <div class:list={['wrap info-grid', { 'w1-m': hubLike }]}>
       <article class="prose">
         {d.contact_card && (
@@ -511,7 +565,7 @@ if (faqItems.length) {
           </address>
         )}
 
-        <Content />
+        {!(hub && fresh) && <Content />}
 
         {d.widget && <InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} />}
 
@@ -520,7 +574,7 @@ if (faqItems.length) {
             {d.cards.map((c, i) => (
               <li>
                 {c.image && <img src={c.image} alt={c.image_alt || c.title} width={c.width || 800} height={c.height || 500} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />}
-                <h2><a href={c.href}>{c.title}</a></h2>
+                <CT><a href={c.href}>{c.title}</a></CT>
                 <p>{c.text}</p>
               </li>
             ))}
@@ -581,6 +635,7 @@ if (faqItems.length) {
         </p>
       </div>
     </section>
+    </>}
   </>
   )}
 

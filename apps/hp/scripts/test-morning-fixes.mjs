@@ -10,7 +10,8 @@ const visibleText = (html) => html.replace(/<script[\s\S]*?<\/script>/g, ' ').re
   .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 const mainWords = (html) => {
   const m = html.match(/<main[\s\S]*?<\/main>/);
-  const art = (m ? m[0] : html).match(/<article[\s\S]*?<\/article>/);
+  // a page built from an own brief spreads its text over panels, cards and posts: count the whole main
+  const art = /svc-panels--sec|class="sc__c/.test(html) ? null : (m ? m[0] : html).match(/<article[\s\S]*?<\/article>/);
   return visibleText(art ? art[0] : (m ? m[0] : html)).split(' ').filter(Boolean).length;
 };
 

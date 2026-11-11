@@ -16,18 +16,26 @@
 // plain #anchors.
 import FaqSearch from './FaqSearch.astro';
 import SpecMosaic, { type MosaicPhoto } from './SpecMosaic.astro';
-import { h2Id, type SpecPage } from '../lib/seo-pages';
+import { h2Id, linksBySection, type SpecPage } from '../lib/seo-pages';
 import { prefix, t, type Lang } from '../lib/i18n';
 
 interface Props {
   page: SpecPage; lang: Lang; photos: (MosaicPhoto | null)[]; faqH: string;
+  /** the page with every question (the services hub links George's FAQ page) */
+  faqHref?: string;
   /** a member is signed in: the button goes straight to the add-property form */
   member?: boolean;
   /** another call to action (listings: sign in / register for buyers); null = none. Default: Sell's
    *  «Add your property» (guests → sign-up → the form, gilded; members → the form). */
+  /** the listings, for the photos of the link tiles (D-20261110-SS-3) */
+  items?: { id: string | number; attributes?: any }[];
+  /** the links of each section, when the caller already assigned them on the whole page (Sell: before some
+   *  sections became cards) */
+  sectionLinks?: { href: string; text: string }[][];
   cta?: { text: string; href: string; ev: 'member:join_from_list' | 'content:sell' | 'register:info'; gild: boolean; plus?: boolean } | null;   // events from the closed list (B-11)
 }
-const { page, lang, photos, faqH, member = false } = Astro.props;
+const { page, lang, photos, faqH, faqHref, member = false, items = [] } = Astro.props;
+const sectionLinks = Astro.props.sectionLinks ?? linksBySection(page);
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
 // the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
 const nav = heads.map((h) => ({ id: h2Id(h), text: h, ask: (page.questionMarks ?? []).includes(h) }));
@@ -42,7 +50,7 @@ const cta = Astro.props.cta === undefined
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
         <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
-        <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true">?</i>}</a></li>)}</ul>
+        <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true"></i>}</a></li>)}</ul>
       </nav>
       {cta && (
         <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>
@@ -53,9 +61,10 @@ const cta = Astro.props.cta === undefined
     </aside>
     {/* phones (no side panel): the same button in a bar that sticks to the bottom while this block is on
         screen (SEO/design audit 2026-11-10: no conversion button on phones) */}
-    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang} /></div>
+    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang}
+                                     sectionLinks={sectionLinks} items={items} self={page.path} /></div>
     {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
-    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
+    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} href={faqHref} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     {cta && <div class="pn__bar">
       {cta && (
         <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>
@@ -86,6 +95,8 @@ const cta = Astro.props.cta === undefined
       margin-block: var(--s7); padding: 16px; background: var(--paper); border-right: 1px solid var(--line-soft); }   /* white as the panel page, so the beige of the current item shows on the beige band */
   }
   /* the posts' beige «?», small, beside the item (Sergei 2026-11-10) */
+  /* the «?» is drawn by CSS: no stray character in the page text (SEO re-check 2026-11-11) */
+  .pn__q::before { content: "?"; }
   .pn__q { margin-left: auto; flex: none; font-style: normal; font-size: var(--fs-s1); font-weight: 600; line-height: 1; letter-spacing: 0;
     color: var(--paper-2); transform: rotate(12deg); }
   :global(.k-side__it:hover) .pn__q, :global(.k-side__it.on) .pn__q { color: var(--paper); }

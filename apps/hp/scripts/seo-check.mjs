@@ -25,6 +25,11 @@ for (const id of readdirSync(join(APP, 'src/content/seo'))) for (const f of read
   const p = JSON.parse(readFileSync(join(APP, 'src/content/seo', id, f), 'utf8'));
   (spec[id] ??= []).push(p);
 }
+// own briefs (P22+, D-20261106-SS-2) are checked against their brief like the spec pages
+for (const id of readdirSync(join(APP, 'src/content/seo-own'))) for (const f of readdirSync(join(APP, 'src/content/seo-own', id))) {
+  const p = JSON.parse(readFileSync(join(APP, 'src/content/seo-own', id, f), 'utf8'));
+  (spec[id] ??= []).push(p);
+}
 const reg = JSON.parse(readFileSync(join(APP, 'src/data/page-registry.json'), 'utf8'));
 
 const targets = [];
@@ -32,7 +37,7 @@ for (const r of reg.pages) {
   if (IDS && !IDS.has(r.id)) continue;
   if (r.status === 'dropped') continue;   // a page decided against (P49, D-20261109-SS-4) is not a target
   if (r.source === 'spec') for (const p of spec[r.id] ?? []) { if (!LANG || p.lang === LANG) targets.push({ id: r.id, lang: p.lang, path: p.path, page: p }); }
-  else for (const [lang, path] of Object.entries(r.paths ?? {})) { if (!LANG || lang === LANG) targets.push({ id: r.id, lang, path }); }
+  else for (const [lang, path] of Object.entries(r.paths ?? {})) { if (!LANG || lang === LANG) targets.push({ id: r.id, lang, path, page: (spec[r.id] ?? []).find((p) => p.lang === lang && p.path === path) }); }
 }
 
 const report = [];

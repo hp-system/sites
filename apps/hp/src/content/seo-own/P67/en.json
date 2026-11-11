@@ -1,0 +1,159 @@
+{
+  "id": "P67",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Energy certificate (PEA)",
+  "pageType": "service",
+  "path": "/en/services/seller-services/energy-efficiency-certificates-pea",
+  "keyword": "PEA energy certificate Greece",
+  "titleFocus": "Owners who sell or rent: the energy certificate a Greek property needs",
+  "title": "PEA Energy Certificate in Halkidiki, Greece",
+  "meta": "The PEA energy certificate a home in Greece needs for a sale or a rental: when it is required, who issues it, how long it is valid and how we arrange it.",
+  "h1": "Energy performance certificate (PEA)",
+  "h2": [
+    "What the PEA is",
+    "When you need a PEA",
+    "How a PEA is issued",
+    "What the inspector needs from you",
+    "Energy classes and how long a PEA is valid",
+    "Why the energy class matters when you sell",
+    "We arrange your PEA"
+  ],
+  "faqQuestions": [
+    "Do I need a PEA to sell my house in Greece?",
+    "Do I need a PEA to rent out my home?",
+    "Who issues the PEA?",
+    "How long is a PEA valid?",
+    "How much does a PEA cost?"
+  ],
+  "faq": [
+    {
+      "q": "Do I need a PEA to sell my house in Greece?",
+      "a": "Yes. A sale of a building or part of a building over 50 m² must be accompanied by an energy performance certificate. Our inspectors arrange it for you."
+    },
+    {
+      "q": "Do I need a PEA to rent out my home?",
+      "a": "Yes. A lease of a building or part of a building over 50 m² needs a PEA too."
+    },
+    {
+      "q": "Who issues the PEA?",
+      "a": "A registered energy inspector, after collecting the documents of the property and checking the building on site."
+    },
+    {
+      "q": "How long is a PEA valid?",
+      "a": "Ten years. It must be renewed earlier if the energy state of the building changes substantially, for example after a renovation."
+    },
+    {
+      "q": "How much does a PEA cost?",
+      "a": "It depends on the property. Our inspectors handle the documents, the checks and the preparation of the PEA at competitive prices. Tell us where it is and what it is like, and we send you an offer."
+    }
+  ],
+  "intro": "<p>Every home sold or rented in Greece needs an energy performance certificate, the PEA (Πιστοποιητικό Ενεργειακής Απόδοσης). It shows how much energy the building uses and how it could use less. Our energy inspectors arrange the whole PEA for your property in Halkidiki: the documents, the visit and the certificate.</p>",
+  "body": "<h2>What the PEA is</h2><p>The PEA is the energy performance certificate of a building in Greece, required by the Buildings' Energy Efficiency Regulation (K.En.A.K.). It records the current energy state of the building, places it in an energy class and proposes ways to improve its performance.</p><h2>When you need a PEA</h2><p>A PEA must accompany every sale and every lease of a building or part of a building with a floor area over 50 m². It accompanies the sale contract, and a lease needs it as well. If you plan to sell or rent out, order it early, so that it does not hold up the contract.</p><h2>How a PEA is issued</h2><p>A registered energy inspector issues the PEA:</p><ul><li><strong>Documents:</strong> the inspector collects the plans and papers of the property.</li><li><strong>Visit:</strong> the inspector checks the building on site: walls, windows, heating, cooling and hot water.</li><li><strong>Report:</strong> the building is placed in its energy class, with recommendations to improve it.</li></ul><h2>What the inspector needs from you</h2><p>Very little. The inspector collects the necessary documents of the property, checks the space on site and prepares the report; our inspectors handle the entire document collection for you. What we need from you is the address of the property, access to it for the visit and the date by which you need the certificate. When you live abroad, we arrange the access and keep you informed until the PEA is issued.</p><h2>Energy classes and how long a PEA is valid</h2><p>There are eight energy classes, from A+, the most efficient, to G. A PEA is valid for ten years, and it must be revised earlier if the energy state of the building changes substantially, for example after a renovation. The report does not only give the class: it also proposes methods to improve the energy performance of the building, which you can use when you plan works or when you talk to a buyer.</p><h2>Why the energy class matters when you sell</h2><p>The energy class appears in the listing and in the contract, and buyers read it. A better class means lower running costs for heating and cooling, which matters to buyers who will live in the home all year. The recommendations in the PEA also show what a buyer could improve, for example insulation, windows or a heat pump. Knowing the class before you set the price helps you answer these questions with confidence.</p><h2>We arrange your PEA</h2><p>Our inspectors handle the whole process for your property in Halkidiki, from the documents to the certificate, also while you live abroad. Tell us where the property is and when you need the certificate.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/services/seller-services/energy-efficiency-certificates-pea",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "Service",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Services",
+    "Seller services",
+    "Energy certificate (PEA)"
+  ],
+  "heroAlt": "Energy inspector checking the wall of a house with a thermal camera",
+  "galleryAltPattern": "",
+  "ogTitle": "PEA Energy Certificate for Your Home in Greece",
+  "anchor": "energy certificate (PEA)",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "seller services",
+      "href": "/en/services/seller-services"
+    },
+    {
+      "anchor": "sell your property in Halkidiki",
+      "href": "/en/sell"
+    },
+    {
+      "anchor": "property management",
+      "href": "/en/services/buyer-services/full-property-management"
+    },
+    {
+      "anchor": "talk to an adviser",
+      "href": "/en/contact"
+    }
+  ],
+  "linkedFrom": [
+    "P35 Services hub (sellers panel)",
+    "P37 Seller services",
+    "P40 Property management",
+    "P24 Sell (What we need from you)"
+  ],
+  "cta": "Order your PEA",
+  "ctaHref": "/en/contact",
+  "oldUrls": [
+    "/en/services/seller-services/energy-efficiency-certificates-pea",
+    "/sr/usluge/usluge-prodavca/sertifikati-o-energetskoj-efikasnosti-pea",
+    "/de/dienstleistungen/verkauferdienste/energieeffizienzzertifikat-energieinspektionen"
+  ],
+  "words": 610,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "Covered by George's seller-services text (K.En.A.K., from 09.01.2011, sale or lease over 50 m², ten years, revised after substantial changes, energy inspectors, eight classes A+ to G, improvement proposals). Lines not in George's texts were removed (Sergei 2026-11-11 «да»).",
+  "source": "brief batch-3.json",
+  "photoThemes": [
+    {
+      "after": "What the PEA is",
+      "tags": [
+        "exterior_facade"
+      ]
+    },
+    {
+      "after": "When you need a PEA",
+      "tags": [
+        "exterior_terrace"
+      ]
+    },
+    {
+      "after": "How a PEA is issued",
+      "tags": [
+        "exterior_garden"
+      ]
+    },
+    {
+      "after": "What the inspector needs from you",
+      "tags": [
+        "exterior_facade"
+      ]
+    },
+    {
+      "after": "Energy classes and how long a PEA is valid",
+      "tags": [
+        "exterior_aerial"
+      ]
+    },
+    {
+      "after": "Why the energy class matters when you sell",
+      "tags": [
+        "exterior_pool"
+      ]
+    },
+    {
+      "after": "We arrange your PEA",
+      "tags": [
+        "view_sea",
+        "view_panoramic"
+      ]
+    }
+  ],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

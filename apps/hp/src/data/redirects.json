@@ -4818,15 +4818,6 @@
    "note": "content page"
   },
   {
-   "from": "/en/services/seller-services/energy-efficiency-certificates-pea",
-   "to": "/en/sell",
-   "status": 301,
-   "lang": "en",
-   "src": "spec",
-   "clicks": 24,
-   "note": "content page"
-  },
-  {
    "from": "/en/services/seller-services/online-delegation-and-selection-of-ad-package",
    "to": "/en/sell",
    "status": 301,

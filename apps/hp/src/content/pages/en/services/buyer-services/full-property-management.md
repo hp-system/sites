@@ -13,27 +13,28 @@ parents:
   path: /en/services/buyer-services
 image: https://media.onsea.gr/properties/ums_4494/detached-house-garden-halkidiki-2980293835_1920w.jpg
 image_alt: Well-kept garden with palm trees around a house in Halkidiki
+desk_image: https://media.onsea.gr/properties/ums_4494/detached-house-garden-halkidiki-2980293835_1920w.jpg
+desk_image_alt: Well-kept garden with palm trees around a house in Halkidiki
+# Related: pages the brief's text does not link already (Sergei 2026-11-11: no link twice)
 related:
-- label: Real estate services in Halkidiki
-  href: /en/services
-- label: Buyer services
-  href: /en/services/buyer-services
-- label: Seller services
-  href: /en/services/seller-services
-- label: Investor services
-  href: /en/services/investor-services
 - label: Construction services
   href: /en/services/construction-services
-- label: Construction projects
-  href: /en/construction
-- label: Contact an adviser
-  href: /en/contact
+  text: Renovation, pools and energy systems for your home.
+  image: /pages/services/76855af3-1624604213-card.webp
+  image_alt: Concrete frame of a new house under construction
+- label: Book an online appointment
+  href: /en/book-an-online-appointment
+  text: Wherever you live — a video or phone call with an adviser.
+  image: /pages/book-an-online-appointment/dc998456-e-viewings.webp
+  image_alt: Two people on a video call with an adviser
 toc: false
 old_url: /en/services/buyer-services/full-property-management
 needs_content: false
 cards: []
 contact_card: false
 catalog: []
+# On the kit with its own brief P40 (Sergei 2026-11-11 «делаем»)
+look: wave1
 form:
   source: 'Services: full property management'
   title: Ask about managing your property

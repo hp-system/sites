@@ -156,7 +156,8 @@ try {
 const w1 = d.look === 'wave1';
 // The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
 const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services', company: 'nav.company' };
-const short = NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
+// a sub page with an own brief names itself (its brief's last breadcrumb), not its section
+const short = fresh && d.parents.length && fresh.breadcrumb?.length ? fresh.breadcrumb[fresh.breadcrumb.length - 1] : NAV_KEY[d.section] ? t(lang, NAV_KEY[d.section]!) : d.h1;
 const HOW_KEY: Partial<Record<typeof d.section, string>> = { sell: 'info.sell_how' };
 const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
 // Own pages (Sell): H2 only for the text sections of the brief; the design headings (how, cards, related,
@@ -365,6 +366,8 @@ if (faqItems.length) {
       )}
     </header>
 
+    {/* nothing to show (an own brief without cards, heading or widget): no empty band */}
+    {(!fresh || howH2 || d.widget || d.cards.length > 0) && (
     <section class="w1-how" aria-labelledby={howH2 ? 'w1-how-h' : undefined}>
       <div class="wrap">
         <div class="w1-how__head">
@@ -398,10 +401,12 @@ if (faqItems.length) {
         )}
       </div>
     </section>
+    )}
 
     {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
         them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
-    {fresh && postsPage && <SpecPosts page={postsPage} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={postLinks} />}
+    {fresh && postsPage && <SpecPosts page={postsPage} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={postLinks}
+                                    cta={d.section === 'sell' ? undefined : null} />}
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
         menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 

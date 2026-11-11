@@ -17,6 +17,7 @@ import table from '../data/redirects.json';
 import services from '../content/redirects/services.json';
 import articlesMap from '../content/redirects/articles.json';
 import listings from '../content/redirects/listings.json';
+import registry from '../data/page-registry.json';
 import { propertyUrl, type Lang } from './i18n';
 
 export type Redirect = { to: string; status: 301 } | { to: null; status: 410 };
@@ -37,12 +38,20 @@ for (const r of (table as { rows: { from: string; to: string | null; status: num
   else if (r.status === 410) TABLE.set(r.from, { to: null, status: 410 });
 }
 
+// A page of the registry is served, never sent away by an old row (P67: the PEA page is back at its old URL,
+// Sergei 2026-11-11; the first engine still maps it to a section of seller services).
+const LIVE = new Set<string>();
+for (const p of (registry as { pages: { status?: string; paths?: Record<string, string> }[] }).pages) {
+  if (p.status === 'dropped') continue;
+  for (const path of Object.values(p.paths ?? {})) LIVE.add(normPath(path));
+}
+
 const OLD = new Map<string, Redirect>();
 function addOld(e: Entry): void {
   if (!e?.from || !e?.to) return;
   const key = normPath(e.from);
   const lang = e.lang ?? key.split('/')[1] ?? '';
-  if (lang !== 'en' || KNOWN.has(key) || OLD.has(key)) return;   // the table decides what it knows
+  if (lang !== 'en' || KNOWN.has(key) || OLD.has(key) || LIVE.has(key)) return;   // the table decides what it knows; a live page stays
   if (key === normPath(e.to.split('#')[0])) return;              // never a loop
   OLD.set(key, { to: e.to, status: 301 });
 }

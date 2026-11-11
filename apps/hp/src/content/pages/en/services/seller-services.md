@@ -122,6 +122,8 @@ PEA Certificate is issued by Energy Inspectors, who collect the necessary docume
 
 Our company’s inspectors handle the entire document collection, controls and preparation of PEA, at competitive prices.
 
+When it is needed, who issues it and how long it is valid: [energy certificate (PEA)](/en/services/seller-services/energy-efficiency-certificates-pea).
+
 <img src="/pages/services-seller-services/94e84bed-1624603681.webp" alt="Energy Efficiency Certificates (PEA) — seller services by Halkidiki Properties" width="400" height="291" loading="lazy" decoding="async" />
 
 <h2 id="photorealistic-and-360-view">Photorealistic and 360 view</h2>

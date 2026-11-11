@@ -30,7 +30,7 @@ try {
   check('pop login: noindex', /<meta name="robots" content="noindex/.test(ph), 'noindex');
   check('pop login: bare (no header, banner, nested dialog)', !/<header/.test(ph) && !ph.includes('id="cc"') && !ph.includes('id="lgd"'), 'bare');
   // the role first (LoginRole, Sergei 2026-11-11): buy / sell / agent, Continue only after a pick
-  check('pop login: the role first (buy / sell / agent)', ph.includes('id="pr"') && (ph.match(/class="rl__o"/g) ?? []).length === 3 && /id="gor" disabled/.test(ph), 'role');
+  check('pop login: the role first (buy / sell / agent)', ph.includes('id="pr"') && (ph.match(/class="rl__o"/g) ?? []).length === 3 && !ph.includes('id="gor"'), 'role');
   check('pop login: steps name+mobile → email → code → welcome', ['id="p0"', 'id="fn"', 'id="sn"', 'id="ph"', 'id="p1"', 'id="em"', 'id="p2"', 'id="cd"', 'id="p4"'].every((x) => ph.includes(x)), 'steps');
   check('pop login: Continue disabled until consent', /<input type="checkbox" id="agree"/.test(ph) && /id="go0" disabled/.test(ph), 'gated');
   check('pop login: no Google button (no Google sign-in in the API)', !ph.includes('id="google"'), 'off');

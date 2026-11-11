@@ -112,7 +112,6 @@ const JS_T = {
                 </button>
               ))}
             </div>
-            <button class="btn" type="button" id="gor" disabled aria-disabled="true">{t(lang, 'auth.continue')}</button>
           </div>
 
           {/* 1 — name, surname, mobile, consent */}
@@ -147,7 +146,7 @@ const JS_T = {
               </div>
               <p class="fine">{t(lang, 'auth.pop_why')}</p>
               {/* Consent (Sergei 02/11): Continue works only when it is ticked. */}
-              <label class="agr"><input type="checkbox" id="agree" /><span class="agr-b" aria-hidden="true"></span><span set:html={agree}></span></label>
+              <label class="agr"><input type="checkbox" id="agree" autocomplete="off" /><span class="agr-b" aria-hidden="true"></span><span set:html={agree}></span></label>
               <p class="err" id="e0" role="alert" aria-live="assertive" hidden></p>
               <button class="btn" type="submit" id="go0" disabled aria-disabled="true">{t(lang, 'auth.continue')}</button>
               <p class="fine fine--start"><button type="button" class="bkl" id="back0">← {t(lang, 'auth.back')}</button></p>
@@ -244,7 +243,7 @@ const JS_T = {
   /* Header floats above the steps; each step reserves the room the header takes on it, so the
      popup keeps one size and nothing jumps (Sergei 02/11). */
   .lp__hd { position: absolute; top: 0; left: 0; right: 0; text-align: center; pointer-events: none; }
-  .lp__mk { display: flex; justify-content: center; align-items: flex-end; height: 124px; margin: 0 0 14px; color: var(--ink);
+  .lp__mk { display: flex; justify-content: center; align-items: flex-end; height: 88px; margin: 0 0 12px; color: var(--ink);
             transition: height .6s cubic-bezier(.4, 0, .2, 1); }
   .lp__mk svg { height: 100%; width: auto; display: block; overflow: visible; }
   .lp.is-small .lp__mk { height: 44px; }
@@ -254,7 +253,7 @@ const JS_T = {
 
   .stps { display: grid; }
   .stp { grid-area: 1 / 1; min-width: 0; padding-top: 152px; display: flex; flex-direction: column; }
-  .stp--first { padding-top: 232px; }
+  .stp--first { padding-top: 194px; }   /* the 88-px mark (Sergei 2026-11-11: «форма сильно высокая»), was 124 */
   .stp--email { padding-top: 176px; }
   .stp.off { visibility: hidden; pointer-events: none; }
   .stp.on { animation: stepfade .35s ease both; }
@@ -293,8 +292,8 @@ const JS_T = {
   .dial__l button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--paper); border: 0;
                     font: inherit; font-size: var(--fs-s-1); color: var(--ink); text-align: start; cursor: pointer; }
   .dial__l button[hidden] { display: none; }
-  .rl { display: grid; gap: 8px; margin: 14px 0 18px; }
-  .rl__o { display: grid; gap: 2px; padding: 14px 16px; text-align: start; background: var(--paper); border: 1px solid var(--line); cursor: pointer;
+  .rl { display: grid; gap: 6px; margin: 10px 0 0; }
+  .rl__o { display: grid; gap: 2px; padding: 10px 14px; text-align: start; background: var(--paper); border: 1px solid var(--line); cursor: pointer;
     font: inherit; color: var(--ink); transition: border-color .15s ease, background .15s ease; }
   .rl__o b { font-size: var(--fs-s0); font-weight: 600; }
   .rl__o span { font-size: var(--fs-s-1); color: var(--muted); }
@@ -412,15 +411,13 @@ const JS_T = {
   // ── 0: the role — only for this window (the CRM keeps no role yet): the welcome and Continue follow it
   let role: 'buy' | 'sell' | 'agent' = 'buy';
   const opts = Array.from(document.querySelectorAll<HTMLButtonElement>('.rl__o'));
-  const gor = $('gor') as HTMLButtonElement;
   opts.forEach((b) => b.addEventListener('click', () => {
     role = (b.dataset.role as typeof role) || 'buy';
     opts.forEach((x) => x.setAttribute('aria-checked', String(x === b)));
-    gor.disabled = false; gor.removeAttribute('aria-disabled');
     $('p4s').textContent = (L as Record<string, string>)[`done_${role}`];
     $('go').textContent = (L as Record<string, string>)[`go_${role}`];
+    show('p0', 'fn');   // a pick goes on at once (Sergei 2026-11-11: «кнопка продолжить не нужна»)
   }));
-  gor.addEventListener('click', () => show('p0', 'fn'));
   $('back0').addEventListener('click', () => { clear('e0'); show('pr'); });
 
   // Esc closes the popup (focus is inside this frame, so the dialog does not see the key).
@@ -432,6 +429,9 @@ const JS_T = {
   const agree = $('agree') as HTMLInputElement;
   const go0 = $('go0') as HTMLButtonElement;
   const syncAgree = () => { go0.disabled = !agree.checked; go0.setAttribute('aria-disabled', String(!agree.checked)); };
+  // never pre-ticked: consent is the person's own click (GDPR), even when the browser restores the form
+  agree.checked = false;
+  addEventListener('pageshow', () => { agree.checked = false; syncAgree(); });
   agree.addEventListener('change', syncAgree); syncAgree();
 
   let first = '', last = '', phone = '', email = '', needs: string[] = [], busy = false;

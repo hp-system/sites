@@ -2,6 +2,12 @@
   "_note": "Fixes to George's redirect sheet and the legacy rules (sites#152). Each row records its reason. Decisions: D-20261106-SS-1 D7 (Sergei: «Если ето правильно, то джордж согласен. Ето должно быть лучшее решение.») and D6. Status: 301 | 410 | pending (target page not built yet) | keep (no redirect: the URL itself is served).",
   "rows": [
     {
+      "from": "/en/services/seller-services/energy-efficiency-certificates-pea",
+      "to": null,
+      "status": "keep",
+      "reason": "Sergei 2026-11-11: the PEA page (P67, own brief) comes back at its old URL (24 clicks, «pea certificate» position 6); George's sheet sent it to /en/sell"
+    },
+    {
       "from": "/robots.txt",
       "to": null,
       "status": "keep",

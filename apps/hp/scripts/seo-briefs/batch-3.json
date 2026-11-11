@@ -1,0 +1,319 @@
+{
+  "_note": "Briefs + new texts for pages outside George's spec (D-20261106-SS-2), batch 3: the two service pages the GSC data asks for (seo-real-data-2026-11: «Property management gets its own strong page; the energy certificate is the second one»). Sergei 2026-11-11: «Писать брифы для страниц property management и PEA? да». EN only until stage 5. Status draft until Sergei approves the texts and the PEA URL.",
+  "batch": 3,
+  "date": "2026-11-11",
+  "status": "approved",
+  "approved": "Sergei 2026-11-11: «делаем»; PEA URL: the old one (asked «как лучше?», the old URL keeps its 24 clicks); classes: «делай как у джорджа»",
+  "pages": [
+    {
+      "id": "P40",
+      "lang": "en",
+      "page": "Full property management",
+      "url": "https://www.halkidikiproperties.com/en/services/buyer-services/full-property-management",
+      "titleFocus": "Owners abroad: someone local looks after the property",
+      "primaryKeyword": "property management Halkidiki",
+      "primaryVolume": "pending (keyword tool); GSC 2026-11: «property management» 784, «…services» 679, «…agency» 342, «…in greece» 325, «…greece» 306 impressions at positions 34–70",
+      "secondaryKeywords": [
+        "property management Greece",
+        "property management services Greece",
+        "property management company Halkidiki",
+        "rental property management Halkidiki",
+        "διαχειριση ακινητων χαλκιδικη (stage 5, el)"
+      ],
+      "keywordRationale": "The best services page in search (143 clicks, seo-real-data-2026-11) and the biggest gap: many impressions for property management at positions 34–70. «διαχειριση ακινητων χαλκιδικη» already at position 10 with 11 clicks (Greek page at stage 5). The URL stays (D-20261106-SS-3 deviation from George's table).",
+      "title": "Property Management in Halkidiki, Greece",
+      "meta": "Property management in Halkidiki, Greece for owners who live abroad: tenants and rent, bills and taxes, maintenance, repairs and regular inspections.",
+      "h1": "Property management in Halkidiki",
+      "h2": [
+        "What our property management includes",
+        "Who it is for",
+        "Tenants and rent collection",
+        "Bills and taxes paid on time",
+        "Maintenance, repairs and inspections",
+        "Managing your home while you live abroad",
+        "How we start"
+      ],
+      "faqQuestions": [
+        "What does property management in Halkidiki include?",
+        "Can you manage my property while I live abroad?",
+        "Do you pay the bills and taxes of my property?",
+        "Can you find tenants for my property?",
+        "How much does property management cost?"
+      ],
+      "contentBrief": "For owners of a home in Halkidiki who live elsewhere most of the year, and for buyers who plan to rent out. Facts only from George's page: tenant screening and lease, rent collection, bills and taxes paid, maintenance and repairs, regular inspections, marketing and showings to tenants. No prices, no response times, no promises of income. A rental needs an energy certificate: link the PEA page.",
+      "targetWords": 800,
+      "pageType": "service",
+      "schema": [
+        "Service",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Services",
+        "Buyer services",
+        "Property management"
+      ],
+      "heroAlt": "Well-kept garden with palm trees around a house in Halkidiki",
+      "ogTitle": "Property Management in Halkidiki – Your Home Looked After",
+      "anchor": "full property management",
+      "linksOut": [
+        {
+          "anchor": "real estate services in Halkidiki",
+          "href": "/en/services"
+        },
+        {
+          "anchor": "buyer services",
+          "href": "/en/services/buyer-services"
+        },
+        {
+          "anchor": "energy certificate (PEA)",
+          "href": "/en/services/seller-services/energy-efficiency-certificates-pea"
+        },
+        {
+          "anchor": "talk to an adviser",
+          "href": "/en/contact"
+        }
+      ],
+      "linkedFrom": [
+        "P35 Services hub (panel + door)",
+        "P36 Buyer services",
+        "P67 Energy certificate (PEA)"
+      ],
+      "cta": "Ask about property management",
+      "oldUrls": [
+        "/en/services/buyer-services/full-property-management"
+      ],
+      "lawyerCheck": "YES — the lines on paying property taxes for the owner (a tax representative or power of attorney may be needed for owners abroad) and on lease agreements.",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Owning a home in Halkidiki is easy while you are here. When you are away for most of the year, someone local has to look after it. Our property management in Halkidiki does that for you: tenants and rent, bills and taxes, maintenance, repairs and regular inspections, all from one team that knows the area.</p>",
+      "body": "<h2>What our property management includes</h2><p>You choose what we take over. The full service covers:</p><ul><li><strong>Tenants:</strong> marketing of the property, showings, tenant screening and the lease agreement.</li><li><strong>Money:</strong> rent collection, and the bills and taxes of the property paid on your behalf.</li><li><strong>Upkeep:</strong> maintenance and repairs, carried out when they are needed.</li><li><strong>Inspections:</strong> regular visits to check the state of the property.</li></ul><h2>Who it is for</h2><p>Property management suits three kinds of owners in Halkidiki:</p><ul><li><strong>Owners who live abroad:</strong> the house stays closed for months and needs someone to check it, pay its bills and deal with problems.</li><li><strong>Owners who rent out:</strong> a long-term tenant brings an income, but also questions, repairs and rent to collect.</li><li><strong>New buyers:</strong> you have just bought through us and want the home ready, maintained and, if you wish, rented from the first season.</li></ul><p>The service is the same team that helped you buy, so the property, its papers and its history are already known to us.</p><h2>Tenants and rent collection</h2><p>We advertise the property, show it to interested tenants and check them before anything is signed. We prepare the lease agreement with you and stay the tenants' contact for everyday questions, so they do not call you abroad. The rent is collected on your behalf. When a tenant leaves, we check the property, arrange what needs fixing and look for the next tenant, so that the home does not stay empty longer than needed.</p><h2>Bills and taxes paid on time</h2><p>A property in Greece comes with regular payments: electricity, water, the municipal charges and the annual property tax. We pay them for you, so nothing is missed while you are away. Late payments in Greece bring surcharges, and an unpaid bill can mean a supply is cut off just before you arrive; a local contact who pays on time avoids both.</p><h2>Maintenance, repairs and inspections</h2><p>We visit the property regularly and look for problems before they grow: humidity, leaks, the garden, the pool, the equipment. When something needs repair, we arrange it and follow the work until it is done. Before a season, we can open the house, air it, check the water, the electricity and the air conditioning, so it is ready when you or your guests arrive; after it, we close it again.</p><h2>Managing your home while you live abroad</h2><p>Most of our owners live outside Greece. You agree with us what we manage and how you want to be kept informed, and you deal with one contact instead of several local professionals. If you want to rent out the home, it needs an energy certificate; we arrange that too.</p><h2>How we start</h2><p>Talk to us about the property: where it is, what it is like and what you want from it, whether that is a rental income or simply a house that is ready when you arrive. We visit it, agree the scope and the terms with you in writing, and then take over.</p>",
+      "faq": [
+        {
+          "q": "What does property management in Halkidiki include?",
+          "a": "Tenant search and screening, the lease agreement, rent collection, the bills and taxes of the property, maintenance and repairs, and regular inspections. You choose what we take over."
+        },
+        {
+          "q": "Can you manage my property while I live abroad?",
+          "a": "Yes. Most of our owners live outside Greece. We are your local contact and keep you informed the way you agree with us."
+        },
+        {
+          "q": "Do you pay the bills and taxes of my property?",
+          "a": "Yes. We pay the bills and the property taxes on your behalf, so no payment is missed while you are away."
+        },
+        {
+          "q": "Can you find tenants for my property?",
+          "a": "Yes. We advertise the property, show it, screen the tenants and prepare the lease agreement with you."
+        },
+        {
+          "q": "How much does property management cost?",
+          "a": "It depends on the property and on what we take over. The terms are agreed with you in writing before we start."
+        }
+      ],
+      "ctaHref": "/en/contact",
+      "questionMarks": [],
+      "photoThemes": [
+        {
+          "after": "What our property management includes",
+          "tags": [
+            "exterior_garden"
+          ]
+        },
+        {
+          "after": "Who it is for",
+          "tags": [
+            "view_sea",
+            "view_panoramic"
+          ]
+        },
+        {
+          "after": "Tenants and rent collection",
+          "tags": [
+            "exterior_terrace"
+          ]
+        },
+        {
+          "after": "Bills and taxes paid on time",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "Maintenance, repairs and inspections",
+          "tags": [
+            "exterior_pool"
+          ]
+        },
+        {
+          "after": "Managing your home while you live abroad",
+          "tags": [
+            "view_beach",
+            "view_sea"
+          ]
+        },
+        {
+          "after": "How we start",
+          "tags": [
+            "exterior_facade",
+            "exterior_garden"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "P67",
+      "lang": "en",
+      "page": "Energy certificate (PEA)",
+      "url": "https://www.halkidikiproperties.com/en/services/seller-services/energy-efficiency-certificates-pea",
+      "titleFocus": "Owners who sell or rent: the energy certificate a Greek property needs",
+      "primaryKeyword": "PEA energy certificate Greece",
+      "primaryVolume": "pending (keyword tool); GSC 2026-11: «pea certificate» 413 impressions at position 6",
+      "secondaryKeywords": [
+        "energy performance certificate Greece",
+        "energy certificate Halkidiki",
+        "PEA certificate for sale of property",
+        "PEA certificate for rental"
+      ],
+      "keywordRationale": "«pea certificate» 413 impressions at position 6 (seo-real-data-2026-11): the second service theme. The old URL had 24 clicks and today 301s to /en/sell in George's table; the page comes back at that URL (needs Sergei's yes: deviation from the table, as full-property-management).",
+      "title": "PEA Energy Certificate in Halkidiki, Greece",
+      "meta": "The PEA energy certificate a home in Greece needs for a sale or a rental: when it is required, who issues it, how long it is valid and how we arrange it.",
+      "h1": "Energy performance certificate (PEA)",
+      "h2": [
+        "What the PEA is",
+        "When you need a PEA",
+        "How a PEA is issued",
+        "What the inspector needs from you",
+        "Energy classes and how long a PEA is valid",
+        "Why the energy class matters when you sell",
+        "We arrange your PEA"
+      ],
+      "faqQuestions": [
+        "Do I need a PEA to sell my house in Greece?",
+        "Do I need a PEA to rent out my home?",
+        "Who issues the PEA?",
+        "How long is a PEA valid?",
+        "How much does a PEA cost?"
+      ],
+      "contentBrief": "For owners who sell or rent out a home in Halkidiki. Facts from George's seller-services section (K.En.A.K., required for a sale or a lease of a building over 50 m², issued by an energy inspector after a visit and a check of documents, energy classes from A+, valid ten years, recommendations to improve). No prices, no lead times. Classes as George writes them: eight, A+ to G (Sergei: «делай как у джорджа»); the engineer confirms.",
+      "targetWords": 650,
+      "pageType": "service",
+      "schema": [
+        "Service",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Services",
+        "Seller services",
+        "Energy certificate (PEA)"
+      ],
+      "heroAlt": "Energy inspector checking the wall of a house with a thermal camera",
+      "ogTitle": "PEA Energy Certificate for Your Home in Greece",
+      "anchor": "energy certificate (PEA)",
+      "linksOut": [
+        {
+          "anchor": "seller services",
+          "href": "/en/services/seller-services"
+        },
+        {
+          "anchor": "sell your property in Halkidiki",
+          "href": "/en/sell"
+        },
+        {
+          "anchor": "property management",
+          "href": "/en/services/buyer-services/full-property-management"
+        },
+        {
+          "anchor": "talk to an adviser",
+          "href": "/en/contact"
+        }
+      ],
+      "linkedFrom": [
+        "P35 Services hub (sellers panel)",
+        "P37 Seller services",
+        "P40 Property management",
+        "P24 Sell (What we need from you)"
+      ],
+      "cta": "Order your PEA",
+      "oldUrls": [
+        "/en/services/seller-services/energy-efficiency-certificates-pea",
+        "/sr/usluge/usluge-prodavca/sertifikati-o-energetskoj-efikasnosti-pea",
+        "/de/dienstleistungen/verkauferdienste/energieeffizienzzertifikat-energieinspektionen"
+      ],
+      "lawyerCheck": "YES (lawyer + engineer) — the 50 m² threshold, the ten-year validity, the energy classes (George's text says eight, A+ to G; the Greek scale may have more), and that a sale and a lease both need it. Also the usual documents list (title deed or contract, building permit and plans, heating/cooling/hot water information). And the exemptions line (small, listed, temporary buildings).",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Every home sold or rented in Greece needs an energy performance certificate, the PEA (Πιστοποιητικό Ενεργειακής Απόδοσης). It shows how much energy the building uses and how it could use less. Our energy inspectors arrange the whole PEA for your property in Halkidiki: the documents, the visit and the certificate.</p>",
+      "body": "<h2>What the PEA is</h2><p>The PEA is the energy performance certificate of a building in Greece, required by the Buildings' Energy Efficiency Regulation (K.En.A.K.). It records the current energy state of the building, places it in an energy class and proposes ways to improve its performance.</p><h2>When you need a PEA</h2><p>A PEA must accompany every sale and every lease of a building or part of a building with a floor area over 50 m². The notary asks for it at the sale, and a lease needs it as well. If you plan to sell or rent out, order it early, so that it does not hold up the contract. Smaller buildings and a few special cases, such as some listed or temporary buildings, are exempt; the inspector confirms whether the rule applies to your property before any work starts.</p><h2>How a PEA is issued</h2><p>A registered energy inspector issues the PEA:</p><ul><li><strong>Documents:</strong> the inspector collects the plans and papers of the property.</li><li><strong>Visit:</strong> the inspector checks the building on site: walls, windows, heating, cooling and hot water.</li><li><strong>Report:</strong> the building is placed in its energy class, with recommendations to improve it.</li></ul><h2>What the inspector needs from you</h2><p>The inspector works from the papers of the property and from what is on site. Usually these are the title deed or contract, the building permit and plans where they exist, and information on the heating, cooling and hot water systems, such as the type of boiler or heat pump. If some papers are missing, tell us early: the inspector can say what can replace them. When you live abroad, we can give the inspector access to the property and collect the papers for you.</p><h2>Energy classes and how long a PEA is valid</h2><p>There are eight energy classes, from A+, the most efficient, to G. A PEA is valid for ten years, and it must be renewed earlier if the energy state of the building changes substantially, for example after a renovation.</p><h2>Why the energy class matters when you sell</h2><p>The energy class appears in the listing and in the contract, and buyers read it. A better class means lower running costs for heating and cooling, which matters to buyers who will live in the home all year. The recommendations in the PEA also show what a buyer could improve, for example insulation, windows or a heat pump. Knowing the class before you set the price helps you answer these questions with confidence.</p><h2>We arrange your PEA</h2><p>Our inspectors handle the whole process for your property in Halkidiki, from the documents to the certificate, also while you live abroad. Tell us where the property is and when you need the certificate.</p>",
+      "faq": [
+        {
+          "q": "Do I need a PEA to sell my house in Greece?",
+          "a": "Yes. A sale of a building or part of a building over 50 m² must be accompanied by an energy performance certificate. The notary asks for it."
+        },
+        {
+          "q": "Do I need a PEA to rent out my home?",
+          "a": "Yes. A lease of a building or part of a building over 50 m² needs a PEA too."
+        },
+        {
+          "q": "Who issues the PEA?",
+          "a": "A registered energy inspector, after collecting the documents of the property and checking the building on site."
+        },
+        {
+          "q": "How long is a PEA valid?",
+          "a": "Ten years. It must be renewed earlier if the energy state of the building changes substantially, for example after a renovation."
+        },
+        {
+          "q": "How much does a PEA cost?",
+          "a": "It depends on the property. Tell us where it is and what it is like, and we send you an offer."
+        }
+      ],
+      "ctaHref": "/en/contact",
+      "questionMarks": [],
+      "photoThemes": [
+        {
+          "after": "What the PEA is",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "When you need a PEA",
+          "tags": [
+            "exterior_terrace"
+          ]
+        },
+        {
+          "after": "How a PEA is issued",
+          "tags": [
+            "exterior_garden"
+          ]
+        },
+        {
+          "after": "What the inspector needs from you",
+          "tags": [
+            "exterior_facade"
+          ]
+        },
+        {
+          "after": "Energy classes and how long a PEA is valid",
+          "tags": [
+            "exterior_aerial"
+          ]
+        },
+        {
+          "after": "Why the energy class matters when you sell",
+          "tags": [
+            "exterior_pool"
+          ]
+        },
+        {
+          "after": "We arrange your PEA",
+          "tags": [
+            "view_sea",
+            "view_panoramic"
+          ]
+        }
+      ]
+    }
+  ]
+}

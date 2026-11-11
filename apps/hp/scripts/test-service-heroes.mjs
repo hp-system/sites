@@ -19,7 +19,9 @@ try {
     const html = await checkPage(path);
     if (!html) { check(`${path} loads`, false, 'page missing'); continue; }
     const fig = html.match(/<figure class="wrap info-hero"[\s\S]*?<\/figure>/);
-    const img = fig ? fig[0].match(/<img [^>]*>/)?.[0] ?? '' : '';
+    // a page on the kit (wave1) carries its hero in the top's picture (desktop source with the srcset)
+    const pic = fig ? null : html.match(/<picture class="w1-top__img[\s\S]*?<\/picture>/);
+    const img = fig ? fig[0].match(/<img [^>]*>/)?.[0] ?? '' : pic ? pic[0] : '';
     check(`${path} hero is ${id}`, img.includes(`${id}_1920w.jpg`), img ? 'hero found' : 'no hero');
     check(`${path} hero srcset 800w + 1920w`, img.includes(`${id}_800w.jpg 800w`) && img.includes(`${id}_1920w.jpg 1920w`), 'srcset');
     check(`${path} hero size and priority`, /width="1920"/.test(img) && /height="1280"/.test(img) && /fetchpriority="high"/.test(img), 'width/height/fetchpriority');

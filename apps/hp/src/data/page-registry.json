@@ -73,7 +73,8 @@
     { "id": "P63", "name": "Assignment order", "source": "page", "template": "legal", "menu": null, "parent": "P25", "footer": false, "status": "live", "paths": { "en": "/en/assignment-order" } },
     { "id": "P64", "name": "Indication order", "source": "page", "template": "legal", "menu": null, "footer": true, "status": "live", "paths": { "en": "/en/indication-order" } },
     { "id": "P65", "name": "Collaboration order (agents)", "source": "page", "template": "legal", "menu": null, "parent": "P42", "footer": false, "status": "live", "paths": { "en": "/en/collaboration-order" } },
-    { "id": "P66", "name": "Blog (articles)", "source": "page", "template": "articles", "menu": null, "footer": true, "status": "live", "paths": { "en": "/en/articles/all-news" }, "note": "34 EN articles, a collection of their own; each article is checked by the crawler, not listed here." }
+    { "id": "P66", "name": "Blog (articles)", "source": "page", "template": "articles", "menu": null, "footer": true, "status": "live", "paths": { "en": "/en/articles/all-news" }, "note": "34 EN articles, a collection of their own; each article is checked by the crawler, not listed here." },
+    { "id": "P67", "name": "Energy certificate (PEA)", "source": "page", "template": "info", "menu": null, "parent": "P37", "footer": false, "status": "live", "paths": { "en": "/en/services/seller-services/energy-efficiency-certificates-pea" }, "note": "Own brief (batch 3); served again at its old URL instead of George's 301 to /en/sell (Sergei 2026-11-11)." }
   ],
   "retired": [
     { "path": "/en/property-for-sale-in-greece", "to": "P03", "why": "D2: the spec hub replaces it (301)." },

@@ -11,6 +11,8 @@
 // the markdown marker (lib/remark-widgets.mjs) and wired here.
 // English only for now — hreflang lists `en` alone.
 // ═══════════════════════════════════════════════════════════════════════════
+import ReadPage from './ReadPage.astro';
+import FaqSearch from './FaqSearch.astro';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
@@ -117,6 +119,7 @@ if (a.has_calculator) {
 
   <main id="main" class="art">
     <header class="wrap art-top">
+      <div class="art-top__txt">
       <nav class="crumb" aria-label="breadcrumb">
         <a href={prefix(lang) || '/'}>{brand.name}</a>
         <span aria-hidden="true">·</span>
@@ -134,26 +137,21 @@ if (a.has_calculator) {
         {/* AI Act art. 50(4): a named human reviewer with editorial responsibility (#48). */}
         <span class="art-ed">Reviewed by <b>{brand.editorial.name}</b> · {brand.editorial.role}</span>
       </p>
+      </div>
+      {image && (
+        <figure class="art-hero">
+          <img src={image} alt={a.h1} width="1200" height="675" fetchpriority="high" decoding="async" />
+        </figure>
+      )}
     </header>
 
-    {image && (
-      <figure class="wrap art-hero">
-        <img src={image} alt={a.h1} width="1200" height="675" fetchpriority="high" decoding="async" />
-      </figure>
-    )}
-
-    <div class="wrap art-grid">
-      <article class="prose">
+    {/* On the kit (2026-11-11): the reading layout — the article's H2s, related articles and areas in the side
+        panel, the text on white (the Rewize structure taken, not its look: Sergei «следуй нашим канонам») */}
+    <ReadPage lang={lang} heads={toc.map((h) => ({ slug: h.slug, text: h.text }))} side>
+      <div class="prose">
         <Content />
 
-        {a.faq.length > 0 && !bodyHasFaq && (
-          <section class="faq" aria-labelledby="faq-h">
-            <h2 id="faq-h">Frequently asked questions</h2>
-            {a.faq.map((f, i) => (
-              <details open={i === 0}><summary>{f.q}</summary><p>{f.a}</p></details>
-            ))}
-          </section>
-        )}
+        {a.faq.length > 0 && !bodyHasFaq && <FaqSearch lang={lang} h="Frequently asked questions" items={a.faq} show={a.faq.length} bare search={false} id="faq" />}
 
         {a.sources.length > 0 && !bodyHasSources && (
           <section aria-labelledby="src-h">
@@ -161,15 +159,9 @@ if (a.has_calculator) {
             <ul class="src">{a.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.title}</a></li>)}</ul>
           </section>
         )}
-      </article>
+      </div>
 
-      <aside class="art-side" aria-label="On this page">
-        {toc.length > 1 && (
-          <nav class="side-box">
-            <p class="t-label">On this page</p>
-            <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
-          </nav>
-        )}
+      <div slot="side" class="art-side">
         {related.length > 0 && (
           <div class="side-box">
             <p class="t-label">Related articles</p>
@@ -180,8 +172,8 @@ if (a.has_calculator) {
           <p class="t-label">Areas of Halkidiki</p>
           <ul>{areas.map((p) => <li><a href={fin(areaUrl(p.slug))}>{p.name}</a></li>)}</ul>
         </div>
-      </aside>
-    </div>
+      </div>
+    </ReadPage>
 
     {related.length > 0 && (
       <section class="art-band">
@@ -235,21 +227,22 @@ if (a.has_calculator) {
   .crumb { font-size: var(--fs-s-1); color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
   .crumb a { color: var(--ink-2); text-decoration: none; }
   .crumb a:hover { text-decoration: underline; }
-  .art-top { padding-top: var(--s5); padding-bottom: var(--s5); }
+  .art-top { display: grid; gap: var(--s5); padding-top: var(--s5); padding-bottom: var(--s6); }
+  @media (min-width: 1024px) { .art-top { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; padding-bottom: 56px; } }
+  .art-top__txt { min-width: 0; }
   .art-cat { margin: var(--s5) 0 0; color: var(--faint); }
   .art-h1 { margin: var(--s3) 0 var(--s4); max-width: 24ch; }
   .art-by { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; font-size: var(--fs-s0); color: var(--muted); }
   .art-au b { color: var(--ink); font-weight: 600; }
-  .art-hero { margin: 0 auto; }
-  .art-hero img { width: 100%; height: auto; max-height: 560px; object-fit: cover; display: block; }
+  .art-hero { margin: 0; }
+  .art-hero img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--paper-2); }
 
-  .art-grid { display: grid; gap: var(--s7); padding-top: var(--s6); padding-bottom: var(--s7); }
-  @media (min-width: 1000px) { .art-grid { grid-template-columns: minmax(0, 1fr) 300px; } }
-  /* On phones the side column is not shown: the same links come at the end (George 20/10). */
+  /* the side panel's extras (related articles, areas); on phones the same links come at the end (George 20/10) */
   .art-side { display: none; }
-  @media (min-width: 1000px) { .art-side { display: block; position: sticky; top: var(--s5); align-self: start; } }
-  .side-box { border-top: 1px solid var(--ink); padding: var(--s3) 0 var(--s5); }
-  .side-box ul { list-style: none; margin: var(--s2) 0 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-s0); }
+  @media (min-width: 1000px) { .art-side { display: grid; gap: var(--s4); } }
+  .side-box { padding: 0; }
+  .side-box .t-label { margin: 0; color: var(--faint); }
+  .side-box ul { list-style: none; margin: var(--s2) 0 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-s-1); line-height: 1.4; }
   .side-box a { color: var(--ink-2); text-decoration: none; }
   .side-box a:hover { text-decoration: underline; }
 
@@ -286,8 +279,9 @@ if (a.has_calculator) {
   .prose :global(.c-tot.big) { font-size: var(--fs-s1); }
   .prose :global(.c-notes) { display: grid; gap: 6px; padding: 0 18px 14px; font-size: var(--fs-s0); }
   .prose :global(.c-notes span) { padding: 8px 10px; }
-  .prose :global(.c-notes .ok) { background: #E8F3EC; color: #1E5B34; }
-  .prose :global(.c-notes .warn) { background: #FBF1DE; color: #6B4A0E; }
+  /* only the palette: beige notes, the warning marked by weight and an ink rule, not by colour */
+  .prose :global(.c-notes .ok) { background: var(--paper-2); color: var(--ink); }
+  .prose :global(.c-notes .warn) { background: var(--paper-2); color: var(--ink); font-weight: 600; box-shadow: inset 2px 0 0 var(--ink); }
   .prose :global(.c-fine) { font-size: var(--fs-s-1); color: var(--faint); padding: 0 18px 14px; margin: 0; }
 
   .faq details { border-top: 1px solid var(--line); padding: var(--s3) 0; }
@@ -303,7 +297,7 @@ if (a.has_calculator) {
   .rel { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: var(--s5) var(--s4); }
   @media (min-width: 760px) { .rel { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .card { display: grid; gap: 6px; text-decoration: none; color: inherit; }
-  .card img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: #E7E6E2; }
+  .card img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: var(--paper-2); }
   .card .t-label { color: var(--faint); margin-top: 4px; }
   .card__t { font-size: var(--fs-s0); line-height: 1.3; color: var(--ink); }
   .card__x { font-size: var(--fs-s0); color: var(--muted); }
@@ -313,10 +307,11 @@ if (a.has_calculator) {
   .links a, .art-more a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
   .art-more { margin: var(--s5) 0 0; }
 
-  .art-cta { background: var(--ink-deep); color: #fff; padding: var(--s7) 0; }
-  .art-cta .t-h2 { color: #fff; }
-  .art-cta p { color: #C9CDD0; max-width: 56ch; }
+  .art-cta { background: var(--ink-deep); color: var(--paper); padding: var(--s7) 0; }
+  .art-cta .t-h2 { color: var(--paper); }
+  .art-cta p { color: var(--paper); opacity: .78; max-width: 56ch; }
+  .art-cta .row { opacity: 1; }
   .row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin: var(--s5) 0 0; }
-  .btn--line { background: transparent; color: #fff; border-color: #fff; }
-  .phone { color: #fff; font-variant-numeric: tabular-nums; }
+  .btn--line { background: transparent; color: var(--paper); border-color: var(--paper); }
+  .phone { color: var(--paper); font-variant-numeric: tabular-nums; }
 </style>

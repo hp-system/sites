@@ -1,0 +1,74 @@
+---
+// A text page on the kit (D-20261110-SS-1; Sergei 2026-11-11 «все остальное да»): company texts, contact,
+// legal pages, FAQ. The Sell canon for text: a beige band; on the left the kit side panel (white, sticky,
+// «On this page» with the page's H2s, the current one marked while reading, as the Sell posts' panel); on
+// the right the text on white at a reading width. Slot `side`: what goes under the list (the contact card).
+// Phones: the text only, the list stays in the HTML (hidden), the side slot moves under the text.
+import { t, type Lang } from '../lib/i18n';
+/** side: the page fills the `side` slot (the slot is declared even when the caller renders nothing into it) */
+interface Props { lang: Lang; heads: { slug: string; text: string }[]; side?: boolean }
+const { lang, heads, side = false } = Astro.props;
+const panel = heads.length > 1 || side;
+---
+<section class="rp">
+  <div class:list={['wrap rp__in', { 'rp__in--solo': !panel }]}>
+    {panel && (
+      <aside class="rp__side" aria-label={t(lang, 'info.on_page')}>
+        {heads.length > 1 && (
+          <nav data-rp>
+            <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
+            <ul class="k-side__list">{heads.map((h) => <li><a class="k-side__it" href={`#${h.slug}`} data-rp-to={h.slug}><span>{h.text}</span></a></li>)}</ul>
+          </nav>
+        )}
+        {side && <div class="rp__extra"><slot name="side" /></div>}
+      </aside>
+    )}
+    <article class="prose rp__txt"><slot /></article>
+  </div>
+</section>
+
+<script>
+  // the H2 being read is marked in the list (as the Sell posts' panel)
+  const init = () => {
+    const nav = document.querySelector<HTMLElement>('[data-rp]:not([data-on])');
+    if (!nav) return;
+    nav.dataset.on = '1';
+    const items = [...nav.querySelectorAll<HTMLAnchorElement>('[data-rp-to]')];
+    const heads = items.map((a) => document.getElementById(a.dataset.rpTo ?? '')).filter(Boolean) as HTMLElement[];
+    const mark = () => {
+      const y = window.innerHeight * 0.3;
+      let cur = 0;
+      heads.forEach((h, i) => { if (h.getBoundingClientRect().top < y) cur = i; });
+      items.forEach((a, i) => a.classList.toggle('on', i === cur));
+    };
+    addEventListener('scroll', mark, { passive: true });
+    mark();
+  };
+  init();
+</script>
+
+<style>
+  .rp { background: var(--paper-2); overflow-x: clip; }
+  .rp__in { display: grid; gap: var(--s5); padding-block: var(--s5) var(--s7); }
+  .rp__txt { min-width: 0; background: var(--paper); padding: 24px 16px; }
+  .rp__side { display: contents; }
+  .rp__side nav { display: none; }
+  .rp__extra { order: 2; background: var(--paper); padding: 20px 16px; }
+  @media (min-width: 1000px) {
+    .rp__in { grid-template-columns: 260px minmax(0, 1fr); column-gap: var(--s6); padding-block: var(--s7); }
+    /* a long list (the privacy policy) scrolls inside the panel, so every item stays reachable */
+    .rp__side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: var(--s5); align-self: start;
+      max-height: calc(100vh - var(--s5) - 24px); overflow-y: auto; overscroll-behavior: contain;
+      padding: 16px; background: var(--paper); border-right: 1px solid var(--line-soft); transition: top .25s ease; }
+    .rp__side nav { display: block; }
+    .rp__extra { order: 0; padding: 14px 0 0; border-top: 1px solid var(--line-soft); }
+    .rp__txt { padding: 48px 56px; }
+    .rp__txt > :global(*) { max-width: 70ch; }
+    /* nothing for the panel: the text alone, centred */
+    .rp__in--solo { grid-template-columns: minmax(0, 960px); justify-content: center; }
+  }
+  /* never under the site header (as the Sell panel) */
+  :global(html.hdr-up) .rp__side { top: calc(var(--hdr-h, 88px) + 12px); max-height: calc(100vh - var(--hdr-h, 88px) - 36px); }
+  .rp :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
+  @media (prefers-reduced-motion: reduce) { .rp__side { transition: none; } }
+</style>

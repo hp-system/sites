@@ -84,6 +84,8 @@ const pages = defineCollection({
      *  Sell, Services and Company — hero with a photo, cards as a carousel, the dark form, Related and
      *  area carousels. Phones keep George's layout. Pages without it are unchanged. */
     look: z.enum(['wave1']).optional(),
+    /** `company`: the page is the company hub (CompanyHub on desktop), only /about-us; its sub pages on the kit are ordinary info pages */
+    hub: z.enum(['company']).optional(),
     /** Desktop hero photo of a `wave1` page — a watermarked `_1920w.jpg` of ours (+ `_800w`). */
     desk_image: z.string().default(''),
     desk_image_alt: z.string().default(''),

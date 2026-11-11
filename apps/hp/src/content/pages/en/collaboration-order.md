@@ -22,6 +22,8 @@ related:
 toc: false
 old_url: /en/collaboration-order
 needs_content: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 The Declarant henceforth referred to as "ASSISTANT" with full details listed in the table "Partner Details" I declare that I am a legal representative of the company described in the table above and

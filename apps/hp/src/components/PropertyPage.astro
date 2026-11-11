@@ -1177,12 +1177,12 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
          text-transform: uppercase; text-decoration: none; }
   .cta svg { width: 15px; height: 15px; flex: none; }
   .cta:hover { opacity: .88; }
-  .cta--wa { background: none; color: #1faa53; border-color: #1faa53; }
+  .cta--wa { background: none; color: var(--wa-green); border-color: var(--wa-green); }
   .cta--sec { background: none; color: var(--ink); }
   .tel { display: block; text-align: center; font-size: var(--fs-s-1); color: var(--ink-2); margin: 9px 0 0; }
   .tel a { color: inherit; text-decoration: none; }
   .tel__ic { display: none; }
-  .cb-open { border: 0; background: none; padding: 4px 2px; font: inherit; color: var(--brand); cursor: pointer;
+  .cb-open { border: 0; background: none; padding: 4px 2px; font: inherit; color: var(--ink); cursor: pointer;   /* brand blue only in the logo and the focus ring */
              text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
 
   .qf { border-top: 1px solid var(--line-soft); margin-top: var(--s4); padding-top: var(--s3);
@@ -1193,7 +1193,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     font: inherit; font-size: var(--fs-s0); padding: 0 11px; height: 44px; box-sizing: border-box; width: 100%; }
   .qf input:focus-visible, .tf input:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
   .qf__int { margin: 0; font-size: var(--fs-s-1); color: var(--muted); background: var(--paper-2);
-             border: 1px dashed var(--line); padding: 9px 11px; }
+             border: 1px solid var(--line); padding: 9px 11px; }   /* no dashed lines (design canon) */
   .qf button, .tf button { border: 0; background: var(--ink); color: var(--paper); font: inherit;
     font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
     padding: 13px; cursor: pointer; }
@@ -1219,7 +1219,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   .bar__i:last-child { border-inline-end: 0; }
   .bar__go { flex: 1.5; background: var(--ink); color: var(--paper); }
   .bar svg { width: 17px; height: 17px; }
-  .bar__i[href^='https://wa.me'] { color: #1faa53; }
+  .bar__i[href^='https://wa.me'] { color: var(--wa-green); }
   @media (min-width: 900px) { .bar { display: none; } }
   /* Χώρος ώστε η μπάρα να μην κρύβει το τέλος της σελίδας. */
   @media (max-width: 899px) { .prop { padding-bottom: 60px; } }
@@ -1243,7 +1243,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
   /* ═══ ΚΙΝΗΤΟ: ΦΥΛΛΟ «ΚΛΗΣΗ» (#82) ═══ */
   .sheet { margin: auto 0 0; inset-inline: 0; width: 100%; max-width: 100%; box-sizing: border-box; border: 0;
-           border-radius: 14px 14px 0 0; padding: 14px var(--gut) calc(18px + env(safe-area-inset-bottom));
+           border-radius: 0; padding: 14px var(--gut) calc(18px + env(safe-area-inset-bottom));
            background: var(--paper); color: var(--ink); max-height: 92dvh; overflow: auto; }
   .sheet[open] { display: grid; gap: 9px; }
   .sheet::backdrop { background: rgba(10,14,16,.45); }
@@ -1277,7 +1277,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .chip { margin: 0 0 0 6px; padding: 4px 8px; gap: 6px; font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
     .chip svg { width: 11px; height: 11px; }
     .tt__r { align-self: flex-end; gap: 8px; }
-    .tt__r .btn { height: auto; min-height: 0; padding: 4px 8px; gap: 6px; font-size: var(--fs-s-1); letter-spacing: .14em; font-weight: 500; line-height: 1.6;
+    .tt__r .btn { height: auto; min-height: 0; padding: 4px 8px; gap: 6px; font-size: var(--fs-s-1); letter-spacing: .14em; font-weight: 600; line-height: 1.6;
                   border-color: rgba(14,18,20,.30); background: var(--paper); transition: background .2s ease, border-color .2s ease; }
     .tt__r .btn svg { width: 11px; height: 11px; transition: transform .25s ease; }
     .tt__r .btn:hover { opacity: 1; background: var(--paper-2); border-color: var(--ink); }
@@ -1504,7 +1504,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     /* Sergei 03/11: WhatsApp as wide as «Request a tour» */
     .cta--wa { border-color: transparent; align-self: stretch;   /* the green edge shows on hover only (Sergei 03/11) */
                width: 100%; height: 40px; padding: 0 12px; margin: 0; }
-    .cta--wa:hover { background: var(--paper-2); color: #1faa53; border-color: #1faa53; }
+    .cta--wa:hover { background: var(--paper-2); color: var(--wa-green); border-color: var(--wa-green); }
     /* the phone as in the header: icon + number, proportional digits; no «or», no «we call you» */
     .tel__or, .tel__cb { display: none; }
     /* Sergei 03/11: the number is a button shaped like WhatsApp, in the colours of «Send» */
@@ -1681,7 +1681,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
         }).addTo(map);
         L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: exact ? 18 : 14 }).addTo(map);
         // white lines read on the photo; the exact point keeps a dark centre
-        if (exact) L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#0d1114', fillOpacity: .9 }).addTo(map);
+        if (exact) L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#0E1214', fillOpacity: .9 }).addTo(map);
         else L.circle([lat, lng], { radius: Number(pm.dataset.r), color: '#fff', weight: 2, fillColor: '#fff', fillOpacity: .14 }).addTo(map);
       };
       document.head.appendChild(js);

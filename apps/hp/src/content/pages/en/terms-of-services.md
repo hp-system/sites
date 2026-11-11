@@ -18,6 +18,8 @@ related:
 toc: true
 old_url: /en/terms-of-services
 needs_content: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 ## Conditions Of Use & Provision Of Services Halkidiki Properties

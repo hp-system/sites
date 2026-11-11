@@ -38,6 +38,8 @@ cards:
   width: 800
   height: 500
 contact_card: false
+# On the kit (D-20261110-SS-1, Sergei 2026-11-11 «все остальное да»)
+look: wave1
 ---
 
 Halkidiki Properties is a group of people who are all committed to one another and their clients. We work together, always motivated by the desire for success, which we share with each other — in remote as well as on-site jobs.

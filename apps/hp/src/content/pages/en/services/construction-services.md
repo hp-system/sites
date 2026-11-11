@@ -11,21 +11,20 @@ parents:
   path: /en/services
 image: https://media.onsea.gr/properties/ums_7985/detached-house-facade-halkidiki-2982420238_1920w.jpg
 image_alt: Modern stone house with a wooden deck and pool in Halkidiki
+desk_image: https://media.onsea.gr/properties/ums_7985/detached-house-facade-halkidiki-2982420238_1920w.jpg
+desk_image_alt: Modern stone house with a wooden deck and pool in Halkidiki
+# Related: sibling pages the brief's text does not link (Sergei 2026-11-11: no link twice)
 related:
-- label: Real estate services in Halkidiki
-  href: /en/services
-- label: Buyer services
-  href: /en/services/buyer-services
-- label: Seller services
-  href: /en/services/seller-services
 - label: Investor services
   href: /en/services/investor-services
-- label: Construction projects
-  href: /en/construction
-- label: Full property management
-  href: /en/services/buyer-services/full-property-management
-- label: Contact an adviser
-  href: /en/contact
+  text: HRADF tenders, hotels, feasibility studies, ports and marinas.
+  image: /pages/services/4a60a018-1620209624-card.webp
+  image_alt: Lobby of a newly built hotel
+- label: Seller services
+  href: /en/services/seller-services
+  text: Photos, drone video, 360° views, the PEA and ads abroad.
+  image: /pages/services/8840faf0-1624603637-card.webp
+  image_alt: Drone filming a seaside villa with a pool in Halkidiki
 toc: false
 old_url: /en/services/construction-services
 needs_content: false
@@ -80,6 +79,8 @@ catalog:
   url: /en/services/construction-services#constructions-of-concrete-stone-brick-panel
 - name: Environmental Impact Studies (M.P.E.)
   url: /en/services/construction-services#environmental-impact-studies
+# On the kit with its own brief P39 (Sergei 2026-11-11 «Да»)
+look: wave1
 form:
   source: 'Services: construction services'
   title: Ask about these services

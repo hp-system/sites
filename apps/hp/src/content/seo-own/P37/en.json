@@ -1,0 +1,155 @@
+{
+  "id": "P37",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Seller services",
+  "pageType": "service",
+  "path": "/en/services/seller-services",
+  "keyword": "seller services Halkidiki",
+  "titleFocus": "Sellers: how the property is presented and promoted",
+  "title": "Seller Services: Photos, Video, PEA and Ads",
+  "meta": "Seller services in Halkidiki: professional photos and drone video, 360° views, the PEA energy certificate and ads on portals in Greece and abroad.",
+  "h1": "Seller services in Halkidiki",
+  "h2": [
+    "Professional photos and video",
+    "Aerial photos and drone video",
+    "Photorealistic designs and 360° views",
+    "Energy certificate (PEA)",
+    "Advertising in Greece and abroad",
+    "Assign your property online",
+    "Selling with us"
+  ],
+  "faqQuestions": [
+    "Do you photograph my property?",
+    "Can you film my property with a drone?",
+    "Do I need an energy certificate to sell?",
+    "Where do you advertise my property?",
+    "How do I assign my property to you?"
+  ],
+  "faq": [
+    {
+      "q": "Do you photograph my property?",
+      "a": "Yes. A photographer experienced in architectural photography takes professional, high-resolution photos of the interior and the exterior, and we can add a video."
+    },
+    {
+      "q": "Can you film my property with a drone?",
+      "a": "Yes. We take aerial photos and video of the property from different angles and heights, which show the plot, the view and the surroundings."
+    },
+    {
+      "q": "Do I need an energy certificate to sell?",
+      "a": "Yes. A sale of a building over 50 m² in Greece needs an energy performance certificate (PEA). Our inspectors arrange it for you."
+    },
+    {
+      "q": "Where do you advertise my property?",
+      "a": "On property portals in Greece and abroad, several of which reach buyers in many countries, with a listing translated by hand."
+    },
+    {
+      "q": "How do I assign my property to you?",
+      "a": "Register it through our website with its pictures and details. A qualified associate then contacts you to discuss the presentation and the promotion."
+    }
+  ],
+  "intro": "<p>A buyer decides on the photos first. Our seller services in Halkidiki make sure your property is presented at its best and seen by the right buyers: professional photos and video, aerial views, 360° tours, the energy certificate the sale needs and advertising in Greece and abroad.</p>",
+  "body": "<h2>Professional photos and video</h2><p>As a Greek proverb says, one picture is worth a thousand words. The photos of a property have to be professional and in high resolution, taken in the right light by a photographer experienced in architectural photography, so that they show the interior and the exterior at their best. We can go one step further with a video of the property and its surroundings, which shows the house as a visitor would walk through it.</p><h2>Aerial photos and drone video</h2><p>With drone technology we capture high-resolution aerial images of the property from different angles and heights. They show what the ground cannot: the plot, the view, the distance to the sea and the village around it. For a villa, a plot or a house with a large garden, the aerial view is especially useful.</p><h2>Photorealistic designs and 360° views</h2><p>Some properties are best shown before they are finished or changed. Photorealistic designs and three-dimensional 360° views let a buyer walk through the house on a screen, see a renovation that is still on paper or understand the layout of a new build.</p><h2>Energy certificate (PEA)</h2><p>Every sale of a building over 50 m² in Greece needs an energy performance certificate. Our energy inspectors handle the documents, the visit and the certificate, so that it is ready before a buyer appears.</p><h2>Advertising in Greece and abroad</h2><p>With our advertising packages, your property is promoted on property portals in Greece and abroad, several of which reach buyers in many countries. Our company works with many property advertising websites in Greece and abroad. Each listing is translated by hand and presented in full, so that the property looks as good in another language as in Greek, and you can be sure it gets the full benefit of its promotion.</p><h2>Assign your property online</h2><p>You can assign your property through our website. If you have pictures of it and know its details, you register it in a few minutes and can change the price, the description or any other detail later. A qualified associate then contacts you directly to discuss the presentation and the promotion of the property and to answer your questions.</p><p>If you prefer, a simple assignment form gives us the whole task: we promote and advertise the property, suggest it to interested buyers, show it to them and bring the two parties to an agreement. This works for properties for sale and for rent.</p><h2>Selling with us</h2><p>These services are part of how we sell. The whole process, from the first visit and the price to the notary, the documents you need and the three ways to work with us, is on our page for owners who want to sell.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/services/seller-services",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "Service",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Services",
+    "Seller services"
+  ],
+  "heroAlt": "Aerial view of a seafront house with a large garden in Halkidiki",
+  "galleryAltPattern": "",
+  "ogTitle": "Seller Services in Halkidiki – Your Property Seen by the Right Buyers",
+  "anchor": "seller services",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "energy certificate (PEA)",
+      "href": "/en/services/seller-services/energy-efficiency-certificates-pea"
+    },
+    {
+      "anchor": "add your property",
+      "href": "/en/add-your-property"
+    },
+    {
+      "anchor": "sell your property in Halkidiki",
+      "href": "/en/sell"
+    },
+    {
+      "anchor": "real estate services in Halkidiki",
+      "href": "/en/services"
+    }
+  ],
+  "linkedFrom": [
+    "P35 Services hub (sellers panel)",
+    "P67 Energy certificate (PEA)"
+  ],
+  "cta": "Add your property",
+  "ctaHref": "/en/add-your-property",
+  "oldUrls": [
+    "/en/services/seller-services"
+  ],
+  "words": 614,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "No new legal lines (the PEA facts are George's, on P67).",
+  "source": "brief batch-4.json",
+  "photoThemes": [
+    {
+      "after": "Professional photos and video",
+      "tags": [
+        "exterior_facade"
+      ]
+    },
+    {
+      "after": "Aerial photos and drone video",
+      "tags": [
+        "exterior_aerial"
+      ]
+    },
+    {
+      "after": "Photorealistic designs and 360° views",
+      "tags": [
+        "exterior_pool"
+      ]
+    },
+    {
+      "after": "Energy certificate (PEA)",
+      "tags": [
+        "exterior_terrace"
+      ]
+    },
+    {
+      "after": "Advertising in Greece and abroad",
+      "tags": [
+        "view_sea",
+        "view_panoramic"
+      ]
+    },
+    {
+      "after": "Assign your property online",
+      "tags": [
+        "exterior_garden"
+      ]
+    },
+    {
+      "after": "Selling with us",
+      "tags": [
+        "view_beach",
+        "view_sea"
+      ]
+    }
+  ],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

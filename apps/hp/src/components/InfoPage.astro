@@ -213,7 +213,9 @@ const org = {
   areaServed: brand.market.areaServed,
   ...(co.foundedYear ? { foundingDate: String(co.foundedYear) } : {}),
 };
-const crumbs = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: fresh?.h1 ?? d.h1, path: url }];
+const crumbs0 = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: fresh?.h1 ?? d.h1, path: url }];
+// an own brief names its breadcrumb (rule 15, as George's spec pages: «Home > Services»)
+const crumbs = fresh && fresh.breadcrumb?.length === crumbs0.length ? crumbs0.map((c, i) => ({ ...c, name: fresh.breadcrumb[i] })) : crumbs0;
 const jsonLd: unknown[] = [
   {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
@@ -229,11 +231,11 @@ if (d.schema === 'Service') {
       itemListElement: d.catalog.map((c) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: c.name, url: abs(c.url) } })),
     } } : {}),
   });
-} else if (fresh) {
+} else if (fresh && ![fresh.schema].flat().includes('CollectionPage')) {
   jsonLd.push({ '@context': 'https://schema.org', '@type': 'Article', headline: fresh.h1, description: fresh.meta, url: abs(url), inLanguage: lang, author: org, publisher: org });
 } else if (d.schema !== 'FAQPage') {
   jsonLd.push({
-    '@context': 'https://schema.org', '@type': d.schema, name: d.h1, description: d.description, url: abs(url),
+    '@context': 'https://schema.org', '@type': d.schema, name: fresh?.h1 ?? d.h1, description: fresh?.meta ?? d.description, url: abs(url),
     inLanguage: lang, ...(d.schema === 'AboutPage' || d.schema === 'ContactPage' ? { mainEntity: org } : {}),
   });
 }
@@ -282,6 +284,12 @@ if (fresh) {
       h2: keep.map((x) => x.h2.replace(/<[^>]+>/g, '')),
       linksOut: fresh.linksOut.filter((l) => !usedLinks.has(pathKey(l.href))) };
   }
+}
+// Services hub with an own brief (P35, Sergei 2026-11-11 «берем первый вариант»): the sections become the service
+// panels instead of cards — the same match by link, the panel shows the section's H2, text and anchor.
+if (hub) for (const r of roles) {
+  const c = secCards.find((x) => pathKey(x.href) === pathKey(r.href));
+  if (c) r.sec = { h2: c.h2, html: c.html, anchor: c.anchor };
 }
 const mosaicPhotos: (MosaicPhoto | null)[] = [];
 // Fixed photos per post win (Sergei 2026-11-10: every post has a picture «найди в интернете»): CC0
@@ -498,8 +506,8 @@ if (faqItems.length) {
         ))}
       </nav>
       {hub && <p class="w1-d svc-eb">{short}</p>}
-      <h1 class="t-display info-h1">{d.h1}</h1>
-      {d.lead && <p class="info-lead">{d.lead}</p>}
+      <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+      {fresh ? <div class="svc-intro"><SpecText page={fresh} part="intro" lang={lang} /></div> : d.lead && <p class="info-lead">{d.lead}</p>}
       {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
     </header>
     )}
@@ -521,8 +529,13 @@ if (faqItems.length) {
     )}
 
     {/* #106 Services hub, desktop only (phones keep everything below). */}
-    {hub && <ServicesHub lang={lang} roles={roles} faq={faqPage ? { h: faqPage.h1, href: faqPage.path, items: faqPage.faq } : null}
-                         terms={terms} privacy={privacy} contact={contact} />}
+    {hub && (
+      <ServicesHub lang={lang} roles={roles} faq={faqPage ? { h: faqPage.h1, href: faqPage.path, items: faqPage.faq } : null}
+                   terms={terms} privacy={privacy} contact={contact}>
+        {fresh && postsPage && <SpecPosts slot="posts" page={postsPage} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)}
+                                          items={items} sectionLinks={postLinks} cta={null} faqHref={faqPage?.path} />}
+      </ServicesHub>
+    )}
 
     {d.image && (
       <figure class="wrap info-hero">
@@ -544,7 +557,7 @@ if (faqItems.length) {
           </address>
         )}
 
-        <Content />
+        {!(hub && fresh) && <Content />}
 
         {d.widget && <InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} />}
 
@@ -553,7 +566,7 @@ if (faqItems.length) {
             {d.cards.map((c, i) => (
               <li>
                 {c.image && <img src={c.image} alt={c.image_alt || c.title} width={c.width || 800} height={c.height || 500} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />}
-                <h2><a href={c.href}>{c.title}</a></h2>
+                <CT><a href={c.href}>{c.title}</a></CT>
                 <p>{c.text}</p>
               </li>
             ))}

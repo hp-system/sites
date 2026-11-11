@@ -5,10 +5,8 @@
 // text, and the link with its exact spec anchor (rule 15). The photo links there too (aria-hidden, no tab
 // stop), so the whole top of the card clicks; the text stays selectable.
 // The cards come in the brief's H2 order (rule 8 checks the outline order).
-// Fold (Sergei 2026-11-11): the card keeps one fixed size; every paragraph and list item is one line until the
-// pointer (or focus, or a tap) opens it, quickly and smoothly; the others close and move, the space never grows.
-// The space = every part closed + the tallest opening, measured in the browser. The whole text stays in the
-// HTML; without the script everything is open.
+// The text folds in a fixed space (FoldText, Sergei 2026-11-11): the card keeps one size.
+import FoldText from './FoldText.astro';
 interface Props {
   /** dark: the page's stand-out section (black, as the fact tiles); ask: the decorative beige «?» beside the H2 */
   cards: { h2: string; html: string; href: string; anchor: string; img?: string; alt?: string; w?: number; h?: number; dark?: boolean; ask?: boolean }[];
@@ -24,54 +22,13 @@ const { cards } = Astro.props;
         </a>
       )}
       <div class="sc__b">
-        <div class="sc__hd"><h2 set:html={c.h2} />{c.ask && <span class="sc__q" aria-hidden="true">?</span>}</div>
-        <div class="sc__tx" set:html={c.html} />
+        <div class="sc__hd"><h2 set:html={c.h2} />{c.ask && <span class="sc__q" aria-hidden="true"></span>}</div>
+        <FoldText html={c.html} dark={c.dark} />
         <p class="sc__go"><a href={c.href}>{c.anchor}</a></p>
       </div>
     </li>
   ))}
 </ul>
-
-<script>
-  const fold = (tx: HTMLElement) => {
-    const parts = [...tx.querySelectorAll<HTMLElement>(':scope > p, :scope > ul > li')];
-    if (parts.length < 2) return;
-    tx.classList.add('is-fold');
-    // read every part open (no paint in between), then fold: closed = its first line (a list row: border, top
-    // padding, one line; its bottom padding becomes a margin outside the clip, so no half line shows)
-    const measure = () => {
-      tx.style.height = '';
-      tx.classList.add('is-measure');
-      const gap = parseFloat(getComputedStyle(tx).getPropertyValue('--s2')) || 0;
-      let shut = 0, grow = 0;
-      for (const p of parts) {
-        const cs = getComputedStyle(p);
-        const li = p.tagName === 'LI';
-        const one = parseFloat(cs.lineHeight) + (li ? parseFloat(cs.paddingTop) + parseFloat(cs.borderTopWidth) : 0);
-        const full = p.offsetHeight;
-        p.style.setProperty('--one', `${one}px`); p.style.setProperty('--full', `${full}px`);
-        shut += one + (li ? gap : parseFloat(cs.marginBottom)); grow = Math.max(grow, full - one);
-      }
-      for (const ul of tx.querySelectorAll<HTMLElement>(':scope > ul')) shut += parseFloat(getComputedStyle(ul).marginBottom);
-      tx.classList.remove('is-measure');
-      tx.style.height = `${Math.ceil(shut + grow)}px`;
-    };
-    const open = (p: HTMLElement) => parts.forEach((x) => x.classList.toggle('is-open', x === p));
-    parts.forEach((p) => {
-      p.tabIndex = 0;
-      p.addEventListener('pointerenter', () => open(p));
-      p.addEventListener('focus', () => open(p));
-      p.addEventListener('click', () => open(p));
-    });
-    tx.addEventListener('pointerleave', () => { if (!tx.contains(document.activeElement)) open(parts[0]); });
-    open(parts[0]);
-    measure();
-    let t = 0;
-    addEventListener('resize', () => { clearTimeout(t); t = window.setTimeout(measure, 150); });
-    document.fonts?.ready.then(measure);
-  };
-  document.querySelectorAll<HTMLElement>('.sc__tx:not([data-on])').forEach((tx) => { tx.dataset.on = '1'; fold(tx); });
-</script>
 
 <style>
   .sc { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
@@ -89,44 +46,17 @@ const { cards } = Astro.props;
   .sc__c:hover .sc__ph img { transform: scale(1.03); }
   .sc__b { display: flex; flex-direction: column; gap: var(--s3); padding: 28px; flex: 1; }
   .sc__b h2 { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; color: var(--ink); }
-  .sc__tx { flex: none; }
-  /* folded: one line each, the open part at its full height; the space is fixed by the script */
-  .sc__tx.is-fold { overflow: hidden; }
-  .sc__tx.is-fold > :global(p), .sc__tx.is-fold > :global(ul) > :global(li) { max-height: var(--one); overflow: hidden; cursor: pointer;
-    transition: max-height .26s cubic-bezier(.2,.7,.2,1); outline-offset: 2px;
-    -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 70%, transparent); }
-  /* a list row fades before its number column, the number stays whole */
-  .sc__tx.is-fold > :global(ul) > :global(li:not(.is-open)) { --m: linear-gradient(90deg, #000 calc(100% - 140px), transparent calc(100% - 48px), #000 calc(100% - 40px));
-    -webkit-mask-image: var(--m); mask-image: var(--m); }
-  .sc__tx.is-fold > :global(p.is-open), .sc__tx.is-fold > :global(ul) > :global(li.is-open) { max-height: var(--full); cursor: auto;
-    -webkit-mask-image: none; mask-image: none; }
-  .sc__tx.is-fold > :global(ul) > :global(li) { transition: max-height .26s cubic-bezier(.2,.7,.2,1), padding .26s cubic-bezier(.2,.7,.2,1), margin .26s cubic-bezier(.2,.7,.2,1); }
-  .sc__tx.is-fold > :global(ul) > :global(li:not(.is-open)) { padding-bottom: 0; margin-bottom: var(--s2); }
-  .sc__tx.is-fold.is-measure > :global(p), .sc__tx.is-fold.is-measure > :global(ul) > :global(li) { max-height: none; padding-bottom: var(--s2); margin-bottom: 0; transition: none; }
-  .sc__tx.is-fold.is-measure > :global(p) { padding-bottom: 0; margin-bottom: var(--s3); }
-  .sc__tx.is-fold.is-measure > :global(p:last-child) { margin-bottom: 0; }
-  /* the number sits at the row's top, so a closed row shows it whole */
-  .sc__tx.is-fold :global(li)::after { top: 0; transform: none; }
-  .sc__tx :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink); }
-  .sc__tx :global(p:last-child) { margin-bottom: 0; }
-  .sc__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; counter-reset: scn; }
-  .sc__tx :global(ul:last-child) { margin-bottom: 0; }
-  .sc__tx :global(li) { position: relative; padding: var(--s2) 40px var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); counter-increment: scn; }
-  /* the posts' big thin outline numbers, smaller here */
-  .sc__tx :global(li)::after { content: counter(scn); position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: var(--fs-s3);
-    font-weight: 300; line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--ink); pointer-events: none; }
-  .sc__tx :global(strong) { color: var(--ink); font-weight: 600; }
   .sc__go { margin: auto 0 0; padding-top: var(--s2); }
   .sc__go a { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 600; text-decoration: underline;
     text-underline-offset: 4px; text-decoration-thickness: 1px; }
   .sc__go a::before { content: '→'; text-decoration: none; display: inline-block; }
   .sc__go a:hover { text-decoration-thickness: 2px; }
   .sc__hd { position: relative; width: fit-content; max-width: calc(100% - 40px); }
+  /* the «?» is drawn by CSS: no stray character in the page text (SEO re-check 2026-11-11) */
+  .sc__q::before { content: "?"; }
   .sc__q { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-58%) rotate(12deg);
     font-size: var(--fs-s4); font-weight: 600; line-height: 1; color: var(--paper-2); pointer-events: none; user-select: none; }
   .sc__c--dark { background: var(--ink-deep); }
-  .sc__c--dark .sc__b h2, .sc__c--dark .sc__tx :global(p), .sc__c--dark .sc__tx :global(li), .sc__c--dark .sc__tx :global(strong), .sc__c--dark .sc__go a { color: var(--paper); }
-  .sc__c--dark .sc__tx :global(li) { border-top: 0; }
-  .sc__c--dark .sc__tx :global(li)::after { -webkit-text-stroke-color: var(--paper); }
-  @media (prefers-reduced-motion: reduce) { .sc__c, .sc__ph img, .sc__tx.is-fold > :global(p), .sc__tx.is-fold :global(li) { transition: none; } }
+  .sc__c--dark .sc__b h2, .sc__c--dark .sc__go a { color: var(--paper); }
+  @media (prefers-reduced-motion: reduce) { .sc__c, .sc__ph img { transition: none; } }
 </style>

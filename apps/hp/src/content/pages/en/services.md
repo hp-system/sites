@@ -35,6 +35,13 @@ cards:
   image_alt: Advisers showing a villa in Halkidiki to a couple of buyers
   width: 800
   height: 500
+- title: Full property management
+  href: /en/services/buyer-services/full-property-management
+  text: Tenants and rent collection, maintenance and repairs, and regular inspections while you are away.
+  image: https://media.onsea.gr/properties/ums_4494/detached-house-garden-halkidiki-2980293835_800w.jpg
+  image_alt: Well-kept garden with palm trees around a house in Halkidiki
+  width: 800
+  height: 533
 - title: Seller services
   href: /en/services/seller-services
   text: Professional photography and drone videos, 360 views, energy certificates (PEA) and ad packages for portals worldwide.

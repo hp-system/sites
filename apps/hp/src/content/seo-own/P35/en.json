@@ -1,0 +1,123 @@
+{
+  "id": "P35",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Services",
+  "pageType": "hub",
+  "path": "/en/services",
+  "keyword": "real estate services in Halkidiki",
+  "titleFocus": "Hub: every real estate service in Halkidiki from one team",
+  "title": "Real Estate Services in Halkidiki",
+  "meta": "Real estate services in Halkidiki from one team: viewing trips, legal checks, property management, energy certificates, construction and investor support.",
+  "h1": "Real estate services in Halkidiki",
+  "h2": [
+    "Services for buyers",
+    "Property management in Halkidiki",
+    "Services for sellers",
+    "Services for investors",
+    "Construction services",
+    "Construction projects",
+    "One team for the whole property",
+    "Where to start"
+  ],
+  "faqQuestions": [
+    "Do you offer property management in Halkidiki?",
+    "What is a PEA energy certificate and when do I need one?",
+    "Can you help me if I buy from abroad?",
+    "Do you build homes in Halkidiki?",
+    "How much do your services cost?"
+  ],
+  "faq": [
+    {
+      "q": "Do you offer property management in Halkidiki?",
+      "a": "Yes. Our full property management covers the marketing of the property, tenants and rent collection, maintenance and repairs, and regular inspections, for owners who live in Greece or abroad."
+    },
+    {
+      "q": "What is a PEA energy certificate and when do I need one?",
+      "a": "The PEA is the energy performance certificate of a building in Greece. You need it to sell or to rent a home. A registered energy inspector issues it after a visit; we arrange it for our sellers."
+    },
+    {
+      "q": "Can you help me if I buy from abroad?",
+      "a": "Yes. We can show you properties by video call, check them for you and negotiate on your behalf, and we coordinate the lawyer and the notary until the contract is signed."
+    },
+    {
+      "q": "Do you build homes in Halkidiki?",
+      "a": "Yes. Our engineers handle the studies, the building licence and the construction of homes, pools and renovations, with live video reports from the site and a 10-year construction warranty."
+    },
+    {
+      "q": "How much do your services cost?",
+      "a": "Each service is priced on its own and agreed with you in writing before we start. Tell us what you need and we send you an offer."
+    }
+  ],
+  "intro": "<p>Buying, selling, investing or building in Halkidiki touches many professions. Our real estate services in Halkidiki bring them together: advisers, engineers, lawyers and accountants who work as one team from our office next to Thessaloniki airport. Choose your service below, or talk to us and we point you to the right person.</p>",
+  "body": "<h2>Services for buyers</h2><p>From the first enquiry to the keys, and after. For buyers we organise:</p><ul><li><strong>Viewing trip and selection:</strong> we shortlist the properties that match what you are looking for and show them to you in person or by video call.</li><li><strong>Negotiation:</strong> we negotiate the price and the terms with the seller on your behalf.</li><li><strong>Checks before you sign:</strong> an appraisal of the property and a legal and accounting audit.</li><li><strong>Paperwork:</strong> translations and interpreting, and the set-up of a company when you buy through one.</li></ul><h2>Property management in Halkidiki</h2><p>If you live abroad for most of the year, we look after your home in Halkidiki while you are away:</p><ul><li><strong>Tenants:</strong> marketing of the property, tenant screening and rent collection.</li><li><strong>Upkeep:</strong> maintenance and repairs when they are needed.</li><li><strong>Inspections:</strong> regular visits to the property.</li></ul><p>You decide with us what we manage and how you want to be kept informed.</p><h2>Services for sellers</h2><p>When you sell, the way your property is presented decides who sees it. For sellers we provide:</p><ul><li><strong>Photos and video:</strong> professional photography, aerial photos and drone video, photorealistic renders and 360° views.</li><li><strong>Energy certificate (PEA):</strong> the energy performance certificate that a sale or a rental in Greece requires.</li><li><strong>Advertising:</strong> ad packages on property portals in Greece and abroad, with a manual translation of the listing.</li></ul><h2>Services for investors</h2><p>For investment projects that generate a stable income we support:</p><ul><li><strong>HRADF tenders:</strong> gathering, managing and submitting the documents for the tenders of the Hellenic Republic Asset Development Fund, which sells and leases state-owned property.</li><li><strong>Hotels:</strong> the design and construction of hotels.</li><li><strong>Ports and marinas:</strong> the study, design and supervision of port and marina projects.</li></ul><h2>Construction services</h2><p>Whether you have a finished design or only an idea for your home, our engineers take it from the first study to the keys:</p><ul><li><strong>Studies and licences:</strong> structural and electro-mechanical studies, cost estimates and building licences.</li><li><strong>Building:</strong> bioclimatic homes, swimming pools, renewable energy systems and complete renovations.</li><li><strong>Supervision:</strong> live video reporting from the site and a 10-year construction warranty.</li></ul><h2>Construction projects</h2><p>Our engineers have designed and built homes in Halkidiki, among them Villa Natalia in Sithonia, and renovated houses and villas for their owners. The projects are shown with photos and architectural designs.</p><h2>One team for the whole property</h2><p>A property in Halkidiki touches many professions: the search and the viewings, the legal and technical checks, taxes and contracts, advertising when you sell, and design, licences and construction when you build or renovate. At Halkidiki Properties these services work together in one office next to Thessaloniki airport, so you deal with one adviser instead of many separate professionals. We have worked in Northern Greece since 2007.</p><h2>Where to start</h2><p>Talk to us about what you need: the property, the area and your timing. An adviser answers by phone, WhatsApp or video call and puts you in touch with the right specialist in our team.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/services",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "CollectionPage",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Services"
+  ],
+  "heroAlt": "Advisers showing a villa in Halkidiki to buyers",
+  "galleryAltPattern": "",
+  "ogTitle": "Real Estate Services in Halkidiki – One Team Since 2007",
+  "anchor": "real estate services in Halkidiki",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "buyer services",
+      "href": "/en/services/buyer-services"
+    },
+    {
+      "anchor": "full property management",
+      "href": "/en/services/buyer-services/full-property-management"
+    },
+    {
+      "anchor": "seller services",
+      "href": "/en/services/seller-services"
+    },
+    {
+      "anchor": "investor services",
+      "href": "/en/services/investor-services"
+    },
+    {
+      "anchor": "construction services",
+      "href": "/en/services/construction-services"
+    },
+    {
+      "anchor": "construction projects",
+      "href": "/en/construction"
+    },
+    {
+      "anchor": "talk to an adviser",
+      "href": "/en/contact"
+    }
+  ],
+  "linkedFrom": [
+    "header menu Services",
+    "P01 Homepage",
+    "every services page (breadcrumb)"
+  ],
+  "cta": "Talk to an adviser",
+  "ctaHref": "/en/contact",
+  "oldUrls": [
+    "/en/services"
+  ],
+  "words": 685,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "YES — the PEA lines (a sale or a rental in Greece requires it; a registered energy inspector issues it after a visit).",
+  "source": "brief batch-2.json",
+  "photoThemes": [],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

@@ -38,14 +38,20 @@ for (const p of [...posts, null]) {
   if (run.length % 2) run[run.length - 1].wide = true;
   run = [];
 }
+// the same set without its largest (1920w) candidate, for phones; '' when there is nothing to drop
+const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean); const keep = all.filter((x) => !/\s1920w$/.test(x)); return keep.length && keep.length < all.length ? keep.join(', ') : ''; };
 ---
 <div class:list={['sp', carousel && 'sp--car']} data-spc={carousel ? '' : undefined}><div class="sp__grid" tabindex={carousel ? 0 : undefined}>
   {posts.map((p) => (
     <article id={h2Id(p.h2)} class:list={['sp__post', p.wide && 'sp__post--wide', p.dark && 'sp__post--fact', !p.photo && 'sp__post--text']}>
       {p.photo && (
         <div class="sp__ph" style={p.photo.style}>
-          <img src={p.photo.src} srcset={p.photo.srcset} sizes={p.wide ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 760px) 600px, 100vw'}
-               alt={p.photo.alt} width="1920" height="1280" loading="lazy" decoding="async" />
+          {/* photo sizes 2026-11-11: below 760px the phone source has no 1920w candidate (a DPR3 phone took ~550 KB) */}
+          <picture>
+            {phoneSet(p.photo.srcset) && <source media="(max-width: 759px)" srcset={phoneSet(p.photo.srcset)} sizes="100vw" />}
+            <img src={p.photo.src} srcset={p.photo.srcset} sizes={p.wide ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 760px) 600px, 100vw'}
+                 alt={p.photo.alt} width="1920" height="1280" loading="lazy" decoding="async" />
+          </picture>
         </div>
       )}
       <div class="sp__b">
@@ -71,6 +77,7 @@ for (const p of [...posts, null]) {
   .sp__grid { display: grid; gap: 12px; align-items: start; }   /* each post as tall as its text (Sergei 2026-11-10) */
   .sp__post { min-width: 0; display: grid; align-content: start; background: var(--paper); }
   .sp__ph { position: relative; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-2); }
+  .sp__ph picture { display: contents; }
   .sp__ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--focal, 50% 50%);
     transition: transform .6s ease; }
   .sp__post:hover .sp__ph img { transform: scale(1.03); }

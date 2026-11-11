@@ -47,6 +47,23 @@ export function crumbPath(name: string, lang: Lang): string | undefined {
   return undefined;
 }
 
+/** Spec pages with no template of their own: the router opens them in the plain GuidePage (Sergei 08/11). */
+export const GUIDE_IDS = new Set(['P03', 'P19', 'P20', 'P21']);
+
+/**
+ * The spec and own pages the router serves from the spec data itself: the guides (GUIDE_IDS) and the own
+ * pages P22+ (D-20261106-SS-2), each with its URL per language. The sitemap adds the ones that no content
+ * page already lists (SEO crawl 2026-11-11: the guides were live and linked from every page, but missing).
+ */
+export function servedSpecGroups(): { id: string; at: Map<Lang, string> }[] {
+  const groups = new Map<string, Map<Lang, string>>();
+  for (const p of BY_ID.values()) {
+    if (!GUIDE_IDS.has(p.id) && !(Number(p.id.slice(1)) > 21)) continue;
+    (groups.get(p.id) ?? groups.set(p.id, new Map()).get(p.id)!).set(p.lang, p.path);
+  }
+  return [...groups.entries()].map(([id, at]) => ({ id, at }));
+}
+
 /** The same page in another language (P03 falls back to the home page in sr/bg/ro). */
 export function specOf(id: string, lang: Lang): SpecPage | undefined {
   return BY_ID.get(`${id}/${lang}`) ?? (id === 'P03' ? BY_ID.get(`P01/${lang}`) : undefined);

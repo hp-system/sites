@@ -12,6 +12,7 @@
     "preview": "astro preview --port 4330 --host",
     "skeleton": "node scripts/serve-skeleton.mjs",
     "local": "node scripts/serve-skeleton.mjs --real",
+    "seo-crawl": "node scripts/seo-crawl.mjs",
     "seo-check": "node scripts/seo-check.mjs",
     "check": "astro check",
     "check:i18n": "node scripts/check-i18n.mjs",

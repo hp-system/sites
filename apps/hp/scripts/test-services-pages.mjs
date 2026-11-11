@@ -30,7 +30,8 @@ try {
   // #106 desktop hub: every role panel, door and question is in the HTML (switching only shows / hides);
   // the panel photos are the service pages' watermarked heroes; phones keep George's page.
   const panels = [...hub.matchAll(/role="tabpanel"/g)].length;
-  check('/en/services hub: 5 role panels in the HTML', panels === 5, `${panels}`);
+  // 6 since the own brief P35 (2026-11-11): property management got its own panel
+  check('/en/services hub: 6 role panels in the HTML', panels === 6, `${panels}`);
   check('/en/services hub: one H1', (hub.match(/<h1[\s>]/g) ?? []).length === 1, 'h1');
   for (const id of ['ums_4761/land-sea-view-halkidiki-2986326863', 'ums_4494/detached-house-aerial-halkidiki-2980294460', 'ums_7010/detached-house-pool-halkidiki-2974736545']) {
     check(`/en/services hub photo ${id}`, hub.includes(`${id}_800w.jpg 800w`) && hub.includes(`${id}_1920w.jpg 1920w`), 'srcset');
@@ -40,7 +41,8 @@ try {
     check(`/en/services hub links ${s}`, hub.includes(`href="${s}"`), 'door / faq');
   }
   const qs = (hub.match(/<details class="k-faq__q/g) ?? []).length;   // kit FAQ list (#186)
-  check('/en/services hub: FAQ questions in the HTML', qs >= 20, `${qs}`);
+  // the brief's FAQ (P35) replaced George's 20+ questions here; his FAQ page stays linked
+  check('/en/services hub: the brief's FAQ questions in the HTML', qs >= 5, `${qs}`);
   check('/en/services hub: window form posts through the shared form', hub.includes('id="svcPop"') && hub.includes('data-in-pop'), 'dialog');
   check('/en/services phones: George\'s text and cards kept', hub.includes('One team for the whole property') && hub.includes('info-grid w1-m'), 'w1-m');
 

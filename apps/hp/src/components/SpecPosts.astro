@@ -21,6 +21,8 @@ import { prefix, t, type Lang } from '../lib/i18n';
 
 interface Props {
   page: SpecPage; lang: Lang; photos: (MosaicPhoto | null)[]; faqH: string;
+  /** the page with every question (the services hub links George's FAQ page) */
+  faqHref?: string;
   /** a member is signed in: the button goes straight to the add-property form */
   member?: boolean;
   /** another call to action (listings: sign in / register for buyers); null = none. Default: Sell's
@@ -32,7 +34,7 @@ interface Props {
   sectionLinks?: { href: string; text: string }[][];
   cta?: { text: string; href: string; ev: 'member:join_from_list' | 'content:sell' | 'register:info'; gild: boolean; plus?: boolean } | null;   // events from the closed list (B-11)
 }
-const { page, lang, photos, faqH, member = false, items = [] } = Astro.props;
+const { page, lang, photos, faqH, faqHref, member = false, items = [] } = Astro.props;
 const sectionLinks = Astro.props.sectionLinks ?? linksBySection(page);
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
 // the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
@@ -62,7 +64,7 @@ const cta = Astro.props.cta === undefined
     <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang}
                                      sectionLinks={sectionLinks} items={items} self={page.path} /></div>
     {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
-    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
+    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} href={faqHref} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     {cta && <div class="pn__bar">
       {cta && (
         <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>

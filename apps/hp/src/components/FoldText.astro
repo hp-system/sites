@@ -1,0 +1,93 @@
+---
+// A section's text that folds in a fixed space (Sergei 2026-11-11, first on the Sell cards): every paragraph
+// and list row is one line until the pointer (or focus, or a tap) opens it, quickly and smoothly; the others
+// close and move, the space never grows. The space = every part closed + the tallest opening, measured in the
+// browser (again when the box shows or changes width). The whole text stays in the HTML; without the script
+// everything is open. List rows carry the posts' big thin outline numbers.
+// Used by SectionCards (Sell) and the services hub panels.
+interface Props { html: string; dark?: boolean }
+const { html, dark = false } = Astro.props;
+---
+<div class:list={['ft', { 'ft--dark': dark }]} set:html={html} />
+
+<script>
+  const fold = (tx: HTMLElement) => {
+    const parts = [...tx.querySelectorAll<HTMLElement>(':scope > p, :scope > ul > li')];
+    if (parts.length < 2) return;
+    tx.classList.add('is-fold');
+    let w = -1;
+    // read every part open (no paint in between), then fold: closed = its first line (a list row: border, top
+    // padding, one line; its bottom padding becomes a margin outside the clip, so no half line shows)
+    const measure = () => {
+      if (!tx.offsetWidth) return;                       // not shown yet (a hidden panel): measured when it shows
+      w = tx.offsetWidth;
+      tx.style.height = '';
+      tx.classList.add('is-measure');
+      const gap = parseFloat(getComputedStyle(tx).getPropertyValue('--s2')) || 0;
+      let shut = 0, grow = 0;
+      for (const p of parts) {
+        const cs = getComputedStyle(p);
+        const li = p.tagName === 'LI';
+        const one = parseFloat(cs.lineHeight) + (li ? parseFloat(cs.paddingTop) + parseFloat(cs.borderTopWidth) : 0);
+        const full = p.offsetHeight;
+        p.style.setProperty('--one', `${one}px`); p.style.setProperty('--full', `${full}px`);
+        shut += one + (li ? gap : parseFloat(cs.marginBottom)); grow = Math.max(grow, full - one);
+      }
+      for (const ul of tx.querySelectorAll<HTMLElement>(':scope > ul')) shut += parseFloat(getComputedStyle(ul).marginBottom);
+      tx.classList.remove('is-measure');
+      tx.style.height = `${Math.ceil(shut + grow)}px`;
+    };
+    const open = (p: HTMLElement) => parts.forEach((x) => x.classList.toggle('is-open', x === p));
+    parts.forEach((p) => {
+      p.tabIndex = 0;
+      p.addEventListener('pointerenter', () => open(p));
+      p.addEventListener('focus', () => open(p));
+      p.addEventListener('click', () => open(p));
+    });
+    tx.addEventListener('pointerleave', () => { if (!tx.contains(document.activeElement)) open(parts[0]); });
+    open(parts[0]);
+    measure();
+    // only a change of width re-measures (our own height change does not loop)
+    new ResizeObserver(() => { if (tx.offsetWidth !== w) measure(); }).observe(tx);
+    document.fonts?.ready.then(measure);
+  };
+  const init = () => document.querySelectorAll<HTMLElement>('.ft:not([data-on])').forEach((tx) => { tx.dataset.on = '1'; fold(tx); });
+  init();
+  document.addEventListener('hp:swap', init);
+</script>
+
+<style>
+  .ft { flex: none; }
+  .ft :global(p) { margin: 0 0 var(--s3); font-size: var(--fs-s0); line-height: 1.55; color: var(--ink); }
+  .ft :global(p:last-child) { margin-bottom: 0; }
+  .ft :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; counter-reset: ftn; }
+  .ft :global(ul:last-child) { margin-bottom: 0; }
+  .ft :global(li) { position: relative; padding: var(--s2) 40px var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); counter-increment: ftn; }
+  /* the posts' big thin outline numbers, smaller here */
+  .ft :global(li)::after { content: counter(ftn); position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: var(--fs-s3);
+    font-weight: 300; line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--ink); pointer-events: none; }
+  .ft :global(strong) { color: var(--ink); font-weight: 600; }
+
+  /* folded: one line each, the open part at its full height; the space is fixed by the script */
+  .ft.is-fold { overflow: hidden; }
+  .ft.is-fold > :global(p), .ft.is-fold > :global(ul) > :global(li) { max-height: var(--one); overflow: hidden; cursor: pointer;
+    transition: max-height .26s cubic-bezier(.2,.7,.2,1); outline-offset: 2px;
+    -webkit-mask-image: linear-gradient(90deg, #000 70%, transparent); mask-image: linear-gradient(90deg, #000 70%, transparent); }
+  /* a list row fades before its number column, the number stays whole */
+  .ft.is-fold > :global(ul) > :global(li:not(.is-open)) { --m: linear-gradient(90deg, #000 calc(100% - 140px), transparent calc(100% - 48px), #000 calc(100% - 40px));
+    -webkit-mask-image: var(--m); mask-image: var(--m); }
+  .ft.is-fold > :global(p.is-open), .ft.is-fold > :global(ul) > :global(li.is-open) { max-height: var(--full); cursor: auto;
+    -webkit-mask-image: none; mask-image: none; }
+  .ft.is-fold > :global(ul) > :global(li) { transition: max-height .26s cubic-bezier(.2,.7,.2,1), padding .26s cubic-bezier(.2,.7,.2,1), margin .26s cubic-bezier(.2,.7,.2,1); }
+  .ft.is-fold > :global(ul) > :global(li:not(.is-open)) { padding-bottom: 0; margin-bottom: var(--s2); }
+  .ft.is-fold.is-measure > :global(p), .ft.is-fold.is-measure > :global(ul) > :global(li) { max-height: none; padding-bottom: var(--s2); margin-bottom: 0; transition: none; }
+  .ft.is-fold.is-measure > :global(p) { padding-bottom: 0; margin-bottom: var(--s3); }
+  .ft.is-fold.is-measure > :global(p:last-child) { margin-bottom: 0; }
+  /* the number sits at the row's top, so a closed row shows it whole */
+  .ft.is-fold :global(li)::after { top: 0; transform: none; }
+
+  .ft--dark :global(p), .ft--dark :global(li), .ft--dark :global(strong) { color: var(--paper); }
+  .ft--dark :global(li) { border-top: 0; }
+  .ft--dark :global(li)::after { -webkit-text-stroke-color: var(--paper); }
+  @media (prefers-reduced-motion: reduce) { .ft.is-fold > :global(p), .ft.is-fold :global(li) { transition: none; } }
+</style>

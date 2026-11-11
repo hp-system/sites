@@ -18,6 +18,7 @@
 // protections (honeypot, 3-second timer; Origin check + rate limit on the server).
 // ═══════════════════════════════════════════════════════════════════════════
 import FaqSearch from './FaqSearch.astro';
+import FoldText from './FoldText.astro';
 import InfoForm from './InfoForm.astro';
 import WaLink from './WaLink.astro';
 import { brand } from '../brand/index';
@@ -26,12 +27,17 @@ import { findInfoPage } from '../lib/infopages';
 import { pui } from '../lib/property';
 import { prefix, t, type Lang } from '../lib/i18n';
 
-export type Role = { n: string; h: string; lead: string; what: string; href: string; img: string; srcset: string; alt: string; source: string };
+// sec: the SEO section merged with this panel (own brief P35, Sergei 2026-11-11 «берем первый вариант»): its H2,
+// its text (folds in a fixed space) and the link with its exact anchor (rule 15) instead of the page's H1 and lead.
+export type Role = { n: string; h: string; lead: string; what: string; href: string; img: string; srcset: string; alt: string; source: string;
+  sec?: { h2: string; html: string; anchor: string } };
 interface Props {
   lang: Lang; roles: Role[]; terms: string; privacy: string; contact: string;
   faq: { h: string; href: string; items: { q: string; a: string }[] } | null;
 }
 const { lang, roles, terms, privacy, contact, faq } = Astro.props;
+// With an own brief the posts and its FAQ come in this slot, where George's FAQ stood (rule 9: FAQ after the text).
+const posts = Astro.slots.has('posts');
 const tt = (k: string, v?: Record<string, string | number>) => t(lang, k, v);
 
 // The pages behind the doors: in this language if it has them, else the English ones.
@@ -41,14 +47,17 @@ const addUrl = await pageIn('add-your-property');
 const pmUrl = await pageIn('services/buyer-services/full-property-management');
 const build = Math.max(0, roles.findIndex((r) => /\/construction$/.test(r.href)));
 
-// Role icons, in the order of the page's cards (buyer, seller, investor, construction services, projects).
+// Role icons by the page they open (buyer, seller, investor, construction services, projects, property management).
+const ICON_KEYS = [/buyer-services$/, /seller-services$/, /investor-services$/, /construction-services$/, /\/construction$/, /full-property-management$/];
 const ICONS = [
   '<circle cx="15" cy="22" r="7"/><path d="M22 22h16M32 22v6M37 22v4"/>',
   '<path d="M8 38V8M8 10h26v14H8"/><path d="M14 17h14"/>',
   '<path d="M6 38h32"/><path d="M10 34V24M18 34V18M26 34V22M34 34V12"/><path d="M8 18l10-8 8 6 10-10"/>',
   '<path d="M10 38V8h4v30M14 10h22l-4 6"/><path d="M28 16v8M24 24h8v6h-8z"/><path d="M6 38h32"/>',
   '<path d="M6 20L22 7l16 13"/><path d="M10 17v21h24V17"/><path d="M18 38V28h8v10"/>',
+  '<path d="M6 20L22 7l16 13"/><path d="M10 17v21h24V17"/><path d="M16 27l4 4 8-8"/>',
 ];
+const iconOf = (href: string, i: number) => { const k = ICON_KEYS.findIndex((re) => re.test(href)); return ICONS[k >= 0 ? k : i % ICONS.length]; };
 const DOORS = [
   { k: 'book', href: bookUrl, h: tt('svc.book'), p: tt('svc.book_p'), cta: tt('svc.book_cta') },
   { k: 'add', href: addUrl, h: tt('svc.add'), p: tt('svc.add_p'), cta: tt('svc.add_cta') },
@@ -75,14 +84,14 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
       {roles.map((r, i) => (
         <button type="button" class:list={['svc-role', { on: i === 0 }]} role="tab" id={`svcTab${i}`} aria-controls={`svcPanel${i}`}
                 aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-i={i}>
-          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter" aria-hidden="true" set:html={ICONS[i % ICONS.length]}></svg>
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter" aria-hidden="true" set:html={iconOf(r.href, i)}></svg>
           <span>{r.n}</span>
         </button>
       ))}
     </div>
   </section>
 
-  <section class="svc-panels" id="svcPanels">
+  <section class:list={['svc-panels', { 'svc-panels--sec': roles.some((r) => r.sec) }]} id="svcPanels">
     <div class="wrap">
       {roles.map((r, i) => (
         <div class:list={['svc-panel', { on: i === 0 }]} role="tabpanel" id={`svcPanel${i}`} aria-labelledby={`svcTab${i}`} hidden={i !== 0}>
@@ -92,13 +101,26 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
           </picture>
           <div>
             <p class="svc-lbl">{r.n}</p>
-            <h2 class="svc-h">{r.h}</h2>
-            <p class="svc-p">{r.lead}</p>
-            {r.what && <p class="svc-w">{r.what}</p>}
-            <p class="svc-acts">
-              <a class="btn" href={r.href}>{tt('info.more')}<span class="sr-only"> — {r.n}</span></a>
-              <button type="button" class="btnw" data-pop="speak" data-src={r.source}>{tt('svc.talk')}</button>
-            </p>
+            {r.sec ? (
+              <>
+                <h2 class="svc-h" set:html={r.sec.h2} />
+                <div class="svc-ft"><FoldText html={r.sec.html} /></div>
+                <p class="svc-acts svc-acts--sec">
+                  <a class="svc-go" href={r.href}>{r.sec.anchor}</a>
+                  <button type="button" class="btnw" data-pop="speak" data-src={r.source}>{tt('svc.talk')}</button>
+                </p>
+              </>
+            ) : (
+              <>
+                <h2 class="svc-h">{r.h}</h2>
+                <p class="svc-p">{r.lead}</p>
+                {r.what && <p class="svc-w">{r.what}</p>}
+                <p class="svc-acts">
+                  <a class="btn" href={r.href}>{tt('info.more')}<span class="sr-only"> — {r.n}</span></a>
+                  <button type="button" class="btnw" data-pop="speak" data-src={r.source}>{tt('svc.talk')}</button>
+                </p>
+              </>
+            )}
           </div>
         </div>
       ))}
@@ -118,7 +140,7 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     </div>
   </section>
 
-  {faq && <FaqSearch lang={lang} h={faq.h} href={faq.href} items={faq.items} show={FAQ_SHOW} />}
+  {posts ? <slot name="posts" /> : faq && <FaqSearch lang={lang} h={faq.h} href={faq.href} items={faq.items} show={FAQ_SHOW} />}
 
   <section class="svc-tiles">
     <div class="wrap svc-tiles__in">
@@ -199,6 +221,17 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     .svc-panels { padding: 20px 0 36px; }
     .svc-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
     .svc-panel[hidden] { display: none; }
+    /* panels with a section: all stacked in one cell, so the block keeps the tallest one's height and never jumps
+       when the menu moves on; the hidden ones only lose visibility (their text is measured by FoldText) */
+    .svc-panels--sec .wrap { display: grid; }
+    .svc-panels--sec .svc-panel { grid-area: 1 / 1; align-items: start; }
+    .svc-panels--sec .svc-panel[hidden] { display: grid; visibility: hidden; }
+    .svc-ft { margin: 16px 0 0; }
+    .svc-acts--sec { align-items: center; gap: 24px; }
+    .svc-go { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 600; text-decoration: underline;
+      text-underline-offset: 4px; text-decoration-thickness: 1px; }
+    .svc-go::before { content: '→'; text-decoration: none; display: inline-block; }
+    .svc-go:hover { text-decoration-thickness: 2px; }
     .svc-panel.on { animation: svc-in .4s ease both; }
     .svc-panel__img { display: block; overflow: hidden; }
     .svc-panel__img img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }

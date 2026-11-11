@@ -569,7 +569,8 @@ if (faqItems.length) {
     {d.image && (
       <figure class="wrap info-hero">
         {heroSrcset
-          ? <img src={d.image} srcset={heroSrcset} sizes="(max-width: 1280px) 100vw, 1280px" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" />
+          /* photo sizes 2026-11-11: phones (DPR3 x 100vw) took the 1920w file; below 760px they stop at 800w */
+          ? <picture><source media="(max-width: 759px)" srcset={d.image.replace(/_1920w.jpg$/, '_800w.jpg')} /><img src={d.image} srcset={heroSrcset} sizes="(max-width: 1280px) 100vw, 1280px" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" /></picture>
           : <img src={d.image} alt={imageAlt} width="1200" height="600" fetchpriority="high" decoding="async" />}
       </figure>
     )}
@@ -690,6 +691,7 @@ if (faqItems.length) {
   .info-cta-top { margin: var(--s4, 24px) 0 0; }
   .w1-top .info-cta-top .k-act { display: inline-flex; width: auto; padding: 0 28px; }
   .info-hero { margin: 0 auto; }
+  .info-hero picture { display: contents; }
   .info-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; }
 
   .info-grid { display: grid; gap: var(--s7); padding-top: var(--s5); padding-bottom: var(--s7); }

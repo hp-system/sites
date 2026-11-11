@@ -15,6 +15,7 @@ import { brand } from '../brand/index';
 import InfoForm from './InfoForm.astro';
 import { findInfoPage } from '../lib/infopages';
 import { HERO_SHOTS } from '../lib/hero';
+import { cleanSrcSet } from '../lib/photos';
 import { privacyPath } from '../lib/legal';
 import registry from '../data/page-registry.json';
 import SpecPosts from './SpecPosts.astro';
@@ -41,6 +42,9 @@ const siteRoot = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const old = Number(page.id.slice(1)) > 21 ? await findInfoPage(page.path) : null;
 const form = old?.data.form ?? null;
 const image = old?.data.image || HERO_SHOTS[0]?.url || '';
+// photo sizes 2026-11-11: the hero took the full 1920 file on every desktop; it is half the page wide
+const heroSet = /_1920w\.jpg$/.test(image) ? `${image.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${image} 1920w`
+  : image === HERO_SHOTS[0]?.url ? cleanSrcSet(image) : image;
 const imageAlt = page.heroAlt || HERO_SHOTS[0]?.alt.en || page.h1;
 const kidsReg = (registry as { pages: { id: string; parent?: string; status: string; paths?: Record<string, string> }[] }).pages
   .filter((r) => r.parent === page.id && r.status === 'live' && r.paths?.[lang]);
@@ -92,7 +96,7 @@ const jsonLd: unknown[] = [
       {image && (
         /* desktop only: phones get a 1-pixel placeholder and never download the photo */
         <picture class="gp__img">
-          <source media="(min-width: 1024px)" srcset={image} />
+          <source media="(min-width: 1024px)" srcset={heroSet} sizes="(min-width: 1440px) 680px, 47vw" />
           <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" />
         </picture>
       )}

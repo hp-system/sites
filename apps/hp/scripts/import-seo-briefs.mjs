@@ -54,7 +54,7 @@ for (const f of readdirSync(join(HERE, 'seo-briefs')).filter((n) => n.endsWith('
       id: b.id, lang: b.lang, buildOrder: '', priority: '', name: b.page, pageType: b.pageType, path,
       keyword: b.primaryKeyword, titleFocus: b.titleFocus, title: b.title, meta: b.meta, h1: b.h1, h2: b.h2,
       faqQuestions: b.faqQuestions, faq: b.faq, intro: b.intro, body: b.body, listingFilter: '',
-      indexing: 'index', canonical: SITE + path, hreflang: [b.lang], schema: b.schema, breadcrumb: b.breadcrumb,
+      indexing: 'index', canonical: path, hreflang: [b.lang], schema: b.schema, breadcrumb: b.breadcrumb,
       heroAlt: b.heroAlt, galleryAltPattern: '', ogTitle: b.ogTitle, anchor: b.anchor, anchorVariants: [],
       linksOut: b.linksOut, linkedFrom: b.linkedFrom, cta: b.cta, ctaHref: b.ctaHref ?? '', oldUrls: b.oldUrls,
       words: words(b.intro + b.body + b.faq.map((x) => x.a).join(' ')), editorialLine: b.editorialLine ?? '',

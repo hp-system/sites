@@ -50,7 +50,7 @@ const cta = Astro.props.cta === undefined
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
         <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
-        <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true">?</i>}</a></li>)}</ul>
+        <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true"></i>}</a></li>)}</ul>
       </nav>
       {cta && (
         <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>
@@ -95,6 +95,8 @@ const cta = Astro.props.cta === undefined
       margin-block: var(--s7); padding: 16px; background: var(--paper); border-right: 1px solid var(--line-soft); }   /* white as the panel page, so the beige of the current item shows on the beige band */
   }
   /* the posts' beige «?», small, beside the item (Sergei 2026-11-10) */
+  /* the «?» is drawn by CSS: no stray character in the page text (SEO re-check 2026-11-11) */
+  .pn__q::before { content: "?"; }
   .pn__q { margin-left: auto; flex: none; font-style: normal; font-size: var(--fs-s1); font-weight: 600; line-height: 1; letter-spacing: 0;
     color: var(--paper-2); transform: rotate(12deg); }
   :global(.k-side__it:hover) .pn__q, :global(.k-side__it.on) .pn__q { color: var(--paper); }

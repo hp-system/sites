@@ -49,7 +49,7 @@ for (const p of [...posts, null]) {
         </div>
       )}
       <div class="sp__b">
-        <div class="sp__hd"><h2 set:html={p.h2} />{p.ask && <span class="sp__q" aria-hidden="true">?</span>}</div>
+        <div class="sp__hd"><h2 set:html={p.h2} />{p.ask && <span class="sp__q" aria-hidden="true"></span>}</div>
         <div class="sp__tx" set:html={p.rest} />
         {p.links.length > 0 && <LinkTiles lang={lang} links={p.links} items={items} self={self} />}
       </div>
@@ -93,6 +93,8 @@ for (const p of [...posts, null]) {
   /* a decorative «?» beside the heading (Sergei 2026-11-10): beige, bolder, tilted; out of the flow, so the
      heading and the post keep their size; aria-hidden, not part of the H2 */
   .sp__hd { position: relative; width: fit-content; max-width: calc(100% - 48px); }
+  /* the «?» is drawn by CSS: no stray character in the page text (SEO re-check 2026-11-11) */
+  .sp__q::before { content: "?"; }
   .sp__q { position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-58%) rotate(12deg);
     font-size: var(--fs-s5); font-weight: 600; line-height: 1; color: var(--paper-2); pointer-events: none; user-select: none; }
   .sp__post--fact { background: var(--ink-deep); }

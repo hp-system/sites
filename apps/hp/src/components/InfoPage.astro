@@ -213,7 +213,9 @@ const org = {
   areaServed: brand.market.areaServed,
   ...(co.foundedYear ? { foundingDate: String(co.foundedYear) } : {}),
 };
-const crumbs = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: fresh?.h1 ?? d.h1, path: url }];
+const crumbs0 = [{ name: brand.name, path: prefix(lang) || '/' }, ...d.parents, { name: fresh?.h1 ?? d.h1, path: url }];
+// an own brief names its breadcrumb (rule 15, as George's spec pages: «Home > Services»)
+const crumbs = fresh && fresh.breadcrumb?.length === crumbs0.length ? crumbs0.map((c, i) => ({ ...c, name: fresh.breadcrumb[i] })) : crumbs0;
 const jsonLd: unknown[] = [
   {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',

@@ -80,7 +80,8 @@ export function checkSpecPage(html, page, cluster, opts = {}) {
   const en = cluster.find((c) => c.lang === 'en');
   if (en && decUrl(p.hreflang['x-default'] ?? '') !== abs(en.path)) bad('hreflang x-default (rule 5)', decUrl(p.hreflang['x-default'] ?? '—'));
   const extra = Object.keys(p.hreflang).filter((l) => l !== 'x-default' && !cluster.some((c) => c.lang === l));
-  if (extra.length) bad('hreflang (rule 5)', `languages outside the cluster: ${extra.join(' ')}`);
+  // an own brief (P22+) is written in English first; its page may already link George's other-language pages
+  if (extra.length && !String(page.source ?? '').startsWith('brief')) bad('hreflang (rule 5)', `languages outside the cluster: ${extra.join(' ')}`);
   if (p.lang !== page.lang) bad('html lang (rule 5)', `${p.lang || '—'} ≠ ${page.lang}`);
   if (page.lang === 'he' && p.dir !== 'rtl') bad('html dir (rule 5)', 'Hebrew page is not dir="rtl"');
   if (opts.mode === 'preview' && !/noindex/.test(p.robots ?? '') ) bad('robots (preview must be noindex)', p.robots ?? '—');

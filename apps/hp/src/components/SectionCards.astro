@@ -22,7 +22,7 @@ const { cards } = Astro.props;
         </a>
       )}
       <div class="sc__b">
-        <div class="sc__hd"><h2 set:html={c.h2} />{c.ask && <span class="sc__q" aria-hidden="true">?</span>}</div>
+        <div class="sc__hd"><h2 set:html={c.h2} />{c.ask && <span class="sc__q" aria-hidden="true"></span>}</div>
         <FoldText html={c.html} dark={c.dark} />
         <p class="sc__go"><a href={c.href}>{c.anchor}</a></p>
       </div>
@@ -52,6 +52,8 @@ const { cards } = Astro.props;
   .sc__go a::before { content: '→'; text-decoration: none; display: inline-block; }
   .sc__go a:hover { text-decoration-thickness: 2px; }
   .sc__hd { position: relative; width: fit-content; max-width: calc(100% - 40px); }
+  /* the «?» is drawn by CSS: no stray character in the page text (SEO re-check 2026-11-11) */
+  .sc__q::before { content: "?"; }
   .sc__q { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-58%) rotate(12deg);
     font-size: var(--fs-s4); font-weight: 600; line-height: 1; color: var(--paper-2); pointer-events: none; user-select: none; }
   .sc__c--dark { background: var(--ink-deep); }

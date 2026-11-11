@@ -37,7 +37,7 @@ import ArticlePage from '../components/ArticlePage.astro';
 import ArticleListPage from '../components/ArticleListPage.astro';
 import InfoPageView from '../components/InfoPage.astro';
 import GuidePage from '../components/GuidePage.astro';
-import { specByPath } from '../lib/seo-pages';
+import { specByPath, GUIDE_IDS } from '../lib/seo-pages';
 import { findInfoPage, EN_MOVED, type InfoPage } from '../lib/infopages';
 import { findArticle, isCategory, categoryUrl, inCategory, PER_PAGE, type Article } from '../lib/articles';
 import { PAGE_KEYS, TRANSLATED_SLUG, pageContent, pageExists, pageLangs, contentUrl, type PageKey } from '../lib/pages';
@@ -312,7 +312,7 @@ if (pageKey && !content) notFound = true;
 //    έγκυρες (soft 404). Φιλική σελίδα, αυστηρός κωδικός.
 // Sergei 08/11: a spec content page with no template yet (P03, P19, P20, P21) opens in the plain
 // GuidePage instead of a 404 — George's text, every language the spec has.
-const GUIDE_IDS = new Set(['P03', 'P19', 'P20', 'P21']);
+// GUIDE_IDS: lib/seo-pages (the sitemap lists the same pages)
 // Own pages P22+ (approved briefs, scripts/import-seo-briefs.mjs) take their URL over the old
 // page there (D-20261106-SS-2: no old texts), in the same plain template as the guides.
 const atPath = specByPath(Astro.url.pathname);

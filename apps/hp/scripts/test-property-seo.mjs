@@ -21,9 +21,10 @@ try {
   const meta = dec(g(en, /name="description" content="([^"]*)"/));
   check('10014 meta (sheet 4), ≤ 160', meta.startsWith('Apartment of 64 m² for sale in Aristotelis, Halkidiki, Greece.') && meta.includes('5 bedrooms')
     && meta.includes('Price €114,000.') && meta.endsWith('See photos and book a viewing.') && [...meta].length <= 160, meta);
-  // the stub has no photos: the cover alt is checked when there is a share image
+  // the stub has no photos: the cover alt is checked when the property has a photo of its own (without one, the
+  // page shares the home's photo with that photo's alt — Base default since the SEO crawl of 2026-11-11)
   const ogAlt = dec(g(en, /og:image:alt" content="([^"]*)"/));
-  check('10014 cover alt (sheet 4)', !en.includes('og:image"') || ogAlt.startsWith('Apartment in Aristotelis, Halkidiki'), ogAlt || 'no share image (stub)');
+  check('10014 cover alt (sheet 4)', !/class="cell"/.test(en) || ogAlt.startsWith('Apartment in Aristotelis, Halkidiki'), ogAlt || 'no share image (stub)');
   const a = anchors(en);
   for (const id of ['P05', 'P14', 'P02', 'P03']) {
     const sp = spec(id, 'en');

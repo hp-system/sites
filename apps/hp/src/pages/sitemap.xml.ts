@@ -30,6 +30,7 @@ import { isProd, ORIGIN, BUILD_DAY } from '../lib/seo';
 import { AREA_PAGES, areaPath } from '../content/areas/en';
 import { CATEGORIES, allArticles, articleUrl, categoryUrl, inCategory } from '../lib/articles';
 import { allInfoPages, infoLastmod } from '../lib/infopages';
+import { servedSpecGroups } from '../lib/seo-pages';
 
 export const prerender = false;
 
@@ -185,13 +186,30 @@ async function liveFacets(pages: Page[]): Promise<Page[]> {
   });
 }
 
+/**
+ * Every page, plus the guides and own pages served from the spec data (lib/seo-pages servedSpecGroups)
+ * that no other list has. SEO crawl 2026-11-11: /en/buying-property-in-greece and /en/property-in-greece
+ * are linked from every page and answered 200 + index, but were not here (34 URLs in 9 languages).
+ */
+async function allPages(): Promise<Page[]> {
+  const pages = [...(await liveFacets(PAGES)), ...(await contentPages()), ...(await articlePages()), ...(await propertyPages())].filter(stays);
+  const have = new Set<string>();
+  for (const p of pages) for (const a of p.pathFor ? hreflangsBy(p.pathFor, p.langs) : hreflangs(p.path ?? '/')) have.add(decodeURI(a.href));
+  for (const g of servedSpecGroups()) {
+    if ([...g.at.values()].some((x) => have.has(x))) continue;
+    const page: Page = { pathFor: (l: Lang) => g.at.get(l) ?? [...g.at.values()][0], langs: [...g.at.keys()], lastmod: BUILD_DAY };
+    if (stays(page)) pages.push(page);
+  }
+  return pages;
+}
+
 export const GET: APIRoute = async ({ request, url }) => {
   // Σε προεπισκόπηση δεν υπάρχει sitemap — όχι κρυμμένο, ανύπαρκτο.
   if (!isProd(request, url)) return new Response(null, { status: 404 });
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${[...(await liveFacets(PAGES)), ...(await contentPages()), ...(await articlePages()), ...(await propertyPages())].filter(stays).map(urlBlock).join('\n')}
+${(await allPages()).map(urlBlock).join('\n')}
 </urlset>
 `;
 

@@ -138,7 +138,10 @@ const has = (k: string) => pageExists(k as any);
      μέρη δεν ακουμπούν ΠΟΤΕ, σε κανένα πλάτος. */
   /* Η κεφαλίδα ήταν το ΜΟΝΟ μπλοκ εκτός της στήλης: το λογότυπο ξεκινούσε στα 40
      ενώ ο H1 από κάτω του στα 120. Τώρα μοιράζεται τη γεωμετρία του `.wrap`. */
-  .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 20; color: #fff; }
+  /* Sergei 12/11 (#250): the header's dropdowns opened under page blocks (property map 500–600, sticky
+     bar 30, list head 20). The header sits above every page block; dialogs live in the top layer and the
+     cookie bar (1000) stays above it. */
+  .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 900; color: #fff; }
 
   /* ── ΣΥΜΠΑΓΗΣ ΕΚΔΟΧΗ — για σελίδες ΧΩΡΙΣ φωτογραφία από πίσω ──────────────
      `static` αντί για `absolute`: πιάνει τον χώρο της αντί να κάθεται πάνω στο
@@ -146,7 +149,7 @@ const has = (k: string) => pageExists(k as any);
      απλώνεται «πέρα ως πέρα» (George) επειδή μπαίνει στο ΕΞΩΤΕΡΙΚΟ στοιχείο,
      ενώ το περιεχόμενο μένει στη στήλη των 1200 όπως όλη η σελίδα. */
   .site-header--solid {
-    position: static; color: var(--ink);
+    position: relative; color: var(--ink);   /* relative, not static: a static box ignores z-index (#250) */
     background: var(--paper); border-bottom: 1px solid var(--line-soft);
   }
   /* Το λογότυπο είναι «mono», δηλαδή παίρνει το χρώμα του γονέα — δεν χρειάζεται
@@ -236,7 +239,7 @@ const has = (k: string) => pageExists(k as any);
   /* ── Sergei 03/11: on every page the header leaves when the page scrolls down and comes
         back (solid white, ink text) as soon as it scrolls up; at the top it is itself again ── */
   header.site-header.hdr-pin {
-    position: fixed !important; top: 0; left: 0; right: 0; z-index: 200;   /* above every panel of the pages (the property «Nearby» list had 100+) */
+    position: fixed !important; top: 0; left: 0; right: 0; z-index: 900;   /* above every panel of the pages (the property «Nearby» list has 600), #250 */
     background: var(--paper) !important; color: var(--ink) !important;
     border-bottom: 1px solid var(--line-soft); box-shadow: 0 6px 20px rgba(10,14,16,.06);
     transform: translateY(-100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
@@ -255,7 +258,7 @@ const has = (k: string) => pageExists(k as any);
   // is out of view, so nothing jumps; a static header leaves a spacer of its own height behind.
   const hdr = document.querySelector<HTMLElement>('header.site-header');
   if (hdr) {
-    const staticBox = getComputedStyle(hdr).position === 'static';
+    const staticBox = getComputedStyle(hdr).position !== 'absolute';   // the solid bar is in the flow (relative since #250)
     let spacer: HTMLElement | null = null;
     let h = hdr.offsetHeight, last = window.scrollY, pinned = false, tick = false;
     const busy = () => !!hdr.querySelector('details[open]') || document.querySelector('[data-menu-open]')?.getAttribute('aria-expanded') === 'true';

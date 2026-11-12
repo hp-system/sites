@@ -33,6 +33,7 @@ import { brand } from '../brand/index';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
 import IntroTicker from './IntroTicker.astro';
+import ListCrumb from './ListCrumb.astro';
 import PageBlocks from './PageBlocks.astro';
 import { pageBlocks } from '../lib/list-blocks';
 import { postPhotos } from '../lib/post-photos';
@@ -127,6 +128,11 @@ const crumbLinks = [prefix(lang) || '/', facetUrl(lang), facets.length === 2 ? f
 const crumbs = spec
   ? spec.breadcrumb.map((name, i, a) => ({ name, url: i === a.length - 1 ? undefined : crumbLinks[i] }))
   : null;
+// Without a spec: the brand, then (themed) all properties and the facet names.
+const crumbList = crumbs ?? [
+  { name: brand.name, url: prefix(lang) || '/' },
+  ...(isThemed ? [{ name: ui(lang, 'all'), url: facetUrl(lang) }, ...names.map((n) => ({ name: n }))] : []),
+];
 
 // 🪤 ΤΟ URL ΜΕΣΑ ΣΤΟ JSON-LD ΠΕΡΝΑΕΙ ΑΠΟ `propertyUrl(lang, …)`.
 //    Στην αρχική ήταν σκληροκωδικοποιημένο `/ακινητο/<id>` και δήλωνε ΕΛΛΗΝΙΚΟ
@@ -400,22 +406,7 @@ const tilePhoto = (() => {
         Ακίνητα προς πώληση στη Χαλκιδική» και ΑΜΕΣΩΣ από κάτω ο H1 έλεγε το ίδιο
         ακριβώς — δύο φορές η ίδια φράση, η μία σε αχνό γκρι. Τώρα το τελευταίο
         σκαλί μπαίνει ΜΟΝΟ όταν υπάρχει θέμα, δηλαδή όταν λέει κάτι διαφορετικό. */}
-    {crumbs ? (
-    <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
-      {crumbs.map((c, i) => (<>{i > 0 && <span aria-hidden="true">·</span>}{c.url ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</>))}
-    </nav>
-    ) : (
-    <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
-      <a href={prefix(lang) || '/'}>{brand.name}</a>
-      {isThemed && (
-        <>
-          <span aria-hidden="true">·</span>
-          <a href={facetUrl(lang)}>{ui(lang, 'all')}</a>
-          {names.map((n) => (<><span aria-hidden="true">·</span><span>{n}</span></>))}
-        </>
-      )}
-    </nav>
-    )}
+    <ListCrumb label={t(lang, 'a11y.crumb')} crumbs={crumbList} cls={res.items.length ? 'crumb--top' : undefined} />
 
     {/* ΤΟ ΠΛΗΘΟΣ ΤΕΡΜΑ ΔΕΞΙΑ, ΣΤΗ ΓΡΑΜΜΗ ΤΟΥ ΤΙΤΛΟΥ (George, 30/7: «μπορείς να
         το πας τέρμα δεξιά στη σελίδα, π.χ. πάνω από την ταξινόμηση ή ακόμη πιο
@@ -708,6 +699,7 @@ const tilePhoto = (() => {
         {/* Between the filters and the cards (Sergei 02/11): Sort and Per page, on the right.
             «Showing a–b» was here and was taken out (Sergei 02/11); its text stays in i18n. */}
         <div class="lres">
+          <ListCrumb label={t(lang, 'a11y.crumb')} crumbs={crumbList} cls="crumb--row" />
           <div class="lres__r">
             <details class="lpp lres__d" data-lc data-ck="sort">
               <summary class="ppb">{ui(lang, 'sort')}: <b>{sortLabel[cur]}</b>
@@ -848,9 +840,9 @@ const tilePhoto = (() => {
      ΜΙΚΡΟ μέγεθος και κεφαλαία διαβάζεται σαν ξεθωριασμένο. Το ανέβασα σε
      `--muted` (6,50:1) και 13px, και οι σύνδεσμοι παίρνουν υπογράμμιση στο
      πέρασμα ώστε να φαίνεται ότι είναι σύνδεσμοι. */
-  .crumb { font-size: var(--fs-s-1); color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
-  .crumb a { color: var(--ink-2); text-decoration: none; }
-  .crumb a:hover { text-decoration: underline; }
+  .ltop :global(.crumb), .lres :global(.crumb) { font-size: var(--fs-s-1); color: var(--muted); display: flex; gap: 7px; flex-wrap: wrap; }
+  .ltop :global(.crumb a), .lres :global(.crumb a) { color: var(--ink-2); text-decoration: none; }
+  .ltop :global(.crumb a:hover), .lres :global(.crumb a:hover) { text-decoration: underline; }
   /* Τίτλος αριστερά, πλήθος τέρμα δεξιά, στην ίδια οπτική γραμμή.
      `baseline` και όχι `center`: τα δύο κείμενα κάθονται στην ίδια γραμμή
      γραφής, όσο κι αν διαφέρουν σε μέγεθος. Σε στενή οθόνη το πλήθος πέφτει
@@ -1069,7 +1061,8 @@ const tilePhoto = (() => {
                                   rgba(10,14,16,0) 46%, rgba(10,14,16,.5) 100%);
     }
     .ltop__in { position: relative; width: 100%; padding-top: 0; padding-bottom: 52px; }
-    .ltop .crumb, .ltop .crumb a { color: rgba(255,255,255,.88); }
+    .ltop :global(.crumb), .ltop :global(.crumb a) { color: rgba(255,255,255,.88); }
+    .ltop :global(.crumb--top) { display: none; }   /* #298: on desktop it sits in the Sort / Per page row */
     .ltop .head { margin-top: 6px; }
     .ltop .head__h {
       font-size: var(--fs-s3); font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: #fff; max-width: none;
@@ -1369,7 +1362,7 @@ const tilePhoto = (() => {
 
 
     /* ── head row between the filters and the cards (desktop only; phones keep George's tools) ── */
-    .lres { display: flex; justify-content: flex-end; align-items: center; gap: 24px; margin: 0 0 18px; }
+    .lres { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 0 0 18px; }
     .lres__r { display: flex; align-items: center; gap: 28px; }
     .lres__m { min-width: 220px; }
 

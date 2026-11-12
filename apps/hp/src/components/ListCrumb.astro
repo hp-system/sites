@@ -1,0 +1,10 @@
+---
+// The list page breadcrumb, drawn in two places by ListingPage.astro: on the hero (phones, and desktop
+// when nothing matches) and in the Sort / Per page row on desktop (#298, Sergei 2026-11-12: «переместить
+// хлебные крошки вниз на уровень где sort и per page»). Only one of the two is visible at any width.
+interface Props { label: string; crumbs: { name: string; url?: string }[]; cls?: string }
+const { label, crumbs, cls } = Astro.props;
+---
+<nav class:list={['crumb', cls]} aria-label={label}>
+  {crumbs.map((c, i) => (<>{i > 0 && <span aria-hidden="true">·</span>}{c.url ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</>))}
+</nav>

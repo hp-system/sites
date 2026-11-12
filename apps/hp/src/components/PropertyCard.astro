@@ -95,12 +95,14 @@ const backTo = `${prefix(lang)}/login?next=${encodeURIComponent(Astro.url.pathna
               ⚠️ Με `?per=48` γίνονταν 144 εικόνες ≈ 20 MB σε μία σελίδα.
               ✅ Μηδέν κόστος στην αναζήτηση: οι 2η/3η έχουν ήδη `alt=''`.
               Κατεβαίνουν πλέον με το πρώτο άγγιγμα της ράγας — δες το script πιο κάτω. */}
+          {/* SEO spec rule 14 (08/11): every photo carries its alt; the slide's aria-hidden keeps screen readers on the first.
+              #270: this note sat inside the tag as a bare JS comment and was printed into the HTML as stray attributes */}
           <img src={i === 0 ? marked(s.url, 800) : undefined}
                srcset={i === 0 ? cardSrcSet(s.url) : undefined}
                data-src={i === 0 ? undefined : marked(s.url, 800)}
                data-srcset={i === 0 ? undefined : cardSrcSet(s.url)}
                sizes="(min-width: 1360px) 383px, (min-width: 760px) calc((100vw - 132px) / 3), calc(100vw - 40px)"
-               alt={altOf(s, lang, title)} width="800" height="533"   /* SEO spec rule 14 (08/11): every photo carries its alt; the slide's aria-hidden keeps screen readers on the first */
+               alt={altOf(s, lang, title)} width="800" height="533"
                loading={eager && i === 0 ? 'eager' : 'lazy'} decoding="async" />
         </a>
       ))}

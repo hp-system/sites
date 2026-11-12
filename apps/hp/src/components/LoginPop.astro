@@ -420,7 +420,13 @@ const JS_T = {
     $('go').textContent = (L as Record<string, string>)[`go_${role}`];
     show('p0', 'fn');   // a pick goes on at once (Sergei 2026-11-11: «кнопка продолжить не нужна»)
   }));
-  $('back0').addEventListener('click', () => { clear('e0'); show('pr'); });
+  // Sergei 2026-11-12: «при нажатии на back должно все анулироваться» — Back takes every red mark and error away; what
+  // was typed stays (name, surname and phone are the same person whatever the role; no field belongs to one role)
+  const unmark = () => document.querySelectorAll<HTMLElement>('.is-bad').forEach((el) => {
+    el.classList.remove('is-bad');
+    (el.matches('input') ? el : el.querySelector('input'))?.removeAttribute('aria-invalid');
+  });
+  $('back0').addEventListener('click', () => { clear('e0'); unmark(); show('pr'); });
 
   // Esc closes the popup (focus is inside this frame, so the dialog does not see the key).
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !e.defaultPrevented) tell({ type: 'hp-login-close' }); });
@@ -468,7 +474,7 @@ const JS_T = {
     phone = p.e164;
     show('p1', 'em');
   });
-  $('back1').addEventListener('click', () => { clear('e1'); show('p0', 'fn'); });
+  $('back1').addEventListener('click', () => { clear('e1'); unmark(); show('p0', 'fn'); });
 
   // ── 2: email → code
   ($('f1') as HTMLFormElement).addEventListener('submit', async (ev) => {

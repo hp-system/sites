@@ -228,7 +228,9 @@ export const FACETS: Facet[] = [
 
 /** #160 Spec rule 10: a listing page is indexed only with this many live listings, counted on the
  *  anonymous set without the country rule, so Google sees the same answer from every country. */
-export const MIN_LIVE: Record<string, number> = { apartments: 12, affordable: 12 };
+// houses (detached houses) never: it overlaps George's Houses (P04) and Villas (P07) — Sergei 2026-11-12,
+// «1 и 2 согласен»; it stays a filter of the list, noindex and out of the sitemap.
+export const MIN_LIVE: Record<string, number> = { apartments: 12, affordable: 12, houses: Infinity };
 export const minLive = (keys: string[]): number => Math.max(6, ...keys.map((k) => MIN_LIVE[k] ?? 6));
 
 /** Οι ΜΟΝΟΙ συνδυασμοί δύο θεμάτων που παίρνουν δική τους σελίδα. */

@@ -308,7 +308,8 @@
           "q": "Can a house qualify for the Golden Visa?",
           "a": "As of November 2026, one home of at least 120 m² bought for €400,000 or more in Halkidiki can qualify, if it is not let for short stays."
         }
-      ]
+      ],
+      "foldedInto": "P04 Houses / P07 Villas (withdrawn 2026-11-12, Sergei: «1 и 2 согласен»: the detached houses list overlaps George's P04 and P07; it stays a filter, noindex)"
     }
   ]
 }

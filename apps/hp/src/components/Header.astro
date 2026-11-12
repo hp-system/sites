@@ -38,10 +38,20 @@ const LABEL: Record<string, string> = {
   P03: 'Property in Greece', P19: 'Buying property in Greece', P22: 'Hotels & commercial', P04: 'Houses',
   P23: 'Pre-published', P10: 'Affordable, up to €150,000',
 };
+// Sergei 12/11 (#250): «слишком много выбора, юзер будет теряться» — each dropdown keeps the main
+// choices (Buy had 12). The pages left out stay in the sitemap and are reached from page blocks,
+// collections and the footer: Maisonettes, Hotels & commercial, Affordable, Property in Greece,
+// Golden Visa · Investor services, Construction projects, For agents · Philosophy, Values, Social
+// responsibility. A section not listed here keeps all its pages.
+const MENU_KEEP: Record<string, Set<string>> = {
+  buy: new Set(['P02', 'P04', 'P05', 'P07', 'P08', 'P09', 'P19']),
+  services: new Set(['P35', 'P36', 'P37', 'P40', 'P39']),
+  about: new Set(['P43', 'P44', 'P48', 'P50']),
+};
 const menu7 = lang === 'en'
   ? SECTIONS.map((sec) => ({
       key: sec, label: SECTION_LABEL[sec],
-      items: menuOf(sec).filter((r) => !NOT_BUILT.has(r.id))
+      items: menuOf(sec).filter((r) => !NOT_BUILT.has(r.id) && (!MENU_KEEP[sec] || MENU_KEEP[sec].has(r.id)))
         .map((r) => ({ href: pathOf(r.id, 'en') ?? '#', label: LABEL[r.id] ?? r.name.replace(/\s*\(.*\)\s*$/, '') })),
     })).filter((s) => s.items.length)
   : null;

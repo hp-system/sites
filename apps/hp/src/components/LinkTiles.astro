@@ -56,6 +56,8 @@ const muniOf = (href: string) => munis.find((m) => pathOf(m.href) === pathOf(hre
 type Tile = { href: string; text: string; sub?: string; photo: Photo | null };
 const typeTiles: Tile[] = [], areaTiles: Tile[] = [], text: Link[] = [];
 for (const l of links) {
+  // #275 (Sergei 2026-11-12): under a SEO section only text links — the tiles are the page blocks above the text
+  if (variant === 'section') { text.push(l); continue; }
   const m = muniOf(l.href);
   if (m) { areaTiles.push({ href: l.href, text: l.text, sub: m.fromText, photo: m.photo }); continue; }
   const fs = facetsOf(l.href);

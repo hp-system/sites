@@ -19,6 +19,8 @@ import { cleanSrcSet } from '../lib/photos';
 import { privacyPath } from '../lib/legal';
 import registry from '../data/page-registry.json';
 import SpecPosts from './SpecPosts.astro';
+import PageBlocks from './PageBlocks.astro';
+import { pageBlocks } from '../lib/list-blocks';
 import Areas from './Areas.astro';
 import { FAQ_H } from '../lib/seo-pages';
 import { allProperties, visitorCountry, type SiteProperty } from '../lib/api';
@@ -59,6 +61,9 @@ let items: SiteProperty[] = [];
 try { items = await allProperties(memberToken, visitorCountry(Astro.request)); } catch { items = []; }
 const photos = postPhotos(items as any, (page.body.match(/<h2>/g) ?? []).length, lang);
 const areas = buildAreaTiles(items as any, lang, undefined, 5);
+// #275 (Sergei 2026-11-12): the home-style Collections and «by area» above the text (they were under the form at the
+// bottom); George's links they show leave the sections
+const blocks = pageBlocks(items as any, lang, [], page.linksOut.map((l) => ({ href: l.href, text: l.anchor })), page.path);
 // the page's call in the side panel: the club page asks to register (gold edge, B-11 event), the others call
 // their own page (no gold: it is not a registration)
 const cta = page.ctaHref && page.cta
@@ -101,7 +106,8 @@ const jsonLd: unknown[] = [
         </picture>
       )}
     </header>
-    <SpecPosts page={page} lang={lang} photos={photos} faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={cta} />
+    <PageBlocks lang={lang} cats={blocks.cats} areas={blocks.areas} areasFrom={blocks.areasFrom} />
+    <SpecPosts page={page} lang={lang} photos={photos} faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={cta} drop={blocks.consumed} />
     {kids.length > 0 && (
       <section class="wrap gp__kids" aria-labelledby="gp-kids-h">
         <p data-h id="gp-kids-h" class="gp__label">{page.name}</p>
@@ -113,7 +119,7 @@ const jsonLd: unknown[] = [
         <InfoForm source={form.source} title={form.title || undefined} message={form.message} terms="/en/terms-of-services" privacy={privacyPath(lang)} />
       </section>
     )}
-    {areas.tiles.length > 0 && <Areas lang={lang} items={areas.tiles} from={areas.from} headHref={listUrl(lang)} />}
+    {/* #275: the areas block moved above the text (PageBlocks) */}
   </main>
   <Footer lang={lang} />
 </Base>

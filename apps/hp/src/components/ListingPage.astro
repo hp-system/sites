@@ -32,6 +32,8 @@ import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
+import PageBlocks from './PageBlocks.astro';
+import { pageBlocks } from '../lib/list-blocks';
 import { postPhotos } from '../lib/post-photos';
 import { specByPath, specTitle, FAQ_H } from '../lib/seo-pages';
 import {
@@ -85,6 +87,14 @@ const pathFor = (l: Lang) => facetUrl(l, ...facets.map((f) => f.key));
 
 // ── #160 GEORGE'S SPEC (05/11): this URL's title, meta, H1, texts, FAQ and links, word for word.
 const spec = specByPath(pathFor(lang));
+// #275 (Sergei 2026-11-12): Collections and «by area» for this page, above the SEO text; George's links they show
+// leave the SEO sections (the rest stay there as text)
+const blocks = pageBlocks(items as any, lang, facets.map((f) => f.key), (spec?.linksOut ?? []).map((l) => ({ href: l.href, text: l.anchor })), pathFor(lang));
+const topicF = facets.find((f) => !f.q.municipality);
+const muniF = facets.find((f) => f.q.municipality);
+const minFrom = (xs: { from: number }[]) => { const v = xs.map((x) => x.from).filter(Boolean); return v.length ? Math.min(...v) : 0; };
+const blockCatsSub = muniF && minFrom(blocks.cats) ? `${muniF.name[lang]} · ${t(lang, 'home.from', { price: money(minFrom(blocks.cats), lang) })}` : undefined;
+const blockAreasSub = topicF && !muniF && blocks.areasFrom ? `${topicF.name[lang]} · ${t(lang, 'home.from', { price: money(blocks.areasFrom, lang) })}` : undefined;
 const firstPage = res.page === 1;
 // Spec rule 10: indexed only with ≥ 6 live listings (≥ 12 for apartments / affordable), counted on
 // the anonymous set WITHOUT the country rule — Google must get the same answer from GR and DE.
@@ -811,7 +821,8 @@ const tilePhoto = (() => {
       links out as photo tiles like the home Collections and by-area (anchors word for word, rule 15). Same words, same H2s. */}
   <div data-lswap="spec">{spec && firstPage && (
     <>
-      <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} items={items as any} facets={facets.map((f) => f.key)} />
+      <PageBlocks lang={lang} cats={blocks.cats} areas={blocks.areas} areasFrom={blocks.areasFrom} catsSub={blockCatsSub} areasSub={blockAreasSub} />
+      <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} items={items as any} facets={facets.map((f) => f.key)} drop={blocks.consumed} />
     </>
   )}</div>
   </main>

@@ -1,0 +1,87 @@
+---
+// The two home-style blocks above a page's SEO text (#275, Sergei 2026-11-12): Collections (the property types,
+// for this page) on the beige band, then «by area» (the five areas, for this page) on white. Data: lib/list-blocks.
+// SEO (George's rule 15): the caption link is the tile's only link text — his exact anchor where the tile is one of
+// his links — stretched over the tile; «from €» sits outside the link. The rail script is LinkTiles' (data-lt-rail).
+import type { BlockTile } from '../lib/list-blocks';
+import { marked, markedSrcSetSmall, altOf } from '../lib/photos';
+import { t, listUrl, type Lang } from '../lib/i18n';
+import { money } from '../lib/format';
+
+interface Props {
+  lang: Lang; cats: BlockTile[]; areas: BlockTile[]; areasFrom: number;
+  /** the line under the Collections heading (default: the home's) */
+  catsSub?: string;
+  /** the line under the «by area» heading (default: the home's «from €») */
+  areasSub?: string;
+}
+const { lang, cats, areas, areasFrom, catsSub, areasSub } = Astro.props;
+const rail = `pb${Math.random().toString(36).slice(2, 8)}`;
+const pages = Math.ceil(cats.length / 4);
+---
+{cats.length > 0 && (
+  <section class="pb pb--cats" aria-labelledby={`${rail}-c`}>
+    <div class="wrap pb__in">
+      <div class="pb__head">
+        <div>
+          <p data-h id={`${rail}-c`} class="t-h2 pb__h">{t(lang, 'coll.h2')}</p>
+          <p class="pb__sub">{catsSub ?? t(lang, 'home.coll_sub')}</p>
+        </div>
+        {pages > 1 && (
+          <div class="k-dash" role="group" aria-label={t(lang, 'home.pages')} data-lt-dash={rail}>
+            {Array.from({ length: pages }).map((_, i) => (
+              <button type="button" class={i === 0 ? 'on' : undefined} aria-pressed={i === 0 ? 'true' : 'false'}
+                      aria-label={t(lang, 'home.page', { n: i + 1 })}><span></span></button>
+            ))}
+          </div>
+        )}
+      </div>
+      <ul class="k-rail pb__rail" id={rail} data-lt-rail>
+        {cats.map((x) => (
+          <li class="k-tile">
+            {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 4), 80vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+            <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a><span class="k-tile__s">{x.sub}</span></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+{areas.length > 0 && (
+  <section class="pb pb--areas" aria-labelledby={`${rail}-a`}>
+    <div class="wrap pb__in">
+      <div class="pb__head">
+        <div>
+          <h2 data-h id={`${rail}-a`} class="t-h2 pb__h"><a class="pb__ha" href={listUrl(lang)}>{t(lang, 'home.area_h2')}</a></h2>
+          {(areasSub || areasFrom > 0) && <p class="pb__sub">{areasSub ?? t(lang, 'home.area_sub', { price: money(areasFrom, lang) })}</p>}
+        </div>
+      </div>
+      <ul class="k-tiles pb__areas" style={`--n: ${areas.length}`}>
+        {areas.map((x) => (
+          <li class="k-tile">
+            {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 5), 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+            <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a><span class="k-tile__s">{x.sub}</span></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .pb { padding-block: var(--s6); }
+  .pb--cats { background: var(--paper-2); }
+  .pb--areas { background: var(--paper); }
+  .pb__in { display: grid; gap: var(--s4); }
+  .pb__head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s4); }
+  .pb__h { margin: 0; }
+  .pb__sub { margin: var(--s2) 0 0; font-size: var(--fs-s0); color: var(--muted); }
+  .pb__ha { color: inherit; text-decoration: none; }
+  .pb__ha:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .pb__areas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (min-width: 760px) { .pb__areas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .pb__areas { grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); } }
+  .pb__areas :global(.k-tile) { aspect-ratio: 3 / 4; }
+  .pb :global(.k-tile__l) { font-size: var(--fs-s1); line-height: 1.2; }
+  @media (min-width: 1024px) { .pb { padding-block: var(--s7); } }
+</style>

@@ -109,7 +109,8 @@ export function isLuxury(a: any): boolean {
 /** #293 (Sergei 2026-11-12: «detached house + luxury yes = villa»): a villa is a detached house with the luxury flag —
  *  both fields come from the CRM (subcategory, lux_prop). An apartment or maisonette with the flag is luxury, not a villa. */
 export function isVilla(a: any): boolean {
-  return String(a?.subcategory ?? '').toLowerCase().trim() === 'detached house' && isLuxury(a);
+  // #295: a detached house in a complex with the flag is a villa too (a villa in a complex)
+  return ['detached house', 'detached house in a complex'].includes(String(a?.subcategory ?? '').toLowerCase().trim()) && isLuxury(a);
 }
 
 export function cardsPerPage(per: number, withJoinTile: boolean): number {

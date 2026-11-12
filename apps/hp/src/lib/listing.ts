@@ -106,6 +106,12 @@ export function isLuxury(a: any): boolean {
   return a?.lux_prop === true || a?.luxury === true;
 }
 
+/** #293 (Sergei 2026-11-12: «detached house + luxury yes = villa»): a villa is a detached house with the luxury flag —
+ *  both fields come from the CRM (subcategory, lux_prop). An apartment or maisonette with the flag is luxury, not a villa. */
+export function isVilla(a: any): boolean {
+  return String(a?.subcategory ?? '').toLowerCase().trim() === 'detached house' && isLuxury(a);
+}
+
 export function cardsPerPage(per: number, withJoinTile: boolean): number {
   return withJoinTile ? per - 1 : per;
 }
@@ -196,7 +202,8 @@ export const FACETS: Facet[] = [
   //    `/en/halkidiki-villas/` του σημερινού site πήρε **1.893** επισκέψεις έναντι
   //    **379** όλης της λίστας. Η λέξη «villa» φέρνει την κίνηση — και μέχρι σήμερα
   //    δεν είχαμε πού να την στείλουμε στο νέο site.
-  { key: 'villas', n: 108, q: { luxury: true },
+  // #293: villas = detached house + luxury (was: any luxury-flagged property — a 33 m² apartment showed as a villa)
+  { key: 'villas', n: 108, q: { subcategory: 'detached house', luxury: true },
     name: { el: 'Βίλες', en: 'Villas', bg: 'Вили', sr: 'Vile', de: 'Villen', ro: 'Vile', tr: 'Villalar', he: 'וילות', ru: 'Виллы' },
     slug: { el: 'βιλες', en: 'villas-for-sale', bg: 'vili', sr: 'vile', de: 'villen',
             ro: 'vile', tr: 'villa', he: 'vilot', ru: 'villy' } },

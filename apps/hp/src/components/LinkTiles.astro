@@ -11,7 +11,8 @@
 // SEO (rule 15): the caption link is the link's only text = the exact anchor, to the exact target; it is
 // stretched over the tile; the photo is decoration; «from €» sits outside the link.
 import { specByPath, LINK_GROUPS } from '../lib/seo-pages';
-import { facetBySlug, matches } from '../lib/listing';
+import { facetBySlug, matches, FACETS, PAIRS, facetUrl, paramsOf } from '../lib/listing';
+import { fromPrice } from '../lib/prices';
 import { pickCover, buildAreaTiles } from '../lib/area-tiles';
 import { marked, markedSrcSetSmall, altOf, type Photo } from '../lib/photos';
 import { t, listUrl, type Lang } from '../lib/i18n';
@@ -23,8 +24,13 @@ interface Props {
   variant?: 'page' | 'section';
   /** the page's own path, never linked to itself */
   self?: string;
+  /** #267: the list facets of the page (its topic and/or municipality): the areas row follows the topic, a
+   *  municipality page gets its categories */
+  facets?: string[];
+  /** #267: this section carries the municipality's category collections (one section per page) */
+  collections?: boolean;
 }
-const { lang, links: raw, items, variant = 'section', self = '' } = Astro.props;
+const { lang, links: raw, items, variant = 'section', self = '', facets: pageKeys = [], collections = false } = Astro.props;
 
 const pathOf = (href: string) => { try { return decodeURI(new URL(href, 'https://x').pathname); } catch { return href; } };
 const links = raw.filter((l) => pathOf(l.href) !== pathOf(self));
@@ -58,17 +64,79 @@ for (const l of links) {
 }
 // where areas show at all, all five municipalities (Sergei 2026-11-10: each link once, next to its text — the
 // section about areas carries Polygyros too); the spec's anchor where it links the area, else the name
-const pageAreas: Tile[] = variant === 'page' || areaTiles.length > 0
+let pageAreas: Tile[] = variant === 'page' || areaTiles.length > 0
   ? munis.map((m) => areaTiles.find((x) => pathOf(x.href) === pathOf(m.href)) ?? { href: m.href, text: m.name, sub: m.fromText, photo: m.photo })
   : areaTiles;
+
+// ── #267 (Sergei 2026-11-12: «блок по эриям … такими как Property for sale in Halkidiki by area»; «в секциях
+//    каждого муниципалитета … коллекции по категориям»). On a list page the tiles follow its topic:
+//    · a topic page (seafront, villas, land …): the five areas for THAT topic — the approved pair page where
+//      George's sheet has one (Kassandra / Sithonia × villas / seafront), else the topic list filtered to the
+//      area (noindex), and «from €» of the topic in that area only (no more «from €25,000» of any plot);
+//    · a municipality page: its categories (houses, apartments, villas, seafront, land) with «from €» there.
+//    George's links keep their exact anchors: a tile that is his link carries his anchor; his other links
+//    (the area pages, the Halkidiki-wide lists) stay as text links under the tiles.
+const pageFacets = pageKeys.map((k) => FACETS.find((x) => x.key === k)).filter(Boolean) as typeof FACETS;
+const pageMuni = pageFacets.find((x) => x.q.municipality);
+const pageTopic = pageFacets.find((x) => !x.q.municipality);
+const MUNI_ORDER = ['kassandra', 'sithonia', 'aristotelis', 'propontida', 'polygyros'];   // as the home «by area»
+const MUNI_FACETS = MUNI_ORDER.map((k) => FACETS.find((x) => x.key === k)!).filter(Boolean);
+const CATS = ['homes', 'apartments', 'villas', 'seafront', 'land'].map((k) => FACETS.find((x) => x.key === k)!).filter(Boolean);
+const isPair = (a: string, b: string) => PAIRS.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
+const cross = (muni: (typeof FACETS)[number], topic: (typeof FACETS)[number], name: string): Tile & { from: number } | null => {
+  const q = { ...muni.q, ...topic.q };
+  const keep = (a: any) => matches({ attributes: a } as any, q as any);
+  const fromN = fromPrice(items as any, keep);
+  if (!fromN) return null;
+  const href = isPair(muni.key, topic.key) ? facetUrl(lang, muni.key, topic.key) : facetUrl(lang, topic.key) + paramsOf({ municipality: muni.q.municipality } as any);
+  const own = href.includes('?') ? undefined : links.find((l) => pathOf(l.href) === pathOf(href));   // George's link to this very page: his anchor
+  return { href, text: own?.text ?? name, sub: t(lang, 'home.from', { price: money(fromN, lang) }), photo: pickCover(items as any, keep, used as any), from: fromN };
+};
+let rowTiles: Tile[] = [];
+let rowAreas = false;
+const areaLinked = areaTiles.length > 0 || links.some((l) => facetsOf(l.href)?.some((x) => x.q.municipality));
+if (variant === 'section' && pageTopic && !pageMuni && areaLinked && collections) {
+  rowTiles = MUNI_FACETS.map((m) => cross(m, pageTopic, m.name[lang])).filter(Boolean) as Tile[];
+  rowAreas = rowTiles.length > 0;
+} else if (variant === 'section' && pageTopic && !pageMuni && areaLinked) {
+  // the areas row is on another section of this page: here George's area links stay as text, once per page in tiles
+  const isArea = (h: string) => !!muniOf(h) || !!facetsOf(h)?.some((x) => x.q.municipality);
+  for (const x of [...areaTiles, ...typeTiles.filter((y) => isArea(y.href))]) text.push({ href: x.href, text: x.text });
+  const keep = typeTiles.filter((y) => !isArea(y.href));
+  typeTiles.length = 0; typeTiles.push(...keep);
+  pageAreas = [];
+}
+if (variant === 'section' && pageMuni && collections) {
+  rowTiles = CATS.map((c) => cross(pageMuni, c, c.name[lang])).filter(Boolean) as Tile[];
+}
+if (rowTiles.length) {
+  // the links the row now carries leave the other groups; George's area pages and Halkidiki-wide lists → text
+  // a filtered list (…?muni=) is not George's page: compare whole addresses, query included
+  const key = (h: string) => (h.includes('?') ? h : pathOf(h));
+  const inRow = new Set(rowTiles.map((x) => key(x.href)));
+  const moved = [...areaTiles, ...typeTiles].filter((x) => !inRow.has(key(x.href)));
+  for (const x of moved) if (!text.some((l) => pathOf(l.href) === pathOf(x.href))) text.push({ href: x.href, text: x.text });
+  typeTiles.length = 0;
+  pageAreas = [];
+}
 const G = LINK_GROUPS[lang] ?? LINK_GROUPS.en;
 const rail = `lt${Math.random().toString(36).slice(2, 8)}`;
 const pages = Math.ceil(typeTiles.length / 4);
 const tile = (x: Tile, sizes: string) => ({ x, sizes });
 ---
 {variant === 'section' ? (
-  (pageAreas.length + typeTiles.length + text.length > 0) && (
+  (rowTiles.length + pageAreas.length + typeTiles.length + text.length > 0) && (
     <div class="lt lt--sec">
+      {rowTiles.length > 0 && (
+        <ul class:list={['k-tiles lt__row', rowAreas ? 'lt__row--areas' : 'lt__row--cats']} style={`--n: ${rowTiles.length}`}>
+          {rowTiles.map((x) => (
+            <li class="k-tile">
+              {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 200px, 45vw" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
+              <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
+            </li>
+          ))}
+        </ul>
+      )}
       {(typeTiles.length + pageAreas.length) > 0 && (
         <ul class="k-tiles lt__sm" style={`--n: ${Math.min(5, typeTiles.length + pageAreas.length)}`}>
           {[...typeTiles, ...pageAreas].map((x) => (
@@ -154,6 +222,12 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
   .lt__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: var(--fs-s0); }
   .lt__links a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
   @media (min-width: 1024px) { .lt__areas { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  /* #267: one row like the home «by area» block — equal tiles, name and «from €», as many as the row has */
+  .lt__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @container (min-width: 560px) { .lt__row { grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); } }
+  .lt__row :global(.k-tile) { aspect-ratio: 3 / 4; }
+  .lt__row :global(.k-tile__t) { padding: 40px 12px 12px; }
+  .lt__row :global(.k-tile__l) { font-size: var(--fs-s1); line-height: 1.2; }
   .lt__areas > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
   @media (min-width: 760px) { .lt__areas > li:last-child:nth-child(odd) { grid-column: auto; } }
 </style>

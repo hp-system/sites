@@ -260,15 +260,24 @@ export function focalStyle(p: Photo | null): string {
  *    σε αλφάβητο που ούτε αυτός ούτε η Google της αγοράς του διαβάζει.
  * ✅ Η σειρά ακολουθεί τη ΓΡΑΦΗ, ίδια λογική με `pick()` και `municipalityOf`.
  */
-const ALT_CYRILLIC = new Set(['bg', 'ru']);
 
+//
+// #251 (translation audit 2026-11-12): an alt in another language is no alt for this page. The CRM has
+// alts only in el/en/de/sr/bg, so ro/tr/he/ru pages showed English or Bulgarian ones; and some «el» alts
+// hold Russian text (seen on /ακινητα). Now: the photo's own alt only if it is in this language (its
+// script matches and, for a Latin language, it is not the English alt again); otherwise the page's own
+// words (`fallback`, always in the page language: the property title, the area name).
+const SCRIPT: Record<string, RegExp> = { el: /\p{Script=Greek}/u, bg: /\p{Script=Cyrillic}/u, ru: /\p{Script=Cyrillic}/u, he: /\p{Script=Hebrew}/u };
+const FOREIGN = /[\p{Script=Greek}\p{Script=Cyrillic}\p{Script=Hebrew}]/u;
+function inLang(s: string, lang: string, en?: string): boolean {
+  const letters = s.replace(/[^\p{L}]/gu, '');
+  if (!letters) return false;
+  if (SCRIPT[lang]) return SCRIPT[lang].test(letters) && [...letters].filter((c) => SCRIPT[lang].test(c)).length >= letters.length / 2;
+  return !FOREIGN.test(letters) && (lang === 'en' || s !== en);
+}
 export function altOf(p: Photo | null, lang: string, fallback: string): string {
   if (!p?.alt) return fallback;
-  if (typeof p.alt === 'string') return p.alt;
+  if (typeof p.alt === 'string') return inLang(p.alt, lang) ? p.alt : fallback;
   const own = p.alt[lang];
-  if (own) return own;
-  if (lang === 'el') return p.alt.el || p.alt.en || fallback;
-  const chain = ALT_CYRILLIC.has(lang) ? [p.alt.bg, p.alt.en, p.alt.el] : [p.alt.en, p.alt.bg, p.alt.el];
-  for (const c of chain) if (c) return c;
-  return fallback;
+  return own && inLang(own, lang, p.alt.en) ? own : fallback;
 }

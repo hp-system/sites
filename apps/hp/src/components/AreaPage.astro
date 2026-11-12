@@ -22,7 +22,7 @@ import Footer from './Footer.astro';
 import PropertyCard from './PropertyCard.astro';
 import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf } from '../lib/gate';
-import { listUrl, prefix, propertyUrl, type Lang } from '../lib/i18n';
+import { listUrl, t, prefix, propertyUrl, type Lang } from '../lib/i18n';
 import { money } from '../lib/format';
 import { matches, runQuery, paramsOf, type Query } from '../lib/listing';
 import { contentUrl, pageExists } from '../lib/pages';
@@ -117,7 +117,7 @@ if (cards.length) {
 
   <main id="main" class="area">
     <section class="wrap a-top">
-      <nav class="crumb" aria-label="breadcrumb">
+      <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
         <a href={prefix(lang) || '/'}>{brand.name}</a>
         <span aria-hidden="true">·</span>
         <a href={listUrl(lang)}>Property for sale</a>

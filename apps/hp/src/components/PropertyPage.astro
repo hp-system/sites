@@ -343,7 +343,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
 
   <main id="main" class="prop">
     <div class="wrap">
-      <nav class="crumb" aria-label="breadcrumb">
+      <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
         <a href={prefix(lang) || '/'}>{brand.name}</a>
         <span aria-hidden="true">·</span>
         <a href={listUrl(lang)}>{ui(lang, 'all')}</a>

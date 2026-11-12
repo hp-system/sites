@@ -453,7 +453,7 @@ const PROP_UI_BASE: Record<Lang, PUIBase> = {
     reqInfo: 'Zatražite informacije', send: 'Pošalji', call: 'Poziv', or: 'ili',
     unlockH: 'Otključajte područje', unlockP: 'Uz besplatan nalog vidite gde se tačno nalazi nekretnina.',
     freeReg: 'Besplatna registracija', morePhotos: 'Još {n} fotografija', photoOf: '{a} / {b}',
-    fName: 'Ime i prezime', fPhone: 'Mobilni', fEmail: 'Email',
+    fName: 'Ime i prezime', fPhone: 'Mobilni', fEmail: 'E-pošta',
     interest: 'Zainteresovan sam za nekretninu #{id}', sent: 'Primljeno — javićemo se uskoro.',
     answers: 'Odgovaramo u roku od 2 sata radnim danima.',
     whenSuits: 'Kada vam odgovara?', otherDay: 'Drugi dan', videocall: 'Video poziv',
@@ -553,7 +553,7 @@ const PROP_UI_BASE: Record<Lang, PUIBase> = {
     reqInfo: 'Запросить информацию', send: 'Отправить', call: 'Звонок', or: 'или',
     unlockH: 'Откройте район', unlockP: 'С бесплатным аккаунтом вы увидите, где именно находится объект.',
     freeReg: 'Бесплатная регистрация', morePhotos: 'Ещё {n} фото', photoOf: '{a} / {b}',
-    fName: 'Имя и фамилия', fPhone: 'Мобильный', fEmail: 'Email',
+    fName: 'Имя и фамилия', fPhone: 'Мобильный', fEmail: 'Эл. почта',
     interest: 'Меня интересует объект #{id}', sent: 'Получено — мы скоро свяжемся с вами.',
     answers: 'Отвечаем в течение 2 часов в рабочие дни.',
     whenSuits: 'Когда вам удобно?', otherDay: 'Другой день', videocall: 'Видеозвонок',
@@ -650,6 +650,8 @@ export function pui(lang: Lang, k: keyof PUI, vars?: Record<string, string | num
  * that `pick` would give (ru showed «Самостоятелна къща», he showed English).
  */
 const SUB_NAMES: Record<string, Record<Lang, string>> = {
+  // #251: the CRM sends this one in English in every language (el/de/he titles showed «detached house in a complex»)
+  'detached house in a complex': { el: 'Μονοκατοικία σε συγκρότημα', en: 'Detached house in a complex', bg: 'Самостоятелна къща в комплекс', sr: 'Samostalna kuća u kompleksu', de: 'Einfamilienhaus in einer Wohnanlage', ro: 'Casă individuală într-un complex', tr: 'Site içinde müstakil ev', he: 'בית פרטי במתחם', ru: 'Отдельный дом в комплексе' },
   'detached house': { el: 'Μονοκατοικία', en: 'Detached house', bg: 'Самостоятелна къща', sr: 'Samostalna kuća', de: 'Einfamilienhaus', ro: 'Casă individuală', tr: 'Müstakil ev', he: 'בית פרטי', ru: 'Отдельный дом' },
   maisonette: { el: 'Μεζονέτα', en: 'Maisonette', bg: 'Мезонет', sr: 'Dupleks', de: 'Maisonette', ro: 'Duplex', tr: 'Dubleks', he: 'דופלקס', ru: 'Мезонет' },
   apartment: { el: 'Διαμέρισμα', en: 'Apartment', bg: 'Апартамент', sr: 'Stan', de: 'Wohnung', ro: 'Apartament', tr: 'Daire', he: 'דירה', ru: 'Квартира' },
@@ -660,13 +662,20 @@ const SUB_NAMES: Record<string, Record<Lang, string>> = {
   penthouse: { el: 'Ρετιρέ', en: 'Penthouse', bg: 'Пентхаус', sr: 'Penthaus', de: 'Penthouse', ro: 'Penthouse', tr: 'Çatı katı daire', he: 'פנטהאוז', ru: 'Пентхаус' },
   hotel: { el: 'Ξενοδοχείο', en: 'Hotel', bg: 'Хотел', sr: 'Hotel', de: 'Hotel', ro: 'Hotel', tr: 'Otel', he: 'מלון', ru: 'Отель' },
   office: { el: 'Γραφείο', en: 'Office', bg: 'Офис', sr: 'Kancelarija', de: 'Büro', ro: 'Birou', tr: 'Ofis', he: 'משרד', ru: 'Офис' },
+  // #251: types the CRM sends with no name in some languages (the cards read «island — Aristotelis», «building — Kassandra»)
+  island: { el: 'Νησί', en: 'Island', bg: 'Остров', sr: 'Ostrvo', de: 'Insel', ro: 'Insulă', tr: 'Ada', he: 'אי', ru: 'Остров' },
+  building: { el: 'Κτίριο', en: 'Building', bg: 'Сграда', sr: 'Zgrada', de: 'Gebäude', ro: 'Clădire', tr: 'Bina', he: 'בניין', ru: 'Здание' },
   store: { el: 'Κατάστημα', en: 'Shop', bg: 'Магазин', sr: 'Lokal', de: 'Ladenlokal', ro: 'Spațiu comercial', tr: 'Dükkan', he: 'חנות', ru: 'Магазин' },
 };
 export function subName(a: Attrs, lang: Lang): string {
   const v = (a as Record<string, unknown>).subcategory_i18n as Record<string, string> | undefined;
   const own = v?.[lang];
-  if (typeof own === 'string' && own) return own;
   const key = String((a as Record<string, unknown>).subcategory ?? '').toLowerCase().trim();
+  // #251: the CRM's «translation» that is only the English name again is no translation — the site's name wins
+  // (in English too: the raw key in lower case «detached house in a complex» → «Detached house in a complex»)
+  const raw = typeof own === 'string' ? own.toLowerCase().trim() : '';
+  const untranslated = raw === key || (lang !== 'en' && raw === String(v?.en ?? '').toLowerCase().trim());
+  if (typeof own === 'string' && own && !(untranslated && SUB_NAMES[key]?.[lang])) return own;
   if (SUB_NAMES[key]?.[lang]) return SUB_NAMES[key][lang];
   // unknown type: the same script-aware order as `pick` in lib/api (Cyrillic → bg, else en; Greek only in el)
   const chain = lang === 'el' ? [v?.el, v?.en] : lang === 'bg' || lang === 'ru' ? [v?.bg, v?.en, v?.el] : [v?.en, v?.bg, v?.el];
@@ -990,7 +999,7 @@ const FL = {
           ro: 'Camere cvadruple', tr: 'Dört kişilik oda', he: 'חדרים לארבעה', ru: 'Четырёхместные' },
   suite: { el: 'Σουίτες', en: 'Suites', bg: 'Апартаменти', de: 'Suiten', sr: 'Apartmani',
            ro: 'Apartamente', tr: 'Süit', he: 'סוויטות', ru: 'Люксы' },
-  studios: { el: 'Studios', en: 'Studios', bg: 'Студиа', de: 'Studios', sr: 'Studiji',
+  studios: { el: 'Στούντιο', en: 'Studios', bg: 'Студиа', de: 'Studios', sr: 'Studiji',
              ro: 'Garsoniere', tr: 'Stüdyo', he: 'סטודיו', ru: 'Студии' },
   bizSqm: { el: 'Εμβαδόν κτιρίου', en: 'Building area', bg: 'Площ на сградата', de: 'Gebäudefläche', sr: 'Površina objekta',
             ro: 'Suprafața clădirii', tr: 'Bina alanı', he: 'שטח המבנה', ru: 'Площадь здания' },

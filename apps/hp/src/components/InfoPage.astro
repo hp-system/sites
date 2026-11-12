@@ -21,6 +21,7 @@ import { priceTables } from '../lib/prices';
 import type { SiteProperty } from '../lib/api';
 import { allProperties, visitorCountry } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
+import { subName } from '../lib/property';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
 import { waHref, viberHref } from '../lib/contact';
@@ -320,7 +321,8 @@ if (fresh?.postPhotos?.length) {
         const ph = photosOf(a).find((x, i) => isPhotoOpen(x, i) && x.tag && th.tags.includes(x.tag));
         if (!ph) continue;
         used.add(p.id);
-        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${p.title}, Halkidiki`), style: focalStyle(ph) };
+        // #251: not the CRM item title (English, with the village — R-006): type and municipality in the page language
+        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`), style: focalStyle(ph) };
         break;
       }
     }
@@ -344,7 +346,7 @@ if (faqItems.length) {
   <>
     <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
-        <nav class="crumb" aria-label="breadcrumb">
+        <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
             <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
           ))}
@@ -504,7 +506,7 @@ if (faqItems.length) {
     /* #107 Company: George's breadcrumb and H1 on every screen; lead, buttons and photo on desktop only. */
     <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
-        <nav class="crumb" aria-label="breadcrumb">
+        <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
             <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
           ))}
@@ -529,7 +531,7 @@ if (faqItems.length) {
     </header>
     ) : (
     <header class="wrap info-top">
-      <nav class="crumb" aria-label="breadcrumb">
+      <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
         {crumbs.slice(0, -1).map((c, i) => (
           <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
         ))}
@@ -666,7 +668,7 @@ if (faqItems.length) {
 
     {/* Desktop: the breadcrumb again above the footer (mockup «dir» bar). */}
     {w1 && (
-    <nav class="w1-dir w1-d" aria-label="breadcrumb">
+    <nav class="w1-dir w1-d" aria-label={t(lang, 'a11y.crumb')}>
       <div class="wrap w1-dir__in">
         <a href={prefix(lang) || '/'} aria-label={brand.name}>{brand.name}</a>
         {d.parents.map((c) => <><span aria-hidden="true">›</span><a href={c.path}>{c.name}</a></>)}

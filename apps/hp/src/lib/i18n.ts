@@ -702,6 +702,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Αρ. ΓΕΜΗ',
     'a11y.skip': 'Μετάβαση στο περιεχόμενο',
     'a11y.nav': 'Κύριο μενού',
+    'a11y.crumb': 'Διαδρομή πλοήγησης',   // #251
+    'a11y.pager': 'Σελίδες',   // #251
     'trust.eyebrow': 'Ποιοι είμαστε',
     'trust.h2': 'Στη Χαλκιδική από το 2007',
     'trust.years': 'χρόνια στην ίδια αγορά, με το ίδιο όνομα.',
@@ -1103,6 +1105,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Companies Reg. no.',
     'a11y.skip': 'Skip to content',
     'a11y.nav': 'Main menu',
+    'a11y.crumb': 'Breadcrumb',   // #251
+    'a11y.pager': 'Pages',   // #251
     'trust.eyebrow': 'Who we are',
     'trust.h2': 'In Halkidiki since 2007',
     'trust.years': 'years in the same market, under the same name.',
@@ -1495,6 +1499,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Рег. номер',
     'a11y.skip': 'Към съдържанието',
     'a11y.nav': 'Главно меню',
+    'a11y.crumb': 'Навигационна пътека',   // #251
+    'a11y.pager': 'Страници',   // #251
     'trust.eyebrow': 'Кои сме ние',
     'trust.h2': 'В Халкидики от 2007 г.',
     'trust.years': 'години на същия пазар, със същото име.',
@@ -1887,6 +1893,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Reg. broj',
     'a11y.skip': 'Pređi na sadržaj',
     'a11y.nav': 'Glavni meni',
+    'a11y.crumb': 'Putanja navigacije',   // #251
+    'a11y.pager': 'Stranice',   // #251
     'trust.eyebrow': 'Ko smo mi',
     'trust.h2': 'Na Halkidikiju od 2007.',
     'trust.years': 'godina na istom tržištu, pod istim imenom.',
@@ -2279,6 +2287,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Handelsreg.-Nr.',
     'a11y.skip': 'Zum Inhalt springen',
     'a11y.nav': 'Hauptmenü',
+    'a11y.crumb': 'Brotkrümelnavigation',   // #251
+    'a11y.pager': 'Seiten',   // #251
     'trust.eyebrow': 'Wer wir sind',
     'trust.h2': 'Auf Chalkidiki seit 2007',
     'trust.years': 'Jahre im selben Markt, unter demselben Namen.',
@@ -2671,6 +2681,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Nr. reg. com.',
     'a11y.skip': 'Salt la conținut',
     'a11y.nav': 'Meniu principal',
+    'a11y.crumb': 'Traseu de navigare',   // #251
+    'a11y.pager': 'Pagini',   // #251
     'trust.eyebrow': 'Cine suntem',
     'trust.h2': 'În Halkidiki din 2007',
     'trust.years': 'ani pe aceeași piață, sub același nume.',
@@ -3064,6 +3076,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Ticaret Sicil No.',
     'a11y.skip': 'İçeriğe geç',
     'a11y.nav': 'Ana menü',
+    'a11y.crumb': 'İçerik haritası',   // #251
+    'a11y.pager': 'Sayfalar',   // #251
     'trust.eyebrow': 'Biz kimiz',
     'trust.h2': '2007\'den bu yana Halkidiki\'de',
     'trust.years': 'yıldır aynı piyasada, aynı isimle.',
@@ -3457,6 +3471,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'מס׳ רישום חברה',
     'a11y.skip': 'דילוג לתוכן',
     'a11y.nav': 'תפריט ראשי',
+    'a11y.crumb': 'פירורי לחם',   // #251
+    'a11y.pager': 'עמודים',   // #251
     'trust.eyebrow': 'מי אנחנו',
     'trust.h2': 'בחלקידיקי מאז 2007',
     'trust.years': 'שנים באותו שוק, תחת אותו שם.',
@@ -3850,6 +3866,8 @@ const U: Record<Lang, Dict> = {
     'foot.reg': 'Рег. № в торговом реестре',
     'a11y.skip': 'Перейти к содержанию',
     'a11y.nav': 'Главное меню',
+    'a11y.crumb': 'Навигационная цепочка',   // #251
+    'a11y.pager': 'Страницы',   // #251
     'trust.eyebrow': 'Кто мы',
     'trust.h2': 'На Халкидики с 2007 года',
     'trust.years': 'лет на том же рынке, под тем же названием.',

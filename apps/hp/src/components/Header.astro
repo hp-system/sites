@@ -50,7 +50,19 @@ const MENU_KEEP: Record<string, Set<string>> = {
 };
 // #262 languages stage, Greek first (Sergei 2026-11-12): the same menu in Greek; its pages have Greek paths
 // in the registry (George's slugs). A language joins MENU_LANGS when all its menu pages exist.
-const MENU_LANGS: Lang[] = ['en', 'el'];
+const MENU_LANGS: Lang[] = ['en', 'el', 'ru'];   // #265: Russian joins
+const SECTION_RU: Record<string, string> = {
+  buy: 'Купить', sell: 'Продать', halkidiki: 'Халкидики', services: 'Услуги', about: 'О компании', exclusive: 'Exclusive', contact: 'Контакты',
+};
+const LABEL_RU: Record<string, string> = {
+  P02: 'Вся недвижимость', P04: 'Дома', P05: 'Квартиры', P07: 'Виллы', P08: 'Земля', P09: 'У моря', P19: 'Как купить недвижимость в Греции',
+  P24: 'Продать', P26: 'Добавить объект',
+  P21: 'Гид по Халкидики', P11: 'Кассандра', P12: 'Ситония', P13: 'Неа-Пропонтида', P14: 'Аристотелис', P58: 'Полигирос',
+  P35: 'Услуги', P36: 'Покупателям', P37: 'Продавцам', P40: 'Управление недвижимостью', P39: 'Строительные услуги',
+  P43: 'О нас', P44: 'Наша история', P48: 'Партнёры', P50: 'Вакансии',
+  P52: 'Exclusive', P23: 'Объекты до публикации', P53: 'Зачем регистрироваться',
+  P56: 'Контакты', P57: 'Онлайн-встреча',
+};
 const SECTION_EL: Record<string, string> = {
   buy: 'Αγορά', sell: 'Πώληση', halkidiki: 'Χαλκιδική', services: 'Υπηρεσίες', about: 'Η εταιρεία', exclusive: 'Exclusive', contact: 'Επικοινωνία',
 };
@@ -65,10 +77,10 @@ const LABEL_EL: Record<string, string> = {
 };
 const menu7 = MENU_LANGS.includes(lang)
   ? SECTIONS.map((sec) => ({
-      key: sec, label: lang === 'el' ? SECTION_EL[sec] : SECTION_LABEL[sec],
+      key: sec, label: lang === 'el' ? SECTION_EL[sec] : lang === 'ru' ? SECTION_RU[sec] : SECTION_LABEL[sec],
       items: menuOf(sec).filter((r) => !NOT_BUILT.has(r.id) && (!MENU_KEEP[sec] || MENU_KEEP[sec].has(r.id)))
         .map((r) => ({ href: pathOf(r.id, lang) ?? '#',
-          label: (lang === 'el' ? LABEL_EL[r.id] : undefined) ?? LABEL[r.id] ?? r.name.replace(/\s*\(.*\)\s*$/, '') })),
+          label: (lang === 'el' ? LABEL_EL[r.id] : lang === 'ru' ? LABEL_RU[r.id] : undefined) ?? LABEL[r.id] ?? r.name.replace(/\s*\(.*\)\s*$/, '') })),
     })).filter((s) => s.items.length)
   : null;
 

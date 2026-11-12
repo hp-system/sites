@@ -674,6 +674,10 @@ const SUB_NAMES: Record<string, Record<Lang, string>> = {
   store: { el: 'Κατάστημα', en: 'Shop', bg: 'Магазин', sr: 'Lokal', de: 'Ladenlokal', ro: 'Spațiu comercial', tr: 'Dükkan', he: 'חנות', ru: 'Магазин' },
 };
 export function subName(a: Attrs, lang: Lang): string {
+  // #293 (Sergei 2026-11-12: «detached house + luxury yes = villa … надпись в хедере объекта»): a detached house with
+  // the CRM luxury flag is named a villa wherever the type is written (H1, title, cards), in every language
+  const r = a as Record<string, unknown>;
+  if (String(r.subcategory ?? '').toLowerCase().trim() === 'detached house' && (r.lux_prop === true || r.luxury === true)) return SUB_NAMES.villa[lang];
   const v = (a as Record<string, unknown>).subcategory_i18n as Record<string, string> | undefined;
   const own = v?.[lang];
   const key = String((a as Record<string, unknown>).subcategory ?? '').toLowerCase().trim();

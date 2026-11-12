@@ -106,10 +106,25 @@ if (variant === 'section' && pageTopic && !pageMuni && areaLinked && collections
   typeTiles.length = 0; typeTiles.push(...keep);
   pageAreas = [];
 }
+// a page without a topic (All properties, the guides): the areas as the same one row, the area pages with
+// «from €» of the whole area — the right price there; the type tiles stay a row of their own above it
+if (variant === 'section' && !pageTopic && !pageMuni && pageAreas.length > 0) {
+  rowTiles = pageAreas;
+  rowAreas = true;
+  pageAreas = [];
+}
+// a municipality page, other sections: its own pair pages (villas / seafront in this area) are in the
+// collections row already — here they stay as text, so no tile repeats
+if (variant === 'section' && pageMuni && !collections) {
+  const mine = (h: string) => !!facetsOf(h)?.some((x) => x.key === pageMuni.key);
+  for (const x of typeTiles.filter((y) => mine(y.href))) text.push({ href: x.href, text: x.text });
+  const keep = typeTiles.filter((y) => !mine(y.href));
+  typeTiles.length = 0; typeTiles.push(...keep);
+}
 if (variant === 'section' && pageMuni && collections) {
   rowTiles = CATS.map((c) => cross(pageMuni, c, c.name[lang])).filter(Boolean) as Tile[];
 }
-if (rowTiles.length) {
+if (rowTiles.length && (pageTopic || pageMuni)) {
   // the links the row now carries leave the other groups; George's area pages and Halkidiki-wide lists → text
   // a filtered list (…?muni=) is not George's page: compare whole addresses, query included
   const key = (h: string) => (h.includes('?') ? h : pathOf(h));
@@ -127,21 +142,21 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
 {variant === 'section' ? (
   (rowTiles.length + pageAreas.length + typeTiles.length + text.length > 0) && (
     <div class="lt lt--sec">
-      {rowTiles.length > 0 && (
-        <ul class:list={['k-tiles lt__row', rowAreas ? 'lt__row--areas' : 'lt__row--cats']} style={`--n: ${rowTiles.length}`}>
-          {rowTiles.map((x) => (
-            <li class="k-tile">
-              {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 200px, 45vw" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
-              <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
-            </li>
-          ))}
-        </ul>
-      )}
       {(typeTiles.length + pageAreas.length) > 0 && (
         <ul class="k-tiles lt__sm" style={`--n: ${Math.min(5, typeTiles.length + pageAreas.length)}`}>
           {[...typeTiles, ...pageAreas].map((x) => (
             <li class="k-tile">
               {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="200px" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
+              <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {rowTiles.length > 0 && (
+        <ul class:list={['k-tiles lt__row', rowAreas ? 'lt__row--areas' : 'lt__row--cats']} style={`--n: ${rowTiles.length}`}>
+          {rowTiles.map((x) => (
+            <li class="k-tile">
+              {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 200px, 45vw" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
               <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
             </li>
           ))}

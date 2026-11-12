@@ -657,6 +657,7 @@ export function pui(lang: Lang, k: keyof PUI, vars?: Record<string, string | num
  */
 const SUB_NAMES: Record<string, Record<Lang, string>> = {
   // #251: the CRM sends this one in English in every language (el/de/he titles showed «detached house in a complex»)
+  'villa in a complex': { el: 'Βίλα σε συγκρότημα', en: 'Villa in a complex', bg: 'Вила в комплекс', sr: 'Vila u kompleksu', de: 'Villa in einer Wohnanlage', ro: 'Vilă într-un complex', tr: 'Site içinde villa', he: 'וילה במתחם', ru: 'Вилла в комплексе' },
   'detached house in a complex': { el: 'Μονοκατοικία σε συγκρότημα', en: 'Detached house in a complex', bg: 'Самостоятелна къща в комплекс', sr: 'Samostalna kuća u kompleksu', de: 'Einfamilienhaus in einer Wohnanlage', ro: 'Casă individuală într-un complex', tr: 'Site içinde müstakil ev', he: 'בית פרטי במתחם', ru: 'Отдельный дом в комплексе' },
   'detached house': { el: 'Μονοκατοικία', en: 'Detached house', bg: 'Самостоятелна къща', sr: 'Samostalna kuća', de: 'Einfamilienhaus', ro: 'Casă individuală', tr: 'Müstakil ev', he: 'בית פרטי', ru: 'Отдельный дом' },
   maisonette: { el: 'Μεζονέτα', en: 'Maisonette', bg: 'Мезонет', sr: 'Dupleks', de: 'Maisonette', ro: 'Duplex', tr: 'Dubleks', he: 'דופלקס', ru: 'Мезонет' },
@@ -673,11 +674,16 @@ const SUB_NAMES: Record<string, Record<Lang, string>> = {
   building: { el: 'Κτίριο', en: 'Building', bg: 'Сграда', sr: 'Zgrada', de: 'Gebäude', ro: 'Clădire', tr: 'Bina', he: 'בניין', ru: 'Здание' },
   store: { el: 'Κατάστημα', en: 'Shop', bg: 'Магазин', sr: 'Lokal', de: 'Ladenlokal', ro: 'Spațiu comercial', tr: 'Dükkan', he: 'חנות', ru: 'Магазин' },
 };
+const VILLA_IN_COMPLEX = SUB_NAMES['villa in a complex'];
 export function subName(a: Attrs, lang: Lang): string {
   // #293 (Sergei 2026-11-12: «detached house + luxury yes = villa … надпись в хедере объекта»): a detached house with
   // the CRM luxury flag is named a villa wherever the type is written (H1, title, cards), in every language
   const r = a as Record<string, unknown>;
-  if (String(r.subcategory ?? '').toLowerCase().trim() === 'detached house' && (r.lux_prop === true || r.luxury === true)) return SUB_NAMES.villa[lang];
+  const lux = r.lux_prop === true || r.luxury === true;
+  const sc = String(r.subcategory ?? '').toLowerCase().trim();
+  if (lux && sc === 'detached house') return SUB_NAMES.villa[lang];
+  // #295 (Sergei 2026-11-12): a detached house in a complex with the luxury flag is a villa in a complex
+  if (lux && sc === 'detached house in a complex') return VILLA_IN_COMPLEX[lang];
   const v = (a as Record<string, unknown>).subcategory_i18n as Record<string, string> | undefined;
   const own = v?.[lang];
   const key = String((a as Record<string, unknown>).subcategory ?? '').toLowerCase().trim();

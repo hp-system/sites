@@ -186,7 +186,9 @@ const activeCount = [
 //    καρτών, και αν ο τροφοδότης προσθέσει μετάφραση, εμφανίζεται μόνη της.
 const labelOf = (sub: string) => {
   const hit = items.find((p) => String(p.attributes?.subcategory ?? '').toLowerCase() === sub);
-  return hit ? subName(hit.attributes ?? {}, lang) : sub;   // #88: same names as the cards
+  // #88: same names as the cards. #251: a type no card on this page has took the raw CRM key
+  // («detached house», «field») in every language — the site's own names cover it.
+  return subName(hit?.attributes ?? { subcategory: sub }, lang);
 };
 const typeOpts = SUBTYPES.map((x) => ({ v: x.v, label: labelOf(x.v) }));
 const muniOpts = MUNIS.map((x) => ({
@@ -387,11 +389,11 @@ const tilePhoto = (() => {
         ακριβώς — δύο φορές η ίδια φράση, η μία σε αχνό γκρι. Τώρα το τελευταίο
         σκαλί μπαίνει ΜΟΝΟ όταν υπάρχει θέμα, δηλαδή όταν λέει κάτι διαφορετικό. */}
     {crumbs ? (
-    <nav class="crumb" aria-label="breadcrumb">
+    <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
       {crumbs.map((c, i) => (<>{i > 0 && <span aria-hidden="true">·</span>}{c.url ? <a href={c.url}>{c.name}</a> : <span>{c.name}</span>}</>))}
     </nav>
     ) : (
-    <nav class="crumb" aria-label="breadcrumb">
+    <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
       <a href={prefix(lang) || '/'}>{brand.name}</a>
       {isThemed && (
         <>

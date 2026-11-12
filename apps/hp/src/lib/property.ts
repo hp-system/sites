@@ -650,6 +650,8 @@ export function pui(lang: Lang, k: keyof PUI, vars?: Record<string, string | num
  * that `pick` would give (ru showed «Самостоятелна къща», he showed English).
  */
 const SUB_NAMES: Record<string, Record<Lang, string>> = {
+  // #251: the CRM sends this one in English in every language (el/de/he titles showed «detached house in a complex»)
+  'detached house in a complex': { el: 'Μονοκατοικία σε συγκρότημα', en: 'Detached house in a complex', bg: 'Самостоятелна къща в комплекс', sr: 'Samostalna kuća u kompleksu', de: 'Einfamilienhaus in einer Wohnanlage', ro: 'Casă individuală într-un complex', tr: 'Site içinde müstakil ev', he: 'בית פרטי במתחם', ru: 'Отдельный дом в комплексе' },
   'detached house': { el: 'Μονοκατοικία', en: 'Detached house', bg: 'Самостоятелна къща', sr: 'Samostalna kuća', de: 'Einfamilienhaus', ro: 'Casă individuală', tr: 'Müstakil ev', he: 'בית פרטי', ru: 'Отдельный дом' },
   maisonette: { el: 'Μεζονέτα', en: 'Maisonette', bg: 'Мезонет', sr: 'Dupleks', de: 'Maisonette', ro: 'Duplex', tr: 'Dubleks', he: 'דופלקס', ru: 'Мезонет' },
   apartment: { el: 'Διαμέρισμα', en: 'Apartment', bg: 'Апартамент', sr: 'Stan', de: 'Wohnung', ro: 'Apartament', tr: 'Daire', he: 'דירה', ru: 'Квартира' },
@@ -665,8 +667,12 @@ const SUB_NAMES: Record<string, Record<Lang, string>> = {
 export function subName(a: Attrs, lang: Lang): string {
   const v = (a as Record<string, unknown>).subcategory_i18n as Record<string, string> | undefined;
   const own = v?.[lang];
-  if (typeof own === 'string' && own) return own;
   const key = String((a as Record<string, unknown>).subcategory ?? '').toLowerCase().trim();
+  // #251: the CRM's «translation» that is only the English name again is no translation — the site's name wins
+  // (in English too: the raw key in lower case «detached house in a complex» → «Detached house in a complex»)
+  const raw = typeof own === 'string' ? own.toLowerCase().trim() : '';
+  const untranslated = raw === key || (lang !== 'en' && raw === String(v?.en ?? '').toLowerCase().trim());
+  if (typeof own === 'string' && own && !(untranslated && SUB_NAMES[key]?.[lang])) return own;
   if (SUB_NAMES[key]?.[lang]) return SUB_NAMES[key][lang];
   // unknown type: the same script-aware order as `pick` in lib/api (Cyrillic → bg, else en; Greek only in el)
   const chain = lang === 'el' ? [v?.el, v?.en] : lang === 'bg' || lang === 'ru' ? [v?.bg, v?.en, v?.el] : [v?.en, v?.bg, v?.el];

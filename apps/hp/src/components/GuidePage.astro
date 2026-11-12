@@ -10,7 +10,7 @@ import Header from './Header.astro';
 import Footer from './Footer.astro';
 import SpecText from './SpecText.astro';
 import { specOf, specTitle, crumbPath, type SpecPage } from '../lib/seo-pages';
-import { prefix, type Lang } from '../lib/i18n';
+import { prefix, t, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
 import InfoForm from './InfoForm.astro';
 import { findInfoPage } from '../lib/infopages';
@@ -84,7 +84,7 @@ const jsonLd: unknown[] = [
   <main id="main" class="gp">
     <header class="wrap gp__top">
       <div class="gp__txt">
-        <nav class="gp__crumb" aria-label="breadcrumb">
+        <nav class="gp__crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.map((c, i, a) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{c.url && i < a.length - 1 ? <a href={c.url}>{c.name}</a> : <span aria-current={i === a.length - 1 ? 'page' : undefined}>{c.name}</span>}</>))}
         </nav>
         <h1 class="t-display gp__h1">{page.h1}</h1>

@@ -91,6 +91,28 @@ export function bedsText(n: number, lang: Lang, one: string, few: string): strin
   return (many && (form === 'many' || (lang === 'sr' && form === 'other')) ? many : few).replace('{n}', String(n));
 }
 
+/**
+ * #254 — properties whose titles would read the same (same type, municipality and m²: 801 groups in the
+ * crawl of 2026-11-11). Sergei 2026-11-12: a feature that tells them apart is fine (sea, pool, bedrooms);
+ * never the property id. `me` and each twin give their features in the same order; the one returned is
+ * the first of this property's own features that differs from the most twins, or '' when none does.
+ */
+export function twinFeature(me: string[], twins: string[][]): string {
+  let best = '', score = 0;
+  me.forEach((v, i) => {
+    if (!v) return;
+    const n = twins.filter((t) => t[i] !== v).length;
+    if (n > score) { score = n; best = v; }
+  });
+  return best;
+}
+/** The key two properties share when their titles collide. */
+export const twinKey = (sub: string, muni: string, sqm: number): string => `${sub.toLowerCase()}|${muni}|${Math.round(sqm)}`;
+/** «with pool» as a title feature, in every language. */
+export const WITH_POOL: Record<Lang, string> = {
+  el: 'με πισίνα', en: 'with pool', de: 'mit Pool', sr: 'sa bazenom', bg: 'с басейн', ro: 'cu piscină', ru: 'с бассейном', tr: 'havuzlu', he: 'עם בריכה',
+};
+
 export type PropertySeo = { title: string; meta: string; h1: string; alt: string };
 
 /** The four texts of a property page in its language, from George's patterns. */

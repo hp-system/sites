@@ -24,7 +24,7 @@ import PropertyCard from './PropertyCard.astro';
 import CallBack from './CallBack.astro';
 import { privacyPath } from '../lib/legal';
 import type { SiteProperty } from '../lib/api';
-import { refOf, priceOf, priceVisible, pick } from '../lib/api';
+import { refOf, priceOf, priceVisible, pick, allProperties } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf, placeOf } from '../lib/gate';
 import { memberOf } from '../lib/member';
 import { coverOf, orderedPhotos, isPhotoOpen, blurSrc, marked, markedSrcSet, markedSrcSetSmall,
@@ -38,13 +38,13 @@ import { company } from '../lib/company';
 import { ui, facetUrl, FACETS, PAIRS, catKey, isLuxury } from '../lib/listing';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
 import { brand } from '../brand/index';
-import { propertySeo, bedsText } from '../lib/property-seo';
+import { propertySeo, bedsText, twinFeature, twinKey, WITH_POOL } from '../lib/property-seo';
 import { specOf, MUNI_SPEC } from '../lib/seo-pages';
 import {
   conditionOf, plotSqmOf,
   descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
   energyOf, oldPriceOf, floorName, pui, subName, poiName, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
-  isBusiness, homeFactsOf, businessFactsOf, bizSqmOf,
+  isBusiness, homeFactsOf, businessFactsOf, bizSqmOf, hasPool,
   CIRCLE_M, mapViewOf, videosOf, embedOf, documentsOf, priceHistoryOf, addressOf,
 } from '../lib/property';
 
@@ -145,7 +145,21 @@ const seo = propertySeo({
   view: seaLabel(a.sea_access, lang),
 });
 // without a municipality the patterns cannot be filled: the old-site title (#88) and the description stay
-const title = muniOwn ? seo.title : pui(lang, 'seoTitleNoM', { t: sub, id });
+// #254: properties with the same type, municipality and m² share a title; the first feature that tells
+// this one apart (sea, pool, bedrooms) goes after it. Counted on the anonymous set without the country
+// rule, so Google gets the same title from every country.
+const twinFeats = (x: Record<string, unknown>) => {
+  const b = Number(x.bedrooms) || 0;
+  return [seaLabel(x.sea_access as string, lang), hasPool(x as any) ? WITH_POOL[lang] : '',
+    b > 0 ? bedsText(b, lang, t(lang, 'list.bed1'), t(lang, 'list.bedn', { n: '{n}' })) : ''];
+};
+const myTwinKey = twinKey(String(a.subcategory ?? ''), muniKey(a), sqmN);
+const twins = muniOwn && sqmN > 0
+  ? (await allProperties().catch(() => [] as SiteProperty[])).filter((p) => refOf(p) !== id
+      && twinKey(String(p.attributes?.subcategory ?? ''), muniKey(p.attributes ?? {}), Number(p.attributes?.sqm ?? 0) || bizSqmOf(p.attributes ?? {})) === myTwinKey)
+  : [];
+const twinTag = twins.length ? twinFeature(twinFeats(a as any), twins.map((p) => twinFeats((p.attributes ?? {}) as any))) : '';
+const title = muniOwn ? (twinTag ? `${seo.title} · ${twinTag}` : seo.title) : pui(lang, 'seoTitleNoM', { t: sub, id });
 const h1Text = muniOwn ? seo.h1 : heading;
 const coverAlt = muniOwn ? seo.alt : altOf(cover, lang, heading);
 // 🪤 ΤΟ ΙΔΙΟ STRING ΠΑΕΙ ΚΑΙ ΣΤΟ JSON-LD παρακάτω — άρα το κόψιμο πρέπει να είναι

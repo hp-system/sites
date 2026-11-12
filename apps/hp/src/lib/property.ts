@@ -1064,6 +1064,12 @@ export function homeFactsOf(a: Attrs, lang: string): Fact[] {
   return out;
 }
 
+/** A pool of any kind (private or shared, outdoor or indoor); «2» is «none» (#254). */
+export function hasPool(a: Attrs): boolean {
+  const g = (a as Record<string, unknown>).pools;
+  return (Array.isArray(g) ? g : [g]).map(code).some((p) => POOL[p] && p !== '2');
+}
+
 /** Desktop six-fact row: the condition alone, in the page language (same words as the facts list). */
 export function conditionOf(a: Attrs, lang: string): string {
   const c = CONDITION[code((a as Record<string, unknown>).condition)];

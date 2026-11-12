@@ -30,11 +30,14 @@ const ALLOW = [
   /^[\w.+-]+@[\w.-]+$/, /^https?:\/\//i, /^[+\d\s()€.,:/–-]+$/,
   /^(halkidiki|chalkidiki|kassandra|sithonia|nea propontida|aristotelis|polygyros|thessaloniki|neo rysio|mount athos)(,\s*(halkidiki|chalkidiki|greece|thessaloniki))*$/i,
   /^(facebook|instagram|youtube|linkedin|tiktok|x)$/i, /^www\.halkidikiproperties\.com$/i,
+  /^\[email(\s|&#160;)?protected\]$/i,   // Cloudflare's e-mail obfuscation placeholder
+  /^·\s*\p{L}+\s+\d{4}$/u,   // «· November 2026» (a month spelt the same in the language)
 ];
 // words that are the same in the language itself (checked one by one, 2026-11-12)
 const SAME_WORD = {
-  de: ['Blog', 'Cookies', 'Marketing', 'Hotels', '8. Cookies', 'Maisonette'], ro: ['Blog', 'Contact', 'Marketing'], sr: ['Blog', 'Marketing'],
-  tr: ['Blog'], el: ['Cookies', '8. Cookies'],
+  de: ['Blog', 'Cookies', 'Marketing', 'Hotels', 'Hotel', '8. Cookies', 'Maisonette', 'Details', 'Pool', 'West', 'Studio', 'Studios', 'Israel', 'Ukraine'],
+  ro: ['Blog', 'Contact', 'Marketing', 'Email', 'Hotel', 'Bulgaria', 'Serbia', 'Israel', 'Albania', 'Austria', 'Slovenia', 'Australia'],
+  sr: ['Blog', 'Marketing', 'Hotel'], tr: ['Blog', 'Türkiye'], el: ['Cookies', '8. Cookies', 'Email'],
 };
 const allowedIn = (lang, s) => allowed(s) || (SAME_WORD[lang] ?? []).includes(s);
 const allowed = (s) => ALLOW.some((r) => r.test(s));

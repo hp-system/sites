@@ -21,6 +21,7 @@ import { priceTables } from '../lib/prices';
 import type { SiteProperty } from '../lib/api';
 import { allProperties, visitorCountry } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
+import { subName } from '../lib/property';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
 import { waHref, viberHref } from '../lib/contact';
@@ -320,7 +321,8 @@ if (fresh?.postPhotos?.length) {
         const ph = photosOf(a).find((x, i) => isPhotoOpen(x, i) && x.tag && th.tags.includes(x.tag));
         if (!ph) continue;
         used.add(p.id);
-        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${p.title}, Halkidiki`), style: focalStyle(ph) };
+        // #251: not the CRM item title (English, with the village — R-006): type and municipality in the page language
+        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`), style: focalStyle(ph) };
         break;
       }
     }

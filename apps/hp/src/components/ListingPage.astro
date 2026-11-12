@@ -762,7 +762,7 @@ const tilePhoto = (() => {
         </ul>
 
         {res.pages > 1 && (
-          <nav class="pager" aria-label="pagination">
+          <nav class="pager" aria-label={t(lang, 'a11y.pager')}>
             {res.page > 1 && <a class="btn" href={pageUrl(res.page - 1)} rel="prev">{ui(lang, 'prev')}</a>}
             <span class="t-data">{ui(lang, 'pageOf', { a: res.page, b: res.pages })}</span>
             {res.page < res.pages && <a class="btn" href={pageUrl(res.page + 1)} rel="next">{ui(lang, 'next')}</a>}

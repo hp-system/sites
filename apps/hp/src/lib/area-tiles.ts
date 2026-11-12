@@ -42,7 +42,7 @@ export function buildAreaTiles(items: Item[], lang: Lang, pick: (f: (a: any) => 
       const name = facet?.name[lang] ?? p.name;
       return {
         key: p.slug, name, from,
-        href: pageOf(({ kassandra: 'P11', sithonia: 'P12', 'nea-propontida': 'P13', aristotelis: 'P14' } as Record<string, string>)[p.slug] ?? '-',
+        href: pageOf(({ kassandra: 'P11', sithonia: 'P12', 'nea-propontida': 'P13', aristotelis: 'P14', polygyros: 'P58' } as Record<string, string>)[p.slug] ?? '-',   // #267: Polygyros has its own page (P58) now
           lang === 'en' ? areaUrl(p.slug) : (facet ? facetUrl(lang, facet.key) : url)),
         alt: t(lang, 'home.area_alt', { name }),
         keep,

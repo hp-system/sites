@@ -16,6 +16,7 @@
 // plain #anchors.
 import FaqSearch from './FaqSearch.astro';
 import SpecMosaic, { type MosaicPhoto } from './SpecMosaic.astro';
+import { linkPath } from '../lib/list-blocks';
 import { h2Id, linksBySection, type SpecPage } from '../lib/seo-pages';
 import { prefix, t, type Lang } from '../lib/i18n';
 
@@ -32,12 +33,15 @@ interface Props {
   /** the links of each section, when the caller already assigned them on the whole page (Sell: before some
    *  sections became cards) */
   sectionLinks?: { href: string; text: string }[][];
+  /** #275: links already shown by the page blocks above (their paths): left out of the sections */
+  drop?: Set<string>;
   /** #267: the list page's facets, for the area / category tiles */
   facets?: string[];
   cta?: { text: string; href: string; ev: 'member:join_from_list' | 'content:sell' | 'register:info'; gild: boolean; plus?: boolean } | null;   // events from the closed list (B-11)
 }
 const { page, lang, photos, faqH, faqHref, member = false, items = [], facets = [] } = Astro.props;
-const sectionLinks = Astro.props.sectionLinks ?? linksBySection(page);
+const drop = Astro.props.drop ?? new Set<string>();
+const sectionLinks = (Astro.props.sectionLinks ?? linksBySection(page)).map((ls) => ls.filter((l) => !drop.has(linkPath(l.href))));
 const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
 // the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
 const nav = heads.map((h) => ({ id: h2Id(h), text: h, ask: (page.questionMarks ?? []).includes(h) }));

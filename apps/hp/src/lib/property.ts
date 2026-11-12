@@ -28,6 +28,12 @@ export function descriptionOf(a: Attrs, lang: Lang): string {
   const d = (k: string) => stripAiTail(String((a as Record<string, unknown>)[`description_${k}`] ?? '').trim());
   return d(lang) || d('en') || d('el');
 }
+/** The language the description above is actually in (#251: ro/tr/he have none in the CRM yet; the English
+ *  one is shown, marked lang="en" so readers and search engines read it as English). */
+export function descriptionLangOf(a: Attrs, lang: Lang): Lang {
+  const has = (k: string) => !!stripAiTail(String((a as Record<string, unknown>)[`description_${k}`] ?? '').trim());
+  return has(lang) ? lang : has('en') ? 'en' : 'el';
+}
 
 /**
  * ΕΝΑ ΧΑΡΑΚΤΗΡΙΣΤΙΚΟ — σταθερό αναγνωριστικό + ετικέτα προς εμφάνιση.

@@ -1,0 +1,314 @@
+{
+  "_note": "Briefs + new texts for three list pages that had no text (SEO crawl 2026-11-11: no H2, a short automatic meta), D-20261106-SS-2; Sergei 2026-11-12 «Делаем». Facts only from George: his area and category pages of 20/10 (src/content/areas/en.ts) and his spec pages P04, P06, P19, P20, P21. No property counts. Each page keeps its property list under the text.",
+  "batch": 5,
+  "date": "2026-11-12",
+  "status": "approved",
+  "approved": "Sergei 2026-11-12: «Утверждаешь тексты брифов? … да»",
+  "pages": [
+    {
+      "id": "P22",
+      "lang": "en",
+      "page": "Hotels & commercial",
+      "url": "https://www.halkidikiproperties.com/en/properties/hotels-for-sale",
+      "titleFocus": "Buyers of a hotel or a business building: what is for sale and how buying works",
+      "primaryKeyword": "hotels for sale in Halkidiki",
+      "primaryVolume": "GSC 12 months: «hotels for sale halkidiki» 174 impressions, «hotels for sale in halkidiki» 128, «ξενοδοχεια προς πωληση χαλκιδικη» 243 (position 10); spec 2_Keywords 40/month",
+      "secondaryKeywords": [
+        "hotel for sale Halkidiki Greece",
+        "commercial property for sale Halkidiki",
+        "hotel for sale Kassandra",
+        "business property Greece"
+      ],
+      "keywordRationale": "The demand on this page is hotels (registry note P22). Shops, offices and buildings share the list, so they get one section.",
+      "title": "Hotels for Sale in Halkidiki, Greece",
+      "meta": "Hotels and commercial property for sale in Halkidiki, Greece: hotels in Kassandra, Sithonia and the rest of the peninsula, shops, offices and buildings.",
+      "h1": "Hotels and commercial property for sale in Halkidiki",
+      "h2": [
+        "Hotels for sale by area",
+        "What each hotel listing shows",
+        "Shops, offices and buildings",
+        "Buying a hotel or business property in Greece"
+      ],
+      "faqQuestions": [
+        "Where are the hotels for sale in Halkidiki?",
+        "What does a hotel listing include?",
+        "Can a commercial building qualify for the Golden Visa?",
+        "How long does buying take?"
+      ],
+      "contentBrief": "The list of hotels and commercial property, with what a buyer of a business needs to know first. Area facts from George's municipality pages; the listing facts are the fields every hotel card shows; the buying steps are George's (P19); the €250,000 Golden Visa line is George's (P20).",
+      "targetWords": 450,
+      "pageType": "listing",
+      "schema": [
+        "CollectionPage",
+        "ItemList",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Properties",
+        "Hotels & commercial"
+      ],
+      "heroAlt": "Hotel by the sea for sale in Halkidiki, Greece",
+      "ogTitle": "Hotels for Sale in Halkidiki – Hotels and Commercial Property",
+      "anchor": "hotels for sale in Halkidiki",
+      "linksOut": [
+        {
+          "anchor": "real estate in Kassandra, Halkidiki",
+          "href": "/en/properties/kassandra"
+        },
+        {
+          "anchor": "Sithonia real estate",
+          "href": "/en/properties/sithonia"
+        },
+        {
+          "anchor": "buying property in Greece",
+          "href": "/en/buying-property-in-greece"
+        },
+        {
+          "anchor": "Greece Golden Visa",
+          "href": "/en/golden-visa-greece"
+        },
+        {
+          "anchor": "Halkidiki property for sale",
+          "href": "/en/properties"
+        }
+      ],
+      "linkedFrom": [
+        "Home collections (Hotels & commercial)",
+        "Footer",
+        "P02 All properties"
+      ],
+      "cta": "Ask for the full file of a hotel",
+      "ctaHref": "/en/contact",
+      "oldUrls": [
+        "/en/property-for-sale/hotels"
+      ],
+      "lawyerCheck": "YES — the line that a running hotel's operating licence is checked by the buyer's lawyer (not in George's texts; drop it if the lawyer does not confirm).",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Kassandra is the strongest rental market of Halkidiki. Here you find the hotels and commercial property for sale across its five municipalities, from hotels near the big beaches to shops, offices and buildings in the towns that stay open all year. Ask an adviser for the full file of each one.</p>",
+      "body": "<h2>Hotels for sale by area</h2><p><strong>Kassandra</strong> has the big beaches and the resorts of Sani, Possidi and Pefkochori, and the longest letting season: a house near the beach lets for 16 to 20 weeks a year. <strong>Sithonia</strong> has the most nature and privacy, with small coves among the pines and views of Mount Athos. On the eastern side, <strong>Aristotelis</strong> has the lowest prices per square metre, and <strong>Nea Propontida</strong> and <strong>Polygyros</strong> have long, easy beaches close to towns with a permanent population.</p><h2>What each hotel listing shows</h2><p>Every hotel in the list shows the facts a buyer of a business asks first: the rooms by type (single, double, triple, quadruple, suites and studios), the classification, the building area and the distance to the sea. The full file of each hotel, with its papers, comes from an adviser.</p><h2>Shops, offices and buildings</h2><p>In the towns that stay open all year, such as Nea Moudania, Polygyros and Kassandreia, shops, offices and buildings serve the people who live here, not only the summer visitors.</p><h2>Buying a hotel or business property in Greece</h2><p>Buying works like any purchase in Greece: a Greek tax number in one day, an independent lawyer, a pre-contract with a 10% deposit, the notary deed and the land registry. Count 4 to 8 weeks in total and about 6% on top of the price for taxes and fees. For a running hotel, your lawyer also checks its operating licence.</p>",
+      "faq": [
+        {
+          "q": "Where are the hotels for sale in Halkidiki?",
+          "a": "Across the five municipalities: near the beaches of Kassandra and Sithonia, on the coast of Aristotelis and in the towns of Nea Propontida and Polygyros. The list shows the hotels for sale today."
+        },
+        {
+          "q": "What does a hotel listing include?",
+          "a": "The rooms by type, the classification, the building area and the distance to the sea. An adviser sends you the full file of each hotel."
+        },
+        {
+          "q": "Can a commercial building qualify for the Golden Visa?",
+          "a": "As of November 2026, a €250,000 threshold applies only to converting a commercial building into a home; other homes in Halkidiki need €400,000."
+        },
+        {
+          "q": "How long does buying take?",
+          "a": "Count 4 to 8 weeks from the tax number to the land registry, and about 6% on top of the price for taxes and fees."
+        }
+      ]
+    },
+    {
+      "id": "P58",
+      "lang": "en",
+      "page": "Polygyros",
+      "url": "https://www.halkidikiproperties.com/en/properties/polygyros",
+      "titleFocus": "Buyers who want a home with year-round life and the beach nearby",
+      "primaryKeyword": "property for sale in Polygyros",
+      "primaryVolume": "Low property demand in GSC (registry note P58); the experience page Polygyros has 7,393 impressions",
+      "secondaryKeywords": [
+        "Polygyros Halkidiki",
+        "Gerakini property",
+        "Psakoudia property",
+        "homes for sale Polygyros"
+      ],
+      "keywordRationale": "The fifth municipality, needed by spec rule 16 (every property links to its municipality page). The town is searched as a place; the page catches it for property.",
+      "title": "Property for Sale in Polygyros, Halkidiki",
+      "meta": "Property for sale in Polygyros, the capital of Halkidiki, and the beach villages of Gerakini and Psakoudia: homes with services open all year round.",
+      "h1": "Property for sale in Polygyros, Halkidiki",
+      "h2": [
+        "Polygyros, the capital of Halkidiki",
+        "The coast: Gerakini and Psakoudia",
+        "The villages inland",
+        "Living in Polygyros all year",
+        "Buying property in Polygyros"
+      ],
+      "faqQuestions": [
+        "Is Polygyros good for a year-round home?",
+        "Is there a hospital in Polygyros?",
+        "Which beaches are near Polygyros?",
+        "How long does buying take?"
+      ],
+      "contentBrief": "The fifth municipality as a place to live all year, with the beach a short drive away. Facts from George's Polygyros page of 20/10 and his guide P21 and houses page P04.",
+      "targetWords": 450,
+      "pageType": "listing",
+      "schema": [
+        "CollectionPage",
+        "ItemList",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Properties",
+        "Polygyros"
+      ],
+      "heroAlt": "Polygyros among pine and olive groves in Halkidiki, Greece",
+      "ogTitle": "Property for Sale in Polygyros – Capital of Halkidiki",
+      "anchor": "property for sale in Polygyros",
+      "linksOut": [
+        {
+          "anchor": "Halkidiki beaches and living guide",
+          "href": "/en/halkidiki"
+        },
+        {
+          "anchor": "Sithonia real estate",
+          "href": "/en/properties/sithonia"
+        },
+        {
+          "anchor": "property for sale in Nea Propontida",
+          "href": "/en/properties/nea-propontida"
+        },
+        {
+          "anchor": "houses for sale in Halkidiki",
+          "href": "/en/properties/homes-for-sale"
+        },
+        {
+          "anchor": "buying property in Greece",
+          "href": "/en/buying-property-in-greece"
+        }
+      ],
+      "linkedFrom": [
+        "Menu Halkidiki",
+        "Every property in Polygyros (spec rule 16)",
+        "P21 Halkidiki guide"
+      ],
+      "cta": "Talk to an adviser about Polygyros",
+      "ctaHref": "/en/contact",
+      "oldUrls": [
+        "/en/property-for-sale/polygyros"
+      ],
+      "lawyerCheck": "No new legal lines: the purchase steps are George's (P19).",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Polygyros is the administrative capital of Halkidiki, a mountain town among pine and olive groves, with the beach villages of Gerakini and Psakoudia on the gulf below. Services stay open all year and the coast is a short drive away.</p>",
+      "body": "<h2>Polygyros, the capital of Halkidiki</h2><p>Polygyros is the capital of the regional unit of Halkidiki, built on the hills among pine and olive groves. The regional offices, the courts and the general hospital of Halkidiki are here, so the town keeps its services open in every season.</p><h2>The coast: Gerakini and Psakoudia</h2><p>Below the town, on the gulf, are the beach villages of Gerakini and Psakoudia, near the base of Sithonia. The beaches are long and easy, close to towns with life all year, and popular with families.</p><h2>The villages inland</h2><p>Inland are the villages of Taxiarchis, Paleochora, Agios Prodromos and Kalyves.</p><h2>Living in Polygyros all year</h2><p>Families who live in Halkidiki all year often choose the area around Polygyros, for its schools, shops and the shorter drive to Thessaloniki. For a home used in winter, check the heating, the insulation and the access in bad weather before you buy.</p><h2>Buying property in Polygyros</h2><p>Buying in Polygyros works like anywhere in Greece: a Greek tax number in one day, an independent lawyer, a pre-contract with a 10% deposit, the notary deed and the land registry. Count 4 to 8 weeks in total and about 6% on top of the price for taxes and fees.</p>",
+      "faq": [
+        {
+          "q": "Is Polygyros good for a year-round home?",
+          "a": "It is the regional capital, with services open all year, and the beaches of Gerakini and Psakoudia are a short drive away."
+        },
+        {
+          "q": "Is there a hospital in Polygyros?",
+          "a": "Yes, the general hospital of Halkidiki is in Polygyros, and the large hospitals of Thessaloniki are within reach."
+        },
+        {
+          "q": "Which beaches are near Polygyros?",
+          "a": "Gerakini and Psakoudia, on the gulf below the town, near the base of Sithonia."
+        },
+        {
+          "q": "How long does buying take?",
+          "a": "Count 4 to 8 weeks from the tax number to the land registry, and about 6% on top of the price for taxes and fees."
+        }
+      ]
+    },
+    {
+      "id": "P68",
+      "lang": "en",
+      "page": "Detached houses",
+      "url": "https://www.halkidikiproperties.com/en/properties/detached-houses",
+      "titleFocus": "Buyers of a house of their own, on its own plot",
+      "primaryKeyword": "detached houses for sale in Halkidiki",
+      "primaryVolume": "pending (keyword tool)",
+      "secondaryKeywords": [
+        "houses for sale Halkidiki Greece",
+        "detached house Kassandra",
+        "house with garden Halkidiki",
+        "family home Halkidiki"
+      ],
+      "keywordRationale": "The list of detached houses (subcategory «detached house»), narrower than the houses page P04 (all homes).",
+      "title": "Detached Houses for Sale in Halkidiki, Greece",
+      "meta": "Detached houses for sale in Halkidiki, Greece: sea-view houses in Kassandra and Sithonia, larger plots in Aristotelis, family homes near Thessaloniki.",
+      "h1": "Detached houses for sale in Halkidiki",
+      "h2": [
+        "Detached houses by area",
+        "Detached house, maisonette or apartment?",
+        "What a detached house costs",
+        "Letting a house near the beach",
+        "Buying a house from abroad"
+      ],
+      "faqQuestions": [
+        "What does a detached house in Halkidiki cost?",
+        "Can a house pay for itself with rentals?",
+        "Can I buy a house from abroad?",
+        "Can a house qualify for the Golden Visa?"
+      ],
+      "contentBrief": "Detached houses across the five municipalities. Facts from George's villas page of 20/10 (it lists detached houses), his maisonettes page P06 and Golden Visa page P20.",
+      "targetWords": 500,
+      "pageType": "listing",
+      "schema": [
+        "CollectionPage",
+        "ItemList",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "breadcrumb": [
+        "Home",
+        "Properties",
+        "Detached houses"
+      ],
+      "heroAlt": "Detached house with garden for sale in Halkidiki, Greece",
+      "ogTitle": "Detached Houses for Sale in Halkidiki – A House of Your Own",
+      "anchor": "detached houses for sale in Halkidiki",
+      "linksOut": [
+        {
+          "anchor": "houses for sale in Halkidiki",
+          "href": "/en/properties/homes-for-sale"
+        },
+        {
+          "anchor": "maisonettes for sale in Halkidiki",
+          "href": "/en/properties/maisonettes"
+        },
+        {
+          "anchor": "villas for sale in Halkidiki",
+          "href": "/en/properties/villas-for-sale"
+        },
+        {
+          "anchor": "Greece Golden Visa",
+          "href": "/en/golden-visa-greece"
+        },
+        {
+          "anchor": "buying property in Greece",
+          "href": "/en/buying-property-in-greece"
+        }
+      ],
+      "linkedFrom": [
+        "List type filter (Detached houses)",
+        "P04 Houses"
+      ],
+      "cta": "See detached houses with an adviser",
+      "ctaHref": "/en/contact",
+      "oldUrls": [],
+      "lawyerCheck": "No new legal lines: buying from abroad and the Golden Visa conditions are George's (villas page, P20).",
+      "editorialLine": "Updated November 2026",
+      "intro": "<p>Detached houses across the municipalities of Halkidiki: sea-view houses in Kassandra and Sithonia, quieter houses near Mount Athos and family homes close to Thessaloniki in Nea Propontida. Each listing shows the facts a buyer asks first: plot size, distance to the sea and pool.</p>",
+      "body": "<h2>Detached houses by area</h2><p>Most houses for sale are on the two western peninsulas. In <strong>Kassandra</strong> they are close to the big beaches and the resorts of Sani, Possidi and Pefkochori. In <strong>Sithonia</strong> they sit among the pines above small coves, often with a view of Mount Athos. In <strong>Aristotelis</strong>, on the eastern side, the same budget buys a larger house or plot, often with a sea view. <strong>Nea Propontida</strong>, 40 to 60 km from Thessaloniki airport, and <strong>Polygyros</strong>, the regional capital, suit a family home used all year.</p><h2>Detached house, maisonette or apartment?</h2><p>A detached house stands on its own plot, with the most space and privacy. A maisonette gives you more space and privacy than an apartment, usually at a lower price than a detached house, and an apartment is the most affordable way to own a home here.</p><h2>What a detached house costs</h2><p>Detached houses start at about €200,000 near Thessaloniki; sea-view houses on Kassandra and Sithonia usually start at €500,000. The prices of the houses for sale today are shown with the list below.</p><h2>Letting a house near the beach</h2><p>Near the beach, a house lets for 16 to 20 weeks a year in Kassandra, the strongest rental market in Halkidiki.</p><h2>Buying a house from abroad</h2><p>Buying from abroad is common: you need a Greek tax number and a lawyer, viewings can be in person or by video call, and the deed can be signed with a power of attorney. Count 4 to 8 weeks in total and about 6% on top of the price for taxes and fees.</p>",
+      "faq": [
+        {
+          "q": "What does a detached house in Halkidiki cost?",
+          "a": "Detached houses start at about €200,000 near Thessaloniki; sea-view houses on Kassandra and Sithonia usually start at €500,000."
+        },
+        {
+          "q": "Can a house pay for itself with rentals?",
+          "a": "Near the beach, houses let for 16 to 20 weeks a year in Kassandra, the strongest rental market in Halkidiki."
+        },
+        {
+          "q": "Can I buy a house from abroad?",
+          "a": "Yes. You need a Greek tax number and a lawyer; viewings can be in person or by video call, and the deed can be signed with a power of attorney."
+        },
+        {
+          "q": "Can a house qualify for the Golden Visa?",
+          "a": "As of November 2026, one home of at least 120 m² bought for €400,000 or more in Halkidiki can qualify, if it is not let for short stays."
+        }
+      ]
+    }
+  ]
+}

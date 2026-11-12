@@ -41,8 +41,11 @@ const allowed = (s) => ALLOW.some((r) => r.test(s));
 // names that stay in Latin script inside a sentence of any language: removed before the Latin-run test
 const NAMES = /Halkidiki Properties|Secret Portfolio|Golden Visa|George Tsigaras|GREEK PROPERTIES[^«»“”"()]*|Electronic Premium Registration|Google Analytics|Google|Facebook|LinkedIn|Instagram|WhatsApp|What’s up|Viber|SendGrid|monday|Crisp|Privacy Authority|www\.halkidikiproperties\.com/gi;
 
-const get = (path) => fetch(BASE + path, { headers: { 'x-forwarded-host': PROD, 'user-agent': 'hp-i18n-crawl' }, redirect: 'manual' });
-const toPath = (u) => (u.startsWith(ORIGIN) ? u.slice(ORIGIN.length) || '/' : u);
+// a local server gets the production host (as verify-seo.mjs); a public host (hp.rewize.app) is asked as it is
+const LOCAL = /^https?:\/\/(127\.0\.0\.1|localhost)/.test(BASE);
+const get = (path) => fetch(BASE + path, { headers: { ...(LOCAL ? { 'x-forwarded-host': PROD } : {}), 'user-agent': 'hp-i18n-crawl' }, redirect: 'manual' });
+// any host (www in the sitemap, hp.rewize.app in its own hreflang) → the path
+const toPath = (u) => (/^https?:\/\//.test(u) ? u.replace(/^https?:\/\/[^/]+/, '') || '/' : u);
 const langOf = (path) => { const s = decodeURI(path).split('/')[1]; return ['en', 'de', 'sr', 'bg', 'ro', 'tr', 'he', 'ru'].includes(s) ? s : 'el'; };
 
 /** The words a reader meets on the page: text between tags, alts, labels, placeholders, title, meta. */
@@ -63,7 +66,10 @@ function segments(html) {
 const latinRun = (s) => /\b[A-Za-z]{3,}\b[\s,'’-]+\b[A-Za-z]{3,}\b/.test(s.replace(NAMES, ' · '));
 const englishish = (s) => /\b[A-Za-z]{4,}\b/.test(s);
 
-const sm = await get('/sitemap.xml');
+// --sitemap <file>: the URL list from a saved sitemap (hp.rewize.app is noindex and serves none; its
+// properties come from the public DB, so the audit needs no access to the CRM)
+const SM_FILE = arg('sitemap');
+const sm = SM_FILE ? { status: 200, text: async () => (await import('node:fs')).readFileSync(SM_FILE, 'utf8') } : await get('/sitemap.xml');
 if (sm.status !== 200) { console.error(`sitemap.xml → ${sm.status}: run the server with SITE_ENV=production`); process.exit(2); }
 let locs = [...(await sm.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(/&amp;/g, '&'));
 if (Number.isFinite(MAX)) locs = locs.slice(0, MAX);

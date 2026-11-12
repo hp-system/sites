@@ -32,6 +32,7 @@ import { clean, marked, coverOf } from '../lib/photos';
 import { brand } from '../brand/index';
 import SpecText from './SpecText.astro';
 import SpecPosts from './SpecPosts.astro';
+import IntroTicker from './IntroTicker.astro';
 import PageBlocks from './PageBlocks.astro';
 import { pageBlocks } from '../lib/list-blocks';
 import { postPhotos } from '../lib/post-photos';
@@ -424,6 +425,8 @@ const tilePhoto = (() => {
         «Ακίνητα προς πώληση στη Χαλκιδική … Βρέθηκαν 527». */}
     <div class="head">
       <h1 class={isThemed || spec ? 't-display head__h' : 't-h2 head__h'}>{h1}</h1>
+      {/* #290 (Sergei 2026-11-12): the spec intro as the home page's ticker under the H1 (rule 9: H1 → intro → grid) */}
+      {spec && firstPage && spec.intro && <IntroTicker html={spec.intro} />}
       {apiDown && <p class="count t-data">—</p>}
     </div>
   </div>
@@ -555,13 +558,7 @@ const tilePhoto = (() => {
     {/* #160 spec rule 9: H1 → intro → grid. Page 1 only. On phones the intro is clamped to a
         few lines with a «more» switch (no JS), so the grid stays above the fold; the whole
         text is in the HTML either way (Google: mobile = same content). */}
-    {spec && firstPage && spec.intro && (
-      <div class="lintro">
-        <input type="checkbox" id="lintro-more" class="lintro__t" />
-        <SpecText page={spec} part="intro" lang={lang} />
-        <label for="lintro-more" class="lintro__more t-btn">+</label>
-      </div>
-    )}
+    {/* #290: the spec intro is the ticker under the H1 now (it stood here, between the filters and the grid) */}
 
     {/* ΔΥΟ ΟΜΑΔΕΣ, ΟΧΙ ΠΕΝΤΕ ΣΚΟΡΠΙΑ ΣΤΟΙΧΕΙΑ (George, 30/7):
           ΑΡΙΣΤΕΡΑ  = ΕΝΕΡΓΕΙΕΣ  → φίλτρα · αποθήκευση · κωδικός
@@ -863,6 +860,8 @@ const tilePhoto = (() => {
     justify-content: space-between; gap: var(--s2) var(--s4);
   }
   .head__h { margin: 0; max-width: 56ch; }
+  /* #290: the intro ticker takes its own line under the H1 */
+  .head :global(.itk) { flex: 0 0 100%; margin-top: 0; color: var(--ink-2); }
 
   /* 🚫 Η ΠΑΝΩ ΓΡΑΜΜΗ ΕΦΥΓΕ (George, 30/7: «η πάνω γραμμή θέλω να φύγει τελείως»).
      Ήταν `border-block`, που σημαίνει ΠΑΝΩ ΚΑΙ ΚΑΤΩ — δύο παράλληλες γραμμές με
@@ -1075,6 +1074,7 @@ const tilePhoto = (() => {
       font-size: var(--fs-s3); font-weight: 300; line-height: 1.14; letter-spacing: -.016em; color: #fff; max-width: none;
     }
     .ltop .count { color: rgba(255,255,255,.88); }
+    .ltop .head :global(.itk) { color: #fff; max-width: min(100%, 980px); }
 
     /* George's phone tools and pager give way to the row and the new pager */
     .tools, .pager { display: none; }

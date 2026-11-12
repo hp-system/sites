@@ -1,0 +1,33 @@
+---
+// The spec intro as a one-line ticker under the H1 of a hero — the home page's (Hero.astro, Sergei 08/11) for
+// every list page (#290, Sergei 2026-11-12: the intro paragraph between the filters and the grid looked out of
+// place; «сделать как на главной … бегущую строку»). Spec rule 9 order kept (H1 → intro → grid).
+// SEO: the text is in the HTML once, as plain text; the second copy that closes the loop is drawn by CSS from
+// data-copy (not in the DOM). Rejected: display:none or an image — Google would not count it, or count it hidden.
+// Moves left slowly, stops on hover; still (one line, cut with «…») with reduced motion.
+interface Props { html: string }
+const text = Astro.props.html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+---
+{text && (
+  <div class="itk">
+    <div class="itk__track" data-copy={text}>
+      <p class="itk__tx">{text}</p>
+    </div>
+  </div>
+)}
+
+<style>
+  .itk { margin-top: var(--s3); overflow: hidden; white-space: nowrap; max-width: 100%;
+         -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+                 mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+  .itk__track { display: inline-flex; gap: 4em; animation: itk 90s linear infinite; }
+  .itk:hover .itk__track { animation-play-state: paused; }
+  .itk__tx, .itk__track::after { margin: 0; flex: none; font-size: var(--fs-s0); line-height: 1.55; color: inherit; opacity: .88; }
+  .itk__track::after { content: attr(data-copy); }
+  @keyframes itk { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 2em)); } }
+  @media (prefers-reduced-motion: reduce) {
+    .itk__track { animation: none; display: block; }
+    .itk__track::after { display: none; }
+    .itk__tx { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  }
+</style>

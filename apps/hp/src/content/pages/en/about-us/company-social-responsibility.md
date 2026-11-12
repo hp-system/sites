@@ -1,5 +1,6 @@
 ---
 path: /en/about-us/company-social-responsibility
+key: about-us/company-social-responsibility
 title: Corporate Social Responsibility
 description: 'Our social responsibility: respect and training for our people, a bioclimatic approach to the environment, support for children and for local sports.'
 h1: Company's social responsibility

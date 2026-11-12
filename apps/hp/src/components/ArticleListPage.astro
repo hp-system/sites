@@ -12,7 +12,7 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
-import { listUrl, prefix, type Lang } from '../lib/i18n';
+import { listUrl, t, prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
 import { redirectFor } from '../lib/redirects';
 import {
@@ -63,7 +63,7 @@ const index = every.map((a) => ({ t: a.data.h1, x: excerptOf(a), u: articleUrl(a
 
   <main id="main" class="al">
     <header class="wrap al-top">
-      <nav class="crumb" aria-label="breadcrumb">
+      <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
         <a href={prefix(lang) || '/'}>{brand.name}</a>
         <span aria-hidden="true">·</span>
         <span>Articles</span>

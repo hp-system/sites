@@ -1,5 +1,6 @@
 ---
 path: /en/halkidiki-property-prices
+key: halkidiki-property-prices
 title: Halkidiki Property Prices per m²
 description: 'Halkidiki property prices: median asking price per m² for homes and land by municipality and village, from our current listings, updated continuously.'
 h1: Halkidiki property prices

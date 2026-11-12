@@ -1,5 +1,6 @@
 ---
 path: /en/terms-of-services
+key: terms-of-services
 title: Terms of Services
 description: 'Terms of use and provision of services of the Halkidiki Properties website: users and registered members, listings, content, liability and the law that applies.'
 h1: Terms of Services

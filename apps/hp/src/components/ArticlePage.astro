@@ -20,7 +20,7 @@ import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
 import { allProperties, visitorCountry } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
-import { listUrl, prefix, type Lang } from '../lib/i18n';
+import { listUrl, t, prefix, type Lang } from '../lib/i18n';
 import { contentUrl, pageExists } from '../lib/pages';
 import { brand } from '../brand/index';
 import { waHref } from '../lib/contact';
@@ -120,7 +120,7 @@ if (a.has_calculator) {
   <main id="main" class="art">
     <header class="wrap art-top">
       <div class="art-top__txt">
-      <nav class="crumb" aria-label="breadcrumb">
+      <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
         <a href={prefix(lang) || '/'}>{brand.name}</a>
         <span aria-hidden="true">·</span>
         <a href={categoryUrl('all-news')}>Articles</a>

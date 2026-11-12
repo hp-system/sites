@@ -2290,48 +2290,48 @@
   },
   {
    "from": "/el/about-us",
-   "to": "/about",
+   "to": "/about-us",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/about-us/αξιες",
-   "to": "/about",
+   "to": "/about-us/αξιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/about-us/ιστορια",
-   "to": "/about",
+   "to": "/about-us/ιστορια",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/about-us/κοινωνικη-ευθυνη",
-   "to": "/about",
+   "to": "/about-us/κοινωνικη-ευθυνη",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/about-us/φιλοσοφια",
-   "to": "/about",
+   "to": "/about-us/φιλοσοφια",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/akinhta-xalkidikh-katoikies-xalkidikh",
@@ -2344,30 +2344,30 @@
   },
   {
    "from": "/el/faq",
-   "to": "/αγορα-ακινητου-στην-ελλαδα",
+   "to": "/faq",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 3,
-   "note": "topic"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/online-επικοινωνια",
-   "to": "/contact",
+   "to": "/online-επικοινωνια",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 6,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/vip",
-   "to": "/sell",
+   "to": "/exclusive",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/ακινητα",
@@ -2623,30 +2623,30 @@
   },
   {
    "from": "/el/αρθρα/ειδησεις-κατασκευαστη",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/αρθρα/ειδησεις-κατασκευαστη/villla-natalia",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 11,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/αρθρα/ειδησεις-κατασκευαστη/ηλεκτρονικη-ταυτοτητα-κτιριου-2022-τι-ειναι-και-τι-χρειαζεται-να-γνωριζεις",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 5,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/αρθρα/ειδησεις/10-λογοι-για-να-αγορασετε-ακινητο-στην-χαλκιδικη",
@@ -2929,138 +2929,138 @@
   },
   {
    "from": "/el/γιατι-να-εγγραφειτε",
-   "to": "/",
+   "to": "/γιατι-να-εγγραφειτε",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "register pages → home (new site uses login)"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/γιατι-να-εγγραφειτε/αγοραστης",
-   "to": "/",
+   "to": "/γιατι-να-εγγραφειτε/αγοραστης",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "register pages → home (new site uses login)"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/γιατι-να-εγγραφειτε/ιδιοκτητης",
-   "to": "/",
+   "to": "/γιατι-να-εγγραφειτε/ιδιοκτητης",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "register pages → home (new site uses login)"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/εντολη-αναθεσησ",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/εντολη-αναθεσης",
-   "to": "/sell",
+   "to": "/εντολη-αναθεσης",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 202,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/εντολη-συνεργασιας",
-   "to": "/sell",
+   "to": "/εντολη-συνεργασιας",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 78,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/εντολη-υποδειξης",
-   "to": "/sell",
+   "to": "/εντολη-υποδειξης",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 66,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/εξοχικο-στη-χαλκιδικη",
-   "to": "/ακινητα/κατοικιες",
+   "to": "/ακινητα-ελλαδα",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "type"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/επικοινωνια",
-   "to": "/contact",
+   "to": "/επικοινωνια",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 8,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/η-ομαδα-μας",
-   "to": "/about",
+   "to": "/about-us",
    "status": 301,
    "lang": "el",
    "src": "override",
    "clicks": 0,
-   "note": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page"
+   "note": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page · #262 Greek page"
   },
   {
    "from": "/el/θεσεις-εργασιας",
-   "to": "/about",
+   "to": "/θεσεις-εργασιας",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 7,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/θεσεις-εργασιας/bulgarian-speaker",
-   "to": "/about",
+   "to": "/θεσεις-εργασιας/bulgarian-speaker",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/θεσεις-εργασιας/construction-engineer",
-   "to": "/about",
+   "to": "/about-us",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/θεσεις-εργασιας/μεσιτες-ακινητων",
-   "to": "/about",
+   "to": "/about-us",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/κατασκευες",
-   "to": "/services/developers",
+   "to": "/κατασκευες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/οδηγοι/εξοχικη-κατοικια-ελλαδα-πλεονεκτηματα-μειονεκτηματα",
@@ -3082,12 +3082,12 @@
   },
   {
    "from": "/el/οδηγοι/πωληση-ακινητου-ελλαδα-μεσιτης-η-μονοι-σας",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/οδηγοι/σπιτια-προς-πωληση-χαλκιδικη",
@@ -3101,11 +3101,11 @@
   {
    "from": "/el/οροι-και-προυποθεσεις",
    "to": "/οροι-και-προυποθεσεις",
-   "status": "pending",
+   "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "legal page: keep same URL (new site must serve it)"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/πολιτικη-απορρητου",
@@ -3118,174 +3118,174 @@
   },
   {
    "from": "/el/προ-δημιοσιευμενα-ακινητα",
-   "to": null,
-   "status": "pending",
+   "to": "/προ-δημιοσιευμενα-ακινητα",
+   "status": 301,
    "lang": "el",
    "src": "override",
    "clicks": 0,
-   "note": "D7: → P23 Pre-published in Greek; its Greek URL waits for Q-20261106-SS-1"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/προσθεσε-το-ακινητο-σου",
-   "to": "/sell",
+   "to": "/προσθεσε-το-ακινητο-σου",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/πωληση",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/αναθεσε-το-στη-halkidiki-properties",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/γιατι-halkidiki-properties",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/διαφημισε-σε-portals",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/ολοκληρωσε-την-αγοραπωλησια-ευκολα",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/πραγματικες-επισκεψεις",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/προσθήκη-στο-secret-portfolio",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/συνεργασου-μαζι-μας-αποκλειστικα",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/πωληση/το-μελλον-του-real-estate",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/συνεργασου-μαζι-μας-αποκλειστικα",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/συνεργαστειτε-μαζι-μας",
-   "to": "/sell",
+   "to": "/συνεργαστειτε-μαζι-μας",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/συνεργατες",
-   "to": "/partners",
+   "to": "/συνεργατες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 3,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/τιμες-ακινητων-χαλκιδικη",
-   "to": "/αγορα-ακινητου-στην-ελλαδα",
+   "to": "/τιμες-ακινητων-χαλκιδικη",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "topic (price info → guide)"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες/αεροφωτογραφιες-αεροβιντεοληψεις",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 2,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες/αναθεση-διαχειρισης-ακινητου",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 39,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες/επαγγελματικές-φωτογραφίες-και-βιντεολήψεις",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες/ηλεκτρονικη-αναθεση-και-επιλογη-πακετου-διαφημισης-ακινητου",
@@ -3298,156 +3298,156 @@
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες/πακετα-διαφημισης-σε-portals",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες/πιστοποιητικα-ενεργειακης-αποδοσης-πεα",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες/πιστοποιητικα-ενεργειακης-αποδοσης-πεα",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 9,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/υπηρεσιες/για-πωλητες/φωτορεαλιστικα-και-360-view",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 4,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων",
-   "to": "/services",
+   "to": "/υπηρεσιες/υπηρεσιες-αγοραστων",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αεροπορικές-πλωτές-και-οδικές-μεταφορές",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αναζητηση-επισκεψη-και-ευρεση-ακινητου",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αποκλειστικοί-συνεργάτες-τύπου-vip-concierge",
-   "to": "/sell",
+   "to": "/πωληση",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 3,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/αρχιτεκτονικες-υπηρεσιες-3d-designs-μελετες",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/εκτιμησεις-νομικος-και-λογιστικος-ελεγχος",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/ιδρυση-και-διαχειριση-εταιρειων",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/μεσολαβηση-και-διαπραγματευση-ακινητων",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/μεταφρασεις-και-διερμηνειες",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/οικονομοτεχνικές-μελέτες-επιχειρηματικά-πλάνα",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-διαχειριση-ακινητης-περιουσιας",
-   "to": "/services/owners",
+   "to": "/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-διαχειριση-ακινητης-περιουσιας",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-διεκπεραιωση-αγοραπωλησιων",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-υποστηριξη-για-νομικες-και-χρηματοοικονομικες-υπηρεσιες",
-   "to": "/services",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-για-επενδυτες",
-   "to": "/ακινητα",
+   "to": "/υπηρεσιες/υπηρεσιες-για-επενδυτες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "topic"
+   "note": "#262: the Greek page at its own Greek URL"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-για-επενδυτες/δημοπρασιες-ταιπεδ",
@@ -3478,228 +3478,228 @@
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/άδειες-δόμησης",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ανάλυση-και-προ-κοστολογηση-έργου",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/αυτονομα-συστηματα-ψυξης-θερμανσης",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/βιοκλιματικές-παθητικές-κατοικίες",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/διαμόρφωση-και-διαχείριση-περιβάλλοντα-χώρου-αρχιτεκτονική-κήπου",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 22,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εγγύηση-κατασκευής",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εγκατασταση-φωτοβολταικων-συστηματων",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 8,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ειδικές-κατασκευές-πισινών",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 3,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εκσκαφές-και-θεμελιώσεις",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 2,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/επίβλεψη-και-ενημέρωση-reporting-με-ζωντανό-βίντεο",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/εφαρμογες-γεωθερμιας",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ηλεκτρικες-και-υδραυλικες-εγκαταστασεις",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ηλεκτρομηχανολογικές-μελέτες",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 7,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/κατασκευές-από-μπετόν-πέτρα-τούβλο-πάνελ",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 9,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/μελέτες-και-εφαρμογές-θερμομόνωσης",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/μελέτες-περιβαλλοντικών-επιπτώσεων",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/μεταλλικές-κατασκευές-κατοικιών",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 1,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/οικονομοτεχνικές-μελέτες-βιωσιμότητας-και-σκοπιμότητας",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ολοκληρωμένες-λύσεις-δομικών-ανακαινίσεων",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/ολοκληρωμένες-μελέτες-κατασκευής",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/συστήματα-απομακρυσμένης-εποπτείας",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/συστήματα-βιολογικού-καθαρισμού-υδάτων",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 2,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/συστηματα-ενδοδαπεδιας-ψυξης-θερμανσης",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες/υβριδικα-συστηματα-για-ανεξαρτητες-κατοικιες",
-   "to": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
    "status": 301,
    "lang": "el",
    "src": "spec",
    "clicks": 0,
-   "note": "content page"
+   "note": "content page · #262 Greek page"
   },
   {
    "from": "/el/υπησιευ/υπησιευ-κασκευαστευ/εγκατασταση-φωτοβολταικων-συστιματων",
@@ -6015,13 +6015,103 @@
    "note": "register pages → home (new site uses login)"
   },
   {
-   "from": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
-   "to": "/services/developers",
+   "from": "/el/υπηρεσιες",
+   "to": "/υπηρεσιες",
    "status": 301,
    "lang": "el",
-   "src": "spec",
+   "src": "override",
    "clicks": 0,
-   "note": "content page"
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/sell",
+   "to": "/πωληση",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/about",
+   "to": "/about-us",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/contact",
+   "to": "/επικοινωνια",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/partners",
+   "to": "/συνεργατες",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/services",
+   "to": "/υπηρεσιες",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/services/buyers",
+   "to": "/υπηρεσιες/υπηρεσιες-αγοραστων",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/services/owners",
+   "to": "/υπηρεσιες/για-πωλητες",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/services/investors",
+   "to": "/υπηρεσιες/υπηρεσιες-για-επενδυτες",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/services/developers",
+   "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/εργα",
+   "to": "/κατασκευες",
+   "status": 301,
+   "lang": "el",
+   "src": "override",
+   "clicks": 0,
+   "note": "#262: the Greek page at its own Greek URL"
   }
  ],
  "rules": [

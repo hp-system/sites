@@ -20,6 +20,8 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/kit.css';   // shared design kit (#186)
 import { brand } from '../brand/index';
+import { HERO_SHOTS } from '../lib/hero';
+import { clean, SHARE_W, SHARE_H } from '../lib/photos';
 
 interface Props {
   lang: Lang;
@@ -52,9 +54,16 @@ interface Props {
 }
 const {
   lang, title, description, path = '/',
-  ogImage, ogImageW, ogImageH, ogImageAlt, pathFor, noindex = false, jsonLd = [],
+  ogImage: ogOwn, ogImageW: ogOwnW, ogImageH: ogOwnH, ogImageAlt: ogOwnAlt, pathFor, noindex = false, jsonLd = [],
   langs, canonicalLang, embed = false, ogTitle, query = '',
 } = Astro.props;
+// SEO crawl 2026-11-11: 193 pages (lists, about, contact, partners) had no og:image, so a shared link came
+// without a picture. A page without its own takes the home's share photo (the same clean 800 frame).
+const shot = HERO_SHOTS[0];
+const ogImage = ogOwn ?? (shot ? clean(shot.url, SHARE_W) : undefined);
+const ogImageW = ogOwn ? ogOwnW : shot ? SHARE_W : undefined;
+const ogImageH = ogOwn ? ogOwnH : shot ? SHARE_H : undefined;
+const ogImageAlt = ogOwn ? ogOwnAlt : (shot?.alt as Record<string, string> | undefined)?.[lang] ?? shot?.alt.en;
 
 // 🌍 Το `og:locale` θέλει μορφή γλώσσα_ΧΩΡΑ («el_GR»), όχι σκέτο «el» — αλλιώς
 //    το Facebook το αγνοεί και πέφτει στο en_US. Οι χώρες είναι οι αγορές μας.

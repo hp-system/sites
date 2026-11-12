@@ -1,5 +1,6 @@
 ---
 path: /en/services/investor-services
+key: services/investor-services
 title: Real Estate Investor Services
 description: 'Services for real estate investors in Greece: HRADF tenders for state-owned property, hotel design and construction, and design of ports and marinas.'
 h1: Investor services in Greece

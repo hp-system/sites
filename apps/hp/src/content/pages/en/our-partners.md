@@ -1,5 +1,6 @@
 ---
 path: /en/our-partners
+key: our-partners
 title: Our Partners in Building and Design
 description: The partners of Halkidiki Properties in construction, materials, interiors and consulting, chosen for their professionalism and high-quality services.
 h1: Our partners

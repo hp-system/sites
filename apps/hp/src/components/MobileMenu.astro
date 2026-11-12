@@ -18,7 +18,7 @@ import LangSwitch from './LangSwitch.astro';
 import { num } from '../lib/format';
 import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
-import { pageExists } from '../lib/pages';
+import { pageExists, contentUrl } from '../lib/pages';
 import { specPathOr, MUNI_SPEC } from '../lib/seo-pages';
 import { FACETS, facetUrl } from '../lib/listing';
 
@@ -31,7 +31,7 @@ const { lang, munis, total, pathFor } = Astro.props;
 
 const p = prefix(lang);
 // English: the old site's URL /en/about-us (the info page); other languages keep /about.
-const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
+const aboutHref = contentUrl('about', lang);   // #262: each language's own URL (en /en/about-us, el /about-us)
 const url = listUrl(lang);
 const co = await company();
 
@@ -97,11 +97,11 @@ const has = (k: string) => pageExists(k as any);
 
     <p class="mm__lab">{t(lang, 'mm.company')}</p>
     <ul class="mm__list mm__list--plain">
-      <li>{has('sell') && <a href={`${p}/sell`}>{t(lang, 'nav.sell')}</a>}</li>
-      <li>{has('services') && <a href={`${p}/services`}>{t(lang, 'nav.services')}</a>}</li>
+      <li>{has('sell') && <a href={contentUrl('sell', lang)}>{t(lang, 'nav.sell')}</a>}</li>
+      <li>{has('services') && <a href={contentUrl('services', lang)}>{t(lang, 'nav.services')}</a>}</li>
       <li>{has('about') && <a href={aboutHref}>{t(lang, 'nav.company')}</a>}</li>
       <li><a href="/en/articles/all-news">{t(lang, 'nav.blog')}</a></li>
-      <li>{has('contact') && <a href={`${p}/contact`}>{t(lang, 'foot.contact')}</a>}</li>
+      <li>{has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'foot.contact')}</a>}</li>
     </ul>
 
     <div class="mm__foot">

@@ -1,5 +1,6 @@
 ---
 path: /en/why-register
+key: why-register
 title: Why Register – Free Membership
 description: 'Why register with Halkidiki Properties: free membership for buyers and owners, exclusive access by request, and a partnership for real estate agents.'
 h1: Why register

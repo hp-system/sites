@@ -1,0 +1,109 @@
+{
+  "id": "P58",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Polygyros",
+  "pageType": "listing",
+  "path": "/en/properties/polygyros",
+  "keyword": "property for sale in Polygyros",
+  "titleFocus": "Buyers who want a home with year-round life and the beach nearby",
+  "title": "Property for Sale in Polygyros, Halkidiki",
+  "meta": "Property for sale in Polygyros, the capital of Halkidiki, and the beach villages of Gerakini and Psakoudia: homes with services open all year round.",
+  "h1": "Property for sale in Polygyros, Halkidiki",
+  "h2": [
+    "Polygyros, the capital of Halkidiki",
+    "The coast: Gerakini and Psakoudia",
+    "The villages inland",
+    "Living in Polygyros all year",
+    "Buying property in Polygyros"
+  ],
+  "faqQuestions": [
+    "Is Polygyros good for a year-round home?",
+    "Is there a hospital in Polygyros?",
+    "Which beaches are near Polygyros?",
+    "How long does buying take?"
+  ],
+  "faq": [
+    {
+      "q": "Is Polygyros good for a year-round home?",
+      "a": "It is the regional capital, with services open all year, and the beaches of Gerakini and Psakoudia are a short drive away."
+    },
+    {
+      "q": "Is there a hospital in Polygyros?",
+      "a": "Yes, the general hospital of Halkidiki is in Polygyros, and the large hospitals of Thessaloniki are within reach."
+    },
+    {
+      "q": "Which beaches are near Polygyros?",
+      "a": "Gerakini and Psakoudia, on the gulf below the town, near the base of Sithonia."
+    },
+    {
+      "q": "How long does buying take?",
+      "a": "Count 4 to 8 weeks from the tax number to the land registry, and about 6% on top of the price for taxes and fees."
+    }
+  ],
+  "intro": "<p>Polygyros is the administrative capital of Halkidiki, a mountain town among pine and olive groves, with the beach villages of Gerakini and Psakoudia on the gulf below. Services stay open all year and the coast is a short drive away.</p>",
+  "body": "<h2>Polygyros, the capital of Halkidiki</h2><p>Polygyros is the capital of the regional unit of Halkidiki, built on the hills among pine and olive groves. The regional offices, the courts and the general hospital of Halkidiki are here, so the town keeps its services open in every season.</p><h2>The coast: Gerakini and Psakoudia</h2><p>Below the town, on the gulf, are the beach villages of Gerakini and Psakoudia, near the base of Sithonia. The beaches are long and easy, close to towns with life all year, and popular with families.</p><h2>The villages inland</h2><p>Inland are the villages of Taxiarchis, Paleochora, Agios Prodromos and Kalyves.</p><h2>Living in Polygyros all year</h2><p>Families who live in Halkidiki all year often choose the area around Polygyros, for its schools, shops and the shorter drive to Thessaloniki. For a home used in winter, check the heating, the insulation and the access in bad weather before you buy.</p><h2>Buying property in Polygyros</h2><p>Buying in Polygyros works like anywhere in Greece: a Greek tax number in one day, an independent lawyer, a pre-contract with a 10% deposit, the notary deed and the land registry. Count 4 to 8 weeks in total and about 6% on top of the price for taxes and fees.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/properties/polygyros",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Polygyros"
+  ],
+  "heroAlt": "Polygyros among pine and olive groves in Halkidiki, Greece",
+  "galleryAltPattern": "",
+  "ogTitle": "Property for Sale in Polygyros – Capital of Halkidiki",
+  "anchor": "property for sale in Polygyros",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "Halkidiki beaches and living guide",
+      "href": "/en/halkidiki"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "property for sale in Nea Propontida",
+      "href": "/en/properties/nea-propontida"
+    },
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "Menu Halkidiki",
+    "Every property in Polygyros (spec rule 16)",
+    "P21 Halkidiki guide"
+  ],
+  "cta": "Talk to an adviser about Polygyros",
+  "ctaHref": "/en/contact",
+  "oldUrls": [
+    "/en/property-for-sale/polygyros"
+  ],
+  "words": 323,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "No new legal lines: the purchase steps are George's (P19).",
+  "source": "brief batch-5.json",
+  "photoThemes": [],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

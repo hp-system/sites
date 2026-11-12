@@ -1,5 +1,6 @@
 ---
 path: /en/work-with-us-exclusively
+key: work-with-us-exclusively
 title: Exclusive Property Assignment
 description: 'Work with us exclusively: what an exclusive assignment means, how long it lasts, and the premium clients and sales services it unlocks for your property.'
 h1: Work with us exclusively

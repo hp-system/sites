@@ -1,0 +1,106 @@
+{
+  "id": "P68",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Detached houses",
+  "pageType": "listing",
+  "path": "/en/properties/detached-houses",
+  "keyword": "detached houses for sale in Halkidiki",
+  "titleFocus": "Buyers of a house of their own, on its own plot",
+  "title": "Detached Houses for Sale in Halkidiki, Greece",
+  "meta": "Detached houses for sale in Halkidiki, Greece: sea-view houses in Kassandra and Sithonia, larger plots in Aristotelis, family homes near Thessaloniki.",
+  "h1": "Detached houses for sale in Halkidiki",
+  "h2": [
+    "Detached houses by area",
+    "Detached house, maisonette or apartment?",
+    "What a detached house costs",
+    "Letting a house near the beach",
+    "Buying a house from abroad"
+  ],
+  "faqQuestions": [
+    "What does a detached house in Halkidiki cost?",
+    "Can a house pay for itself with rentals?",
+    "Can I buy a house from abroad?",
+    "Can a house qualify for the Golden Visa?"
+  ],
+  "faq": [
+    {
+      "q": "What does a detached house in Halkidiki cost?",
+      "a": "Detached houses start at about €200,000 near Thessaloniki; sea-view houses on Kassandra and Sithonia usually start at €500,000."
+    },
+    {
+      "q": "Can a house pay for itself with rentals?",
+      "a": "Near the beach, houses let for 16 to 20 weeks a year in Kassandra, the strongest rental market in Halkidiki."
+    },
+    {
+      "q": "Can I buy a house from abroad?",
+      "a": "Yes. You need a Greek tax number and a lawyer; viewings can be in person or by video call, and the deed can be signed with a power of attorney."
+    },
+    {
+      "q": "Can a house qualify for the Golden Visa?",
+      "a": "As of November 2026, one home of at least 120 m² bought for €400,000 or more in Halkidiki can qualify, if it is not let for short stays."
+    }
+  ],
+  "intro": "<p>Detached houses across the municipalities of Halkidiki: sea-view houses in Kassandra and Sithonia, quieter houses near Mount Athos and family homes close to Thessaloniki in Nea Propontida. Each listing shows the facts a buyer asks first: plot size, distance to the sea and pool.</p>",
+  "body": "<h2>Detached houses by area</h2><p>Most houses for sale are on the two western peninsulas. In <strong>Kassandra</strong> they are close to the big beaches and the resorts of Sani, Possidi and Pefkochori. In <strong>Sithonia</strong> they sit among the pines above small coves, often with a view of Mount Athos. In <strong>Aristotelis</strong>, on the eastern side, the same budget buys a larger house or plot, often with a sea view. <strong>Nea Propontida</strong>, 40 to 60 km from Thessaloniki airport, and <strong>Polygyros</strong>, the regional capital, suit a family home used all year.</p><h2>Detached house, maisonette or apartment?</h2><p>A detached house stands on its own plot, with the most space and privacy. A maisonette gives you more space and privacy than an apartment, usually at a lower price than a detached house, and an apartment is the most affordable way to own a home here.</p><h2>What a detached house costs</h2><p>Detached houses start at about €200,000 near Thessaloniki; sea-view houses on Kassandra and Sithonia usually start at €500,000. The prices of the houses for sale today are shown with the list below.</p><h2>Letting a house near the beach</h2><p>Near the beach, a house lets for 16 to 20 weeks a year in Kassandra, the strongest rental market in Halkidiki.</p><h2>Buying a house from abroad</h2><p>Buying from abroad is common: you need a Greek tax number and a lawyer, viewings can be in person or by video call, and the deed can be signed with a power of attorney. Count 4 to 8 weeks in total and about 6% on top of the price for taxes and fees.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/properties/detached-houses",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Detached houses"
+  ],
+  "heroAlt": "Detached house with garden for sale in Halkidiki, Greece",
+  "galleryAltPattern": "",
+  "ogTitle": "Detached Houses for Sale in Halkidiki – A House of Your Own",
+  "anchor": "detached houses for sale in Halkidiki",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "houses for sale in Halkidiki",
+      "href": "/en/properties/homes-for-sale"
+    },
+    {
+      "anchor": "maisonettes for sale in Halkidiki",
+      "href": "/en/properties/maisonettes"
+    },
+    {
+      "anchor": "villas for sale in Halkidiki",
+      "href": "/en/properties/villas-for-sale"
+    },
+    {
+      "anchor": "Greece Golden Visa",
+      "href": "/en/golden-visa-greece"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    }
+  ],
+  "linkedFrom": [
+    "List type filter (Detached houses)",
+    "P04 Houses"
+  ],
+  "cta": "See detached houses with an adviser",
+  "ctaHref": "/en/contact",
+  "oldUrls": [],
+  "words": 406,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "No new legal lines: buying from abroad and the Golden Visa conditions are George's (villas page, P20).",
+  "source": "brief batch-5.json",
+  "photoThemes": [],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

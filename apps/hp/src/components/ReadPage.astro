@@ -67,6 +67,13 @@ const panel = heads.length > 1 || side;
     /* nothing for the panel: the text alone, centred */
     .rp__in--solo { grid-template-columns: minmax(0, 960px); justify-content: center; }
   }
+  /* #259 (Sergei 12/11): partner logos in the text (Our partners) — the tiles of the About us partners strip
+     (120 × 84, grey until hover), in rows that wrap, instead of one 400 px logo under another */
+  .rp__txt :global(.gallery.logos) { display: flex; flex-wrap: wrap; gap: 12px; margin: var(--s4) 0 0; max-width: none; }
+  .rp__txt :global(.gallery.logos img) { width: 120px; height: 84px; object-fit: contain; margin: 0; display: block;
+    filter: grayscale(1); opacity: .75; transition: filter .25s ease, opacity .25s ease; }
+  .rp__txt :global(.gallery.logos img:hover) { filter: none; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .rp__txt :global(.gallery.logos img) { transition: none; } }
   /* never under the site header (as the Sell panel) */
   :global(html.hdr-up) .rp__side { top: calc(var(--hdr-h, 88px) + 12px); max-height: calc(100vh - var(--hdr-h, 88px) - 36px); }
   .rp :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }

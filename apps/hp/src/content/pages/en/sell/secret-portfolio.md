@@ -1,5 +1,6 @@
 ---
 path: /en/sell/secret-portfolio
+key: sell/secret-portfolio
 title: Secret Portfolio for Private Sales
 description: 'Sell privately: your property is not published but shown only to certified buyers in our Exclusive Secret Portfolio, for luxury homes, hotels and more.'
 h1: Halkidiki Properties secret portfolio

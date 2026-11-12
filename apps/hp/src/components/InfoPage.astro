@@ -21,6 +21,7 @@ import { priceTables } from '../lib/prices';
 import type { SiteProperty } from '../lib/api';
 import { allProperties, visitorCountry } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
+import { subName } from '../lib/property';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { brand } from '../brand/index';
 import { waHref, viberHref } from '../lib/contact';
@@ -48,7 +49,7 @@ import ReadPage from './ReadPage.astro';
 import FaqSearch from './FaqSearch.astro';
 import SectionCards from './SectionCards.astro';
 import { specByPath, specTitle, specSections, linksBySection } from '../lib/seo-pages';
-import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
+import { cleanSrcSet, photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
 
 interface Props { page: InfoPage }
@@ -111,7 +112,8 @@ const fresh = ownAt && Number(ownAt.id.slice(1)) > 21 && ownAt.lang === lang ? o
 // An info page that is the English version of an older content page (about, partners,
 // services, contact, sell…) declares that page's translations as its alternates, so every
 // member of the hreflang cluster (and the sitemap) lists the same set. Otherwise: English only.
-const key = PAGE_KEYS.find((k) => pageExists(k) && contentUrl(k, 'en') === url);
+// #262: the Greek info page at George's Greek URL is that page's Greek version too (contentUrl(k, 'el'))
+const key = PAGE_KEYS.find((k) => pageExists(k) && (contentUrl(k, 'en') === url || (lang !== 'en' && contentUrl(k, lang) === url)));
 // #94: translations of the same info page (`key` in the files) form their own cluster.
 const cluster = await infoCluster(page);
 const own = new Map(cluster.map((p) => [p.data.lang as Lang, p.data.path]));   // raw: Base encodes once
@@ -136,8 +138,13 @@ const muniLinks = lang === 'en'
   ? AREA_PAGES.filter((p) => p.kind === 'municipality').map((p) => ({ href: areaUrl(p.slug), name: p.name }))
   : FACETS.filter((f) => f.q.municipality && Object.keys(f.q).length === 1).map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
 const co = await company();
-const addr = brand.addressLatin ?? { street: brand.address.street, city: brand.address.city, country: brand.address.country };
-const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addr.street} ${brand.address.postalCode}, ${addr.city}`)}`;
+const addrLatin = brand.addressLatin ?? { street: brand.address.street, city: brand.address.city, country: brand.address.country };
+// #262: the Greek page writes the address in Greek (the brand's own address); every other language in Latin script
+const addr = lang === 'el' ? { street: brand.address.street, city: brand.address.city, country: 'Ελλάδα' } : addrLatin;
+const CARD = lang === 'el'
+  ? { office: 'Γραφείο', phone: 'Τηλέφωνο', mail: 'E-mail', map: 'Οδηγίες για το γραφείο μας στο Google Maps' }
+  : { office: 'Office', phone: 'Phone', mail: 'E-mail', map: 'Get directions to our office on Google Maps' };
+const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addrLatin.street} ${brand.address.postalCode}, ${addrLatin.city}`)}`;
 
 let munis: { name: string; key: string }[] = [];
 const memberToken = Astro.cookies.get('member_token')?.value;
@@ -169,8 +176,29 @@ const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
 // form, closing call) become p / h3 with the same look (SEO audit 2026-11-10: 15 H2 against 7).
 const HT = fresh ? 'p' : 'h2';
 const CT = fresh ? 'p' : 'h2';   // the card titles come before the first H2: a design heading, not h3 (heading order)
-const deskImg = d.desk_image;
-const deskSet = /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
+// #259 (Sergei 12/11, Pre-published: «почему справа просто белое пространство?»): a wave-1 page with no photo of
+// its own left the right half of its hero empty. It now takes an open, watermarked photo of a property with a
+// sea or outside view, the same one for the same page (chosen by its path). The Contact page puts its contact
+// details there instead.
+const HERO_TAGS = ['view_sea', 'view_beach', 'exterior_aerial', 'view_panoramic', 'exterior_pool'];
+const autoPhoto = (() => {
+  if (d.desk_image || !w1 || d.contact_card) return null;
+  const pool = items.flatMap((p) => {
+    if ((p as { locked?: boolean }).locked) return [];
+    const a = p.attributes ?? {};
+    const ph = photosOf(a).find((x, i) => isPhotoOpen(x, i) && x.tag && HERO_TAGS.includes(x.tag));
+    return ph ? [{ ph, a }] : [];
+  });
+  if (!pool.length) return null;
+  let h = 0; for (const c of d.path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const { ph, a } = pool[h % pool.length];
+  return { url: marked(ph.url, 1920), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`) };
+})();
+// no property photo in memory (the CRM down, a local run): the home page's hero shot, never an empty half
+const heroFallback = !d.desk_image && !autoPhoto && w1 && !d.contact_card ? HERO_SHOTS[0] : undefined;
+const deskImg = d.desk_image || autoPhoto?.url || heroFallback?.url || '';
+const deskAlt = d.desk_image ? (d.desk_image_alt || d.h1) : (autoPhoto?.alt || heroFallback?.alt[lang] || heroFallback?.alt.en || d.h1);
+const deskSet = heroFallback ? cleanSrcSet(deskImg) : /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
 const relCards = w1 ? d.related.map((r) => ({
   ...r, text: r.text.replaceAll('{phone}', brand.contact.phoneText), button: r.button || t(lang, 'info.more'),
 })) : [];
@@ -320,7 +348,8 @@ if (fresh?.postPhotos?.length) {
         const ph = photosOf(a).find((x, i) => isPhotoOpen(x, i) && x.tag && th.tags.includes(x.tag));
         if (!ph) continue;
         used.add(p.id);
-        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${p.title}, Halkidiki`), style: focalStyle(ph) };
+        // #251: not the CRM item title (English, with the village — R-006): type and municipality in the page language
+        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`), style: focalStyle(ph) };
         break;
       }
     }
@@ -344,7 +373,7 @@ if (faqItems.length) {
   <>
     <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
-        <nav class="crumb" aria-label="breadcrumb">
+        <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
             <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
           ))}
@@ -365,31 +394,32 @@ if (faqItems.length) {
         /* Desktop only: phones get a 1-pixel placeholder and never download the photo. */
         <picture class="w1-top__img w1-d">
           <source media="(min-width: 1024px)" srcset={deskSet} sizes="(min-width: 1280px) 584px, 46vw" />
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={d.desk_image_alt || d.h1}
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={deskAlt}
                width="1920" height="1280" fetchpriority="high" decoding="async" />
         </picture>
+      )}
+      {/* #259 (Sergei 12/11): the contact details sit beside the heading «Contact Halkidiki Properties», not in the side panel */}
+      {d.contact_card && (
+        <address class="rp-card w1-top__card">
+          <p><span class="t-label">{CARD.office}</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
+          <p><span class="t-label">{CARD.phone}</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
+          <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
+          <p><span class="t-label">{CARD.mail}</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
+          <p><a href={mapUrl} rel="noopener" target="_blank">{CARD.map}</a></p>
+          </address>
       )}
     </header>
 
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
-      <ReadPage lang={lang} heads={readHeads} side={Boolean(d.contact_card)}>
+      <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
-        {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} /></div>}
+        {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
         {d.cards.length > 0 && (
           <div class="rp-cards">{d.cards.map((c) => <PageCard href={c.href} title={c.title} text={c.text} img={c.image || undefined} alt={c.image_alt || c.title} />)}</div>
         )}
         {d.faq.length > 0 && <FaqSearch lang={lang} h={ui.faq} items={d.faq} show={d.faq.length} bare headTag="p" />}
-        {d.contact_card && (
-          <address class="rp-card" slot="side">
-            <p><span class="t-label">Office</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
-            <p><span class="t-label">Phone</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
-            <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
-            <p><span class="t-label">E-mail</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
-            <p><a href={mapUrl} rel="noopener" target="_blank">Get directions to our office on Google Maps</a></p>
-          </address>
-        )}
       </ReadPage>
     ) : (!fresh || howH2 || d.widget || d.cards.length > 0) && (
     <section class="w1-how" aria-labelledby={howH2 ? 'w1-how-h' : undefined}>
@@ -399,7 +429,7 @@ if (faqItems.length) {
           {!fresh && <div class="prose w1-how__p"><Content /></div>}
           {secCards.length === 0 && d.cards.length > 0 && <RailDash for="w1Cards" count={d.cards.length} lang={lang} />}
         </div>
-        {d.widget && <div class="prose"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} /></div>}
+        {d.widget && <div class="prose"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
         {secCards.length > 0 && <div class="w1-how__sc" style={`--n: ${secCards.length}`}><SectionCards cards={secCards} /></div>}
         {secCards.length === 0 && d.cards.length > 0 && (
           <div class="prose w1-how__cards">
@@ -504,7 +534,7 @@ if (faqItems.length) {
     /* #107 Company: George's breadcrumb and H1 on every screen; lead, buttons and photo on desktop only. */
     <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
-        <nav class="crumb" aria-label="breadcrumb">
+        <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
             <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
           ))}
@@ -522,14 +552,14 @@ if (faqItems.length) {
       {deskImg && (
         <picture class="w1-top__img w1-d">
           <source media="(min-width: 1024px)" srcset={deskSet} sizes="(min-width: 1280px) 584px, 46vw" />
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={d.desk_image_alt || d.h1}
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={deskAlt}
                width="1200" height="900" fetchpriority="high" decoding="async" />
         </picture>
       )}
     </header>
     ) : (
     <header class="wrap info-top">
-      <nav class="crumb" aria-label="breadcrumb">
+      <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
         {crumbs.slice(0, -1).map((c, i) => (
           <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
         ))}
@@ -569,7 +599,8 @@ if (faqItems.length) {
     {d.image && (
       <figure class="wrap info-hero">
         {heroSrcset
-          ? <img src={d.image} srcset={heroSrcset} sizes="(max-width: 1280px) 100vw, 1280px" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" />
+          /* photo sizes 2026-11-11: phones (DPR3 x 100vw) took the 1920w file; below 760px they stop at 800w */
+          ? <picture><source media="(max-width: 759px)" srcset={d.image.replace(/_1920w.jpg$/, '_800w.jpg')} /><img src={d.image} srcset={heroSrcset} sizes="(max-width: 1280px) 100vw, 1280px" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" /></picture>
           : <img src={d.image} alt={imageAlt} width="1200" height="600" fetchpriority="high" decoding="async" />}
       </figure>
     )}
@@ -581,17 +612,17 @@ if (faqItems.length) {
       <article class="prose">
         {d.contact_card && (
           <address class="ccard">
-            <p><span class="t-label">Office</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
-            <p><span class="t-label">Phone</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
+            <p><span class="t-label">{CARD.office}</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
+            <p><span class="t-label">{CARD.phone}</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
             <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
-            <p><span class="t-label">E-mail</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
-            <p><a href={mapUrl} rel="noopener" target="_blank">Get directions to our office on Google Maps</a></p>
+            <p><span class="t-label">{CARD.mail}</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
+            <p><a href={mapUrl} rel="noopener" target="_blank">{CARD.map}</a></p>
           </address>
         )}
 
         {!(hub && fresh) && <Content />}
 
-        {d.widget && <InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} />}
+        {d.widget && <InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} />}
 
         {d.cards.length > 0 && (
           <ul class="cards">
@@ -665,7 +696,7 @@ if (faqItems.length) {
 
     {/* Desktop: the breadcrumb again above the footer (mockup «dir» bar). */}
     {w1 && (
-    <nav class="w1-dir w1-d" aria-label="breadcrumb">
+    <nav class="w1-dir w1-d" aria-label={t(lang, 'a11y.crumb')}>
       <div class="wrap w1-dir__in">
         <a href={prefix(lang) || '/'} aria-label={brand.name}>{brand.name}</a>
         {d.parents.map((c) => <><span aria-hidden="true">›</span><a href={c.path}>{c.name}</a></>)}
@@ -690,6 +721,7 @@ if (faqItems.length) {
   .info-cta-top { margin: var(--s4, 24px) 0 0; }
   .w1-top .info-cta-top .k-act { display: inline-flex; width: auto; padding: 0 28px; }
   .info-hero { margin: 0 auto; }
+  .info-hero picture { display: contents; }
   .info-hero img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; }
 
   .info-grid { display: grid; gap: var(--s7); padding-top: var(--s5); padding-bottom: var(--s7); }
@@ -766,6 +798,20 @@ if (faqItems.length) {
   .rp-card p { margin: 0; font-size: var(--fs-s-1); line-height: 1.5; color: var(--ink); }
   .rp-card .t-label { display: block; margin-bottom: 2px; color: var(--faint); }
   .rp-card a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  /* #259: the card beside the Contact heading — a beige block, the four ways to reach us in two columns
+     (one on phones), the directions link under them */
+  .w1-top__card { background: var(--paper-2); padding: 24px 20px; gap: 20px 32px; margin-top: var(--s4); }
+  .w1-top__card p { font-size: var(--fs-s0); }
+  .w1-top__card .t-label { margin-bottom: 6px; }
+  .w1-top__card a { text-decoration: none; }
+  .w1-top__card a:hover { text-decoration: underline; }
+  .w1-top__card p:last-child a { text-decoration: underline; font-size: var(--fs-s-1); }
+  @media (min-width: 760px) {
+    .w1-top__card { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 36px 40px; }
+    .w1-top__card p:first-child, .w1-top__card p:last-child { grid-column: 1 / -1; }
+    .w1-top__card p:last-child { padding-top: 18px; border-top: 1px solid var(--line-soft); }
+  }
+  @media (min-width: 1024px) { .w1-top__card { margin-top: 0; } }
   .w1-how { padding-top: var(--s5); }
   .w1-how__head .prose :global(p:last-child) { margin-bottom: var(--s4); }
   .w1-form { padding-bottom: var(--s7); }

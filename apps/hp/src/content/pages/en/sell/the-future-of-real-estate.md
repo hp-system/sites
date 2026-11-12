@@ -1,5 +1,6 @@
 ---
 path: /en/sell/the-future-of-real-estate
+key: sell/the-future-of-real-estate
 title: The Future of Real Estate Sales
 description: 'How we use technology to sell your property: automation, data analytics, image recognition and targeted advertising that shows it to the right buyers.'
 h1: Collaborate with the future of real estate

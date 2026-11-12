@@ -18,7 +18,7 @@
 // 🔒 Photos: George's existing page pictures; the property photo (Villa Natalia) is watermarked.
 // ═══════════════════════════════════════════════════════════════════════════
 import { brand } from '../brand/index';
-import { findInfoPage, type InfoPage } from '../lib/infopages';
+import { findInfoPage, allInfoPages, type InfoPage } from '../lib/infopages';
 import { prefix, t, type Lang } from '../lib/i18n';
 
 interface Props { lang: Lang; page: InfoPage; contact: string }
@@ -27,7 +27,9 @@ const tt = (k: string, v?: Record<string, string | number>) => t(lang, k, v);
 const d = page.data;
 
 // A page below this one, in this language if it exists, else the English one.
-const sub = async (slug: string) => (await findInfoPage(`${prefix(lang)}/${slug}`)) ?? (await findInfoPage(`/en/${slug}`));
+// #262: a translation lives at its own URL (Greek: /about-us/αξιες), found by the page's `key` (= the EN slug)
+const sub = async (slug: string) => (await allInfoPages()).find((x) => x.data.key === slug && x.data.lang === lang)
+  ?? (await findInfoPage(`${prefix(lang)}/${slug}`)) ?? (await findInfoPage(`/en/${slug}`));
 const valuesPg = await sub('about-us/values');
 const storyPg = await sub('about-us/our-story');
 const partnersPg = await sub('our-partners');
@@ -63,6 +65,10 @@ const peopleQ = peopleParas.length > 1 ? peopleParas[peopleParas.length - 1] : '
 
 // ── «Our story»: each period's first sentence; the last period is open at the start ──
 // Pictures: George's own (the office, advisers, the technology card) and the watermarked Villa Natalia photo.
+// #262: the alts in the page language (Greek; the other languages keep English until their stage)
+const ERA_ALT_EL = ['Αγοραστής βλέπει ακίνητο προς πώληση σε tablet', 'Σύμβουλοι δείχνουν μια βίλα στη Χαλκιδική σε ένα ζευγάρι αγοραστών',
+  `Τα γραφεία της ${brand.name}, η ιστορία από το 2007`, 'Η Villa Natalia στη Σιθωνία το σούρουπο: σαλόνι και πισίνα',
+  'Δίκτυο προφίλ αγοραστών: τεχνολογία που ταιριάζει ακίνητα με αγοραστές'];
 const ERA_IMG = [
   { src: '/pages/sell/37818ed8-1623745980-card.webp', alt: 'Buyer looking at a property for sale on a tablet' },
   { src: '/pages/services/01596b1d-1624545055-card.webp', alt: 'Advisers showing a villa in Halkidiki to a couple of buyers' },
@@ -70,6 +76,7 @@ const ERA_IMG = [
   { src: '/pages/construction/villa-natalia-7010-wm.jpg', alt: 'Villa Natalia in Sithonia at dusk: living room and pool' },
   { src: '/pages/sell/49ed2b3f-1623746026-card.webp', alt: 'Network of buyer profiles: technology that matches properties with buyers' },
 ];
+if (lang === 'el') ERA_IMG.forEach((x, i) => { x.alt = ERA_ALT_EL[i] ?? x.alt; });
 const sBody = storyPg?.body ?? '';
 const eras = [...sBody.matchAll(/^##\s+(.+)\n+([\s\S]*?)(?=\n##\s|(?![\s\S]))/gm)].map((m, i) => {
   const [y, k = ''] = m[1].split(/:\s*/);

@@ -1,5 +1,6 @@
 ---
 path: /en/services/seller-services
+key: services/seller-services
 title: Seller Services in Halkidiki
 description: 'Services for owners selling property in Halkidiki: photography, drone video, 360 views, energy certificates, worldwide portal ads and management.'
 h1: Seller services in Halkidiki

@@ -59,7 +59,9 @@ await withSite('production', async () => {
   }
   check('B-16 content pages in the sitemap = own languages', !wrong.length && keys.length > 0,
     wrong.length ? `wrong: ${wrong.slice(0, 8)}` : `${keys.length} pages, ${keys.reduce((n, k) => n + pageLangs(k).length, 0)} URLs`);
-  check('B-16 pages without text stay out', !['halkidiki', 'team'].some((k) => [...locs].some((u) => u.endsWith(`/${k}`))), 'halkidiki, team absent');
+  check('B-16 pages without text stay out', ![...locs].some((u) => u.endsWith('/team')), 'team absent');
+  // the Halkidiki guide has George's text since 08/11 (P21, GuidePage) and is in the sitemap (SEO crawl 2026-11-11)
+  check('guides in the sitemap (P19, P21)', locs.has(ORIGIN + '/en/halkidiki') && locs.has(ORIGIN + '/en/buying-property-in-greece'), 'en/halkidiki, en/buying-property-in-greece');
 
   // A fallback: `contact` has no text in this language.
   const fb = PUBLISHED.find((l) => !pageLangs('contact').includes(l));

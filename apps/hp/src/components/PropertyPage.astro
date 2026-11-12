@@ -42,7 +42,7 @@ import { propertySeo, bedsText } from '../lib/property-seo';
 import { specOf, MUNI_SPEC } from '../lib/seo-pages';
 import {
   conditionOf, plotSqmOf,
-  descriptionOf, featuresOf, featureIcon, spacesOf, distancesOf,
+  descriptionOf, descriptionLangOf, featuresOf, featureIcon, spacesOf, distancesOf,
   energyOf, oldPriceOf, floorName, pui, subName, poiName, seaDistanceText, schemaTypesOf, isLand, landFactsOf,
   isBusiness, homeFactsOf, businessFactsOf, bizSqmOf,
   CIRCLE_M, mapViewOf, videosOf, embedOf, documentsOf, priceHistoryOf, addressOf,
@@ -101,6 +101,9 @@ const spaces = spacesOf(a);
 const dists = distancesOf(a);
 const energy = energyOf(a, lang);
 const desc = descriptionOf(a, lang);
+// #251 (Sergei 12/11: «Пока оставить английский»): a description in another language is marked as such
+const descLang = descriptionLangOf(a, lang);
+const dLang = descLang !== lang ? descLang : undefined;
 // The description's first paragraph (blank-line separated) and the rest, for the fold below.
 const descParts = (desc || '').split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
 const descFirst = descParts[0] ?? '';
@@ -522,12 +525,12 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             {/* Sergei 03/11: the first paragraph always; the rest fades out under it, with a button to open and close */}
             {descRest ? (
               <div class="dsc" data-dsc>
-                <p class="desc">{descFirst}</p>
-                <div class="dsc__more" id="dsc-more"><p class="desc">{descRest}</p></div>
+                <p class="desc" lang={dLang} dir={dLang && lang === 'he' ? 'ltr' : undefined}>{descFirst}</p>
+                <div class="dsc__more" id="dsc-more"><p class="desc" lang={dLang} dir={dLang && lang === 'he' ? 'ltr' : undefined}>{descRest}</p></div>
                 <button type="button" class="dsc__t" aria-expanded="false" aria-controls="dsc-more"
                         data-more={pui(lang, 'descMore')} data-less={pui(lang, 'descLess')}>{pui(lang, 'descMore')}</button>
               </div>
-            ) : <p class="desc">{desc}</p>}
+            ) : <p class="desc" lang={dLang} dir={dLang && lang === 'he' ? 'ltr' : undefined}>{desc}</p>}
           </>)}
 
           {feats.length > 0 && (<>

@@ -49,7 +49,8 @@ export function pageBlocks(items: Item[], lang: Lang, facetKeys: string[], links
     if (own) consumed.add(linkPath(own.href));
     return { href, text: own?.text ?? name, sub: t(lang, 'home.from', { price: money(from, lang) }), photo: pickCover(items, keep, used), from };
   };
-  const notSelf = (x: BlockTile | null): x is BlockTile => !!x && linkPath(x.href) !== linkPath(self);
+  // #278: a filtered list (…/seafront?muni=…) is not the page itself, though its path is the page's: compare whole addresses
+  const notSelf = (x: BlockTile | null): x is BlockTile => !!x && (x.href.includes('?') || linkPath(x.href) !== linkPath(self));
 
   // ── categories
   const cats = CAT_KEYS.map((k) => FACETS.find((x) => x.key === k)).filter(Boolean).map((c) => {

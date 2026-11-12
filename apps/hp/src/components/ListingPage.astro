@@ -1039,7 +1039,7 @@ const tilePhoto = (() => {
 
   @media (min-width: 1024px) {
     /* ── top strip: the end of the home photo, header + breadcrumb + H1 on it ── */
-    .lhead { position: absolute; top: 0; left: 0; right: 0; z-index: 20; }
+    .lhead { position: absolute; top: 0; left: 0; right: 0; z-index: 900; }   /* #250: as the header — its dropdowns over the filters (30–50) */
     .lhead :global(.site-header--solid) { background: transparent; border-bottom: 0; color: #fff; }
     .lhead :global(.lsw > summary) { color: rgba(255,255,255,.78); }
     .lhead :global(.lsw > summary:hover) { color: #fff; }

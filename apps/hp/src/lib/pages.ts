@@ -101,17 +101,37 @@ export const EL_URL: Partial<Record<PageKey, string>> = {
   projects: '/κατασκευες',
 };
 
+/** #265: Russian info pages at their own Russian URLs (Russian words, Latin script, as George's spec pages). */
+export const RU_URL: Partial<Record<PageKey, string>> = {
+  about: '/ru/o-nas',
+  contact: '/ru/kontakty',
+  partners: '/ru/partnery',
+  sell: '/ru/prodat',
+  services: '/ru/uslugi',
+  'services/buyers': '/ru/uslugi/dlya-pokupateley',
+  'services/owners': '/ru/uslugi/dlya-prodavtsov',
+  'services/investors': '/ru/uslugi/dlya-investorov',
+  'services/developers': '/ru/uslugi/stroitelnye-uslugi',
+  projects: '/ru/stroitelstvo',
+};
+/** The languages whose info pages took over a content key (their translations of the EN info page). */
+export const TAKEN_OVER: Partial<Record<Lang, Partial<Record<PageKey, string>>>> = { en: EN_URL, el: EL_URL, ru: RU_URL };
+
 /** URL of a content page in a language — one rule for the router, the page head and the sitemap (B-16). */
 export function contentUrl(key: PageKey, l: Lang): string {
   if (l === 'en' && EN_URL[key]) return EN_URL[key]!;
   if (l === 'el' && EL_URL[key]) return EL_URL[key]!;
+  if (l === 'ru' && RU_URL[key]) return RU_URL[key]!;
   return `${prefix(l)}/${key === 'projects' ? SLUG[l].projects : key}`;
 }
 
 /** Ποιες γλώσσες έχουν ΔΙΚΟ ΤΟΥΣ κείμενο — για τα hreflang, χωρίς ψέματα. */
 export function pageLangs(key: PageKey): Lang[] {
   const d = CONTENT[key];
-  return d ? (Object.keys(d) as Lang[]) : [];
+  const own = d ? (Object.keys(d) as Lang[]) : [];
+  // #265: a language whose own info page took the key over (Russian) is a member too
+  const taken = (Object.keys(TAKEN_OVER) as Lang[]).filter((l) => TAKEN_OVER[l]?.[key]);
+  return own.length ? [...new Set([...own, ...taken])] : own;
 }
 
 

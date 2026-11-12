@@ -77,6 +77,10 @@ const ERA_IMG = [
   { src: '/pages/sell/49ed2b3f-1623746026-card.webp', alt: 'Network of buyer profiles: technology that matches properties with buyers' },
 ];
 if (lang === 'el') ERA_IMG.forEach((x, i) => { x.alt = ERA_ALT_EL[i] ?? x.alt; });
+const ERA_ALT_RU = ['Покупатель смотрит объект на продажу на планшете', 'Консультанты показывают виллу в Халкидики паре покупателей',
+  `Офис ${brand.name}, история с 2007 года`, 'Villa Natalia в Ситонии на закате: гостиная и бассейн',
+  'Сеть профилей покупателей: технология подбирает объекты под покупателей'];
+if (lang === 'ru') ERA_IMG.forEach((x, i) => { x.alt = ERA_ALT_RU[i] ?? x.alt; });
 const sBody = storyPg?.body ?? '';
 const eras = [...sBody.matchAll(/^##\s+(.+)\n+([\s\S]*?)(?=\n##\s|(?![\s\S]))/gm)].map((m, i) => {
   const [y, k = ''] = m[1].split(/:\s*/);

@@ -6112,6 +6112,105 @@
    "src": "override",
    "clicks": 0,
    "note": "#262: the Greek page at its own Greek URL"
+  },
+  {
+   "from": "/ru/about",
+   "to": "/ru/o-nas",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/sell",
+   "to": "/ru/prodat",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/services",
+   "to": "/ru/uslugi",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/contact",
+   "to": "/ru/kontakty",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/partners",
+   "to": "/ru/partnery",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/services/buyers",
+   "to": "/ru/uslugi/dlya-pokupateley",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/services/owners",
+   "to": "/ru/uslugi/dlya-prodavtsov",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/services/investors",
+   "to": "/ru/uslugi/dlya-investorov",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/services/developers",
+   "to": "/ru/uslugi/stroitelnye-uslugi",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/proekty",
+   "to": "/ru/stroitelstvo",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
+  },
+  {
+   "from": "/ru/vip",
+   "to": "/ru/exclusive",
+   "status": 301,
+   "lang": "ru",
+   "src": "override",
+   "clicks": 0,
+   "note": "#265: the Russian page at its own Russian URL"
   }
  ],
  "rules": [

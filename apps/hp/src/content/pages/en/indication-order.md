@@ -1,5 +1,6 @@
 ---
 path: /en/indication-order
+key: indication-order
 title: Property Indication Order
 description: 'The indication order a buyer signs when Halkidiki Properties suggests properties: the agency fee, how long it applies and what happens if you buy.'
 h1: Indication order

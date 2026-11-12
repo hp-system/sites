@@ -1,5 +1,6 @@
 ---
 path: /en/about-us/our-story
+key: about-us/our-story
 title: Our Story Since 2007
 description: 'Our story begins in 2007 in a small office in Thessaloniki: sales, construction, Villa Natalia in Sithonia and the digital future of real estate in Greece.'
 h1: Our story

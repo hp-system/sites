@@ -1,5 +1,6 @@
 ---
 path: /en/about-us/values
+key: about-us/values
 title: Our Values and Our People
 description: 'The core values of Halkidiki Properties: love for Greece, deep local knowledge, customers at the heart of what we do, honesty, teamwork and new ideas.'
 h1: Our values

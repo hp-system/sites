@@ -317,7 +317,9 @@ if (pageKey && !content) notFound = true;
 // page there (D-20261106-SS-2: no old texts), in the same plain template as the guides.
 const atPath = specByPath(Astro.url.pathname);
 // …except where the old page has George's approved design (wave 1): InfoPage then shows the new text inside it.
-const ownPage = atPath && Number(atPath.id.slice(1)) > 21 && atPath.lang === lang && info?.data.look !== 'wave1' ? atPath : undefined;
+// #262: …and never on a property list (Hotels P22, Polygyros P58): the list keeps its properties and shows the
+// text itself, as George's list pages do (the guide template had taken them over since #258).
+const ownPage = atPath && Number(atPath.id.slice(1)) > 21 && atPath.lang === lang && info?.data.look !== 'wave1' && facets.length === 0 ? atPath : undefined;
 const guideSpec = notFound ? atPath : undefined;
 const guide = ownPage ?? (guideSpec && GUIDE_IDS.has(guideSpec.id) && guideSpec.lang === lang ? guideSpec : undefined);
 if (guide) notFound = false;

@@ -59,6 +59,9 @@ export function servedSpecGroups(): { id: string; at: Map<Lang, string> }[] {
   const groups = new Map<string, Map<Lang, string>>();
   for (const p of BY_ID.values()) {
     if (!GUIDE_IDS.has(p.id) && !(Number(p.id.slice(1)) > 21)) continue;
+    // #262: an own page that is a property list (Hotels P22, Polygyros P58) is a list facet: the sitemap lists it
+    // with the facets, only while it has enough listings (spec rule 10) — never twice, never while noindex
+    if (p.pageType === 'listing') continue;
     (groups.get(p.id) ?? groups.set(p.id, new Map()).get(p.id)!).set(p.lang, p.path);
   }
   return [...groups.entries()].map(([id, at]) => ({ id, at }));

@@ -1,5 +1,6 @@
 ---
 path: /en/book-an-online-appointment
+key: book-an-online-appointment
 title: Book an Online Property Viewing
 description: 'Book an online appointment: wherever you are, see the properties you select live by video call with an agent, or ask for a phone call with an adviser.'
 h1: Book an online appointment

@@ -82,7 +82,8 @@ async function contentPages(): Promise<Page[]> {
   // contentUrl(k, 'en') already is the info page's URL where one took over (EN_URL, and the
   // same-path pages contact/sell/services): the cluster keeps its English member, and that
   // info page is not listed a second time on its own.
-  const covered = new Set(keys.map((k) => contentUrl(k, 'en')));
+  // #262: the Greek info page at George's Greek URL is the Greek member of that cluster too (contentUrl(k, 'el'))
+  const covered = new Set(keys.flatMap((k) => [contentUrl(k, 'en'), contentUrl(k, 'el')]));
   const old: Page[] = keys.map((k) => ({ pathFor: (l: Lang) => contentUrl(k, l), langs: pageLangs(k), lastmod: BUILD_DAY }));
   // #94: translations of one info page (same `key`) are one entry with their alternates.
   const own: Page[] = [];
@@ -91,6 +92,7 @@ async function contentPages(): Promise<Page[]> {
     if (p.data.key && done.has(p.data.key)) continue;
     if (p.data.key) done.add(p.data.key);
     const group = p.data.key ? info.filter((x) => x.data.key === p.data.key) : [p];
+    if (group.some((x) => covered.has(x.data.path))) continue;   // its cluster is listed with the content page
     // raw paths, as every other entry: the sitemap encodes them once on output
     const at = new Map(group.map((x) => [x.data.lang as Lang, x.data.path]));
     own.push({ pathFor: (l: Lang) => at.get(l) ?? p.data.path, langs: [...at.keys()], lastmod: infoLastmod(p, BUILD_DAY) });

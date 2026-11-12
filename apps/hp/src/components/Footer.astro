@@ -20,7 +20,7 @@ interface Props { lang: Lang; munis?: { name: string; key?: string }[] }
 const { lang } = Astro.props;
 const p = prefix(lang);
 // English: the old site's URL /en/about-us (the info page); other languages keep /about.
-const aboutHref = lang === 'en' ? '/en/about-us' : `${p}/about`;
+const aboutHref = contentUrl('about', lang);   // #262: each language's own URL
 // Same for services and projects: English links the old site's URLs (no redirect hop).
 // Other languages: the translated projects slug (/εργα, /proiecte…) — linking `/projects` was a 301 hop (#69).
 const moved = (k: string) => (lang === 'en' && EN_MOVED[k]) || contentUrl(k as PageKey, lang);
@@ -81,7 +81,7 @@ import { consentText } from '../lib/consent';
         {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
         {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
         {has('projects') && <a href={moved('projects')}>{t(lang, 'foot.projects')}</a>}
-        {has('contact') && <a href={`${p}/contact`}>{t(lang, 'foot.contact')}</a>}
+        {has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'foot.contact')}</a>}
       </nav>
     </div>
 

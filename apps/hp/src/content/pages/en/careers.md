@@ -1,5 +1,6 @@
 ---
 path: /en/careers
+key: careers
 title: Careers in Real Estate in Halkidiki
 description: 'Careers at Halkidiki Properties: join a group of people committed to one another and to their clients, in on-site and remote jobs. See the open positions.'
 h1: Careers at Halkidiki Properties

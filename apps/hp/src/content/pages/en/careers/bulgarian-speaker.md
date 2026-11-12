@@ -1,5 +1,6 @@
 ---
 path: /en/careers/bulgarian-speaker
+key: careers/bulgarian-speaker
 title: 'Job: Bulgarian Speaker Support Agent'
 description: 'Job: Bulgarian-speaking customer support agent at Halkidiki Properties. Full-time, competitive salary and insurance. Native Bulgarian and B2 English.'
 h1: Bulgarian-speaking customer support agent

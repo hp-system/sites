@@ -87,9 +87,24 @@ export const EN_URL: Partial<Record<PageKey, string>> = {
   projects: '/en/construction',
 };
 
+/** #262 (D-20261112-SS-1): Greek has its info pages at George's Greek URLs; the old routes 301 there. */
+export const EL_URL: Partial<Record<PageKey, string>> = {
+  about: '/about-us',
+  contact: '/επικοινωνια',
+  partners: '/συνεργατες',
+  sell: '/πωληση',
+  services: '/υπηρεσιες',
+  'services/buyers': '/υπηρεσιες/υπηρεσιες-αγοραστων',
+  'services/owners': '/υπηρεσιες/για-πωλητες',
+  'services/investors': '/υπηρεσιες/υπηρεσιες-για-επενδυτες',
+  'services/developers': '/υπηρεσιες/υπηρεσιες-κατασκευαστες',
+  projects: '/κατασκευες',
+};
+
 /** URL of a content page in a language — one rule for the router, the page head and the sitemap (B-16). */
 export function contentUrl(key: PageKey, l: Lang): string {
   if (l === 'en' && EN_URL[key]) return EN_URL[key]!;
+  if (l === 'el' && EL_URL[key]) return EL_URL[key]!;
   return `${prefix(l)}/${key === 'projects' ? SLUG[l].projects : key}`;
 }
 

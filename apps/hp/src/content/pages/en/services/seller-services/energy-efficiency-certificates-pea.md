@@ -1,5 +1,6 @@
 ---
 path: /en/services/seller-services/energy-efficiency-certificates-pea
+key: services/seller-services/energy-efficiency-certificates-pea
 title: PEA Energy Certificate in Halkidiki, Greece
 description: 'The PEA energy certificate a home in Greece needs for a sale or a rental: when it is required, who issues it, how long it is valid and how we arrange it.'
 h1: Energy performance certificate (PEA)

@@ -1,5 +1,6 @@
 ---
 path: /en/why-register/buyer
+key: why-register/buyer
 title: Register as a Buyer – Free
 description: 'Register as a buyer for free: see the village or area of every property, the map at village level, the secret portfolio, favourites and saved searches.'
 h1: Register as a buyer

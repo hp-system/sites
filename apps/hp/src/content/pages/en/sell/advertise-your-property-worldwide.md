@@ -1,5 +1,6 @@
 ---
 path: /en/sell/advertise-your-property-worldwide
+key: sell/advertise-your-property-worldwide
 title: Advertise Your Property Worldwide
 description: 'Your property for sale in Halkidiki, advertised on the largest property portals worldwide through automated synchronisation: Greece, Europe, China and more.'
 h1: Advertise your property on the largest portals worldwide

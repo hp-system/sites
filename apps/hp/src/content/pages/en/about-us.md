@@ -1,5 +1,6 @@
 ---
 path: /en/about-us
+key: about-us
 title: About Our Real Estate Agency
 description: 'Halkidiki Properties: a real estate agency with the largest property database of Halkidiki, an experienced team and technology that matches buyers.'
 h1: About Halkidiki Properties

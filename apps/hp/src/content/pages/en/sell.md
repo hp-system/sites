@@ -1,5 +1,6 @@
 ---
 path: /en/sell
+key: sell
 title: Sell Your Property in Halkidiki
 description: 'Sell your property in Halkidiki with experienced local agents: exclusive assignment, worldwide portals, a secret portfolio and support up to the contract.'
 h1: Sell your property in Halkidiki

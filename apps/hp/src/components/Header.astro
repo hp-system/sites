@@ -48,11 +48,27 @@ const MENU_KEEP: Record<string, Set<string>> = {
   services: new Set(['P35', 'P36', 'P37', 'P40', 'P39']),
   about: new Set(['P43', 'P44', 'P48', 'P50']),
 };
-const menu7 = lang === 'en'
+// #262 languages stage, Greek first (Sergei 2026-11-12): the same menu in Greek; its pages have Greek paths
+// in the registry (George's slugs). A language joins MENU_LANGS when all its menu pages exist.
+const MENU_LANGS: Lang[] = ['en', 'el'];
+const SECTION_EL: Record<string, string> = {
+  buy: 'Αγορά', sell: 'Πώληση', halkidiki: 'Χαλκιδική', services: 'Υπηρεσίες', about: 'Η εταιρεία', exclusive: 'Exclusive', contact: 'Επικοινωνία',
+};
+const LABEL_EL: Record<string, string> = {
+  P02: 'Όλα τα ακίνητα', P04: 'Σπίτια', P05: 'Διαμερίσματα', P07: 'Βίλες', P08: 'Γη', P09: 'Παραθαλάσσια', P19: 'Αγορά ακινήτου στην Ελλάδα',
+  P24: 'Πώληση', P26: 'Πρόσθεσε το ακίνητό σου',
+  P21: 'Οδηγός Χαλκιδικής', P11: 'Κασσάνδρα', P12: 'Σιθωνία', P13: 'Νέα Προποντίδα', P14: 'Αριστοτέλης', P58: 'Πολύγυρος',
+  P35: 'Υπηρεσίες', P36: 'Για αγοραστές', P37: 'Για πωλητές', P40: 'Διαχείριση ακινήτων', P39: 'Κατασκευαστικές υπηρεσίες',
+  P43: 'Η εταιρεία', P44: 'Η ιστορία μας', P48: 'Συνεργάτες', P50: 'Θέσεις εργασίας',
+  P52: 'Exclusive', P23: 'Προ-δημοσιευμένα ακίνητα', P53: 'Γιατί να εγγραφείτε',
+  P56: 'Επικοινωνία', P57: 'Online ραντεβού',
+};
+const menu7 = MENU_LANGS.includes(lang)
   ? SECTIONS.map((sec) => ({
-      key: sec, label: SECTION_LABEL[sec],
+      key: sec, label: lang === 'el' ? SECTION_EL[sec] : SECTION_LABEL[sec],
       items: menuOf(sec).filter((r) => !NOT_BUILT.has(r.id) && (!MENU_KEEP[sec] || MENU_KEEP[sec].has(r.id)))
-        .map((r) => ({ href: pathOf(r.id, 'en') ?? '#', label: LABEL[r.id] ?? r.name.replace(/\s*\(.*\)\s*$/, '') })),
+        .map((r) => ({ href: pathOf(r.id, lang) ?? '#',
+          label: (lang === 'el' ? LABEL_EL[r.id] : undefined) ?? LABEL[r.id] ?? r.name.replace(/\s*\(.*\)\s*$/, '') })),
     })).filter((s) => s.items.length)
   : null;
 
@@ -231,6 +247,14 @@ const has = (k: string) => pageExists(k as any);
     .nav7__dd a { display: block; padding: 9px var(--s4); color: var(--ink-2); font-size: var(--fs-s0); white-space: nowrap; text-decoration: none; }
     .nav7__dd a:hover, .nav7__dd a:focus-visible { color: var(--ink); background: var(--paper-2); }
     .nav7__s::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }   /* hover bridge */
+  }
+  /* #262: the Greek menu is ~90px wider than the English one; between 1080 and 1319px the header row would
+     overflow (logo + 8 items + phone + language + sign in). Tighter gaps and the phone as its icon only (the
+     number stays in its aria-label); from 1320px everything as designed. */
+  @media (min-width: 1080px) and (max-width: 1319px) {
+    .nav7 { gap: 18px; }
+    .navright { gap: var(--s3); }
+    .tel__n { display: none; }
   }
 </style>
 

@@ -1,5 +1,6 @@
 ---
 path: /en/contact
+key: contact
 title: Contact Our Estate Agents
 description: 'Contact Halkidiki Properties: call, e-mail or send us a message. We guide you whether you are buying or selling a property in Halkidiki or need an adviser.'
 h1: Contact Halkidiki Properties

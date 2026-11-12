@@ -1,5 +1,6 @@
 ---
 path: /en/sell/assign-to-halkidiki-real-estate
+key: sell/assign-to-halkidiki-real-estate
 title: Assign Your Property for Sale
 description: 'Assign your property to Halkidiki Properties: we become your agent, handle the paperwork and legal steps and bring buyers from Greece and abroad.'
 h1: Assign your property to Halkidiki Properties for a hassle-free sale

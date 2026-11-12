@@ -140,8 +140,12 @@ const muniLinks = lang === 'en'
 const co = await company();
 const addrLatin = brand.addressLatin ?? { street: brand.address.street, city: brand.address.city, country: brand.address.country };
 // #262: the Greek page writes the address in Greek (the brand's own address); every other language in Latin script
-const addr = lang === 'el' ? { street: brand.address.street, city: brand.address.city, country: 'Ελλάδα' } : addrLatin;
-const CARD = lang === 'el'
+const addr = lang === 'el' ? { street: brand.address.street, city: brand.address.city, country: 'Ελλάδα' }
+  : lang === 'ru' ? { street: 'Нео-Рисио', city: 'Салоники', country: 'Греция' }   // #265
+  : addrLatin;
+const CARD = lang === 'ru'
+  ? { office: 'Офис', phone: 'Телефон', mail: 'E-mail', map: 'Как добраться до нашего офиса: Google Maps' }
+  : lang === 'el'
   ? { office: 'Γραφείο', phone: 'Τηλέφωνο', mail: 'E-mail', map: 'Οδηγίες για το γραφείο μας στο Google Maps' }
   : { office: 'Office', phone: 'Phone', mail: 'E-mail', map: 'Get directions to our office on Google Maps' };
 const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addrLatin.street} ${brand.address.postalCode}, ${addrLatin.city}`)}`;

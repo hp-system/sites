@@ -83,7 +83,7 @@ async function contentPages(): Promise<Page[]> {
   // same-path pages contact/sell/services): the cluster keeps its English member, and that
   // info page is not listed a second time on its own.
   // #262: the Greek info page at George's Greek URL is the Greek member of that cluster too (contentUrl(k, 'el'))
-  const covered = new Set(keys.flatMap((k) => [contentUrl(k, 'en'), contentUrl(k, 'el')]));
+  const covered = new Set(keys.flatMap((k) => (['en', 'el', 'ru'] as Lang[]).map((l) => contentUrl(k, l))));   // #265: + Russian
   const old: Page[] = keys.map((k) => ({ pathFor: (l: Lang) => contentUrl(k, l), langs: pageLangs(k), lastmod: BUILD_DAY }));
   // #94: translations of one info page (same `key`) are one entry with their alternates.
   const own: Page[] = [];

@@ -811,7 +811,7 @@ const tilePhoto = (() => {
       links out as photo tiles like the home Collections and by-area (anchors word for word, rule 15). Same words, same H2s. */}
   <div data-lswap="spec">{spec && firstPage && (
     <>
-      <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} items={items as any} />
+      <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} items={items as any} facets={facets.map((f) => f.key)} />
     </>
   )}</div>
   </main>

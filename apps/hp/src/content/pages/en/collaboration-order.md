@@ -1,5 +1,6 @@
 ---
 path: /en/collaboration-order
+key: collaboration-order
 title: Collaboration Order for Agents
 description: 'Cooperation agreement between Halkidiki Properties and partner agents who bring a buyer: the terms, the fee split and the obligations of both parties.'
 h1: Cooperation Agreement

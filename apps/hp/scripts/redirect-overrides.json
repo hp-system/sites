@@ -21,9 +21,9 @@
     },
     {
       "from": "/el/προ-δημιοσιευμενα-ακινητα",
-      "to": null,
-      "status": "pending",
-      "reason": "D7: → P23 Pre-published in Greek; its Greek URL waits for Q-20261106-SS-1"
+      "to": "/προ-δημιοσιευμενα-ακινητα",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at George's slug without /el (was pending until the page existed)"
     },
     {
       "from": "/sr/uslovi-usluga",
@@ -159,9 +159,321 @@
     },
     {
       "from": "/el/η-ομαδα-μας",
-      "to": "/about",
+      "to": "/about-us",
       "status": 301,
-      "reason": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page"
+      "reason": "D-20261109-SS-4 (Sergei: «ведем на О нас»): no Team page P49 for now; the Greek «our team» page goes to the Greek About us page · #262: the Greek page now lives at its Greek URL"
+    },
+    {
+      "from": "/el/about-us/κοινωνικη-ευθυνη",
+      "to": "/about-us/κοινωνικη-ευθυνη",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/about-us/ιστορια",
+      "to": "/about-us/ιστορια",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/about-us/φιλοσοφια",
+      "to": "/about-us/φιλοσοφια",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/about-us/αξιες",
+      "to": "/about-us/αξιες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/about-us",
+      "to": "/about-us",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/προσθεσε-το-ακινητο-σου",
+      "to": "/προσθεσε-το-ακινητο-σου",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/εντολη-αναθεσης",
+      "to": "/εντολη-αναθεσης",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/online-επικοινωνια",
+      "to": "/online-επικοινωνια",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/θεσεις-εργασιας/bulgarian-speaker",
+      "to": "/θεσεις-εργασιας/bulgarian-speaker",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/θεσεις-εργασιας",
+      "to": "/θεσεις-εργασιας",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/εντολη-συνεργασιας",
+      "to": "/εντολη-συνεργασιας",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/κατασκευες",
+      "to": "/κατασκευες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/επικοινωνια",
+      "to": "/επικοινωνια",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/faq",
+      "to": "/faq",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/τιμες-ακινητων-χαλκιδικη",
+      "to": "/τιμες-ακινητων-χαλκιδικη",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/εντολη-υποδειξης",
+      "to": "/εντολη-υποδειξης",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/συνεργατες",
+      "to": "/συνεργατες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πολιτικη-απορρητου",
+      "to": "/πολιτικη-απορρητου",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/εξοχικο-στη-χαλκιδικη",
+      "to": "/ακινητα-ελλαδα",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/συνεργαστειτε-μαζι-μας",
+      "to": "/συνεργαστειτε-μαζι-μας",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση/διαφημισε-σε-portals",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση/αναθεσε-το-στη-halkidiki-properties",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση/ολοκληρωσε-την-αγοραπωλησια-ευκολα",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση/πραγματικες-επισκεψεις",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση/προσθήκη-στο-secret-portfolio",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση/το-μελλον-του-real-estate",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση/γιατι-halkidiki-properties",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/πωληση",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-διαχειριση-ακινητης-περιουσιας",
+      "to": "/υπηρεσιες/υπηρεσιες-αγοραστων/πληρης-διαχειριση-ακινητης-περιουσιας",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/υπηρεσιες/υπηρεσιες-αγοραστων",
+      "to": "/υπηρεσιες/υπηρεσιες-αγοραστων",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/υπηρεσιες/υπηρεσιες-κατασκευαστες",
+      "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/υπηρεσιες/υπηρεσιες-για-επενδυτες",
+      "to": "/υπηρεσιες/υπηρεσιες-για-επενδυτες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/υπηρεσιες/για-πωλητες/πιστοποιητικα-ενεργειακης-αποδοσης-πεα",
+      "to": "/υπηρεσιες/για-πωλητες/πιστοποιητικα-ενεργειακης-αποδοσης-πεα",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/υπηρεσιες/για-πωλητες",
+      "to": "/υπηρεσιες/για-πωλητες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/οροι-και-προυποθεσεις",
+      "to": "/οροι-και-προυποθεσεις",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/vip",
+      "to": "/exclusive",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/γιατι-να-εγγραφειτε/αγοραστης",
+      "to": "/γιατι-να-εγγραφειτε/αγοραστης",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/γιατι-να-εγγραφειτε/ιδιοκτητης",
+      "to": "/γιατι-να-εγγραφειτε/ιδιοκτητης",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/γιατι-να-εγγραφειτε",
+      "to": "/γιατι-να-εγγραφειτε",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/συνεργασου-μαζι-μας-αποκλειστικα",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/el/υπηρεσιες",
+      "to": "/υπηρεσιες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/sell",
+      "to": "/πωληση",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/about",
+      "to": "/about-us",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/contact",
+      "to": "/επικοινωνια",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/partners",
+      "to": "/συνεργατες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/services",
+      "to": "/υπηρεσιες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/services/buyers",
+      "to": "/υπηρεσιες/υπηρεσιες-αγοραστων",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/services/owners",
+      "to": "/υπηρεσιες/για-πωλητες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/services/investors",
+      "to": "/υπηρεσιες/υπηρεσιες-για-επενδυτες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/services/developers",
+      "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+    },
+    {
+      "from": "/εργα",
+      "to": "/κατασκευες",
+      "status": 301,
+      "reason": "D-20261112-SS-1 (#262): the Greek construction page at George's Greek URL"
+    },
+    {
+      "from": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
+      "to": null,
+      "status": "keep",
+      "reason": "D-20261112-SS-1 (#262): the Greek construction services page itself lives here (George's sheet sent it to /services/developers, which now 301s here: a loop)"
     }
   ],
   "moves": [],

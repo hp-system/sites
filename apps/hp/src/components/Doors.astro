@@ -23,7 +23,7 @@ const p = prefix(lang);
 // Data, not markup (#101): the three doors in one loop, same links and words as before.
 const DOORS = [
   { k: 'buy', href: listUrl(lang) },
-  { k: 'sell', href: `${p}/sell` },
+  { k: 'sell', href: contentUrl('sell', lang) },
   { k: 'partner', href: contentUrl('partners', lang) },
 ];
 ---

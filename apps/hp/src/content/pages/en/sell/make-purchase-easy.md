@@ -1,5 +1,6 @@
 ---
 path: /en/sell/make-purchase-easy
+key: sell/make-purchase-easy
 title: Sell Your Property From Abroad
 description: Live abroad or have no time? With a power of attorney we act for you at every stage of the sale, from viewings and checks to signing and safe payment.
 h1: Make the sale of your property easy, even from abroad

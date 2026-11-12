@@ -1,5 +1,6 @@
 ---
 path: /en/about-us/philosophy
+key: about-us/philosophy
 title: Our Real Estate Philosophy
 description: '“Everyone has the right to dream.” The philosophy of Halkidiki Properties: team spirit, method and the trust of the customers who give us their dreams.'
 h1: Our philosophy

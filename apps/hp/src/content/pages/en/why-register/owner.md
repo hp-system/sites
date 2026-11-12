@@ -1,5 +1,6 @@
 ---
 path: /en/why-register/owner
+key: why-register/owner
 title: Register as a Property Owner – Free
 description: 'Register as an owner for free: follow how your property listed with us performs, the interest it receives, and get suggestions from our team to sell sooner.'
 h1: Register as a property owner

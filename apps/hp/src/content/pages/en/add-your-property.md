@@ -1,5 +1,6 @@
 ---
 path: /en/add-your-property
+key: add-your-property
 title: Add Your Property for Sale
 description: 'Add your property for sale in Halkidiki: send the basic details, an agent checks them and calls you, and buyers looking for what you sell are told at once.'
 h1: Add your property for sale in Halkidiki

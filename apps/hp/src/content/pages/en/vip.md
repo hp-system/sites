@@ -1,5 +1,6 @@
 ---
 path: /en/vip
+key: vip
 title: Exclusive Access – Halkidiki Property
 description: 'Exclusive access by request: exact location, price history, videos and documents, the most discreet listings and priority support from a dedicated agent.'
 h1: Exclusive access

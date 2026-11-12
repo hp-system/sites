@@ -1,5 +1,6 @@
 ---
 path: /en/sell/why-halkidiki-properties
+key: sell/why-halkidiki-properties
 title: Why Sell Your Property With Us
 description: 'Why owners choose Halkidiki Properties to sell: local market experience, a personalised service, a wide network of buyers, transparency and reputation.'
 h1: Why Halkidiki Properties for your real estate needs?

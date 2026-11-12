@@ -86,7 +86,7 @@ const ROW = ['s1', 'c1', 'c2', 'c3', 'c4', 'c5', 's2', 's3', 'c6', 's4'];
 // through a full-width window; the tiles slide past faster than the page while the window crosses
 // the screen. Placement is by grid area (cd--<key>), so the order above is only the reading order.
 
-const contactHref = pageExists('contact') ? `${prefix(lang)}/contact` : (await company()).phoneHref;
+const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await company()).phoneHref;   // #262: each language's own URL
 ---
 <section class="cx" aria-labelledby="cx-h">
   <div class="wrap">

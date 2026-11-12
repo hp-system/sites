@@ -1,5 +1,6 @@
 ---
 path: /en/services
+key: services
 title: Real Estate Services in Halkidiki
 description: 'Real estate services in Halkidiki for buyers, sellers, investors and builders: from viewing trips and legal checks to construction, licences and management.'
 h1: Real estate services in Halkidiki

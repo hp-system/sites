@@ -1,5 +1,6 @@
 ---
 path: /en/services/buyer-services
+key: services/buyer-services
 title: Buyer Services in Halkidiki
 description: 'Services for buyers of property in Halkidiki: viewing trips, negotiation, legal and accounting checks, translations, company set-up and management.'
 h1: Buyer services in Halkidiki

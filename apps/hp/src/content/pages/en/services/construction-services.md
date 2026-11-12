@@ -1,5 +1,6 @@
 ---
 path: /en/services/construction-services
+key: services/construction-services
 title: Construction Services in Halkidiki
 description: 'Construction in Halkidiki: studies and building licences, bioclimatic homes, pools, renewable energy, renovation and a 10-year construction warranty.'
 h1: Construction services in Halkidiki

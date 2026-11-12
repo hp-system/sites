@@ -1,5 +1,6 @@
 ---
 path: /en/assignment-order
+key: assignment-order
 title: Property Assignment Order
 description: 'The assignment order an owner signs so Halkidiki Properties can market and sell a property: price commitment, duration, the fee and obligations.'
 h1: Assignment Order

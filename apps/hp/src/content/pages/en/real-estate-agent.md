@@ -1,5 +1,6 @@
 ---
 path: /en/real-estate-agent
+key: real-estate-agent
 title: Real Estate Agents – Partner With Us
 description: 'Are you a real estate agent? Partner with Halkidiki Properties: register your client in your name, we do the work and you collect your fee on contract day.'
 h1: Are you a real estate agent?

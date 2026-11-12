@@ -1,5 +1,6 @@
 ---
 path: /en/faq
+key: faq
 title: 'Buying Property in Greece: FAQ'
 description: 'Answers to what buyers ask most: viewings, the buying process, documents, taxes and the extra costs of buying a property in Halkidiki, Greece, as a foreigner.'
 h1: 'Buying property in Greece: frequently asked questions'

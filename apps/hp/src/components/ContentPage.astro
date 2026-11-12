@@ -18,7 +18,7 @@ import Header from './Header.astro';
 import Footer from './Footer.astro';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
-import type { PageContent, PageKey } from '../lib/pages';
+import { contentUrl, type PageContent, type PageKey } from '../lib/pages';
 import { EVENTS } from '../lib/track';
 
 // 🪤 ΤΟ `Base` ΔΕΝ ΔΕΧΕΤΑΙ `canonical` ΟΥΤΕ `hreflangLangs`. Δέχεται `path` (ίδιο σε
@@ -38,7 +38,7 @@ const CTA_EV = { list: EVENTS.CONTENT_LIST, phone: EVENTS.CONTENT_PHONE, login: 
 const ctaHref = page.cta
   ? page.cta.to === 'list' ? listUrl(lang)
   : page.cta.to === 'phone' ? co.phoneHref
-  : page.cta.to === 'sell' ? `${p}/sell`
+  : page.cta.to === 'sell' ? contentUrl('sell', lang)
   : `${p}/login`
   : null;
 ---

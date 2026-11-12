@@ -1,5 +1,6 @@
 ---
 path: /en/pre-published-properties
+key: pre-published-properties
 title: Pre-published Properties in Halkidiki
 description: 'Pre-published properties in Halkidiki: homes, land and hotels before they reach the market. Register free and be the first to hear about the ones you want.'
 h1: Pre-published properties

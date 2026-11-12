@@ -1,5 +1,6 @@
 ---
 path: /en/sell/real-time-visits
+key: sell/real-time-visits
 title: Real Visits From Real Buyers
 description: From the first day your property is published on our site it receives visits and requests from buyers, and we send you reports on who is interested.
 h1: Get real visits from real buyers (beta)

@@ -1,5 +1,6 @@
 ---
 path: /en/property-for-sale-in-greece
+key: property-for-sale-in-greece
 title: Property for Sale in Greece
 description: 'Property for sale in Greece, in Halkidiki: houses, maisonettes, apartments and land. Prices from our listings, how foreigners buy, taxes and costs in 2026.'
 h1: Property for sale in Greece — Halkidiki

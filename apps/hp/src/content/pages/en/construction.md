@@ -1,5 +1,6 @@
 ---
 path: /en/construction
+key: construction
 title: Construction Projects in Halkidiki
 description: 'Construction projects by Halkidiki Properties: Villa Natalia in Sithonia, renovated homes and villas, and architectural designs in Thessaloniki and Corfu.'
 h1: Construction projects

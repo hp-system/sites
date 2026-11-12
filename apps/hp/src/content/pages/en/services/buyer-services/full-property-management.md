@@ -1,5 +1,6 @@
 ---
 path: /en/services/buyer-services/full-property-management
+key: services/buyer-services/full-property-management
 title: Full Property Management in Halkidiki
 description: 'Full property management in Halkidiki, Greece: tenant screening, rent collection, maintenance and repairs, regular inspections and marketing of your home.'
 h1: Full property management in Halkidiki

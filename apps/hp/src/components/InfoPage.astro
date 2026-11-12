@@ -49,7 +49,7 @@ import ReadPage from './ReadPage.astro';
 import FaqSearch from './FaqSearch.astro';
 import SectionCards from './SectionCards.astro';
 import { specByPath, specTitle, specSections, linksBySection } from '../lib/seo-pages';
-import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
+import { cleanSrcSet, photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
 
 interface Props { page: InfoPage }
@@ -170,8 +170,29 @@ const howH2 = HOW_KEY[d.section] ? t(lang, HOW_KEY[d.section]!) : '';
 // form, closing call) become p / h3 with the same look (SEO audit 2026-11-10: 15 H2 against 7).
 const HT = fresh ? 'p' : 'h2';
 const CT = fresh ? 'p' : 'h2';   // the card titles come before the first H2: a design heading, not h3 (heading order)
-const deskImg = d.desk_image;
-const deskSet = /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
+// #259 (Sergei 12/11, Pre-published: «почему справа просто белое пространство?»): a wave-1 page with no photo of
+// its own left the right half of its hero empty. It now takes an open, watermarked photo of a property with a
+// sea or outside view, the same one for the same page (chosen by its path). The Contact page puts its contact
+// details there instead.
+const HERO_TAGS = ['view_sea', 'view_beach', 'exterior_aerial', 'view_panoramic', 'exterior_pool'];
+const autoPhoto = (() => {
+  if (d.desk_image || !w1 || d.contact_card) return null;
+  const pool = items.flatMap((p) => {
+    if ((p as { locked?: boolean }).locked) return [];
+    const a = p.attributes ?? {};
+    const ph = photosOf(a).find((x, i) => isPhotoOpen(x, i) && x.tag && HERO_TAGS.includes(x.tag));
+    return ph ? [{ ph, a }] : [];
+  });
+  if (!pool.length) return null;
+  let h = 0; for (const c of d.path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const { ph, a } = pool[h % pool.length];
+  return { url: marked(ph.url, 1920), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`) };
+})();
+// no property photo in memory (the CRM down, a local run): the home page's hero shot, never an empty half
+const heroFallback = !d.desk_image && !autoPhoto && w1 && !d.contact_card ? HERO_SHOTS[0] : undefined;
+const deskImg = d.desk_image || autoPhoto?.url || heroFallback?.url || '';
+const deskAlt = d.desk_image ? (d.desk_image_alt || d.h1) : (autoPhoto?.alt || heroFallback?.alt[lang] || heroFallback?.alt.en || d.h1);
+const deskSet = heroFallback ? cleanSrcSet(deskImg) : /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
 const relCards = w1 ? d.related.map((r) => ({
   ...r, text: r.text.replaceAll('{phone}', brand.contact.phoneText), button: r.button || t(lang, 'info.more'),
 })) : [];
@@ -367,31 +388,32 @@ if (faqItems.length) {
         /* Desktop only: phones get a 1-pixel placeholder and never download the photo. */
         <picture class="w1-top__img w1-d">
           <source media="(min-width: 1024px)" srcset={deskSet} sizes="(min-width: 1280px) 584px, 46vw" />
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={d.desk_image_alt || d.h1}
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={deskAlt}
                width="1920" height="1280" fetchpriority="high" decoding="async" />
         </picture>
+      )}
+      {/* #259 (Sergei 12/11): the contact details sit beside the heading «Contact Halkidiki Properties», not in the side panel */}
+      {d.contact_card && (
+        <address class="rp-card w1-top__card">
+          <p><span class="t-label">Office</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
+          <p><span class="t-label">Phone</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
+          <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
+          <p><span class="t-label">E-mail</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
+          <p><a href={mapUrl} rel="noopener" target="_blank">Get directions to our office on Google Maps</a></p>
+          </address>
       )}
     </header>
 
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
-      <ReadPage lang={lang} heads={readHeads} side={Boolean(d.contact_card)}>
+      <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} /></div>}
         {d.cards.length > 0 && (
           <div class="rp-cards">{d.cards.map((c) => <PageCard href={c.href} title={c.title} text={c.text} img={c.image || undefined} alt={c.image_alt || c.title} />)}</div>
         )}
         {d.faq.length > 0 && <FaqSearch lang={lang} h={ui.faq} items={d.faq} show={d.faq.length} bare headTag="p" />}
-        {d.contact_card && (
-          <address class="rp-card" slot="side">
-            <p><span class="t-label">Office</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
-            <p><span class="t-label">Phone</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
-            <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
-            <p><span class="t-label">E-mail</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
-            <p><a href={mapUrl} rel="noopener" target="_blank">Get directions to our office on Google Maps</a></p>
-          </address>
-        )}
       </ReadPage>
     ) : (!fresh || howH2 || d.widget || d.cards.length > 0) && (
     <section class="w1-how" aria-labelledby={howH2 ? 'w1-how-h' : undefined}>
@@ -524,7 +546,7 @@ if (faqItems.length) {
       {deskImg && (
         <picture class="w1-top__img w1-d">
           <source media="(min-width: 1024px)" srcset={deskSet} sizes="(min-width: 1280px) 584px, 46vw" />
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={d.desk_image_alt || d.h1}
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={deskAlt}
                width="1200" height="900" fetchpriority="high" decoding="async" />
         </picture>
       )}
@@ -770,6 +792,20 @@ if (faqItems.length) {
   .rp-card p { margin: 0; font-size: var(--fs-s-1); line-height: 1.5; color: var(--ink); }
   .rp-card .t-label { display: block; margin-bottom: 2px; color: var(--faint); }
   .rp-card a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  /* #259: the card beside the Contact heading — a beige block, the four ways to reach us in two columns
+     (one on phones), the directions link under them */
+  .w1-top__card { background: var(--paper-2); padding: 24px 20px; gap: 20px 32px; margin-top: var(--s4); }
+  .w1-top__card p { font-size: var(--fs-s0); }
+  .w1-top__card .t-label { margin-bottom: 6px; }
+  .w1-top__card a { text-decoration: none; }
+  .w1-top__card a:hover { text-decoration: underline; }
+  .w1-top__card p:last-child a { text-decoration: underline; font-size: var(--fs-s-1); }
+  @media (min-width: 760px) {
+    .w1-top__card { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 36px 40px; }
+    .w1-top__card p:first-child, .w1-top__card p:last-child { grid-column: 1 / -1; }
+    .w1-top__card p:last-child { padding-top: 18px; border-top: 1px solid var(--line-soft); }
+  }
+  @media (min-width: 1024px) { .w1-top__card { margin-top: 0; } }
   .w1-how { padding-top: var(--s5); }
   .w1-how__head .prose :global(p:last-child) { margin-bottom: var(--s4); }
   .w1-form { padding-bottom: var(--s7); }

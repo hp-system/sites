@@ -1,0 +1,108 @@
+{
+  "id": "P22",
+  "lang": "en",
+  "buildOrder": "",
+  "priority": "",
+  "name": "Hotels & commercial",
+  "pageType": "listing",
+  "path": "/en/properties/hotels-for-sale",
+  "keyword": "hotels for sale in Halkidiki",
+  "titleFocus": "Buyers of a hotel or a business building: what is for sale and how buying works",
+  "title": "Hotels for Sale in Halkidiki, Greece",
+  "meta": "Hotels and commercial property for sale in Halkidiki, Greece: hotels in Kassandra, Sithonia and the rest of the peninsula, shops, offices and buildings.",
+  "h1": "Hotels and commercial property for sale in Halkidiki",
+  "h2": [
+    "Hotels for sale by area",
+    "What each hotel listing shows",
+    "Shops, offices and buildings",
+    "Buying a hotel or business property in Greece"
+  ],
+  "faqQuestions": [
+    "Where are the hotels for sale in Halkidiki?",
+    "What does a hotel listing include?",
+    "Can a commercial building qualify for the Golden Visa?",
+    "How long does buying take?"
+  ],
+  "faq": [
+    {
+      "q": "Where are the hotels for sale in Halkidiki?",
+      "a": "Across the five municipalities: near the beaches of Kassandra and Sithonia, on the coast of Aristotelis and in the towns of Nea Propontida and Polygyros. The list shows the hotels for sale today."
+    },
+    {
+      "q": "What does a hotel listing include?",
+      "a": "The rooms by type, the classification, the building area and the distance to the sea. An adviser sends you the full file of each hotel."
+    },
+    {
+      "q": "Can a commercial building qualify for the Golden Visa?",
+      "a": "As of November 2026, a €250,000 threshold applies only to converting a commercial building into a home; other homes in Halkidiki need €400,000."
+    },
+    {
+      "q": "How long does buying take?",
+      "a": "Count 4 to 8 weeks from the tax number to the land registry, and about 6% on top of the price for taxes and fees."
+    }
+  ],
+  "intro": "<p>Kassandra is the strongest rental market of Halkidiki. Here you find the hotels and commercial property for sale across its five municipalities, from hotels near the big beaches to shops, offices and buildings in the towns that stay open all year. Ask an adviser for the full file of each one.</p>",
+  "body": "<h2>Hotels for sale by area</h2><p><strong>Kassandra</strong> has the big beaches and the resorts of Sani, Possidi and Pefkochori, and the longest letting season: a house near the beach lets for 16 to 20 weeks a year. <strong>Sithonia</strong> has the most nature and privacy, with small coves among the pines and views of Mount Athos. On the eastern side, <strong>Aristotelis</strong> has the lowest prices per square metre, and <strong>Nea Propontida</strong> and <strong>Polygyros</strong> have long, easy beaches close to towns with a permanent population.</p><h2>What each hotel listing shows</h2><p>Every hotel in the list shows the facts a buyer of a business asks first: the rooms by type (single, double, triple, quadruple, suites and studios), the classification, the building area and the distance to the sea. The full file of each hotel, with its papers, comes from an adviser.</p><h2>Shops, offices and buildings</h2><p>In the towns that stay open all year, such as Nea Moudania, Polygyros and Kassandreia, shops, offices and buildings serve the people who live here, not only the summer visitors.</p><h2>Buying a hotel or business property in Greece</h2><p>Buying works like any purchase in Greece: a Greek tax number in one day, an independent lawyer, a pre-contract with a 10% deposit, the notary deed and the land registry. Count 4 to 8 weeks in total and about 6% on top of the price for taxes and fees. For a running hotel, your lawyer also checks its operating licence.</p>",
+  "listingFilter": "",
+  "indexing": "index",
+  "canonical": "/en/properties/hotels-for-sale",
+  "hreflang": [
+    "en"
+  ],
+  "schema": [
+    "CollectionPage",
+    "ItemList",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "breadcrumb": [
+    "Home",
+    "Properties",
+    "Hotels & commercial"
+  ],
+  "heroAlt": "Hotel by the sea for sale in Halkidiki, Greece",
+  "galleryAltPattern": "",
+  "ogTitle": "Hotels for Sale in Halkidiki – Hotels and Commercial Property",
+  "anchor": "hotels for sale in Halkidiki",
+  "anchorVariants": [],
+  "linksOut": [
+    {
+      "anchor": "real estate in Kassandra, Halkidiki",
+      "href": "/en/properties/kassandra"
+    },
+    {
+      "anchor": "Sithonia real estate",
+      "href": "/en/properties/sithonia"
+    },
+    {
+      "anchor": "buying property in Greece",
+      "href": "/en/buying-property-in-greece"
+    },
+    {
+      "anchor": "Greece Golden Visa",
+      "href": "/en/golden-visa-greece"
+    },
+    {
+      "anchor": "Halkidiki property for sale",
+      "href": "/en/properties"
+    }
+  ],
+  "linkedFrom": [
+    "Home collections (Hotels & commercial)",
+    "Footer",
+    "P02 All properties"
+  ],
+  "cta": "Ask for the full file of a hotel",
+  "ctaHref": "/en/contact",
+  "oldUrls": [
+    "/en/property-for-sale/hotels"
+  ],
+  "words": 396,
+  "editorialLine": "Updated November 2026",
+  "lawyerCheck": "YES — the line that a running hotel's operating licence is checked by the buyer's lawyer (not in George's texts; drop it if the lawyer does not confirm).",
+  "source": "brief batch-5.json",
+  "photoThemes": [],
+  "standout": [],
+  "postPhotos": [],
+  "questionMarks": []
+}

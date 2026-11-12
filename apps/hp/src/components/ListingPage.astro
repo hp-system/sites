@@ -199,7 +199,8 @@ const labelOf = (sub: string) => {
   const hit = items.find((p) => String(p.attributes?.subcategory ?? '').toLowerCase() === sub);
   // #88: same names as the cards. #251: a type no card on this page has took the raw CRM key
   // («detached house», «field») in every language — the site's own names cover it.
-  return subName(hit?.attributes ?? { subcategory: sub }, lang);
+  // #293: the filter names the type itself — never «Villa» because the first card of that type is a luxury house
+  return subName({ subcategory: sub, subcategory_i18n: (hit?.attributes as any)?.subcategory_i18n } as any, lang);
 };
 const typeOpts = SUBTYPES.map((x) => ({ v: x.v, label: labelOf(x.v) }));
 const muniOpts = MUNIS.map((x) => ({

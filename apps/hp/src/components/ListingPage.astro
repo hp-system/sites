@@ -819,10 +819,12 @@ const tilePhoto = (() => {
   {/* #193 (D-20261110-SS-1): the spec text in the Sell layout — posts with photos of this page's own listings,
       the side menu of the sections, a sign-in call for guests, the FAQ after the text (rule 9), then the spec's
       links out as photo tiles like the home Collections and by-area (anchors word for word, rule 15). Same words, same H2s. */}
-  <div data-lswap="spec">{spec && firstPage && (
+  <div data-lswap="spec">{firstPage && (
     <>
+      {/* #287 deep check: the blocks also on a list page with no text of its own (detached houses; hotels and
+          Polygyros in the languages without a brief yet) */}
       <PageBlocks lang={lang} cats={blocks.cats} areas={blocks.areas} areasFrom={blocks.areasFrom} catsSub={blockCatsSub} areasSub={blockAreasSub} />
-      <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} items={items as any} facets={facets.map((f) => f.key)} drop={blocks.consumed} />
+      {spec && <SpecPosts page={spec} lang={lang} photos={specPhotos} faqH={FAQ_H[lang]} member={viewer.member} cta={specCta} items={items as any} facets={facets.map((f) => f.key)} drop={blocks.consumed} />}
     </>
   )}</div>
   </main>

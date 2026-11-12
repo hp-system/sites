@@ -463,6 +463,9 @@ if (faqItems.length) {
 
     {/* The Sell FAQ (as on the services hub) and the posts, with the «On this page» navigator beside
         them, right after «Get to know how we sell» (Sergei 2026-11-10) */}
+    {/* #287 (Sergei 2026-11-12 «да»): on Sell the «by area» block stands above the SEO posts, as on the list pages (#275) —
+        an owner sees from which price homes sell in the area; the other own pages keep it where it was */}
+    {fresh && d.key === 'sell' && homeAreas.tiles.length > 0 && <Areas lang={lang} items={homeAreas.tiles} from={homeAreas.from} headHref={listUrl(lang)} />}
     {fresh && postsPage && <SpecPosts page={postsPage} lang={lang} photos={mosaicPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={postLinks}
                                     cta={d.section === 'sell' ? undefined : null} />}
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
@@ -504,7 +507,7 @@ if (faqItems.length) {
 
     {/* Own pages (Sell): «Property for sale in Halkidiki» exactly as on the home page (Areas.astro, white),
         Sergei 2026-11-10 */}
-    {fresh && homeAreas.tiles.length > 0 && <Areas lang={lang} items={homeAreas.tiles} from={homeAreas.from} headHref={listUrl(lang)} />}
+    {fresh && d.key !== 'sell' && homeAreas.tiles.length > 0 && <Areas lang={lang} items={homeAreas.tiles} from={homeAreas.from} headHref={listUrl(lang)} />}
 
     {/* Phones: George's link band and closing call to action. */}
     {d.related.length > 0 && (

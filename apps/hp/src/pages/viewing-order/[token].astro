@@ -11,6 +11,7 @@ import '../../styles/tokens.css';
 import '../../styles/base.css';
 import '../../styles/kit.css';
 import { TOKEN_RE, PRIVATE_HEADERS } from '../../lib/eindication';
+import MARK from '../../components/_mark_paths.json';
 
 export const prerender = false;
 const token = Astro.params.token ?? '';
@@ -30,6 +31,8 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
   <link rel="icon" href="/favicon.svg" />
 </head>
 <body>
+  {/* the sign-in window's mark (Sergei 2026-11-16: «сделай страницу похожей на логин по дизайну», not a popup) */}
+  <div id="vo-mark" hidden><svg viewBox={MARK.viewBox} aria-hidden="true" focusable="false">{MARK.paths.map((d) => <path fill-rule="evenodd" clip-rule="evenodd" d={d} fill="currentColor" />)}</svg></div>
   <div id="vo" data-base={TOKEN_RE.test(token) ? `/api/viewing-order/${token}` : ''}></div>
 
   <script>
@@ -54,7 +57,7 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
     const T = {
       el: { title: 'Υπόδειξη ακινήτων', hello: (d: Data) => `${d.client!.first_name || d.client!.name}, ο σύμβουλός σας ${d.agent} θα σας δείξει τα παρακάτω ακίνητα ${when(d.appointment_at!, true)}.`,
         props: 'Τα ακίνητα', you: 'Τα στοιχεία σας', name: 'Όνομα', mobile: 'Κινητό', tax: 'ΑΦΜ ή αριθμός διαβατηρίου', taxPh: 'Συμπληρώστε το ένα από τα δύο', terms: 'Οι όροι', fee: 'Αμοιβή μεσίτη: {f} συν ΦΠΑ',
-        full: 'Δείτε ολόκληρο το έγγραφο', agree: 'Συμφωνώ. Στείλτε μου κωδικό', disagree: 'Δεν συμφωνώ', valid: 'Ισχύει έως {d}. Δεν χρειάζεται λογαριασμός.',
+        full: 'Δείτε ολόκληρο το έγγραφο', agree: 'Στείλτε μου κωδικό', consent: 'Συμφωνώ με τους όρους της υπόδειξης', disagree: 'Δεν συμφωνώ', valid: 'Ισχύει έως {d}. Δεν χρειάζεται λογαριασμός.',
         codeT: 'Γράψτε τον κωδικό', codeS: 'Στείλαμε έναν εξαψήφιο κωδικό με SMS στο κινητό που λήγει σε {n}.', approve: 'Έγκριση υπόδειξης', noCome: 'Δεν ήρθε;', again: 'Στείλτε ξανά', againIn: 'Στείλτε ξανά σε {s}', newCode: 'Στείλτε μου νέο κωδικό',
         decl: 'Γράφοντας τον κωδικό δηλώνετε ότι είδατε τα ακίνητα {c} μέσω της {b} και αποδέχεστε τους όρους.',
         okT: 'Η υπόδειξη εγκρίθηκε', okS: '{d}. Σας στείλαμε αντίγραφο και με email.', docName: 'Υπόδειξη ακινήτων', withOk: 'με την έγκρισή σας', nProps: '{n} ακίνητα · ', dl: 'Λήψη', appt: 'Το ραντεβού σας', whenL: 'Πότε', who: 'Με ποιον',
@@ -66,7 +69,7 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
         needTax: 'Συμπληρώστε ΑΦΜ ή αριθμό διαβατηρίου.', needReason: 'Διαλέξτε τουλάχιστον έναν λόγο.', err: 'Κάτι δεν πήγε καλά. Δοκιμάστε ξανά.', wait: 'Περιμένετε…' },
       en: { title: 'Property viewing', hello: (d: Data) => `${d.client!.first_name || d.client!.name}, your advisor ${d.agent} will show you the following properties ${when(d.appointment_at!, true)}.`,
         props: 'The properties', you: 'Your details', name: 'Name', mobile: 'Mobile', tax: 'Tax number or passport number', taxPh: 'Fill in one of the two', terms: 'The terms', fee: "Agent's fee: {f} plus VAT",
-        full: 'See the whole document', agree: 'I agree. Send me a code', disagree: 'I do not agree', valid: 'Valid until {d}. No account is needed.',
+        full: 'See the whole document', agree: 'Send me a code', consent: 'I agree with the terms of the viewing order', disagree: 'I do not agree', valid: 'Valid until {d}. No account is needed.',
         codeT: 'Enter the code', codeS: 'We sent a six-digit code by SMS to the mobile ending in {n}.', approve: 'Approve the viewing order', noCome: 'Did it not arrive?', again: 'Send again', againIn: 'Send again in {s}', newCode: 'Send me a new code',
         decl: 'By entering the code you declare that you saw the properties {c} through {b} and you accept the terms.',
         okT: 'The viewing order was approved', okS: '{d}. We also sent you a copy by e-mail.', docName: 'Property viewing', withOk: 'with your approval', nProps: '{n} properties · ', dl: 'Download', appt: 'Your appointment', whenL: 'When', who: 'With',
@@ -95,10 +98,17 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
       const j = (await r.json().catch(() => ({}))) as J; j.__status = r.status; return j;
     }
 
-    const head = () => `<header class="vo-h"><b class="vo-brand">${esc(D?.brand ?? '')}</b><span class="vo-lang" role="group">`
-      + (['el', 'en'] as const).map((l) => `<button type="button" data-l="${l}" aria-pressed="${lang === l}">${l === 'el' ? 'ΕΛ' : 'EN'}</button>`).join('') + '</span></header>';
+    // Consent first, then the one button (Sergei 2026-11-16: «плашка … согласие, и просто кнопка отправить»).
+    app.addEventListener('change', (e) => {
+      const c = e.target as HTMLInputElement;
+      if (c.id === 'consent') (document.getElementById('agree') as HTMLButtonElement).disabled = !c.checked;
+    });
+    const MARKUP = document.getElementById("vo-mark")?.innerHTML ?? '';
+    const head = () => `<span class="vo-lang" role="group">`
+      + (['el', 'en'] as const).map((l) => `<button type="button" data-l="${l}" aria-pressed="${lang === l}">${l === 'el' ? 'ΕΛ' : 'EN'}</button>`).join('') + '</span>'
+      + `<div class="vo-hd"><div class="vo-mk">${MARKUP}</div><p class="vo-lbl">${esc(D?.brand ?? '')}</p></div>`;
     function page(h: string, wide = false) {
-      app.innerHTML = head() + `<main class="vo${wide ? ' vo--wide' : ''}">${h}</main>`;
+      app.innerHTML = `<main class="vo-pg"><div class="vo${wide ? ' vo--wide' : ''}">${head()}${h}</div></main>`;
       document.documentElement.lang = lang;
       document.title = (D?.brand ? D.brand + ' · ' : '') + t('title');
     }
@@ -108,13 +118,13 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
       + `<a class="vo-lnk" href="${base}${D!.pdf ? '/pdf' : '/document'}?download=1" rel="noreferrer">${t('dl')}</a></div>`;
 
     function draw() {
-      if (!D) { app.innerHTML = `<main class="vo"><p class="vo-txt">${t('wait')}</p></main>`; return; }
+      if (!D) { app.innerHTML = `<main class="vo-pg"><div class="vo"><p class="vo-txt vo-c">${t('wait')}</p></div></main>`; return; }
       const s = D.state;
       if (s === 'notfound') return page(seal('?') + `<div class="vo-c"><h1 class="vo-t">${t('nfT')}</h1><p class="vo-txt">${t('nfS')}</p></div>`);
       if (s === 'replaced') return page(seal('↻') + `<div class="vo-c"><h1 class="vo-t">${t('repT')}</h1><p class="vo-txt">${t('repS')}</p></div>`);
       if (s === 'cancelled') return page(seal('×') + `<div class="vo-c"><h1 class="vo-t">${t('canT')}</h1><p class="vo-txt">${t('canS')}</p></div>`);
       if (s === 'expired') return page(seal('⏱') + `<div class="vo-c"><h1 class="vo-t">${t('expT')}</h1><p class="vo-txt">${t('expS').replace('{d}', when(D.expires_at!))}</p></div>`
-        + (view === 'asked' ? `<p class="vo-note vo-c">${t('askedOk')}</p>` : `<button type="button" class="k-act vo-b" id="renew">${t('ask')}</button>`)
+        + (view === 'asked' ? `<p class="vo-note vo-c">${t('askedOk')}</p>` : `<button type="button" class="vo-btn" id="renew">${t('ask')}</button>`)
         + `<p class="vo-hint vo-c">${t('asked').replace('{a}', esc(D.agent))}</p>`);
       if (s === 'declined') return page(seal('✓') + `<div class="vo-c"><p class="vo-txt">${t('noDone')}</p></div>`);
       if (s === 'approved') {
@@ -124,17 +134,17 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
         return page(seal('✓', false) + `<div class="vo-c"><h1 class="vo-t">${t('doneT')}</h1><p class="vo-txt">${t('doneS').replace('{d}', full(D.approved_at!))}</p></div>` + file(t('withOk')));
       }
       if (view === 'decline') {
-        let h = `<div><h1 class="vo-t">${t('noT')}</h1><p class="vo-txt">${t('noS')}</p></div><section class="vo-blk">`;
+        let h = `<div class="vo-c"><h1 class="vo-t">${t('noT')}</h1><p class="vo-txt">${t('noS')}</p></div><section class="vo-blk">`;
         (D.decline_reasons || []).forEach((r) => { h += `<label class="vo-chk"><input type="checkbox" name="r" value="${esc(r.key)}"><span>${esc(r.text[lang] || r.text.el)}</span></label>`; });
         h += `<textarea id="note" maxlength="1000" placeholder="${t('notePh')}" aria-label="${t('notePh')}"></textarea></section>${msgBox()}`
-          + `<button type="button" class="k-act vo-b" id="dsend">${t('send')}</button><button type="button" class="vo-lnk vo-c" id="dback">${t('back')}</button>`;
+          + `<button type="button" class="vo-btn" id="dsend">${t('send')}</button><button type="button" class="vo-lnk vo-c" id="dback">${t('back')}</button>`;
         return page(h);
       }
       if (view === 'code') {
         const codes = (D.properties || []).map((p) => p.code).join(lang === 'el' ? ' και ' : ' and ');
-        page(`<div><h1 class="vo-t">${t('codeT')}</h1><p class="vo-txt">${t('codeS').replace('{n}', `<b>${esc(sentTo || D.client?.mobile_tail)}</b>`)}</p></div>`
-          + `<input class="vo-otp${codeBad ? ' is-bad' : ''}" id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="${t('codeT')}">`
-          + msgBox() + `<button type="button" class="k-act vo-b" id="ok" disabled>${t('approve')}</button>`
+        page(`<div class="vo-c"><h1 class="vo-t">${t('codeT')}</h1><p class="vo-txt">${t('codeS').replace('{n}', `<b>${esc(sentTo || D.client?.mobile_tail)}</b>`)}</p></div>`
+          + `<input class="fi vo-otp${codeBad ? ' is-bad' : ''}" id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="${t('codeT')}">`
+          + msgBox() + `<button type="button" class="vo-btn" id="ok" disabled>${t('approve')}</button>`
           + `<p class="vo-hint vo-c">${codeBad ? '' : t('noCome') + ' '}<button type="button" class="vo-lnk" id="again"></button></p>`
           + `<p class="vo-note">${t('decl').replace('{c}', `<span class="vo-mono">${esc(codes)}</span>`).replace('{b}', esc(D.brand))}</p>`);
         const o = document.getElementById('otp') as HTMLInputElement;
@@ -142,17 +152,18 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
         o.oninput = () => { o.value = o.value.replace(/\D/g, ''); (document.getElementById('ok') as HTMLButtonElement).disabled = o.value.length !== 6; };
         tick(); return;
       }
-      let h = `<div><h1 class="vo-t">${t('title')}</h1><p class="vo-txt">${esc(T[lang].hello(D))}</p></div><div class="vo-cols"><div class="vo-col"><section class="vo-blk"><h2>${t('props')}</h2>`;
+      let h = `<div class="vo-c"><h1 class="vo-t">${t('title')}</h1><p class="vo-txt">${esc(T[lang].hello(D))}</p></div><div class="vo-cols"><div class="vo-col"><section class="vo-blk"><h2>${t('props')}</h2>`;
       (D.properties || []).forEach((p) => {
         h += `<div class="vo-prop"><b><span class="vo-mono">${esc(p.code)}</span> · ${esc([p.subcategory, p.sqm ? p.sqm + (lang === 'el' ? ' τ.μ.' : ' m²') : ''].filter(Boolean).join(' '))}</b>`
           + `<small>${esc([p.area, p.municipality].filter(Boolean).join(', '))}${p.price ? ' · ' + money(p.price) : ''}</small></div>`;
       });
       h += `</section><section class="vo-blk"><h2>${t('you')}</h2><dl class="vo-kv"><dt>${t('name')}</dt><dd>${esc(D.client?.name)}</dd><dt>${t('mobile')}</dt><dd class="vo-mono">${esc(D.client?.mobile)}</dd></dl>`
-        + (D.client?.has_tax ? '' : `<label class="vo-fl" for="tax">${t('tax')}</label><input class="vo-in" type="text" id="tax" maxlength="30" autocomplete="off" placeholder="${t('taxPh')}" value="${esc(tax)}">`) + '</section></div><div class="vo-col">'
+        + (D.client?.has_tax ? '' : `<label class="vo-fl" for="tax">${t('tax')}</label><input class="fi" type="text" id="tax" maxlength="30" autocomplete="off" placeholder="${t('taxPh')}" value="${esc(tax)}">`) + '</section></div><div class="vo-col">'
         + `<section class="vo-blk"><h2>${t('terms')}</h2><p class="vo-note vo-c">${t('fee').replace('{f}', esc(D.fee_text))}</p><a class="vo-lnk" target="_blank" rel="noreferrer" href="${base}/document">${t('full')}</a></section>`
         + msgBox() + (D.sms ? '' : `<p class="vo-note">${t('smsOff')}</p>`)
-        + `<button type="button" class="k-act vo-b" id="agree"${D.sms ? '' : ' disabled'}>${t('agree')}</button>`
-        + `<button type="button" class="k-line vo-b" id="no">${t('disagree')}</button><p class="vo-hint vo-c">${t('valid').replace('{d}', when(D.expires_at!))}</p></div></div>`;
+        + `<label class="agr"><input type="checkbox" id="consent" autocomplete="off"${D.sms ? '' : ' disabled'}><span class="agr-b" aria-hidden="true"></span><span>${t('consent')}</span></label>`
+        + `<button type="button" class="vo-btn" id="agree" disabled>${t('agree')}</button>`
+        + `<p class="vo-hint">${t('valid').replace('{d}', when(D.expires_at!))} <button type="button" class="vo-lnk vo-lnk--in" id="no">${t('disagree')}</button></p></div></div>`;
       page(h, true);
     }
 
@@ -224,55 +235,74 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
   </script>
 
   <style is:global>
+    /* The sign-in window's look (LoginPop.astro): a white card on the beige band, the mark, the brand label, a light
+       title, its fields, consent box and outline button. Not the gilded edge: that is only for calls to register. */
     body { background: var(--paper-2); color: var(--ink); margin: 0; }
-    .vo-h { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: var(--s3) var(--s4); background: var(--paper); border-bottom: 1px solid var(--line); }
-    .vo-brand { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
-    .vo-lang { display: flex; border: 1px solid var(--line); }
-    .vo-lang button { all: unset; cursor: pointer; padding: 6px 12px; font-size: var(--fs-s-1); color: var(--faint); }
+    .vo-pg { min-height: 100vh; box-sizing: border-box; display: flex; justify-content: center; align-items: flex-start; padding: var(--s6) 16px; }
+    .vo { position: relative; box-sizing: border-box; width: 100%; max-width: 500px; background: var(--paper); padding: 28px 40px 26px; display: grid; gap: var(--s4); align-content: start; }
+    .vo-hd { text-align: center; }
+    .vo-mk { display: flex; justify-content: center; height: 44px; margin: 0 0 12px; color: var(--ink); }
+    .vo-mk svg { height: 100%; width: auto; display: block; }
+    .vo-lbl { margin: 0; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+    .vo-lang { position: absolute; top: 14px; right: 14px; display: flex; border: 1px solid var(--line); }
+    .vo-lang button { all: unset; cursor: pointer; padding: 4px 10px; font-size: var(--fs-s-1); color: var(--faint); }
     .vo-lang button[aria-pressed='true'] { background: var(--paper-2); color: var(--ink); font-weight: 600; }
     .vo-lang button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-    .vo { box-sizing: border-box; width: 100%; max-width: 520px; margin: 0 auto; padding: var(--s5) var(--s4) var(--s7); display: grid; gap: var(--s4); align-content: start; }
-    /* Sergei 2026-11-16: «страница должна быть без скрола» — on a desktop the order is two columns that fit one
-       screen (properties and details | terms and buttons); a phone keeps one column. */
+    .vo-t { margin: 0; font-size: var(--fs-s2); font-weight: 300; line-height: 1.25; letter-spacing: -.016em; }
+    .vo-txt { margin: 6px 0 0; color: var(--muted); font-size: var(--fs-s-1); line-height: 1.55; }
+    .vo-c { text-align: center; }
+    /* the order on a desktop: two columns inside the card, so it fits one screen (Sergei 2026-11-16) */
     .vo-cols { display: grid; gap: var(--s4); min-width: 0; }
     .vo-col { display: grid; gap: var(--s3); align-content: start; min-width: 0; }
     @media (min-width: 900px) {
-      .vo--wide { max-width: 1040px; padding-top: var(--s5); padding-bottom: var(--s5); }
+      .vo--wide { max-width: 920px; }
       .vo--wide .vo-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s5); }
     }
-    .vo-t { margin: 0; font-size: var(--fs-s1); font-weight: 400; line-height: 1.25; }
-    .vo-txt { margin: var(--s2) 0 0; color: var(--ink-2); font-size: var(--fs-s0); line-height: 1.5; }
-    .vo-c { text-align: center; }
-    .vo-blk { background: var(--paper); border: 1px solid var(--line); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+    @media (max-width: 520px) { .vo { padding: 24px 18px 22px; } .vo-pg { padding: 0; } }
+    .vo-blk { display: grid; gap: var(--s2); min-width: 0; }
     .vo-blk h2 { margin: 0; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
-    .vo-prop { display: grid; gap: 2px; padding: var(--s3); border: 1px solid var(--line-soft); font-size: var(--fs-s0); }
+    .vo-prop { display: grid; gap: 2px; padding: 10px 14px; border: 1px solid var(--line); font-size: var(--fs-s0); }
     .vo-prop small { color: var(--muted); font-size: var(--fs-s-1); }
-    .vo-kv { display: grid; grid-template-columns: minmax(0, 110px) minmax(0, 1fr); gap: var(--s2) var(--s3); margin: 0; font-size: var(--fs-s0); }
+    .vo-kv { display: grid; grid-template-columns: minmax(0, 110px) minmax(0, 1fr); gap: 6px var(--s3); margin: 0; font-size: var(--fs-s0); }
     .vo-kv dt { color: var(--faint); font-size: var(--fs-s-1); align-self: center; }
     .vo-kv dd { margin: 0; overflow-wrap: anywhere; }
     .vo-mono { font-variant-numeric: tabular-nums; letter-spacing: .02em; }
-    .vo-fl { font-size: var(--fs-s-1); color: var(--muted); }
-    .vo-in, .vo textarea { box-sizing: border-box; width: 100%; min-height: 48px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: inherit; font-size: var(--fs-s0); padding: 10px 12px; }
-    .vo textarea { min-height: 88px; resize: vertical; }
-    .vo-in:focus, .vo textarea:focus, .vo-otp:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
-    .vo-otp { box-sizing: border-box; width: 100%; height: 64px; border: 1px solid var(--line); background: var(--paper); text-align: center; font: inherit; font-size: var(--fs-s2); font-weight: 600; letter-spacing: .45em; font-variant-numeric: tabular-nums; }
-    .vo-otp.is-bad { border-color: var(--err, #DC3545); box-shadow: inset 0 0 0 1px var(--err, #DC3545); }
-    .vo-b { width: 100%; font: inherit; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
-    .vo-b.k-line { min-height: 56px; }
-    .vo-b:disabled { opacity: .4; cursor: default; }
-    .vo-note { margin: 0; background: var(--paper); border-left: 2px solid var(--gold); padding: var(--s3); font-size: var(--fs-s-1); color: var(--ink-2); line-height: 1.5; }
-    .vo-err { margin: 0; padding: 8px 10px; border: 1px solid var(--err, #DC3545); color: var(--err, #DC3545); font-size: var(--fs-s-1); background: var(--paper); }
-    .vo-hint { margin: 0; font-size: var(--fs-s-1); color: var(--faint); }
-    .vo-lnk { all: unset; cursor: pointer; color: var(--ink); font-size: var(--fs-s-1); text-decoration: underline; text-underline-offset: 3px; justify-self: center; padding: 6px 0; }
+    .vo-fl { font-size: var(--fs-s-1); color: var(--muted); margin-top: 4px; }
+    .fi, .vo textarea { width: 100%; min-height: 46px; box-sizing: border-box; padding: 0 14px; border: 1px solid var(--line); background: var(--paper);
+          color: var(--ink); font: inherit; font-size: var(--fs-s0); text-align: start; }
+    .vo textarea { min-height: 88px; padding: 10px 14px; resize: vertical; }
+    .fi::placeholder, .vo textarea::placeholder { color: var(--faint); opacity: 1; }
+    .fi:focus-visible, .vo textarea:focus-visible { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(3, 109, 172, .16); }
+    .vo-otp { height: 56px; text-align: center; font-size: var(--fs-s2); letter-spacing: .34em; font-variant-numeric: tabular-nums; }
+    .fi.is-bad { border-color: var(--err, #DC3545); box-shadow: inset 0 0 0 1px var(--err, #DC3545); }
+    .vo-btn { width: 100%; min-height: 44px; background: transparent; border: 1px solid var(--ink); color: var(--ink); font: inherit; font-size: var(--fs-s-1);
+              font-weight: 600; letter-spacing: .16em; text-transform: uppercase; cursor: pointer; transition: background .2s ease; }
+    .vo-btn:hover { background: var(--paper-2); }
+    .vo-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+    .vo-btn:disabled { opacity: .4; cursor: not-allowed; background: transparent; }
+    .agr { position: relative; display: flex; align-items: flex-start; gap: 10px; font-size: var(--fs-s-1); line-height: 1.5; color: var(--ink-2); cursor: pointer; }
+    .agr input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .agr-b { flex: none; width: 18px; height: 18px; margin-top: 1px; box-sizing: border-box; border: 1px solid rgba(14, 18, 20, .35); background: var(--paper);
+             display: flex; align-items: center; justify-content: center; }
+    .agr:hover .agr-b { border-color: var(--ink); }
+    .agr input:checked + .agr-b { background: var(--ink); border-color: var(--ink); }
+    .agr input:checked + .agr-b::after { content: ""; width: 9px; height: 5px; border-left: 1.6px solid var(--paper); border-bottom: 1.6px solid var(--paper); transform: translateY(-1px) rotate(-45deg); }
+    .agr input:focus-visible + .agr-b { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .agr input:disabled ~ span { opacity: .5; }
+    .vo-note { margin: 0; background: var(--paper-2); padding: 10px 14px; font-size: var(--fs-s-1); color: var(--ink-2); line-height: 1.5; }
+    .vo-err { margin: 0; padding: 8px 10px; border: 1px solid var(--err, #DC3545); color: var(--err, #DC3545); font-size: var(--fs-s-1); }
+    .vo-hint { margin: 0; font-size: var(--fs-s-1); line-height: 1.5; color: var(--faint); text-align: center; }
+    .vo-lnk { all: unset; cursor: pointer; color: var(--ink-2); font-size: var(--fs-s-1); text-decoration: underline; text-underline-offset: 3px; justify-self: center; padding: 4px 0; }
+    .vo-lnk--in { padding: 0; }
     .vo-lnk:disabled { color: var(--faint); cursor: default; text-decoration: none; }
     .vo-lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-    .vo-seal { width: 64px; height: 64px; margin: var(--s2) auto 0; display: grid; place-items: center; font-size: var(--fs-s2); border: 1px solid var(--ink); color: var(--ink); border-radius: 50%; }
+    .vo-seal { width: 56px; height: 56px; margin: 0 auto; display: grid; place-items: center; font-size: var(--fs-s1); border: 1px solid var(--ink); color: var(--ink); border-radius: 50%; }
     .vo-seal--mute { border-color: var(--line); color: var(--faint); }
-    .vo-file { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: var(--s3); align-items: center; padding: var(--s3); background: var(--paper); border: 1px solid var(--line); font-size: var(--fs-s0); }
+    .vo-file { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: var(--s3); align-items: center; padding: 10px 14px; border: 1px solid var(--line); font-size: var(--fs-s0); }
     .vo-file__ic { width: 40px; height: 48px; display: grid; place-items: center; background: var(--paper-2); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .08em; }
     .vo-file small { display: block; color: var(--faint); font-size: var(--fs-s-1); }
     .vo-chk { display: flex; gap: var(--s3); align-items: flex-start; font-size: var(--fs-s0); cursor: pointer; }
-    .vo-chk input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--ink); }
-  </style>
+    .vo-chk input { width: 18px; height: 18px; margin: 2px 0 0; flex: none; accent-color: var(--ink); }
+</style>
 </body>
 </html>

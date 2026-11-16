@@ -37,6 +37,7 @@ import { rentalUrl } from '../lib/contact';
 import { company } from '../lib/company';
 import { ui, facetUrl, FACETS, PAIRS, catKey, isLuxury, isVilla } from '../lib/listing';
 import { AREA_PAGES } from '../content/areas/en';
+import { areaBandShot } from '../lib/area-band';
 import { brand } from '../brand/index';
 import { propertySeo, bedsText, twinFeature, twinKey, WITH_POOL } from '../lib/property-seo';
 import { specOf, MUNI_SPEC } from '../lib/seo-pages';
@@ -306,7 +307,11 @@ const pickPhoto = (keep: (x: SiteProperty) => boolean) => {
 };
 const inMuni = (k: string) => (p: SiteProperty) => muniKey(p.attributes ?? {}) === k;
 // About band photo: a seafront/view cover from the same municipality.
-const bandPhoto = myMuni ? pickPhoto((p) => inMuni(myMuni)(p) && (p.attributes?.sea_access === 'front')) ?? pickPhoto(inMuni(myMuni)) : null;
+// Sergei 2026-11-16: one chosen landscape per municipality (lib/area-band.ts); the automatic pick only when that
+// photo's property is no longer published, or when it is this very property.
+const bandShot = myMuni ? areaBandShot(myMuni, new Set(all.map((p) => refOf(p)))) : null;
+const bandPhoto = bandShot && bandShot.ref !== id ? ({ url: bandShot.url } as ReturnType<typeof coverOf>)
+  : myMuni ? pickPhoto((p) => inMuni(myMuni)(p) && (p.attributes?.sea_access === 'front')) ?? pickPhoto(inMuni(myMuni)) : null;
 
 // Area zone («Property for sale in Halkidiki»): links that are not elsewhere on the page —
 // the municipality's two topic pages, the other municipalities, homes / land, Greece.

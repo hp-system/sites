@@ -395,6 +395,10 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     main.w1-svc > .info-top .crumb { display: none; }
     main.w1-svc > .info-top .svc-eb { display: block; margin: 0; font-size: var(--fs-s-1); font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
     main.w1-svc > .info-top .info-h1 { margin: 10px auto 0; max-width: none; font-size: var(--fs-s4); font-weight: 300; line-height: 1.08; letter-spacing: -.022em; }
+    /* the intro under the H1: centred on the page like the heading, in even lines (Sergei 2026-11-16: «текст некрасиво
+       сверху» — the block sat left of centre with ragged lines) */
+    main.w1-svc > .info-top .svc-intro .st-intro { max-width: 96ch; margin-inline: auto; }
+    main.w1-svc > .info-top .svc-intro .st-intro p { text-wrap: balance; color: var(--ink-2); }
   }
 </style>
 

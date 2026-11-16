@@ -97,8 +97,8 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
 
     const head = () => `<header class="vo-h"><b class="vo-brand">${esc(D?.brand ?? '')}</b><span class="vo-lang" role="group">`
       + (['el', 'en'] as const).map((l) => `<button type="button" data-l="${l}" aria-pressed="${lang === l}">${l === 'el' ? 'ΕΛ' : 'EN'}</button>`).join('') + '</span></header>';
-    function page(h: string) {
-      app.innerHTML = head() + `<main class="vo">${h}</main>`;
+    function page(h: string, wide = false) {
+      app.innerHTML = head() + `<main class="vo${wide ? ' vo--wide' : ''}">${h}</main>`;
       document.documentElement.lang = lang;
       document.title = (D?.brand ? D.brand + ' · ' : '') + t('title');
     }
@@ -142,18 +142,18 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
         o.oninput = () => { o.value = o.value.replace(/\D/g, ''); (document.getElementById('ok') as HTMLButtonElement).disabled = o.value.length !== 6; };
         tick(); return;
       }
-      let h = `<div><h1 class="vo-t">${t('title')}</h1><p class="vo-txt">${esc(T[lang].hello(D))}</p></div><section class="vo-blk"><h2>${t('props')}</h2>`;
+      let h = `<div><h1 class="vo-t">${t('title')}</h1><p class="vo-txt">${esc(T[lang].hello(D))}</p></div><div class="vo-cols"><div class="vo-col"><section class="vo-blk"><h2>${t('props')}</h2>`;
       (D.properties || []).forEach((p) => {
         h += `<div class="vo-prop"><b><span class="vo-mono">${esc(p.code)}</span> · ${esc([p.subcategory, p.sqm ? p.sqm + (lang === 'el' ? ' τ.μ.' : ' m²') : ''].filter(Boolean).join(' '))}</b>`
           + `<small>${esc([p.area, p.municipality].filter(Boolean).join(', '))}${p.price ? ' · ' + money(p.price) : ''}</small></div>`;
       });
       h += `</section><section class="vo-blk"><h2>${t('you')}</h2><dl class="vo-kv"><dt>${t('name')}</dt><dd>${esc(D.client?.name)}</dd><dt>${t('mobile')}</dt><dd class="vo-mono">${esc(D.client?.mobile)}</dd></dl>`
-        + (D.client?.has_tax ? '' : `<label class="vo-fl" for="tax">${t('tax')}</label><input class="vo-in" type="text" id="tax" maxlength="30" autocomplete="off" placeholder="${t('taxPh')}" value="${esc(tax)}">`) + '</section>'
+        + (D.client?.has_tax ? '' : `<label class="vo-fl" for="tax">${t('tax')}</label><input class="vo-in" type="text" id="tax" maxlength="30" autocomplete="off" placeholder="${t('taxPh')}" value="${esc(tax)}">`) + '</section></div><div class="vo-col">'
         + `<section class="vo-blk"><h2>${t('terms')}</h2><p class="vo-note vo-c">${t('fee').replace('{f}', esc(D.fee_text))}</p><a class="vo-lnk" target="_blank" rel="noreferrer" href="${base}/document">${t('full')}</a></section>`
         + msgBox() + (D.sms ? '' : `<p class="vo-note">${t('smsOff')}</p>`)
         + `<button type="button" class="k-act vo-b" id="agree"${D.sms ? '' : ' disabled'}>${t('agree')}</button>`
-        + `<button type="button" class="k-line vo-b" id="no">${t('disagree')}</button><p class="vo-hint vo-c">${t('valid').replace('{d}', when(D.expires_at!))}</p>`;
-      page(h);
+        + `<button type="button" class="k-line vo-b" id="no">${t('disagree')}</button><p class="vo-hint vo-c">${t('valid').replace('{d}', when(D.expires_at!))}</p></div></div>`;
+      page(h, true);
     }
 
     function tick() {
@@ -232,6 +232,14 @@ if (!TOKEN_RE.test(token)) Astro.response.status = 404;
     .vo-lang button[aria-pressed='true'] { background: var(--paper-2); color: var(--ink); font-weight: 600; }
     .vo-lang button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
     .vo { box-sizing: border-box; width: 100%; max-width: 520px; margin: 0 auto; padding: var(--s5) var(--s4) var(--s7); display: grid; gap: var(--s4); align-content: start; }
+    /* Sergei 2026-11-16: «страница должна быть без скрола» — on a desktop the order is two columns that fit one
+       screen (properties and details | terms and buttons); a phone keeps one column. */
+    .vo-cols { display: grid; gap: var(--s4); min-width: 0; }
+    .vo-col { display: grid; gap: var(--s3); align-content: start; min-width: 0; }
+    @media (min-width: 900px) {
+      .vo--wide { max-width: 1040px; padding-top: var(--s5); padding-bottom: var(--s5); }
+      .vo--wide .vo-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s5); }
+    }
     .vo-t { margin: 0; font-size: var(--fs-s1); font-weight: 400; line-height: 1.25; }
     .vo-txt { margin: var(--s2) 0 0; color: var(--ink-2); font-size: var(--fs-s0); line-height: 1.5; }
     .vo-c { text-align: center; }

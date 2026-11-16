@@ -221,11 +221,17 @@ const areas = w1 ? areaCards(items, lang) : [];
 // Halkidiki» on every info page as the list page's blocks (PageBlocks) — photo tiles with the caption link on the photo,
 // no buttons, no «About the area». Related tiles take a watermarked property cover each (a page has no photo of its own).
 const infoBlocks = w1 ? pageBlocks(items as any, lang, [], [], d.path) : { cats: [], areas: [], areasFrom: 0, consumed: new Set<string>() };
+// the related links once per address (the phones' link band; the tiles below do the same)
+const relLinks = d.related.filter((x, i, all) => x.href !== d.path && all.findIndex((y) => y.href === x.href) === i);
 const relTiles: BlockTile[] = (() => {
   if (!w1) return [];
   const used = new Set<string>();
   const pool = items.filter((p) => heroReady(p.attributes ?? {}) && !p.locked).map((p) => coverOf((p.attributes ?? {}) as any)).filter((c): c is NonNullable<typeof c> => !!c && !used.has(c.url) && (used.add(c.url), true));
-  return d.related.map((x, i) => ({ href: x.href, text: x.label, sub: '', photo: pool.length ? pool[(i * 7 + d.path.length) % pool.length] : null, from: 0 }));
+  // one tile per address: George's related links to the folded Sell pages all lead to Sell now (D-20261109-SS-5), and a
+  // link to this very page is no tile (Sergei 2026-11-16 saw three tiles to /en/sell)
+  const seen = new Set<string>([d.path]);
+  return d.related.filter((x) => !seen.has(x.href) && (seen.add(x.href), true))
+    .map((x, i) => ({ href: x.href, text: x.label, sub: '', photo: pool.length ? pool[(i * 7 + d.path.length) % pool.length] : null, from: 0 }));
 })();
 // SEO (Sergei 2026-11-10: «этот блок там для этого»): every municipality, Polygyros too, and the heading links the list
 const homeAreas = fresh ? buildAreaTiles(items, lang, undefined, 5) : { tiles: [], from: 0 };
@@ -513,7 +519,7 @@ if (faqItems.length) {
       <section class="info-band w1-m">
         <div class="wrap">
           <p class="t-label">{ui.related}</p>
-          <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
+          <ul class="links">{relLinks.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
           <p class="t-label info-areas-l">{ui.forSale}</p>
           <ul class="links">{muniLinks.map((p) => <li><a href={p.href}>{ui.forSaleIn.replace('{m}', p.name)}</a></li>)}</ul>
         </div>
@@ -665,7 +671,7 @@ if (faqItems.length) {
       <section class:list={['info-band', { 'w1-m': hubLike }]}>
         <div class="wrap">
           <p class="t-label">{ui.related}</p>
-          <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
+          <ul class="links">{relLinks.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
           <p class="t-label info-areas-l">{ui.forSale}</p>
           <ul class="links">{muniLinks.map((p) => <li><a href={p.href}>{ui.forSaleIn.replace('{m}', p.name)}</a></li>)}</ul>
         </div>

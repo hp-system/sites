@@ -25,7 +25,7 @@ import { contentUrl, pageExists } from '../lib/pages';
 import { brand } from '../brand/index';
 import { waHref } from '../lib/contact';
 import {
-  articleUrl, articlesRoot, categoryName, categoryUrl, relatedTo, readingMinutes, dateText,
+  articleUrl, articlesRoot, categoryName, categoryUrl, relatedTo, dateText,
   excerptOf, type Article,
 } from '../lib/articles';
 import { authorOf } from '../content/articles/authors';
@@ -46,7 +46,6 @@ const bodyHasFaq = /^#{2,3}\s.*(frequently asked|faq)/im.test(body);
 const bodyHasSources = /^#{2,3}\s.*sources/im.test(body);
 
 const author = authorOf(a.author);
-const minutes = readingMinutes(article);
 const updated = dateText(a.updated || a.published);
 const related = await relatedTo(article, 3);
 const areas = AREA_PAGES.filter((p) => p.kind === 'municipality');
@@ -130,12 +129,9 @@ if (a.has_calculator) {
       <p class="t-label art-cat">{categoryName(a.category)}</p>
       <h1 class="t-display art-h1">{a.h1}</h1>
       <p class="art-by">
-        {author && <span class="art-au"><b>{author.name}</b> · {author.role}</span>}
-        <span>{minutes} min read</span>
+        {/* Sergei 2026-11-16: only the author and the date at the top; the reviewer goes to the end, by the sources */}
+        {author && <span class="art-au"><b>{author.name}</b></span>}
         {updated && <span>Updated {updated}</span>}
-        {a.byline_note && <span>{a.byline_note}</span>}
-        {/* AI Act art. 50(4): a named human reviewer with editorial responsibility (#48). */}
-        <span class="art-ed">Reviewed by <b>{brand.editorial.name}</b> · {brand.editorial.role}</span>
       </p>
       </div>
       {image && (
@@ -159,6 +155,14 @@ if (a.has_calculator) {
             <ul class="src">{a.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.title}</a></li>)}</ul>
           </section>
         )}
+
+        {/* AI Act art. 50(4): a named human reviewer with editorial responsibility (#48) — at the end of the text, by the
+            sources (Sergei 2026-11-16), with the article's scope note */}
+        <p class="art-ed">
+          {author && <span>Written by <b>{author.name}</b> · {author.role}</span>}
+          <span>Reviewed by <b>{brand.editorial.name}</b> · {brand.editorial.role}</span>
+          {a.byline_note && <span>{a.byline_note}</span>}
+        </p>
       </div>
 
       <div slot="side" class="art-side">
@@ -234,6 +238,9 @@ if (a.has_calculator) {
   .art-h1 { margin: var(--s3) 0 var(--s4); max-width: 24ch; }
   .art-by { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; font-size: var(--fs-s0); color: var(--muted); }
   .art-au b { color: var(--ink); font-weight: 600; }
+  .art-ed { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: var(--s6) 0 0; padding-top: var(--s3); border-top: 1px solid var(--line-soft);
+            font-size: var(--fs-s-1); color: var(--muted); }
+  .art-ed b { color: var(--ink); font-weight: 600; }
   .art-hero { margin: 0; }
   .art-hero img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--paper-2); }
 

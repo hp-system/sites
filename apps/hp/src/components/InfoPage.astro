@@ -158,10 +158,19 @@ const addr = lang === 'el' ? { street: brand.address.street, city: brand.address
   : lang === 'ru' ? { street: 'Нео-Рисио', city: 'Салоники', country: 'Греция' }   // #265
   : addrLatin;
 const CARD = lang === 'ru'
-  ? { office: 'Офис', phone: 'Телефон', mail: 'E-mail', map: 'Как добраться до нашего офиса: Google Maps' }
+  ? { office: 'Офис', phone: 'Телефон', mail: 'E-mail', map: 'Как добраться до нашего офиса: Google Maps',
+      reach: 'Позвонить или написать', hours: 'Часы работы', write: 'Написать нам', mapShort: 'Маршрут в Google Maps',
+      days: [['Понедельник – пятница', '09:30 – 19:00'], ['Суббота', '10:00 – 14:00'], ['Воскресенье', 'Выходной']] }
   : lang === 'el'
-  ? { office: 'Γραφείο', phone: 'Τηλέφωνο', mail: 'E-mail', map: 'Οδηγίες για το γραφείο μας στο Google Maps' }
-  : { office: 'Office', phone: 'Phone', mail: 'E-mail', map: 'Get directions to our office on Google Maps' };
+  ? { office: 'Γραφείο', phone: 'Τηλέφωνο', mail: 'E-mail', map: 'Οδηγίες για το γραφείο μας στο Google Maps',
+      reach: 'Τηλέφωνο και μηνύματα', hours: 'Ώρες λειτουργίας', write: 'Στείλτε μας μήνυμα', mapShort: 'Οδηγίες στο Google Maps',
+      days: [['Δευτέρα – Παρασκευή', '09:30 – 19:00'], ['Σάββατο', '10:00 – 14:00'], ['Κυριακή', 'Κλειστά']] }
+  : { office: 'Office', phone: 'Phone', mail: 'E-mail', map: 'Get directions to our office on Google Maps',
+      reach: 'Call or write', hours: 'Working hours', write: 'Send us a message', mapShort: 'Directions on Google Maps',
+      days: [['Monday – Friday', '09:30 – 19:00'], ['Saturday', '10:00 – 14:00'], ['Sunday', 'Closed']] };
+// the brands' own marks in one colour (Simple Icons, CC0; Sergei 2026-11-16 «иконки оригинальные но чернобелые»)
+const ICON_WA = 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z';
+const ICON_VIBER = 'M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.776 6.12 20.36h.003l-.004 2.416s-.037.977.61 1.177c.777.242 1.234-.5 1.98-1.302.407-.44.972-1.084 1.397-1.58 3.85.326 6.812-.416 7.15-.525.776-.252 5.176-.816 5.892-6.657.74-6.02-.36-9.83-2.34-11.546-.596-.55-3.006-2.3-8.375-2.323 0 0-.395-.025-1.037-.017zm.058 1.693c.545-.004.88.017.88.017 4.542.02 6.717 1.388 7.222 1.846 1.675 1.435 2.53 4.868 1.906 9.897v.002c-.604 4.878-4.174 5.184-4.832 5.395-.28.09-2.882.737-6.153.524 0 0-2.436 2.94-3.197 3.704-.12.12-.26.167-.352.144-.13-.033-.166-.188-.165-.414l.02-4.018c-4.762-1.32-4.485-6.292-4.43-8.895.054-2.604.543-4.738 1.996-6.173 1.96-1.773 5.474-2.018 7.11-2.03zm.38 2.602c-.167 0-.303.135-.304.302 0 .167.133.303.3.305 1.624.01 2.946.537 4.028 1.592 1.073 1.046 1.62 2.468 1.633 4.334.002.167.14.3.307.3.166-.002.3-.138.3-.304-.014-1.984-.618-3.596-1.816-4.764-1.19-1.16-2.692-1.753-4.447-1.765zm-3.96.695c-.19-.032-.4.005-.616.117l-.01.002c-.43.247-.816.562-1.146.932-.002.004-.006.004-.008.008-.267.323-.42.638-.46.948-.008.046-.01.093-.007.14 0 .136.022.27.065.4l.013.01c.135.48.473 1.276 1.205 2.604.42.768.903 1.5 1.446 2.186.27.344.56.673.87.984l.132.132c.31.308.64.6.984.87.686.543 1.418 1.027 2.186 1.447 1.328.733 2.126 1.07 2.604 1.206l.01.014c.13.042.265.064.402.063.046.002.092 0 .138-.008.31-.036.627-.19.948-.46.004 0 .003-.002.008-.005.37-.33.683-.72.93-1.148l.003-.01c.225-.432.15-.842-.18-1.12-.004 0-.698-.58-1.037-.83-.36-.255-.73-.492-1.113-.71-.51-.285-1.032-.106-1.248.174l-.447.564c-.23.283-.657.246-.657.246-3.12-.796-3.955-3.955-3.955-3.955s-.037-.426.248-.656l.563-.448c.277-.215.456-.737.17-1.248-.217-.383-.454-.756-.71-1.115-.25-.34-.826-1.033-.83-1.035-.137-.165-.31-.265-.502-.297zm4.49.88c-.158.002-.29.124-.3.282-.01.167.115.312.282.324 1.16.085 2.017.466 2.645 1.15.63.688.93 1.524.906 2.57-.002.168.13.306.3.31.166.003.305-.13.31-.297.025-1.175-.334-2.193-1.067-2.994-.74-.81-1.777-1.253-3.05-1.346h-.024zm.463 1.63c-.16.002-.29.127-.3.287-.008.167.12.31.288.32.523.028.875.175 1.113.422.24.245.388.62.416 1.164.01.167.15.295.318.287.167-.008.295-.15.287-.317-.03-.644-.215-1.178-.58-1.557-.367-.378-.893-.574-1.52-.607h-.018z';
 const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addrLatin.street} ${brand.address.postalCode}, ${addrLatin.city}`)}`;
 
 let munis: { name: string; key: string }[] = [];
@@ -420,12 +429,13 @@ if (faqItems.length) {
         {d.cta && <p class="info-cta-top"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
         {d.form && (
           <p class="w1-acts w1-d">
-            <a class="btn" href="#form" data-ev="content:sell">{d.form.title || ui.adviser}</a>
+            {/* Contact (Sergei 2026-11-16): only the button on the left, every detail in the card on the right */}
+            <a class="btn" href="#form" data-ev="content:sell">{d.contact_card ? CARD.write : d.form.title || ui.adviser}</a>
             {/* the phone on the WhatsApp line, under the button (Sergei 2026-11-16) */}
-            <span class="w1-acts__alt">
+            {!d.contact_card && <span class="w1-acts__alt">
               <a class="lnkg" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
               <WaLink />
-            </span>
+            </span>}
           </p>
         )}
       </div>
@@ -439,13 +449,26 @@ if (faqItems.length) {
       )}
       {/* #259 (Sergei 12/11): the contact details sit beside the heading «Contact Halkidiki Properties», not in the side panel */}
       {d.contact_card && (
-        <address class="rp-card w1-top__card">
-          <p><span class="t-label">{CARD.office}</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
-          <p><span class="t-label">{CARD.phone}</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
-          <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
-          <p><span class="t-label">{CARD.mail}</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
-          <p><a href={mapUrl} rel="noopener" target="_blank">{CARD.map}</a></p>
-          </address>
+        <address class="rp-card w1-top__card ct">
+          <div class="ct__col">
+            <div class="ct__sec">
+              <span class="t-label">{CARD.office}</span>
+              <p>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
+              <a class="ct__row ct__map" href={mapUrl} rel="noopener" target="_blank" aria-label={CARD.map}><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>{CARD.mapShort}</span></a>
+            </div>
+            <div class="ct__sec">
+              <span class="t-label">{CARD.hours}</span>
+              <dl class="ct__hours">{CARD.days.map(([dd, hh]) => <><dt>{dd}</dt><dd>{hh}</dd></>)}</dl>
+            </div>
+          </div>
+          <div class="ct__col ct__sec">
+            <span class="t-label">{CARD.reach}</span>
+            <a class="ct__row" href={brand.contact.phoneHref} data-ev="call:footer"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg><span><small>{CARD.phone}</small><bdi dir="ltr">{brand.contact.phoneText}</bdi></span></a>
+            <a class="ct__row" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d={ICON_WA} /></svg><span><small>WhatsApp</small><bdi dir="ltr">{brand.contact.mobileText}</bdi></span></a>
+            <a class="ct__row" href={viberHref()} data-ev="lead:viber"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d={ICON_VIBER} /></svg><span><small>Viber</small><bdi dir="ltr">{brand.contact.mobileText}</bdi></span></a>
+            <a class="ct__row" href={`mailto:${brand.contact.email}`}><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14"/><path d="m3 6 9 7 9-7"/></svg><span><small>{CARD.mail}</small><span>{brand.contact.email.split('@')[0]}@<wbr />{brand.contact.email.split('@')[1]}</span></span></a>
+          </div>
+        </address>
       )}
     </header>
 
@@ -822,6 +845,23 @@ if (faqItems.length) {
     .w1-top__card p:last-child { padding-top: 18px; border-top: 1px solid var(--line-soft); }
   }
   @media (min-width: 1024px) { .w1-top__card { margin-top: 0; } }
+  /* Contact card (Sergei 2026-11-16 «структурируй инфу нормально»): office + directions and the working hours on the left,
+     every way to call or write on the right, each with its icon (the messengers' own marks in one colour) */
+  .w1-top__card.ct { display: grid; gap: 28px 40px; }
+  .ct__col { display: grid; gap: 28px; align-content: start; min-width: 0; }
+  .ct__sec { display: grid; gap: 10px; align-content: start; }
+  .w1-top__card.ct p { grid-column: auto; padding: 0; border: 0; }
+  .w1-top__card.ct .t-label { margin: 0; }
+  .ct__row { display: flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none !important; font-size: var(--fs-s0); }
+  .ct__row > span { display: grid; line-height: 1.35; min-width: 0; }
+  .ct__row small { font-size: var(--fs-s-1); color: var(--muted); }
+  .ct__row:hover > span > :last-child, .ct__map:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  .ct__ic { flex: none; width: 20px; height: 20px; color: var(--ink); }
+  .ct__map { font-size: var(--fs-s-1); }
+  .ct__hours { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 6px 18px; margin: 0; font-size: var(--fs-s-1); white-space: nowrap; }
+  .ct__hours dt { color: var(--muted); }
+  .ct__hours dd { margin: 0; color: var(--ink); font-weight: 600; }
+  @media (min-width: 760px) { .w1-top__card.ct { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 32px; padding: 32px; } }
   .w1-how { padding-top: var(--s5); }
   .w1-how__head .prose :global(p:last-child) { margin-bottom: var(--s4); }
   .w1-form { padding-bottom: var(--s7); }

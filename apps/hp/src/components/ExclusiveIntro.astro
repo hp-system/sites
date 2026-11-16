@@ -3,8 +3,9 @@
 // («What to expect» · «How it works» · «Your time is the most valuable thing»). Sergei 2026-11-16: «нам нужно
 // написать на странице ексклюзив тоже чтото что б юзеры понимали что ето за страница», then «етот блок сделай
 // также как на главной» — the home Construction bento (Construction.astro): on a desktop a full-width beige window
-// onto a bento fixed to the screen, white tiles with icons (what members get) and black tiles with large lines
-// (who it is for · how to join · the closing line with the call). Phones: the same tiles one under the other.
+// onto a bento fixed to the screen. Only the four white tiles go in it («только ети части остаються в етой 3д
+// области, все остальное верни обратно»); the steps and the dark closing line stay under it as before.
+// Phones: the tiles one under the other.
 // The words come from the approved P52 brief (sites#301) and George's VIP page; Sergei approves the English,
 // Greek and Russian are faithful translations (D-20261112-SS-1). No headings: the H2 outline stays the brief's
 // (spec rule 9), the full texts stay in the sections below.
@@ -12,13 +13,12 @@ import type { Lang } from '../lib/i18n';
 interface Props { lang: Lang; cta?: { href: string; text: string } | null }
 const { lang, cta } = Astro.props;
 
-type T = { give: string; who: [string, string]; how: string; time: [string, string]; items: [string, string][]; steps: string[] };
+type T = { give: string; how: string; time: string; items: [string, string][]; steps: string[] };
 const TX: Partial<Record<Lang, T>> = {
   en: {
     give: 'What Exclusive gives you',
-    who: ['From €1 million', 'Seafront villas, estates, large plots by the sea and special properties.'],
     how: 'How to join',
-    time: ['Your time is the most valuable thing', 'and we respect that.'],
+    time: 'Your time is the most valuable thing, and we respect that.',
     items: [
       ['The Secret Portfolio', 'Homes whose owners never advertise them, shown only to members.'],
       ['Early access', 'New properties and price drops reach you before the market, with a notification on your phone.'],
@@ -29,9 +29,8 @@ const TX: Partial<Record<Lang, T>> = {
   },
   el: {
     give: 'Τι σας δίνει το Exclusive',
-    who: ['Από 1 εκατ. €', 'Παραθαλάσσιες βίλες, κτήματα, μεγάλα οικόπεδα δίπλα στη θάλασσα και ξεχωριστά ακίνητα.'],
     how: 'Πώς γίνεστε μέλος',
-    time: ['Ο χρόνος σας είναι το πιο πολύτιμο πράγμα', 'και τον σεβόμαστε.'],
+    time: 'Ο χρόνος σας είναι το πιο πολύτιμο πράγμα και τον σεβόμαστε.',
     items: [
       ['Το Secret Portfolio', 'Κατοικίες που οι ιδιοκτήτες τους δεν διαφημίζουν ποτέ, μόνο για τα μέλη.'],
       ['Πρώτη πρόσβαση', 'Τα νέα ακίνητα και οι μειώσεις τιμών φτάνουν σε εσάς πριν από την αγορά, με ειδοποίηση στο κινητό σας.'],
@@ -42,9 +41,8 @@ const TX: Partial<Record<Lang, T>> = {
   },
   ru: {
     give: 'Что даёт Exclusive',
-    who: ['От 1 млн €', 'Виллы на первой линии, поместья, большие участки у моря и особые объекты.'],
     how: 'Как вступить',
-    time: ['Ваше время — самое ценное', 'и мы это уважаем.'],
+    time: 'Ваше время — самое ценное, и мы это уважаем.',
     items: [
       ['Secret Portfolio', 'Дома, которые владельцы никогда не рекламируют, — только для участников.'],
       ['Ранний доступ', 'Новые объекты и снижения цен приходят к вам раньше, чем на рынок, с уведомлением на телефон.'],
@@ -67,23 +65,24 @@ const ICONS = [
   <div class="wrap"><p class="xi__lbl">{tx.give}</p></div>
   <div class="xi__win" data-xi-win>
     <div class="xi__bento">
-      <div class="xd xd--f xd--f1"><b>{tx.who[0]}</b><span>{tx.who[1]}</span></div>
       {tx.items.map(([h, s], i) => (
         <div class={`xd xd--c${i + 1}`}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[i]}></svg>
           <b>{h}</b><span>{s}</span>
         </div>
       ))}
-      <div class="xd xd--f xd--f2">
-        <b>{tx.how}</b>
-        <ol>{tx.steps.map((s) => <li>{s}</li>)}</ol>
-      </div>
-      <div class="xd xd--f xd--f3">
-        <b>{tx.time[0]}</b><span>{tx.time[1]}</span>
-        {cta && <a class="k-act k-gild k-gild--dk xd__go" href={cta.href} data-ev="register:info">{cta.text}</a>}
-      </div>
     </div>
     <div class="xi__shade" aria-hidden="true"></div>
+  </div>
+  <div class="wrap xi__row">
+    <div class="xi__how">
+      <p class="xi__lbl">{tx.how}</p>
+      <ol>{tx.steps.map((s) => <li>{s}</li>)}</ol>
+    </div>
+    <div class="xi__time">
+      <p>{tx.time}</p>
+      {cta && <a class="k-act k-gild k-gild--dk" href={cta.href} data-ev="register:info">{cta.text}</a>}
+    </div>
   </div>
 </section>
 
@@ -98,49 +97,41 @@ const ICONS = [
 </script>
 
 <style>
-  /* phones and tablets: the tiles one under the other (two columns from 760) */
+  /* phones and tablets: the four tiles one under the other (two columns from 760), then the steps and the closing line */
   .xi { background: var(--paper-2); padding-block: var(--s7); }
   .xi__lbl { margin: 0 0 var(--s4); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
   .xi__bento { display: grid; gap: 12px; padding-inline: var(--gut); }
   .xi__shade { display: none; }
   .xd { min-width: 0; background: var(--paper); padding: var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
   .xd svg { width: 40px; height: 40px; color: var(--ink); flex: none; margin-bottom: var(--s2); }
-  .xd b { font-size: var(--fs-s0); font-weight: 600; line-height: 1.25; letter-spacing: -.01em; }
-  .xd span, .xd li { font-size: var(--fs-s0); line-height: 1.5; color: var(--ink-2); }
-  .xd--f { background: var(--ink-deep); color: #fff; justify-content: flex-end; }
-  .xd--f b { font-size: var(--fs-s3); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
-  .xd--f span, .xd--f li { color: rgba(255,255,255,.72); }
-  .xd ol { margin: var(--s2) 0 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: var(--s2); }
-  .xd ol li { counter-increment: st; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: var(--s2); align-items: baseline; }
-  .xd ol li::before { content: counter(st); font-size: var(--fs-s1); font-weight: 300; color: var(--gold-dk-text); }
-  .xd__go { align-self: flex-start; margin-top: var(--s3); padding: 0 28px; }
-  @media (min-width: 760px) and (max-width: 1023px) {
-    .xi__bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .xd--f1, .xd--f2, .xd--f3 { grid-column: 1 / -1; }
-  }
+  .xd b { font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
+  .xd span { font-size: var(--fs-s0); line-height: 1.55; color: var(--ink-2); }
+  .xi__row { display: grid; gap: var(--s5); margin-top: var(--s6); }
+  .xi__how ol { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: var(--s3); }
+  .xi__how li { counter-increment: st; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--s3); align-items: baseline; font-size: var(--fs-s0); }
+  .xi__how li::before { content: counter(st); font-size: var(--fs-s1); font-weight: 300; color: var(--gold); }
+  .xi__time { background: var(--ink); color: var(--paper); padding: var(--s5); display: grid; gap: var(--s4); align-content: center; }
+  .xi__time p { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.3; }
+  .xi__time .k-act { justify-self: start; padding: 0 28px; }
+  @media (min-width: 760px) { .xi__bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-  /* desktop: the home bento — a full-width beige window onto tiles fixed to the screen */
+  /* desktop: only the four tiles in the home bento window (Sergei 2026-11-16) — a full-width beige window onto a
+     2 × 2 bento fixed to the screen (Construction.astro technique); the steps and the closing line under it */
   @media (min-width: 1024px) {
-    .xi { background: var(--paper); padding: 40px 0 0; }
     .xi__win { --pw: 100vw; --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
                position: relative; width: var(--pw); height: 480px; overflow: hidden; clip-path: inset(0); background: var(--paper-3); }
     .xi__bento { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(600px, calc(var(--tw) * .6), 100vh);
                  box-sizing: border-box; padding: 0; position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
-                 grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr));
-                 grid-template-areas: "f1 f1 c1 c2" "c3 c4 f2 f2" "f3 f3 f2 f2"; }
+                 grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
     .xi__shade { display: block; position: absolute; inset: 0; pointer-events: none;
                  box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
-    .xd { padding: 22px 24px; overflow: hidden; }
-    .xd b { margin-top: auto; }
-    .xd--f { padding: 26px 28px; }
-    .xd--f1 { grid-area: f1; } .xd--f2 { grid-area: f2; } .xd--f3 { grid-area: f3; }
-    .xd--c1 { grid-area: c1; } .xd--c2 { grid-area: c2; } .xd--c3 { grid-area: c3; } .xd--c4 { grid-area: c4; }
-    .xd--f2 { justify-content: center; }
-    .xd--f2 b { margin-top: 0; }
-    .xd--f2 ol { margin-top: var(--s4); gap: var(--s3); }
+    .xd { padding: 28px 30px; overflow: hidden; justify-content: flex-end; }
+    .xd svg { width: 56px; height: 56px; margin-bottom: auto; }
+    .xi__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; margin-top: var(--s6); }
+    .xi__time { padding: var(--s6); }
   }
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
     .xi__win { height: auto; clip-path: none; overflow: visible; padding-block: 40px; }
-    .xi__bento { position: static; height: auto; grid-template-rows: none; grid-auto-rows: 250px; margin-inline: var(--off); }
+    .xi__bento { position: static; height: auto; grid-template-rows: none; grid-auto-rows: 260px; margin-inline: var(--off); }
   }
 </style>

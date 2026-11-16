@@ -17,6 +17,7 @@ import { analyticsOn, consentHeadScript } from '../lib/consent';
 import CookieConsent from '../components/CookieConsent.astro';
 import LoginDialog from '../components/LoginDialog.astro';
 import MemberEvents from '../components/MemberEvents.astro';
+import { cmsSeo } from '../lib/cms-seo';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/kit.css';   // shared design kit (#186)
@@ -58,12 +59,30 @@ const {
   ogImage: ogOwn, ogImageW: ogOwnW, ogImageH: ogOwnH, ogImageAlt: ogOwnAlt, pathFor, noindex = false, jsonLd = [],
   langs, canonicalLang, embed = false, ogTitle, query = '',
 } = Astro.props;
+// The cache headers first: they must be set before anything is awaited below (sites#307 — after the CMS await the
+// response had already started and a member's page lost its «private, no-store»).
+// Ανώνυμος επισκέπτης → η σελίδα αποθηκεύεται στο edge. Μέλος → ποτέ.
+// ΑΥΤΟ μόνο του ξεκλειδώνει το caching: σήμερα μπαίνει session cookie σε ΚΑΘΕ
+// ανώνυμο αίτημα και γι' αυτό τίποτα δεν αποθηκεύεται πουθενά.
+const isMember = !!Astro.cookies.get('member_token')?.value;
+Astro.response.headers.set(
+  'Cache-Control',
+  isMember ? 'private, no-store' : 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400',
+);
+// #18: list pages differ by the visitor's country (energy-certificate rule for Greece). Cloudflare
+// ignores Vary for HTML (traps T-K07), so before any HTML edge-cache rule the cache key must add
+// the country, or GR must bypass — see ssot traps T-K20.
+Astro.response.headers.set('Vary', 'Cookie, Accept-Encoding, CF-IPCountry');
 // SEO crawl 2026-11-11: 193 pages (lists, about, contact, partners) had no og:image, so a shared link came
 // without a picture. A page without its own takes the home's share photo (the same clean 800 frame).
 const shot = HERO_SHOTS[0];
-const ogImage = ogOwn ?? (shot ? clean(shot.url, SHARE_W) : undefined);
-const ogImageW = ogOwn ? ogOwnW : shot ? SHARE_W : undefined;
-const ogImageH = ogOwn ? ogOwnH : shot ? SHARE_H : undefined;
+// sites#307: what the office set for this page in the CRM CMS wins over our texts (never the canonical; noindex only adds)
+const cms = embed ? null : await cmsSeo(Astro.url.pathname, lang);
+const pageTitle = cms?.title || title;
+const pageDesc = cms?.description || description;
+const ogImage = cms?.ogImage ?? ogOwn ?? (shot ? clean(shot.url, SHARE_W) : undefined);
+const ogImageW = cms?.ogImage ? undefined : ogOwn ? ogOwnW : shot ? SHARE_W : undefined;
+const ogImageH = cms?.ogImage ? undefined : ogOwn ? ogOwnH : shot ? SHARE_H : undefined;
 const ogImageAlt = ogOwn ? ogOwnAlt : (shot?.alt as Record<string, string> | undefined)?.[lang] ?? shot?.alt.en;
 
 // 🌍 Το `og:locale` θέλει μορφή γλώσσα_ΧΩΡΑ («el_GR»), όχι σκέτο «el» — αλλιώς
@@ -102,18 +121,6 @@ const alts = (pathFor
 // robots.txt και το sitemap.xml — δες lib/seo.ts.
 const indexable = isProd(Astro.request, Astro.url);
 
-// Ανώνυμος επισκέπτης → η σελίδα αποθηκεύεται στο edge. Μέλος → ποτέ.
-// ΑΥΤΟ μόνο του ξεκλειδώνει το caching: σήμερα μπαίνει session cookie σε ΚΑΘΕ
-// ανώνυμο αίτημα και γι' αυτό τίποτα δεν αποθηκεύεται πουθενά.
-const isMember = !!Astro.cookies.get('member_token')?.value;
-Astro.response.headers.set(
-  'Cache-Control',
-  isMember ? 'private, no-store' : 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400',
-);
-// #18: list pages differ by the visitor's country (energy-certificate rule for Greece). Cloudflare
-// ignores Vary for HTML (traps T-K07), so before any HTML edge-cache rule the cache key must add
-// the country, or GR must bypass — see ssot traps T-K20.
-Astro.response.headers.set('Vary', 'Cookie, Accept-Encoding, CF-IPCountry');
 
 // Consent defaults on every page; the GTM loader only on the real production host.
 const headScript = consentHeadScript(analyticsOn(Astro.request, Astro.url) ? brand.analytics.gtmId : null);
@@ -127,8 +134,8 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   {/* Consent Mode defaults (+ GTM on production) — the only blocking script in <head>, tiny, inline. */}
   <script is:inline id="consent-default" set:html={headScript} />
-  <title>{title}</title>
-  <meta name="description" content={description} />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDesc} />
   <link rel="canonical" href={canonical} />
 
   {/* hreflang — πλήρες σύμπλεγμα, με x-default */}
@@ -146,8 +153,8 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={brand.name} />
   <meta property="og:locale" content={OG_LOCALE[lang] ?? lang} />
-  <meta property="og:title" content={ogTitle ?? title} />
-  <meta property="og:description" content={description} />
+  <meta property="og:title" content={cms?.ogTitle || ogTitle || pageTitle} />
+  <meta property="og:description" content={cms?.ogDescription || pageDesc} />
   <meta property="og:url" content={canonical} />
   {/* Το `twitter:card` δήλωνε μεγάλη εικόνα ενώ δεν υπήρχε `twitter:image` πουθενά —
       καμία εικόνα δεν εμφανιζόταν. Το `secure_url` το ζητούν ακόμα παλιοί καταναλωτές. */}
@@ -197,7 +204,7 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
     name="robots"
     content={!indexable
       ? 'noindex, nofollow'
-      : (noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large')}
+      : (noindex || cms?.noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large')}
   />
 
   {/* B-07 (traps T-K09): CRM text may contain "</script>"; `<` written as \u003c keeps the JSON valid and the page intact. */}

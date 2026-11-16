@@ -264,7 +264,9 @@ const coHub = w1 && d.hub === 'company';   // only the about-us page itself (its
 const coLead = coHub ? (page.body ?? '').trim().split(/(?<=[.!?])\s+/)[0] ?? '' : '';
 const coContact = coHub ? d.related.find((r) => r.href === contact)?.label || t(lang, 'co.contact') : '';
 // «About Halkidiki Properties»: the brand name on its own line on desktop, as the design draws it.
-const h1Pre = coHub && d.h1.endsWith(brand.name) && d.h1.length > brand.name.length ? d.h1.slice(0, -brand.name.length) : '';
+// an H1 that ends with the brand («Contact Halkidiki Properties»): the words before it small, the name large below them
+// (Sergei 2026-11-16 «contact сделай мелким и ниже Halkidiki properties большим»); one H1 for search, joined by a space
+const h1Pre2 = (h: string) => (h.endsWith(brand.name) && h.length > brand.name.length + 1 ? h.slice(0, -brand.name.length).trim() : '');
 const hubLike = hub || coHub;
 const faqPage = hub ? (await findInfoPage(`${prefix(lang)}/faq`))?.data ?? null : null;
 
@@ -409,7 +411,7 @@ if (faqItems.length) {
           ))}
           <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
         </nav>
-        <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+        <h1 class="t-display info-h1">{h1Pre2(fresh?.h1 ?? d.h1) ? <><span class="info-h1k">{h1Pre2(fresh?.h1 ?? d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : fresh?.h1 ?? d.h1}</h1>
         {fresh ? <SpecText page={fresh} part="intro" lang={lang} /> : d.lead && <p class="info-lead">{d.lead}</p>}
         {d.cta && <p class="info-cta-top"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
         {d.form && (
@@ -552,7 +554,7 @@ if (faqItems.length) {
           ))}
           <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
         </nav>
-        <h1 class="t-display info-h1">{h1Pre ? <>{h1Pre}<br class="w1-d" />{brand.name}</> : d.h1}</h1>
+        <h1 class="t-display info-h1">{h1Pre2(d.h1) ? <><span class="info-h1k">{h1Pre2(d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : d.h1}</h1>
         {d.lead && <p class="info-lead">{d.lead}</p>}
         {coLead && <p class="info-lead w1-d">{coLead}</p>}
         <p class="w1-acts w1-d">
@@ -577,7 +579,7 @@ if (faqItems.length) {
         ))}
       </nav>
       {hub && <p class="w1-d svc-eb">{short}</p>}
-      <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+      <h1 class="t-display info-h1">{h1Pre2(fresh?.h1 ?? d.h1) ? <><span class="info-h1k">{h1Pre2(fresh?.h1 ?? d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : fresh?.h1 ?? d.h1}</h1>
       {fresh ? <div class="svc-intro"><SpecText page={fresh} part="intro" lang={lang} /></div> : d.lead && <p class="info-lead">{d.lead}</p>}
       {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
     </header>
@@ -717,6 +719,8 @@ if (faqItems.length) {
   .crumb a:hover { text-decoration: underline; }
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
+  .info-h1k { display: block; margin-bottom: 6px; font-size: var(--fs-s1); font-weight: 300; letter-spacing: .02em; line-height: 1.3; color: var(--muted); }
+  .info-h1m { display: block; }
   .info-lead { font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); max-width: 64ch; margin: 0; }
   .info-cta-top { margin: var(--s4, 24px) 0 0; }
   .w1-top .info-cta-top .k-act { display: inline-flex; width: auto; padding: 0 28px; }

@@ -160,7 +160,7 @@ const ICONS = [
     .xi__bento { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(600px, calc(var(--tw) * .6), 100vh);
                  box-sizing: border-box; padding: 0; position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
                  grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(2, minmax(0, 1fr)); }
-    .xi { padding-top: 0; }
+    .xi { padding-block: 0; }   /* the black box touches the ends of its band (Sergei 2026-11-16) */
     .xi__give { align-self: end; padding: 0 0 6px; font-size: var(--fs-s4); font-weight: 300; line-height: 1.05; letter-spacing: -.022em;
                 text-transform: none; color: var(--ink); }
     .xd b { font-size: var(--fs-s4); }
@@ -169,7 +169,7 @@ const ICONS = [
     .xd { padding: 32px 36px; overflow: hidden; justify-content: flex-end; gap: 12px; }
     .xd svg { width: 56px; height: 56px; margin-bottom: auto; }
     /* the white band is taller than the box: the box has room to drift */
-    .xi__row { margin-top: var(--s7); min-height: 420px; }
+    .xi__row { margin-top: 0; min-height: 340px; }
     .xi__box { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; padding: 44px 48px; align-items: center; }
     .xi__time { padding-left: 64px; border-left: 1px solid rgba(255,255,255,.14); }
   }

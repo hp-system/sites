@@ -60,6 +60,14 @@ const sp = Astro.url.searchParams;
 // `defined()`: a parameter that is NOT in the URL must not wipe the facet's own value
 // (the «Kassandra» page listed the whole catalogue before — see lib/listing.ts).
 const q: Query = Object.assign({}, ...facets.map((f) => f.q), defined(queryFromParams(sp)));
+// sites#305: the list's filters in the CRM's names (its site-activity SEARCH_FILTERS), for a signed-in member's search event
+const mevSearch = JSON.stringify(Object.fromEntries(Object.entries({
+  category: q.category, subcategory: (q.subs?.length ? q.subs : [q.subcategory]).filter(Boolean).join(','),
+  municipality: (q.munis?.length ? q.munis : [q.municipality]).filter(Boolean).join(','),
+  minPrice: q.priceMin, maxPrice: q.priceMax ?? q.priceCap, minSqm: q.sqmMin, maxSqm: q.sqmMax, bedrooms: q.beds,
+  pool: q.pool ? '1' : undefined, seaAccess: (q.seas?.length ? q.seas : [q.sea]).filter(Boolean).join(','),
+  feature: q.luxury ? 'luxury' : undefined, sort: q.sort, page: q.page && q.page > 1 ? q.page : undefined,
+}).filter(([, v]) => v !== undefined && v !== '' && v !== null).map(([k, v]) => [k, String(v)])));
 
 let items: Awaited<ReturnType<typeof allProperties>> = [];
 let apiDown = false;
@@ -122,6 +130,9 @@ const desc = spec
   ? spec.meta
   : isThemed ? `${heading}. ${ui(lang, 'all')}.` : ui(lang, 'all');
 const h1 = spec ? spec.h1 : heading;
+// The free-account tile speaks as the sign-in window (Sergei 2026-11-16: «Unlock большим, три надписи как на попапе регистрации»).
+const escHtml = (x: string) => x.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" } as Record<string, string>)[c]);
+const unLines = [1, 2, 3].map((n) => t(lang, `auth.un${n}`, { b: `<b>${escHtml(t(lang, `auth.un${n}_b`))}</b>` }));
 // Breadcrumb: the spec's names; links to the home page, the main listing and, on a pair page
 // (Kassandra · Villas), the area page.
 const crumbLinks = [prefix(lang) || '/', facetUrl(lang), facets.length === 2 ? facetUrl(lang, facets[0].key) : undefined];
@@ -546,7 +557,7 @@ const tilePhoto = (() => {
     </div>
   </div>
 
-  <div class="wrap list" data-lswap="list">
+  <div class="wrap list" data-lswap="list" data-mev-search={mevSearch}>
     {/* #160 spec rule 9: H1 → intro → grid. Page 1 only. On phones the intro is clamped to a
         few lines with a «more» switch (no JS), so the grid stays above the fold; the whole
         text is in the HTML either way (Google: mobile = same content). */}
@@ -744,11 +755,9 @@ const tilePhoto = (() => {
                       <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
                     </svg>
                   </span>
-                  <b class="join__h t-h3">{ui(lang, 'joinH')}</b>
-                  <ul class="join__list">
-                    <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21ZM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" /></svg><span>{ui(lang, 'joinB1')}</span></li>
-                    <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v13H3zM8 6l1.5-2h5L16 6M12 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" /></svg><span>{ui(lang, 'joinB2')}</span></li>
-                    <li><svg class="join__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2ZM10 21h4" /></svg><span>{ui(lang, 'joinB3')}</span></li>
+                  <b class="join__h join__h--un t-h3">{t(lang, 'auth.unlock')}</b>
+                  <ul class="join__list join__list--un" aria-label={t(lang, 'auth.unlock')}>
+                    {unLines.map((u) => <li set:html={u}></li>)}
                   </ul>
                   </div>
                   <a class="join__b l-gild" href={`${prefix(lang)}/login?next=${encodeURIComponent(here)}`}
@@ -1027,6 +1036,9 @@ const tilePhoto = (() => {
   }
   .join__list li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; }
   .join__list li::before { content: '·'; opacity: .6; }
+  .join__list--un li { display: block; }
+  .join__list--un li::before { content: none; }
+  .join__list--un li :global(b) { font-weight: 600; }
   .join__b {
     margin-top: var(--s2); border: 1px solid var(--paper); background: var(--paper); color: var(--ink);
     font-size: var(--fs-s-1); letter-spacing: .05em; text-transform: uppercase; padding: 13px 26px;
@@ -1287,6 +1299,11 @@ const tilePhoto = (() => {
     .join__list li { grid-template-columns: 18px 1fr; gap: 9px; }
     .join__list li::before { content: none; }
     .join__ic { display: block; color: #fff; }
+    /* «Unlock» large and light, the three lines as in the sign-in window: the key words bold (Sergei 2026-11-16) */
+    .join__h--un { font-size: var(--fs-s2); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; }
+    .join__list--un { gap: 4px; font-size: var(--fs-s-1); line-height: 1.45; }
+    .join__list--un li { display: block; color: rgba(255,255,255,.82); }
+    .join__list--un li :global(b) { color: #fff; font-weight: 600; }
     .join__b {
       margin-top: 0; height: 40px; padding: 0 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
       font-size: var(--fs-s-1); letter-spacing: .09em; font-weight: 600; background: transparent; color: var(--gold-lo);

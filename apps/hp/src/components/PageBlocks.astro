@@ -10,12 +10,14 @@ import { money } from '../lib/format';
 
 interface Props {
   lang: Lang; cats: BlockTile[]; areas: BlockTile[]; areasFrom: number;
-  /** the line under the Collections heading (default: the home's) */
+  /** the line under the Collections heading (default: the home's; '' = none) */
   catsSub?: string;
+  /** the heading of the first row (default «Collections»); info pages use it for «Related» (Sergei 2026-11-16: one pattern) */
+  catsH?: string;
   /** the line under the «by area» heading (default: the home's «from €») */
   areasSub?: string;
 }
-const { lang, cats, areas, areasFrom, catsSub, areasSub } = Astro.props;
+const { lang, cats, areas, areasFrom, catsSub, areasSub, catsH } = Astro.props;
 const rail = `pb${Math.random().toString(36).slice(2, 8)}`;
 const pages = Math.ceil(cats.length / 4);
 ---
@@ -24,8 +26,8 @@ const pages = Math.ceil(cats.length / 4);
     <div class="wrap pb__in">
       <div class="pb__head">
         <div>
-          <p data-h id={`${rail}-c`} class="t-h2 pb__h">{t(lang, 'coll.h2')}</p>
-          <p class="pb__sub">{catsSub ?? t(lang, 'home.coll_sub')}</p>
+          <p data-h id={`${rail}-c`} class="t-h2 pb__h">{catsH ?? t(lang, 'coll.h2')}</p>
+          {catsSub !== '' && <p class="pb__sub">{catsSub ?? t(lang, 'home.coll_sub')}</p>}
         </div>
         {pages > 1 && (
           <div class="k-dash" role="group" aria-label={t(lang, 'home.pages')} data-lt-dash={rail}>

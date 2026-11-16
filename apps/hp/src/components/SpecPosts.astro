@@ -125,6 +125,17 @@ const cta = Astro.props.cta === undefined
     const car = box.closest('.pn')?.querySelector<HTMLElement>('[data-spc]');
     if (car) {
       car.addEventListener('spc:change', (e) => mark((e as CustomEvent).detail));
+      // the carousel follows the post on show (2026-11-16), so a short post could leave the side panel hanging over the
+      // FAQ band: the posts block is at least as tall as the panel (its padding included)
+      const side = box.closest<HTMLElement>('.pn__side');
+      const postsEl = box.closest('.pn')?.querySelector<HTMLElement>('.pn__posts');
+      const keep = () => {
+        if (!side || !postsEl) return;
+        const pad = parseFloat(getComputedStyle(postsEl).paddingTop) + parseFloat(getComputedStyle(postsEl).paddingBottom);
+        postsEl.style.minHeight = side.offsetParent ? `${side.offsetHeight + pad}px` : '';
+      };
+      keep();
+      addEventListener('resize', keep);
       const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
       links.forEach((a) => a.addEventListener('click', (e) => {
         e.preventDefault();

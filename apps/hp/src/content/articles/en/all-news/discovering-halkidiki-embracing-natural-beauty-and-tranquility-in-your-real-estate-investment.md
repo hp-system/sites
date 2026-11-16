@@ -72,11 +72,11 @@ Beyond its beauty, Halkidiki has practical strengths for a buyer: a one-hour tra
 
 | If you want | Look at |
 | --- | --- |
-| Sandy beaches, resorts, rental demand | [Kassandra](/en/property-for-sale/kassandra) |
-| Pine forests, coves, sea-view villas | [Sithonia](/en/property-for-sale/sithonia) |
-| Quiet bays, mountain villages, lower prices | [Aristotelis](/en/property-for-sale/aristotelis) |
-| A year-round home 40–60 km from Thessaloniki | [Nea Propontida](/en/property-for-sale/nea-propontida) |
-| The administrative centre, inland and green | [Polygyros](/en/property-for-sale/polygyros) |
+| Sandy beaches, resorts, rental demand | [Kassandra](/en/properties/kassandra) |
+| Pine forests, coves, sea-view villas | [Sithonia](/en/properties/sithonia) |
+| Quiet bays, mountain villages, lower prices | [Aristotelis](/en/properties/aristotelis) |
+| A year-round home 40–60 km from Thessaloniki | [Nea Propontida](/en/properties/nea-propontida) |
+| The administrative centre, inland and green | [Polygyros](/en/properties/polygyros) |
 
 Prices by area and type are in our overview of [houses for sale in Halkidiki](/en/articles/all-news/homes-for-sale-in-halkidiki-greece).
 

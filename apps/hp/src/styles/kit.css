@@ -111,15 +111,19 @@
   background: linear-gradient(0deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,0) 100%);
 }
 .k-tile__l { display: block; color: var(--paper); text-decoration: none; font-size: var(--fs-s0); font-weight: 300; line-height: 1.25;
-  text-shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 22px rgba(0,0,0,.55); transition: transform .35s ease; }
+  text-shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 22px rgba(0,0,0,.55); }
 .k-tile__l::first-letter { text-transform: uppercase; }
 .k-tile__l::after { content: ''; position: absolute; inset: 0; }   /* the whole tile clicks through the caption */
 .k-tile__l:focus-visible { outline: none; }
 .k-tile:has(.k-tile__l:focus-visible) { outline: 2px solid var(--brand); outline-offset: 2px; }
-.k-tile:hover .k-tile__l { transform: translateY(-2px); }
+/* the caption lifts on hover by its box's padding, never by a transform: a transform on the link (or its box) makes it the
+   containing block of ::after, the clickable layer shrank to the caption and a click on the photo did nothing
+   (Sergei 2026-11-16: «ссылкой является не только имя, но и вся картинка целиком») */
+.k-tile__t { transition: padding-bottom .35s ease; }
+.k-tile:hover .k-tile__t { padding-bottom: calc(var(--s3) + 2px); }
 .k-tile__s { display: block; margin-top: 2px; font-size: var(--fs-s-1); letter-spacing: .06em; opacity: .95; text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 14px rgba(0,0,0,.5); }
-@media (min-width: 1024px) { .k-tile__t { padding: 56px var(--s4) var(--s4); } .k-tile__l { font-size: var(--fs-s1); } }
-@media (prefers-reduced-motion: reduce) { .k-tile img, .k-tile__l { transition: none; } }
+@media (min-width: 1024px) { .k-tile__t { padding: 56px var(--s4) var(--s4); } .k-tile:hover .k-tile__t { padding-bottom: calc(var(--s4) + 2px); } .k-tile__l { font-size: var(--fs-s1); } }
+@media (prefers-reduced-motion: reduce) { .k-tile img, .k-tile__t { transition: none; } }
 
 /* ── Tile row: four tiles a page on desktop (home Collections #101), two on phones; scrolled, every tile
    in the HTML. Turned by a .k-dash group. ─────────────────────────────────────────────────────────── */

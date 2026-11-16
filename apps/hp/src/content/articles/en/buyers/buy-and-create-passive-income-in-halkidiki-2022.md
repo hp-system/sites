@@ -58,7 +58,7 @@ And no matter how beautiful Halkidiki is, one summer you may want to travel some
 
 Seasonal lets from May to October of well-located houses near the beach typically bring a gross return of about 4–6 % of the purchase price a year, with the owner using the house in May and October. Year-round lets near Nea Moudania or Polygyros bring a lower rate but no empty months, because these towns live all year.
 
-Location decides most of the result. [Kassandra](/en/property-for-sale/kassandra) has the sandy beaches, the resorts and the strongest rental demand. [Sithonia](/en/property-for-sale/sithonia) is greener and quieter, with guests who come for coves and pine forests. [Aristotelis](/en/property-for-sale/aristotelis) has the lowest prices per square metre. [Nea Propontida](/en/property-for-sale/nea-propontida) is 40–60 km from Thessaloniki and lets all year. We do not promise figures in advance; for a specific property we show you the rental history of comparable homes where it is available.
+Location decides most of the result. [Kassandra](/en/properties/kassandra) has the sandy beaches, the resorts and the strongest rental demand. [Sithonia](/en/properties/sithonia) is greener and quieter, with guests who come for coves and pine forests. [Aristotelis](/en/properties/aristotelis) has the lowest prices per square metre. [Nea Propontida](/en/properties/nea-propontida) is 40–60 km from Thessaloniki and lets all year. We do not promise figures in advance; for a specific property we show you the rental history of comparable homes where it is available.
 
 ## What it costs to own
 

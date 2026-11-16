@@ -278,7 +278,7 @@ const JS_T = {
   .ph { position: relative; display: flex; height: 46px; margin-top: 8px; border: 1px solid var(--line); background: var(--paper); box-sizing: border-box; }
   .ph:focus-within { border-color: var(--ink); }
   /* a missing or wrong field: the error colour of this window, without a message box */
-  .fi.is-bad, .ph.is-bad { border-color: #A3312B; box-shadow: inset 0 0 0 1px #A3312B; }
+  .fi.is-bad, .ph.is-bad { border-color: var(--err); box-shadow: inset 0 0 0 1px var(--err); }
   .ph #ph { flex: 1; min-width: 0; height: 100%; border: 0; padding: 0 11px; font: inherit; font-size: var(--fs-s0); color: var(--ink); background: transparent; outline: none; }
   .dial { display: flex; flex: none; width: 88px; height: 100%; align-items: center; justify-content: space-between; gap: 4px; padding: 0 8px;
           background: transparent; border: 0; border-inline-end: 1px solid var(--line); font: inherit; font-size: var(--fs-s-1); color: var(--ink); cursor: pointer; }
@@ -342,7 +342,7 @@ const JS_T = {
   .fine--start { text-align: start; }
   .fine a { color: var(--ink-2); }
   .lp__foot { margin-top: 16px; }
-  .err { margin: 10px 0 0; padding: 8px 10px; border: 1px solid #A3312B; color: #A3312B; font-size: var(--fs-s-1); text-align: start; }
+  .err { margin: 10px 0 0; padding: 8px 10px; border: 1px solid var(--err); color: var(--err); font-size: var(--fs-s-1); text-align: start; }
   [hidden] { display: none !important; }
 
   /* Beige strip: the padlock left, «Unlock» and the three lines right (Sergei 02/11). */
@@ -426,7 +426,8 @@ const JS_T = {
     el.classList.remove('is-bad');
     (el.matches('input') ? el : el.querySelector('input'))?.removeAttribute('aria-invalid');
   });
-  $('back0').addEventListener('click', () => { clear('e0'); unmark(); show('pr'); });
+  // Sergei 2026-11-16: the consent tick stayed on after Back — Back to the role choice clears it too (GDPR: a fresh click)
+  $('back0').addEventListener('click', () => { clear('e0'); unmark(); agree.checked = false; syncAgree(); show('pr'); });
 
   // Esc closes the popup (focus is inside this frame, so the dialog does not see the key).
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !e.defaultPrevented) tell({ type: 'hp-login-close' }); });

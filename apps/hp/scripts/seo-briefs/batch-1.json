@@ -326,12 +326,13 @@
       ],
       "keywordRationale": "/en/vip had 1,327 GA views in 2026 and /el/vip 919 (export 2026-11-06); Exclusive is its successor (D-20261105-SS-1). Not the villas list P07: this page sells access, not a listing.",
       "title": "Exclusive: Private Access to Luxury Property in Halkidiki",
-      "meta": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki: off-market properties, exact locations, documents and one agent for you.",
+      "meta": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki: early access to new properties, the Secret Portfolio and one agent for you.",
       "h1": "Exclusive: Private Access to Luxury Property in Halkidiki",
       "h2": [
         "Who Exclusive is for",
         "What Exclusive members see",
-        "Properties that are never advertised",
+        "The Secret Portfolio: properties that are never advertised",
+        "Your own agent",
         "How to join",
         "Discretion"
       ],
@@ -339,7 +340,8 @@
         "What is Exclusive?",
         "Who can join Exclusive?",
         "How do I join Exclusive?",
-        "Is my search kept confidential?"
+        "Is my search kept confidential?",
+        "Do Exclusive members see new properties before anyone else?"
       ],
       "contentBrief": "Exclusive = our private club for buyers of homes from €1 million (D-20261105-SS-1), successor of VIP. Say clearly who it is for. Members see what guests and members do not: exact location, price history, videos, documents and floor plans (R-006), plus the private collection never advertised, and one agent. Joining: a registered member presses «Join Exclusive», the request is reviewed by our team, access is opened after approval (Sergei 2026-11-09). Discretion. No counts, no CRM name.",
       "targetWords": 550,
@@ -386,11 +388,11 @@
       "lawyerCheck": "NO",
       "editorialLine": "",
       "intro": "<p>Exclusive is our private club for buyers looking for homes from €1 million in Halkidiki. Members see the full details of every property, including some that are never advertised, and work with one agent who knows what they are looking for. If you are searching at this level and value discretion, Exclusive gives you the complete picture before you travel.</p>",
-      "body": "<h2>Who Exclusive is for</h2><p>Exclusive is for buyers of luxury property: seafront villas, estates, large plots by the sea and special properties from €1 million upwards. It is not a general newsletter. If your budget is lower, our member account already shows you more than a guest sees, and our listings cover every price range.</p><h2>What Exclusive members see</h2><p>Guests on our site see the municipality of a property and its public photos. Members see more. Exclusive members see everything we know about the property:</p><ul><li><strong>the exact location</strong> of the property</li><li><strong>the price history</strong></li><li><strong>videos, documents and floor plans</strong></li><li><strong>new properties first</strong>, before they are published</li></ul><h2>Properties that are never advertised</h2><p>Some owners of high-value homes do not want their property on any portal. We keep these properties in a private collection that only Exclusive members can see. Many of the most interesting properties in Halkidiki change hands this way, without ever being advertised.</p><h2>How to join</h2><ul><li><strong>Create a member account</strong> on our site, if you do not have one yet.</li><li><strong>Press «Join Exclusive»</strong> in your account.</li><li><strong>Our team reviews your request</strong> and may contact you briefly to understand what you are looking for.</li><li><strong>We open your access</strong> once the request is approved, and introduce you to your agent.</li></ul><h2>Discretion</h2><p>Your search, your budget and the properties you look at stay between you and our team. The same applies to the owners: details of the private collection are shared only with approved members.</p>",
+      "body": "<h2>Who Exclusive is for</h2><p>Exclusive is for buyers of luxury property: seafront villas, estates, large plots by the sea and special properties from €1 million upwards. It is not a general newsletter. If your budget is lower, our member account already shows you more than a guest sees, and our listings cover every price range.</p><h2>What Exclusive members see</h2><p>Guests on our site see the municipality of a property and its public photos. Members see more. Exclusive members see everything we know about the property:</p><ul><li><strong>the exact location</strong> of the property</li><li><strong>the price history</strong></li><li><strong>videos, documents and floor plans</strong></li><li><strong>early access</strong>: new properties and price drops reach you before they reach the market, with a notification on your phone</li></ul><h2>The Secret Portfolio: properties that are never advertised</h2><p>Some owners of high-value homes do not want their property on any portal. We keep these properties in our Secret Portfolio, which only Exclusive members can see. Many of the most interesting properties in Halkidiki change hands this way, without ever being advertised.</p><h2>Your own agent</h2><p>Your time is the most valuable thing, and we respect that. Your agent knows what you are looking for, answers you first and takes you through the whole purchase, from the first viewing to the contract.</p><h2>How to join</h2><ul><li><strong>Create a member account</strong> on our site, if you do not have one yet.</li><li><strong>Press «Join Exclusive»</strong> in your account.</li><li><strong>Our team reviews your request</strong> and may contact you briefly to understand what you are looking for.</li><li><strong>We open your access</strong> once the request is approved, and introduce you to your agent.</li></ul><h2>Discretion</h2><p>Your search, your budget and the properties you look at stay between you and our team. Your personal details and requests are stored encrypted, and no other agent or company can see them. The same applies to the owners: details of the Secret Portfolio are shared only with approved members.</p>",
       "faq": [
         {
           "q": "What is Exclusive?",
-          "a": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki. Members see the full details of every property, including a private collection that is never advertised, and work with one agent."
+          "a": "Exclusive is our private club for buyers of homes from €1 million in Halkidiki. Members see the full details of every property, including the Secret Portfolio, which is never advertised, and work with one agent."
         },
         {
           "q": "Who can join Exclusive?",
@@ -402,7 +404,11 @@
         },
         {
           "q": "Is my search kept confidential?",
-          "a": "Yes. Your search, your budget and the properties you look at stay between you and our team."
+          "a": "Yes. Your search, your budget and the properties you look at stay between you and our team. Your details are stored encrypted, and no other agent or company can see them."
+        },
+        {
+          "q": "Do Exclusive members see new properties before anyone else?",
+          "a": "Yes. New properties and price drops reach Exclusive members first, with a notification on their phone, before they are published for everyone else."
         }
       ],
       "ctaHref": "/en/login"

@@ -68,10 +68,10 @@ The second-largest city in Greece, on the northern coast, is known for its cultu
 
 If you are looking for something calmer than Athens or Thessaloniki, consider Halkidiki: a peninsula of blue and green on the northern mainland, with 550 km of coast, Blue Flag beaches, and plenty of outdoor activities such as hiking and fishing. Property prices are reasonable compared with other popular parts of Greece, which makes it a good choice if you want an affordable investment by the sea.
 
-- **[Kassandra](/en/property-for-sale/kassandra):** sandy beaches, resorts and the strongest rental demand.
-- **[Sithonia](/en/property-for-sale/sithonia):** pine forests, coves, villas with sea views; quieter.
-- **[Aristotelis](/en/property-for-sale/aristotelis):** towards Mount Athos, the lowest prices per square metre and large plots.
-- **[Nea Propontida](/en/property-for-sale/nea-propontida):** 40–60 km from Thessaloniki, schools, hospital and shops all year; the best area for a permanent home or a year-round let.
+- **[Kassandra](/en/properties/kassandra):** sandy beaches, resorts and the strongest rental demand.
+- **[Sithonia](/en/properties/sithonia):** pine forests, coves, villas with sea views; quieter.
+- **[Aristotelis](/en/properties/aristotelis):** towards Mount Athos, the lowest prices per square metre and large plots.
+- **[Nea Propontida](/en/properties/nea-propontida):** 40–60 km from Thessaloniki, schools, hospital and shops all year; the best area for a permanent home or a year-round let.
 
 Seasonal lets of well-located houses near the beach typically bring a gross return of about 4–6 % of the purchase price a year; year-round lets near Nea Moudania or Polygyros bring less but with no empty months. Buyers come from Greece, Bulgaria, Serbia, Germany and Romania, which gives a wide resale market. The full picture is in [houses for sale in Halkidiki: prices and areas](/en/articles/all-news/homes-for-sale-in-halkidiki-greece) and in [why invest in Greek real estate](/en/articles/buyers/investing-in-real-estate).
 

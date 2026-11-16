@@ -62,11 +62,11 @@ Away from the coast, Halkidiki is farming country: olive groves, vineyards, beek
 
 | Lifestyle | Where to look |
 | --- | --- |
-| Hiking with the sea in view | Sithonia: Neos Marmaras, Parthenonas, Nikiti ([Sithonia](/en/property-for-sale/sithonia)) |
+| Hiking with the sea in view | Sithonia: Neos Marmaras, Parthenonas, Nikiti ([Sithonia](/en/properties/sithonia)) |
 | Kayaking and snorkelling | Vourvourou, Sarti, Sykia; Olympiada on the Athos side |
-| Mountain life all year | Arnaia and northern Halkidiki ([Aristotelis](/en/property-for-sale/aristotelis)) |
-| Beach sports and a lively summer | [Kassandra](/en/property-for-sale/kassandra) |
-| Outdoor life plus year-round services | [Nea Propontida](/en/property-for-sale/nea-propontida), Nikiti, Ierissos |
+| Mountain life all year | Arnaia and northern Halkidiki ([Aristotelis](/en/properties/aristotelis)) |
+| Beach sports and a lively summer | [Kassandra](/en/properties/kassandra) |
+| Outdoor life plus year-round services | [Nea Propontida](/en/properties/nea-propontida), Nikiti, Ierissos |
 
 ## Homes designed for an active life
 

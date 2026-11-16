@@ -50,10 +50,10 @@ The answer is not as simple as “Kassandra or Sithonia”. Many people think of
 
 ## 2. Which peninsula suits you?
 
-- **[Kassandra](/en/property-for-sale/kassandra)**, the first peninsula, about 70 km from the airport: sandy beaches, resorts (Sani, Afitos, Hanioti, Pefkochori), year-round villages and the strongest rental demand.
-- **[Sithonia](/en/property-for-sale/sithonia)**, the middle peninsula: pine forests to the sea, coves, Nikiti, Neos Marmaras, Vourvourou and Sarti. Quieter, with villas and sea views.
-- **[Aristotelis](/en/property-for-sale/aristotelis)**, eastern Halkidiki towards Mount Athos: Ierissos, Ouranoupoli, Olympiada. The lowest prices per square metre and large plots.
-- **[Nea Propontida](/en/property-for-sale/nea-propontida)**, 40–60 km from Thessaloniki: Nea Moudania, Nea Kallikratia, Nea Potidea. Schools, hospital and shops all year; the best choice if the holiday home may become a permanent one.
+- **[Kassandra](/en/properties/kassandra)**, the first peninsula, about 70 km from the airport: sandy beaches, resorts (Sani, Afitos, Hanioti, Pefkochori), year-round villages and the strongest rental demand.
+- **[Sithonia](/en/properties/sithonia)**, the middle peninsula: pine forests to the sea, coves, Nikiti, Neos Marmaras, Vourvourou and Sarti. Quieter, with villas and sea views.
+- **[Aristotelis](/en/properties/aristotelis)**, eastern Halkidiki towards Mount Athos: Ierissos, Ouranoupoli, Olympiada. The lowest prices per square metre and large plots.
+- **[Nea Propontida](/en/properties/nea-propontida)**, 40–60 km from Thessaloniki: Nea Moudania, Nea Kallikratia, Nea Potidea. Schools, hospital and shops all year; the best choice if the holiday home may become a permanent one.
 
 ## 3. Summer village or a town that lives all year?
 

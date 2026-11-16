@@ -59,8 +59,9 @@ try {
   check('/en/sell all 3 cards in the HTML (section cards)', cardN === 3
     && ['/en/add-your-property', '/en/exclusive', '/en/assignment-order'].every((h) => rail.includes(`href="${h}"`)), `${cardN} cards`);
   check('/en/sell row of 3 cards needs no page dashes', !(sell.match(/data-irail-dash="w1Cards"[\s\S]*?<\/div>/)?.[0].match(/<button/g) ?? []).length || true, 'dashes');
-  const rel = sell.match(/id="w1Rel"[\s\S]*?<\/section>/)?.[0] ?? '';
-  check('/en/sell Related row: 3 cards with links', (rel.match(/class="pc"/g) ?? []).length === 3 && rel.includes('href="/en/halkidiki-property-prices"') && !rel.includes('href="/en/assignment-order"'), 'related: no link the cards already carry');
+  // Sergei 2026-11-16: Related as the list pages' photo tiles (PageBlocks pb--cats) — one pattern on every page
+  const rel = sell.match(/class="pb pb--cats"[\s\S]*?<\/section>/)?.[0] ?? '';
+  check('/en/sell Related row: 3 cards with links', (rel.match(/class="k-tile"/g) ?? []).length === 3 && rel.includes('href="/en/halkidiki-property-prices"') && !rel.includes('href="/en/assignment-order"'), 'related: no link the cards already carry');
   // The area row needs listings with photos per municipality (checked on live data, #105); with the stub it may be absent.
   const area = rel.includes('id="w1Area"');
   check('/en/sell area row (when listed): municipality guides + H2', !area || (/>Property for sale in Halkidiki<\/h2>/.test(rel) && /href="\/en\/property-for-sale\/(kassandra|sithonia|aristotelis|nea-propontida|polygyros)"/.test(rel)), area ? 'about the area' : 'no area cards in the stub');

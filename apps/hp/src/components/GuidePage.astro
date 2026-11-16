@@ -121,7 +121,7 @@ const jsonLd: unknown[] = [
         {/* existing event names only (B-11, lib/track.ts): the club page is a sign-in call, the sell pages a seller call */}
         {cta && <p class="gp__cta"><a class:list={['k-act', cta.gild && 'k-gild', lux && 'k-gild--dk']} href={cta.href} data-ev={cta.ev === 'register:info' ? 'register:info' : 'content:sell'}>{cta.text}</a></p>}
       </div>
-      {lux && cinema.length > 0 ? <div class="gp__img"><ExclusiveCinema shots={cinema} /></div> : image && (
+      {lux && cinema.length > 0 ? <div class="gp__img" aria-hidden="true"><ExclusiveCinema shots={cinema} /></div> : image && (
         /* desktop only: phones get a 1-pixel placeholder and never download the photo */
         <picture class="gp__img">
           <source media="(min-width: 1024px)" srcset={heroSet} sizes="(min-width: 1440px) 680px, 47vw" />
@@ -170,19 +170,21 @@ const jsonLd: unknown[] = [
   .gp__kids ul { margin: var(--s3) 0 0; padding: 0; list-style: none; display: grid; gap: var(--s2); grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
   .gp__label { margin: 0; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
-  /* ── Exclusive, the luxury face (Sergei 2026-11-16): the top of the page black — the header bar and the first
-     screen — with large thin type, gold only on the registration call, and slow motion. George's tokens only:
-     --ink-deep (the Secret Portfolio black), white text, the gilded edge of the call (k-gild--dk). ── */
-  :global(body:has(main.gp--lux) .site-header--solid) { background: var(--ink-deep); border-bottom: 1px solid rgba(255,255,255,.08); color: #fff; }
-  :global(body:has(main.gp--lux) .site-header--solid .lsw > summary) { color: rgba(255,255,255,.72); }
-  :global(body:has(main.gp--lux) .site-header--solid .lsw > summary:hover) { color: #fff; }
+  /* ── Exclusive, the luxury face (Sergei 2026-11-16): a white header bar; the first screen a full-width film of the
+     dearest properties (ExclusiveCinema) under a dark veil, everything centred, large thin type, gold only on the
+     registration call, slow motion. George's tokens only: --ink-deep for the veil, white text, k-gild--dk. ── */
   .gp--lux { overflow-x: clip; }
-  .gp--lux .gp__top { position: relative; isolation: isolate; color: #fff; padding-block: var(--s7) var(--s8); }
-  .gp--lux .gp__top::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
-                              background: var(--ink-deep); z-index: -1; }
-  .gp--lux .gp__crumb, .gp--lux .gp__crumb a { color: rgba(255,255,255,.56); }
-  .gp--lux .gp__h1 { color: #fff; }
-  .gp--lux .gp__top :global(.st-intro), .gp--lux .gp__top :global(.st-intro p) { color: rgba(255,255,255,.72); }
+  .gp--lux .gp__top { position: relative; isolation: isolate; color: #fff; min-height: min(86vh, 860px); box-sizing: border-box;
+                      display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; text-align: center; padding-block: 72px; }
+  .gp--lux .gp__img { display: block; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
+                      z-index: -2; overflow: hidden; }
+  .gp--lux .gp__top::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1;
+                              background: linear-gradient(180deg, rgba(11,14,16,.62) 0%, rgba(11,14,16,.46) 45%, rgba(11,14,16,.7) 100%); }
+  .gp--lux .gp__txt { justify-items: center; max-width: 880px; margin-inline: auto; }
+  .gp--lux .gp__crumb, .gp--lux .gp__crumb a { color: rgba(255,255,255,.7); }
+  .gp--lux .gp__h1 { color: #fff; max-width: 18ch; margin-inline: auto; }
+  .gp--lux .gp__top :global(.st-intro) { max-width: 60ch; margin-inline: auto; }
+  .gp--lux .gp__top :global(.st-intro), .gp--lux .gp__top :global(.st-intro p) { color: rgba(255,255,255,.84); }
   /* slow, expensive motion: the words come up one after another */
   @media (prefers-reduced-motion: no-preference) {
     .gp--lux .gp__txt > * { opacity: 0; transform: translateY(14px); animation: gp-rise 1.4s cubic-bezier(.2,.7,.2,1) forwards; }
@@ -190,12 +192,10 @@ const jsonLd: unknown[] = [
     .gp--lux .gp__txt > :nth-child(3) { animation-delay: .55s; }
     .gp--lux .gp__txt > :nth-child(4) { animation-delay: .85s; }
     .gp--lux .gp__txt > :nth-child(5) { animation-delay: 1.1s; }
-    .gp--lux .gp__img { opacity: 0; animation: gp-fade 2.2s ease .3s forwards; }
   }
   @keyframes gp-rise { to { opacity: 1; transform: none; } }
-  @keyframes gp-fade { to { opacity: 1; } }
   @media (min-width: 1024px) {
-    .gp--lux .gp__top { padding-block: 72px 88px; gap: 72px; }
-    .gp--lux .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.04; letter-spacing: -.024em; max-width: 13ch; }
+    .gp--lux .gp__top { padding-block: 96px; gap: 0; }
+    .gp--lux .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.04; letter-spacing: -.024em; }
   }
 </style>

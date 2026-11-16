@@ -1,47 +1,78 @@
 ---
-// Exclusive top (Sergei 2026-11-16, «давай попробуем Медленное кино»): instead of one landscape, the covers of the
-// dearest open properties cross-fade slowly while the camera drifts in (Ken Burns), as a luxury hotel's front page.
-// Desktop only, as the photo it replaces (phones never download it). Watermarked files (rule 4), open photos only.
-// Every frame loads from the script, on a desktop only (phones never download them); each one a turn ahead. Still with reduced motion.
+// Exclusive top (Sergei 2026-11-16): the covers of the dearest open properties as a full-width background film —
+// «картинка полным фоном во всю длинну екрана, и перелистывалась с 3д ефектом». Each frame comes forward out of the
+// depth with a slight turn while the old one sinks back; inside a frame the camera drifts (Ken Burns); on scroll the
+// film moves slower than the page (depth). Watermarked files (rule 4), open photos only; phones take the 800w files.
+// Still (first frame, no motion) with reduced motion.
 import { marked, type Photo } from '../lib/photos';
 interface Props { shots: { photo: Photo; alt: string }[] }
 const { shots } = Astro.props;
 ---
 {shots.length > 0 && (
   <div class="cin" data-cin aria-hidden="true">
-    {shots.map((s, i) => (
-      <img class:list={['cin__f', i === 0 && 'on']} data-src={marked(s.photo.url, 1920)} alt={s.alt} width="1920" height="1280"
-           decoding="async" />
-    ))}
+    <div class="cin__depth" data-cin-depth>
+      {shots.map((s, i) => (
+        <div class:list={['cin__s', i === 0 && 'on']}>
+          <img data-src={marked(s.photo.url, 1920)} data-src-sm={marked(s.photo.url, 800)} alt={s.alt} width="1920" height="1280" decoding="async" />
+        </div>
+      ))}
+    </div>
   </div>
 )}
 
 <script>
-  // One frame every 7 s: the next one is loaded a turn ahead, then fades in over 2.4 s while it drifts.
   document.querySelectorAll<HTMLElement>('[data-cin]').forEach((box) => {
-    const frames = Array.from(box.querySelectorAll<HTMLImageElement>('.cin__f'));
-    if (!matchMedia('(min-width: 1024px)').matches) return;
-    const load = (f?: HTMLImageElement) => { if (f?.dataset.src) { f.src = f.dataset.src; delete f.dataset.src; } };
-    load(frames[0]);
-    if (frames.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const slides = Array.from(box.querySelectorAll<HTMLElement>('.cin__s'));
+    const small = !matchMedia('(min-width: 1024px)').matches;
+    const load = (s?: HTMLElement) => {
+      const img = s?.querySelector('img');
+      const src = img && (small ? img.dataset.srcSm : img.dataset.src);
+      if (img && src && !img.src) img.src = src;
+    };
+    load(slides[0]);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // depth on scroll: the film moves at 40 % of the page's speed while the top is on screen
+    const depth = box.querySelector<HTMLElement>('[data-cin-depth]');
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const r = box.getBoundingClientRect();
+        if (depth && r.bottom > 0) depth.style.transform = `translate3d(0, ${Math.round(-r.top * 0.4)}px, 0)`;
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    if (slides.length < 2) return;
     let k = 0;
-    load(frames[1]);
+    load(slides[1]);
     window.setInterval(() => {
       if (document.hidden) return;
-      const next = (k + 1) % frames.length;
-      frames[next].classList.add('on');
-      frames[k].classList.remove('on');
-      k = next;
-      load(frames[(k + 1) % frames.length]);
+      const old = slides[k];
+      k = (k + 1) % slides.length;
+      old.classList.remove('on');
+      old.classList.add('out');
+      slides[k].classList.remove('out');
+      slides[k].classList.add('on');
+      window.setTimeout(() => old.classList.remove('out'), 2800);
+      load(slides[(k + 1) % slides.length]);
     }, 7000);
   });
 </script>
 
 <style>
-  .cin { position: relative; overflow: hidden; aspect-ratio: 4 / 3; background: var(--ink-deep); }
-  .cin__f { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
-            opacity: 0; transform: scale(1.0); transition: opacity 2.4s ease-in-out; }
-  .cin__f.on { opacity: 1; animation: cin-drift 9.4s linear forwards; }
+  .cin { position: absolute; inset: 0; overflow: hidden; background: var(--ink-deep); perspective: 1400px; }
+  .cin__depth { position: absolute; inset: -6% 0 -18%; will-change: transform; transform-style: preserve-3d; }
+  .cin__s { position: absolute; inset: 0; opacity: 0; transform: translateZ(160px) rotateY(-7deg);
+            transition: opacity 2.2s ease, transform 2.8s cubic-bezier(.2,.7,.2,1); }
+  .cin__s.on { opacity: 1; transform: none; }
+  .cin__s.out { opacity: 0; transform: translateZ(-260px) rotateY(7deg); }
+  .cin__s img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cin__s.on img { animation: cin-drift 9.8s linear forwards; }
   @keyframes cin-drift { from { transform: scale(1.0) translate3d(0, 0, 0); } to { transform: scale(1.08) translate3d(-1.2%, -.8%, 0); } }
-  @media (prefers-reduced-motion: reduce) { .cin__f.on { animation: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .cin__s { transition: none; transform: none; }
+    .cin__s.on img { animation: none; }
+  }
 </style>

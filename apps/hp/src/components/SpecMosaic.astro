@@ -140,17 +140,20 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
   /* ── carousel ── */
   .sp--car .sp__grid { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory;
     scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; align-items: flex-start; transition: height .3s ease; }
-  /* phones: the row takes the height of the post on show (a fixed tallest height left 1,000 px of white under
-     short posts at 390 px); from 700 px one fixed height, the tallest post (Sergei 2026-11-10) */
+  /* the row takes the height of the post on show (phones since 2026-11-10; every width since 2026-11-16) */
   .sp--car .sp__grid::-webkit-scrollbar { display: none; }
   .sp--car .sp__grid:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   .sp--car .sp__post { flex: none; width: 100%; scroll-snap-align: start; align-content: stretch; }   /* the photo fills the fixed height */
   .sp--car .sp__post--text { align-content: start; }
   .sp--car .sp__ph { aspect-ratio: 16 / 9; }
+  /* Sergei 2026-11-16 (a pattern for every page): a post is never taller than the screen — what does not fit scrolls
+     inside the post, the page never needs a scroll to read one — and the row is as tall as the post on show */
+  .sp--car .sp__post { max-height: calc(100vh - 140px); overflow: hidden; }
+  .sp--car .sp__b { max-height: calc(100vh - 140px); overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; }
   @container (min-width: 700px) {
-    .sp--car .sp__grid { align-items: stretch; height: auto !important; }
     .sp--car .sp__post:not(.sp__post--text) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: stretch; }
     .sp--car .sp__ph { aspect-ratio: auto; min-height: 100%; }
+    .sp--car .sp__post:not(.sp__post--text) { min-height: min(420px, calc(100vh - 140px)); }
     /* the photo left, then right, then left … (Sergei 2026-11-10) */
     .sp--car .sp__post:nth-child(even):not(.sp__post--text) { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
     .sp--car .sp__post:nth-child(even) .sp__ph { order: 2; }
@@ -175,7 +178,8 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
     const posts = Array.from(row.children) as HTMLElement[];
     const dashes = Array.from(box.querySelectorAll<HTMLButtonElement>('[data-spc-go]'));
     let cur = -1;
-    const fit = () => { const p = posts[Math.max(0, cur)]; row.style.height = p && row.clientWidth < 700 ? `${p.offsetHeight}px` : ''; };
+    // the row takes the height of the post on show, on every width (Sergei 2026-11-16: no white under a short post)
+    const fit = () => { const p = posts[Math.max(0, cur)]; row.style.height = p ? `${p.offsetHeight}px` : ''; };
     const step = () => (posts[1] ? posts[1].offsetLeft - posts[0].offsetLeft : row.clientWidth) || 1;
     const show = (k: number) => {
       if (k === cur) return fit();

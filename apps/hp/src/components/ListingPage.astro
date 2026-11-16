@@ -60,6 +60,14 @@ const sp = Astro.url.searchParams;
 // `defined()`: a parameter that is NOT in the URL must not wipe the facet's own value
 // (the «Kassandra» page listed the whole catalogue before — see lib/listing.ts).
 const q: Query = Object.assign({}, ...facets.map((f) => f.q), defined(queryFromParams(sp)));
+// sites#305: the list's filters in the CRM's names (its site-activity SEARCH_FILTERS), for a signed-in member's search event
+const mevSearch = JSON.stringify(Object.fromEntries(Object.entries({
+  category: q.category, subcategory: (q.subs?.length ? q.subs : [q.subcategory]).filter(Boolean).join(','),
+  municipality: (q.munis?.length ? q.munis : [q.municipality]).filter(Boolean).join(','),
+  minPrice: q.priceMin, maxPrice: q.priceMax ?? q.priceCap, minSqm: q.sqmMin, maxSqm: q.sqmMax, bedrooms: q.beds,
+  pool: q.pool ? '1' : undefined, seaAccess: (q.seas?.length ? q.seas : [q.sea]).filter(Boolean).join(','),
+  feature: q.luxury ? 'luxury' : undefined, sort: q.sort, page: q.page && q.page > 1 ? q.page : undefined,
+}).filter(([, v]) => v !== undefined && v !== '' && v !== null).map(([k, v]) => [k, String(v)])));
 
 let items: Awaited<ReturnType<typeof allProperties>> = [];
 let apiDown = false;
@@ -549,7 +557,7 @@ const tilePhoto = (() => {
     </div>
   </div>
 
-  <div class="wrap list" data-lswap="list">
+  <div class="wrap list" data-lswap="list" data-mev-search={mevSearch}>
     {/* #160 spec rule 9: H1 → intro → grid. Page 1 only. On phones the intro is clamped to a
         few lines with a «more» switch (no JS), so the grid stays above the fold; the whole
         text is in the HTML either way (Google: mobile = same content). */}

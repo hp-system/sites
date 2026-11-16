@@ -362,7 +362,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
   <Header lang={lang} solid pathFor={pathFor} />
   <MobileMenu lang={lang} pathFor={pathFor} munis={munis.map((m) => ({ name: m.name, n: 0, key: m.key }))} total={all.length} />
 
-  <main id="main" class="prop">
+  <main id="main" class="prop" data-mev-prop={id}>
     <div class="wrap">
       <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
         <a href={prefix(lang) || '/'}>{brand.name}</a>
@@ -707,6 +707,17 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                   <img data-src={marked(bandPhoto.url, 1920)} alt={altOf(bandPhoto, lang, t(lang, 'home.area_alt', { name: muniName }))} decoding="async" />
                 </div></div>
               )}
+              {/* Frosted glass (Sergei 2026-11-16, his Photoshop settings): Gaussian blur 9 + Glass distortion —
+                  distortion 20, smoothness 2, texture Frosted, scaling 151 %, invert. Frost = fine fractal noise
+                  (base frequency 0.9 / 1.51), smoothness = a blur of the noise, distortion = displacement 20,
+                  invert = the sign of the displacement. Used by the two cards' backdrop-filter below. */}
+              <svg class="band__fx" width="0" height="0" aria-hidden="true" focusable="false">
+                <filter id="band-frost" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="7" result="noise" />
+                  <feGaussianBlur in="noise" stdDeviation="1" result="soft" />
+                  <feDisplacementMap in="SourceGraphic" in2="soft" scale="-20" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+              </svg>
               <div class="band__cards" id="bandCards">
                 <div class="muni__card">
                   <div>
@@ -1424,9 +1435,13 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     .muni__card, .muni__pr {
       position: relative; min-width: 0; box-sizing: border-box;
       background: linear-gradient(160deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.64) 45%, rgba(255,255,255,.72) 100%);
-      -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+      /* was blur(22px) saturate(170%); now Sergei's Photoshop frost (2026-11-16): blur 9, then the glass filter
+         (#band-frost). Safari has no url() in backdrop-filter: it keeps the blur only. */
+      -webkit-backdrop-filter: blur(9px) saturate(170%);
+      backdrop-filter: blur(9px) url(#band-frost) saturate(170%);
       box-shadow: 0 10px 30px rgba(10,30,40,.16);
     }
+    .band__fx { position: absolute; width: 0; height: 0; overflow: hidden; }
     .muni__card { flex: 54 1 0; padding: 18px 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
     .muni .sec { background: none; height: auto; padding: 0; margin: 0 0 8px; font-size: var(--fs-s1); font-weight: 300; line-height: 1.14;
                  letter-spacing: -.016em; text-transform: none; }

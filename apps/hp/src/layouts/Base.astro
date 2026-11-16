@@ -16,6 +16,7 @@ import { TRACK_SNIPPET } from '../lib/track';
 import { analyticsOn, consentHeadScript } from '../lib/consent';
 import CookieConsent from '../components/CookieConsent.astro';
 import LoginDialog from '../components/LoginDialog.astro';
+import MemberEvents from '../components/MemberEvents.astro';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/kit.css';   // shared design kit (#186)
@@ -209,6 +210,8 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   <slot />
   {!embed && <CookieConsent lang={lang} />}
   {!embed && <LoginDialog lang={lang} />}
+  {/* sites#305: a signed-in member's pages, searches and contact clicks go to the CRM (guests never load it) */}
+  {!embed && isMember && <MemberEvents />}
   {/* Σήμανση: ένα listener για όλη τη σελίδα, χωρίς βιβλιοθήκη. Δες lib/track.ts. */}
   <script is:inline set:html={TRACK_SNIPPET} />
 </body>

@@ -11,7 +11,7 @@ const visibleText = (html) => html.replace(/<script[\s\S]*?<\/script>/g, ' ').re
 const mainWords = (html) => {
   const m = html.match(/<main[\s\S]*?<\/main>/);
   // a page built from an own brief spreads its text over panels, cards and posts: count the whole main
-  const art = /svc-panels--sec|class="sc__c|class="rp"/.test(html) ? null : (m ? m[0] : html).match(/<article[\s\S]*?<\/article>/);
+  const art = /svc-panels--sec|class="sc__c|class="rp"|data-spc/.test(html) ? null : (m ? m[0] : html).match(/<article[\s\S]*?<\/article>/);
   return visibleText(art ? art[0] : (m ? m[0] : html)).split(' ').filter(Boolean).length;
 };
 

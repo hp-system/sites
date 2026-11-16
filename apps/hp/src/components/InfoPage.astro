@@ -109,8 +109,12 @@ const readHeads = headings.filter((h) => h.depth === 2 && h.text.trim()).map((h)
 // carousel, side list turns it) instead of one long column (Sergei 2026-11-16: «должно быть перелистываемыми блоками»).
 // Only Sell pages that are plain text (legal texts, FAQ and pages with widgets or cards keep the reading layout).
 const readHtml: string = (page as any).rendered?.html ?? '';
-const readCar = d.section === 'sell' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /^\s*<h2/.test(readHtml)
-  ? ({ body: readHtml.replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
+// Since 2026-11-16 every plain text page but the legal texts (Sergei on Contact: «ети блоки же должны быть блоками
+// прокручиваемыми … мы же делали паттерн для етого»); the «Add your property» button only on Sell pages.
+// the text before the first H2 (Contact, Careers…) stays above the carousel as the page's intro
+const readPre = readHtml.includes('<h2') ? readHtml.slice(0, readHtml.indexOf('<h2')).trim() : '';
+const readCar = d.section !== 'legal' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
+  ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
 
 const url = d.path;
@@ -448,7 +452,7 @@ if (faqItems.length) {
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
-      readCar ? <SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} /> :
+      readCar ? <>{readPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
@@ -719,6 +723,8 @@ if (faqItems.length) {
   .crumb a:hover { text-decoration: underline; }
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
+  .rc-pre { padding-block: var(--s6) 0; }
+  .rc-pre .prose { max-width: 72ch; }
   .info-h1k { display: block; margin-bottom: 6px; font-size: var(--fs-s1); font-weight: 300; letter-spacing: .02em; line-height: 1.3; color: var(--muted); }
   .info-h1m { display: block; }
   .info-lead { font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); max-width: 64ch; margin: 0; }

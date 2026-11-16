@@ -1,18 +1,24 @@
 ---
 // Exclusive (P52): what the club gives and how to join, right under the top — as George's old /en/vip showed it
 // («What to expect» · «How it works» · «Your time is the most valuable thing»). Sergei 2026-11-16: «нам нужно
-// написать на странице ексклюзив тоже чтото что б юзеры понимали что ето за страница».
+// написать на странице ексклюзив тоже чтото что б юзеры понимали что ето за страница», then «етот блок сделай
+// также как на главной» — the home Construction bento (Construction.astro): on a desktop a full-width beige window
+// onto a bento fixed to the screen, white tiles with icons (what members get) and black tiles with large lines
+// (who it is for · how to join · the closing line with the call). Phones: the same tiles one under the other.
 // The words come from the approved P52 brief (sites#301) and George's VIP page; Sergei approves the English,
-// Greek and Russian are faithful translations (D-20261112-SS-1). Labels are not headings: the H2 outline stays
-// the brief's (spec rule 9), the full texts stay in the sections below.
+// Greek and Russian are faithful translations (D-20261112-SS-1). No headings: the H2 outline stays the brief's
+// (spec rule 9), the full texts stay in the sections below.
 import type { Lang } from '../lib/i18n';
 interface Props { lang: Lang; cta?: { href: string; text: string } | null }
 const { lang, cta } = Astro.props;
 
-type T = { give: string; how: string; time: string; items: [string, string][]; steps: string[] };
+type T = { give: string; who: [string, string]; how: string; time: [string, string]; items: [string, string][]; steps: string[] };
 const TX: Partial<Record<Lang, T>> = {
   en: {
-    give: 'What Exclusive gives you', how: 'How to join', time: 'Your time is the most valuable thing, and we respect that.',
+    give: 'What Exclusive gives you',
+    who: ['From €1 million', 'Seafront villas, estates, large plots by the sea and special properties.'],
+    how: 'How to join',
+    time: ['Your time is the most valuable thing', 'and we respect that.'],
     items: [
       ['The Secret Portfolio', 'Homes whose owners never advertise them, shown only to members.'],
       ['Early access', 'New properties and price drops reach you before the market, with a notification on your phone.'],
@@ -22,7 +28,10 @@ const TX: Partial<Record<Lang, T>> = {
     steps: ['Create a member account', 'Press «Join Exclusive» in your account', 'Our team reviews your request', 'We open your access and introduce your agent'],
   },
   el: {
-    give: 'Τι σας δίνει το Exclusive', how: 'Πώς γίνεστε μέλος', time: 'Ο χρόνος σας είναι το πιο πολύτιμο πράγμα και τον σεβόμαστε.',
+    give: 'Τι σας δίνει το Exclusive',
+    who: ['Από 1 εκατ. €', 'Παραθαλάσσιες βίλες, κτήματα, μεγάλα οικόπεδα δίπλα στη θάλασσα και ξεχωριστά ακίνητα.'],
+    how: 'Πώς γίνεστε μέλος',
+    time: ['Ο χρόνος σας είναι το πιο πολύτιμο πράγμα', 'και τον σεβόμαστε.'],
     items: [
       ['Το Secret Portfolio', 'Κατοικίες που οι ιδιοκτήτες τους δεν διαφημίζουν ποτέ, μόνο για τα μέλη.'],
       ['Πρώτη πρόσβαση', 'Τα νέα ακίνητα και οι μειώσεις τιμών φτάνουν σε εσάς πριν από την αγορά, με ειδοποίηση στο κινητό σας.'],
@@ -32,7 +41,10 @@ const TX: Partial<Record<Lang, T>> = {
     steps: ['Δημιουργήστε λογαριασμό μέλους', 'Πατήστε «Γίνετε μέλος του Exclusive» στον λογαριασμό σας', 'Η ομάδα μας εξετάζει το αίτημά σας', 'Ανοίγουμε την πρόσβασή σας και σας γνωρίζουμε τον σύμβουλό σας'],
   },
   ru: {
-    give: 'Что даёт Exclusive', how: 'Как вступить', time: 'Ваше время — самое ценное, и мы это уважаем.',
+    give: 'Что даёт Exclusive',
+    who: ['От 1 млн €', 'Виллы на первой линии, поместья, большие участки у моря и особые объекты.'],
+    how: 'Как вступить',
+    time: ['Ваше время — самое ценное', 'и мы это уважаем.'],
     items: [
       ['Secret Portfolio', 'Дома, которые владельцы никогда не рекламируют, — только для участников.'],
       ['Ранний доступ', 'Новые объекты и снижения цен приходят к вам раньше, чем на рынок, с уведомлением на телефон.'],
@@ -43,60 +55,92 @@ const TX: Partial<Record<Lang, T>> = {
   },
 };
 const tx = TX[lang] ?? TX.en!;
-// line icons: a hidden folder, a bell, a person, a lock
+// line icons as on the home bento: a hidden folder, a bell, a person, a lock
 const ICONS = [
-  'M3 7h6l2 2h10v10H3zM3 7V5h6l2 2',
-  'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2ZM10 21h4',
-  'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21a8 8 0 0 1 16 0',
-  'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4',
+  '<path d="M3 7h6l2 2h10v10H3z"/><path d="M3 7V5h6l2 2"/>',
+  '<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2Z"/><path d="M10 21h4"/>',
+  '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  '<rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
 ];
 ---
 <section class="xi" aria-label={tx.give}>
-  <div class="wrap">
-    <p class="xi__lbl">{tx.give}</p>
-    <ul class="xi__give">
+  <div class="wrap"><p class="xi__lbl">{tx.give}</p></div>
+  <div class="xi__win" data-xi-win>
+    <div class="xi__bento">
+      <div class="xd xd--f xd--f1"><b>{tx.who[0]}</b><span>{tx.who[1]}</span></div>
       {tx.items.map(([h, s], i) => (
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICONS[i]} /></svg>
-          <b>{h}</b>
-          <span>{s}</span>
-        </li>
+        <div class={`xd xd--c${i + 1}`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[i]}></svg>
+          <b>{h}</b><span>{s}</span>
+        </div>
       ))}
-    </ul>
-    <div class="xi__row">
-      <div class="xi__how">
-        <p class="xi__lbl">{tx.how}</p>
+      <div class="xd xd--f xd--f2">
+        <b>{tx.how}</b>
         <ol>{tx.steps.map((s) => <li>{s}</li>)}</ol>
       </div>
-      <div class="xi__time">
-        <p>{tx.time}</p>
-        {cta && <a class="k-act k-gild k-gild--dk" href={cta.href} data-ev="register:info">{cta.text}</a>}
+      <div class="xd xd--f xd--f3">
+        <b>{tx.time[0]}</b><span>{tx.time[1]}</span>
+        {cta && <a class="k-act k-gild k-gild--dk xd__go" href={cta.href} data-ev="register:info">{cta.text}</a>}
       </div>
     </div>
+    <div class="xi__shade" aria-hidden="true"></div>
   </div>
 </section>
 
+<script>
+  // The window onto the bento, as on the home page (Construction.astro): the bento is fixed to the screen (CSS) and
+  // the page scrolls the window across it; only the page's width without the scrollbar is measured here.
+  document.querySelectorAll<HTMLElement>('[data-xi-win]').forEach((win) => {
+    const pw = () => win.style.setProperty('--pw', `${document.documentElement.clientWidth}px`);
+    window.addEventListener('resize', pw);
+    pw();
+  });
+</script>
+
 <style>
+  /* phones and tablets: the tiles one under the other (two columns from 760) */
   .xi { background: var(--paper-2); padding-block: var(--s7); }
   .xi__lbl { margin: 0 0 var(--s4); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
-  .xi__give { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); grid-template-columns: minmax(0, 1fr); }
-  .xi__give li { background: var(--paper); padding: var(--s5); display: grid; gap: var(--s2); align-content: start; }
-  .xi__give svg { width: 32px; height: 32px; color: var(--gold); margin-bottom: var(--s2); }
-  .xi__give b { font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
-  .xi__give span { font-size: var(--fs-s0); line-height: 1.55; color: var(--ink-2); }
-  .xi__row { display: grid; gap: var(--s5); margin-top: var(--s6); }
-  .xi__how ol { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: var(--s3); }
-  .xi__how li { counter-increment: st; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--s3); align-items: baseline; font-size: var(--fs-s0); }
-  .xi__how li::before { content: counter(st); font-size: var(--fs-s1); font-weight: 300; color: var(--gold); }
-  .xi__time { background: var(--ink); color: var(--paper); padding: var(--s5); display: grid; gap: var(--s4); align-content: center; }
-  .xi__time p { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.3; }
-  .xi__time .k-act { justify-self: start; padding: 0 28px; }
-  @media (min-width: 760px) {
-    .xi__give { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .xi__bento { display: grid; gap: 12px; padding-inline: var(--gut); }
+  .xi__shade { display: none; }
+  .xd { min-width: 0; background: var(--paper); padding: var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
+  .xd svg { width: 40px; height: 40px; color: var(--ink); flex: none; margin-bottom: var(--s2); }
+  .xd b { font-size: var(--fs-s0); font-weight: 600; line-height: 1.25; letter-spacing: -.01em; }
+  .xd span, .xd li { font-size: var(--fs-s0); line-height: 1.5; color: var(--ink-2); }
+  .xd--f { background: var(--ink-deep); color: #fff; justify-content: flex-end; }
+  .xd--f b { font-size: var(--fs-s3); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
+  .xd--f span, .xd--f li { color: rgba(255,255,255,.72); }
+  .xd ol { margin: var(--s2) 0 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: var(--s2); }
+  .xd ol li { counter-increment: st; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: var(--s2); align-items: baseline; }
+  .xd ol li::before { content: counter(st); font-size: var(--fs-s1); font-weight: 300; color: var(--gold-dk-text); }
+  .xd__go { align-self: flex-start; margin-top: var(--s3); padding: 0 28px; }
+  @media (min-width: 760px) and (max-width: 1023px) {
+    .xi__bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .xd--f1, .xd--f2, .xd--f3 { grid-column: 1 / -1; }
   }
+
+  /* desktop: the home bento — a full-width beige window onto tiles fixed to the screen */
   @media (min-width: 1024px) {
-    .xi__give { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-    .xi__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
-    .xi__time { padding: var(--s6); }
+    .xi { background: var(--paper); padding: 40px 0 0; }
+    .xi__win { --pw: 100vw; --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
+               position: relative; width: var(--pw); height: 480px; overflow: hidden; clip-path: inset(0); background: var(--paper-3); }
+    .xi__bento { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(600px, calc(var(--tw) * .6), 100vh);
+                 box-sizing: border-box; padding: 0; position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
+                 grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr));
+                 grid-template-areas: "f1 f1 c1 c2" "c3 c4 f2 f2" "f3 f3 f2 f2"; }
+    .xi__shade { display: block; position: absolute; inset: 0; pointer-events: none;
+                 box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
+    .xd { padding: 22px 24px; overflow: hidden; }
+    .xd b { margin-top: auto; }
+    .xd--f { padding: 26px 28px; }
+    .xd--f1 { grid-area: f1; } .xd--f2 { grid-area: f2; } .xd--f3 { grid-area: f3; }
+    .xd--c1 { grid-area: c1; } .xd--c2 { grid-area: c2; } .xd--c3 { grid-area: c3; } .xd--c4 { grid-area: c4; }
+    .xd--f2 { justify-content: center; }
+    .xd--f2 b { margin-top: 0; }
+    .xd--f2 ol { margin-top: var(--s4); gap: var(--s3); }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+    .xi__win { height: auto; clip-path: none; overflow: visible; padding-block: 40px; }
+    .xi__bento { position: static; height: auto; grid-template-rows: none; grid-auto-rows: 250px; margin-inline: var(--off); }
   }
 </style>

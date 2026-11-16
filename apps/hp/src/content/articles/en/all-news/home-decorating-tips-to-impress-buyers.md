@@ -95,7 +95,7 @@ The seller pays for the engineer's certificates and the energy certificate. If s
 
 ## Price it right
 
-The best staging cannot sell an overpriced house. Before you list, look at what comparable homes in your area are offered for: our area pages for [Kassandra](/en/property-for-sale/kassandra), [Sithonia](/en/property-for-sale/sithonia) and [Nea Propontida](/en/property-for-sale/nea-propontida) are a good starting point, and we show you the sales history of the area before we agree a price.
+The best staging cannot sell an overpriced house. Before you list, look at what comparable homes in your area are offered for: our area pages for [Kassandra](/en/properties/kassandra), [Sithonia](/en/properties/sithonia) and [Nea Propontida](/en/properties/nea-propontida) are a good starting point, and we show you the sales history of the area before we agree a price.
 
 ## Ready to sell?
 

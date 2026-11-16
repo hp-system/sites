@@ -61,10 +61,10 @@ The range is wide: traditional stone houses in villages, apartments and studios 
 
 ## 5. Which area should I choose?
 
-- **[Kassandra](/en/property-for-sale/kassandra)**: the closest peninsula to the airport, sandy beaches, resorts and the strongest rental demand.
-- **[Sithonia](/en/property-for-sale/sithonia)**: greener and quieter, pine forests down to the sea, villas and plots with sea views.
-- **[Aristotelis](/en/property-for-sale/aristotelis)**: towards Mount Athos, the lowest prices per square metre and large plots.
-- **[Nea Propontida](/en/property-for-sale/nea-propontida)**: 40–60 km from Thessaloniki, schools, a hospital and shops all year; the best choice for a permanent home.
+- **[Kassandra](/en/properties/kassandra)**: the closest peninsula to the airport, sandy beaches, resorts and the strongest rental demand.
+- **[Sithonia](/en/properties/sithonia)**: greener and quieter, pine forests down to the sea, villas and plots with sea views.
+- **[Aristotelis](/en/properties/aristotelis)**: towards Mount Athos, the lowest prices per square metre and large plots.
+- **[Nea Propontida](/en/properties/nea-propontida)**: 40–60 km from Thessaloniki, schools, a hospital and shops all year; the best choice for a permanent home.
 
 ## 6. What are the legal requirements?
 

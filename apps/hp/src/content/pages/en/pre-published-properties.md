@@ -44,7 +44,7 @@ Registered members see these properties first, with the municipality, the type, 
 ## Who it is for
 
 - **Buyers with a clear brief** — a type, an area and a budget — who want to see suitable homes, land or hotels before they appear on the open market.
-- **Investors** looking for land, plots and professional properties across the four municipalities of Halkidiki: [Kassandra](/en/property-for-sale/kassandra), [Sithonia](/en/property-for-sale/sithonia), [Aristotelis](/en/property-for-sale/aristotelis) and [Nea Propontida](/en/property-for-sale/nea-propontida).
+- **Investors** looking for land, plots and professional properties across the four municipalities of Halkidiki: [Kassandra](/en/properties/kassandra), [Sithonia](/en/properties/sithonia), [Aristotelis](/en/properties/aristotelis) and [Nea Propontida](/en/properties/nea-propontida).
 - **Buyers abroad**, who can follow the market from their screen and book an [online viewing](/en/book-an-online-appointment) the moment a property is ready.
 
 ## How it works

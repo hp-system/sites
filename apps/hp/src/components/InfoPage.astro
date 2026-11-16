@@ -39,6 +39,9 @@ import WaLink from './WaLink.astro';
 import { areaCards } from '../lib/areacards';
 import { buildAreaTiles } from '../lib/area-tiles';
 import Areas from './Areas.astro';
+import PageBlocks from './PageBlocks.astro';
+import { pageBlocks, type BlockTile } from '../lib/list-blocks';
+import { coverOf, heroReady } from '../lib/photos';
 import ServicesHub, { type Role } from './ServicesHub.astro';
 import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
@@ -102,6 +105,13 @@ const toc = d.toc ? headings.filter((h) => h.depth === 2 && h.text.trim()) : [];
 // A text page on the kit (no widget, no own brief; its cards under the text): the reading layout (ReadPage) with every H2 in
 // its side list, whatever `toc` says (Sergei 2026-11-11 «все остальное да»).
 const readHeads = headings.filter((h) => h.depth === 2 && h.text.trim()).map((h) => ({ slug: h.slug, text: h.text }));
+// A Sell page without an own brief (Add your property…): its H2 sections as the paged posts of the Sell canon (SpecPosts
+// carousel, side list turns it) instead of one long column (Sergei 2026-11-16: «должно быть перелистываемыми блоками»).
+// Only Sell pages that are plain text (legal texts, FAQ and pages with widgets or cards keep the reading layout).
+const readHtml: string = (page as any).rendered?.html ?? '';
+const readCar = d.section === 'sell' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /^\s*<h2/.test(readHtml)
+  ? ({ body: readHtml.replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
+  : null;
 
 const url = d.path;
 // A page with an approved new text (own page P22+, D-20261106-SS-2) keeps this design (Sergei
@@ -207,6 +217,22 @@ const relCards = w1 ? d.related.map((r) => ({
   ...r, text: r.text.replaceAll('{phone}', brand.contact.phoneText), button: r.button || t(lang, 'info.more'),
 })) : [];
 const areas = w1 ? areaCards(items, lang) : [];
+// Sergei 2026-11-16 («паттерн должен быть для всех одинаковый, просто ссылки разные»): «Related» and «Property for sale in
+// Halkidiki» on every info page as the list page's blocks (PageBlocks) — photo tiles with the caption link on the photo,
+// no buttons, no «About the area». Related tiles take a watermarked property cover each (a page has no photo of its own).
+const infoBlocks = w1 ? pageBlocks(items as any, lang, [], [], d.path) : { cats: [], areas: [], areasFrom: 0, consumed: new Set<string>() };
+// the related links once per address (the phones' link band; the tiles below do the same)
+const relLinks = d.related.filter((x, i, all) => x.href !== d.path && all.findIndex((y) => y.href === x.href) === i);
+const relTiles: BlockTile[] = (() => {
+  if (!w1) return [];
+  const used = new Set<string>();
+  const pool = items.filter((p) => heroReady(p.attributes ?? {}) && !p.locked).map((p) => coverOf((p.attributes ?? {}) as any)).filter((c): c is NonNullable<typeof c> => !!c && !used.has(c.url) && (used.add(c.url), true));
+  // one tile per address: George's related links to the folded Sell pages all lead to Sell now (D-20261109-SS-5), and a
+  // link to this very page is no tile (Sergei 2026-11-16 saw three tiles to /en/sell)
+  const seen = new Set<string>([d.path]);
+  return d.related.filter((x) => !seen.has(x.href) && (seen.add(x.href), true))
+    .map((x, i) => ({ href: x.href, text: x.label, sub: '', photo: pool.length ? pool[(i * 7 + d.path.length) % pool.length] : null, from: 0 }));
+})();
 // SEO (Sergei 2026-11-10: «этот блок там для этого»): every municipality, Polygyros too, and the heading links the list
 const homeAreas = fresh ? buildAreaTiles(items, lang, undefined, 5) : { tiles: [], from: 0 };
 // ── SERVICES HUB, desktop (#106, approved by George 2026-11-02) ─────────────
@@ -389,8 +415,11 @@ if (faqItems.length) {
         {d.form && (
           <p class="w1-acts w1-d">
             <a class="btn" href="#form" data-ev="content:sell">{d.form.title || ui.adviser}</a>
-            <a class="lnkg" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
-            <WaLink />
+            {/* the phone on the WhatsApp line, under the button (Sergei 2026-11-16) */}
+            <span class="w1-acts__alt">
+              <a class="lnkg" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+              <WaLink />
+            </span>
           </p>
         )}
       </div>
@@ -417,6 +446,7 @@ if (faqItems.length) {
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
+      readCar ? <SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} /> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
@@ -480,41 +510,16 @@ if (faqItems.length) {
       </section>
     )}
 
-    {/* Desktop: «Related» and «Property for sale in Halkidiki» as rows of cards (every card in the HTML). */}
-    <section class="w1-more w1-d" aria-label={ui.side}>
-      {relCards.length > 0 && (
-        <div class="wrap w1-more__blk">
-          <div class="ir-head"><HT class="w1-h2 w1-h2--sm" data-h>{ui.related}</HT><RailDash for="w1Rel" count={relCards.length} lang={lang} /></div>
-          <div class="ir-rail" id="w1Rel" data-irail data-gap="20">
-            {relCards.map((r) => (
-              <PageCard href={r.href} title={r.label} text={r.text} button={fresh ? undefined : r.button} img={r.image || undefined} alt={r.image_alt || r.label} />
-            ))}
-          </div>
-        </div>
-      )}
-      {!fresh && areas.length > 0 && (
-        <div class="wrap w1-more__blk">
-          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{fresh ? <a class="w1-h2a" href={listUrl(lang)}>{ui.forSale}</a> : ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
-          <div class="ir-rail" id="w1Area" data-irail data-gap="20">
-            {areas.map((a) => (
-              <PageCard href={a.href} title={a.name} button={ui.seeAll} img={a.img} srcset={a.srcset} alt={a.alt}
-                        link={a.guide ? { href: a.guide, label: t(lang, 'info.about_area') } : undefined} />
-            ))}
-          </div>
-        </div>
-      )}
-    </section>
-
-    {/* Own pages (Sell): «Property for sale in Halkidiki» exactly as on the home page (Areas.astro, white),
-        Sergei 2026-11-10 */}
-    {fresh && d.key !== 'sell' && homeAreas.tiles.length > 0 && <Areas lang={lang} items={homeAreas.tiles} from={homeAreas.from} headHref={listUrl(lang)} />}
+    {/* «Related» and «Property for sale in Halkidiki» as on the list pages (PageBlocks; Sergei 2026-11-16). Sell shows its
+        by-area block above the posts already. Desktop only, as before (phones keep George's link band below). */}
+    <div class="w1-d"><PageBlocks lang={lang} cats={relTiles} catsH={ui.related} catsSub="" areas={d.key === 'sell' || coHub ? [] : infoBlocks.areas} areasFrom={infoBlocks.areasFrom} /></div>
 
     {/* Phones: George's link band and closing call to action. */}
     {d.related.length > 0 && (
       <section class="info-band w1-m">
         <div class="wrap">
           <p class="t-label">{ui.related}</p>
-          <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
+          <ul class="links">{relLinks.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
           <p class="t-label info-areas-l">{ui.forSale}</p>
           <ul class="links">{muniLinks.map((p) => <li><a href={p.href}>{ui.forSaleIn.replace('{m}', p.name)}</a></li>)}</ul>
         </div>
@@ -580,19 +585,7 @@ if (faqItems.length) {
 
     {/* #107 Company page, desktop only (phones keep everything below). */}
     {coHub && <CompanyHub lang={lang} page={page} contact={contact} />}
-    {coHub && areas.length > 0 && (
-      <section class="w1-more w1-d" aria-label={ui.side}>
-        <div class="wrap w1-more__blk">
-          <div class="ir-head"><h2 class="w1-h2 w1-h2--sm">{fresh ? <a class="w1-h2a" href={listUrl(lang)}>{ui.forSale}</a> : ui.forSale}</h2><RailDash for="w1Area" count={areas.length} lang={lang} /></div>
-          <div class="ir-rail" id="w1Area" data-irail data-gap="20">
-            {areas.map((a) => (
-              <PageCard href={a.href} title={a.name} button={ui.seeAll} img={a.img} srcset={a.srcset} alt={a.alt}
-                        link={a.guide ? { href: a.guide, label: t(lang, 'info.about_area') } : undefined} />
-            ))}
-          </div>
-        </div>
-      </section>
-    )}
+    {coHub && <div class="w1-d"><PageBlocks lang={lang} cats={[]} areas={infoBlocks.areas} areasFrom={infoBlocks.areasFrom} /></div>}
 
     {/* #106 Services hub, desktop only (phones keep everything below). */}
     {hub && (
@@ -678,7 +671,7 @@ if (faqItems.length) {
       <section class:list={['info-band', { 'w1-m': hubLike }]}>
         <div class="wrap">
           <p class="t-label">{ui.related}</p>
-          <ul class="links">{d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
+          <ul class="links">{relLinks.map((r) => <li><a href={r.href}>{r.label}</a></li>)}</ul>
           <p class="t-label info-areas-l">{ui.forSale}</p>
           <ul class="links">{muniLinks.map((p) => <li><a href={p.href}>{ui.forSaleIn.replace('{m}', p.name)}</a></li>)}</ul>
         </div>
@@ -827,6 +820,7 @@ if (faqItems.length) {
     .w1-top .info-h1 { margin: 18px 0; font-size: var(--fs-s5); font-weight: 300; line-height: 1.06; letter-spacing: -.021em; max-width: 12em; }
     .w1-top .info-lead { max-width: 46ch; }
     .w1-acts { display: flex !important; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 28px 0 0; font-size: var(--fs-s0); }
+    .w1-acts__alt { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
     .w1-top__img { display: block !important; overflow: hidden; }
     .w1-top__img img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 70%; display: block; }
 

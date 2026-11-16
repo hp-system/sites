@@ -12,7 +12,7 @@ import { company } from '../lib/company';
 //    κερδίζουν κιόλας: είναι σε ΚΑΘΕ σελίδα, όχι μόνο στη λίστα, και δείχνουν
 //    στα ΚΑΘΑΡΑ URLs των θεματικών (`/ακινητα/κασσανδρα`), όχι σε παραμέτρους
 //    `?municipality=` που η μηχανή αγνοεί.
-import { FACETS, facetUrl } from '../lib/listing';
+import { FACETS, facetUrl, MIN_LIVE } from '../lib/listing';
 import { pageExists, contentUrl, type PageKey } from '../lib/pages';
 import { brand } from '../brand/index';
 import { EN_MOVED } from '../lib/infopages';
@@ -26,7 +26,9 @@ const aboutHref = contentUrl('about', lang);   // #262: each language's own URL
 const moved = (k: string) => (lang === 'en' && EN_MOVED[k]) || contentUrl(k as PageKey, lang);
 const co = await company();
 // Δήμοι πρώτα, μετά οι συλλογές — ό,τι δείχνει και η αρχική.
-const seoLinks = FACETS.map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
+// Never a page that is always noindex (MIN_LIVE Infinity: Detached houses, withdrawn 2026-11-12, D-20261112-SS-1;
+// Sergei 2026-11-16 saw it in the footer).
+const seoLinks = FACETS.filter((f) => MIN_LIVE[f.key] !== Infinity).map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
 
 // 🛡️ ΔΙΧΤΥ: ΔΕΝ ΔΕΙΧΝΟΥΜΕ ΣΥΝΔΕΣΜΟ ΓΙΑ ΣΕΛΙΔΑ ΠΟΥ ΔΕΝ ΥΠΑΡΧΕΙ.
 //    Έτσι γεννήθηκαν οι 124 νεκροί σύνδεσμοι: τα μενού γράφτηκαν πριν τις σελίδες και

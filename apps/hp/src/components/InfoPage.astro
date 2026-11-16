@@ -504,7 +504,7 @@ if (faqItems.length) {
     {d.form && (
       <section class="w1-form" id="form">
         <div class="wrap"><div class="prose w1-form__in">
-          <InfoForm source={d.form.source} headTag={fresh ? 'p' : 'h2'} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+          <InfoForm source={d.form.source} when={d.key === 'book-an-online-appointment'} headTag={fresh ? 'p' : 'h2'} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
                     look="wave1" lang={lang} eyebrow={short} />
         </div></div>
       </section>
@@ -644,7 +644,7 @@ if (faqItems.length) {
           </section>
         )}
 
-        {d.form && <InfoForm source={d.form.source} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy} />}
+        {d.form && <InfoForm source={d.form.source} when={d.key === 'book-an-online-appointment'} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy} />}
       </article>
 
       <aside class="info-side" aria-label={ui.side}>

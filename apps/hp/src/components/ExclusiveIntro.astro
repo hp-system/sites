@@ -62,9 +62,10 @@ const ICONS = [
 ];
 ---
 <section class="xi" aria-label={tx.give}>
-  <div class="wrap"><p class="xi__lbl">{tx.give}</p></div>
   <div class="xi__win" data-xi-win>
     <div class="xi__bento">
+      {/* Sergei 2026-11-16: «What Exclusive gives you» inside the window too, in large type */}
+      <p class="xi__lbl xi__give">{tx.give}</p>
       {tx.items.map(([h, s], i) => (
         <div class={`xd xd--c${i + 1}`}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[i]}></svg>
@@ -104,8 +105,10 @@ const ICONS = [
   .xi__shade { display: none; }
   .xd { min-width: 0; background: var(--paper); padding: var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
   .xd svg { width: 40px; height: 40px; color: var(--ink); flex: none; margin-bottom: var(--s2); }
-  .xd b { font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
-  .xd span { font-size: var(--fs-s0); line-height: 1.55; color: var(--ink-2); }
+  /* large type that catches the eye (Sergei 2026-11-16) */
+  .xd b { font-size: var(--fs-s3); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
+  .xd span { font-size: var(--fs-s1); font-weight: 300; line-height: 1.4; color: var(--ink-2); }
+  .xi__give { grid-column: 1 / -1; margin: 0; }
   .xi__row { display: grid; gap: var(--s5); margin-top: var(--s6); }
   .xi__how ol { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: var(--s3); }
   .xi__how li { counter-increment: st; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--s3); align-items: baseline; font-size: var(--fs-s0); }
@@ -122,10 +125,14 @@ const ICONS = [
                position: relative; width: var(--pw); height: 480px; overflow: hidden; clip-path: inset(0); background: var(--paper-3); }
     .xi__bento { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(600px, calc(var(--tw) * .6), 100vh);
                  box-sizing: border-box; padding: 0; position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
-                 grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+                 grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(2, minmax(0, 1fr)); }
+    .xi { padding-top: 0; }
+    .xi__give { align-self: end; padding: 0 0 6px; font-size: var(--fs-s4); font-weight: 300; line-height: 1.05; letter-spacing: -.022em;
+                text-transform: none; color: var(--ink); }
+    .xd b { font-size: var(--fs-s4); }
     .xi__shade { display: block; position: absolute; inset: 0; pointer-events: none;
                  box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
-    .xd { padding: 28px 30px; overflow: hidden; justify-content: flex-end; }
+    .xd { padding: 32px 36px; overflow: hidden; justify-content: flex-end; gap: 12px; }
     .xd svg { width: 56px; height: 56px; margin-bottom: auto; }
     .xi__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; margin-top: var(--s6); }
     .xi__time { padding: var(--s6); }

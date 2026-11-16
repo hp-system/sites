@@ -65,7 +65,7 @@ const ICONS = [
   <div class="xi__win" data-xi-win>
     <div class="xi__bento">
       {/* Sergei 2026-11-16: «What Exclusive gives you» inside the window too, in large type */}
-      <p class="xi__lbl xi__give">{tx.give}</p>
+      <p class="xi__lbl xi__give"><span class="xi__q">{tx.give}<span class="xi__qm" aria-hidden="true"></span></span></p>
       {tx.items.map(([h, s], i) => (
         <div class={`xd xd--c${i + 1}`}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[i]}></svg>
@@ -99,7 +99,7 @@ const ICONS = [
 
 <style>
   /* phones and tablets: the four tiles one under the other (two columns from 760), then the steps and the closing line */
-  .xi { background: var(--paper-2); padding-block: var(--s7); }
+  .xi { background: var(--paper); padding-block: var(--s7); }   /* white under «How to join» (Sergei 2026-11-16) */
   .xi__lbl { margin: 0 0 var(--s4); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
   .xi__bento { display: grid; gap: 12px; padding-inline: var(--gut); }
   .xi__shade { display: none; }
@@ -109,6 +109,11 @@ const ICONS = [
   .xd b { font-size: var(--fs-s3); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
   .xd span { font-size: var(--fs-s1); font-weight: 300; line-height: 1.4; color: var(--ink-2); }
   .xi__give { grid-column: 1 / -1; margin: 0; }
+  /* the tilted question mark after the heading, as the section cards have it (SectionCards .sc__q; Sergei 2026-11-16) */
+  .xi__q { position: relative; display: inline-block; }
+  .xi__qm { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-58%) rotate(12deg);
+            font-size: var(--fs-s4); font-weight: 600; line-height: 1; letter-spacing: 0; color: var(--paper); pointer-events: none; user-select: none; }
+  .xi__qm::before { content: "?"; }
   .xi__row { display: grid; gap: var(--s5); margin-top: var(--s6); }
   .xi__how ol { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: var(--s3); }
   .xi__how li { counter-increment: st; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--s3); align-items: baseline; font-size: var(--fs-s0); }

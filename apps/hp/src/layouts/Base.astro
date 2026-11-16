@@ -59,6 +59,20 @@ const {
   ogImage: ogOwn, ogImageW: ogOwnW, ogImageH: ogOwnH, ogImageAlt: ogOwnAlt, pathFor, noindex = false, jsonLd = [],
   langs, canonicalLang, embed = false, ogTitle, query = '',
 } = Astro.props;
+// The cache headers first: they must be set before anything is awaited below (sites#307 — after the CMS await the
+// response had already started and a member's page lost its «private, no-store»).
+// Ανώνυμος επισκέπτης → η σελίδα αποθηκεύεται στο edge. Μέλος → ποτέ.
+// ΑΥΤΟ μόνο του ξεκλειδώνει το caching: σήμερα μπαίνει session cookie σε ΚΑΘΕ
+// ανώνυμο αίτημα και γι' αυτό τίποτα δεν αποθηκεύεται πουθενά.
+const isMember = !!Astro.cookies.get('member_token')?.value;
+Astro.response.headers.set(
+  'Cache-Control',
+  isMember ? 'private, no-store' : 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400',
+);
+// #18: list pages differ by the visitor's country (energy-certificate rule for Greece). Cloudflare
+// ignores Vary for HTML (traps T-K07), so before any HTML edge-cache rule the cache key must add
+// the country, or GR must bypass — see ssot traps T-K20.
+Astro.response.headers.set('Vary', 'Cookie, Accept-Encoding, CF-IPCountry');
 // SEO crawl 2026-11-11: 193 pages (lists, about, contact, partners) had no og:image, so a shared link came
 // without a picture. A page without its own takes the home's share photo (the same clean 800 frame).
 const shot = HERO_SHOTS[0];
@@ -107,18 +121,6 @@ const alts = (pathFor
 // robots.txt και το sitemap.xml — δες lib/seo.ts.
 const indexable = isProd(Astro.request, Astro.url);
 
-// Ανώνυμος επισκέπτης → η σελίδα αποθηκεύεται στο edge. Μέλος → ποτέ.
-// ΑΥΤΟ μόνο του ξεκλειδώνει το caching: σήμερα μπαίνει session cookie σε ΚΑΘΕ
-// ανώνυμο αίτημα και γι' αυτό τίποτα δεν αποθηκεύεται πουθενά.
-const isMember = !!Astro.cookies.get('member_token')?.value;
-Astro.response.headers.set(
-  'Cache-Control',
-  isMember ? 'private, no-store' : 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400',
-);
-// #18: list pages differ by the visitor's country (energy-certificate rule for Greece). Cloudflare
-// ignores Vary for HTML (traps T-K07), so before any HTML edge-cache rule the cache key must add
-// the country, or GR must bypass — see ssot traps T-K20.
-Astro.response.headers.set('Vary', 'Cookie, Accept-Encoding, CF-IPCountry');
 
 // Consent defaults on every page; the GTM loader only on the real production host.
 const headScript = consentHeadScript(analyticsOn(Astro.request, Astro.url) ? brand.analytics.gtmId : null);

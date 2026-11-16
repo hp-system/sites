@@ -114,7 +114,7 @@ const ICONS = [
   .xi__qm { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-58%) rotate(12deg);
             font-size: var(--fs-s4); font-weight: 600; line-height: 1; letter-spacing: 0; color: var(--paper); pointer-events: none; user-select: none; }
   .xi__qm::before { content: "?"; }
-  .xi__row { display: grid; gap: var(--s5); margin-top: var(--s6); }
+  .xi__row { display: grid; gap: var(--s5); margin-top: var(--s7); }   /* the same space above and below (Sergei 2026-11-16) */
   .xi__how ol { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: var(--s3); }
   .xi__how li { counter-increment: st; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: var(--s3); align-items: baseline; font-size: var(--fs-s0); }
   .xi__how li::before { content: counter(st); font-size: var(--fs-s1); font-weight: 300; color: var(--gold); }
@@ -139,7 +139,7 @@ const ICONS = [
                  box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
     .xd { padding: 32px 36px; overflow: hidden; justify-content: flex-end; gap: 12px; }
     .xd svg { width: 56px; height: 56px; margin-bottom: auto; }
-    .xi__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; margin-top: var(--s6); }
+    .xi__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; margin-top: var(--s7); }
     .xi__time { padding: var(--s6); }
   }
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {

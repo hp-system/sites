@@ -60,7 +60,15 @@ const abs = (u: string) => siteRoot + encodeURI(u);
 const memberToken = Astro.cookies.get('member_token')?.value;
 let items: SiteProperty[] = [];
 try { items = await allProperties(memberToken, visitorCountry(Astro.request)); } catch { items = []; }
-const photos = postPhotos(items as any, (page.body.match(/<h2>/g) ?? []).length, lang);
+// fixed photos per post win (as on Sell: a CC0 stock photo of the topic, not a property, so no watermark; Exclusive since
+// 2026-11-16 «на каждый артикл нужна картинка подходящая»); the others take an open property photo as before
+const autoPhotos = postPhotos(items as any, (page.body.match(/<h2>/g) ?? []).length, lang);
+const photos = page.postPhotos?.length
+  ? (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h, i) => {
+      const pp = page.postPhotos!.find((x) => x.after === h.replace(/<[^>]+>/g, '').trim());
+      return pp ? { src: `${pp.file}_960w.webp`, srcset: `${pp.file}_640w.webp 640w, ${pp.file}_960w.webp 960w`, alt: pp.alt, style: '' } : autoPhotos[i] ?? null;
+    })
+  : autoPhotos;
 const areas = buildAreaTiles(items as any, lang, undefined, 5);
 // #275 (Sergei 2026-11-12): the home-style Collections and «by area» above the text (they were under the form at the
 // bottom); George's links they show leave the sections

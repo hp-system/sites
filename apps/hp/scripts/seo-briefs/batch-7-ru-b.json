@@ -557,7 +557,39 @@
           "a": "Да. Новые объекты и снижения цен сначала приходят участникам Exclusive, с уведомлением на телефон, ещё до публикации для всех остальных."
         }
       ],
-      "ctaHref": "/ru/login"
+      "ctaHref": "/ru/login",
+      "postPhotos": [
+        {
+          "after": "Для кого Exclusive",
+          "file": "/pages/exclusive/posts/who-exclusive-is-for",
+          "alt": "Вилла с подсвеченным бассейном в сумерках"
+        },
+        {
+          "after": "Что видят участники Exclusive",
+          "file": "/pages/exclusive/posts/what-exclusive-members-see",
+          "alt": "Архитектурные планы на столе"
+        },
+        {
+          "after": "Secret Portfolio: объекты, которые никогда не рекламируются",
+          "file": "/pages/exclusive/posts/the-secret-portfolio",
+          "alt": "Закрытые кованые ворота"
+        },
+        {
+          "after": "Ваш личный агент",
+          "file": "/pages/exclusive/posts/your-own-agent",
+          "alt": "Два человека пожимают руки за столом"
+        },
+        {
+          "after": "Как вступить",
+          "file": "/pages/exclusive/posts/how-to-join",
+          "alt": "Телефон в руке"
+        },
+        {
+          "after": "Конфиденциальность",
+          "file": "/pages/exclusive/posts/discretion",
+          "alt": "Старинная дверная ручка с замочной скважиной"
+        }
+      ]
     },
     {
       "id": "P22",

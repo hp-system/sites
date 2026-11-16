@@ -74,8 +74,20 @@ export const POST: APIRoute = async ({ request, url, clientAddress }) => {
   if (!name || !email || !/.+@.+\..+/.test(email)) return answer(false, { error: 'name+email' }, 400);
   if (limited('inquiry', clientIpOf(request, clientAddress) || email, 10)) return answer(false, { error: 'too_many' }, 429);
 
+  // sites#306: a date and time (the online appointment form) → the CRM books the meeting in its calendar
+  // (/site/appointment: it matches or creates the contact, a «meeting» event at that time). A moment in the past or
+  // more than a year ahead is not a booking: the request goes as a plain inquiry with the time in the message.
+  const whenRaw = clean(b.when, 40);
+  const at = whenRaw ? new Date(whenRaw) : null;
+  const okAt = !!at && !isNaN(at.getTime()) && at.getTime() > Date.now() - 600_000 && at.getTime() < Date.now() + 366 * 864e5;
+  if (okAt) {
+    const booked = await sendLead('/site/appointment', { ...forwardIp(request, clientAddress), ...originHeader(request, url) },
+      { name, email, phone, datetime: at!.toISOString(), message, lang });
+    return booked.ok ? answer(true, { ok: true, ...(booked.queued ? { queued: true } : {}) }) : answer(false, { error: 'upstream' }, 502);
+  }
+  const msgOut = whenRaw && !okAt ? `${message} · when=${whenRaw}`.trim() : message;
   // B-03: visitor IP and site origin, as every other proxy sends them (lib/clientip, lib/origin).
   const sent = await sendLead('/site/inquiry', { ...forwardIp(request, clientAddress), ...originHeader(request, url) },
-    { name, email, phone, message, propertyId, lang });
+    { name, email, phone, message: msgOut, propertyId, lang });
   return sent.ok ? answer(true, { ok: true, ...(sent.queued ? { queued: true } : {}) }) : answer(false, { error: 'upstream' }, 502);
 };

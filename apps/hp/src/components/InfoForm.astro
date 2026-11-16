@@ -21,8 +21,17 @@ import { brand } from '../brand/index';
 // `extra`, sent in front of the message), Cancel · phone · WhatsApp · Send at the bottom. On success the
 // form fires `iform:sent` so the window can show its thank-you view.
 interface Props { source: string; title?: string; message?: boolean; terms: string; privacy: string;
-  look?: 'wave1' | 'pop'; lang?: Lang; eyebrow?: string; headTag?: 'h2' | 'p' }
-const { source, title: titleIn, message = true, terms, privacy, look, lang = 'en', eyebrow = '', headTag = 'h2' } = Astro.props;
+  look?: 'wave1' | 'pop'; lang?: Lang; eyebrow?: string; headTag?: 'h2' | 'p';
+  /** sites#306: a date-and-time field; the server books the meeting in the CRM calendar (/site/appointment) */
+  when?: boolean }
+const { source, title: titleIn, message = true, terms, privacy, look, lang = 'en', eyebrow = '', headTag = 'h2', when = false } = Astro.props;
+// the visitor picks the time in their own clock; the browser sends it as an exact moment (ISO, UTC)
+const WHEN_L: Record<string, string> = {
+  en: 'Date and time (your time)', el: 'Ημερομηνία και ώρα (η δική σας ώρα)', ru: 'Дата и время (ваше время)',
+  de: 'Datum und Uhrzeit (Ihre Ortszeit)', bg: 'Дата и час (вашето време)', sr: 'Datum i vreme (vaše vreme)',
+  ro: 'Data și ora (ora dvs.)', tr: 'Tarih ve saat (sizin saatiniz)', he: 'תאריך ושעה (לפי השעון שלך)',
+};
+const whenL = WHEN_L[lang] ?? WHEN_L.en;
 const title = titleIn ?? t(lang, 'form.title');
 const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const consent = t(lang, 'form.consent', {
@@ -81,6 +90,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
           </div>
         </div>
       </div>
+      {when && <input class="pop__i" name="when" type="datetime-local" required step="900" aria-label={whenL} title={whenL} />}
       {message && <textarea class="pop__i" name="message" rows="3" maxlength="1900" placeholder={pui(lang, 'msgL')} aria-label={pui(lang, 'msgL')}></textarea>}
       <input type="hidden" name="extra" value="" />
       <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -133,6 +143,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
         </div>
       </div>
     </div>
+    {when && <div class="iform__fld wide"><label class="iform__l" for={`${id}-w`}>{whenL}</label><input id={`${id}-w`} name="when" type="datetime-local" required step="900" aria-label={whenL} /></div>}
     {message && <div class="iform__fld wide"><label class="iform__l" for={`${id}-m`}>{pui(lang, 'msgL')}</label><textarea id={`${id}-m`} name="message" rows="5" maxlength="1900" placeholder={pui(lang, 'msgL')}></textarea></div>}
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
     <input type="hidden" name="source" value={source} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={openedAt} />
@@ -152,6 +163,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     <label>{pui(lang, 'fName')}<input name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></label>
     <label>{pui(lang, 'fEmail')}<input name="email" type="email" autocomplete="email" required maxlength="200" value={mine?.email || undefined} /></label>
     <label>{pui(lang, 'fPhone')}<input name="phone" type="tel" autocomplete="tel" maxlength="40" value={mine?.phone || undefined} /></label>
+    {when && <label class="wide">{whenL}<input name="when" type="datetime-local" required step="900" /></label>}
     {message && <label class="wide">{pui(lang, 'msgL')}<textarea name="message" rows="5" maxlength="1900"></textarea></label>}
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
     <input type="hidden" name="source" value={source} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={openedAt} />
@@ -189,6 +201,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
       let phone = String(d.get('phone') ?? '').trim();
       if (w1 && phone && !/^(\+|00)/.test(phone)) phone = `+${dialW?.code() ?? '30'} ${phone}`;
       if (!name || !/.+@.+\..+/.test(email)) { msg.textContent = M.need; return; }
+      if (f.querySelector('input[name=when]') && !d.get('when')) { msg.textContent = M.need; return; }
       const btn = f.querySelector<HTMLButtonElement>('button[type=submit]')!;
       btn.disabled = true;
       try {
@@ -200,6 +213,8 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
             // #106: the window's extra fields (kind, area, size, day…) go in front of the message.
             message: `[${f.dataset.source}] ${[String(d.get('extra') ?? '').trim(), String(d.get('message') ?? '')].filter(Boolean).join(' · ')}`.trim(),
             website: String(d.get('website') ?? ''), t: opened, lang,
+            // sites#306: the chosen moment, in UTC (the field is the visitor's own clock)
+            ...(d.get('when') ? { when: new Date(String(d.get('when'))).toISOString() } : {}),
           }),
         });
         if (!r.ok) throw new Error(String(r.status));

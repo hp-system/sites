@@ -97,6 +97,12 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
   .sp__tx :global(p:last-child) { margin-bottom: 0; }
   .sp__tx :global(ul) { margin: 0 0 var(--s3); padding: 0; list-style: none; }
   .sp__tx :global(ul:last-child) { margin-bottom: 0; }
+  /* an old page's numbered steps (Add your property, Sergei 2026-11-16): the big outline number only, no «1.»;
+     the step's icon beside its text */
+  .sp__tx :global(ol) { margin: 0 0 var(--s3); padding: 0; list-style: none; counter-reset: spn; }
+  .sp__tx :global(ol:last-child) { margin-bottom: 0; }
+  .sp__tx :global(ol > li) { display: flex; align-items: center; gap: var(--s4); }
+  .sp__tx :global(ol > li > img) { flex: none; width: 48px; height: 48px; }
   .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); }
   .sp__tx :global(strong) { color: var(--ink); font-weight: 600; }
   /* big thin numbers on the list items (Sergei 2026-11-10: «большие тонкие цифры, но так чтоб не изменять

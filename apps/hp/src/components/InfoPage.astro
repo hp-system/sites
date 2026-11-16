@@ -102,6 +102,13 @@ const toc = d.toc ? headings.filter((h) => h.depth === 2 && h.text.trim()) : [];
 // A text page on the kit (no widget, no own brief; its cards under the text): the reading layout (ReadPage) with every H2 in
 // its side list, whatever `toc` says (Sergei 2026-11-11 «все остальное да»).
 const readHeads = headings.filter((h) => h.depth === 2 && h.text.trim()).map((h) => ({ slug: h.slug, text: h.text }));
+// A Sell page without an own brief (Add your property…): its H2 sections as the paged posts of the Sell canon (SpecPosts
+// carousel, side list turns it) instead of one long column (Sergei 2026-11-16: «должно быть перелистываемыми блоками»).
+// Only Sell pages that are plain text (legal texts, FAQ and pages with widgets or cards keep the reading layout).
+const readHtml: string = (page as any).rendered?.html ?? '';
+const readCar = d.section === 'sell' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /^\s*<h2/.test(readHtml)
+  ? ({ body: readHtml.replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
+  : null;
 
 const url = d.path;
 // A page with an approved new text (own page P22+, D-20261106-SS-2) keeps this design (Sergei
@@ -420,6 +427,7 @@ if (faqItems.length) {
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
+      readCar ? <SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} /> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}

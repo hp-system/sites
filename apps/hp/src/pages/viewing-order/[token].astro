@@ -1,0 +1,270 @@
+---
+// Electronic viewing order: the client's page (sites#302, George 16/11, ealida docs/eindication-site-contract.md).
+// The link comes to the client by SMS and e-mail: /viewing-order/{token} (36 + 15 + 43 = 94 characters on
+// www.halkidikiproperties.com, under the 96 that keep the SMS in one part — no language prefix for that reason).
+// The page is a bare document: no site header, menu, consent banner or analytics (the token must never leave the
+// page), noindex, never cached, no Referer. It reads and writes only through our /api/viewing-order/{token}…,
+// which forwards to the CRM over the private link. Behaviour and texts: George's temporary page
+// (apps/api/src/eindication/temp-page.ts), screens 3α–3ζ; the look is the site's kit.
+// Languages: the document is Greek or English (the CRM decides); the page's labels follow it, with a ΕΛ/EN switch.
+import '../../styles/tokens.css';
+import '../../styles/base.css';
+import '../../styles/kit.css';
+import { TOKEN_RE, PRIVATE_HEADERS } from '../../lib/eindication';
+
+export const prerender = false;
+const token = Astro.params.token ?? '';
+for (const [k, v] of Object.entries(PRIVATE_HEADERS)) Astro.response.headers.set(k, v);
+Astro.response.headers.set('content-security-policy', "frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
+if (!TOKEN_RE.test(token)) Astro.response.status = 404;
+---
+<!doctype html>
+<html lang="el" translate="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="google" content="notranslate" />   {/* a legal document: the browser does not machine-translate it; ΕΛ/EN switch instead */}
+  <title>…</title>
+  <link rel="icon" href="/favicon.svg" />
+</head>
+<body>
+  <div id="vo" data-base={TOKEN_RE.test(token) ? `/api/viewing-order/${token}` : ''}></div>
+
+  <script>
+    type Prop = { code: string; subcategory?: string; sqm?: number; area?: string; municipality?: string; price?: number };
+    type Data = {
+      state: string; lang?: 'el' | 'en'; brand?: string; agent?: string; appointment_at?: string; expires_at?: string; title?: string;
+      approved_at?: string; properties_count?: number; pdf?: boolean; sms?: boolean; fee_text?: string;
+      client?: { name: string; first_name?: string; mobile: string; mobile_tail?: string; has_tax?: boolean };
+      properties?: Prop[]; decline_reasons?: { key: string; text: { el?: string; en?: string } }[];
+    };
+    type J = Record<string, any> & { __status: number };
+
+    const app = document.getElementById('vo')!;
+    const base = app.dataset.base || '';
+    let D: Data | null = null;
+    let lang: 'el' | 'en' = (navigator.language || '').slice(0, 2) === 'el' ? 'el' : 'en';
+    let langSet = false;
+    let view = 'main', msg = '', codeBad = false, tax = '', sentTo = '', left = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    // George's texts, verbatim (temp-page.ts).
+    const T = {
+      el: { title: 'Υπόδειξη ακινήτων', hello: (d: Data) => `${d.client!.first_name || d.client!.name}, ο σύμβουλός σας ${d.agent} θα σας δείξει τα παρακάτω ακίνητα ${when(d.appointment_at!, true)}.`,
+        props: 'Τα ακίνητα', you: 'Τα στοιχεία σας', name: 'Όνομα', mobile: 'Κινητό', tax: 'ΑΦΜ ή αριθμός διαβατηρίου', taxPh: 'Συμπληρώστε το ένα από τα δύο', terms: 'Οι όροι', fee: 'Αμοιβή μεσίτη: {f} συν ΦΠΑ',
+        full: 'Δείτε ολόκληρο το έγγραφο', agree: 'Συμφωνώ. Στείλτε μου κωδικό', disagree: 'Δεν συμφωνώ', valid: 'Ισχύει έως {d}. Δεν χρειάζεται λογαριασμός.',
+        codeT: 'Γράψτε τον κωδικό', codeS: 'Στείλαμε έναν εξαψήφιο κωδικό με SMS στο κινητό που λήγει σε {n}.', approve: 'Έγκριση υπόδειξης', noCome: 'Δεν ήρθε;', again: 'Στείλτε ξανά', againIn: 'Στείλτε ξανά σε {s}', newCode: 'Στείλτε μου νέο κωδικό',
+        decl: 'Γράφοντας τον κωδικό δηλώνετε ότι είδατε τα ακίνητα {c} μέσω της {b} και αποδέχεστε τους όρους.',
+        okT: 'Η υπόδειξη εγκρίθηκε', okS: '{d}. Σας στείλαμε αντίγραφο και με email.', docName: 'Υπόδειξη ακινήτων', withOk: 'με την έγκρισή σας', nProps: '{n} ακίνητα · ', dl: 'Λήψη', appt: 'Το ραντεβού σας', whenL: 'Πότε', who: 'Με ποιον',
+        expT: 'Ο σύνδεσμος έληξε', expS: 'Η υπόδειξη αυτή ίσχυε έως {d}. Ο σύμβουλός σας μπορεί να σας στείλει νέα.', ask: 'Ζητήστε νέο σύνδεσμο', asked: 'Θα ειδοποιηθεί ο σύμβουλός σας {a}. Δεν χρειάζεται να κάνετε κάτι άλλο.', askedOk: 'Το αίτημά σας στάλθηκε.',
+        noT: 'Δεν συμφωνείτε;', noS: 'Πείτε μας τι δεν σας ταιριάζει. Ο σύμβουλός σας θα επικοινωνήσει μαζί σας. Δεν υπογράφετε τίποτα.', notePh: 'Γράψτε αν θέλετε (προαιρετικό)', send: 'Αποστολή', back: 'Πίσω στην υπόδειξη',
+        noDone: 'Ευχαριστούμε. Ο σύμβουλός σας θα επικοινωνήσει μαζί σας.', doneT: 'Έχετε ήδη εγκρίνει αυτή την υπόδειξη', doneS: 'Στις {d}. Μπορείτε να κατεβάσετε ξανά το αντίγραφό σας.',
+        repT: 'Ο σύνδεσμος αντικαταστάθηκε', repS: 'Σας έχει σταλεί νεότερος σύνδεσμος. Ανοίξτε τον τελευταίο που λάβατε.', canT: 'Η υπόδειξη ακυρώθηκε', canS: 'Ο σύμβουλός σας μπορεί να σας στείλει νέα.',
+        nfT: 'Ο σύνδεσμος δεν βρέθηκε', nfS: 'Ελέγξτε ότι ανοίξατε ολόκληρο τον σύνδεσμο που σας στάλθηκε.', smsOff: 'Η αποστολή κωδικού με SMS δεν είναι ακόμα διαθέσιμη. Ο σύμβουλός σας θα επικοινωνήσει μαζί σας.',
+        needTax: 'Συμπληρώστε ΑΦΜ ή αριθμό διαβατηρίου.', needReason: 'Διαλέξτε τουλάχιστον έναν λόγο.', err: 'Κάτι δεν πήγε καλά. Δοκιμάστε ξανά.', wait: 'Περιμένετε…' },
+      en: { title: 'Property viewing', hello: (d: Data) => `${d.client!.first_name || d.client!.name}, your advisor ${d.agent} will show you the following properties ${when(d.appointment_at!, true)}.`,
+        props: 'The properties', you: 'Your details', name: 'Name', mobile: 'Mobile', tax: 'Tax number or passport number', taxPh: 'Fill in one of the two', terms: 'The terms', fee: "Agent's fee: {f} plus VAT",
+        full: 'See the whole document', agree: 'I agree. Send me a code', disagree: 'I do not agree', valid: 'Valid until {d}. No account is needed.',
+        codeT: 'Enter the code', codeS: 'We sent a six-digit code by SMS to the mobile ending in {n}.', approve: 'Approve the viewing order', noCome: 'Did it not arrive?', again: 'Send again', againIn: 'Send again in {s}', newCode: 'Send me a new code',
+        decl: 'By entering the code you declare that you saw the properties {c} through {b} and you accept the terms.',
+        okT: 'The viewing order was approved', okS: '{d}. We also sent you a copy by e-mail.', docName: 'Property viewing', withOk: 'with your approval', nProps: '{n} properties · ', dl: 'Download', appt: 'Your appointment', whenL: 'When', who: 'With',
+        expT: 'The link has expired', expS: 'This viewing order was valid until {d}. Your advisor can send you a new one.', ask: 'Ask for a new link', asked: 'Your advisor {a} will be notified. You do not need to do anything else.', askedOk: 'Your request was sent.',
+        noT: 'You do not agree?', noS: 'Tell us what does not suit you. Your advisor will contact you. You are not signing anything.', notePh: 'Write if you wish (optional)', send: 'Send', back: 'Back to the viewing order',
+        noDone: 'Thank you. Your advisor will contact you.', doneT: 'You have already approved this viewing order', doneS: 'On {d}. You can download your copy again.',
+        repT: 'The link was replaced', repS: 'A newer link has been sent to you. Open the last one you received.', canT: 'The viewing order was cancelled', canS: 'Your advisor can send you a new one.',
+        nfT: 'The link was not found', nfS: 'Check that you opened the whole link that was sent to you.', smsOff: 'Sending a code by SMS is not available yet. Your advisor will contact you.',
+        needTax: 'Enter your tax number or passport number.', needReason: 'Choose at least one reason.', err: 'Something went wrong. Try again.', wait: 'Please wait…' },
+    };
+    type Key = Exclude<keyof typeof T.en, 'hello'>;
+    const t = (k: Key) => T[lang][k];
+    const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+    const loc = () => (lang === 'el' ? 'el-GR' : 'en-GB');
+    function when(iso: string, time?: boolean) {
+      const d = new Date(iso);
+      let s = d.toLocaleDateString(loc(), { timeZone: 'Europe/Athens', weekday: 'long', day: 'numeric', month: 'numeric' });
+      if (time) s += (lang === 'el' ? ' στις ' : ' at ') + d.toLocaleTimeString('en-GB', { timeZone: 'Europe/Athens', hour: '2-digit', minute: '2-digit' });
+      return lang === 'el' ? (time ? 'την ' : '') + s : (time ? 'on ' : '') + s;
+    }
+    const full = (iso: string) => { const d = new Date(iso); return d.toLocaleDateString(loc(), { timeZone: 'Europe/Athens', weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) + ', ' + d.toLocaleTimeString('en-GB', { timeZone: 'Europe/Athens', hour: '2-digit', minute: '2-digit' }); };
+    const money = (n?: number) => (n ? Math.round(n).toLocaleString('de-DE') + ' €' : '');
+
+    async function call(method: 'GET' | 'POST', path: string, body?: unknown): Promise<J> {
+      const r = await fetch(base + path, { method, headers: method === 'POST' ? { 'content-type': 'application/json' } : {}, body: method === 'POST' ? JSON.stringify(body ?? {}) : undefined, cache: 'no-store', referrerPolicy: 'no-referrer' });
+      const j = (await r.json().catch(() => ({}))) as J; j.__status = r.status; return j;
+    }
+
+    const head = () => `<header class="vo-h"><b class="vo-brand">${esc(D?.brand ?? '')}</b><span class="vo-lang" role="group">`
+      + (['el', 'en'] as const).map((l) => `<button type="button" data-l="${l}" aria-pressed="${lang === l}">${l === 'el' ? 'ΕΛ' : 'EN'}</button>`).join('') + '</span></header>';
+    function page(h: string) {
+      app.innerHTML = head() + `<main class="vo">${h}</main>`;
+      document.documentElement.lang = lang;
+      document.title = (D?.brand ? D.brand + ' · ' : '') + t('title');
+    }
+    const seal = (s: string, mute = true) => `<div class="vo-seal${mute ? ' vo-seal--mute' : ''}" aria-hidden="true">${s}</div>`;
+    const msgBox = () => (msg ? `<p class="vo-err" role="alert">${esc(msg)}</p>` : '');
+    const file = (sub: string) => `<div class="vo-file"><span class="vo-file__ic">${D!.pdf ? 'PDF' : 'DOC'}</span><div>${esc(D!.title || t('docName'))}<small>${sub}</small></div>`
+      + `<a class="vo-lnk" href="${base}${D!.pdf ? '/pdf' : '/document'}?download=1" rel="noreferrer">${t('dl')}</a></div>`;
+
+    function draw() {
+      if (!D) { app.innerHTML = `<main class="vo"><p class="vo-txt">${t('wait')}</p></main>`; return; }
+      const s = D.state;
+      if (s === 'notfound') return page(seal('?') + `<div class="vo-c"><h1 class="vo-t">${t('nfT')}</h1><p class="vo-txt">${t('nfS')}</p></div>`);
+      if (s === 'replaced') return page(seal('↻') + `<div class="vo-c"><h1 class="vo-t">${t('repT')}</h1><p class="vo-txt">${t('repS')}</p></div>`);
+      if (s === 'cancelled') return page(seal('×') + `<div class="vo-c"><h1 class="vo-t">${t('canT')}</h1><p class="vo-txt">${t('canS')}</p></div>`);
+      if (s === 'expired') return page(seal('⏱') + `<div class="vo-c"><h1 class="vo-t">${t('expT')}</h1><p class="vo-txt">${t('expS').replace('{d}', when(D.expires_at!))}</p></div>`
+        + (view === 'asked' ? `<p class="vo-note vo-c">${t('askedOk')}</p>` : `<button type="button" class="k-act vo-b" id="renew">${t('ask')}</button>`)
+        + `<p class="vo-hint vo-c">${t('asked').replace('{a}', esc(D.agent))}</p>`);
+      if (s === 'declined') return page(seal('✓') + `<div class="vo-c"><p class="vo-txt">${t('noDone')}</p></div>`);
+      if (s === 'approved') {
+        if (view === 'justok') return page(seal('✓', false) + `<div class="vo-c"><h1 class="vo-t">${t('okT')}</h1><p class="vo-txt">${t('okS').replace('{d}', full(D.approved_at!))}</p></div>`
+          + file(t('nProps').replace('{n}', String(Number(D.properties_count) || 0)) + t('withOk'))
+          + `<section class="vo-blk"><h2>${t('appt')}</h2><dl class="vo-kv"><dt>${t('whenL')}</dt><dd>${when(D.appointment_at!, true)}</dd><dt>${t('who')}</dt><dd>${esc(D.agent)}</dd></dl></section>`);
+        return page(seal('✓', false) + `<div class="vo-c"><h1 class="vo-t">${t('doneT')}</h1><p class="vo-txt">${t('doneS').replace('{d}', full(D.approved_at!))}</p></div>` + file(t('withOk')));
+      }
+      if (view === 'decline') {
+        let h = `<div><h1 class="vo-t">${t('noT')}</h1><p class="vo-txt">${t('noS')}</p></div><section class="vo-blk">`;
+        (D.decline_reasons || []).forEach((r) => { h += `<label class="vo-chk"><input type="checkbox" name="r" value="${esc(r.key)}"><span>${esc(r.text[lang] || r.text.el)}</span></label>`; });
+        h += `<textarea id="note" maxlength="1000" placeholder="${t('notePh')}" aria-label="${t('notePh')}"></textarea></section>${msgBox()}`
+          + `<button type="button" class="k-act vo-b" id="dsend">${t('send')}</button><button type="button" class="vo-lnk vo-c" id="dback">${t('back')}</button>`;
+        return page(h);
+      }
+      if (view === 'code') {
+        const codes = (D.properties || []).map((p) => p.code).join(lang === 'el' ? ' και ' : ' and ');
+        page(`<div><h1 class="vo-t">${t('codeT')}</h1><p class="vo-txt">${t('codeS').replace('{n}', `<b>${esc(sentTo || D.client?.mobile_tail)}</b>`)}</p></div>`
+          + `<input class="vo-otp${codeBad ? ' is-bad' : ''}" id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="${t('codeT')}">`
+          + msgBox() + `<button type="button" class="k-act vo-b" id="ok" disabled>${t('approve')}</button>`
+          + `<p class="vo-hint vo-c">${codeBad ? '' : t('noCome') + ' '}<button type="button" class="vo-lnk" id="again"></button></p>`
+          + `<p class="vo-note">${t('decl').replace('{c}', `<span class="vo-mono">${esc(codes)}</span>`).replace('{b}', esc(D.brand))}</p>`);
+        const o = document.getElementById('otp') as HTMLInputElement;
+        o.focus();
+        o.oninput = () => { o.value = o.value.replace(/\D/g, ''); (document.getElementById('ok') as HTMLButtonElement).disabled = o.value.length !== 6; };
+        tick(); return;
+      }
+      let h = `<div><h1 class="vo-t">${t('title')}</h1><p class="vo-txt">${esc(T[lang].hello(D))}</p></div><section class="vo-blk"><h2>${t('props')}</h2>`;
+      (D.properties || []).forEach((p) => {
+        h += `<div class="vo-prop"><b><span class="vo-mono">${esc(p.code)}</span> · ${esc([p.subcategory, p.sqm ? p.sqm + (lang === 'el' ? ' τ.μ.' : ' m²') : ''].filter(Boolean).join(' '))}</b>`
+          + `<small>${esc([p.area, p.municipality].filter(Boolean).join(', '))}${p.price ? ' · ' + money(p.price) : ''}</small></div>`;
+      });
+      h += `</section><section class="vo-blk"><h2>${t('you')}</h2><dl class="vo-kv"><dt>${t('name')}</dt><dd>${esc(D.client?.name)}</dd><dt>${t('mobile')}</dt><dd class="vo-mono">${esc(D.client?.mobile)}</dd></dl>`
+        + (D.client?.has_tax ? '' : `<label class="vo-fl" for="tax">${t('tax')}</label><input class="vo-in" type="text" id="tax" maxlength="30" autocomplete="off" placeholder="${t('taxPh')}" value="${esc(tax)}">`) + '</section>'
+        + `<section class="vo-blk"><h2>${t('terms')}</h2><p class="vo-note vo-c">${t('fee').replace('{f}', esc(D.fee_text))}</p><a class="vo-lnk" target="_blank" rel="noreferrer" href="${base}/document">${t('full')}</a></section>`
+        + msgBox() + (D.sms ? '' : `<p class="vo-note">${t('smsOff')}</p>`)
+        + `<button type="button" class="k-act vo-b" id="agree"${D.sms ? '' : ' disabled'}>${t('agree')}</button>`
+        + `<button type="button" class="k-line vo-b" id="no">${t('disagree')}</button><p class="vo-hint vo-c">${t('valid').replace('{d}', when(D.expires_at!))}</p>`;
+      page(h);
+    }
+
+    function tick() {
+      const b = document.getElementById('again') as HTMLButtonElement | null;
+      if (!b) return;
+      clearInterval(timer);
+      const f = () => {
+        if (left > 0) { b.disabled = true; b.textContent = t('againIn').replace('{s}', '0:' + String(left).padStart(2, '0')); left--; }
+        else { b.disabled = false; b.textContent = codeBad ? t('newCode') : t('again'); clearInterval(timer); }
+      };
+      f(); timer = setInterval(f, 1000);
+    }
+    async function load() {
+      if (!base) { D = { state: 'notfound' }; draw(); return; }
+      try {
+        const j = await call('GET', '');
+        if (j.__status === 404 || !j.state) D = { state: 'notfound' };
+        else { D = j as unknown as Data; if (!langSet && D.lang) lang = D.lang; }
+      } catch { D = { state: 'notfound' }; }
+      draw();
+    }
+    async function sendCode() {
+      msg = '';
+      const j = await call('POST', '/code');
+      if (j.ok) { sentTo = j.to; left = j.resend_in_sec || 60; codeBad = false; view = 'code'; }
+      else if (j.code === 'code_wait') { left = j.retry_after_sec || 60; view = 'code'; }
+      else { msg = j.message || t('err'); if (j.__status === 409 || j.__status === 410) return load(); }
+      draw();
+    }
+    app.addEventListener('click', async (e) => {
+      const b = (e.target as HTMLElement).closest('button');
+      if (!b) return;
+      if (b.dataset.l) { lang = b.dataset.l as 'el' | 'en'; langSet = true; draw(); return; }
+      if (b.id === 'agree') {
+        const x = document.getElementById('tax') as HTMLInputElement | null;
+        tax = x ? x.value.trim() : '';
+        if (x && !tax) { msg = t('needTax'); draw(); return; }
+        b.disabled = true; sendCode(); return;
+      }
+      if (b.id === 'again') { b.disabled = true; sendCode(); return; }
+      if (b.id === 'no') { msg = ''; view = 'decline'; draw(); return; }
+      if (b.id === 'dback') { msg = ''; view = 'main'; draw(); return; }
+      if (b.id === 'dsend') {
+        const rs = [...document.querySelectorAll<HTMLInputElement>('input[name=r]:checked')].map((i) => i.value);
+        if (!rs.length) { msg = t('needReason'); draw(); return; }
+        b.disabled = true;
+        const j = await call('POST', '/decline', { reasons: rs, note: (document.getElementById('note') as HTMLTextAreaElement).value });
+        if (j.ok) D!.state = 'declined'; else msg = j.message || t('err');
+        draw(); return;
+      }
+      if (b.id === 'renew') { b.disabled = true; await call('POST', '/renew'); view = 'asked'; draw(); return; }
+      if (b.id === 'ok') {
+        b.disabled = true;
+        const body: Record<string, string> = { code: (document.getElementById('otp') as HTMLInputElement).value };
+        if (tax) { if (/^\d{9}$/.test(tax)) body.vat = tax; else body.passport = tax; }
+        try {
+          const j = await call('POST', '/approve', body);
+          if (j.ok) { const v = await call('GET', ''); D = v as unknown as Data; view = j.already ? 'main' : 'justok'; }
+          else {
+            msg = j.message || t('err'); codeBad = true;
+            if (j.code === 'tax_required' || j.code === 'bad_vat' || j.code === 'bad_passport') { view = 'main'; codeBad = false; }
+          }
+        } catch { msg = t('err'); }
+        draw();
+      }
+    });
+    draw(); load();
+  </script>
+
+  <style is:global>
+    body { background: var(--paper-2); color: var(--ink); margin: 0; }
+    .vo-h { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: var(--s3) var(--s4); background: var(--paper); border-bottom: 1px solid var(--line); }
+    .vo-brand { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+    .vo-lang { display: flex; border: 1px solid var(--line); }
+    .vo-lang button { all: unset; cursor: pointer; padding: 6px 12px; font-size: var(--fs-s-1); color: var(--faint); }
+    .vo-lang button[aria-pressed='true'] { background: var(--paper-2); color: var(--ink); font-weight: 600; }
+    .vo-lang button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .vo { box-sizing: border-box; width: 100%; max-width: 520px; margin: 0 auto; padding: var(--s5) var(--s4) var(--s7); display: grid; gap: var(--s4); align-content: start; }
+    .vo-t { margin: 0; font-size: var(--fs-s1); font-weight: 400; line-height: 1.25; }
+    .vo-txt { margin: var(--s2) 0 0; color: var(--ink-2); font-size: var(--fs-s0); line-height: 1.5; }
+    .vo-c { text-align: center; }
+    .vo-blk { background: var(--paper); border: 1px solid var(--line); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+    .vo-blk h2 { margin: 0; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+    .vo-prop { display: grid; gap: 2px; padding: var(--s3); border: 1px solid var(--line-soft); font-size: var(--fs-s0); }
+    .vo-prop small { color: var(--muted); font-size: var(--fs-s-1); }
+    .vo-kv { display: grid; grid-template-columns: minmax(0, 110px) minmax(0, 1fr); gap: var(--s2) var(--s3); margin: 0; font-size: var(--fs-s0); }
+    .vo-kv dt { color: var(--faint); font-size: var(--fs-s-1); align-self: center; }
+    .vo-kv dd { margin: 0; overflow-wrap: anywhere; }
+    .vo-mono { font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+    .vo-fl { font-size: var(--fs-s-1); color: var(--muted); }
+    .vo-in, .vo textarea { box-sizing: border-box; width: 100%; min-height: 48px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: inherit; font-size: var(--fs-s0); padding: 10px 12px; }
+    .vo textarea { min-height: 88px; resize: vertical; }
+    .vo-in:focus, .vo textarea:focus, .vo-otp:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+    .vo-otp { box-sizing: border-box; width: 100%; height: 64px; border: 1px solid var(--line); background: var(--paper); text-align: center; font: inherit; font-size: var(--fs-s2); font-weight: 600; letter-spacing: .45em; font-variant-numeric: tabular-nums; }
+    .vo-otp.is-bad { border-color: var(--err, #DC3545); box-shadow: inset 0 0 0 1px var(--err, #DC3545); }
+    .vo-b { width: 100%; font: inherit; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+    .vo-b.k-line { min-height: 56px; }
+    .vo-b:disabled { opacity: .4; cursor: default; }
+    .vo-note { margin: 0; background: var(--paper); border-left: 2px solid var(--gold); padding: var(--s3); font-size: var(--fs-s-1); color: var(--ink-2); line-height: 1.5; }
+    .vo-err { margin: 0; padding: 8px 10px; border: 1px solid var(--err, #DC3545); color: var(--err, #DC3545); font-size: var(--fs-s-1); background: var(--paper); }
+    .vo-hint { margin: 0; font-size: var(--fs-s-1); color: var(--faint); }
+    .vo-lnk { all: unset; cursor: pointer; color: var(--ink); font-size: var(--fs-s-1); text-decoration: underline; text-underline-offset: 3px; justify-self: center; padding: 6px 0; }
+    .vo-lnk:disabled { color: var(--faint); cursor: default; text-decoration: none; }
+    .vo-lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .vo-seal { width: 64px; height: 64px; margin: var(--s2) auto 0; display: grid; place-items: center; font-size: var(--fs-s2); border: 1px solid var(--ink); color: var(--ink); border-radius: 50%; }
+    .vo-seal--mute { border-color: var(--line); color: var(--faint); }
+    .vo-file { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: var(--s3); align-items: center; padding: var(--s3); background: var(--paper); border: 1px solid var(--line); font-size: var(--fs-s0); }
+    .vo-file__ic { width: 40px; height: 48px; display: grid; place-items: center; background: var(--paper-2); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .08em; }
+    .vo-file small { display: block; color: var(--faint); font-size: var(--fs-s-1); }
+    .vo-chk { display: flex; gap: var(--s3); align-items: flex-start; font-size: var(--fs-s0); cursor: pointer; }
+    .vo-chk input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--ink); }
+  </style>
+</body>
+</html>

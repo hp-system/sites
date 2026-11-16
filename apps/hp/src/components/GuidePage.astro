@@ -78,6 +78,7 @@ const cta = page.ctaHref && page.cta
 // Exclusive (Sergei 2026-11-16): the luxury face of the company — a black top, large thin type, gold only on the call,
 // slow motion, and the photo replaced by a slow film of the dearest open properties (sea first), €1M and up.
 const lux = page.id === 'P52';
+const luxH1 = lux && /^[^:]{2,30}:\s+\S/.test(page.h1) ? [page.h1.split(/:\s+/)[0], page.h1.replace(/^[^:]+:\s+/, '')] as [string, string] : null;
 const cinema = (() => {
   if (!lux) return [];
   const sea = (a: any) => a?.sea_access === 'front' || (Array.isArray(a?.views) && a.views.includes('sea'));
@@ -115,7 +116,9 @@ const jsonLd: unknown[] = [
         <nav class="gp__crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.map((c, i, a) => (<>{i > 0 && <span aria-hidden="true"> · </span>}{c.url && i < a.length - 1 ? <a href={c.url}>{c.name}</a> : <span aria-current={i === a.length - 1 ? 'page' : undefined}>{c.name}</span>}</>))}
         </nav>
-        <h1 class="t-display gp__h1">{page.h1}</h1>
+        {/* Exclusive: «Exclusive» small on top, the rest large on one line (Sergei 2026-11-16); the H1 text stays whole */}
+        {luxH1 ? <h1 class="t-display gp__h1 gp__h1--split"><span class="gp__h1k">{luxH1[0]}</span><span class="sr-only">: </span><span class="gp__h1m">{luxH1[1]}</span></h1>
+               : <h1 class="t-display gp__h1">{page.h1}</h1>}
         {page.editorialLine && <p class="gp__ed">{page.editorialLine}</p>}
         <SpecText page={page} part="intro" lang={lang} />
         {/* existing event names only (B-11, lib/track.ts): the club page is a sign-in call, the sell pages a seller call */}
@@ -183,7 +186,12 @@ const jsonLd: unknown[] = [
   .gp--lux .gp__txt { justify-items: center; max-width: 1180px; margin-inline: auto; }   /* wider, not squeezed (Sergei 2026-11-16) */
   .gp--lux .gp__crumb, .gp--lux .gp__crumb a { color: rgba(255,255,255,.7); }
   .gp--lux .gp__h1 { color: #fff; max-width: 26ch; margin-inline: auto; }
-  .gp--lux .gp__top :global(.st-intro) { max-width: 92ch; margin-inline: auto; }
+  .gp--lux .gp__top :global(.st-intro) { max-width: 112ch; margin-inline: auto; }
+  /* the paragraph in even lines (three on a desktop) */
+  .gp--lux .gp__top :global(.st-intro p) { text-wrap: balance; }
+  .gp__h1--split { display: grid; justify-items: center; gap: var(--s3); }
+  .gp__h1k { font-size: var(--fs-s1); font-weight: 300; letter-spacing: .02em; color: rgba(255,255,255,.84); }
+  .gp__h1m { text-wrap: balance; }
   .gp--lux .gp__top :global(.st-intro), .gp--lux .gp__top :global(.st-intro p) { color: rgba(255,255,255,.84); }
   /* slow, expensive motion: the words come up one after another */
   @media (prefers-reduced-motion: no-preference) {
@@ -197,5 +205,6 @@ const jsonLd: unknown[] = [
   @media (min-width: 1024px) {
     .gp--lux .gp__top { padding-block: 96px; gap: 0; }
     .gp--lux .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.04; letter-spacing: -.024em; }
+    .gp--lux .gp__h1--split { max-width: none; font-size: var(--fs-s4); }
   }
 </style>

@@ -126,6 +126,7 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
   .sp__post--fact .sp__tx :global(li) { border-top: 0; }   /* white, black and beige only (Sergei 2026-11-10): no grey rule on black */
   /* sized by the room the posts get (beside the navigator they are narrower than the page) */
   @container (min-width: 700px) {
+    .sp--car .sp__grid { align-items: stretch; height: auto !important; }
     .sp__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .sp__post--wide { grid-column: 1 / -1; }
     .sp__post--wide .sp__ph { aspect-ratio: 16 / 9; }
@@ -140,14 +141,16 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
   /* ── carousel ── */
   .sp--car .sp__grid { display: flex; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory;
     scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; align-items: flex-start; transition: height .3s ease; }
-  /* the row takes the height of the post on show (phones since 2026-11-10; every width since 2026-11-16) */
   .sp--car .sp__grid::-webkit-scrollbar { display: none; }
   .sp--car .sp__grid:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   .sp--car .sp__post { flex: none; width: 100%; scroll-snap-align: start; align-content: stretch; }   /* the photo fills the fixed height */
   .sp--car .sp__post--text { align-content: start; }
   .sp--car .sp__ph { aspect-ratio: 16 / 9; }
   /* Sergei 2026-11-16 (a pattern for every page): a post is never taller than the screen — what does not fit scrolls
-     inside the post, the page never needs a scroll to read one — and the row is as tall as the post on show */
+     inside the post, the page never needs a scroll to read one. From 700 px the row keeps one fixed height (the tallest
+     post, «он должен быть фиксированым»); phones follow the post on show. A picture inside a post's text is cut to
+     260 px high so one screenshot does not make the whole row huge. */
+  .sp__tx :global(img:not(li img)) { display: block; width: 100%; height: auto; max-height: 260px; object-fit: cover; object-position: 50% 0; margin: var(--s3) 0; }
   .sp--car .sp__post { max-height: calc(100vh - 140px); overflow: hidden; }
   .sp--car .sp__b { max-height: calc(100vh - 140px); overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; }
   @container (min-width: 700px) {
@@ -178,8 +181,8 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
     const posts = Array.from(row.children) as HTMLElement[];
     const dashes = Array.from(box.querySelectorAll<HTMLButtonElement>('[data-spc-go]'));
     let cur = -1;
-    // the row takes the height of the post on show, on every width (Sergei 2026-11-16: no white under a short post)
-    const fit = () => { const p = posts[Math.max(0, cur)]; row.style.height = p ? `${p.offsetHeight}px` : ''; };
+    // phones: the row takes the height of the post on show; from 700 px one fixed height (CSS, the tallest post)
+    const fit = () => { const p = posts[Math.max(0, cur)]; row.style.height = p && row.clientWidth < 700 ? `${p.offsetHeight}px` : ''; };
     const step = () => (posts[1] ? posts[1].offsetLeft - posts[0].offsetLeft : row.clientWidth) || 1;
     const show = (k: number) => {
       if (k === cur) return fit();

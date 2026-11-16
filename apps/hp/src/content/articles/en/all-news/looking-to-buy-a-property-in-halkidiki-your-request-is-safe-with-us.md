@@ -94,6 +94,6 @@ After you choose, the purchase follows a fixed sequence: Greek tax number, an in
 
 ## Where to start
 
-If you already know the area, browse the homes for sale in [Kassandra](/en/property-for-sale/kassandra), [Sithonia](/en/property-for-sale/sithonia), [Aristotelis](/en/property-for-sale/aristotelis) or [Nea Propontida](/en/property-for-sale/nea-propontida). If you do not, our overview of [houses for sale in Halkidiki](/en/articles/all-news/homes-for-sale-in-halkidiki-greece) explains the character and price level of each area.
+If you already know the area, browse the homes for sale in [Kassandra](/en/properties/kassandra), [Sithonia](/en/properties/sithonia), [Aristotelis](/en/properties/aristotelis) or [Nea Propontida](/en/properties/nea-propontida). If you do not, our overview of [houses for sale in Halkidiki](/en/articles/all-news/homes-for-sale-in-halkidiki-greece) explains the character and price level of each area.
 
 Customer service and direct communication with everyone matter to us. The whole process is simple and quick, and it has one aim: **to bring you one step closer to the home you want in Halkidiki.** [Send us your request](/en/contact) and we will take it from there.

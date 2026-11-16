@@ -59,10 +59,10 @@ Halkidiki, the three-fingered peninsula an hour from Thessaloniki, has 550 km of
 
 | Area | From | What it is like |
 | --- | --- | --- |
-| [Kassandra](/en/property-for-sale/kassandra) | €100,000 | First peninsula, 70 km from the airport. Sandy beaches, resorts (Sani, Afitos, Hanioti, Pefkochori), year-round villages, best rental demand. |
-| [Sithonia](/en/property-for-sale/sithonia) | €150,000 | Middle peninsula. Pine forests to the sea, coves, Nikiti, Neos Marmaras, Vourvourou, Sarti. Quieter, villas with sea views. |
-| [Aristotelis](/en/property-for-sale/aristotelis) | €120,000 | Eastern Halkidiki towards Mount Athos: Ierissos, Ouranoupoli, Olympiada. Lowest prices per square metre, large plots. |
-| [Nea Propontida](/en/property-for-sale/nea-propontida) | €105,000 | 40–60 km from Thessaloniki: Nea Moudania, Nea Kallikratia, Nea Potidea. Schools, hospital, shops all year; best for a permanent home. |
+| [Kassandra](/en/properties/kassandra) | €100,000 | First peninsula, 70 km from the airport. Sandy beaches, resorts (Sani, Afitos, Hanioti, Pefkochori), year-round villages, best rental demand. |
+| [Sithonia](/en/properties/sithonia) | €150,000 | Middle peninsula. Pine forests to the sea, coves, Nikiti, Neos Marmaras, Vourvourou, Sarti. Quieter, villas with sea views. |
+| [Aristotelis](/en/properties/aristotelis) | €120,000 | Eastern Halkidiki towards Mount Athos: Ierissos, Ouranoupoli, Olympiada. Lowest prices per square metre, large plots. |
+| [Nea Propontida](/en/properties/nea-propontida) | €105,000 | 40–60 km from Thessaloniki: Nea Moudania, Nea Kallikratia, Nea Potidea. Schools, hospital, shops all year; best for a permanent home. |
 
 ## Types of homes
 

@@ -75,10 +75,10 @@ Whatever you choose, the payment at the deed is made by bank transfer, and you m
 
 On a first purchase, location matters more than anything else: you can renovate a house, but you cannot move it. In Halkidiki the choice is between four quite different markets:
 
-- **[Kassandra](/en/property-for-sale/kassandra)**: sandy beaches, resorts, the strongest rental demand;
-- **[Sithonia](/en/property-for-sale/sithonia)**: greener and quieter, pine forests and coves;
-- **[Aristotelis](/en/property-for-sale/aristotelis)**: the lowest prices per square metre, large plots;
-- **[Nea Propontida](/en/property-for-sale/nea-propontida)**: 40–60 km from Thessaloniki, services all year, best for a permanent home.
+- **[Kassandra](/en/properties/kassandra)**: sandy beaches, resorts, the strongest rental demand;
+- **[Sithonia](/en/properties/sithonia)**: greener and quieter, pine forests and coves;
+- **[Aristotelis](/en/properties/aristotelis)**: the lowest prices per square metre, large plots;
+- **[Nea Propontida](/en/properties/nea-propontida)**: 40–60 km from Thessaloniki, services all year, best for a permanent home.
 
 As a guide to price levels, apartments start around €100,000 and houses with a garden near the sea around €200,000. Decide also whether this is a holiday home, a permanent home or partly a rental: a permanent home needs a village that lives all year, and many beach villages close from November to April. Our overview of [houses for sale in Halkidiki](/en/articles/all-news/homes-for-sale-in-halkidiki-greece) compares the areas in detail.
 

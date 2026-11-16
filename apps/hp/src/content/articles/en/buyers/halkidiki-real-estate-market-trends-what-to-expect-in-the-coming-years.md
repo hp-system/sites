@@ -46,17 +46,17 @@ Halkidiki has long been the summer destination of northern Greece. Over the last
 
 Tourism in Greece has grown strongly in recent years and Halkidiki has benefited directly. Many buyers first came here on holiday. Today they buy for three reasons, often at once: a summer house for the family, an asset that earns rent in the season, and a place to live later, for example in retirement.
 
-Access matters. Thessaloniki airport is about one hour by car from the peninsulas, all year, and the city itself sends a steady stream of weekend visitors. That gives Halkidiki a longer season than many islands and a local market that does not depend only on foreigners. [Nea Propontida](/en/property-for-sale/nea-propontida), the belt closest to Thessaloniki, lives twelve months a year and attracts permanent residents as well as holiday buyers.
+Access matters. Thessaloniki airport is about one hour by car from the peninsulas, all year, and the city itself sends a steady stream of weekend visitors. That gives Halkidiki a longer season than many islands and a local market that does not depend only on foreigners. [Nea Propontida](/en/properties/nea-propontida), the belt closest to Thessaloniki, lives twelve months a year and attracts permanent residents as well as holiday buyers.
 
 ## 2. Prices: up steadily, but not the same everywhere
 
-Prices in coastal Halkidiki have risen steadily since 2017. The rise has not been uniform: seafront land in places such as Vourvourou is among the most expensive in Halkidiki, while [Aristotelis](/en/property-for-sale/aristotelis) on the Athos side still has the lowest prices per square metre. Today apartments start from about €100,000, houses with a garden near the sea from about €200,000, plots from about €100,000, and villas from about €600,000. All prices on our site are live, so you see the market as it is.
+Prices in coastal Halkidiki have risen steadily since 2017. The rise has not been uniform: seafront land in places such as Vourvourou is among the most expensive in Halkidiki, while [Aristotelis](/en/properties/aristotelis) on the Athos side still has the lowest prices per square metre. Today apartments start from about €100,000, houses with a garden near the sea from about €200,000, plots from about €100,000, and villas from about €600,000. All prices on our site are live, so you see the market as it is.
 
 We do not promise appreciation. Before you buy, we show you the sales history of the area, which is a better guide than any forecast.
 
 ## 3. The rise of luxury villas
 
-Halkidiki is seeing more high-end homes: architect-designed villas with panoramic views of the Aegean, private pools, large plots and, in a few cases, direct access to the beach. [Sithonia](/en/property-for-sale/sithonia) offers villas with sea views among the pine forests; [Kassandra](/en/property-for-sale/kassandra) has the resort areas such as Sani and Afitos. Many of these properties are above the €400,000 Golden Visa threshold, which brings in buyers from outside the EU. [See villas for sale](/en/property-for-sale/villas).
+Halkidiki is seeing more high-end homes: architect-designed villas with panoramic views of the Aegean, private pools, large plots and, in a few cases, direct access to the beach. [Sithonia](/en/properties/sithonia) offers villas with sea views among the pine forests; [Kassandra](/en/properties/kassandra) has the resort areas such as Sani and Afitos. Many of these properties are above the €400,000 Golden Visa threshold, which brings in buyers from outside the EU. [See villas for sale](/en/property-for-sale/villas).
 
 ## 4. Holiday letting and short-term rentals
 

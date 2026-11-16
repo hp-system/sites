@@ -36,7 +36,7 @@ import { prefix, propertyUrl, listUrl, t, type Lang } from '../lib/i18n';
 import { rentalUrl } from '../lib/contact';
 import { company } from '../lib/company';
 import { ui, facetUrl, FACETS, PAIRS, catKey, isLuxury, isVilla } from '../lib/listing';
-import { AREA_PAGES, areaUrl } from '../content/areas/en';
+import { AREA_PAGES } from '../content/areas/en';
 import { brand } from '../brand/index';
 import { propertySeo, bedsText, twinFeature, twinKey, WITH_POOL } from '../lib/property-seo';
 import { specOf, MUNI_SPEC } from '../lib/seo-pages';
@@ -310,7 +310,7 @@ const bandPhoto = myMuni ? pickPhoto((p) => inMuni(myMuni)(p) && (p.attributes?.
 
 // Area zone («Property for sale in Halkidiki»): links that are not elsewhere on the page —
 // the municipality's two topic pages, the other municipalities, homes / land, Greece.
-type ZoneCard = { t: string; href: string; photo: ReturnType<typeof coverOf>; about?: string };
+type ZoneCard = { t: string; href: string; photo: ReturnType<typeof coverOf> };
 const zone: ZoneCard[] = [];
 // George's sheet 4: → type page · → municipality page · → P02 · → P03 (P01 in sr/bg/ro), exact anchors from 1_Pages.
 {
@@ -334,9 +334,8 @@ for (const [m, k] of PAIRS) {
   }
 }
 for (const f of FACETS.filter((x) => x.q.municipality && x.q.municipality !== myMuni)) {
-  const ap = AREA_PAGES.find((x) => x.kind === 'municipality' && x.q.municipality === f.q.municipality);
   const photo = pickPhoto(inMuni(f.q.municipality as string));
-  if (photo && !zone.some((z) => z.href === facetUrl(lang, f.key))) zone.push({ t: f.name[lang], href: facetUrl(lang, f.key), photo, about: lang === 'en' && ap ? areaUrl(ap.slug) : undefined });
+  if (photo && !zone.some((z) => z.href === facetUrl(lang, f.key))) zone.push({ t: f.name[lang], href: facetUrl(lang, f.key), photo });
 }
 for (const k of ['homes', 'land']) {
   const f = FACETS.find((x) => x.key === k);
@@ -710,7 +709,8 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                     {lang === 'en' && muniArea && <p class="muni__p">{muniArea.intro}</p>}
                   </div>
                   <ul class="muni__l">
-                    {lang === 'en' && muniArea && <li><a href={areaUrl(muniArea.slug)}>{muniArea.h1}</a></li>}
+                    {/* The area-guide link («Property for sale in Kassandra, Halkidiki») is gone (Sergei 2026-11-16, check of the
+                        area block): the guides now 301 to the lists, so it repeated the button below; for Polygyros it was a 301 hop. */}
                     {muniList && <li class="muni__go"><a href={facetUrl(lang, muniList.key)}>{pui(lang, 'allInMuni', { m: muniName })}</a></li>}
                     <li><a href="/en/buying-property-in-greece">{pui(lang, 'costs')}</a></li>
                   </ul>
@@ -789,11 +789,9 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                       {c.photo && <img src={marked(c.photo.url, 800)} srcset={markedSrcSetSmall(c.photo.url)} sizes="300px"
                                        alt={altOf(c.photo, lang, c.t)} width="800" height="533" loading="lazy" decoding="async" />}
                     </a>
+                    {/* Sergei 2026-11-16: no «View properties» / «About the area» buttons — the photo and the title already
+                        open the page («View properties» went to the same address; «About the area» too, except Polygyros). */}
                     <a class="pct" href={c.href}>{c.t}</a>
-                    <span class="pca">
-                      <a class="pcb" href={c.href}>{pui(lang, 'viewProps')}</a>
-                      {c.about && <a class="pcl" href={c.about}>{pui(lang, 'aboutArea')} ›</a>}
-                    </span>
                   </div>
                 ))}
               </div></div>
@@ -1503,13 +1501,6 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     /* the spec anchors are lower case («land for sale in Halkidiki»); the text stays exact (rule 15), only the look
        starts with a capital, as the other cards (needs a block box: ::first-letter does not apply to flex) */
     .pct::first-letter { text-transform: uppercase; }
-    .pca { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: auto; padding-top: 10px; }
-    .pcb { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; background: var(--paper); color: var(--ink);
-           border: 1px solid var(--line); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-           text-decoration: none; white-space: nowrap; transition: border-color .15s ease; }
-    .pcb:hover { border-color: var(--ink); }
-    .pcl { font-size: var(--fs-s-1); color: var(--ink); text-decoration: none; white-space: nowrap; }
-    .pcl:hover { text-decoration: underline; text-underline-offset: 3px; }
 
     /* ── the price box: frosted glass, sticky, lands on the bottom of the area zone ── */
     .side { position: sticky; top: 12px; align-self: start; z-index: 6; transition: top .25s ease; }

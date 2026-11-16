@@ -54,7 +54,7 @@ Our office is in Neo Rysio, next to Thessaloniki airport "Macedonia", on the way
 
 The more we know, the faster we can help:
 
-- **Buying:** the area you like ([Kassandra](/en/property-for-sale/kassandra), [Sithonia](/en/property-for-sale/sithonia), [Aristotelis](/en/property-for-sale/aristotelis), [Nea Propontida](/en/property-for-sale/nea-propontida)), the type of property, your budget and when you would like to buy. You can also browse [all properties for sale](/en/properties) first.
+- **Buying:** the area you like ([Kassandra](/en/properties/kassandra), [Sithonia](/en/properties/sithonia), [Aristotelis](/en/properties/aristotelis), [Nea Propontida](/en/properties/nea-propontida)), the type of property, your budget and when you would like to buy. You can also browse [all properties for sale](/en/properties) first.
 - **Selling:** the location of your property, its size and a few photos. Read how we [sell your property](/en/sell) and [advertise it worldwide](/en/sell/advertise-your-property-worldwide).
 - **Building or renovating:** what you have in mind and where. See our [construction services](/en/services/construction-services).
 

@@ -42,7 +42,7 @@ The route is simple. From Thessaloniki you drive south-east past Nea Moudania, t
 
 ## Morning: the charming village of Afytos
 
-My day started in the charming village of Afytos (also written Afitos), on the [Kassandra peninsula](/en/property-for-sale/kassandra), about 80 km from the airport. As I walked through the narrow streets, I felt as though I had stepped back in time. The traditional architecture and [stone houses](/en/properties) spoke of a rich history and culture, and I couldn't wait to explore more.
+My day started in the charming village of Afytos (also written Afitos), on the [Kassandra peninsula](/en/properties/kassandra), about 80 km from the airport. As I walked through the narrow streets, I felt as though I had stepped back in time. The traditional architecture and [stone houses](/en/properties) spoke of a rich history and culture, and I couldn't wait to explore more.
 
 Afitos sits on a cliff above the Toroneos gulf. The old core is stone-built, with cobbled lanes, small galleries and craft workshops, and a square where the tavernas look straight down to the sea. Below the cliff there is a long sandy beach, reached by paths and steps from the village. Go early: the light on the gulf is at its best in the morning, the lanes are quiet, and you can walk the whole village in an hour without hurrying.
 
@@ -85,7 +85,7 @@ In conclusion, Halkidiki is a must-visit destination for anyone looking to exper
 Many of our buyers first came to Halkidiki exactly like this: a day by the sea, a village they liked, a second visit. If you start thinking about a house, a few things help:
 
 1. **Decide holiday home or year-round home.** A summer village is fine for a holiday home; for living here all year choose a village with a school, shops and doctors in winter, such as Nea Moudania, Kassandria or Nikiti.
-2. **Look at the area pages.** [Property for sale in Kassandra](/en/property-for-sale/kassandra), [Sithonia](/en/property-for-sale/sithonia) and [Nea Propontida](/en/property-for-sale/nea-propontida) show what is for sale and what each area is like. Our overview of [houses for sale in Halkidiki](/en/articles/all-news/homes-for-sale-in-halkidiki-greece) compares prices by area.
+2. **Look at the area pages.** [Property for sale in Kassandra](/en/properties/kassandra), [Sithonia](/en/properties/sithonia) and [Nea Propontida](/en/properties/nea-propontida) show what is for sale and what each area is like. Our overview of [houses for sale in Halkidiki](/en/articles/all-news/homes-for-sale-in-halkidiki-greece) compares prices by area.
 3. **Know the process before you fall in love.** Buying takes four to eight weeks and costs about 6 % on top of the price; the [step-by-step buying guide](/en/articles/buyers/the-ultimate-guide-to-buying-property-in-halkidiki) explains every step.
 4. **Register.** [Registered members](/en/why-register) see exact locations, all photos and videos, and receive price-drop alerts.
 

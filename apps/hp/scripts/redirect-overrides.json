@@ -540,6 +540,12 @@
       "to": "/ru/exclusive",
       "status": 301,
       "reason": "#265 (D-20261112-SS-1): the Russian page lives at its own Russian URL"
+    },
+    {
+      "from": "/en/property-for-sale/polygyros",
+      "to": "/en/properties/polygyros",
+      "status": 301,
+      "reason": "Sergei 2026-11-16: the old Polygyros area guide had the same H1 as the list with our P58 text (two pages for one query); like the other four municipalities (George sheet rows), it goes to the list. Its only link was «About the area» on the property page, removed the same day."
     }
   ],
   "moves": [],

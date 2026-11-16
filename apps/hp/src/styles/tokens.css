@@ -49,6 +49,7 @@
   --paper-3:      #E9E6DF;   /* empty tile on the beige band */
   --ink-hover:    #2A3034;   /* dark button on hover */
   --wa-green:     #1faa53;   /* WhatsApp link (property page #103, info pages #105) */
+  --err:          #DC3545;   /* form errors: the red of George's live site (Bootstrap danger, 28× in header-ready.css); was #A3312B / #B3261E / #A3341F — «слишком темный», Sergei 2026-11-16 */
 
   /* ── Αποστάσεις — μία κλίμακα, καμία τιμή εκτός ──────────────────────── */
   --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;

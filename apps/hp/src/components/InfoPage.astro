@@ -193,6 +193,8 @@ try {
 // «Related» and area rows (InfoKit.astro). Phones (< 1024px) keep George's layout: the same
 // markup draws it, the desktop-only pieces are hidden there and load nothing.
 const w1 = d.look === 'wave1';
+// Contact band look while Sergei chooses (2026-11-18); split = details light, form dark
+const ctV = (['split', 'mirror', 'dark', 'light'] as const).find((v) => v === Astro.url.searchParams.get('v')) ?? 'split';
 // The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
 const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services', company: 'nav.company' };
 // a sub page with an own brief names itself (its brief's last breadcrumb), not its section
@@ -427,7 +429,7 @@ if (faqItems.length) {
         <h1 class="t-display info-h1">{h1Pre2(fresh?.h1 ?? d.h1) ? <><span class="info-h1k">{h1Pre2(fresh?.h1 ?? d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : fresh?.h1 ?? d.h1}</h1>
         {fresh ? <SpecText page={fresh} part="intro" lang={lang} /> : d.lead && <p class="info-lead">{d.lead}</p>}
         {d.cta && <p class="info-cta-top"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
-        {d.form && (
+        {d.form && !d.contact_card && (
           <p class="w1-acts w1-d">
             {/* Contact (Sergei 2026-11-16): only the button on the left, every detail in the card on the right */}
             <a class="btn" href="#form" data-ev="content:sell">{d.contact_card ? CARD.write : d.form.title || ui.adviser}</a>
@@ -447,30 +449,36 @@ if (faqItems.length) {
                width="1920" height="1280" fetchpriority="high" decoding="async" />
         </picture>
       )}
-      {/* #259 (Sergei 12/11): the contact details sit beside the heading «Contact Halkidiki Properties», not in the side panel */}
-      {d.contact_card && (
-        <address class="rp-card w1-top__card ct">
-          <div class="ct__col">
-            <div class="ct__sec">
-              <span class="t-label">{CARD.office}</span>
-              <p>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
-              <a class="ct__row ct__map" href={mapUrl} rel="noopener" target="_blank" aria-label={CARD.map}><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>{CARD.mapShort}</span></a>
-            </div>
-            <div class="ct__sec">
-              <span class="t-label">{CARD.hours}</span>
-              <dl class="ct__hours">{CARD.days.map(([dd, hh]) => <><dt>{dd}</dt><dd>{hh}</dd></>)}</dl>
-            </div>
+    </header>
+
+    {/* Contact (Sergei 2026-11-18): the details and the form in one full-width box at the top. Four looks to choose
+        from while we try them (?v=split | mirror | dark | light); the button «Send us a message» is gone. */}
+    {d.contact_card && d.form && (
+      <section class={`ctb ctb--${ctV}`} id="form" aria-label={CARD.write}>
+        <address class="ctb__ct">
+          <div class="ctb__sec">
+            <span class="ctb__l">{CARD.office}</span>
+            <p class="ctb__v">{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
+            <a class="ct__row ct__map" href={mapUrl} rel="noopener" target="_blank" aria-label={CARD.map}><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>{CARD.mapShort}</span></a>
           </div>
-          <div class="ct__col ct__sec">
-            <span class="t-label">{CARD.reach}</span>
+          <div class="ctb__sec">
+            <span class="ctb__l">{CARD.reach}</span>
             <a class="ct__row" href={brand.contact.phoneHref} data-ev="call:footer"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg><span><small>{CARD.phone}</small><bdi dir="ltr">{brand.contact.phoneText}</bdi></span></a>
             <a class="ct__row" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d={ICON_WA} /></svg><span><small>WhatsApp</small><bdi dir="ltr">{brand.contact.mobileText}</bdi></span></a>
             <a class="ct__row" href={viberHref()} data-ev="lead:viber"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d={ICON_VIBER} /></svg><span><small>Viber</small><bdi dir="ltr">{brand.contact.mobileText}</bdi></span></a>
             <a class="ct__row" href={`mailto:${brand.contact.email}`}><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14"/><path d="m3 6 9 7 9-7"/></svg><span><small>{CARD.mail}</small><span>{brand.contact.email.split('@')[0]}@<wbr />{brand.contact.email.split('@')[1]}</span></span></a>
           </div>
+          <div class="ctb__sec">
+            <span class="ctb__l">{CARD.hours}</span>
+            <dl class="ct__hours">{CARD.days.map(([dd, hh]) => <><dt>{dd}</dt><dd>{hh}</dd></>)}</dl>
+          </div>
         </address>
-      )}
-    </header>
+        <div class="ctb__f">
+          <InfoForm source={d.form.source} headTag={fresh ? 'p' : 'h2'} title={CARD.write} message={d.form.message} terms={terms} privacy={privacy}
+                    look="wave1" lang={lang} roles bare tone={ctV === 'mirror' || ctV === 'light' ? 'light' : 'dark'} />
+        </div>
+      </section>
+    )}
 
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
@@ -530,7 +538,7 @@ if (faqItems.length) {
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
         menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 
-    {d.form && (
+    {d.form && !d.contact_card && (
       <section class="w1-form" id="form">
         <div class="wrap"><div class="prose w1-form__in">
           <InfoForm source={d.form.source} when={d.key === 'book-an-online-appointment'} headTag={fresh ? 'p' : 'h2'} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
@@ -862,6 +870,46 @@ if (faqItems.length) {
   .ct__hours dt { color: var(--muted); }
   .ct__hours dd { margin: 0; color: var(--ink); font-weight: 600; }
   @media (min-width: 760px) { .w1-top__card.ct { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 32px; padding: 32px; } }
+  /* ── Contact band (Sergei 2026-11-18) ── */
+  .ctb { display: grid; scroll-margin-top: 24px; }
+  .ctb__ct, .ctb__f { padding: 40px var(--gut); min-width: 0; }
+  .ctb__ct { display: grid; gap: 32px; align-content: start; background: var(--paper-2); color: var(--ink); font-style: normal; }
+  .ctb__sec { display: grid; gap: 12px; align-content: start; }
+  .ctb__l { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .ctb__v { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.35; }
+  .ctb .ct__row { display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none !important; font-size: var(--fs-s1); font-weight: 300; }
+  .ctb .ct__row > span { display: grid; line-height: 1.3; min-width: 0; }
+  .ctb .ct__row small { font-size: var(--fs-s-1); font-weight: 400; color: var(--muted); letter-spacing: .02em; }
+  .ctb .ct__row:hover > span > :last-child, .ctb .ct__map:hover span { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .ctb .ct__ic { flex: none; width: 22px; height: 22px; color: currentColor; }
+  .ctb .ct__map { font-size: var(--fs-s0); font-weight: 400; }
+  .ctb .ct__hours { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 8px 28px; margin: 0; font-size: var(--fs-s0); white-space: nowrap; }
+  .ctb .ct__hours dt { color: var(--muted); }
+  .ctb .ct__hours dd { margin: 0; font-weight: 600; color: inherit; }
+  @media (min-width: 1024px) {
+    /* full width; each half lines its content up with the page column */
+    .ctb { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .ctb__ct { --edge: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+               padding: 72px 56px 72px var(--edge); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 44px 40px; }
+    /* the ways to call or write first, across the half (the e-mail needs the width); the office and the hours side by side under them */
+    .ctb__ct .ctb__sec:nth-child(2) { grid-column: 1 / -1; grid-row: 1; }
+    .ctb__ct .ctb__sec:nth-child(1) { grid-column: 1; grid-row: 2; }
+    .ctb__ct .ctb__sec:nth-child(3) { grid-column: 2; grid-row: 2; }
+    .ctb__f { --edge: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+              padding: 72px var(--edge) 72px 64px; }
+    .ctb__f :global(.iform) { margin: 0; }
+    /* split: details light, form dark (the dark band the site already uses for its forms) */
+    .ctb--split .ctb__f, .ctb--dark .ctb__f { background: var(--ink-deep); color: #fff; }
+    /* mirror: details dark, form light */
+    .ctb--mirror .ctb__ct, .ctb--dark .ctb__ct { background: var(--ink-deep); color: #fff; }
+    .ctb--mirror .ctb__f { background: var(--paper); }
+    .ctb--mirror .ctb__l, .ctb--dark .ctb__l, .ctb--mirror .ct__row small, .ctb--dark .ct__row small, .ctb--mirror .ct__hours dt, .ctb--dark .ct__hours dt { color: rgba(255,255,255,.55); }
+    /* dark: one black box, a hairline between the halves */
+    .ctb--dark .ctb__f { border-inline-start: 1px solid rgba(255,255,255,.12); }
+    /* light: one beige box, a hairline between the halves */
+    .ctb--light .ctb__f { background: var(--paper-2); border-inline-start: 1px solid var(--line); }
+    .ctb--light .iform__role, .ctb--light :global(.iform__f input), .ctb--light :global(.iform__f textarea) { background: var(--paper); }
+  }
   .w1-how { padding-top: var(--s5); }
   .w1-how__head .prose :global(p:last-child) { margin-bottom: var(--s4); }
   .w1-form { padding-bottom: var(--s7); }

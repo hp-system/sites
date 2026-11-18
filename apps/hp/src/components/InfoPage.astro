@@ -193,8 +193,11 @@ try {
 // «Related» and area rows (InfoKit.astro). Phones (< 1024px) keep George's layout: the same
 // markup draws it, the desktop-only pieces are hidden there and load nothing.
 const w1 = d.look === 'wave1';
-// Contact band look while Sergei chooses (2026-11-18); split = details light, form dark
-const ctV = (['split', 'mirror', 'dark', 'light'] as const).find((v) => v === Astro.url.searchParams.get('v')) ?? 'split';
+// Contact (Sergei 2026-11-18): the intro under the box, centred, its link as a real button below the words
+const ctPre = d.contact_card && readPre ? (() => {
+  const m = readPre.match(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/);
+  return m ? { html: readPre.replace(m[0], m[2]), href: m[1], label: m[2] } : { html: readPre, href: '', label: '' };
+})() : null;
 // The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
 const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services', company: 'nav.company' };
 // a sub page with an own brief names itself (its brief's last breadcrumb), not its section
@@ -452,10 +455,10 @@ if (faqItems.length) {
       )}
     </header>}
 
-    {/* Contact (Sergei 2026-11-18): the details and the form in one full-width box at the top. Four looks to choose
-        from while we try them (?v=split | mirror | dark | light); the button «Send us a message» is gone. */}
+    {/* Contact (Sergei 2026-11-18): the details (light) and the form (dark) in one full-width box that opens the page;
+        chosen of four looks tried on the dev server («split»); the button «Send us a message» is gone. */}
     {d.contact_card && d.form && (
-      <section class={`ctb ctb--${ctV}`} id="form" aria-labelledby="ctb-h">
+      <section class="ctb" id="form" aria-labelledby="ctb-h">
         <div class="ctb__ct">
           <div class="ctb__hd">
             <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
@@ -487,7 +490,7 @@ if (faqItems.length) {
         </div>
         <div class="ctb__f">
           <InfoForm source={d.form.source} headTag={fresh ? 'p' : 'h2'} title={CARD.write} message={d.form.message} terms={terms} privacy={privacy}
-                    look="wave1" lang={lang} roles bare tone={ctV === 'mirror' || ctV === 'light' ? 'light' : 'dark'} />
+                    look="wave1" lang={lang} roles bare />
         </div>
       </section>
     )}
@@ -495,7 +498,7 @@ if (faqItems.length) {
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
-      readCar ? <>{readPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
+      readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
@@ -767,6 +770,9 @@ if (faqItems.length) {
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .rc-pre { padding-block: var(--s6) 0; }
+  .rc-pre--c { text-align: center; padding-bottom: var(--s6); }
+  .rc-pre--c .prose { margin-inline: auto; text-wrap: balance; }
+  .rc-pre__go { margin: var(--s4) 0 0; }
   .rc-pre .prose { max-width: 72ch; }
   .info-h1k { display: block; margin-bottom: 6px; font-size: var(--fs-s1); font-weight: 300; letter-spacing: .02em; line-height: 1.3; color: var(--muted); }
   .info-h1m { display: block; }
@@ -915,18 +921,8 @@ if (faqItems.length) {
               padding: 72px var(--edge) 72px 64px; }
     .ctb__f :global(.iform) { margin: 0; }
     .ctb__hd .info-h1 { font-size: var(--fs-s5); }
-    .ctb--mirror .ctb__hd :is(.crumb, .crumb a, .info-h1k), .ctb--dark .ctb__hd :is(.crumb, .crumb a, .info-h1k) { color: rgba(255,255,255,.6); }
-    /* split: details light, form dark (the dark band the site already uses for its forms) */
-    .ctb--split .ctb__f, .ctb--dark .ctb__f { background: var(--ink-deep); color: #fff; }
-    /* mirror: details dark, form light */
-    .ctb--mirror .ctb__ct, .ctb--dark .ctb__ct { background: var(--ink-deep); color: #fff; }
-    .ctb--mirror .ctb__f { background: var(--paper); }
-    .ctb--mirror .ctb__l, .ctb--dark .ctb__l, .ctb--mirror .ct__row small, .ctb--dark .ct__row small, .ctb--mirror .ct__hours dt, .ctb--dark .ct__hours dt { color: rgba(255,255,255,.55); }
-    /* dark: one black box, a hairline between the halves */
-    .ctb--dark .ctb__f { border-inline-start: 1px solid rgba(255,255,255,.12); }
-    /* light: one beige box, a hairline between the halves */
-    .ctb--light .ctb__f { background: var(--paper-2); border-inline-start: 1px solid var(--line); }
-    .ctb--light .iform__role, .ctb--light :global(.iform__f input), .ctb--light :global(.iform__f textarea) { background: var(--paper); }
+    /* the details light, the form dark (the dark band the site already uses for its forms) */
+    .ctb__f { background: var(--ink-deep); color: #fff; }
   }
   .w1-how { padding-top: var(--s5); }
   .w1-how__head .prose :global(p:last-child) { margin-bottom: var(--s4); }

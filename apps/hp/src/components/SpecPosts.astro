@@ -50,13 +50,17 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
 const cta = Astro.props.cta === undefined
   ? { text: t(lang, 'svc.add_cta'), href: go, ev: member ? 'content:sell' : 'register:info', gild: !member, plus: true }
   : Astro.props.cta;
+// Sergei 2026-11-18 «весь блок сео … слишком сжат … поексперементируем с типографикой»: looks tried on the dev server,
+// ?pn=ix (an editorial index: big titles on the left, the post beside) · ?pn=ch (chapters: big numbered titles across
+// the top, the post at the full width below). Without the parameter: the panel as it was.
+const look = (['ix', 'ch'] as const).find((v) => v === Astro.url.searchParams.get('pn')) ?? '';
 ---
-<section class="pn">
+<section class:list={['pn', look && `pn--${look}`]}>
   <div class="wrap pn__in">
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
         <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
-        <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true"></i>}</a></li>)}</ul>
+        <ul class="k-side__list">{nav.map((n, i) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><b class="pn__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</b><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true"></i>}</a></li>)}</ul>
       </nav>
       {cta && (
         <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>
@@ -111,6 +115,43 @@ const cta = Astro.props.cta === undefined
   .pn__side { transition: top .25s ease; }
   .pn__side .k-act { margin-top: var(--s2); }   /* the button: kit .k-act (+ .k-gild for guests) */
   @media (prefers-reduced-motion: reduce) { .pn__side { transition: none; } }
+  .pn__n { display: none; }
+  /* ── ?pn=ix: an editorial index (Sergei 2026-11-18, experiment) ── */
+  @media (min-width: 1000px) {
+    .pn--ix .pn__in { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: 72px; }
+    .pn--ix .pn__side { background: transparent; border: 0; padding: 0; gap: 28px; }
+    .pn--ix .k-side__lbl { font-size: var(--fs-s-1); }
+    .pn--ix :global(.k-side__list) { gap: 0; margin-top: 20px; border-bottom: 1px solid var(--line); }
+    .pn--ix :global(.k-side__it) { align-items: baseline; gap: 20px; padding: 20px 0; border-top: 1px solid var(--line); background: transparent !important;
+      font-size: var(--fs-s2); font-weight: 300; line-height: 1.15; letter-spacing: -.012em; text-transform: none; color: var(--faint); }
+    .pn--ix :global(.k-side__it > span) { transform: none; }
+    .pn--ix :global(.k-side__it:hover), .pn--ix :global(.k-side__it.on) { color: var(--ink); font-weight: 300; }
+    .pn--ix .pn__n { display: block; flex: none; min-width: 2.4em; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; color: inherit; transform: translateY(-.35em); }
+    .pn--ix :global(.sp--car .sp__b h2) { font-size: var(--fs-s4) !important; line-height: 1.08; }
+    .pn--ix :global(.sp__tx p) { line-height: 1.7; color: var(--ink-2); }
+  }
+  /* ── ?pn=ch: chapters across the top, the post at the full width (Sergei 2026-11-18, experiment) ── */
+  @media (min-width: 1000px) {
+    .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); max-width: none; padding-inline: max(var(--gut), 4vw); }
+    .pn--ch .pn__faq, .pn--ch .pn__posts { grid-column: 1; }
+    .pn--ch .pn__posts { padding-top: var(--s5); }
+    .pn--ch .pn__side { grid-column: 1; grid-row: auto; position: static; flex-direction: row; align-items: flex-end; gap: 40px;
+      margin-block: var(--s7) 0; padding: 0; background: transparent; border: 0; }
+    .pn--ch .pn__nav { flex: 1; min-width: 0; }
+    .pn--ch .pn__side .k-act { flex: none; width: auto; padding-inline: 28px; margin: 0; }
+    .pn--ch :global(.k-side__list) { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 32px; margin-top: 20px; }
+    .pn--ch :global(.k-side__it) { flex-direction: column; align-items: flex-start; gap: 14px; height: 100%; padding: 20px 0 0; border-top: 2px solid var(--line);
+      background: transparent !important; font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.005em; text-transform: none; color: var(--faint); }
+    .pn--ch :global(.k-side__it > span) { transform: none; }
+    .pn--ch :global(.k-side__it:hover), .pn--ch :global(.k-side__it.on) { color: var(--ink); font-weight: 300; }
+    .pn--ch :global(.k-side__it.on) { border-top-color: var(--ink); }
+    .pn--ch .pn__n { display: block; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 1px var(--faint); }
+    .pn--ch :global(.k-side__it.on) .pn__n { color: var(--ink); -webkit-text-stroke: 0; }
+    .pn--ch .pn__q { display: none; }
+    .pn--ch :global(.sp--car .sp__b h2) { font-size: var(--fs-s4) !important; line-height: 1.08; }
+    .pn--ch :global(.sp__tx p) { font-size: var(--fs-s1); font-weight: 300; line-height: 1.6; max-width: 60ch; }
+    .pn--ch :global(.sp--car .sp__b) { padding: 56px 64px; }
+  }
   .pn :global([data-spc]), .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
 </style>
 

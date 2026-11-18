@@ -418,7 +418,8 @@ if (faqItems.length) {
   <main id="main" class:list={['info', { w1, 'w1-svc': hub, 'w1-co': coHub }]}>
   {w1 && !hubLike ? (
   <>
-    <header class="wrap info-top w1-top">
+    {/* Contact (Sergei 2026-11-18): the breadcrumb and the H1 open the box below; the page starts with it */}
+    {!(d.contact_card && d.form) && <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
         <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
@@ -449,13 +450,23 @@ if (faqItems.length) {
                width="1920" height="1280" fetchpriority="high" decoding="async" />
         </picture>
       )}
-    </header>
+    </header>}
 
     {/* Contact (Sergei 2026-11-18): the details and the form in one full-width box at the top. Four looks to choose
         from while we try them (?v=split | mirror | dark | light); the button «Send us a message» is gone. */}
     {d.contact_card && d.form && (
-      <section class={`ctb ctb--${ctV}`} id="form" aria-label={CARD.write}>
-        <address class="ctb__ct">
+      <section class={`ctb ctb--${ctV}`} id="form" aria-labelledby="ctb-h">
+        <div class="ctb__ct">
+          <div class="ctb__hd">
+            <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
+            </nav>
+            <h1 id="ctb-h" class="t-display info-h1">{h1Pre2(fresh?.h1 ?? d.h1) ? <><span class="info-h1k">{h1Pre2(fresh?.h1 ?? d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : fresh?.h1 ?? d.h1}</h1>
+          </div>
+          <address class="ctb__ad">
           <div class="ctb__sec">
             <span class="ctb__l">{CARD.office}</span>
             <p class="ctb__v">{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
@@ -472,7 +483,8 @@ if (faqItems.length) {
             <span class="ctb__l">{CARD.hours}</span>
             <dl class="ct__hours">{CARD.days.map(([dd, hh]) => <><dt>{dd}</dt><dd>{hh}</dd></>)}</dl>
           </div>
-        </address>
+          </address>
+        </div>
         <div class="ctb__f">
           <InfoForm source={d.form.source} headTag={fresh ? 'p' : 'h2'} title={CARD.write} message={d.form.message} terms={terms} privacy={privacy}
                     look="wave1" lang={lang} roles bare tone={ctV === 'mirror' || ctV === 'light' ? 'light' : 'dark'} />
@@ -875,6 +887,9 @@ if (faqItems.length) {
   .ctb__ct, .ctb__f { padding: 40px var(--gut); min-width: 0; }
   .ctb__ct { display: grid; gap: 32px; align-content: start; background: var(--paper-2); color: var(--ink); font-style: normal; }
   .ctb__sec { display: grid; gap: 12px; align-content: start; }
+  .ctb__ad { display: contents; font-style: normal; }
+  .ctb__hd { grid-column: 1 / -1; }
+  .ctb__hd .info-h1 { margin: 14px 0 0; font-weight: 300; line-height: 1.06; letter-spacing: -.021em; }
   .ctb__l { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
   .ctb__v { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.35; }
   .ctb .ct__row { display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none !important; font-size: var(--fs-s1); font-weight: 300; }
@@ -892,12 +907,15 @@ if (faqItems.length) {
     .ctb__ct { --edge: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
                padding: 72px 56px 72px var(--edge); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 44px 40px; }
     /* the ways to call or write first, across the half (the e-mail needs the width); the office and the hours side by side under them */
-    .ctb__ct .ctb__sec:nth-child(2) { grid-column: 1 / -1; grid-row: 1; }
-    .ctb__ct .ctb__sec:nth-child(1) { grid-column: 1; grid-row: 2; }
-    .ctb__ct .ctb__sec:nth-child(3) { grid-column: 2; grid-row: 2; }
+    .ctb__ct .ctb__hd { grid-row: 1; }
+    .ctb__ct .ctb__sec:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+    .ctb__ct .ctb__sec:nth-child(1) { grid-column: 1; grid-row: 3; }
+    .ctb__ct .ctb__sec:nth-child(3) { grid-column: 2; grid-row: 3; }
     .ctb__f { --edge: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
               padding: 72px var(--edge) 72px 64px; }
     .ctb__f :global(.iform) { margin: 0; }
+    .ctb__hd .info-h1 { font-size: var(--fs-s5); }
+    .ctb--mirror .ctb__hd :is(.crumb, .crumb a, .info-h1k), .ctb--dark .ctb__hd :is(.crumb, .crumb a, .info-h1k) { color: rgba(255,255,255,.6); }
     /* split: details light, form dark (the dark band the site already uses for its forms) */
     .ctb--split .ctb__f, .ctb--dark .ctb__f { background: var(--ink-deep); color: #fff; }
     /* mirror: details dark, form light */

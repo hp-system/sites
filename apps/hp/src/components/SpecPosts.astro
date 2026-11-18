@@ -57,6 +57,8 @@ const look = (['ix', 'ch'] as const).find((v) => v === Astro.url.searchParams.ge
 ---
 <section class:list={['pn', look && `pn--${look}`]}>
   <div class="wrap pn__in">
+    {/* the stage: the menu and the posts; in the tried looks one screen high (Sergei 2026-11-18), otherwise not drawn */}
+    <div class="pn__stage" data-pn-stage>
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
         <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
@@ -73,6 +75,7 @@ const look = (['ix', 'ch'] as const).find((v) => v === Astro.url.searchParams.ge
         screen (SEO/design audit 2026-11-10: no conversion button on phones) */}
     <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang}
                                      sectionLinks={sectionLinks} items={items} self={page.path} facets={facets} /></div>
+    </div>
     {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
     {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} href={faqHref} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     {cta && <div class="pn__bar">
@@ -116,9 +119,31 @@ const look = (['ix', 'ch'] as const).find((v) => v === Astro.url.searchParams.ge
   .pn__side .k-act { margin-top: var(--s2); }   /* the button: kit .k-act (+ .k-gild for guests) */
   @media (prefers-reduced-motion: reduce) { .pn__side { transition: none; } }
   .pn__n { display: none; }
+  .pn__stage { display: contents; }
+  /* ── both tried looks (Sergei 2026-11-18): one screen high whatever the post holds (a long post scrolls inside
+     itself), no «Add your property» beside the menu, no dashes; a click on the menu brings the whole stage on
+     screen; the posts turn by themselves while the pointer is not on the menu ── */
+  @media (min-width: 1000px) {
+    .pn--ix .pn__stage, .pn--ch .pn__stage { display: grid; height: 100vh; height: 100svh; box-sizing: border-box; min-height: 0; }
+    .pn--ix .pn__in, .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); }
+    .pn--ix .pn__faq, .pn--ch .pn__faq { grid-column: 1; }
+    .pn--ix .pn__side .k-act, .pn--ch .pn__side .k-act { display: none; }
+    .pn--ix :global(.sp__dash), .pn--ch :global(.sp__dash) { display: none; }
+    .pn--ix .pn__posts, .pn--ch .pn__posts { min-height: 0 !important; height: 100%; padding: 0; }
+    .pn--ix :global(.sp), .pn--ch :global(.sp) { height: 100%; }
+    .pn--ix :global(.sp--car .sp__grid), .pn--ch :global(.sp--car .sp__grid) { height: 100% !important; align-items: stretch; }
+    .pn--ix :global(.sp--car .sp__post), .pn--ch :global(.sp--car .sp__post) { height: 100%; max-height: none; }
+    .pn--ix :global(.sp--car .sp__b), .pn--ch :global(.sp--car .sp__b) { max-height: none; height: 100%; }
+    .pn--ix .pn__stage { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: 72px; padding-block: 48px; }
+    .pn--ix .pn__side { grid-column: 1; grid-row: 1; position: static; margin: 0; overflow: hidden auto; }
+    .pn--ix .pn__posts { grid-column: 2; grid-row: 1; }
+    .pn--ch .pn__side { grid-column: 1; grid-row: 1; }
+    .pn--ch .pn__posts { grid-column: 1; grid-row: 2; }
+    .pn--ch .pn__stage { grid-template-rows: auto minmax(0, 1fr); row-gap: 28px; padding-block: 32px 40px; }
+    .pn--ch .pn__side { margin: 0; }
+  }
   /* ── ?pn=ix: an editorial index (Sergei 2026-11-18, experiment) ── */
   @media (min-width: 1000px) {
-    .pn--ix .pn__in { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: 72px; }
     .pn--ix .pn__side { background: transparent; border: 0; padding: 0; gap: 28px; }
     .pn--ix .k-side__lbl { font-size: var(--fs-s-1); }
     .pn--ix :global(.k-side__list) { gap: 0; margin-top: 20px; border-bottom: 1px solid var(--line); }
@@ -133,10 +158,8 @@ const look = (['ix', 'ch'] as const).find((v) => v === Astro.url.searchParams.ge
   /* ── ?pn=ch: chapters across the top, the post at the full width (Sergei 2026-11-18, experiment) ── */
   @media (min-width: 1000px) {
     .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); max-width: none; padding-inline: max(var(--gut), 4vw); }
-    .pn--ch .pn__faq, .pn--ch .pn__posts { grid-column: 1; }
-    .pn--ch .pn__posts { padding-top: var(--s5); }
     .pn--ch .pn__side { grid-column: 1; grid-row: auto; position: static; flex-direction: row; align-items: flex-end; gap: 40px;
-      margin-block: var(--s7) 0; padding: 0; background: transparent; border: 0; }
+      padding: 0; background: transparent; border: 0; }
     .pn--ch .pn__nav { flex: 1; min-width: 0; }
     .pn--ch .pn__side .k-act { flex: none; width: auto; padding-inline: 28px; margin: 0; }
     .pn--ch :global(.k-side__list) { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 32px; margin-top: 20px; }
@@ -178,13 +201,40 @@ const look = (['ix', 'ch'] as const).find((v) => v === Astro.url.searchParams.ge
       keep();
       addEventListener('resize', keep);
       const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // the tried looks (Sergei 2026-11-18): the stage is one screen high; a click puts it exactly on the screen
+      const pnBox = box.closest<HTMLElement>('.pn');
+      const stage = pnBox?.querySelector<HTMLElement>('[data-pn-stage]');
+      const staged = () => !!stage && /pn--(ix|ch)/.test(pnBox?.className ?? '') && getComputedStyle(stage).display === 'grid';
+      let held = 0;   // the time of the visitor's last own turn: the automatic turning waits after it
       links.forEach((a) => a.addEventListener('click', (e) => {
         e.preventDefault();
+        held = Date.now();
         car.dispatchEvent(new CustomEvent('spc:go', { detail: a.dataset.pnTo }));
-        const top = car.getBoundingClientRect().top;
-        if (top < 0 || top > innerHeight * 0.6) car.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+        if (staged()) {
+          scrollTo({ top: stage!.getBoundingClientRect().top + scrollY, behavior: still ? 'auto' : 'smooth' });
+        } else {
+          const top = car.getBoundingClientRect().top;
+          if (top < 0 || top > innerHeight * 0.6) car.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+        }
         history.replaceState(null, '', `#${a.dataset.pnTo}`);
       }));
+      // …and the posts turn by themselves, one after another, while the stage is on screen and the pointer is not on
+      // the menu (Sergei 2026-11-18 «если мышка не на уровне кнопок … перелистываеться автоматически на следущее»).
+      // Never with reduced motion, never in a hidden tab.
+      if (stage && !still) {
+        let onMenu = false, seen = false;
+        box.addEventListener('pointerenter', () => { onMenu = true; });
+        box.addEventListener('pointerleave', () => { onMenu = false; });
+        box.addEventListener('focusin', () => { onMenu = true; });
+        box.addEventListener('focusout', () => { onMenu = false; });
+        if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { seen = en.intersectionRatio > 0.6; }, { threshold: [0, 0.6, 1] }).observe(stage);
+        const ids = links.map((l) => l.dataset.pnTo);
+        setInterval(() => {
+          if (!staged() || !seen || onMenu || document.hidden || Date.now() - held < 12000) return;
+          const now = links.findIndex((l) => l.classList.contains('on'));
+          car.dispatchEvent(new CustomEvent('spc:go', { detail: ids[(now + 1) % ids.length] }));
+        }, 7000);
+      }
       const first = car.querySelector<HTMLElement>('.sp__post')?.id;
       mark(links.some((l) => `#${l.dataset.pnTo}` === location.hash) ? location.hash.slice(1) : first);
       return;

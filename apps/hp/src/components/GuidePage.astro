@@ -209,6 +209,12 @@ const jsonLd: unknown[] = [
      («чёрный без фото»: the watermarked covers full-width did not suit); everything centred, large thin type, gold only
      on the registration call, slow motion. ── */
   .gp--lux { overflow-x: clip; }
+  /* Exclusive: the blocks after the bento slide over it (ExclusiveIntro, 2026-11-19) — above it, with a ground */
+  @media (min-width: 1024px) {
+    :global(.gp--lux > .xi ~ *) { position: relative; z-index: 1; }
+    /* a block without a ground of its own gets white at the full width (a .wrap block is narrower than the screen) */
+    :global(:where(.gp--lux > .xi ~ *)) { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
+  }
   .gp--lux .gp__top { position: relative; isolation: isolate; color: #fff; min-height: min(86vh, 860px); box-sizing: border-box;
                       display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; text-align: center; padding-block: 72px; }
   .gp__dark { position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; overflow: hidden;

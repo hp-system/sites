@@ -65,7 +65,9 @@ for (const l of links) {
     if (m) { secTiles.push({ href: l.href, text: l.text, sub: m.fromText, photo: m.photo }); continue; }
     const fs = facetsOf(l.href);
     if (fs || idOf(l.href) === 'P02') { secTiles.push({ href: l.href, text: l.text, photo: photoFor(fs ?? []) }); continue; }
-    text.push(l); continue;
+    // every other link a card too (Sergei 2026-11-19 «сделай ссылки как карточки, как везде»): a cover of an open listing
+    // (watermarked, never the same twice on a page), the link's anchor as its only text
+    secTiles.push({ href: l.href, text: l.text, photo: photoFor([]) }); continue;
   }
   const m = muniOf(l.href);
   if (m) { areaTiles.push({ href: l.href, text: l.text, sub: m.fromText, photo: m.photo }); continue; }

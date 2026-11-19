@@ -58,18 +58,18 @@ form_split: true
 
 | Портал | Рынок |
 | --- | --- |
-| Green Acres | Международный портал |
-| Tranio | Международный портал |
-| James Edition | Международный портал |
-| Luximmo | Болгарский портал |
-| Plot | Греческий портал |
-| Prian | Русскоязычный портал |
-| Spiti 24 | Греческий портал |
-| Spitogatos | Греческий портал |
-| ToSpitiMou | Греческий портал |
-| Xrysi Eukairia (xe.gr) | Греческий портал |
-| Property.bg | Болгарский портал |
-| Suprimmo | Болгарский портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/green-acres.png" alt="Green Acres" width="16" height="16" /> Green Acres | Международный портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/tranio.png" alt="Tranio" width="16" height="16" /> Tranio | Международный портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/jamesedition.png" alt="James Edition" width="16" height="16" /> James Edition | Международный портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/spitogatos.png" alt="Spitogatos" width="16" height="16" /> Spitogatos | Греческий портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/xe.png" alt="Xrysi Eukairia (xe.gr)" width="16" height="16" /> Xrysi Eukairia (xe.gr) | Греческий портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/spiti24.png" alt="Spiti 24" width="16" height="16" /> Spiti 24 | Греческий портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/tospitimou.png" alt="ToSpitiMou" width="16" height="16" /> ToSpitiMou | Греческий портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/plot.png" alt="Plot" width="16" height="16" /> Plot | Греческий портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/luximmo.png" alt="Luximmo" width="16" height="16" /> Luximmo | Болгарский портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/property-bg.png" alt="Property.bg" width="16" height="16" /> Property.bg | Болгарский портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/suprimmo.png" alt="Suprimmo" width="16" height="16" /> Suprimmo | Болгарский портал |
+| <img class="pt-ic" src="/pages/add-your-property/portals/prian.png" alt="Prian" width="16" height="16" /> Prian | Русскоязычный портал |
 
 ## Все порталы из одной точки
 

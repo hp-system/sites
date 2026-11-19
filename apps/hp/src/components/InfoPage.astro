@@ -162,7 +162,7 @@ if (readCar) {
 let carVid = '';
 const secImgs: (MosaicPhoto | null)[] = [];
 let cardsH = '';
-if (readCar && coPage) {
+if (readCar && (coPage || d.section === 'sell')) {
   let b: string = readCar.body;
   // the H3 parts are posts of their own (Values: our people; Responsibility: sports, plans — one post was two screens long)
   if (/<h3[^>]*>/.test(b)) b = b.replace(/<h3[^>]*>/g, '<h2>').replace(/<\/h3>/g, '</h2>');
@@ -173,7 +173,7 @@ if (readCar && coPage) {
   for (const sc of secs) {
     const rest = sc.replace(/<h2>[\s\S]*?<\/h2>/, '').trim();
     if (!rest) { cardsH ||= sc.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? ''; continue; }
-    const im = sc.match(/(?:<p>\s*)?<img\s[^>]*>(?:\s*<\/p>)?/);
+    const im = sc.match(/(?:<p>\s*)?<img\s(?![^>]*pt-ic)[^>]*>(?:\s*<\/p>)?/);   // not a portal's icon in a table
     const inLi = im ? /<li>(?:(?!<\/li>)[\s\S])*$/.test(sc.slice(0, im.index)) : false;
     if (im && !inLi) {
       const src = im[0].match(/src="([^"]+)"/)?.[1] ?? '';
@@ -287,6 +287,15 @@ const PAGE_PH: Record<string, { dir: string; list: PostPh[] }> = {
     stockPh('how-to-reach-us', 'A phone in hand: call or write to us', 'Κινητό στο χέρι: τηλεφωνήστε ή γράψτε μας', 'Телефон в руке: позвоните или напишите нам'),
     ownPic('/pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp', `The office of ${brand.name} next to Thessaloniki airport`, `Το γραφείο της ${brand.name} δίπλα στο αεροδρόμιο της Θεσσαλονίκης`, `Офис ${brand.name} рядом с аэропортом Салоник`),
     stockPh('what-to-send-us', 'Laptop, coffee and notes on a desk: what to send us', 'Laptop, καφές και σημειώσεις σε γραφείο: τι να μας στείλετε', 'Ноутбук, кофе и заметки на столе: что нам прислать'),
+  ] },
+  // Add your property (Sergei 2026-11-19 «на каждую статью SEO скачай соответствующую картинку»); the statistics post keeps
+  // its own picture of the owner's panel (null = the section's own picture)
+  'add-your-property': { dir: '/pages/add-your-property/posts/', list: [
+    stockPh('how-it-works', 'Notes and a tablet with photos: uploading the details of your property', 'Σημειώσεις και tablet με φωτογραφίες: καταχώριση των στοιχείων του ακινήτου σας', 'Заметки и планшет с фото: вы загружаете данные объекта'),
+    stockPh('how-do-i-win', 'A buyer browsing properties on a tablet: every client who asked for what you sell is notified', 'Αγοραστής βλέπει ακίνητα σε tablet: ενημερώνεται κάθε πελάτης που ζήτησε αυτό που πουλάτε', 'Покупатель смотрит объекты на планшете: уведомление получает каждый клиент, который искал то, что вы продаёте'),
+    stockPh('advertise-on-portals', 'People on their laptops in a café: buyers looking at property portals', 'Άνθρωποι με laptop σε καφέ: αγοραστές βλέπουν πύλες ακινήτων', 'Люди с ноутбуками в кафе: покупатели смотрят порталы недвижимости'),
+    stockPh('manage-all-portals-from-one-point', 'A laptop and coffee on a desk: every portal managed from one point', 'Laptop και καφές σε γραφείο: όλες οι πύλες από ένα σημείο', 'Ноутбук и кофе на столе: все порталы из одного места'),
+    null,
   ] },
   'book-an-online-appointment': { dir: '/pages/book-an-online-appointment/posts/', list: [
     null, null,
@@ -413,7 +422,10 @@ const autoPhoto = (() => {
 })();
 // no property photo in memory (the CRM down, a local run): the home page's hero shot, never an empty half
 const heroFallback = !d.desk_image && !autoPhoto && w1 && !d.contact_card ? HERO_SHOTS[0] : undefined;
-const deskImg = prtLogos.length ? '' : d.desk_image || autoPhoto?.url || heroFallback?.url || '';   // Our partners: no top picture
+// a company page with a video (Our story, Values, Philosophy): the video in the top instead of the picture (Sergei
+// 2026-11-19 «убери картинку, вместо неё видео»), not above the posts
+const topVid = coPage && carVid && !prtLogos.length ? carVid : '';
+const deskImg = prtLogos.length || topVid ? '' : d.desk_image || autoPhoto?.url || heroFallback?.url || '';   // Our partners: no top picture
 const deskAlt = d.desk_image ? (d.desk_image_alt || d.h1) : (autoPhoto?.alt || heroFallback?.alt[lang] || heroFallback?.alt.en || d.h1);
 const deskSet = heroFallback ? cleanSrcSet(deskImg) : /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
 const relCards = w1 ? d.related.map((r) => ({
@@ -635,8 +647,9 @@ if (faqItems.length) {
               ))}
               <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
             </nav>
-            <h1 id="ctb-h" class="t-display info-h1">{d.h1}</h1>
-            {d.lead && <p class="ctb__lead">{d.lead}</p>}
+            <h1 id="ctb-h" class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+            {/* a page with its own brief (Sell, Sergei 2026-11-19 «сделай форму в шапке, как мы уже делали»): its intro */}
+            {fresh ? <div class="ctb__lead"><SpecText page={fresh} part="intro" lang={lang} /></div> : d.lead && <p class="ctb__lead">{d.lead}</p>}
             {/* the pre-published list (or its note) under the text (Sergei 2026-11-19 «просто перенеси это вверх к тексту») */}
             {d.widget && <div class="ctb__w"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
             {d.cta && <p class="ctb__cta"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
@@ -713,6 +726,7 @@ if (faqItems.length) {
           </p>
         )}
       </div>
+      {topVid && <div class="w1-top__vid" set:html={topVid} />}
       {deskImg && (
         /* Desktop only: phones get a 1-pixel placeholder and never download the photo. */
         <picture class="w1-top__img w1-d">
@@ -777,7 +791,7 @@ if (faqItems.length) {
            the left, the rest and the button on the right, two even halves */
         const ps = ctPre.html.match(/<p>[\s\S]*?<\/p>/g) ?? [ctPre.html];
         return <div class="wrap rc-pre rc-two"><div class="prose" set:html={ps[0]} /><div><div class="prose" set:html={ps.slice(1).join('')} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div></div>;
-      })() : readPre && !d.form_top && !headPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && <div class="wrap prt-vid" set:html={carVid} />}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} />{coPage && d.cards.length > 0 && (
+      })() : readPre && !d.form_top && !headPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && !topVid && <div class="wrap prt-vid" set:html={carVid} />}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} />{coPage && d.cards.length > 0 && (
         <section class="wrap rc-cards" aria-labelledby="rc-cards-h">
           {cardsH && <h2 id="rc-cards-h" class="rc-cards__h">{cardsH}</h2>}
           {/* Careers (Sergei 2026-11-19 «Open positions что это и почему выглядит так странно»): a list of open positions,
@@ -1246,6 +1260,7 @@ if (faqItems.length) {
   .ctb__sec { display: grid; gap: 12px; align-content: start; }
   .ctb__ad { display: contents; font-style: normal; }
   .ctb__hd { grid-column: 1 / -1; }
+  .ctb__lead :global(p) { margin: 0; font-size: inherit; line-height: inherit; color: inherit; max-width: none; }
   .ctb__lead { margin: 18px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); max-width: 52ch; }
   .ctb__cta { margin: 28px 0 0; }
   .ctb__ph { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin: 28px 0 0; font-size: var(--fs-s0); }
@@ -1295,6 +1310,7 @@ if (faqItems.length) {
     .w1-acts { display: flex !important; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 28px 0 0; font-size: var(--fs-s0); }
     .w1-acts__alt { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
     .w1-top__img { display: block !important; overflow: hidden; }
+    .w1-top__vid :global(figure.vid) { margin: 0 !important; }
     .w1-top__img img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 70%; display: block; }
 
     .w1-how { background: var(--paper-2); padding: 56px 0 48px; }

@@ -118,8 +118,8 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
   </section>
 
   {values.length > 0 && (
-    <section class="co-vals" id="coVals" aria-labelledby="coValsH">
-      <div class="wrap co-g2">
+    <section class="co-vals" id="coVals" aria-labelledby="coValsH" data-co-ppl>
+      <div class="wrap co-g2" data-co-ppl-in>
         <div>
           <p class="co-lbl co-lbl--dk">{valuesL}</p>
           <h2 class="co-zh" id="coValsH">{valuesH2 || valuesL}</h2>
@@ -266,10 +266,15 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     /* «Our people» stays while «Partners» slides over it from below (Sergei 2026-11-19 «между этими двумя блоками сделай
        3D эффект, чтобы нижний налазил на верхний»): sticky inside the page's company part, the blocks after it above it on
        a ground of their own with a soft top shadow; the script sinks and dims it as it is covered */
-    .co-ppl { position: sticky; top: var(--ppl-top, 0px); z-index: 0; background: var(--paper); overflow: hidden; }
-    .co-ppl::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--ppl-dim, 0); pointer-events: none; }
-    .co-ppl > .wrap { transform-origin: 50% 0; will-change: transform; }
-    .co-ppl ~ * { position: relative; z-index: 1; }
+    /* since 2026-11-19 the chain starts at the values («3D пусть начинает налазить от блока Our company's core values»):
+       the values stay and Our people slides over them, then Our people stays and Partners slides over it */
+    .co-vals, .co-ppl { position: sticky; top: var(--ppl-top, 0px); overflow: hidden; }
+    .co-vals { z-index: 0; }
+    .co-ppl { z-index: 1; background: var(--paper); box-shadow: 0 -18px 40px rgba(14, 18, 20, .18); }
+    .co-vals::after, .co-ppl::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--ppl-dim, 0); pointer-events: none; }
+    .co-vals::after { background: #000; }
+    .co-vals > .wrap, .co-ppl > .wrap { transform-origin: 50% 0; will-change: transform; }
+    .co-ppl ~ * { position: relative; z-index: 2; }
     .co-ppl ~ .co-prt { background: var(--paper); box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); }
     .co-prt__hd { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 14px; }
     .co-prt__h { margin: 6px 0 0; font-size: var(--fs-s2); font-weight: 300; letter-spacing: -.016em; line-height: 1.2; color: var(--ink); }
@@ -304,8 +309,8 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
   // ── Company page, desktop (#107) ─────────────────────────────────────────
   const desk = window.matchMedia('(min-width: 1024px)');
   const still = window.matchMedia('(prefers-reduced-motion: reduce)');
-  // «Our people» sinks as «Partners» slides over it (2026-11-19): sticks where its bottom meets the screen's, then 96% and
-  // 25% dim when covered; none with reduced motion
+  // «Our company's core values», then «Our people» sink as the next block slides over each (2026-11-19): each sticks where
+  // its bottom meets the screen's, then 96% and 25% dim when covered; none with reduced motion
   document.querySelectorAll<HTMLElement>('[data-co-ppl]').forEach((ppl) => {
     const inner = ppl.querySelector<HTMLElement>('[data-co-ppl-in]');
     let next = ppl.nextElementSibling as HTMLElement | null;

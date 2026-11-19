@@ -422,7 +422,10 @@ const autoPhoto = (() => {
 })();
 // no property photo in memory (the CRM down, a local run): the home page's hero shot, never an empty half
 const heroFallback = !d.desk_image && !autoPhoto && w1 && !d.contact_card ? HERO_SHOTS[0] : undefined;
-const deskImg = prtLogos.length ? '' : d.desk_image || autoPhoto?.url || heroFallback?.url || '';   // Our partners: no top picture
+// a company page with a video (Our story, Values, Philosophy): the video in the top instead of the picture (Sergei
+// 2026-11-19 «убери картинку, вместо неё видео»), not above the posts
+const topVid = coPage && carVid && !prtLogos.length ? carVid : '';
+const deskImg = prtLogos.length || topVid ? '' : d.desk_image || autoPhoto?.url || heroFallback?.url || '';   // Our partners: no top picture
 const deskAlt = d.desk_image ? (d.desk_image_alt || d.h1) : (autoPhoto?.alt || heroFallback?.alt[lang] || heroFallback?.alt.en || d.h1);
 const deskSet = heroFallback ? cleanSrcSet(deskImg) : /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
 const relCards = w1 ? d.related.map((r) => ({
@@ -723,6 +726,7 @@ if (faqItems.length) {
           </p>
         )}
       </div>
+      {topVid && <div class="w1-top__vid" set:html={topVid} />}
       {deskImg && (
         /* Desktop only: phones get a 1-pixel placeholder and never download the photo. */
         <picture class="w1-top__img w1-d">
@@ -787,7 +791,7 @@ if (faqItems.length) {
            the left, the rest and the button on the right, two even halves */
         const ps = ctPre.html.match(/<p>[\s\S]*?<\/p>/g) ?? [ctPre.html];
         return <div class="wrap rc-pre rc-two"><div class="prose" set:html={ps[0]} /><div><div class="prose" set:html={ps.slice(1).join('')} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div></div>;
-      })() : readPre && !d.form_top && !headPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && <div class="wrap prt-vid" set:html={carVid} />}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} />{coPage && d.cards.length > 0 && (
+      })() : readPre && !d.form_top && !headPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && !topVid && <div class="wrap prt-vid" set:html={carVid} />}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} />{coPage && d.cards.length > 0 && (
         <section class="wrap rc-cards" aria-labelledby="rc-cards-h">
           {cardsH && <h2 id="rc-cards-h" class="rc-cards__h">{cardsH}</h2>}
           {/* Careers (Sergei 2026-11-19 «Open positions что это и почему выглядит так странно»): a list of open positions,
@@ -1306,6 +1310,7 @@ if (faqItems.length) {
     .w1-acts { display: flex !important; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 28px 0 0; font-size: var(--fs-s0); }
     .w1-acts__alt { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
     .w1-top__img { display: block !important; overflow: hidden; }
+    .w1-top__vid :global(figure.vid) { margin: 0 !important; }
     .w1-top__img img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 70%; display: block; }
 
     .w1-how { background: var(--paper-2); padding: 56px 0 48px; }

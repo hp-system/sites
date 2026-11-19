@@ -161,7 +161,7 @@ const jsonLd: unknown[] = [
           <p id="gst-h" class="gst__h">{stepH[0]}{stepH[1] && <><span class="sr-only">: </span><span class="gst__sub">{stepH[1]}</span></>}</p>
           <ol class="gst__path" style={`--n: ${stepSrc.steps.length}`}>
             {stepSrc.steps.map((x, i) => (
-              <li class:list={['gst__st', i % 2 ? 'gst__st--lo' : 'gst__st--hi', i === stepSrc.steps.length - 1 && 'gst__st--end']} style={`--c: ${i + 1}`}>
+              <li class:list={['gst__st', i % 2 ? 'gst__st--lo' : 'gst__st--hi', i === stepSrc.steps.length - 1 && 'gst__st--end']} style={`--c: ${i + 1}`} tabindex="0" data-gst-i={i}>
                 <span class="gst__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <span class="gst__tx"><b>{x.t}</b><span set:html={x.d} /></span>
               </li>
@@ -290,10 +290,25 @@ const jsonLd: unknown[] = [
     .gst__st--hi .gst__tx { grid-row: 1; align-self: end; padding-bottom: 20px; }
     .gst__st--lo .gst__tx { grid-row: 3; align-self: start; padding-top: 20px; }
     .gst__tx > span { font-size: var(--fs-s0); font-weight: 300; line-height: 1.5; }
+    /* pointing at a step (Sergei 2026-11-19): the path up to it stays, the steps after it fade — how far to the notary */
+    .gst__st { transition: opacity .25s ease; cursor: default; }
+    .gst__st:focus-visible { outline: 2px solid var(--brand); outline-offset: 6px; }
+    .gst__path.is-on .gst__st:not(.on) { opacity: .22; }
+    .gst__path.is-on .gst__st.at .gst__tx b { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
   }
+  @media (prefers-reduced-motion: reduce) { .gst__st { transition: none; } }
 </style>
 
 <script>
+  // pointing at a step (or focusing it): the steps up to it stay, the ones after it fade
+  document.querySelectorAll<HTMLElement>('.gst__path').forEach((path) => {
+    const sts = [...path.querySelectorAll<HTMLElement>('[data-gst-i]')];
+    const show = (k: number) => { path.classList.add('is-on'); sts.forEach((x, i) => { x.classList.toggle('on', i <= k); x.classList.toggle('at', i === k); }); };
+    const clear = () => { path.classList.remove('is-on'); sts.forEach((x) => x.classList.remove('on', 'at')); };
+    sts.forEach((x, i) => { x.addEventListener('pointerenter', () => show(i)); x.addEventListener('focus', () => show(i)); });
+    path.addEventListener('pointerleave', clear);
+    path.addEventListener('focusout', (e) => { if (!path.contains(e.relatedTarget as Node)) clear(); });
+  });
   // the steps band sinks as the page slides over it (desktop; none with reduced motion): it sticks where its bottom meets
   // the screen's bottom, then scales down to 94% and dims to 35% while the next block covers it
   const band = document.querySelector<HTMLElement>('[data-gst]');

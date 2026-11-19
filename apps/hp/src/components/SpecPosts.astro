@@ -141,7 +141,7 @@ const look = 'ch';
     .pn--ch :global(.sp--car .sp__b) { overflow: hidden; }
     /* step 1 for a long post: its text in two columns */
     .pn--ch :global(.sp__b.is-cols .sp__tx) { columns: 2; column-gap: 48px; }
-    .pn--ch :global(.sp__b.is-cols .sp__tx > *) { break-inside: avoid; }
+    .pn--ch :global(.sp__b.is-cols .sp__tx li), .pn--ch :global(.sp__b.is-cols .sp__tx h3) { break-inside: avoid; }
     /* last step, a post that does not fit one screen even so: the stage grows to the longest post (every post the
        same height, so the box still does not jump), the page scrolls, never the post */
     .pn__stage.is-tall { height: auto !important; min-height: 100svh; }
@@ -213,13 +213,16 @@ const look = 'ch';
         bs.forEach((b) => { b.classList.remove('is-cols'); [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = ''; }); });
         if (!staged()) return;
         let tall = false;
+        const zoomTo = (b: HTMLElement, z: string) => [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = z; });
+        const shrink = (b: HTMLElement) => { for (let z = 95; over(b) && z >= 80; z -= 5) zoomTo(b, String(z / 100)); };
         bs.forEach((b) => {
-          const kids = [...b.children] as HTMLElement[];
-          if (over(b) && b.clientWidth > 640) b.classList.add('is-cols');
-          for (let z = 95; over(b) && z >= 80; z -= 5) kids.forEach((k) => { k.style.zoom = String(z / 100); });
+          if (!over(b)) return;
+          shrink(b);   // a little smaller first, one column
+          if (over(b) && b.clientWidth > 640) { zoomTo(b, ''); b.classList.add('is-cols'); shrink(b); }   // then two columns
           if (over(b)) tall = true;
         });
-        if (tall) { bs.forEach((b) => [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = ''; })); stage?.classList.add('is-tall'); }
+        // the stage grows: every post back to one column at its full size
+        if (tall) { bs.forEach((b) => { b.classList.remove('is-cols'); zoomTo(b, ''); }); stage?.classList.add('is-tall'); }
       };
       fit();
       addEventListener('resize', fit);

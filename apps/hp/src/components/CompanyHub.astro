@@ -142,8 +142,8 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
   )}
 
   {peopleH && (
-    <section class="co-ppl" aria-labelledby="coPplH">
-      <div class="wrap co-g2 co-g2--mid">
+    <section class="co-ppl" aria-labelledby="coPplH" data-co-ppl>
+      <div class="wrap co-g2 co-g2--mid" data-co-ppl-in>
         <div>
           <p class="co-lbl">{peopleH}</p>
           <h2 class="co-zh" id="coPplH">{peopleH}</h2>
@@ -168,8 +168,9 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
           </div>
           <a class="co-prt__all" href={partnersPg.data.path}>{tt('co.all_partners')} <span aria-hidden="true">›</span></a>
         </div>
-        <LogoMarquee logos={logos} />
       </div>
+      {/* every partner's logo across the whole screen (Sergei 2026-11-19 «картинки всех партнёров пусть будут на весь экран») */}
+      <div class="co-prt__mq"><LogoMarquee logos={logos} full /></div>
     </section>
   )}
 
@@ -256,6 +257,15 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
 
     /* ── partners: the logos float by, held under the pointer ── */
     .co-prt { padding: 32px 0 30px; }
+    .co-prt__mq { margin-top: 18px; }
+    /* «Our people» stays while «Partners» slides over it from below (Sergei 2026-11-19 «между этими двумя блоками сделай
+       3D эффект, чтобы нижний налазил на верхний»): sticky inside the page's company part, the blocks after it above it on
+       a ground of their own with a soft top shadow; the script sinks and dims it as it is covered */
+    .co-ppl { position: sticky; top: var(--ppl-top, 0px); z-index: 0; background: var(--paper); overflow: hidden; }
+    .co-ppl::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--ppl-dim, 0); pointer-events: none; }
+    .co-ppl > .wrap { transform-origin: 50% 0; will-change: transform; }
+    .co-ppl ~ * { position: relative; z-index: 1; }
+    .co-ppl ~ .co-prt { background: var(--paper); box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); }
     .co-prt__hd { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 14px; }
     .co-prt__h { margin: 6px 0 0; font-size: var(--fs-s2); font-weight: 300; letter-spacing: -.016em; line-height: 1.2; color: var(--ink); }
     .co-prt__p { margin: 6px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
@@ -289,6 +299,27 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
   // ── Company page, desktop (#107) ─────────────────────────────────────────
   const desk = window.matchMedia('(min-width: 1024px)');
   const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // «Our people» sinks as «Partners» slides over it (2026-11-19): sticks where its bottom meets the screen's, then 96% and
+  // 25% dim when covered; none with reduced motion
+  document.querySelectorAll<HTMLElement>('[data-co-ppl]').forEach((ppl) => {
+    const inner = ppl.querySelector<HTMLElement>('[data-co-ppl-in]');
+    let next = ppl.nextElementSibling as HTMLElement | null;
+    while (next && next.offsetHeight === 0) next = next.nextElementSibling as HTMLElement | null;
+    let raf = 0;
+    const place = () => ppl.style.setProperty('--ppl-top', `${Math.min(0, window.innerHeight - ppl.offsetHeight)}px`);
+    const tick = () => {
+      raf = 0;
+      if (!inner || !next || !desk.matches || still.matches) { if (inner) inner.style.transform = ''; ppl.style.setProperty('--ppl-dim', '0'); return; }
+      const r = ppl.getBoundingClientRect();
+      const covered = Math.min(1, Math.max(0, (r.bottom - next.getBoundingClientRect().top) / r.height));
+      inner.style.transform = `scale(${1 - covered * 0.04})`;
+      ppl.style.setProperty('--ppl-dim', String(covered * 0.25));
+    };
+    const ask = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    place(); tick();
+    window.addEventListener('scroll', ask, { passive: true });
+    window.addEventListener('resize', () => { place(); ask(); });
+  });
   const root = document.querySelector<HTMLElement>('.co');
   if (root) {
     // ── values: one at a time, the next every 3.5 s; held under the pointer; a dash shows its value ──

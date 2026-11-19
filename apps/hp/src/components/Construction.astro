@@ -186,7 +186,9 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     const rail = win.querySelector<HTMLElement>('[data-cx-rail]');
     // the first block after the cards that takes room (a script or a hidden band in between is skipped)
     let next = win.nextElementSibling as HTMLElement | null;
-    while (next && (next.offsetHeight === 0 || getComputedStyle(next).display === 'none')) next = next.nextElementSibling as HTMLElement | null;
+    while (next && (getComputedStyle(next).display === 'contents' ? false : (next.offsetHeight === 0 || getComputedStyle(next).display === 'none'))) next = next.nextElementSibling as HTMLElement | null;
+    // a wrapper laid out as display: contents (the home «abroad» bands) stands for its first child
+    if (next && getComputedStyle(next).display === 'contents') next = next.firstElementChild as HTMLElement | null;
     next?.classList.add('cx-next');
     const desk = matchMedia('(min-width: 1024px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
     let raf = 0;

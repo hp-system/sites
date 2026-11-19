@@ -21,9 +21,6 @@ import registry from '../data/page-registry.json';
 import SpecPosts from './SpecPosts.astro';
 import PageBlocks from './PageBlocks.astro';
 import ExclusiveIntro from './ExclusiveIntro.astro';
-import ExclusiveCinema from './ExclusiveCinema.astro';
-import { coverOf, heroReady, altOf } from '../lib/photos';
-import { priceOf, priceVisible } from '../lib/api';
 import { pageBlocks } from '../lib/list-blocks';
 import Areas from './Areas.astro';
 import { FAQ_H } from '../lib/seo-pages';
@@ -63,7 +60,15 @@ const abs = (u: string) => siteRoot + encodeURI(u);
 const memberToken = Astro.cookies.get('member_token')?.value;
 let items: SiteProperty[] = [];
 try { items = await allProperties(memberToken, visitorCountry(Astro.request)); } catch { items = []; }
-const photos = postPhotos(items as any, (page.body.match(/<h2>/g) ?? []).length, lang);
+// fixed photos per post win (as on Sell: a CC0 stock photo of the topic, not a property, so no watermark; Exclusive since
+// 2026-11-16 «на каждый артикл нужна картинка подходящая»); the others take an open property photo as before
+const autoPhotos = postPhotos(items as any, (page.body.match(/<h2>/g) ?? []).length, lang);
+const photos = page.postPhotos?.length
+  ? (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h, i) => {
+      const pp = page.postPhotos!.find((x) => x.after === h.replace(/<[^>]+>/g, '').trim());
+      return pp ? { src: `${pp.file}_960w.webp`, srcset: `${pp.file}_640w.webp 640w, ${pp.file}_960w.webp 960w`, alt: pp.alt, style: '' } : autoPhotos[i] ?? null;
+    })
+  : autoPhotos;
 const areas = buildAreaTiles(items as any, lang, undefined, 5);
 // #275 (Sergei 2026-11-12): the home-style Collections and «by area» above the text (they were under the form at the
 // bottom); George's links they show leave the sections
@@ -76,25 +81,26 @@ const cta = page.ctaHref && page.cta
     : { text: page.cta, href: form ? '#gp-form' : page.ctaHref, ev: 'content:sell' as const, gild: false }
   : null;
 // Exclusive (Sergei 2026-11-16): the luxury face of the company — a black top, large thin type, gold only on the call,
-// slow motion, and the photo replaced by a slow film of the dearest open properties (sea first), €1M and up.
+// slow motion; no photo behind the words (Sergei 2026-11-16, ExclusiveCinema no longer used).
 const lux = page.id === 'P52';
 const luxH1 = lux && /^[^:]{2,30}:\s+\S/.test(page.h1) ? [page.h1.split(/:\s+/)[0], page.h1.replace(/^[^:]+:\s+/, '')] as [string, string] : null;
-const cinema = (() => {
-  if (!lux) return [];
-  const sea = (a: any) => a?.sea_access === 'front' || (Array.isArray(a?.views) && a.views.includes('sea'));
-  const pool = items.filter((p) => { const a = (p.attributes ?? {}) as any; return priceVisible(a) && priceOf(a) >= 1_000_000 && heroReady(a); })
-    .sort((x, y) => Number(sea(y.attributes)) - Number(sea(x.attributes)) || priceOf((y.attributes ?? {}) as any) - priceOf((x.attributes ?? {}) as any));
-  const seen = new Set<string>();
-  const out: { photo: NonNullable<ReturnType<typeof coverOf>>; alt: string }[] = [];
-  for (const p of pool) {
-    const c = coverOf((p.attributes ?? {}) as any);
-    if (!c || seen.has(c.url)) continue;
-    seen.add(c.url);
-    out.push({ photo: c, alt: altOf(c, lang, imageAlt) });
-    if (out.length === 5) break;
-  }
-  return out;
-})();
+// Buying property in Greece (Sergei 2026-11-19 «давай линию, но на весь экран на всю ширину, тогда эти части текстов
+// можно убрать с SEO-блока; сделай это сразу под шапкой»): the step list of the guide — a line before it and six or more
+// points that each open with their name in bold — leaves its post and is drawn as one path across the screen right
+// under the top; the post keeps its heading and its other paragraphs. Only where the language's text has such a list
+// (each language has its own text).
+const stepSrc = page.id === 'P19'
+  ? (page.body.split(/(?=<h2>)/).map((sc) => {
+      const m = sc.match(/<p>([^<]*)<\/p>\s*<ul>([\s\S]*?)<\/ul>/);
+      if (!sc.startsWith('<h2>') || !m) return null;
+      const lis = [...m[2].matchAll(/<li>\s*<strong>([\s\S]*?)<\/strong>\s*([\s\S]*?)<\/li>/g)];
+      const all = (m[2].match(/<li>/g) ?? []).length;
+      return lis.length >= 6 && lis.length === all
+        ? { h: sc.match(/<h2>([\s\S]*?)<\/h2>/)![1], lead: m[1], cut: m[0], steps: lis.map((x) => ({ t: x[1].replace(/[.:]\s*$/, ''), d: x[2].trim() })) }
+        : null;
+    }).find(Boolean) ?? null)
+  : null;
+const postsPage = stepSrc ? { ...page, body: page.body.replace(stepSrc.cut, '') } : page;
 const crumbs = page.breadcrumb.map((name, i, a) => ({ name, url: i === 0 ? (prefix(lang) || '/') : i === a.length - 1 ? page.path : crumbPath(name, lang) }));
 
 const jsonLd: unknown[] = [
@@ -124,7 +130,16 @@ const jsonLd: unknown[] = [
         {/* existing event names only (B-11, lib/track.ts): the club page is a sign-in call, the sell pages a seller call */}
         {cta && <p class="gp__cta"><a class:list={['k-act', cta.gild && 'k-gild', lux && 'k-gild--dk']} href={cta.href} data-ev={cta.ev === 'register:info' ? 'register:info' : 'content:sell'}>{cta.text}</a></p>}
       </div>
-      {lux && cinema.length > 0 ? <div class="gp__img" aria-hidden="true"><ExclusiveCinema shots={cinema} /></div> : image && (
+      {/* Sergei 2026-11-16: no photo behind the words (the watermarked covers full-width did not suit) — black, a slow
+          light and the home Secret Portfolio's thin lock */}
+      {lux ? (
+        <div class="gp__dark" aria-hidden="true">
+          <svg class="gp__lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".35" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4.5" y="10.5" width="15" height="11"></rect><path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"></path>
+            <circle cx="12" cy="15.4" r="1.3"></circle><path d="M12 16.7v2.1"></path>
+          </svg>
+        </div>
+      ) : image && (
         /* desktop only: phones get a 1-pixel placeholder and never download the photo */
         <picture class="gp__img">
           <source media="(min-width: 1024px)" srcset={heroSet} sizes="(min-width: 1440px) 680px, 47vw" />
@@ -134,8 +149,24 @@ const jsonLd: unknown[] = [
     </header>
     {/* Exclusive (Sergei 2026-11-16): what the club is, right under the top, instead of the general Collections / by-area
         tiles (homes from €25,000 on a €1M club page); their links stay in the sections below (no drop) */}
+    {stepSrc && (
+      <section class="gst" aria-labelledby="gst-h" data-gst>
+        <div class="gst__in" data-gst-in>
+          <p id="gst-h" class="gst__h">{stepSrc.h}</p>
+          <p class="gst__lead">{stepSrc.lead}</p>
+          <ol class="gst__path" style={`--n: ${stepSrc.steps.length}`}>
+            {stepSrc.steps.map((x, i) => (
+              <li class:list={['gst__st', i % 2 ? 'gst__st--lo' : 'gst__st--hi', i === stepSrc.steps.length - 1 && 'gst__st--end']} style={`--c: ${i + 1}`}>
+                <span class="gst__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span class="gst__tx"><b>{x.t}</b><span set:html={x.d} /></span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )}
     {page.id === 'P52' ? <ExclusiveIntro lang={lang} cta={cta} /> : <PageBlocks lang={lang} cats={blocks.cats} areas={blocks.areas} areasFrom={blocks.areasFrom} />}
-    <SpecPosts page={page} lang={lang} photos={photos} faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={cta} drop={page.id === 'P52' ? undefined : blocks.consumed} />
+    <SpecPosts page={postsPage} lang={lang} photos={photos} faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={cta} drop={page.id === 'P52' ? undefined : blocks.consumed} />
     {kids.length > 0 && (
       <section class="wrap gp__kids" aria-labelledby="gp-kids-h">
         <p data-h id="gp-kids-h" class="gp__label">{page.name}</p>
@@ -173,16 +204,22 @@ const jsonLd: unknown[] = [
   .gp__kids ul { margin: var(--s3) 0 0; padding: 0; list-style: none; display: grid; gap: var(--s2); grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
   .gp__label { margin: 0; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
-  /* ── Exclusive, the luxury face (Sergei 2026-11-16): a white header bar; the first screen a full-width film of the
-     dearest properties (ExclusiveCinema) under a dark veil, everything centred, large thin type, gold only on the
-     registration call, slow motion. George's tokens only: --ink-deep for the veil, white text, k-gild--dk. ── */
+  /* ── Exclusive, the luxury face (Sergei 2026-11-16): a white header bar; the first screen black (--ink-deep, the
+     Secret Portfolio black) with a soft light that drifts slowly and a big faint thin lock behind the words — no photo
+     («чёрный без фото»: the watermarked covers full-width did not suit); everything centred, large thin type, gold only
+     on the registration call, slow motion. ── */
   .gp--lux { overflow-x: clip; }
   .gp--lux .gp__top { position: relative; isolation: isolate; color: #fff; min-height: min(86vh, 860px); box-sizing: border-box;
                       display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; text-align: center; padding-block: 72px; }
-  .gp--lux .gp__img { display: block; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
-                      z-index: -2; overflow: hidden; }
-  .gp--lux .gp__top::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1;
-                              background: linear-gradient(180deg, rgba(11,14,16,.62) 0%, rgba(11,14,16,.46) 45%, rgba(11,14,16,.7) 100%); }
+  .gp__dark { position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; overflow: hidden;
+              background: var(--ink-deep); color: #fff; }
+  /* the light: one soft white glow, far larger than the screen, wandering slowly (24 s a lap) */
+  .gp__dark::before { content: ''; position: absolute; inset: -40%;
+    background: radial-gradient(closest-side, rgba(255,255,255,.075), rgba(255,255,255,0) 70%) 30% 40% / 60% 60% no-repeat;
+    animation: gp-glow 24s ease-in-out infinite alternate; }
+  @keyframes gp-glow { 0% { transform: translate(-6%, -4%); } 50% { transform: translate(8%, 6%); } 100% { transform: translate(-2%, 8%); } }
+  .gp__lock { position: absolute; left: 50%; top: 50%; width: min(70vh, 560px); height: auto; transform: translate(-50%, -52%); opacity: .06; }
+  @media (prefers-reduced-motion: reduce) { .gp__dark::before { animation: none; } }
   .gp--lux .gp__txt { justify-items: center; max-width: 1180px; margin-inline: auto; }   /* wider, not squeezed (Sergei 2026-11-16) */
   .gp--lux .gp__crumb, .gp--lux .gp__crumb a { color: rgba(255,255,255,.7); }
   .gp--lux .gp__h1 { color: #fff; max-width: 26ch; margin-inline: auto; }
@@ -207,4 +244,67 @@ const jsonLd: unknown[] = [
     .gp--lux .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.04; letter-spacing: -.024em; }
     .gp--lux .gp__h1--split { max-width: none; font-size: var(--fs-s4); }
   }
+
+  /* ── the guide's steps as one path across the screen (Sergei 2026-11-19); phones: a numbered column ── */
+  .gst { background: var(--paper); border-top: 1px solid var(--line-soft); }
+  .gst__in { padding: var(--s6) var(--gut); }
+  .gst__h { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.12; letter-spacing: -.016em; color: var(--ink); }
+  .gst__lead { margin: 10px 0 0; font-size: var(--fs-s0); color: var(--muted); }
+  .gst__path { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: 0; }
+  .gst__st { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); }
+  .gst__n { font-size: var(--fs-s3); font-weight: 300; line-height: 1; letter-spacing: -.02em; color: var(--ink); }
+  .gst__st--end .gst__n { justify-self: start; align-self: start; padding: 4px 8px; background: var(--ink); color: var(--paper); }
+  .gst__tx b { display: block; font-size: var(--fs-s0); font-weight: 600; line-height: 1.3; color: var(--ink); }
+  .gst__tx > span { display: block; margin-top: 6px; font-size: var(--fs-s-1); line-height: 1.55; color: var(--ink-2); }
+  @media (min-width: 1000px) {
+    /* depth (Sergei 2026-11-19 «сделай эту секцию в глубину как 3D эффект, пусть сайт скроллится над ней»): the band
+       stays where it is and the page slides over it with a soft shadow; the script sinks it a little as it is covered */
+    .gst { position: sticky; top: var(--gst-top, 0px); z-index: 0; overflow: hidden; }
+    .gst__in { transform-origin: 50% 0; will-change: transform; }
+    .gst::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--gst-dim, 0); pointer-events: none; }
+    :global(.gp > .gst ~ *) { position: relative; z-index: 1; }
+    :global(:where(.gp > .gst ~ *)) { background: var(--paper); }   /* only where a block has no ground of its own (zero specificity) */
+    :global(.gp > .gst + *) { box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); }
+    .gst__in { padding: 56px max(var(--gut), 4vw) 64px; }
+    .gst__h { font-size: var(--fs-s4); }
+    /* one line across the whole width, a station per step; the steps stand above and below it in turn */
+    .gst__path { position: relative; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); grid-template-rows: auto 64px auto; column-gap: 24px; margin-top: 48px; }
+    .gst__st { grid-column: var(--c); grid-row: 1 / 4; display: grid; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0; border: 0; }
+    .gst__n { grid-row: 2; grid-column: 1; align-self: center; justify-self: start; position: relative; z-index: 1; padding-inline-end: 12px; background: var(--paper); font-size: var(--fs-s3); }
+    /* the line runs through the numbers' row, across each column and its gap */
+    .gst__st::before { content: ""; grid-row: 2; grid-column: 1; align-self: center; height: 1px; margin-inline-end: -24px; background: var(--ink); }
+    .gst__st:last-child::before { margin-inline-end: 0; }
+    .gst__st--end .gst__n { padding: 6px 12px; background: var(--ink); color: var(--paper); align-self: center; }
+    .gst__tx { padding-inline-start: 14px; border-inline-start: 1px solid var(--line); }
+    .gst__st--hi .gst__tx { grid-row: 1; align-self: end; padding-bottom: 20px; }
+    .gst__st--lo .gst__tx { grid-row: 3; align-self: start; padding-top: 20px; }
+    .gst__tx > span { font-size: var(--fs-s0); font-weight: 300; line-height: 1.5; }
+  }
 </style>
+
+<script>
+  // the steps band sinks as the page slides over it (desktop; none with reduced motion): it sticks where its bottom meets
+  // the screen's bottom, then scales down to 94% and dims to 35% while the next block covers it
+  const band = document.querySelector<HTMLElement>('[data-gst]');
+  const inner = band?.querySelector<HTMLElement>('[data-gst-in]');
+  if (band && inner) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wide = matchMedia('(min-width: 1000px)');
+    let raf = 0;
+    const place = () => { band.style.setProperty('--gst-top', `${Math.min(0, innerHeight - band.offsetHeight)}px`); };
+    const tick = () => {
+      raf = 0;
+      if (!wide.matches || still) { inner.style.transform = ''; band.style.setProperty('--gst-dim', '0'); return; }
+      const next = band.nextElementSibling as HTMLElement | null;
+      if (!next) return;
+      const b = band.getBoundingClientRect();
+      const covered = Math.min(1, Math.max(0, (b.bottom - next.getBoundingClientRect().top) / b.height));
+      inner.style.transform = `scale(${1 - covered * 0.06})`;
+      band.style.setProperty('--gst-dim', String(covered * 0.35));
+    };
+    const ask = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    place(); tick();
+    addEventListener('scroll', ask, { passive: true });
+    addEventListener('resize', () => { place(); ask(); });
+  }
+</script>

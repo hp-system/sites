@@ -47,6 +47,7 @@ import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
+import LogoMarquee from './LogoMarquee.astro';
 import SpecPosts from './SpecPosts.astro';
 import ReadPage from './ReadPage.astro';
 import FaqSearch from './FaqSearch.astro';
@@ -108,10 +109,198 @@ const readHeads = headings.filter((h) => h.depth === 2 && h.text.trim()).map((h)
 // A Sell page without an own brief (Add your property…): its H2 sections as the paged posts of the Sell canon (SpecPosts
 // carousel, side list turns it) instead of one long column (Sergei 2026-11-16: «должно быть перелистываемыми блоками»).
 // Only Sell pages that are plain text (legal texts, FAQ and pages with widgets or cards keep the reading layout).
-const readHtml: string = (page as any).rendered?.html ?? '';
-const readCar = d.section === 'sell' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /^\s*<h2/.test(readHtml)
-  ? ({ body: readHtml.replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
+const readHtmlAll: string = (page as any).rendered?.html ?? '';
+// Our partners (Sergei 2026-11-19): a page whose text carries a logo gallery shows it as the floating strip at the full
+// width under its centred intro, the video under the strip, then the posts at the normal size, without the logos
+const logoBlock = readHtmlAll.match(/<div class="gallery logos">[\s\S]*?<\/div>/)?.[0] ?? '';
+const prtLogos = [...logoBlock.matchAll(/<img src="([^"]+)" alt="([^"]*)"/g)].map((m) => ({ src: m[1], alt: m[2] }));
+const readHtml0: string = logoBlock ? readHtmlAll.replace(logoBlock, '') : readHtmlAll;
+// Construction (Sergei 2026-11-19 «сео блок сделай нормальной высоты»): the section that is a gallery of projects leaves
+// the posts and stands as its own block of photo tiles under the top band, its H2 as the block's heading
+const projSec = readHtml0.match(/<h2[^>]*>([^<]*)<\/h2>\s*(<div class="gallery projects">[\s\S]*?<\/div>)/);
+const projH2 = projSec?.[1] ?? '';
+const projFigs = projSec ? [...projSec[2].matchAll(/<figure>[\s\S]*?<\/figure>/g)].map((m) => m[0]) : [];
+const readHtml: string = projSec ? readHtml0.replace(projSec[0], '') : readHtml0;
+// Since 2026-11-16 every plain text page but the legal texts (Sergei on Contact: «ети блоки же должны быть блоками
+// прокручиваемыми … мы же делали паттерн для етого»); the «Add your property» button only on Sell pages.
+// the text before the first H2 (Contact, Careers…) stays above the carousel as the page's intro
+const readPre = readHtml.includes('<h2') ? readHtml.slice(0, readHtml.indexOf('<h2')).trim() : '';
+const readPreAll = readPre;
+const prtVid = prtLogos.length ? readPreAll.match(/<figure class="vid"[\s\S]*?<\/figure>/)?.[0] ?? '' : '';
+const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
+// …its top as the home page's dark band «We do the rest for you.» (Sergei 2026-11-19): the H1 on the left, George's
+// intro on the right at the text size, every sentence the same («этот текст одинакового размера, не увеличивай»)
+// Pre-published (Sergei 2026-11-19 «сделай SEO-блок как он должен быть сейчас»): a page with the pre-published list takes
+// the SEO block too; the list stands as its own block above it
+// About us (Sergei 2026-11-19 «иди в каждую страницу в about us и сделай блоки SEO как нужно»): the company pages take the
+// block too — one section is enough there (Philosophy), and the cards (Careers' open positions) stand as a block under it
+const coPage = d.section === 'company';
+// a company page without a lead (Careers): its text before the first H2 stands under the H1 (Sergei 2026-11-19 «перенеси к
+// заголовку»), not above the posts
+const headPre = coPage && !d.lead && !d.contact_card && !d.form_top && readHeads.length > 0 ? readPre : '';
+const readCar = d.section !== 'legal' && (readHeads.length > 1 || (coPage && readHeads.length >= 1)) && (!d.widget || d.widget === 'prepublished')
+  && (d.cards.length === 0 || coPage) && d.faq.length === 0 && /<h2/.test(readHtml)
+  ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
+// two sections under the same H2 (Construction has «Build with us» twice) are one post: the second one's text joins
+// the first, nothing is lost, and the menu does not show the same title twice with both marked
+if (readCar) {
+  const secs: string[] = readCar.body.split(/(?=<h2>)/).filter((x: string) => x.trim());
+  const seen = new Map<string, number>();
+  const out: string[] = [];
+  for (const sc of secs) {
+    const h = sc.match(/<h2>([\s\S]*?)<\/h2>/)?.[1].trim() ?? '';
+    if (h && seen.has(h)) { out[seen.get(h)!] += sc.replace(/<h2>[\s\S]*?<\/h2>/, ''); continue; }
+    if (h) seen.set(h, out.length);
+    out.push(sc);
+  }
+  readCar.body = out.join('');
+}
+// company pages: a page of one H2 with H3 parts (Values: the values, our people) — the parts are the posts; a video in
+// the text stands centred above the block (as on Our partners); a picture standing on its own in a section becomes that
+// post's photo; a section with no text (Careers' «Open positions») leaves the posts and heads the cards block instead
+let carVid = '';
+const secImgs: (MosaicPhoto | null)[] = [];
+let cardsH = '';
+if (readCar && coPage) {
+  let b: string = readCar.body;
+  // the H3 parts are posts of their own (Values: our people; Responsibility: sports, plans — one post was two screens long)
+  if (/<h3[^>]*>/.test(b)) b = b.replace(/<h3[^>]*>/g, '<h2>').replace(/<\/h3>/g, '</h2>');
+  carVid = b.match(/<figure class="vid"[\s\S]*?<\/figure>/)?.[0] ?? '';
+  if (carVid) b = b.replace(carVid, '');
+  const secs = b.split(/(?=<h2>)/).filter((x) => x.trim());
+  const kept: string[] = [];
+  for (const sc of secs) {
+    const rest = sc.replace(/<h2>[\s\S]*?<\/h2>/, '').trim();
+    if (!rest) { cardsH ||= sc.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? ''; continue; }
+    const im = sc.match(/(?:<p>\s*)?<img\s[^>]*>(?:\s*<\/p>)?/);
+    const inLi = im ? /<li>(?:(?!<\/li>)[\s\S])*$/.test(sc.slice(0, im.index)) : false;
+    if (im && !inLi) {
+      const src = im[0].match(/src="([^"]+)"/)?.[1] ?? '';
+      const alt = im[0].match(/alt="([^"]*)"/)?.[1] ?? '';
+      secImgs.push(src ? { src, srcset: '', alt, style: '' } : null);
+      kept.push(sc.replace(im[0], ''));
+    } else { secImgs.push(null); kept.push(sc); }
+  }
+  readCar.body = kept.join('');
+}
+// Our partners (Sergei 2026-11-19 «первая статья может пойти просто заголовком над видео, а статей будет 3»): the first
+// section leaves the posts and stands as the heading over the video; the other three get a picture each
+const prtFirst = (() => {
+  if (!readCar || !prtLogos.length) return null;
+  const b: string = readCar.body;
+  const i2 = b.indexOf('<h2', 4);
+  if (i2 < 0) return null;
+  const sec = b.slice(0, i2);
+  readCar.body = b.slice(i2);
+  return { h2: sec.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '', html: sec.replace(/<h2>[\s\S]*?<\/h2>/, '').trim() };
+})();
+const prtHeads = prtFirst ? readHeads.slice(1) : readHeads;
+// a CC0 photo per post (Sergei 2026-11-19 «найди фото в хорошем разрешении в интернете … и сразу сео в них тоже делай»):
+// a bright kitchen and living room (materials, windows, kitchens, interiors), a builder with the plans in front of a
+// house going up (renovate, furnish, build), a handshake (working with us); sources in public/pages/our-partners/posts/
+// SOURCES.json. SEO: the file is named after its post, the alt says what the photo shows and ties it to the post, in
+// the page's language
+const PRT_DIR = '/pages/our-partners/posts/';
+const PRT_PH = [
+  { f: 'who-our-partners-are', w: [640, 960], alt: {
+    en: 'Bright kitchen and dining area with white cabinets, tiles and large windows: materials, kitchens and interiors from our partners',
+    el: 'Φωτεινή κουζίνα και τραπεζαρία με λευκά ντουλάπια, πλακάκια και μεγάλα παράθυρα: υλικά, κουζίνες και εσωτερικοί χώροι από τους συνεργάτες μας',
+    ru: 'Светлая кухня-столовая с белыми шкафами, плиткой и большими окнами: материалы, кухни и интерьеры от наших партнёров' } },
+  { f: 'why-partners-matter-to-our-clients', w: [640, 960], alt: {
+    en: 'Builder with the plans in front of a house under construction: building and renovating a home in Halkidiki with trusted partners',
+    el: 'Εργοδηγός με τα σχέδια μπροστά σε σπίτι υπό κατασκευή: κατασκευή και ανακαίνιση κατοικίας στη Χαλκιδική με αξιόπιστους συνεργάτες',
+    ru: 'Прораб с чертежами у строящегося дома: строительство и ремонт дома в Халкидиках с надёжными партнёрами' } },
+  { f: 'working-with-us', w: [640, 960, 1600], alt: {
+    en: `Handshake over a table after an agreement: a new partnership with ${brand.name}`,
+    el: `Χειραψία πάνω από ένα τραπέζι μετά από συμφωνία: νέα συνεργασία με τη ${brand.name}`,
+    ru: `Рукопожатие за столом после договорённости: новое партнёрство с ${brand.name}` } },
+];
+// Construction (Sergei 2026-11-19 «для двоих статей найди подходящие картинки»): engineers over the plans (build with us),
+// an olive grove on a hillside (a plot to build on); CC0, sources in public/pages/construction/posts/SOURCES.json
+const CON_DIR = '/pages/construction/posts/';
+const CON_PH = [
+  { f: 'build-with-us', alt: {
+    en: 'Engineers going over the construction plans together: studies, licences and building a home in Halkidiki',
+    el: 'Μηχανικοί εξετάζουν μαζί τα κατασκευαστικά σχέδια: μελέτες, άδειες και κατασκευή κατοικίας στη Χαλκιδική',
+    ru: 'Инженеры вместе разбирают строительные чертежи: проект, разрешения и строительство дома в Халкидиках' } },
+  { f: 'have-a-plot-or-an-idea', alt: {
+    en: 'Olive grove on a green hillside: a plot of land to build your home on',
+    el: 'Ελαιώνας σε πράσινη πλαγιά: οικόπεδο για να χτίσετε το σπίτι σας',
+    ru: 'Оливковая роща на зелёном склоне: участок земли под строительство дома' } },
+];
+// Pre-published (Sergei 2026-11-19 «дай каждой статье картинку»): papers on a desk (the property made ready before the
+// market), a laptop by a window over the sea (who it is for; the couple photo replaced the same day), a laptop and the phone in hand (register, get told first)
+const PP_DIR = '/pages/pre-published-properties/posts/';
+const PP_PH = [
+  { f: 'what-pre-published-means', alt: {
+    en: 'Documents and a pen on a desk: a property being made ready before it reaches the market',
+    el: 'Έγγραφα και στυλό σε γραφείο: ένα ακίνητο ετοιμάζεται πριν βγει στην αγορά',
+    ru: 'Документы и ручка на столе: объект готовят до выхода на рынок' } },
+  { f: 'who-it-is-for', alt: {
+    en: 'Laptop and coffee by a window over the sea and the mountains: buyers who follow the market from their screen, before the open market',
+    el: 'Laptop και καφές δίπλα σε παράθυρο με θέα θάλασσα και βουνά: αγοραστές που παρακολουθούν την αγορά από την οθόνη τους, πριν από την ανοιχτή αγορά',
+    ru: 'Ноутбук и кофе у окна с видом на море и горы: покупатели, которые следят за рынком с экрана, ещё до открытого рынка' } },
+  { f: 'how-it-works', alt: {
+    en: 'Laptop and a phone in hand: register for free and be the first to hear about a matching property',
+    el: 'Laptop και κινητό στο χέρι: κάντε δωρεάν εγγραφή και μάθετε πρώτοι για το ακίνητο που σας ταιριάζει',
+    ru: 'Ноутбук и телефон в руке: бесплатная регистрация, и вы первыми узнаёте о подходящем объекте' } },
+];
+// About us pages (Sergei 2026-11-19): a photo per post — CC0 stock (sources in each page's posts/SOURCES.json), the
+// company's own pictures where they fit (Our story: the eras' pictures of the About us page; the pages' own banners);
+// null = the section's own picture (Philosophy, Book an online appointment)
+type PostPh = { f?: string; src?: string; alt: { en: string; el: string; ru: string } } | null;
+const stockPh = (f: string, en: string, el: string, ru: string): PostPh => ({ f, alt: { en, el, ru } });
+const ownPic = (src: string, en: string, el: string, ru: string): PostPh => ({ src, alt: { en, el, ru } });
+const PAGE_PH: Record<string, { dir: string; list: PostPh[] }> = {
+  construction: { dir: CON_DIR, list: CON_PH },
+  'pre-published-properties': { dir: PP_DIR, list: PP_PH },
+  'about-us/our-story': { dir: '', list: [
+    ownPic('/pages/sell/37818ed8-1623745980-card.webp', 'Buyer looking at a property for sale on a tablet', 'Αγοραστής βλέπει ακίνητο προς πώληση σε tablet', 'Покупатель смотрит объект на продажу на планшете'),
+    ownPic('/pages/services/01596b1d-1624545055-card.webp', 'Advisers showing a villa in Halkidiki to a couple of buyers', 'Σύμβουλοι δείχνουν βίλα στη Χαλκιδική σε ζευγάρι αγοραστών', 'Консультанты показывают виллу в Халкидиках паре покупателей'),
+    ownPic('/pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp', `Offices of ${brand.name}, the story since 2007`, `Τα γραφεία της ${brand.name}, η ιστορία από το 2007`, `Офис ${brand.name}, история с 2007 года`),
+    ownPic('/pages/construction/villa-natalia-7010-wm.jpg', 'Villa Natalia in Sithonia at dusk: living room and pool', 'Villa Natalia στη Σιθωνία το σούρουπο: σαλόνι και πισίνα', 'Villa Natalia в Ситонии в сумерках: гостиная и бассейн'),
+    ownPic('/pages/sell/49ed2b3f-1623746026-card.webp', 'Network of buyer profiles: technology that matches properties with buyers', 'Δίκτυο προφίλ αγοραστών: τεχνολογία που ταιριάζει ακίνητα με αγοραστές', 'Сеть профилей покупателей: технология подбирает объекты под покупателей'),
+  ] },
+  'about-us/values': { dir: '/pages/about-us-values/posts/', list: [
+    ownPic('/pages/about-us-values/4a4e6e1e-aboutus-values-banner-hero.webp', 'Wooden blocks reading core values, strategy and vision', 'Ξύλινα τουβλάκια με τις λέξεις αξίες, στρατηγική και όραμα', 'Деревянные кубики со словами «ценности», «стратегия» и «видение»'),
+    stockPh('our-people', 'Our team around one table: the people who make the company', 'Η ομάδα μας γύρω από ένα τραπέζι: οι άνθρωποι που κάνουν την εταιρεία', 'Наша команда за одним столом: люди, которые делают компанию'),
+  ] },
+  'about-us/company-social-responsibility': { dir: '/pages/about-us-company-social-responsibility/posts/', list: [
+    stockPh('people', 'A colleague showing a teammate the work on a laptop: training and growth in our team', 'Συνάδελφος δείχνει τη δουλειά σε laptop: εκπαίδευση και εξέλιξη στην ομάδα μας', 'Коллега показывает работу на ноутбуке: обучение и рост в нашей команде'),
+    ownPic('/pages/about-us-company-social-responsibility/7adfe48a-aboutus-company-responsibility-banner-hero.webp', 'Tote bag reading coexist with the earth: our environmental policy', 'Υφασμάτινη τσάντα με τη φράση coexist with the earth: η περιβαλλοντική μας πολιτική', 'Сумка с надписью coexist with the earth: наша экологическая политика'),
+    stockPh('social-contribution', 'Children playing outdoors on the grass: our support for children', 'Παιδιά παίζουν έξω στο γρασίδι: η στήριξή μας στα παιδιά', 'Дети играют на траве: наша поддержка детей'),
+    stockPh('sports', 'Children playing basketball on an outdoor court: our support for sport', 'Παιδιά παίζουν μπάσκετ σε ανοιχτό γήπεδο: η στήριξή μας στον αθλητισμό', 'Дети играют в баскетбол на открытой площадке: наша поддержка спорта'),
+    stockPh('plans-and-future-goals', 'A lens held up to houses: our plans and goals for the future', 'Φακός μπροστά σε σπίτια: τα σχέδια και οι στόχοι μας για το μέλλον', 'Линза на фоне домов: наши планы и цели на будущее'),
+  ] },
+  careers: { dir: '/pages/careers/posts/', list: [
+    stockPh('working-at-halkidiki-properties', `Colleagues working together at one table: working at ${brand.name}`, `Συνάδελφοι δουλεύουν μαζί σε ένα τραπέζι: δουλεύοντας στη ${brand.name}`, `Коллеги работают за одним столом: работа в ${brand.name}`),
+    stockPh('how-to-apply', 'Writing an application on a laptop: send us your CV', 'Αίτηση σε laptop: στείλτε μας το βιογραφικό σας', 'Заявка на ноутбуке: пришлите нам резюме'),
+  ] },
+  'careers/bulgarian-speaker': { dir: '/pages/careers-bulgarian-speaker/posts/', list: [
+    stockPh('we-are-looking-for', 'Laptop, phone and coffee on a desk: a customer support agent at work', 'Laptop, κινητό και καφές σε γραφείο: εκπρόσωπος εξυπηρέτησης πελατών στη δουλειά', 'Ноутбук, телефон и кофе на столе: специалист поддержки клиентов за работой'),
+    stockPh('requirements', 'A checklist in a notebook: the requirements of the position', 'Λίστα ελέγχου σε σημειωματάριο: οι απαιτήσεις της θέσης', 'Список в блокноте: требования к кандидату'),
+    stockPh('benefits', 'Team planning at a table with notes: full-time work in our team', 'Η ομάδα σχεδιάζει σε τραπέζι με σημειώσεις: πλήρης απασχόληση στην ομάδα μας', 'Команда планирует за столом с заметками: полная занятость в нашей команде'),
+  ] },
+  // Contact (Sergei 2026-11-19 «на каждую статью SEO найди подходящую картинку»): a phone in hand, our own office, a desk
+  contact: { dir: '/pages/contact/posts/', list: [
+    stockPh('how-to-reach-us', 'A phone in hand: call or write to us', 'Κινητό στο χέρι: τηλεφωνήστε ή γράψτε μας', 'Телефон в руке: позвоните или напишите нам'),
+    ownPic('/pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp', `The office of ${brand.name} next to Thessaloniki airport`, `Το γραφείο της ${brand.name} δίπλα στο αεροδρόμιο της Θεσσαλονίκης`, `Офис ${brand.name} рядом с аэропортом Салоник`),
+    stockPh('what-to-send-us', 'Laptop, coffee and notes on a desk: what to send us', 'Laptop, καφές και σημειώσεις σε γραφείο: τι να μας στείλετε', 'Ноутбук, кофе и заметки на столе: что нам прислать'),
+  ] },
+  'book-an-online-appointment': { dir: '/pages/book-an-online-appointment/posts/', list: [
+    null, null,
+    stockPh('how-an-online-viewing-works', 'Watching a property live on a phone: how an online viewing works', 'Παρακολούθηση ακινήτου ζωντανά στο κινητό: πώς γίνεται μια online προβολή', 'Просмотр объекта вживую на телефоне: как проходит онлайн-просмотр'),
+  ] },
+};
+const pagePh = PAGE_PH[d.key];
+const ownPh: (MosaicPhoto | null)[] = pagePh ? pagePh.list.map((p: any) => !p ? null : p.src ? ({ src: p.src, srcset: '', alt: p.alt[lang] ?? p.alt.en, style: '' }) : ({
+  src: `${pagePh.dir}${p.f}_960w.webp`, srcset: [640, 960].map((w) => `${pagePh.dir}${p.f}_${w}w.webp ${w}w`).join(', '),
+  alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
+const conPhotos: (MosaicPhoto | null)[] = Array.from({ length: Math.max(ownPh.length, secImgs.length) }, (_, i) => ownPh[i] ?? secImgs[i] ?? null);
+const prtPhotos: (MosaicPhoto | null)[] = prtFirst ? PRT_PH.map((p) => ({
+  src: `${PRT_DIR}${p.f}_960w.webp`, srcset: p.w.map((w) => `${PRT_DIR}${p.f}_${w}w.webp ${w}w`).join(', '),
+  alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
 
 const url = d.path;
 // A page with an approved new text (own page P22+, D-20261106-SS-2) keeps this design (Sergei
@@ -154,10 +343,19 @@ const addr = lang === 'el' ? { street: brand.address.street, city: brand.address
   : lang === 'ru' ? { street: 'Нео-Рисио', city: 'Салоники', country: 'Греция' }   // #265
   : addrLatin;
 const CARD = lang === 'ru'
-  ? { office: 'Офис', phone: 'Телефон', mail: 'E-mail', map: 'Как добраться до нашего офиса: Google Maps' }
+  ? { office: 'Офис', phone: 'Телефон', mail: 'E-mail', map: 'Как добраться до нашего офиса: Google Maps',
+      reach: 'Позвонить или написать', hours: 'Часы работы', write: 'Написать нам', mapShort: 'Проложить маршрут',
+      days: [['Понедельник – пятница', '09:30 – 19:00'], ['Суббота', '10:00 – 14:00'], ['Воскресенье', 'Выходной']] }
   : lang === 'el'
-  ? { office: 'Γραφείο', phone: 'Τηλέφωνο', mail: 'E-mail', map: 'Οδηγίες για το γραφείο μας στο Google Maps' }
-  : { office: 'Office', phone: 'Phone', mail: 'E-mail', map: 'Get directions to our office on Google Maps' };
+  ? { office: 'Γραφείο', phone: 'Τηλέφωνο', mail: 'E-mail', map: 'Οδηγίες για το γραφείο μας στο Google Maps',
+      reach: 'Τηλέφωνο και μηνύματα', hours: 'Ώρες λειτουργίας', write: 'Στείλτε μας μήνυμα', mapShort: 'Οδηγίες μετάβασης',
+      days: [['Δευτέρα – Παρασκευή', '09:30 – 19:00'], ['Σάββατο', '10:00 – 14:00'], ['Κυριακή', 'Κλειστά']] }
+  : { office: 'Office', phone: 'Phone', mail: 'E-mail', map: 'Get directions to our office on Google Maps',
+      reach: 'Call or write', hours: 'Working hours', write: 'Send us a message', mapShort: 'Get directions',
+      days: [['Monday – Friday', '09:30 – 19:00'], ['Saturday', '10:00 – 14:00'], ['Sunday', 'Closed']] };
+// the brands' own marks in one colour (Simple Icons, CC0; Sergei 2026-11-16 «иконки оригинальные но чернобелые»)
+const ICON_WA = 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z';
+const ICON_VIBER = 'M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.776 6.12 20.36h.003l-.004 2.416s-.037.977.61 1.177c.777.242 1.234-.5 1.98-1.302.407-.44.972-1.084 1.397-1.58 3.85.326 6.812-.416 7.15-.525.776-.252 5.176-.816 5.892-6.657.74-6.02-.36-9.83-2.34-11.546-.596-.55-3.006-2.3-8.375-2.323 0 0-.395-.025-1.037-.017zm.058 1.693c.545-.004.88.017.88.017 4.542.02 6.717 1.388 7.222 1.846 1.675 1.435 2.53 4.868 1.906 9.897v.002c-.604 4.878-4.174 5.184-4.832 5.395-.28.09-2.882.737-6.153.524 0 0-2.436 2.94-3.197 3.704-.12.12-.26.167-.352.144-.13-.033-.166-.188-.165-.414l.02-4.018c-4.762-1.32-4.485-6.292-4.43-8.895.054-2.604.543-4.738 1.996-6.173 1.96-1.773 5.474-2.018 7.11-2.03zm.38 2.602c-.167 0-.303.135-.304.302 0 .167.133.303.3.305 1.624.01 2.946.537 4.028 1.592 1.073 1.046 1.62 2.468 1.633 4.334.002.167.14.3.307.3.166-.002.3-.138.3-.304-.014-1.984-.618-3.596-1.816-4.764-1.19-1.16-2.692-1.753-4.447-1.765zm-3.96.695c-.19-.032-.4.005-.616.117l-.01.002c-.43.247-.816.562-1.146.932-.002.004-.006.004-.008.008-.267.323-.42.638-.46.948-.008.046-.01.093-.007.14 0 .136.022.27.065.4l.013.01c.135.48.473 1.276 1.205 2.604.42.768.903 1.5 1.446 2.186.27.344.56.673.87.984l.132.132c.31.308.64.6.984.87.686.543 1.418 1.027 2.186 1.447 1.328.733 2.126 1.07 2.604 1.206l.01.014c.13.042.265.064.402.063.046.002.092 0 .138-.008.31-.036.627-.19.948-.46.004 0 .003-.002.008-.005.37-.33.683-.72.93-1.148l.003-.01c.225-.432.15-.842-.18-1.12-.004 0-.698-.58-1.037-.83-.36-.255-.73-.492-1.113-.71-.51-.285-1.032-.106-1.248.174l-.447.564c-.23.283-.657.246-.657.246-3.12-.796-3.955-3.955-3.955-3.955s-.037-.426.248-.656l.563-.448c.277-.215.456-.737.17-1.248-.217-.383-.454-.756-.71-1.115-.25-.34-.826-1.033-.83-1.035-.137-.165-.31-.265-.502-.297zm4.49.88c-.158.002-.29.124-.3.282-.01.167.115.312.282.324 1.16.085 2.017.466 2.645 1.15.63.688.93 1.524.906 2.57-.002.168.13.306.3.31.166.003.305-.13.31-.297.025-1.175-.334-2.193-1.067-2.994-.74-.81-1.777-1.253-3.05-1.346h-.024zm.463 1.63c-.16.002-.29.127-.3.287-.008.167.12.31.288.32.523.028.875.175 1.113.422.24.245.388.62.416 1.164.01.167.15.295.318.287.167-.008.295-.15.287-.317-.03-.644-.215-1.178-.58-1.557-.367-.378-.893-.574-1.52-.607h-.018z';
 const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${brand.name}, ${addrLatin.street} ${brand.address.postalCode}, ${addrLatin.city}`)}`;
 
 let munis: { name: string; key: string }[] = [];
@@ -180,6 +378,11 @@ try {
 // «Related» and area rows (InfoKit.astro). Phones (< 1024px) keep George's layout: the same
 // markup draws it, the desktop-only pieces are hidden there and load nothing.
 const w1 = d.look === 'wave1';
+// Contact (Sergei 2026-11-18): the intro under the box, centred, its link as a real button below the words
+const ctPre = d.contact_card && readPre ? (() => {
+  const m = readPre.match(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/);
+  return m ? { html: readPre.replace(m[0], m[2]), href: m[1], label: m[2] } : { html: readPre, href: '', label: '' };
+})() : null;
 // The page's short name (breadcrumb end, form eyebrow): the menu word of its section.
 const NAV_KEY: Partial<Record<typeof d.section, string>> = { sell: 'nav.sell', services: 'nav.services', company: 'nav.company' };
 // a sub page with an own brief names itself (its brief's last breadcrumb), not its section
@@ -210,7 +413,7 @@ const autoPhoto = (() => {
 })();
 // no property photo in memory (the CRM down, a local run): the home page's hero shot, never an empty half
 const heroFallback = !d.desk_image && !autoPhoto && w1 && !d.contact_card ? HERO_SHOTS[0] : undefined;
-const deskImg = d.desk_image || autoPhoto?.url || heroFallback?.url || '';
+const deskImg = prtLogos.length ? '' : d.desk_image || autoPhoto?.url || heroFallback?.url || '';   // Our partners: no top picture
 const deskAlt = d.desk_image ? (d.desk_image_alt || d.h1) : (autoPhoto?.alt || heroFallback?.alt[lang] || heroFallback?.alt.en || d.h1);
 const deskSet = heroFallback ? cleanSrcSet(deskImg) : /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
 const relCards = w1 ? d.related.map((r) => ({
@@ -264,7 +467,9 @@ const coHub = w1 && d.hub === 'company';   // only the about-us page itself (its
 const coLead = coHub ? (page.body ?? '').trim().split(/(?<=[.!?])\s+/)[0] ?? '' : '';
 const coContact = coHub ? d.related.find((r) => r.href === contact)?.label || t(lang, 'co.contact') : '';
 // «About Halkidiki Properties»: the brand name on its own line on desktop, as the design draws it.
-const h1Pre = coHub && d.h1.endsWith(brand.name) && d.h1.length > brand.name.length ? d.h1.slice(0, -brand.name.length) : '';
+// an H1 that ends with the brand («Contact Halkidiki Properties»): the words before it small, the name large below them
+// (Sergei 2026-11-16 «contact сделай мелким и ниже Halkidiki properties большим»); one H1 for search, joined by a space
+const h1Pre2 = (h: string) => (h.endsWith(brand.name) && h.length > brand.name.length + 1 ? h.slice(0, -brand.name.length).trim() : '');
 const hubLike = hub || coHub;
 const faqPage = hub ? (await findInfoPage(`${prefix(lang)}/faq`))?.data ?? null : null;
 
@@ -401,7 +606,91 @@ if (faqItems.length) {
   <main id="main" class:list={['info', { w1, 'w1-svc': hub, 'w1-co': coHub }]}>
   {w1 && !hubLike ? (
   <>
-    <header class="wrap info-top w1-top">
+    {/* Contact (Sergei 2026-11-18): the breadcrumb and the H1 open the box below; the page starts with it */}
+    {readCar && prtLogos.length > 0 && !fresh && (
+      <header class="prt-hd">
+        <div class="wrap prt-hd__g">
+          <div>
+            <nav class="crumb prt-hd__crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span aria-hidden="true">·</span><span aria-current="page">{short}</span>
+            </nav>
+            <h1 class="prt-hd__h">{d.h1}</h1>
+          </div>
+          {prtPre && <div class="prt-hd__s" set:html={prtPre} />}
+        </div>
+      </header>
+    )}
+    {d.form_top && d.form && d.form_split && (
+      /* Pre-published (Sergei 2026-11-19 «сделай шапку и форму как на странице contact»): the Contact box — the crumbs,
+         the H1, the lead and the call to register on the light half, the form on the dark half; no top picture */
+      <section class="ctb ctb--top" id="form" aria-labelledby="ctb-h">
+        <div class="ctb__ct">
+          <div class="ctb__hd">
+            <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
+            </nav>
+            <h1 id="ctb-h" class="t-display info-h1">{d.h1}</h1>
+            {d.lead && <p class="ctb__lead">{d.lead}</p>}
+            {/* the pre-published list (or its note) under the text (Sergei 2026-11-19 «просто перенеси это вверх к тексту») */}
+            {d.widget && <div class="ctb__w"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
+            {d.cta && <p class="ctb__cta"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
+            {/* a page without its own call (Add your property): the phone and WhatsApp, as in the old top */}
+            {!d.cta && (
+              <p class="ctb__ph">
+                <a href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+                <WaLink />
+              </p>
+            )}
+          </div>
+        </div>
+        <div class="ctb__f">
+          <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+                    look="wave1" lang={lang} bare />
+        </div>
+      </section>
+    )}
+    {d.form_top && d.form && !d.form_split && (
+      /* Construction (Sergei 2026-11-19 «убери сверху картинку, сделай форму и заголовок и кнопки и маленький текст
+         сверху»): one dark band opens the page — the crumbs, the H1, George's intro and the phone on the left, the form
+         on the right; no top picture, no form band at the bottom */
+      <section class="ftb" id="form" aria-labelledby="ftb-h">
+        <div class="wrap ftb__g">
+          <div class="ftb__l">
+            <nav class="crumb ftb__crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span aria-hidden="true">·</span><span aria-current="page">{short}</span>
+            </nav>
+            <h1 id="ftb-h" class="ftb__h">{d.h1}</h1>
+            {readPre && <div class="ftb__p" set:html={readPre} />}
+            <p class="ftb__ct">
+              <a href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+              <WaLink dark />
+            </p>
+          </div>
+          <div class="ftb__f">
+            <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+                      look="wave1" lang={lang} bare />
+          </div>
+        </div>
+      </section>
+    )}
+    {projFigs.length > 0 && (
+      <section class="prj" aria-labelledby="prj-h">
+        <div class="wrap">
+          <h2 id="prj-h" class="prj__h">{projH2}</h2>
+          <div class="prj__g" set:html={projFigs.join('')} />
+        </div>
+      </section>
+    )}
+    {!(d.contact_card && d.form) && !(readCar && prtLogos.length > 0 && !fresh) && !(d.form_top && d.form) && <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
         <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
@@ -409,17 +698,18 @@ if (faqItems.length) {
           ))}
           <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
         </nav>
-        <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
-        {fresh ? <SpecText page={fresh} part="intro" lang={lang} /> : d.lead && <p class="info-lead">{d.lead}</p>}
+        <h1 class="t-display info-h1">{h1Pre2(fresh?.h1 ?? d.h1) ? <><span class="info-h1k">{h1Pre2(fresh?.h1 ?? d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : fresh?.h1 ?? d.h1}</h1>
+        {fresh ? <SpecText page={fresh} part="intro" lang={lang} /> : d.lead ? <p class="info-lead">{d.lead}</p> : headPre && <div class="info-lead info-lead--pre" set:html={headPre} />}
         {d.cta && <p class="info-cta-top"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
-        {d.form && (
+        {d.form && !d.contact_card && (
           <p class="w1-acts w1-d">
-            <a class="btn" href="#form" data-ev="content:sell">{d.form.title || ui.adviser}</a>
+            {/* Contact (Sergei 2026-11-16): only the button on the left, every detail in the card on the right */}
+            <a class="btn" href="#form" data-ev="content:sell">{d.contact_card ? CARD.write : d.form.title || ui.adviser}</a>
             {/* the phone on the WhatsApp line, under the button (Sergei 2026-11-16) */}
-            <span class="w1-acts__alt">
+            {!d.contact_card && <span class="w1-acts__alt">
               <a class="lnkg" href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
               <WaLink />
-            </span>
+            </span>}
           </p>
         )}
       </div>
@@ -431,22 +721,72 @@ if (faqItems.length) {
                width="1920" height="1280" fetchpriority="high" decoding="async" />
         </picture>
       )}
-      {/* #259 (Sergei 12/11): the contact details sit beside the heading «Contact Halkidiki Properties», not in the side panel */}
-      {d.contact_card && (
-        <address class="rp-card w1-top__card">
-          <p><span class="t-label">{CARD.office}</span>{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
-          <p><span class="t-label">{CARD.phone}</span><a href={brand.contact.phoneHref} data-ev="call:footer">{brand.contact.phoneText}</a></p>
-          <p><span class="t-label">WhatsApp · Viber</span><a href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content">WhatsApp {brand.contact.mobileText}</a> · <a href={viberHref()} data-ev="lead:viber">Viber</a></p>
-          <p><span class="t-label">{CARD.mail}</span><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></p>
-          <p><a href={mapUrl} rel="noopener" target="_blank">{CARD.map}</a></p>
+    </header>}
+
+    {/* Contact (Sergei 2026-11-18): the details (light) and the form (dark) in one full-width box that opens the page;
+        chosen of four looks tried on the dev server («split»); the button «Send us a message» is gone. */}
+    {d.contact_card && d.form && (
+      <section class="ctb" id="form" aria-labelledby="ctb-h">
+        <div class="ctb__ct">
+          <div class="ctb__hd">
+            <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
+            </nav>
+            <h1 id="ctb-h" class="t-display info-h1">{h1Pre2(fresh?.h1 ?? d.h1) ? <><span class="info-h1k">{h1Pre2(fresh?.h1 ?? d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : fresh?.h1 ?? d.h1}</h1>
+          </div>
+          <address class="ctb__ad">
+          <div class="ctb__sec">
+            <span class="ctb__l">{CARD.office}</span>
+            <p class="ctb__v">{addr.street}, {brand.address.postalCode} {addr.city}, {addr.country}</p>
+            <a class="ct__row ct__map" href={mapUrl} rel="noopener" target="_blank" aria-label={CARD.map}><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>{CARD.mapShort}</span></a>
+          </div>
+          <div class="ctb__sec">
+            <span class="ctb__l">{CARD.reach}</span>
+            <a class="ct__row" href={brand.contact.phoneHref} data-ev="call:footer"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg><span><small>{CARD.phone}</small><bdi dir="ltr">{brand.contact.phoneText}</bdi></span></a>
+            <a class="ct__row" href={waHref()} rel="noopener" target="_blank" data-ev="lead:whatsapp_content"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d={ICON_WA} /></svg><span><small>WhatsApp</small><bdi dir="ltr">{brand.contact.mobileText}</bdi></span></a>
+            <a class="ct__row" href={viberHref()} data-ev="lead:viber"><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d={ICON_VIBER} /></svg><span><small>Viber</small><bdi dir="ltr">{brand.contact.mobileText}</bdi></span></a>
+            <a class="ct__row" href={`mailto:${brand.contact.email}`}><svg class="ct__ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14"/><path d="m3 6 9 7 9-7"/></svg><span><small>{CARD.mail}</small><span>{brand.contact.email.split('@')[0]}@<wbr />{brand.contact.email.split('@')[1]}</span></span></a>
+          </div>
+          <div class="ctb__sec">
+            <span class="ctb__l">{CARD.hours}</span>
+            <dl class="ct__hours">{CARD.days.map(([dd, hh]) => <><dt>{dd}</dt><dd>{hh}</dd></>)}</dl>
+          </div>
           </address>
-      )}
-    </header>
+        </div>
+        <div class="ctb__f">
+          <InfoForm source={d.form.source} headTag={fresh ? 'p' : 'h2'} title={CARD.write} message={d.form.message} terms={terms} privacy={privacy}
+                    look="wave1" lang={lang} roles bare />
+        </div>
+      </section>
+    )}
 
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
-      readCar ? <SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} /> :
+      readCar && prtLogos.length ? <>
+        <section class="prt-mq" aria-label={d.h1}><LogoMarquee logos={prtLogos} full /></section>
+        {prtFirst && <div class="wrap prt-first"><h2 class="prt-first__h">{prtFirst.h2}</h2>{prtFirst.html && <div class="prt-first__p" set:html={prtFirst.html} />}</div>}
+        {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
+        <SpecPosts page={readCar} lang={lang} photos={prtPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={prtHeads.map(() => [])} cta={null} />
+      </> :
+      readCar ? <>{d.widget && !d.form_split && <section class="wrap rc-widget"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></section>}{ctPre ? (() => {
+        /* Contact (Sergei 2026-11-19 «этот текст сделай в два блока слева и справа равномерно»): the first paragraph on
+           the left, the rest and the button on the right, two even halves */
+        const ps = ctPre.html.match(/<p>[\s\S]*?<\/p>/g) ?? [ctPre.html];
+        return <div class="wrap rc-pre rc-two"><div class="prose" set:html={ps[0]} /><div><div class="prose" set:html={ps.slice(1).join('')} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div></div>;
+      })() : readPre && !d.form_top && !headPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && <div class="wrap prt-vid" set:html={carVid} />}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} />{coPage && d.cards.length > 0 && (
+        <section class="wrap rc-cards" aria-labelledby="rc-cards-h">
+          {cardsH && <h2 id="rc-cards-h" class="rc-cards__h">{cardsH}</h2>}
+          {/* Careers (Sergei 2026-11-19 «Open positions что это и почему выглядит так странно»): a list of open positions,
+              one row each — the title large, its line, an arrow; the old card picture is not shown */}
+          <ul class="rc-rows">{d.cards.map((c) => (
+            <li><a href={c.href}><b>{c.title}</b><span>{c.text}</span><i aria-hidden="true">→</i></a></li>
+          ))}</ul>
+        </section>
+      )}</> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
@@ -501,7 +841,7 @@ if (faqItems.length) {
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
         menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 
-    {d.form && (
+    {d.form && !d.contact_card && !d.form_top && (
       <section class="w1-form" id="form">
         <div class="wrap"><div class="prose w1-form__in">
           <InfoForm source={d.form.source} when={d.key === 'book-an-online-appointment'} headTag={fresh ? 'p' : 'h2'} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
@@ -552,7 +892,7 @@ if (faqItems.length) {
           ))}
           <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
         </nav>
-        <h1 class="t-display info-h1">{h1Pre ? <>{h1Pre}<br class="w1-d" />{brand.name}</> : d.h1}</h1>
+        <h1 class="t-display info-h1">{h1Pre2(d.h1) ? <><span class="info-h1k">{h1Pre2(d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : d.h1}</h1>
         {d.lead && <p class="info-lead">{d.lead}</p>}
         {coLead && <p class="info-lead w1-d">{coLead}</p>}
         <p class="w1-acts w1-d">
@@ -577,7 +917,7 @@ if (faqItems.length) {
         ))}
       </nav>
       {hub && <p class="w1-d svc-eb">{short}</p>}
-      <h1 class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+      <h1 class="t-display info-h1">{h1Pre2(fresh?.h1 ?? d.h1) ? <><span class="info-h1k">{h1Pre2(fresh?.h1 ?? d.h1)}</span> <span class="info-h1m">{brand.name}</span></> : fresh?.h1 ?? d.h1}</h1>
       {fresh ? <div class="svc-intro"><SpecText page={fresh} part="intro" lang={lang} /></div> : d.lead && <p class="info-lead">{d.lead}</p>}
       {d.cta && <p class="info-cta-top"><a class="btn" href={d.cta.href} data-ev="register:info">{d.cta.label}</a></p>}
     </header>
@@ -717,6 +1057,76 @@ if (faqItems.length) {
   .crumb a:hover { text-decoration: underline; }
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
+  .rc-pre { padding-block: var(--s6) 0; }
+  .rc-widget { padding-block: var(--s6); }
+  .rc-cards { padding-block: var(--s6) var(--s7); }
+  .rc-cards__h { margin: 0 0 var(--s4); font-size: var(--fs-s3); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; color: var(--ink); }
+  .rc-rows { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line); }
+  .rc-rows a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 32px; padding: 24px 0; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+  .rc-rows b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
+  .rc-rows span { grid-column: 1; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); max-width: 70ch; }
+  .rc-rows i { grid-column: 2; grid-row: 1 / 3; align-self: center; font-style: normal; font-size: var(--fs-s2); transition: transform .2s ease; }
+  .rc-rows a:hover b { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+  .rc-rows a:hover i { transform: translateX(6px); }
+  .info-lead--pre :global(p) { margin: 0; }
+  /* Construction: the dark band that opens the page (the form band's look: ink-deep, white text) */
+  .ftb { background: var(--ink-deep); color: #fff; padding-block: var(--s6); scroll-margin-top: 24px; }
+  .ftb__g { display: grid; gap: var(--s5); }
+  .ftb__l { min-width: 0; }
+  .ftb__crumb, .ftb__crumb a { color: rgba(255,255,255,.6); }
+  .ftb__crumb a:hover { color: #fff; }
+  .ftb__h { margin: 14px 0 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.08; letter-spacing: -.018em; color: #fff; }
+  .ftb__p { margin-top: 18px; font-size: var(--fs-s0); line-height: 1.65; color: rgba(255,255,255,.72); max-width: 52ch; }
+  .ftb__p :global(p) { margin: 0; }
+  .ftb__ct { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin: 24px 0 0; font-size: var(--fs-s0); }
+  .ftb__ct > a { color: #fff; text-decoration: none; letter-spacing: .02em; }
+  .ftb__ct > a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .ftb__f :global(.iform) { margin: 0; }
+  @media (min-width: 1024px) {
+    .ftb { padding-block: 64px; }
+    .ftb__g { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
+    .ftb__h { font-size: var(--fs-s5); line-height: 1.04; }
+  }
+  /* Construction: the projects as a block of their own, four photo tiles a row, the caption under each */
+  .prj { padding-block: var(--s6) var(--s5); }
+  .prj__h { margin: 0 0 var(--s4); font-size: var(--fs-s3); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; color: var(--ink); }
+  .prj__g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  @media (min-width: 1024px) { .prj__g { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; } }
+  .prj__g :global(figure) { margin: 0; min-width: 0; }
+  .prj__g :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .prj__g :global(figcaption) { margin-top: 10px; font-size: var(--fs-s-1); line-height: 1.4; color: var(--muted); }
+  .prj__g :global(figcaption strong) { font-size: var(--fs-s0); font-weight: 400; color: var(--ink); }
+  /* Our partners (Sergei 2026-11-19): the top as the home page's dark band «We do the rest for you.» (Abroad.astro):
+     two halves centred on one height, the H1 left, George's intro right (its first sentence large, the rest grey) */
+  .prt-hd { background: var(--ink-deep); color: #fff; padding-block: var(--s6); }
+  .prt-hd__g { display: grid; gap: var(--s4); }
+  .prt-hd__crumb, .prt-hd__crumb a { color: rgba(255,255,255,.6); }
+  .prt-hd__crumb a:hover { color: #fff; }
+  .prt-hd__h { margin: 14px 0 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: #fff; }
+  .prt-hd__s { font-size: var(--fs-s0); line-height: 1.65; color: rgba(255,255,255,.78); max-width: 60ch; }
+  .prt-hd__s :global(p) { margin: 0; }
+  .prt-hd__s :global(p + p) { margin-top: 12px; }
+  @media (min-width: 1024px) {
+    .prt-hd { min-height: 280px; box-sizing: border-box; display: flex; align-items: center; padding-block: 36px; }
+    .prt-hd__g { width: 100%; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }
+  }
+  .prt-mq { padding-block: var(--s5) var(--s3); }
+  .prt-vid { padding-block: var(--s4) var(--s7); }
+  .prt-first { padding-top: var(--s6); text-align: center; }
+  .prt-first__h { margin: 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: var(--ink); text-wrap: balance; }
+  .prt-first__p { margin-top: 12px; font-size: var(--fs-s0); line-height: 1.65; color: var(--muted); }
+  .prt-first__p :global(p) { margin: 0; }
+  .prt-vid :global(figure.vid) { max-width: 960px; margin: 0 auto !important; }
+  .rc-pre--c { text-align: center; padding-bottom: var(--s6); }
+  .rc-pre--c .prose { margin-inline: auto; text-wrap: balance; }
+  .rc-pre__go { margin: var(--s4) 0 0; }
+  .rc-two { display: grid; gap: var(--s4); padding-bottom: var(--s6); }
+  .rc-two .prose { max-width: none; font-size: var(--fs-s1); font-weight: 300; line-height: 1.5; color: var(--ink-2); }
+  .rc-two .prose :global(p) { margin: 0; }
+  @media (min-width: 1024px) { .rc-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; padding-block: 56px; } }
+  .rc-pre .prose { max-width: 72ch; }
+  .info-h1k { display: block; margin-bottom: 6px; font-size: var(--fs-s1); font-weight: 300; letter-spacing: .02em; line-height: 1.3; color: var(--muted); }
+  .info-h1m { display: block; }
   .info-lead { font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); max-width: 64ch; margin: 0; }
   .info-cta-top { margin: var(--s4, 24px) 0 0; }
   .w1-top .info-cta-top .k-act { display: inline-flex; width: auto; padding: 0 28px; }
@@ -812,6 +1222,69 @@ if (faqItems.length) {
     .w1-top__card p:last-child { padding-top: 18px; border-top: 1px solid var(--line-soft); }
   }
   @media (min-width: 1024px) { .w1-top__card { margin-top: 0; } }
+  /* Contact card (Sergei 2026-11-16 «структурируй инфу нормально»): office + directions and the working hours on the left,
+     every way to call or write on the right, each with its icon (the messengers' own marks in one colour) */
+  .w1-top__card.ct { display: grid; gap: 28px 40px; }
+  .ct__col { display: grid; gap: 28px; align-content: start; min-width: 0; }
+  .ct__sec { display: grid; gap: 10px; align-content: start; }
+  .w1-top__card.ct p { grid-column: auto; padding: 0; border: 0; }
+  .w1-top__card.ct .t-label { margin: 0; }
+  .ct__row { display: flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none !important; font-size: var(--fs-s0); }
+  .ct__row > span { display: grid; line-height: 1.35; min-width: 0; }
+  .ct__row small { font-size: var(--fs-s-1); color: var(--muted); }
+  .ct__row:hover > span > :last-child, .ct__map:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  .ct__ic { flex: none; width: 20px; height: 20px; color: var(--ink); }
+  .ct__map { font-size: var(--fs-s-1); }
+  .ct__hours { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 6px 18px; margin: 0; font-size: var(--fs-s-1); white-space: nowrap; }
+  .ct__hours dt { color: var(--muted); }
+  .ct__hours dd { margin: 0; color: var(--ink); font-weight: 600; }
+  @media (min-width: 760px) { .w1-top__card.ct { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 32px; padding: 32px; } }
+  /* ── Contact band (Sergei 2026-11-18) ── */
+  .ctb { display: grid; scroll-margin-top: 24px; }
+  .ctb__ct, .ctb__f { padding: 40px var(--gut); min-width: 0; }
+  .ctb__ct { display: grid; gap: 32px; align-content: start; background: var(--paper-2); color: var(--ink); font-style: normal; }
+  .ctb__sec { display: grid; gap: 12px; align-content: start; }
+  .ctb__ad { display: contents; font-style: normal; }
+  .ctb__hd { grid-column: 1 / -1; }
+  .ctb__lead { margin: 18px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); max-width: 52ch; }
+  .ctb__cta { margin: 28px 0 0; }
+  .ctb__ph { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin: 28px 0 0; font-size: var(--fs-s0); }
+  .ctb__ph > a { color: var(--ink); text-decoration: none; letter-spacing: .02em; }
+  .ctb__ph > a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .ctb__w :global(.pw) { margin: 28px 0 0; padding-top: 24px; border-top: 1px solid var(--line); }
+  .ctb__w :global(.pw h2) { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.3; color: var(--ink); }
+  .ctb__w :global(.pw-empty), .ctb__w :global(.pw-pre) { margin: 10px 0 0; max-width: 52ch; }
+  .ctb__cta .k-act { display: inline-flex; width: auto !important; padding: 0 28px; }
+  @media (min-width: 1024px) { .ctb--top .ctb__ct { align-content: center; } }
+  .ctb__hd .info-h1 { margin: 14px 0 0; font-weight: 300; line-height: 1.06; letter-spacing: -.021em; }
+  .ctb__l { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .ctb__v { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.35; }
+  .ctb .ct__row { display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none !important; font-size: var(--fs-s1); font-weight: 300; }
+  .ctb .ct__row > span { display: grid; line-height: 1.3; min-width: 0; }
+  .ctb .ct__row small { font-size: var(--fs-s-1); font-weight: 400; color: var(--muted); letter-spacing: .02em; }
+  .ctb .ct__row:hover > span > :last-child, .ctb .ct__map:hover span { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .ctb .ct__ic { flex: none; width: 22px; height: 22px; color: currentColor; }
+  .ctb .ct__map { font-size: var(--fs-s0); font-weight: 400; }
+  .ctb .ct__hours { display: grid; grid-template-columns: auto auto; justify-content: start; gap: 8px 28px; margin: 0; font-size: var(--fs-s0); white-space: nowrap; }
+  .ctb .ct__hours dt { color: var(--muted); }
+  .ctb .ct__hours dd { margin: 0; font-weight: 600; color: inherit; }
+  @media (min-width: 1024px) {
+    /* full width; each half lines its content up with the page column */
+    .ctb { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .ctb__ct { --edge: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+               padding: 72px 56px 72px var(--edge); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 44px 40px; }
+    /* the ways to call or write first, across the half (the e-mail needs the width); the office and the hours side by side under them */
+    .ctb__ct .ctb__hd { grid-row: 1; }
+    .ctb__ct .ctb__sec:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+    .ctb__ct .ctb__sec:nth-child(1) { grid-column: 1; grid-row: 3; }
+    .ctb__ct .ctb__sec:nth-child(3) { grid-column: 2; grid-row: 3; }
+    .ctb__f { --edge: max(var(--gut), calc((100vw - var(--max)) / 2 + var(--gut)));
+              padding: 72px var(--edge) 72px 64px; }
+    .ctb__f :global(.iform) { margin: 0; }
+    .ctb__hd .info-h1 { font-size: var(--fs-s5); }
+    /* the details light, the form dark (the dark band the site already uses for its forms) */
+    .ctb__f { background: var(--ink-deep); color: #fff; }
+  }
   .w1-how { padding-top: var(--s5); }
   .w1-how__head .prose :global(p:last-child) { margin-bottom: var(--s4); }
   .w1-form { padding-bottom: var(--s7); }

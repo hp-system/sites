@@ -35,6 +35,8 @@ form:
   message: true
 # On the kit (D-20261110-SS-1, Sergei 2026-11-11 «да»)
 look: wave1
+form_top: true
+form_split: true
 ---
 
 ## Πώς λειτουργεί

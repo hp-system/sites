@@ -101,6 +101,37 @@
   "source": "brief batch-6-el-b.json",
   "photoThemes": [],
   "standout": [],
-  "postPhotos": [],
+  "postPhotos": [
+    {
+      "after": "Σε ποιους απευθύνεται το Exclusive",
+      "file": "/pages/exclusive/posts/who-exclusive-is-for",
+      "alt": "Βίλα με φωτισμένη πισίνα το σούρουπο"
+    },
+    {
+      "after": "Τι βλέπουν τα μέλη του Exclusive",
+      "file": "/pages/exclusive/posts/what-exclusive-members-see",
+      "alt": "Αρχιτεκτονικές κατόψεις σε γραφείο"
+    },
+    {
+      "after": "Το Secret Portfolio: ακίνητα που δεν διαφημίζονται ποτέ",
+      "file": "/pages/exclusive/posts/the-secret-portfolio",
+      "alt": "Κλειστή σιδερένια πύλη"
+    },
+    {
+      "after": "Ο δικός σας σύμβουλος",
+      "file": "/pages/exclusive/posts/your-own-agent",
+      "alt": "Δύο άνθρωποι δίνουν τα χέρια πάνω από ένα γραφείο"
+    },
+    {
+      "after": "Πώς γίνεστε μέλος",
+      "file": "/pages/exclusive/posts/how-to-join",
+      "alt": "Κινητό τηλέφωνο στο χέρι"
+    },
+    {
+      "after": "Διακριτικότητα",
+      "file": "/pages/exclusive/posts/discretion",
+      "alt": "Παλιό χερούλι πόρτας με κλειδαρότρυπα"
+    }
+  ],
   "questionMarks": []
 }

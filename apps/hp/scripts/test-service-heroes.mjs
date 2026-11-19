@@ -10,7 +10,7 @@ const HEROES = {
   '/en/services/investor-services': 'ums_8535/land-beach-view-halkidiki-2973826451',
   '/en/services/construction-services': 'ums_7985/detached-house-facade-halkidiki-2982420238',
   '/en/services/buyer-services/full-property-management': 'ums_4494/detached-house-garden-halkidiki-2980293835',
-  '/en/construction': 'ums_7010/detached-house-pool-halkidiki-2974736545',
+  // /en/construction: no top picture since 2026-11-19 (Sergei «убери сверху картинку»): the form band opens the page
 };
 
 const stop = await start();

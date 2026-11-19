@@ -47,7 +47,13 @@ look: wave1
 
 ## Ποιοι είναι οι συνεργάτες μας
 
-Καλύπτουν κάθε στάδιο ενός σπιτιού: δομικά υλικά και μονώσεις (Isomat, Knauf, Tecnocemento, Sidenor), κουφώματα, πόρτες και αλουμίνια (Rehau, Mouratidis κατασκευές αλουμινίου, Porta Impresa), θέρμανση, ψύξη και νερό (Thermogaz NIBE, Intelwater), κουζίνες, πλακάκια και εσωτερικούς χώρους (Aran Cucine, Porcelana, Steropal, COCO-MAT, m&f Flora υφάσματα και κουρτίνες, ArtAbout), καθώς και μελέτες και συμβουλευτικές υπηρεσίες (KE.PA.MACH. S.A., Alpha Plan Consultants, Tsoulfidis).
+Καλύπτουν κάθε στάδιο ενός σπιτιού:
+
+- **Δομικά υλικά και μονώσεις**: Isomat, Knauf, Tecnocemento, Sidenor
+- **Κουφώματα, πόρτες και αλουμίνια**: Rehau, Mouratidis κατασκευές αλουμινίου, Porta Impresa
+- **Θέρμανση, ψύξη και νερό**: Thermogaz NIBE, Intelwater
+- **Κουζίνες, πλακάκια και εσωτερικοί χώροι**: Aran Cucine, Porcelana, Steropal, COCO-MAT, m&f Flora υφάσματα και κουρτίνες, ArtAbout
+- **Μελέτες και συμβουλευτικές υπηρεσίες**: KE.PA.MACH. S.A., Alpha Plan Consultants, Tsoulfidis
 
 ## Γιατί οι συνεργάτες μας έχουν σημασία για τους πελάτες μας
 

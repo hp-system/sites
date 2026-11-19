@@ -50,13 +50,21 @@ const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(su
 const cta = Astro.props.cta === undefined
   ? { text: t(lang, 'svc.add_cta'), href: go, ev: member ? 'content:sell' : 'register:info', gild: !member, plus: true }
   : Astro.props.cta;
+// The SEO block pattern for the whole site (Sergei 2026-11-19 «вот такой стиль я хочу применить на все страницы где
+// есть сео блок … сделать паттерном для всего сайта»), chosen from the looks tried on 2026-11-18: chapters — big
+// numbered titles across the top, the post at the full width below, one screen high (desktop ≥1000px). The other
+// look (?pn=ix, an editorial index) and the old panel are in git history. Pages that hold much more text get their
+// own fixes one by one.
+const look = 'ch';
 ---
-<section class="pn">
+<section class:list={['pn', look && `pn--${look}`]}>
   <div class="wrap pn__in">
+    {/* the stage: the menu and the posts; in the tried looks one screen high (Sergei 2026-11-18), otherwise not drawn */}
+    <div class="pn__stage" data-pn-stage>
     <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
       <nav class="pn__nav" data-pn>
         <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
-        <ul class="k-side__list">{nav.map((n) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true"></i>}</a></li>)}</ul>
+        <ul class="k-side__list">{nav.map((n, i) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><b class="pn__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</b><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true"></i>}</a></li>)}</ul>
       </nav>
       {cta && (
         <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>
@@ -69,6 +77,7 @@ const cta = Astro.props.cta === undefined
         screen (SEO/design audit 2026-11-10: no conversion button on phones) */}
     <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang}
                                      sectionLinks={sectionLinks} items={items} self={page.path} facets={facets} /></div>
+    </div>
     {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
     {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} href={faqHref} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
     {cta && <div class="pn__bar">
@@ -111,6 +120,75 @@ const cta = Astro.props.cta === undefined
   .pn__side { transition: top .25s ease; }
   .pn__side .k-act { margin-top: var(--s2); }   /* the button: kit .k-act (+ .k-gild for guests) */
   @media (prefers-reduced-motion: reduce) { .pn__side { transition: none; } }
+  .pn__n { display: none; }
+  .pn__stage { display: contents; }
+  /* ── the pattern (Sergei 2026-11-18/19): one screen high whatever the post holds (no scroll inside a post: see
+     fit() in the script), no «Add your property» beside the menu, no dashes; a click on the menu brings the whole stage on
+     screen; the posts turn by themselves while the pointer is not on the menu ── */
+  @media (min-width: 1000px) {
+    .pn--ch .pn__stage { display: grid; height: 100vh; height: 100svh; box-sizing: border-box; min-height: 0; }
+    .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); }
+    .pn--ch .pn__faq { grid-column: 1; }
+    .pn--ch .pn__side .k-act { display: none; }
+    .pn--ch :global(.sp__dash) { display: none; }
+    .pn--ch .pn__posts { min-height: 0 !important; height: 100%; padding: 0; }
+    .pn--ch :global(.sp) { height: 100%; }
+    .pn--ch :global(.sp--car .sp__grid) { height: 100% !important; align-items: stretch; }
+    .pn--ch :global(.sp--car .sp__post) { height: 100%; max-height: none; }
+    .pn--ch :global(.sp--car .sp__b) { max-height: none; height: 100%; }
+    /* no scroll inside a post (Sergei 2026-11-19 «скрол в сео отделе не должен быть»): the script scales a long
+       post's content down until it fits the box (see fit() below) */
+    .pn--ch :global(.sp--car .sp__b) { overflow: hidden; }
+    /* step 1 for a long post: its text in two columns */
+    .pn--ch :global(.sp__b.is-cols .sp__tx) { columns: 2; column-gap: 48px; }
+    .pn--ch :global(.sp__b.is-cols .sp__tx li), .pn--ch :global(.sp__b.is-cols .sp__tx h3) { break-inside: avoid; }
+    /* a long post with a photo (Sergei 2026-11-19 «фото меньше, а некоторый текст во всю ширину … сохранить стиль»): the
+       photo shrinks to a corner of the post and the text flows beside it, then on at the full width under it */
+    .pn--ch :global(.sp__post.is-wrap) { display: block !important; }
+    /* the script moves the photo into the text (a float only wraps text in its own block) */
+    .pn--ch :global(.sp__post.is-wrap .sp__tx > .sp__ph) { float: left; width: 28%; height: auto; min-height: 0; aspect-ratio: 3 / 2; margin: 6px 40px 16px 0; }
+    .pn--ch :global(.sp__post.is-wrap:nth-child(even) .sp__tx > .sp__ph) { float: right; margin: 4px 0 16px 40px; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx ul), .pn--ch :global(.sp__post.is-wrap .sp__tx ol) { display: flow-root; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx p) { max-width: none; }
+    .pn--ch :global(.sp__post.is-bare .sp__tx > .sp__ph) { display: none; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx > .sp__ph img) { max-height: none; margin: 0; }   /* the text's own image rules do not apply to the photo */
+    .pn--ch :global(.sp__post.is-wrap .sp__b) { padding: 40px 48px; }
+    /* a list of four or more in two columns; the link tile beside the text links, smaller */
+    .pn--ch :global(.sp__post.is-wrap .sp__tx ul:has(> li:nth-child(4))), .pn--ch :global(.sp__post.is-wrap .sp__tx ol:has(> li:nth-child(4))) { columns: 2; column-gap: 40px; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx li) { break-inside: avoid; }
+    .pn--ch :global(.sp__post.is-wrap .lt--sec) { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px 32px; }
+    .pn--ch :global(.sp__post.is-wrap .lt__sm) { grid-template-columns: repeat(var(--n, 3), 200px); }
+    /* last step, a post that does not fit one screen even so: the stage grows to the longest post (every post the
+       same height, so the box still does not jump), the page scrolls, never the post */
+    .pn__stage.is-tall { height: auto !important; min-height: 100svh; }
+    .pn__stage.is-tall .pn__posts, .pn__stage.is-tall :global(.sp), .pn__stage.is-tall :global(.sp--car .sp__grid),
+    .pn__stage.is-tall :global(.sp--car .sp__post), .pn__stage.is-tall :global(.sp--car .sp__b) { height: auto !important; }
+    .pn__stage.is-tall :global(.sp--car .sp__b) { overflow: visible; }
+    .pn--ch .pn__side { grid-column: 1; grid-row: 1; }
+    .pn--ch .pn__posts { grid-column: 1; grid-row: 2; }
+    .pn--ch .pn__stage { grid-template-rows: auto minmax(0, 1fr); row-gap: 28px; padding-block: 32px 40px; }
+    .pn--ch .pn__side { margin: 0; }
+  }
+  /* ── chapters across the top, the post at the full width (Sergei 2026-11-18, the site pattern since 2026-11-19) ── */
+  @media (min-width: 1000px) {
+    .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); max-width: none; padding-inline: max(var(--gut), 4vw); }
+    .pn--ch .pn__side { grid-column: 1; grid-row: auto; position: static; flex-direction: row; align-items: flex-end; gap: 40px;
+      padding: 0; background: transparent; border: 0; }
+    .pn--ch .pn__nav { flex: 1; min-width: 0; }
+    .pn--ch .pn__side .k-act { flex: none; width: auto; padding-inline: 28px; margin: 0; }
+    .pn--ch :global(.k-side__list) { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 32px; margin-top: 20px; }
+    .pn--ch :global(.k-side__it) { flex-direction: column; align-items: flex-start; gap: 14px; height: 100%; padding: 20px 0 0; border-top: 2px solid var(--line);
+      background: transparent !important; font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.005em; text-transform: none; color: var(--faint); }
+    .pn--ch :global(.k-side__it > span) { transform: none; }
+    .pn--ch :global(.k-side__it:hover), .pn--ch :global(.k-side__it.on) { color: var(--ink); font-weight: 300; }
+    .pn--ch :global(.k-side__it.on) { border-top-color: var(--ink); }
+    .pn--ch .pn__n { display: block; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 1px var(--faint); }
+    .pn--ch :global(.k-side__it.on) .pn__n { color: var(--ink); -webkit-text-stroke: 0; }
+    .pn--ch .pn__q { display: none; }
+    .pn--ch :global(.sp--car .sp__b h2) { font-size: var(--fs-s4) !important; line-height: 1.08; }
+    .pn--ch :global(.sp__tx p) { font-size: var(--fs-s1); font-weight: 300; line-height: 1.6; max-width: 60ch; }
+    .pn--ch :global(.sp--car .sp__b) { padding: 56px 64px; }
+  }
   .pn :global([data-spc]), .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
 </style>
 
@@ -137,13 +215,82 @@ const cta = Astro.props.cta === undefined
       keep();
       addEventListener('resize', keep);
       const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // the tried looks (Sergei 2026-11-18): the stage is one screen high; a click puts it exactly on the screen
+      const pnBox = box.closest<HTMLElement>('.pn');
+      const stage = pnBox?.querySelector<HTMLElement>('[data-pn-stage]');
+      const staged = () => !!stage && /pn--ch/.test(pnBox?.className ?? '') && getComputedStyle(stage).display === 'grid';
+      // every post fits its one-screen box, no scroll inside (Sergei 2026-11-19): a long post is first zoomed down a
+      // little (to 80%); then a post with a photo gets the photo smaller in its corner and the text round it and on at
+      // the full width (is-wrap: lists in two columns, to 75%), and as the last step loses the photo (is-bare); a post
+      // without one gets its text in two columns; if one still does not fit, the whole stage grows to the longest
+      // post instead (the page scrolls, the post never does)
+      const over = (b: HTMLElement) => b.scrollHeight > b.clientHeight + 1;
+      // the photo into the text and back (is-wrap)
+      const wrap = (b: HTMLElement) => {
+        const post = b.closest('.sp__post'); const ph = post?.querySelector(':scope > .sp__ph'); const tx = b.querySelector('.sp__tx');
+        if (!post || !ph || !tx) return false;
+        tx.prepend(ph); post.classList.add('is-wrap'); return true;
+      };
+      const unwrap = (b: HTMLElement) => {
+        const post = b.closest('.sp__post'); const ph = b.querySelector('.sp__tx > .sp__ph');
+        if (post && ph) post.prepend(ph);
+        post?.classList.remove('is-wrap', 'is-bare');
+      };
+      const fit = () => {
+        const bs = [...car.querySelectorAll<HTMLElement>('.sp__b')];
+        stage?.classList.remove('is-tall');
+        bs.forEach((b) => { b.classList.remove('is-cols'); unwrap(b); [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = ''; }); });
+        if (!staged()) return;
+        let tall = false;
+        const zoomTo = (b: HTMLElement, z: string) => [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = z; });
+        const shrink = (b: HTMLElement, min = 80) => { for (let z = 95; over(b) && z >= min; z -= 5) zoomTo(b, String(z / 100)); };
+        bs.forEach((b) => {
+          if (!over(b)) return;
+          shrink(b);   // a little smaller first, one column
+          if (over(b) && b.closest('.sp__post')?.querySelector(':scope > .sp__ph')) {
+            zoomTo(b, ''); wrap(b); shrink(b, 75);   // then the photo smaller (the text a little smaller still: 75%)
+            if (over(b)) { zoomTo(b, ''); b.closest('.sp__post')?.classList.add('is-bare'); shrink(b, 75); }   // last: the post without its photo
+          }
+          else if (over(b) && b.clientWidth > 640) { zoomTo(b, ''); b.classList.add('is-cols'); shrink(b); }   // or two columns
+          if (over(b)) tall = true;
+        });
+        // the stage grows: every post back to one column at its full size
+        if (tall) { bs.forEach((b) => { b.classList.remove('is-cols'); unwrap(b); zoomTo(b, ''); }); stage?.classList.add('is-tall'); }
+      };
+      fit();
+      addEventListener('resize', fit);
+      document.fonts?.ready.then(fit);
+      addEventListener('load', fit);
+      let held = 0;   // the time of the visitor's last own turn: the automatic turning waits after it
       links.forEach((a) => a.addEventListener('click', (e) => {
         e.preventDefault();
+        held = Date.now();
         car.dispatchEvent(new CustomEvent('spc:go', { detail: a.dataset.pnTo }));
-        const top = car.getBoundingClientRect().top;
-        if (top < 0 || top > innerHeight * 0.6) car.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+        if (staged()) {
+          scrollTo({ top: stage!.getBoundingClientRect().top + scrollY, behavior: still ? 'auto' : 'smooth' });
+        } else {
+          const top = car.getBoundingClientRect().top;
+          if (top < 0 || top > innerHeight * 0.6) car.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+        }
         history.replaceState(null, '', `#${a.dataset.pnTo}`);
       }));
+      // …and the posts turn by themselves, one after another, while the stage is on screen and the pointer is not on
+      // the menu (Sergei 2026-11-18 «если мышка не на уровне кнопок … перелистываеться автоматически на следущее»).
+      // Never with reduced motion, never in a hidden tab.
+      if (stage && !still) {
+        let onMenu = false, seen = false;
+        box.addEventListener('pointerenter', () => { onMenu = true; });
+        box.addEventListener('pointerleave', () => { onMenu = false; });
+        box.addEventListener('focusin', () => { onMenu = true; });
+        box.addEventListener('focusout', () => { onMenu = false; });
+        if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { seen = en.intersectionRatio > 0.6; }, { threshold: [0, 0.6, 1] }).observe(stage);
+        const ids = links.map((l) => l.dataset.pnTo);
+        setInterval(() => {
+          if (!staged() || !seen || onMenu || document.hidden || Date.now() - held < 12000) return;
+          const now = links.findIndex((l) => l.classList.contains('on'));
+          car.dispatchEvent(new CustomEvent('spc:go', { detail: ids[(now + 1) % ids.length] }));
+        }, 7000);
+      }
       const first = car.querySelector<HTMLElement>('.sp__post')?.id;
       mark(links.some((l) => `#${l.dataset.pnTo}` === location.hash) ? location.hash.slice(1) : first);
       return;

@@ -217,6 +217,12 @@ const jsonLd: unknown[] = [
   /* Exclusive: the blocks after the bento slide over it (ExclusiveIntro, 2026-11-19) — above it, with a ground */
   @media (min-width: 1024px) {
     :global(.gp--lux > .xi ~ *) { position: relative; z-index: 1; }
+    /* the black top stays and the bento «What Exclusive gives you» slides over it from below (Sergei 2026-11-19 «пусть
+       наезжает скроллом 3D наверх»); the script dims the top as it is covered */
+    .gp.gp--lux .gp__top { position: sticky; top: var(--lux-top, 0px); z-index: 0; }
+    .gp--lux .gp__top::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
+                               background: #000; opacity: var(--lux-dim, 0); pointer-events: none; z-index: 1; }
+    :global(.gp--lux > .xi .xi__win) { box-shadow: 0 -18px 40px rgba(0, 0, 0, .25); }
     /* a block without a ground of its own gets white at the full width (a .wrap block is narrower than the screen) */
     :global(:where(.gp--lux > .xi ~ *)) { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
   }
@@ -226,8 +232,9 @@ const jsonLd: unknown[] = [
               background: var(--ink-deep); color: #fff; }
   /* the light: one soft white glow, far larger than the screen, wandering slowly (24 s a lap) */
   .gp__dark::before { content: ''; position: absolute; inset: -40%;
-    background: radial-gradient(closest-side, rgba(255,255,255,.075), rgba(255,255,255,0) 70%) 30% 40% / 60% 60% no-repeat;
-    animation: gp-glow 24s ease-in-out infinite alternate; }
+    background: radial-gradient(closest-side, rgba(255,255,255,.075), rgba(255,255,255,0) 70%) 50% 50% / 60% 60% no-repeat; }
+  /* the light stands still in the middle (Sergei 2026-11-19 «плавает кружочек, просто центрируй его»); the drift (gp-glow)
+     is no longer used */
   @keyframes gp-glow { 0% { transform: translate(-6%, -4%); } 50% { transform: translate(8%, 6%); } 100% { transform: translate(-2%, 8%); } }
   .gp__lock { position: absolute; left: 50%; top: 50%; width: min(70vh, 560px); height: auto; transform: translate(-50%, -52%); opacity: .06; }
   @media (prefers-reduced-motion: reduce) { .gp__dark::before { animation: none; } }
@@ -300,6 +307,24 @@ const jsonLd: unknown[] = [
 </style>
 
 <script>
+  // Exclusive: the black top dims as the bento slides over it (desktop; none with reduced motion)
+  document.querySelectorAll<HTMLElement>('.gp--lux .gp__top').forEach((top) => {
+    const win = document.querySelector<HTMLElement>('.gp--lux [data-xi-win]');
+    const desk = matchMedia('(min-width: 1024px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
+    let raf = 0;
+    const place = () => top.style.setProperty('--lux-top', `${Math.min(0, innerHeight - top.offsetHeight)}px`);
+    const tick = () => {
+      raf = 0;
+      if (!win || !desk.matches || still.matches) { top.style.setProperty('--lux-dim', '0'); return; }
+      const r = top.getBoundingClientRect();
+      const covered = Math.min(1, Math.max(0, (r.bottom - win.getBoundingClientRect().top) / r.height));
+      top.style.setProperty('--lux-dim', String(covered * 0.5));
+    };
+    const ask = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    place(); tick();
+    addEventListener('scroll', ask, { passive: true });
+    addEventListener('resize', () => { place(); ask(); });
+  });
   // pointing at a step (or focusing it): the steps up to it stay, the ones after it fade
   document.querySelectorAll<HTMLElement>('.gst__path').forEach((path) => {
     const sts = [...path.querySelectorAll<HTMLElement>('[data-gst-i]')];

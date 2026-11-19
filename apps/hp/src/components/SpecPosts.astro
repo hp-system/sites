@@ -129,6 +129,9 @@ const look = 'ch';
     .pn--ch .pn__stage { display: grid; height: 100vh; height: 100svh; box-sizing: border-box; min-height: 0; }
     .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); }
     .pn--ch .pn__faq { grid-column: 1; }
+    /* the questions at the site's working width, not the full screen as the chapters (Sergei 2026-11-19 «Frequently asked
+       questions везде должны быть шириной не на весь экран, а на рабочую область сайта») */
+    .pn--ch .pn__faq { justify-self: center; width: 100%; max-width: calc(var(--max) - 2 * var(--gut)); }
     .pn--ch .pn__side .k-act { display: none; }
     .pn--ch :global(.sp__dash) { display: none; }
     .pn--ch .pn__posts { min-height: 0 !important; height: 100%; padding: 0; }

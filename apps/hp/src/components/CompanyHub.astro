@@ -17,6 +17,7 @@
 // SEO: every value, period, logo and door is in the HTML; switching only shows / hides.
 // 🔒 Photos: George's existing page pictures; the property photo (Villa Natalia) is watermarked.
 // ═══════════════════════════════════════════════════════════════════════════
+import LogoMarquee from './LogoMarquee.astro';
 import { brand } from '../brand/index';
 import { findInfoPage, allInfoPages, type InfoPage } from '../lib/infopages';
 import { prefix, t, type Lang } from '../lib/i18n';
@@ -194,12 +195,7 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
           </div>
           <a class="co-prt__all" href={partnersPg.data.path}>{tt('co.all_partners')} <span aria-hidden="true">›</span></a>
         </div>
-        <div class="co-mq">
-          <div class="co-mqt">
-            {logos.map((l) => <img src={l.src} alt={l.alt} width="120" height="84" loading="lazy" decoding="async" />)}
-            {logos.map((l) => <img src={l.src} alt={l.alt} aria-hidden="true" width="120" height="84" loading="lazy" decoding="async" />)}
-          </div>
-        </div>
+        <LogoMarquee logos={logos} />
       </div>
     </section>
   )}
@@ -292,11 +288,6 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     .co-prt__p { margin: 6px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
     .co-prt__all { flex: none; font-size: var(--fs-s0); color: var(--muted); text-decoration: none; transition: color .15s ease; }
     .co-prt__all:hover { color: var(--ink); }
-    .co-mq { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-    .co-mqt { display: flex; align-items: center; gap: 12px; width: max-content; animation: co-mq 60s linear infinite; }
-    .co-mq:hover .co-mqt { animation-play-state: paused; }
-    .co-mqt img { height: 84px; width: 120px; object-fit: contain; display: block; filter: grayscale(1); opacity: .75; transition: filter .25s ease, opacity .25s ease; }
-    .co-mqt img:hover { filter: none; opacity: 1; }
 
     /* ── two doors: the hovered one grows and turns dark; the row's height is fixed (280px) ── */
     .co-doors-s { background: var(--paper-2); padding: 40px 0 48px; }
@@ -316,9 +307,7 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     :global([dir='rtl']) .co-door.on .co-ar { transform: translateX(-6px) scaleX(-1); }
     :global([dir='rtl']) .co-ar { transform: scaleX(-1); }
   }
-  @keyframes co-mq { to { transform: translateX(-50%); } }
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
-    .co-mqt { animation: none; }
     .co-sx, .co-bar span, .co-accw, .co-accimg img, .co-door, .co-door b, .co-dp, .co-ar, .co-acb svg { transition: none; }
   }
 </style>

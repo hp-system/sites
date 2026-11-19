@@ -46,7 +46,13 @@ Our friends and partners! We are grateful for all the moments and experiences th
 
 ## Who our partners are
 
-They cover every stage of a home: building materials and insulation (Isomat, Knauf, Tecnocemento, Sidenor), windows, doors and aluminium (Rehau, Mouratidis aluminium constructions, Porta Impresa), heating, cooling and water (Thermogaz NIBE, Intelwater), kitchens, tiles and interiors (Aran Cucine, Porcelana, Steropal, COCO-MAT, m&f Flora fabrics and curtains, ArtAbout), and engineering and consulting (KE.PA.MACH. S.A., Alpha Plan Consultants, Tsoulfidis).
+They cover every stage of a home:
+
+- **Building materials and insulation**: Isomat, Knauf, Tecnocemento, Sidenor
+- **Windows, doors and aluminium**: Rehau, Mouratidis aluminium constructions, Porta Impresa
+- **Heating, cooling and water**: Thermogaz NIBE, Intelwater
+- **Kitchens, tiles and interiors**: Aran Cucine, Porcelana, Steropal, COCO-MAT, m&f Flora fabrics and curtains, ArtAbout
+- **Engineering and consulting**: KE.PA.MACH. S.A., Alpha Plan Consultants, Tsoulfidis
 
 ## Why partners matter to our clients
 

@@ -74,6 +74,10 @@ const pages = defineCollection({
     })).default([]),
     /** Address, phone and e-mail from the brand config (contact page). */
     contact_card: z.boolean().default(false),
+    /** The form opens the page (Construction, Sergei 2026-11-19): crumbs, H1, intro, phone and the form in one dark band. */
+    form_top: z.boolean().default(false),
+    /** …in the Contact look (Pre-published, Sergei 2026-11-19): the title side light, the form side dark, the full width. */
+    form_split: z.boolean().default(false),
     /** Services described on the page (sections of a services page) → Service.hasOfferCatalog. */
     catalog: z.array(z.object({ name: z.string(), url: z.string() })).default([]),
     /** Live data block rendered after the text: price tables, "from €" guide, pre-published list. */

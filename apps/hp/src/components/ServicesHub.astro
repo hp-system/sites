@@ -212,12 +212,15 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     .svc-top { text-align: center; padding: 0 40px; }
     .svc-lead { margin: 12px auto 0; max-width: 60ch; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); }
     .svc-nav { display: flex; justify-content: center; gap: 28px; margin-top: 14px; padding-bottom: 6px; border-bottom: 1px solid var(--line-soft); }
+    /* as the member panel's side menu (kit .k-side__it, Sergei 2026-11-16 «как в админке есть меню слева»): the items not
+       chosen a little smaller and in the faint grey; the chosen one full size, ink, bold. Hover brings an item to full size. */
     .svc-role { all: unset; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 150px; padding: 4px 0 6px;
-      color: var(--ink-2); text-align: center; font-size: var(--fs-s0); line-height: 1.4; transition: color .15s ease; }
-    .svc-role svg { transition: transform .2s ease; }
-    .svc-role:hover { color: var(--ink); }
-    .svc-role:hover svg { transform: translateY(-3px); }
-    .svc-role.on { color: var(--ink); font-weight: 600; }
+      color: var(--faint); text-align: center; font-size: var(--fs-s0); line-height: 1.4; transition: color .15s ease; }
+    .svc-role svg, .svc-role span { transform: scale(.88); transform-origin: 50% 50%; transition: transform .2s ease; }
+    .svc-role span { transform-origin: 50% 0; }
+    .svc-role:hover, .svc-role.on { color: var(--ink); }
+    .svc-role:hover svg, .svc-role:hover span, .svc-role.on svg, .svc-role.on span { transform: scale(1); }
+    .svc-role.on { font-weight: 600; }
     .svc-role:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
     /* ── the chosen role's panel ── */
@@ -395,6 +398,10 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     main.w1-svc > .info-top .crumb { display: none; }
     main.w1-svc > .info-top .svc-eb { display: block; margin: 0; font-size: var(--fs-s-1); font-weight: 600; line-height: 1.4; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
     main.w1-svc > .info-top .info-h1 { margin: 10px auto 0; max-width: none; font-size: var(--fs-s4); font-weight: 300; line-height: 1.08; letter-spacing: -.022em; }
+    /* the intro under the H1: centred on the page like the heading, in even lines (Sergei 2026-11-16: «текст некрасиво
+       сверху» — the block sat left of centre with ragged lines) */
+    main.w1-svc > .info-top .svc-intro .st-intro { max-width: 96ch; margin-inline: auto; }
+    main.w1-svc > .info-top .svc-intro .st-intro p { text-wrap: balance; color: var(--ink-2); }
   }
 </style>
 

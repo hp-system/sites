@@ -101,18 +101,21 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
      the step's icon beside its text */
   .sp__tx :global(ol) { margin: 0 0 var(--s3); padding: 0; list-style: none; counter-reset: spn; }
   .sp__tx :global(ol:last-child) { margin-bottom: 0; }
-  .sp__tx :global(ol > li) { display: flex; align-items: center; gap: var(--s4); }
+  .sp__tx :global(ol > li:has(> img)) { display: flex; align-items: center; gap: var(--s4); }
   .sp__tx :global(ol > li > img) { flex: none; width: 48px; height: 48px; }
   .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); }
   .sp__tx :global(strong) { color: var(--ink); font-weight: 600; }
-  /* big thin numbers on the list items (Sergei 2026-11-10: «большие тонкие цифры, но так чтоб не изменять
-     размер самого блока»): out of the flow, behind the text at the right edge, so no line or post grows */
-  .sp__tx :global(ul) { counter-reset: spn; }
-  .sp__tx :global(li) { position: relative; isolation: isolate; counter-increment: spn; padding-right: 56px; }   /* room for the number: it never covers the text */
-  .sp__tx :global(li)::after { content: counter(spn); position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-    z-index: -1; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; pointer-events: none;
-    color: transparent; -webkit-text-stroke: 1px var(--ink); }   /* outline only: thin, the text over it stays readable */
-  .sp__post--fact .sp__tx :global(li)::after { -webkit-text-stroke-color: var(--paper); }
+  /* lists stand apart from the running text (Sergei 2026-11-19 «цифры внутри боксов не подходят … другое оформление
+     что б отделить этот текст»; replaces the big outline numbers of 2026-11-10): a beige panel, a small «01» label
+     on the left of each item, hairlines between items */
+  .sp__tx :global(ul), .sp__tx :global(ol) { counter-reset: spn; background: var(--paper-2); padding: var(--s1) var(--s4); }
+  .sp__tx :global(li) { position: relative; counter-increment: spn; padding-left: 44px; }
+  .sp__tx :global(li:first-child) { border-top: 0; }
+  .sp__tx :global(li)::before { content: counter(spn, decimal-leading-zero); position: absolute; left: 0; top: var(--s2);
+    font-size: var(--fs-s-1); font-weight: 600; line-height: 1.5rem; letter-spacing: .08em; color: var(--muted); pointer-events: none; }
+  .sp__tx :global(ol > li:has(> img))::before { position: static; flex: none; width: 28px; margin-left: -44px; }
+  .sp__post--fact .sp__tx :global(ul), .sp__post--fact .sp__tx :global(ol) { background: rgba(255,255,255,.06); }
+  .sp__post--fact .sp__tx :global(li)::before { color: rgba(255,255,255,.55); }
   /* a decorative «?» beside the heading (Sergei 2026-11-10): beige, bolder, tilted; out of the flow, so the
      heading and the post keep their size; aria-hidden, not part of the H2 */
   .sp__hd { position: relative; width: fit-content; max-width: calc(100% - 48px); }

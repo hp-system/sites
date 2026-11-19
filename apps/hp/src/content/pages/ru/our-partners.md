@@ -47,7 +47,13 @@ look: wave1
 
 ## Кто наши партнёры
 
-Они охватывают каждый этап создания дома: строительные материалы и изоляция (Isomat, Knauf, Tecnocemento, Sidenor), окна, двери и алюминиевые конструкции (Rehau, Mouratidis aluminium constructions, Porta Impresa), отопление, кондиционирование и водоснабжение (Thermogaz NIBE, Intelwater), кухни, плитка и интерьеры (Aran Cucine, Porcelana, Steropal, COCO-MAT, ткани и шторы m&f Flora, ArtAbout), а также инжиниринг и консалтинг (KE.PA.MACH. S.A., Alpha Plan Consultants, Tsoulfidis).
+Они охватывают каждый этап создания дома:
+
+- **Строительные материалы и изоляция**: Isomat, Knauf, Tecnocemento, Sidenor
+- **Окна, двери и алюминиевые конструкции**: Rehau, Mouratidis aluminium constructions, Porta Impresa
+- **Отопление, кондиционирование и водоснабжение**: Thermogaz NIBE, Intelwater
+- **Кухни, плитка и интерьеры**: Aran Cucine, Porcelana, Steropal, COCO-MAT, ткани и шторы m&f Flora, ArtAbout
+- **Инжиниринг и консалтинг**: KE.PA.MACH. S.A., Alpha Plan Consultants, Tsoulfidis
 
 ## Почему партнёры важны для наших клиентов
 

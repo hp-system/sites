@@ -104,6 +104,37 @@
   "source": "brief batch-1.json",
   "photoThemes": [],
   "standout": [],
-  "postPhotos": [],
+  "postPhotos": [
+    {
+      "after": "Who Exclusive is for",
+      "file": "/pages/exclusive/posts/who-exclusive-is-for",
+      "alt": "A villa with a lit pool at dusk"
+    },
+    {
+      "after": "What Exclusive members see",
+      "file": "/pages/exclusive/posts/what-exclusive-members-see",
+      "alt": "Architectural floor plans on a desk"
+    },
+    {
+      "after": "The Secret Portfolio: properties that are never advertised",
+      "file": "/pages/exclusive/posts/the-secret-portfolio",
+      "alt": "A closed wrought-iron gate"
+    },
+    {
+      "after": "Your own agent",
+      "file": "/pages/exclusive/posts/your-own-agent",
+      "alt": "Two people shaking hands across a desk"
+    },
+    {
+      "after": "How to join",
+      "file": "/pages/exclusive/posts/how-to-join",
+      "alt": "A phone in a hand"
+    },
+    {
+      "after": "Discretion",
+      "file": "/pages/exclusive/posts/discretion",
+      "alt": "An old door handle with a keyhole"
+    }
+  ],
   "questionMarks": []
 }

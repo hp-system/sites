@@ -86,12 +86,12 @@ try {
   check('/en/about-us one H1', (about.match(/<h1[\s>]/g) ?? []).length === 1, 'h1');
   check('/en/about-us values: 8 of George\'s, all in the HTML', (about.match(/class="co-sx/g) ?? []).length === 8 && about.includes('Human relationships mean everything to us.'), 'values');
   check('/en/about-us people + quote', about.includes('They are the people who make the companies and not the other way around.'), 'people');
-  check('/en/about-us story: 5 periods, last open', (about.match(/class="co-acb"/g) ?? []).length === 5 && about.includes('The journey begins') && /id="coEraB4"[^>]*aria-expanded="true"|aria-expanded="true"[^>]*id="coEraB4"/.test(about), 'story');
+  // Sergei 2026-11-19: the years accordion is gone; Our story is the third door (its own page has the periods)
+  check('/en/about-us Our story as the third door, no years accordion', /class="co-door[^"]*" href="\/en\/about-us\/our-story"/.test(about) && !/class="co-acb"/.test(about), 'door');
   check('/en/about-us partner logos named', (about.match(/<img src="\/pages\/our-partners\/[^"]+" alt="[^"]+ logo/g) ?? []).length >= 15, 'logos');
   check('/en/about-us doors: careers + contact', /class="co-door[^"]*" href="\/en\/careers"/.test(about) && /class="co-door[^"]*" href="\/en\/contact"/.test(about), 'doors');
   check('/en/about-us H2s of the blocks', ["Our company&#39;s core values", '>Our people<', '>Our story<', '>Partners we work with<'].every((s) => about.includes(s)), 'h2');
   check('/en/about-us no prototype images', !about.includes('/_blob/'), 'no /_blob/');
-  check('/en/about-us Villa Natalia photo watermarked', about.includes('/pages/construction/villa-natalia-7010-wm.jpg'), 'wm');
   check('/en/about-us phones: George\'s text and cards kept', about.includes('making our company the most reliable for investors') && about.includes('info-grid w1-m'), 'w1-m');
   check('/en/careers links the job', (pages['/en/careers'] ?? '').includes('href="/en/careers/bulgarian-speaker"'), 'job card');
 

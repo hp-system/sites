@@ -54,10 +54,19 @@ const { tiles: munis, from } = buildAreaTiles(items as any, lang, (f) => pickCov
 const muniOf = (href: string) => munis.find((m) => pathOf(m.href) === pathOf(href));
 
 type Tile = { href: string; text: string; sub?: string; photo: Photo | null };
-const typeTiles: Tile[] = [], areaTiles: Tile[] = [], text: Link[] = [];
+const typeTiles: Tile[] = [], areaTiles: Tile[] = [], text: Link[] = [], secTiles: Tile[] = [];
 for (const l of links) {
-  // #275 (Sergei 2026-11-12): under a SEO section only text links — the tiles are the page blocks above the text
-  if (variant === 'section') { text.push(l); continue; }
+  // #275 (Sergei 2026-11-12): under a SEO section the page's area / category rows are not repeated.
+  // Sergei 2026-11-19 («сделай её также как здесь какой-то подходящей картинкой»): a link to a property list
+  // is a small photo tile like the home «by area» (a cover of a listing that list shows, watermarked; the
+  // spec anchor as its only text); every other link stays text
+  if (variant === 'section') {
+    const m = muniOf(l.href);
+    if (m) { secTiles.push({ href: l.href, text: l.text, sub: m.fromText, photo: m.photo }); continue; }
+    const fs = facetsOf(l.href);
+    if (fs || idOf(l.href) === 'P02') { secTiles.push({ href: l.href, text: l.text, photo: photoFor(fs ?? []) }); continue; }
+    text.push(l); continue;
+  }
   const m = muniOf(l.href);
   if (m) { areaTiles.push({ href: l.href, text: l.text, sub: m.fromText, photo: m.photo }); continue; }
   const fs = facetsOf(l.href);
@@ -144,11 +153,11 @@ const pages = Math.ceil(typeTiles.length / 4);
 const tile = (x: Tile, sizes: string) => ({ x, sizes });
 ---
 {variant === 'section' ? (
-  (rowTiles.length + pageAreas.length + typeTiles.length + text.length > 0) && (
+  (rowTiles.length + secTiles.length + text.length > 0) && (
     <div class="lt lt--sec">
-      {(typeTiles.length + pageAreas.length) > 0 && (
-        <ul class="k-tiles lt__sm" style={`--n: ${Math.min(5, typeTiles.length + pageAreas.length)}`}>
-          {[...typeTiles, ...pageAreas].map((x) => (
+      {secTiles.length > 0 && (
+        <ul class="k-tiles lt__sm" style={`--n: ${Math.min(5, Math.max(3, secTiles.length))}`}>
+          {secTiles.map((x) => (
             <li class="k-tile">
               {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="200px" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
               <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
@@ -226,8 +235,8 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
   .lt__sm { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* by the room the block gets: two a row in a narrow text column, up to four where there is space */
   @container (min-width: 560px) { .lt__sm { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); } }
-  .lt__sm :global(.k-tile__t) { padding: 28px 10px 10px; }
-  .lt__sm :global(.k-tile__l) { font-size: var(--fs-s-1); }
+  .lt__sm :global(.k-tile__t) { padding: 40px 14px 12px; }
+  .lt__sm :global(.k-tile__l) { font-size: var(--fs-s1); line-height: 1.2; }   /* as the home «by area» caption (Sergei 2026-11-19) */
   .lt--page { padding-block: var(--s7); background: var(--paper); }
   .lt__in { display: grid; gap: var(--s7); }
   .lt__grp { display: grid; gap: var(--s4); }

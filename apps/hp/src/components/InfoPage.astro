@@ -114,7 +114,13 @@ const readHtmlAll: string = (page as any).rendered?.html ?? '';
 // width under its centred intro, the video under the strip, then the posts at the normal size, without the logos
 const logoBlock = readHtmlAll.match(/<div class="gallery logos">[\s\S]*?<\/div>/)?.[0] ?? '';
 const prtLogos = [...logoBlock.matchAll(/<img src="([^"]+)" alt="([^"]*)"/g)].map((m) => ({ src: m[1], alt: m[2] }));
-const readHtml: string = logoBlock ? readHtmlAll.replace(logoBlock, '') : readHtmlAll;
+const readHtml0: string = logoBlock ? readHtmlAll.replace(logoBlock, '') : readHtmlAll;
+// Construction (Sergei 2026-11-19 «сео блок сделай нормальной высоты»): the section that is a gallery of projects leaves
+// the posts and stands as its own block of photo tiles under the top band, its H2 as the block's heading
+const projSec = readHtml0.match(/<h2[^>]*>([^<]*)<\/h2>\s*(<div class="gallery projects">[\s\S]*?<\/div>)/);
+const projH2 = projSec?.[1] ?? '';
+const projFigs = projSec ? [...projSec[2].matchAll(/<figure>[\s\S]*?<\/figure>/g)].map((m) => m[0]) : [];
+const readHtml: string = projSec ? readHtml0.replace(projSec[0], '') : readHtml0;
 // Since 2026-11-16 every plain text page but the legal texts (Sergei on Contact: «ети блоки же должны быть блоками
 // прокручиваемыми … мы же делали паттерн для етого»); the «Add your property» button only on Sell pages.
 // the text before the first H2 (Contact, Careers…) stays above the carousel as the page's intro
@@ -127,6 +133,20 @@ const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
 const readCar = d.section !== 'legal' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
   ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
+// two sections under the same H2 (Construction has «Build with us» twice) are one post: the second one's text joins
+// the first, nothing is lost, and the menu does not show the same title twice with both marked
+if (readCar) {
+  const secs: string[] = readCar.body.split(/(?=<h2>)/).filter((x: string) => x.trim());
+  const seen = new Map<string, number>();
+  const out: string[] = [];
+  for (const sc of secs) {
+    const h = sc.match(/<h2>([\s\S]*?)<\/h2>/)?.[1].trim() ?? '';
+    if (h && seen.has(h)) { out[seen.get(h)!] += sc.replace(/<h2>[\s\S]*?<\/h2>/, ''); continue; }
+    if (h) seen.set(h, out.length);
+    out.push(sc);
+  }
+  readCar.body = out.join('');
+}
 // Our partners (Sergei 2026-11-19 «первая статья может пойти просто заголовком над видео, а статей будет 3»): the first
 // section leaves the posts and stands as the heading over the video; the other three get a picture each
 const prtFirst = (() => {
@@ -484,7 +504,42 @@ if (faqItems.length) {
         </div>
       </header>
     )}
-    {!(d.contact_card && d.form) && !(readCar && prtLogos.length > 0 && !fresh) && <header class="wrap info-top w1-top">
+    {d.form_top && d.form && (
+      /* Construction (Sergei 2026-11-19 «убери сверху картинку, сделай форму и заголовок и кнопки и маленький текст
+         сверху»): one dark band opens the page — the crumbs, the H1, George's intro and the phone on the left, the form
+         on the right; no top picture, no form band at the bottom */
+      <section class="ftb" id="form" aria-labelledby="ftb-h">
+        <div class="wrap ftb__g">
+          <div class="ftb__l">
+            <nav class="crumb ftb__crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span aria-hidden="true">·</span><span aria-current="page">{short}</span>
+            </nav>
+            <h1 id="ftb-h" class="ftb__h">{d.h1}</h1>
+            {readPre && <div class="ftb__p" set:html={readPre} />}
+            <p class="ftb__ct">
+              <a href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+              <WaLink dark />
+            </p>
+          </div>
+          <div class="ftb__f">
+            <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+                      look="wave1" lang={lang} bare />
+          </div>
+        </div>
+      </section>
+    )}
+    {projFigs.length > 0 && (
+      <section class="prj" aria-labelledby="prj-h">
+        <div class="wrap">
+          <h2 id="prj-h" class="prj__h">{projH2}</h2>
+          <div class="prj__g" set:html={projFigs.join('')} />
+        </div>
+      </section>
+    )}
+    {!(d.contact_card && d.form) && !(readCar && prtLogos.length > 0 && !fresh) && !(d.form_top && d.form) && <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
         <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
@@ -566,7 +621,7 @@ if (faqItems.length) {
         {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
         <SpecPosts page={readCar} lang={lang} photos={prtPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={prtHeads.map(() => [])} cta={null} />
       </> :
-      readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
+      readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && !d.form_top && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
@@ -621,7 +676,7 @@ if (faqItems.length) {
     {/* No «See also» block on own pages in wave-1 (Sergei 2026-11-10): its links are all in «Related», the
         menu and the buttons already; the one keyword anchor left (to the property list) is the heading below. */}
 
-    {d.form && !d.contact_card && (
+    {d.form && !d.contact_card && !d.form_top && (
       <section class="w1-form" id="form">
         <div class="wrap"><div class="prose w1-form__in">
           <InfoForm source={d.form.source} when={d.key === 'book-an-online-appointment'} headTag={fresh ? 'p' : 'h2'} title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
@@ -838,6 +893,33 @@ if (faqItems.length) {
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .rc-pre { padding-block: var(--s6) 0; }
+  /* Construction: the dark band that opens the page (the form band's look: ink-deep, white text) */
+  .ftb { background: var(--ink-deep); color: #fff; padding-block: var(--s6); scroll-margin-top: 24px; }
+  .ftb__g { display: grid; gap: var(--s5); }
+  .ftb__l { min-width: 0; }
+  .ftb__crumb, .ftb__crumb a { color: rgba(255,255,255,.6); }
+  .ftb__crumb a:hover { color: #fff; }
+  .ftb__h { margin: 14px 0 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.08; letter-spacing: -.018em; color: #fff; }
+  .ftb__p { margin-top: 18px; font-size: var(--fs-s0); line-height: 1.65; color: rgba(255,255,255,.72); max-width: 52ch; }
+  .ftb__p :global(p) { margin: 0; }
+  .ftb__ct { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin: 24px 0 0; font-size: var(--fs-s0); }
+  .ftb__ct > a { color: #fff; text-decoration: none; letter-spacing: .02em; }
+  .ftb__ct > a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .ftb__f :global(.iform) { margin: 0; }
+  @media (min-width: 1024px) {
+    .ftb { padding-block: 64px; }
+    .ftb__g { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
+    .ftb__h { font-size: var(--fs-s5); line-height: 1.04; }
+  }
+  /* Construction: the projects as a block of their own, four photo tiles a row, the caption under each */
+  .prj { padding-block: var(--s6) var(--s5); }
+  .prj__h { margin: 0 0 var(--s4); font-size: var(--fs-s3); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; color: var(--ink); }
+  .prj__g { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  @media (min-width: 1024px) { .prj__g { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; } }
+  .prj__g :global(figure) { margin: 0; min-width: 0; }
+  .prj__g :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .prj__g :global(figcaption) { margin-top: 10px; font-size: var(--fs-s-1); line-height: 1.4; color: var(--muted); }
+  .prj__g :global(figcaption strong) { font-size: var(--fs-s0); font-weight: 400; color: var(--ink); }
   /* Our partners (Sergei 2026-11-19): the top as the home page's dark band «We do the rest for you.» (Abroad.astro):
      two halves centred on one height, the H1 left, George's intro right (its first sentence large, the rest grey) */
   .prt-hd { background: var(--ink-deep); color: #fff; padding-block: var(--s6); }

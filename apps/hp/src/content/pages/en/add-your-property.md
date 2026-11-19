@@ -57,18 +57,18 @@ Your property is advertised on the portals we work with:
 
 | Portal | Market |
 | --- | --- |
-| Green Acres | International portal |
-| Tranio | International portal |
-| James Edition | International portal |
-| Luximmo | Bulgarian portal |
-| Plot | Greek portal |
-| Prian | Russian portal |
-| Spiti 24 | Greek portal |
-| Spitogatos | Greek portal |
-| ToSpitiMou | Greek portal |
-| Xrysi Eukairia (xe.gr) | Greek portal |
-| Property.bg | Bulgarian portal |
-| Suprimmo | Bulgarian portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/green-acres.png" alt="" width="16" height="16" /> Green Acres | International portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/tranio.png" alt="" width="16" height="16" /> Tranio | International portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/jamesedition.png" alt="" width="16" height="16" /> James Edition | International portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/spitogatos.png" alt="" width="16" height="16" /> Spitogatos | Greek portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/xe.png" alt="" width="16" height="16" /> Xrysi Eukairia (xe.gr) | Greek portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/spiti24.png" alt="" width="16" height="16" /> Spiti 24 | Greek portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/tospitimou.png" alt="" width="16" height="16" /> ToSpitiMou | Greek portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/plot.png" alt="" width="16" height="16" /> Plot | Greek portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/luximmo.png" alt="" width="16" height="16" /> Luximmo | Bulgarian portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/property-bg.png" alt="" width="16" height="16" /> Property.bg | Bulgarian portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/suprimmo.png" alt="" width="16" height="16" /> Suprimmo | Bulgarian portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/prian.png" alt="" width="16" height="16" /> Prian | Russian portal |
 
 ## Manage all portals from one point
 

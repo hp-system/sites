@@ -58,18 +58,18 @@ form_split: true
 
 | Portal | Αγορά |
 | --- | --- |
-| Green Acres | Διεθνές portal |
-| Tranio | Διεθνές portal |
-| James Edition | Διεθνές portal |
-| Luximmo | Βουλγαρικό portal |
-| Plot | Ελληνικό portal |
-| Prian | Ρωσικό portal |
-| Spiti 24 | Ελληνικό portal |
-| Spitogatos | Ελληνικό portal |
-| ToSpitiMou | Ελληνικό portal |
-| Xrysi Eukairia (xe.gr) | Ελληνικό portal |
-| Property.bg | Βουλγαρικό portal |
-| Suprimmo | Βουλγαρικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/green-acres.png" alt="" width="16" height="16" /> Green Acres | Διεθνές portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/tranio.png" alt="" width="16" height="16" /> Tranio | Διεθνές portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/jamesedition.png" alt="" width="16" height="16" /> James Edition | Διεθνές portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/spitogatos.png" alt="" width="16" height="16" /> Spitogatos | Ελληνικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/xe.png" alt="" width="16" height="16" /> Xrysi Eukairia (xe.gr) | Ελληνικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/spiti24.png" alt="" width="16" height="16" /> Spiti 24 | Ελληνικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/tospitimou.png" alt="" width="16" height="16" /> ToSpitiMou | Ελληνικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/plot.png" alt="" width="16" height="16" /> Plot | Ελληνικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/luximmo.png" alt="" width="16" height="16" /> Luximmo | Βουλγαρικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/property-bg.png" alt="" width="16" height="16" /> Property.bg | Βουλγαρικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/suprimmo.png" alt="" width="16" height="16" /> Suprimmo | Βουλγαρικό portal |
+| <img class="pt-ic" src="/pages/add-your-property/portals/prian.png" alt="" width="16" height="16" /> Prian | Ρωσικό portal |
 
 ## Διαχειρίσου από 1 σημείο όλα τα portals
 

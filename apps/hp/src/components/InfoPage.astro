@@ -162,7 +162,7 @@ if (readCar) {
 let carVid = '';
 const secImgs: (MosaicPhoto | null)[] = [];
 let cardsH = '';
-if (readCar && coPage) {
+if (readCar && (coPage || d.section === 'sell')) {
   let b: string = readCar.body;
   // the H3 parts are posts of their own (Values: our people; Responsibility: sports, plans — one post was two screens long)
   if (/<h3[^>]*>/.test(b)) b = b.replace(/<h3[^>]*>/g, '<h2>').replace(/<\/h3>/g, '</h2>');
@@ -173,7 +173,7 @@ if (readCar && coPage) {
   for (const sc of secs) {
     const rest = sc.replace(/<h2>[\s\S]*?<\/h2>/, '').trim();
     if (!rest) { cardsH ||= sc.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? ''; continue; }
-    const im = sc.match(/(?:<p>\s*)?<img\s[^>]*>(?:\s*<\/p>)?/);
+    const im = sc.match(/(?:<p>\s*)?<img\s(?![^>]*pt-ic)[^>]*>(?:\s*<\/p>)?/);   // not a portal's icon in a table
     const inLi = im ? /<li>(?:(?!<\/li>)[\s\S])*$/.test(sc.slice(0, im.index)) : false;
     if (im && !inLi) {
       const src = im[0].match(/src="([^"]+)"/)?.[1] ?? '';
@@ -287,6 +287,15 @@ const PAGE_PH: Record<string, { dir: string; list: PostPh[] }> = {
     stockPh('how-to-reach-us', 'A phone in hand: call or write to us', 'Κινητό στο χέρι: τηλεφωνήστε ή γράψτε μας', 'Телефон в руке: позвоните или напишите нам'),
     ownPic('/pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp', `The office of ${brand.name} next to Thessaloniki airport`, `Το γραφείο της ${brand.name} δίπλα στο αεροδρόμιο της Θεσσαλονίκης`, `Офис ${brand.name} рядом с аэропортом Салоник`),
     stockPh('what-to-send-us', 'Laptop, coffee and notes on a desk: what to send us', 'Laptop, καφές και σημειώσεις σε γραφείο: τι να μας στείλετε', 'Ноутбук, кофе и заметки на столе: что нам прислать'),
+  ] },
+  // Add your property (Sergei 2026-11-19 «на каждую статью SEO скачай соответствующую картинку»); the statistics post keeps
+  // its own picture of the owner's panel (null = the section's own picture)
+  'add-your-property': { dir: '/pages/add-your-property/posts/', list: [
+    stockPh('how-it-works', 'Notes and a tablet with photos: uploading the details of your property', 'Σημειώσεις και tablet με φωτογραφίες: καταχώριση των στοιχείων του ακινήτου σας', 'Заметки и планшет с фото: вы загружаете данные объекта'),
+    stockPh('how-do-i-win', 'A buyer browsing properties on a tablet: every client who asked for what you sell is notified', 'Αγοραστής βλέπει ακίνητα σε tablet: ενημερώνεται κάθε πελάτης που ζήτησε αυτό που πουλάτε', 'Покупатель смотрит объекты на планшете: уведомление получает каждый клиент, который искал то, что вы продаёте'),
+    stockPh('advertise-on-portals', 'People on their laptops in a café: buyers looking at property portals', 'Άνθρωποι με laptop σε καφέ: αγοραστές βλέπουν πύλες ακινήτων', 'Люди с ноутбуками в кафе: покупатели смотрят порталы недвижимости'),
+    stockPh('manage-all-portals-from-one-point', 'A laptop and coffee on a desk: every portal managed from one point', 'Laptop και καφές σε γραφείο: όλες οι πύλες από ένα σημείο', 'Ноутбук и кофе на столе: все порталы из одного места'),
+    null,
   ] },
   'book-an-online-appointment': { dir: '/pages/book-an-online-appointment/posts/', list: [
     null, null,

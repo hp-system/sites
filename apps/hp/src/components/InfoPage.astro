@@ -47,6 +47,7 @@ import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
 import SpecText from './SpecText.astro';
+import LogoMarquee from './LogoMarquee.astro';
 import SpecPosts from './SpecPosts.astro';
 import ReadPage from './ReadPage.astro';
 import FaqSearch from './FaqSearch.astro';
@@ -108,11 +109,19 @@ const readHeads = headings.filter((h) => h.depth === 2 && h.text.trim()).map((h)
 // A Sell page without an own brief (Add your property…): its H2 sections as the paged posts of the Sell canon (SpecPosts
 // carousel, side list turns it) instead of one long column (Sergei 2026-11-16: «должно быть перелистываемыми блоками»).
 // Only Sell pages that are plain text (legal texts, FAQ and pages with widgets or cards keep the reading layout).
-const readHtml: string = (page as any).rendered?.html ?? '';
+const readHtmlAll: string = (page as any).rendered?.html ?? '';
+// Our partners (Sergei 2026-11-19): a page whose text carries a logo gallery shows it as the floating strip at the full
+// width under its centred intro, the video under the strip, then the posts at the normal size, without the logos
+const logoBlock = readHtmlAll.match(/<div class="gallery logos">[\s\S]*?<\/div>/)?.[0] ?? '';
+const prtLogos = [...logoBlock.matchAll(/<img src="([^"]+)" alt="([^"]*)"/g)].map((m) => ({ src: m[1], alt: m[2] }));
+const readHtml: string = logoBlock ? readHtmlAll.replace(logoBlock, '') : readHtmlAll;
 // Since 2026-11-16 every plain text page but the legal texts (Sergei on Contact: «ети блоки же должны быть блоками
 // прокручиваемыми … мы же делали паттерн для етого»); the «Add your property» button only on Sell pages.
 // the text before the first H2 (Contact, Careers…) stays above the carousel as the page's intro
 const readPre = readHtml.includes('<h2') ? readHtml.slice(0, readHtml.indexOf('<h2')).trim() : '';
+const readPreAll = readPre;
+const prtVid = prtLogos.length ? readPreAll.match(/<figure class="vid"[\s\S]*?<\/figure>/)?.[0] ?? '' : '';
+const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
 const readCar = d.section !== 'legal' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
   ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
@@ -228,7 +237,7 @@ const autoPhoto = (() => {
 })();
 // no property photo in memory (the CRM down, a local run): the home page's hero shot, never an empty half
 const heroFallback = !d.desk_image && !autoPhoto && w1 && !d.contact_card ? HERO_SHOTS[0] : undefined;
-const deskImg = d.desk_image || autoPhoto?.url || heroFallback?.url || '';
+const deskImg = prtLogos.length ? '' : d.desk_image || autoPhoto?.url || heroFallback?.url || '';   // Our partners: no top picture
 const deskAlt = d.desk_image ? (d.desk_image_alt || d.h1) : (autoPhoto?.alt || heroFallback?.alt[lang] || heroFallback?.alt.en || d.h1);
 const deskSet = heroFallback ? cleanSrcSet(deskImg) : /_1920w\.jpg$/.test(deskImg) ? `${deskImg.replace(/_1920w\.jpg$/, '_800w.jpg')} 800w, ${deskImg} 1920w` : deskImg;
 const relCards = w1 ? d.related.map((r) => ({
@@ -422,7 +431,7 @@ if (faqItems.length) {
   {w1 && !hubLike ? (
   <>
     {/* Contact (Sergei 2026-11-18): the breadcrumb and the H1 open the box below; the page starts with it */}
-    {!(d.contact_card && d.form) && <header class="wrap info-top w1-top">
+    {!(d.contact_card && d.form) && <header class:list={['wrap info-top w1-top', { 'w1-top--c': prtLogos.length > 0 }]}>
       <div class="w1-top__txt">
         <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
@@ -498,6 +507,12 @@ if (faqItems.length) {
     {/* a page of the kit without an own brief: the reading layout (its widget under the text, at the full width of
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
+      readCar && prtLogos.length ? <>
+        {prtPre && <div class="wrap prt-pre"><div class="prose" set:html={prtPre} /></div>}
+        <section class="prt-mq" aria-label={d.h1}><LogoMarquee logos={prtLogos} full /></section>
+        {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
+        <SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} cta={null} />
+      </> :
       readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
@@ -770,6 +785,17 @@ if (faqItems.length) {
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .rc-pre { padding-block: var(--s6) 0; }
+  /* Our partners (Sergei 2026-11-19): the title, the intro, the logos strip and the video, all centred */
+  .w1-top--c { text-align: center; }
+  .w1-top--c .crumb { justify-content: center; }
+  .w1-top.w1-top--c .info-h1 { margin-inline: auto; max-width: none; }
+  @media (min-width: 1024px) { .w1-top.w1-top--c { grid-template-columns: minmax(0, 1fr); padding-bottom: 0; } }
+  .prt-pre { padding-block: var(--s4) var(--s6); text-align: center; }
+  .prt-pre .prose { max-width: none; margin-inline: auto; text-wrap: balance; font-size: var(--fs-s1); font-weight: 300; line-height: 1.5; }
+  .prt-pre .prose :global(p) { margin: 0; }
+  .prt-mq { padding-block: var(--s3); }
+  .prt-vid { padding-block: var(--s6) var(--s7); }
+  .prt-vid :global(figure.vid) { max-width: 960px; margin: 0 auto !important; }
   .rc-pre--c { text-align: center; padding-bottom: var(--s6); }
   .rc-pre--c .prose { margin-inline: auto; text-wrap: balance; }
   .rc-pre__go { margin: var(--s4) 0 0; }

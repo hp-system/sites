@@ -122,6 +122,12 @@ const readPre = readHtml.includes('<h2') ? readHtml.slice(0, readHtml.indexOf('<
 const readPreAll = readPre;
 const prtVid = prtLogos.length ? readPreAll.match(/<figure class="vid"[\s\S]*?<\/figure>/)?.[0] ?? '' : '';
 const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
+// …its top as the home page's dark band «We do the rest for you.» (Sergei 2026-11-19): the H1 on the left; on the right
+// George's intro, its first sentence as the heading and the rest as the grey line under it
+const prtTxt = prtPre.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const prtSplit = prtTxt.match(/^(.+?[.!?])\s+(.+)$/);
+const prtLead = prtSplit ? prtSplit[1] : prtTxt;
+const prtSub = prtSplit ? prtSplit[2] : '';
 const readCar = d.section !== 'legal' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
   ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
@@ -431,7 +437,23 @@ if (faqItems.length) {
   {w1 && !hubLike ? (
   <>
     {/* Contact (Sergei 2026-11-18): the breadcrumb and the H1 open the box below; the page starts with it */}
-    {!(d.contact_card && d.form) && <header class:list={['wrap info-top w1-top', { 'w1-top--c': prtLogos.length > 0 }]}>
+    {readCar && prtLogos.length > 0 && !fresh && (
+      <header class="prt-hd">
+        <div class="wrap prt-hd__g">
+          <div>
+            <nav class="crumb prt-hd__crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span aria-hidden="true">·</span><span aria-current="page">{short}</span>
+            </nav>
+            <h1 class="prt-hd__h">{d.h1}</h1>
+          </div>
+          {prtLead && <div><p class="prt-hd__l">{prtLead}</p>{prtSub && <p class="prt-hd__s">{prtSub}</p>}</div>}
+        </div>
+      </header>
+    )}
+    {!(d.contact_card && d.form) && !(readCar && prtLogos.length > 0 && !fresh) && <header class="wrap info-top w1-top">
       <div class="w1-top__txt">
         <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
           {crumbs.slice(0, -1).map((c, i) => (
@@ -508,7 +530,6 @@ if (faqItems.length) {
         the white column); an own brief without cards, heading or widget: no empty band */}
     {!fresh ? (
       readCar && prtLogos.length ? <>
-        {prtPre && <div class="wrap prt-pre"><div class="prose" set:html={prtPre} /></div>}
         <section class="prt-mq" aria-label={d.h1}><LogoMarquee logos={prtLogos} full /></section>
         {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
         <SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} cta={null} />
@@ -785,15 +806,20 @@ if (faqItems.length) {
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .rc-pre { padding-block: var(--s6) 0; }
-  /* Our partners (Sergei 2026-11-19): the title, the intro, the logos strip and the video, all centred */
-  .w1-top--c { text-align: center; }
-  .w1-top--c .crumb { justify-content: center; }
-  .w1-top.w1-top--c .info-h1 { margin-inline: auto; max-width: none; }
-  @media (min-width: 1024px) { .w1-top.w1-top--c { grid-template-columns: minmax(0, 1fr); padding-bottom: 0; } }
-  .prt-pre { padding-block: var(--s4) var(--s6); text-align: center; }
-  .prt-pre .prose { max-width: none; margin-inline: auto; text-wrap: balance; font-size: var(--fs-s1); font-weight: 300; line-height: 1.5; }
-  .prt-pre .prose :global(p) { margin: 0; }
-  .prt-mq { padding-block: var(--s3); }
+  /* Our partners (Sergei 2026-11-19): the top as the home page's dark band «We do the rest for you.» (Abroad.astro):
+     two halves centred on one height, the H1 left, George's intro right (its first sentence large, the rest grey) */
+  .prt-hd { background: var(--ink-deep); color: #fff; padding-block: var(--s6); }
+  .prt-hd__g { display: grid; gap: var(--s4); }
+  .prt-hd__crumb, .prt-hd__crumb a { color: rgba(255,255,255,.6); }
+  .prt-hd__crumb a:hover { color: #fff; }
+  .prt-hd__h { margin: 14px 0 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: #fff; }
+  .prt-hd__l { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; color: #fff; text-wrap: balance; }
+  .prt-hd__s { margin: 12px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: rgba(255,255,255,.6); max-width: 60ch; }
+  @media (min-width: 1024px) {
+    .prt-hd { min-height: 280px; box-sizing: border-box; display: flex; align-items: center; padding-block: 36px; }
+    .prt-hd__g { width: 100%; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }
+  }
+  .prt-mq { padding-block: var(--s5) var(--s3); }
   .prt-vid { padding-block: var(--s6) var(--s7); }
   .prt-vid :global(figure.vid) { max-width: 960px; margin: 0 auto !important; }
   .rc-pre--c { text-align: center; padding-bottom: var(--s6); }

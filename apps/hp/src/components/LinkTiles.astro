@@ -234,7 +234,7 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
   .lt--sec { display: grid; gap: var(--s3); margin-top: var(--s4); container-type: inline-size; }
   .lt__sm { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   /* by the room the block gets: two a row in a narrow text column, up to four where there is space */
-  @container (min-width: 560px) { .lt__sm { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); } }
+  @container (min-width: 560px) { .lt__sm { grid-template-columns: repeat(var(--n, 4), minmax(0, 260px)); } }   /* never wider than 260px: a wide post keeps them small (2026-11-19) */
   .lt__sm :global(.k-tile__t) { padding: 40px 14px 12px; }
   .lt__sm :global(.k-tile__l) { font-size: var(--fs-s1); line-height: 1.2; }   /* as the home «by area» caption (Sergei 2026-11-19) */
   .lt--page { padding-block: var(--s7); background: var(--paper); }

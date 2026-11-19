@@ -142,6 +142,22 @@ const look = 'ch';
     /* step 1 for a long post: its text in two columns */
     .pn--ch :global(.sp__b.is-cols .sp__tx) { columns: 2; column-gap: 48px; }
     .pn--ch :global(.sp__b.is-cols .sp__tx li), .pn--ch :global(.sp__b.is-cols .sp__tx h3) { break-inside: avoid; }
+    /* a long post with a photo (Sergei 2026-11-19 «фото меньше, а некоторый текст во всю ширину … сохранить стиль»): the
+       photo shrinks to a corner of the post and the text flows beside it, then on at the full width under it */
+    .pn--ch :global(.sp__post.is-wrap) { display: block !important; }
+    /* the script moves the photo into the text (a float only wraps text in its own block) */
+    .pn--ch :global(.sp__post.is-wrap .sp__tx > .sp__ph) { float: left; width: 28%; height: auto; min-height: 0; aspect-ratio: 3 / 2; margin: 6px 40px 16px 0; }
+    .pn--ch :global(.sp__post.is-wrap:nth-child(even) .sp__tx > .sp__ph) { float: right; margin: 4px 0 16px 40px; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx ul), .pn--ch :global(.sp__post.is-wrap .sp__tx ol) { display: flow-root; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx p) { max-width: none; }
+    .pn--ch :global(.sp__post.is-bare .sp__tx > .sp__ph) { display: none; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx > .sp__ph img) { max-height: none; margin: 0; }   /* the text's own image rules do not apply to the photo */
+    .pn--ch :global(.sp__post.is-wrap .sp__b) { padding: 40px 48px; }
+    /* a list of four or more in two columns; the link tile beside the text links, smaller */
+    .pn--ch :global(.sp__post.is-wrap .sp__tx ul:has(> li:nth-child(4))), .pn--ch :global(.sp__post.is-wrap .sp__tx ol:has(> li:nth-child(4))) { columns: 2; column-gap: 40px; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx li) { break-inside: avoid; }
+    .pn--ch :global(.sp__post.is-wrap .lt--sec) { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px 32px; }
+    .pn--ch :global(.sp__post.is-wrap .lt__sm) { grid-template-columns: repeat(var(--n, 3), 200px); }
     /* last step, a post that does not fit one screen even so: the stage grows to the longest post (every post the
        same height, so the box still does not jump), the page scrolls, never the post */
     .pn__stage.is-tall { height: auto !important; min-height: 100svh; }
@@ -203,26 +219,43 @@ const look = 'ch';
       const pnBox = box.closest<HTMLElement>('.pn');
       const stage = pnBox?.querySelector<HTMLElement>('[data-pn-stage]');
       const staged = () => !!stage && /pn--ch/.test(pnBox?.className ?? '') && getComputedStyle(stage).display === 'grid';
-      // every post fits its one-screen box, no scroll inside (Sergei 2026-11-19): a long post first gets its text in
-      // two columns, then its content zoomed down step by step to 80%; if one still does not fit, the whole stage
-      // grows to the longest post instead (the page scrolls, the post never does)
+      // every post fits its one-screen box, no scroll inside (Sergei 2026-11-19): a long post is first zoomed down a
+      // little (to 80%); then a post with a photo gets the photo smaller in its corner and the text round it and on at
+      // the full width (is-wrap: lists in two columns, to 75%), and as the last step loses the photo (is-bare); a post
+      // without one gets its text in two columns; if one still does not fit, the whole stage grows to the longest
+      // post instead (the page scrolls, the post never does)
       const over = (b: HTMLElement) => b.scrollHeight > b.clientHeight + 1;
+      // the photo into the text and back (is-wrap)
+      const wrap = (b: HTMLElement) => {
+        const post = b.closest('.sp__post'); const ph = post?.querySelector(':scope > .sp__ph'); const tx = b.querySelector('.sp__tx');
+        if (!post || !ph || !tx) return false;
+        tx.prepend(ph); post.classList.add('is-wrap'); return true;
+      };
+      const unwrap = (b: HTMLElement) => {
+        const post = b.closest('.sp__post'); const ph = b.querySelector('.sp__tx > .sp__ph');
+        if (post && ph) post.prepend(ph);
+        post?.classList.remove('is-wrap', 'is-bare');
+      };
       const fit = () => {
         const bs = [...car.querySelectorAll<HTMLElement>('.sp__b')];
         stage?.classList.remove('is-tall');
-        bs.forEach((b) => { b.classList.remove('is-cols'); [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = ''; }); });
+        bs.forEach((b) => { b.classList.remove('is-cols'); unwrap(b); [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = ''; }); });
         if (!staged()) return;
         let tall = false;
         const zoomTo = (b: HTMLElement, z: string) => [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = z; });
-        const shrink = (b: HTMLElement) => { for (let z = 95; over(b) && z >= 80; z -= 5) zoomTo(b, String(z / 100)); };
+        const shrink = (b: HTMLElement, min = 80) => { for (let z = 95; over(b) && z >= min; z -= 5) zoomTo(b, String(z / 100)); };
         bs.forEach((b) => {
           if (!over(b)) return;
           shrink(b);   // a little smaller first, one column
-          if (over(b) && b.clientWidth > 640) { zoomTo(b, ''); b.classList.add('is-cols'); shrink(b); }   // then two columns
+          if (over(b) && b.closest('.sp__post')?.querySelector(':scope > .sp__ph')) {
+            zoomTo(b, ''); wrap(b); shrink(b, 75);   // then the photo smaller (the text a little smaller still: 75%)
+            if (over(b)) { zoomTo(b, ''); b.closest('.sp__post')?.classList.add('is-bare'); shrink(b, 75); }   // last: the post without its photo
+          }
+          else if (over(b) && b.clientWidth > 640) { zoomTo(b, ''); b.classList.add('is-cols'); shrink(b); }   // or two columns
           if (over(b)) tall = true;
         });
         // the stage grows: every post back to one column at its full size
-        if (tall) { bs.forEach((b) => { b.classList.remove('is-cols'); zoomTo(b, ''); }); stage?.classList.add('is-tall'); }
+        if (tall) { bs.forEach((b) => { b.classList.remove('is-cols'); unwrap(b); zoomTo(b, ''); }); stage?.classList.add('is-tall'); }
       };
       fit();
       addEventListener('resize', fit);

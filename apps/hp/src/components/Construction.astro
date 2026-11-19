@@ -127,20 +127,6 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
            data-ev="construction:have_land">{t(lang, 'cx.cta2')}</a>
       </p>
 
-      {/* desktop: the row of cards (the same texts as the boxes below, which stay for phones) */}
-      <div class="cx__rw" data-cx-win>
-        <div class="cx__rail" data-cx-rail>
-          {ROW.map((k) => k.startsWith('s') ? (
-            <article class={`cd cd--fact cd--${k}`}><h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p></article>
-          ) : (
-            <article class={`cd cd--${k}`}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICON[k]}></svg>
-              <h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p>
-            </article>
-          ))}
-        </div>
-        <div class="cx__shade" aria-hidden="true"></div>
-      </div>
 
       <div class="cx__caps" data-acc>
         {CAPS.map((k, i) => (
@@ -174,15 +160,49 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     </div>
   </div>
 </section>
+{/* desktop: the cards (the same texts as the boxes in the section, which stay for phones). Outside the section since
+    2026-11-19 (Sergei «после этого блока сделай, чтобы 3D анимация налазила только снизу, сверху пусть будет обычно»): the
+    cards come in as an ordinary block, then stay while the blocks below slide over them (sticky inside the page's main) */}
+  <div class="cx__rw" data-cx-win>
+    <div class="cx__rail" data-cx-rail>
+      {ROW.map((k) => k.startsWith('s') ? (
+        <article class={`cd cd--fact cd--${k}`}><h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p></article>
+      ) : (
+        <article class={`cd cd--${k}`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICON[k]}></svg>
+          <h3>{t(lang, `cx.${k}_t`)}</h3><p>{t(lang, `cx.${k}_d`)}</p>
+        </article>
+      ))}
+    </div>
+    <div class="cx__shade" aria-hidden="true"></div>
+  </div>
 
 <script>
-  // Desktop window onto the bento (Sergei 08/11): the same «window» as the property of the week —
-  // the bento is fixed to the screen (CSS) and the page scrolls the window across it. Only the
-  // page's width without the scrollbar is measured here; no scroll handler is needed.
+  // Desktop bento (Sergei 08/11, depth changed 2026-11-19): the page's width without the scrollbar, and the depth —
+  // the cards stick where their bottom meets the screen's, then sink to 95% and dim to 30% while the next block
+  // slides over them; none with reduced motion.
   document.querySelectorAll<HTMLElement>('[data-cx-win]').forEach((win) => {
     const sbw = () => win.style.setProperty('--pw', `${document.documentElement.clientWidth}px`);
-    window.addEventListener('resize', sbw);
-    sbw();
+    const rail = win.querySelector<HTMLElement>('[data-cx-rail]');
+    // the first block after the cards that takes room (a script or a hidden band in between is skipped)
+    let next = win.nextElementSibling as HTMLElement | null;
+    while (next && (next.offsetHeight === 0 || getComputedStyle(next).display === 'none')) next = next.nextElementSibling as HTMLElement | null;
+    next?.classList.add('cx-next');
+    const desk = matchMedia('(min-width: 1024px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
+    let raf = 0;
+    const place = () => win.style.setProperty('--cx-top', `${Math.min(0, window.innerHeight - win.offsetHeight)}px`);
+    const tick = () => {
+      raf = 0;
+      if (!rail || !next || !desk.matches || still.matches) { if (rail) rail.style.transform = ''; win.style.setProperty('--cx-dim', '0'); return; }
+      const w = win.getBoundingClientRect();
+      const covered = Math.min(1, Math.max(0, (w.bottom - next.getBoundingClientRect().top) / w.height));
+      rail.style.transform = `scale(${1 - covered * 0.05})`;
+      win.style.setProperty('--cx-dim', String(covered * 0.3));
+    };
+    const ask = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    window.addEventListener('resize', () => { sbw(); place(); ask(); });
+    window.addEventListener('scroll', ask, { passive: true });
+    sbw(); place(); tick();
   });
 </script>
 
@@ -322,17 +342,21 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     /* --pw = the page's width without the scrollbar, measured by the script (some browsers already
        leave the scrollbar out of 100vw, so 100vw − scrollbar came out 15 px short). */
     .cx__rw { --pw: calc(100vw - var(--sbw, 0px)); --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
-              display: block; grid-area: rail; position: relative; margin: 40px 0 0 calc(-1 * var(--off)); width: var(--pw);
-              height: 480px; overflow: hidden; clip-path: inset(0); background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles */
+              display: block; position: sticky; top: var(--cx-top, 0px); z-index: 0; width: var(--pw); box-sizing: border-box;
+              padding-block: 0 48px; overflow: hidden; background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles; 2026-11-19: the tiles touch the white top («прикрепи эти блочки к верху белому») */
+    .cx__rw::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--cx-dim, 0); pointer-events: none; }
+    /* every block after the cards slides over them, on a ground of its own (a block without one gets white, full width) */
+    :global(main > .cx__rw ~ *) { position: relative; z-index: 1; }
+    :global(:where(main > .cx__rw ~ *)) { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
+    :global(main > .cx__rw ~ .cx-next) { box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); clip-path: none; }
     /* Sergei 08/11: the tiles as wide as the text (the page's text lines), and lower to match;
        centred on the screen's height, the beige window around them. */
-    .cx__rail { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(600px, calc(var(--tw) * .6), 100vh);
+    .cx__rail { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(560px, calc(var(--tw) * .5), calc(100vh - 96px));
                 box-sizing: border-box; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
                 grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 12px;
-                position: fixed; left: var(--off); width: var(--tw); height: var(--th); top: calc(50vh - var(--th) / 2);
+                margin-inline: var(--off); width: var(--tw); height: var(--th); transform-origin: 50% 0; will-change: transform;
                 grid-template-areas: "s1 s1 c1 c2 c3" "c4 c5 c1 s2 s2" "s3 s3 c6 s4 s4"; }
-    .cx__shade { position: absolute; inset: 0; pointer-events: none;
-                 box-shadow: inset 0 22px 26px -20px rgba(14,18,20,.28), inset 0 -22px 26px -20px rgba(14,18,20,.28); }
+    .cx__shade { display: none; }
     /* Sergei 08/11: tiles only white (services) and black (facts) */
     .cd { min-width: 0; overflow: hidden; background: var(--paper); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
     .cd svg { width: 40px; height: 40px; color: var(--ink); flex: none; stroke-width: 1.2; }   /* Sergei 08/11: bigger icons */
@@ -352,7 +376,7 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
   }
   /* Reduced motion (as the property of the week): no fixed layer; the window is an ordinary scroll box. */
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
-    .cx__rw { overflow-y: auto; clip-path: none; }
-    .cx__rail { position: static; width: auto; height: auto; grid-template-rows: none; grid-auto-rows: 250px; }
+    .cx__rw { position: relative; }
+    .cx__rail { height: auto; grid-template-rows: none; grid-auto-rows: 250px; }
   }
 </style>

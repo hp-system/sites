@@ -100,6 +100,10 @@ const stepSrc = page.id === 'P19'
         : null;
     }).find(Boolean) ?? null)
   : null;
+// the heading split at its colon: the first part large, the rest as a small line under it
+const stepH: [string, string] = stepSrc
+  ? (stepSrc.h.includes(':') ? [stepSrc.h.slice(0, stepSrc.h.indexOf(':')).trim(), stepSrc.h.slice(stepSrc.h.indexOf(':') + 1).trim()] : [stepSrc.h, ''])
+  : ['', ''];
 const postsPage = stepSrc ? { ...page, body: page.body.replace(stepSrc.cut, '') } : page;
 const crumbs = page.breadcrumb.map((name, i, a) => ({ name, url: i === 0 ? (prefix(lang) || '/') : i === a.length - 1 ? page.path : crumbPath(name, lang) }));
 
@@ -152,11 +156,12 @@ const jsonLd: unknown[] = [
     {stepSrc && (
       <section class="gst" aria-labelledby="gst-h" data-gst>
         <div class="gst__in" data-gst-in>
-          <p id="gst-h" class="gst__h">{stepSrc.h}</p>
-          <p class="gst__lead">{stepSrc.lead}</p>
+          {/* Sergei 2026-11-19: «Step by step» centred and large, «from viewing to the notary» small under it; the line
+              «The usual path looks like this:» is not shown */}
+          <p id="gst-h" class="gst__h">{stepH[0]}{stepH[1] && <><span class="sr-only">: </span><span class="gst__sub">{stepH[1]}</span></>}</p>
           <ol class="gst__path" style={`--n: ${stepSrc.steps.length}`}>
             {stepSrc.steps.map((x, i) => (
-              <li class:list={['gst__st', i % 2 ? 'gst__st--lo' : 'gst__st--hi', i === stepSrc.steps.length - 1 && 'gst__st--end']} style={`--c: ${i + 1}`}>
+              <li class:list={['gst__st', i % 2 ? 'gst__st--lo' : 'gst__st--hi', i === stepSrc.steps.length - 1 && 'gst__st--end']} style={`--c: ${i + 1}`} tabindex="0" data-gst-i={i}>
                 <span class="gst__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <span class="gst__tx"><b>{x.t}</b><span set:html={x.d} /></span>
               </li>
@@ -209,6 +214,12 @@ const jsonLd: unknown[] = [
      («чёрный без фото»: the watermarked covers full-width did not suit); everything centred, large thin type, gold only
      on the registration call, slow motion. ── */
   .gp--lux { overflow-x: clip; }
+  /* Exclusive: the blocks after the bento slide over it (ExclusiveIntro, 2026-11-19) — above it, with a ground */
+  @media (min-width: 1024px) {
+    :global(.gp--lux > .xi ~ *) { position: relative; z-index: 1; }
+    /* a block without a ground of its own gets white at the full width (a .wrap block is narrower than the screen) */
+    :global(:where(.gp--lux > .xi ~ *)) { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
+  }
   .gp--lux .gp__top { position: relative; isolation: isolate; color: #fff; min-height: min(86vh, 860px); box-sizing: border-box;
                       display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; text-align: center; padding-block: 72px; }
   .gp__dark { position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); z-index: -1; overflow: hidden;
@@ -248,8 +259,8 @@ const jsonLd: unknown[] = [
   /* ── the guide's steps as one path across the screen (Sergei 2026-11-19); phones: a numbered column ── */
   .gst { background: var(--paper); border-top: 1px solid var(--line-soft); }
   .gst__in { padding: var(--s6) var(--gut); }
-  .gst__h { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.12; letter-spacing: -.016em; color: var(--ink); }
-  .gst__lead { margin: 10px 0 0; font-size: var(--fs-s0); color: var(--muted); }
+  .gst__h { margin: 0; text-align: center; font-size: var(--fs-s3); font-weight: 300; line-height: 1.12; letter-spacing: -.016em; color: var(--ink); }
+  .gst__sub { display: block; margin-top: 10px; font-size: var(--fs-s0); font-weight: 400; letter-spacing: 0; color: var(--muted); }
   .gst__path { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: 0; }
   .gst__st { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); }
   .gst__n { font-size: var(--fs-s3); font-weight: 300; line-height: 1; letter-spacing: -.02em; color: var(--ink); }
@@ -279,10 +290,25 @@ const jsonLd: unknown[] = [
     .gst__st--hi .gst__tx { grid-row: 1; align-self: end; padding-bottom: 20px; }
     .gst__st--lo .gst__tx { grid-row: 3; align-self: start; padding-top: 20px; }
     .gst__tx > span { font-size: var(--fs-s0); font-weight: 300; line-height: 1.5; }
+    /* pointing at a step (Sergei 2026-11-19): the path up to it stays, the steps after it fade — how far to the notary */
+    .gst__st { transition: opacity .25s ease; cursor: default; }
+    .gst__st:focus-visible { outline: 2px solid var(--brand); outline-offset: 6px; }
+    .gst__path.is-on .gst__st:not(.on) { opacity: .22; }
+    .gst__path.is-on .gst__st.at .gst__tx b { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
   }
+  @media (prefers-reduced-motion: reduce) { .gst__st { transition: none; } }
 </style>
 
 <script>
+  // pointing at a step (or focusing it): the steps up to it stay, the ones after it fade
+  document.querySelectorAll<HTMLElement>('.gst__path').forEach((path) => {
+    const sts = [...path.querySelectorAll<HTMLElement>('[data-gst-i]')];
+    const show = (k: number) => { path.classList.add('is-on'); sts.forEach((x, i) => { x.classList.toggle('on', i <= k); x.classList.toggle('at', i === k); }); };
+    const clear = () => { path.classList.remove('is-on'); sts.forEach((x) => x.classList.remove('on', 'at')); };
+    sts.forEach((x, i) => { x.addEventListener('pointerenter', () => show(i)); x.addEventListener('focus', () => show(i)); });
+    path.addEventListener('pointerleave', clear);
+    path.addEventListener('focusout', (e) => { if (!path.contains(e.relatedTarget as Node)) clear(); });
+  });
   // the steps band sinks as the page slides over it (desktop; none with reduced motion): it sticks where its bottom meets
   // the screen's bottom, then scales down to 94% and dims to 35% while the next block covers it
   const band = document.querySelector<HTMLElement>('[data-gst]');

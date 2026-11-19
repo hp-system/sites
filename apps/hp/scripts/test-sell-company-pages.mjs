@@ -49,9 +49,10 @@ try {
   check('/en/sell links its pages (add, terms, Exclusive)', subs.every((s) => sell.includes(`href="${s}"`)), subs.filter((s) => !sell.includes(`href="${s}"`)).join(',') || 'all');
   // #105 desktop redesign, wave 1 (approved by George 2026-11-02): the Sell page only.
   check('/en/sell wave 1 layout', sell.includes('class="info w1"'), 'main.w1');
-  const hero = sell.match(/<picture class="w1-top__img[\s\S]*?<\/picture>/)?.[0] ?? '';
-  check('/en/sell desktop hero: watermarked 800w + 1920w', hero.includes('_800w.jpg 800w') && hero.includes('_1920w.jpg 1920w') && hero.includes('media="(min-width: 1024px)"'), hero ? 'picture' : 'missing');
-  check('/en/sell desktop hero: phones load nothing', /<img src="data:image\/gif/.test(hero), 'placeholder img');
+  // Sergei 2026-11-19: the top is the Contact box (title and intro on the light half, the form on the dark half); no top picture
+  const top = sell.match(/<section class="ctb ctb--top"[\s\S]*?<\/section>/)?.[0] ?? '';
+  check('/en/sell top box: H1, intro and the form', /<h1 id="ctb-h"/.test(top) && /class="iform iform--w1/.test(top), top ? 'ctb' : 'missing');
+  check('/en/sell no top picture', !/<picture class="w1-top__img/.test(sell), 'none');
   // Since 2026-11-10 the three Sell cards are the SEO sections that carry their link (SectionCards: the
   // section H2 + text + the link with its spec anchor), in the brief's H2 order.
   const rail = sell.split('class="w1-how__sc"')[1]?.split('</section>')[0] ?? '';   // the cards hold lists: cut at the section end
@@ -66,7 +67,7 @@ try {
   const area = rel.includes('id="w1Area"');
   check('/en/sell area row (when listed): municipality guides + H2', !area || (/>Property for sale in Halkidiki<\/h2>/.test(rel) && /href="\/en\/property-for-sale\/(kassandra|sithonia|aristotelis|nea-propontida|polygyros)"/.test(rel)), area ? 'about the area' : 'no area cards in the stub');
   check('/en/sell area photos watermarked', [...rel.matchAll(/<img [^>]*src="(https?:[^"]+)"/g)].every((m) => /_(400|800|1920)w\./.test(m[1])), 'marked');
-  check('/en/sell dark form: wave 1, picker, consent', /class="iform iform--w1"/.test(sell) && /data-w1/.test(sell) && sell.includes('data-cc="GR"') && sell.includes('name="first"') && sell.includes('name="last"'), 'form');
+  check('/en/sell dark form: wave 1, picker, consent', /class="iform iform--w1/.test(sell) && /data-w1/.test(sell) && sell.includes('data-cc="GR"') && sell.includes('name="first"') && sell.includes('name="last"'), 'form');
   // Sell is an own page (P24): its H2 outline is the brief's 7 sections; «Get to know how we sell.» and «Related»
   // stay as design headings (p[data-h]) with the same look (SEO audit 2026-11-10).
   check('/en/sell «Get to know how we sell.» + Related as design headings, not H2', sell.includes('Get to know how we sell.')
@@ -85,12 +86,12 @@ try {
   check('/en/about-us one H1', (about.match(/<h1[\s>]/g) ?? []).length === 1, 'h1');
   check('/en/about-us values: 8 of George\'s, all in the HTML', (about.match(/class="co-sx/g) ?? []).length === 8 && about.includes('Human relationships mean everything to us.'), 'values');
   check('/en/about-us people + quote', about.includes('They are the people who make the companies and not the other way around.'), 'people');
-  check('/en/about-us story: 5 periods, last open', (about.match(/class="co-acb"/g) ?? []).length === 5 && about.includes('The journey begins') && /id="coEraB4"[^>]*aria-expanded="true"|aria-expanded="true"[^>]*id="coEraB4"/.test(about), 'story');
+  // Sergei 2026-11-19: the years accordion is gone; Our story is the third door (its own page has the periods)
+  check('/en/about-us Our story as the third door, no years accordion', /class="co-door[^"]*" href="\/en\/about-us\/our-story"/.test(about) && !/class="co-acb"/.test(about), 'door');
   check('/en/about-us partner logos named', (about.match(/<img src="\/pages\/our-partners\/[^"]+" alt="[^"]+ logo/g) ?? []).length >= 15, 'logos');
   check('/en/about-us doors: careers + contact', /class="co-door[^"]*" href="\/en\/careers"/.test(about) && /class="co-door[^"]*" href="\/en\/contact"/.test(about), 'doors');
   check('/en/about-us H2s of the blocks', ["Our company&#39;s core values", '>Our people<', '>Our story<', '>Partners we work with<'].every((s) => about.includes(s)), 'h2');
   check('/en/about-us no prototype images', !about.includes('/_blob/'), 'no /_blob/');
-  check('/en/about-us Villa Natalia photo watermarked', about.includes('/pages/construction/villa-natalia-7010-wm.jpg'), 'wm');
   check('/en/about-us phones: George\'s text and cards kept', about.includes('making our company the most reliable for investors') && about.includes('info-grid w1-m'), 'w1-m');
   check('/en/careers links the job', (pages['/en/careers'] ?? '').includes('href="/en/careers/bulgarian-speaker"'), 'job card');
 

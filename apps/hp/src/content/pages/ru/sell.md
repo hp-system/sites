@@ -55,6 +55,8 @@ cards:
   height: 500
 contact_card: false
 look: wave1
+form_top: true
+form_split: true
 desk_image: https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736545_1920w.jpg
 desk_image_alt: Терраса виллы и бассейн инфинити с видом на море в Халкидиках
 form:

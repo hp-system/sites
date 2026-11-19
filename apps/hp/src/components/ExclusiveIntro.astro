@@ -122,8 +122,9 @@ const ICONS = [
     window.addEventListener('scroll', ask, { passive: true });
     window.addEventListener('resize', () => { place(); ask(); });
   });
-  // The black box drifts from the top of its white band to the bottom while the band crosses the screen
-  // (the same formula as the property page About / Prices cards); desktop only, none with reduced motion.
+  // The black box drifts from the top of its white band to the bottom while the band crosses the screen, and the
+  // faint lock down the box (the same formula as the property page About / Prices cards); desktop only, none with
+  // reduced motion. Kept with the band sliding over the bento (Sergei 2026-11-19 «почему потерял анимацию?»).
   document.querySelectorAll<HTMLElement>('[data-xi-band]').forEach((band) => {
     const box = band.querySelector<HTMLElement>('[data-xi-box]');
     if (!box) return;
@@ -192,9 +193,13 @@ const ICONS = [
     .xi__bento { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(560px, calc(var(--tw) * .5), calc(100vh - 96px));
                  box-sizing: border-box; padding: 0; margin-inline: var(--off); width: var(--tw); height: var(--th); transform-origin: 50% 0; will-change: transform;
                  grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(2, minmax(0, 1fr)); }
-    .xi__row { position: relative; z-index: 1; background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(-48px -100vmax 0 -100vmax); }
-    .xi__row::before { content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: 100%; height: 48px; pointer-events: none;
-                       background: linear-gradient(to top, rgba(14, 18, 20, .14), rgba(14, 18, 20, 0)); }
+    /* the bento stays put until the end of the page's main part (the section is display: contents, so the bento's
+       sticky box is the whole main), and every block after it slides over it: first this white band with the black
+       box, then the posts. The band's white ground and its soft top shadow run the full width (a pseudo behind it). */
+    .xi { display: contents; }
+    .xi__row { position: relative; z-index: 1; }
+    .xi__row::before { content: ""; position: absolute; inset: 0 -100vmax; z-index: -1; background: var(--paper);
+                       box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); pointer-events: none; }
     .xi { padding-block: 0; }   /* the black box touches the ends of its band (Sergei 2026-11-16) */
     .xi__give { align-self: end; padding: 0 0 6px; font-size: var(--fs-s4); font-weight: 300; line-height: 1.05; letter-spacing: -.022em;
                 text-transform: none; color: var(--ink); }
@@ -203,7 +208,7 @@ const ICONS = [
     .xd { padding: 32px 36px; overflow: hidden; justify-content: flex-end; gap: 12px; }
     .xd svg { width: 56px; height: 56px; margin-bottom: auto; }
     /* the white band is taller than the box: the box has room to drift */
-    .xi__row { margin-top: 0; min-height: 340px; }
+    .xi__row { margin-top: 0; min-height: 340px; }   /* the white band is taller than the box: the box has room to drift */
     .xi__box { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; padding: 44px 48px; align-items: center; }
     .xi__time p { font-size: var(--fs-s3); line-height: 1.14; text-wrap: balance; }
     .xi__lock { display: block; position: absolute; left: calc(50% - 50px); top: 0; width: 100px; height: 100px;

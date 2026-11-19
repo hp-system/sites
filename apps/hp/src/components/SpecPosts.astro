@@ -129,6 +129,9 @@ const look = 'ch';
     .pn--ch .pn__stage { display: grid; height: 100vh; height: 100svh; box-sizing: border-box; min-height: 0; }
     .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); }
     .pn--ch .pn__faq { grid-column: 1; }
+    /* the questions at the site's working width, not the full screen as the chapters (Sergei 2026-11-19 «Frequently asked
+       questions везде должны быть шириной не на весь экран, а на рабочую область сайта») */
+    .pn--ch .pn__faq { justify-self: center; width: 100%; max-width: calc(var(--max) - 2 * var(--gut)); }
     .pn--ch .pn__side .k-act { display: none; }
     .pn--ch :global(.sp__dash) { display: none; }
     .pn--ch .pn__posts { min-height: 0 !important; height: 100%; padding: 0; }
@@ -138,7 +141,10 @@ const look = 'ch';
     .pn--ch :global(.sp--car .sp__b) { max-height: none; height: 100%; }
     /* no scroll inside a post (Sergei 2026-11-19 «скрол в сео отделе не должен быть»): the script scales a long
        post's content down until it fits the box (see fit() below) */
-    .pn--ch :global(.sp--car .sp__b) { overflow: hidden; }
+    .pn--ch :global(.sp--car .sp__b) { overflow: hidden; overscroll-behavior: auto; }
+    /* the wheel always scrolls the page over a post (Sergei 2026-11-19 «почему когда мышка в SEO-блоке скролл не работает?
+       везде»): the old «contain» of the scrolling post stayed on a box that no longer scrolls and swallowed the wheel */
+    .pn--ch :global(.sp--car .sp__grid) { overscroll-behavior: auto; }
     /* step 1 for a long post: its text in two columns */
     .pn--ch :global(.sp__b.is-cols .sp__tx) { columns: 2; column-gap: 48px; }
     .pn--ch :global(.sp__b.is-cols .sp__tx li), .pn--ch :global(.sp__b.is-cols .sp__tx h3) { break-inside: avoid; }

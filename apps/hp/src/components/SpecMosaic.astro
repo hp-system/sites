@@ -153,6 +153,8 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
      inside the post, the page never needs a scroll to read one. From 700 px the row keeps one fixed height (the tallest
      post, «он должен быть фиксированым»); phones follow the post on show. A picture inside a post's text is cut to
      260 px high so one screenshot does not make the whole row huge. */
+  /* a portal's small icon before its name in a table (Add your property, Sergei 2026-11-19) */
+  .sp__tx :global(img.pt-ic) { display: inline-block; width: 18px; height: 18px; max-height: none; margin: 0 10px 0 0; vertical-align: -4px; object-fit: contain; }
   .sp__tx :global(img:not(li img)) { display: block; width: 100%; height: auto; max-height: 260px; object-fit: cover; object-position: 50% 0; margin: var(--s3) 0; }
   .sp--car .sp__post { max-height: calc(100vh - 140px); overflow: hidden; }
   .sp--car .sp__b { max-height: calc(100vh - 140px); overflow-y: auto; overscroll-behavior: contain; box-sizing: border-box; }

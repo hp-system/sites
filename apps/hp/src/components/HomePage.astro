@@ -17,8 +17,9 @@ import Valuation from './Valuation.astro';
 import Doors from './Doors.astro';
 import Abroad from './Abroad.astro';
 import Footer from './Footer.astro';
-import SpecText from './SpecText.astro';
-import { specOf, specTitle } from '../lib/seo-pages';
+import { specOf, specTitle, linksBySection, FAQ_H } from '../lib/seo-pages';
+import SpecPosts from './SpecPosts.astro';
+import { postPhotos } from '../lib/post-photos';
 import REGISTRY from '../data/page-registry.json';
 
 import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
@@ -325,16 +326,13 @@ if (spec?.faq.length) jsonLd.push({
 
     {/* SEO portion 2: George's H2 body, FAQ and links — at the very bottom, after the close and
         before the footer (Sergei 08/11). Still «below the grid» as the spec's rule 9 asks. */}
-    {spec && <SpecText page={spec} part="rest" lang={lang} faq="tiles" body="rotate" links="sections" items={items}
-      join={(['P13', 'P14'] as const).map((id) => specOf(id, lang)).filter((x) => !!x)
-        .map((x) => ({ href: x!.path, text: x!.anchor, withId: 'P11' }))}
-      more={[
-        // the guides that sat under the area tiles (English articles for now, as in the footer, #69).
-        // «Property for sale in Greece» (/en/property-for-sale-in-greece) is NOT carried over: the
-        // spec already links that anchor to the Greece hub P03 — one anchor, two URLs would split it.
-        // the old buying-guide article folds into the spec guide P19, already linked by the spec (D-20261109-SS-2)
-        // the taxes article 301s to the buying guide P19, already linked by the spec (D-20261109-SS-3)
-      ]} />}
+    {/* Sergei 2026-11-19 «на главной странице сделай SEO блок как он должен быть и вопросы тоже»: the site's SEO block
+        (chapters, one screen high, a photo per post) and the questions under it at the site's width, as on every page;
+        George's links stay with their sections, P13 / P14 joined to the section that links P11 as before */}
+    {spec && <SpecPosts page={spec} lang={lang} photos={postPhotos(items as any, (spec.body.match(/<h2>/g) ?? []).length, lang)}
+      faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={null}
+      sectionLinks={linksBySection(spec, { join: (['P13', 'P14'] as const).map((id) => specOf(id, lang)).filter((x) => !!x)
+        .map((x) => ({ href: x!.path, text: x!.anchor, withId: 'P11' })) })} />}
   </main>
 
   {/* 11 υποσέλιδο */}

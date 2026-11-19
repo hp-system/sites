@@ -122,12 +122,8 @@ const readPre = readHtml.includes('<h2') ? readHtml.slice(0, readHtml.indexOf('<
 const readPreAll = readPre;
 const prtVid = prtLogos.length ? readPreAll.match(/<figure class="vid"[\s\S]*?<\/figure>/)?.[0] ?? '' : '';
 const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
-// …its top as the home page's dark band «We do the rest for you.» (Sergei 2026-11-19): the H1 on the left; on the right
-// George's intro, its first sentence as the heading and the rest as the grey line under it
-const prtTxt = prtPre.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-const prtSplit = prtTxt.match(/^(.+?[.!?])\s+(.+)$/);
-const prtLead = prtSplit ? prtSplit[1] : prtTxt;
-const prtSub = prtSplit ? prtSplit[2] : '';
+// …its top as the home page's dark band «We do the rest for you.» (Sergei 2026-11-19): the H1 on the left, George's
+// intro on the right at the text size, every sentence the same («этот текст одинакового размера, не увеличивай»)
 const readCar = d.section !== 'legal' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
   ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
@@ -449,7 +445,7 @@ if (faqItems.length) {
             </nav>
             <h1 class="prt-hd__h">{d.h1}</h1>
           </div>
-          {prtLead && <div><p class="prt-hd__l">{prtLead}</p>{prtSub && <p class="prt-hd__s">{prtSub}</p>}</div>}
+          {prtPre && <div class="prt-hd__s" set:html={prtPre} />}
         </div>
       </header>
     )}
@@ -813,8 +809,9 @@ if (faqItems.length) {
   .prt-hd__crumb, .prt-hd__crumb a { color: rgba(255,255,255,.6); }
   .prt-hd__crumb a:hover { color: #fff; }
   .prt-hd__h { margin: 14px 0 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: #fff; }
-  .prt-hd__l { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; color: #fff; text-wrap: balance; }
-  .prt-hd__s { margin: 12px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: rgba(255,255,255,.6); max-width: 60ch; }
+  .prt-hd__s { font-size: var(--fs-s0); line-height: 1.65; color: rgba(255,255,255,.78); max-width: 60ch; }
+  .prt-hd__s :global(p) { margin: 0; }
+  .prt-hd__s :global(p + p) { margin-top: 12px; }
   @media (min-width: 1024px) {
     .prt-hd { min-height: 280px; box-sizing: border-box; display: flex; align-items: center; padding-block: 36px; }
     .prt-hd__g { width: 100%; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }

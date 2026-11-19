@@ -141,7 +141,10 @@ const look = 'ch';
     .pn--ch :global(.sp--car .sp__b) { max-height: none; height: 100%; }
     /* no scroll inside a post (Sergei 2026-11-19 «скрол в сео отделе не должен быть»): the script scales a long
        post's content down until it fits the box (see fit() below) */
-    .pn--ch :global(.sp--car .sp__b) { overflow: hidden; }
+    .pn--ch :global(.sp--car .sp__b) { overflow: hidden; overscroll-behavior: auto; }
+    /* the wheel always scrolls the page over a post (Sergei 2026-11-19 «почему когда мышка в SEO-блоке скролл не работает?
+       везде»): the old «contain» of the scrolling post stayed on a box that no longer scrolls and swallowed the wheel */
+    .pn--ch :global(.sp--car .sp__grid) { overscroll-behavior: auto; }
     /* step 1 for a long post: its text in two columns */
     .pn--ch :global(.sp__b.is-cols .sp__tx) { columns: 2; column-gap: 48px; }
     .pn--ch :global(.sp__b.is-cols .sp__tx li), .pn--ch :global(.sp__b.is-cols .sp__tx h3) { break-inside: avoid; }

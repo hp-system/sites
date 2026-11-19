@@ -194,8 +194,30 @@ const CON_PH = [
     el: 'Ελαιώνας σε πράσινη πλαγιά: οικόπεδο για να χτίσετε το σπίτι σας',
     ru: 'Оливковая роща на зелёном склоне: участок земли под строительство дома' } },
 ];
-const conPhotos: (MosaicPhoto | null)[] = d.key === 'construction' ? CON_PH.map((p) => ({
-  src: `${CON_DIR}${p.f}_960w.webp`, srcset: [640, 960].map((w) => `${CON_DIR}${p.f}_${w}w.webp ${w}w`).join(', '),
+// Pre-published (Sergei 2026-11-19 «дай каждой статье картинку»): papers on a desk (the property made ready before the
+// market), a couple choosing on a tablet at home (who it is for), a laptop and the phone in hand (register, get told first)
+const PP_DIR = '/pages/pre-published-properties/posts/';
+const PP_PH = [
+  { f: 'what-pre-published-means', alt: {
+    en: 'Documents and a pen on a desk: a property being made ready before it reaches the market',
+    el: 'Έγγραφα και στυλό σε γραφείο: ένα ακίνητο ετοιμάζεται πριν βγει στην αγορά',
+    ru: 'Документы и ручка на столе: объект готовят до выхода на рынок' } },
+  { f: 'who-it-is-for', alt: {
+    en: 'A couple choosing a home on a tablet: buyers who want to see properties before the open market',
+    el: 'Ζευγάρι επιλέγει σπίτι σε tablet: αγοραστές που θέλουν να δουν ακίνητα πριν από την ανοιχτή αγορά',
+    ru: 'Пара выбирает дом на планшете: покупатели, которые хотят увидеть объекты до открытого рынка' } },
+  { f: 'how-it-works', alt: {
+    en: 'Laptop and a phone in hand: register for free and be the first to hear about a matching property',
+    el: 'Laptop και κινητό στο χέρι: κάντε δωρεάν εγγραφή και μάθετε πρώτοι για το ακίνητο που σας ταιριάζει',
+    ru: 'Ноутбук и телефон в руке: бесплатная регистрация, и вы первыми узнаёте о подходящем объекте' } },
+];
+const PAGE_PH: Record<string, { dir: string; list: typeof CON_PH }> = {
+  construction: { dir: CON_DIR, list: CON_PH },
+  'pre-published-properties': { dir: PP_DIR, list: PP_PH },
+};
+const pagePh = PAGE_PH[d.key];
+const conPhotos: (MosaicPhoto | null)[] = pagePh ? pagePh.list.map((p) => ({
+  src: `${pagePh.dir}${p.f}_960w.webp`, srcset: [640, 960].map((w) => `${pagePh.dir}${p.f}_${w}w.webp ${w}w`).join(', '),
   alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
 const prtPhotos: (MosaicPhoto | null)[] = prtFirst ? PRT_PH.map((p) => ({
   src: `${PRT_DIR}${p.f}_960w.webp`, srcset: p.w.map((w) => `${PRT_DIR}${p.f}_${w}w.webp ${w}w`).join(', '),

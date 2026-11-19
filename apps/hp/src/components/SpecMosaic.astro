@@ -101,7 +101,7 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
      the step's icon beside its text */
   .sp__tx :global(ol) { margin: 0 0 var(--s3); padding: 0; list-style: none; counter-reset: spn; }
   .sp__tx :global(ol:last-child) { margin-bottom: 0; }
-  .sp__tx :global(ol > li) { display: flex; align-items: center; gap: var(--s4); }
+  .sp__tx :global(ol > li:has(> img)) { display: flex; align-items: center; gap: var(--s4); }
   .sp__tx :global(ol > li > img) { flex: none; width: 48px; height: 48px; }
   .sp__tx :global(li) { padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.5; color: var(--ink); }
   .sp__tx :global(strong) { color: var(--ink); font-weight: 600; }
@@ -113,7 +113,7 @@ const phoneSet = (set: string) => { const all = set.split(/,\s*/).filter(Boolean
   .sp__tx :global(li:first-child) { border-top: 0; }
   .sp__tx :global(li)::before { content: counter(spn, decimal-leading-zero); position: absolute; left: 0; top: var(--s2);
     font-size: var(--fs-s-1); font-weight: 600; line-height: 1.5rem; letter-spacing: .08em; color: var(--muted); pointer-events: none; }
-  .sp__tx :global(ol > li)::before { position: static; flex: none; width: 28px; margin-left: -44px; }
+  .sp__tx :global(ol > li:has(> img))::before { position: static; flex: none; width: 28px; margin-left: -44px; }
   .sp__post--fact .sp__tx :global(ul), .sp__post--fact .sp__tx :global(ol) { background: rgba(255,255,255,.06); }
   .sp__post--fact .sp__tx :global(li)::before { color: rgba(255,255,255,.55); }
   /* a decorative «?» beside the heading (Sergei 2026-11-10): beige, bolder, tilted; out of the flow, so the

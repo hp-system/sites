@@ -130,7 +130,9 @@ const prtVid = prtLogos.length ? readPreAll.match(/<figure class="vid"[\s\S]*?<\
 const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
 // …its top as the home page's dark band «We do the rest for you.» (Sergei 2026-11-19): the H1 on the left, George's
 // intro on the right at the text size, every sentence the same («этот текст одинакового размера, не увеличивай»)
-const readCar = d.section !== 'legal' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
+// Pre-published (Sergei 2026-11-19 «сделай SEO-блок как он должен быть сейчас»): a page with the pre-published list takes
+// the SEO block too; the list stands as its own block above it
+const readCar = d.section !== 'legal' && readHeads.length > 1 && (!d.widget || d.widget === 'prepublished') && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
   ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
 // two sections under the same H2 (Construction has «Build with us» twice) are one post: the second one's text joins
@@ -520,7 +522,30 @@ if (faqItems.length) {
         </div>
       </header>
     )}
-    {d.form_top && d.form && (
+    {d.form_top && d.form && d.form_split && (
+      /* Pre-published (Sergei 2026-11-19 «сделай шапку и форму как на странице contact»): the Contact box — the crumbs,
+         the H1, the lead and the call to register on the light half, the form on the dark half; no top picture */
+      <section class="ctb ctb--top" id="form" aria-labelledby="ctb-h">
+        <div class="ctb__ct">
+          <div class="ctb__hd">
+            <nav class="crumb" aria-label={t(lang, 'a11y.crumb')}>
+              {crumbs.slice(0, -1).map((c, i) => (
+                <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+              ))}
+              <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
+            </nav>
+            <h1 id="ctb-h" class="t-display info-h1">{d.h1}</h1>
+            {d.lead && <p class="ctb__lead">{d.lead}</p>}
+            {d.cta && <p class="ctb__cta"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
+          </div>
+        </div>
+        <div class="ctb__f">
+          <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+                    look="wave1" lang={lang} bare />
+        </div>
+      </section>
+    )}
+    {d.form_top && d.form && !d.form_split && (
       /* Construction (Sergei 2026-11-19 «убери сверху картинку, сделай форму и заголовок и кнопки и маленький текст
          сверху»): one dark band opens the page — the crumbs, the H1, George's intro and the phone on the left, the form
          on the right; no top picture, no form band at the bottom */
@@ -637,7 +662,7 @@ if (faqItems.length) {
         {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
         <SpecPosts page={readCar} lang={lang} photos={prtPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={prtHeads.map(() => [])} cta={null} />
       </> :
-      readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && !d.form_top && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
+      readCar ? <>{d.widget && <section class="wrap rc-widget"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></section>}{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && !d.form_top && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
@@ -909,6 +934,7 @@ if (faqItems.length) {
   .info-top { padding-top: var(--s5); padding-bottom: var(--s4); }
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .rc-pre { padding-block: var(--s6) 0; }
+  .rc-widget { padding-block: var(--s6); }
   /* Construction: the dark band that opens the page (the form band's look: ink-deep, white text) */
   .ftb { background: var(--ink-deep); color: #fff; padding-block: var(--s6); scroll-margin-top: 24px; }
   .ftb__g { display: grid; gap: var(--s5); }
@@ -1082,6 +1108,10 @@ if (faqItems.length) {
   .ctb__sec { display: grid; gap: 12px; align-content: start; }
   .ctb__ad { display: contents; font-style: normal; }
   .ctb__hd { grid-column: 1 / -1; }
+  .ctb__lead { margin: 18px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); max-width: 52ch; }
+  .ctb__cta { margin: 28px 0 0; }
+  .ctb__cta .k-act { display: inline-flex; width: auto !important; padding: 0 28px; }
+  @media (min-width: 1024px) { .ctb--top .ctb__ct { align-content: center; } }
   .ctb__hd .info-h1 { margin: 14px 0 0; font-weight: 300; line-height: 1.06; letter-spacing: -.021em; }
   .ctb__l { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
   .ctb__v { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.35; }

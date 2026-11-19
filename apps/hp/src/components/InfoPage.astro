@@ -791,7 +791,7 @@ if (faqItems.length) {
            the left, the rest and the button on the right, two even halves */
         const ps = ctPre.html.match(/<p>[\s\S]*?<\/p>/g) ?? [ctPre.html];
         return <div class="wrap rc-pre rc-two"><div class="prose" set:html={ps[0]} /><div><div class="prose" set:html={ps.slice(1).join('')} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div></div>;
-      })() : readPre && !d.form_top && !headPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && !topVid && <div class="wrap prt-vid" set:html={carVid} />}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} />{coPage && d.cards.length > 0 && (
+      })() : readPre && !d.form_top && !headPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && !topVid && <div class="wrap prt-vid" set:html={carVid} />}{/* Careers (Sergei 2026-11-19): the open positions above the SEO block */}{coPage && d.cards.length > 0 && (
         <section class="wrap rc-cards" aria-labelledby="rc-cards-h">
           {cardsH && <h2 id="rc-cards-h" class="rc-cards__h">{cardsH}</h2>}
           {/* Careers (Sergei 2026-11-19 «Open positions что это и почему выглядит так странно»): a list of open positions,
@@ -800,7 +800,7 @@ if (faqItems.length) {
             <li><a href={c.href}><b>{c.title}</b><span>{c.text}</span><i aria-hidden="true">→</i></a></li>
           ))}</ul>
         </section>
-      )}</> :
+      )}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}

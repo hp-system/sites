@@ -100,6 +100,10 @@ const stepSrc = page.id === 'P19'
         : null;
     }).find(Boolean) ?? null)
   : null;
+// the heading split at its colon: the first part large, the rest as a small line under it
+const stepH: [string, string] = stepSrc
+  ? (stepSrc.h.includes(':') ? [stepSrc.h.slice(0, stepSrc.h.indexOf(':')).trim(), stepSrc.h.slice(stepSrc.h.indexOf(':') + 1).trim()] : [stepSrc.h, ''])
+  : ['', ''];
 const postsPage = stepSrc ? { ...page, body: page.body.replace(stepSrc.cut, '') } : page;
 const crumbs = page.breadcrumb.map((name, i, a) => ({ name, url: i === 0 ? (prefix(lang) || '/') : i === a.length - 1 ? page.path : crumbPath(name, lang) }));
 
@@ -152,8 +156,9 @@ const jsonLd: unknown[] = [
     {stepSrc && (
       <section class="gst" aria-labelledby="gst-h" data-gst>
         <div class="gst__in" data-gst-in>
-          <p id="gst-h" class="gst__h">{stepSrc.h}</p>
-          <p class="gst__lead">{stepSrc.lead}</p>
+          {/* Sergei 2026-11-19: «Step by step» centred and large, «from viewing to the notary» small under it; the line
+              «The usual path looks like this:» is not shown */}
+          <p id="gst-h" class="gst__h">{stepH[0]}{stepH[1] && <><span class="sr-only">: </span><span class="gst__sub">{stepH[1]}</span></>}</p>
           <ol class="gst__path" style={`--n: ${stepSrc.steps.length}`}>
             {stepSrc.steps.map((x, i) => (
               <li class:list={['gst__st', i % 2 ? 'gst__st--lo' : 'gst__st--hi', i === stepSrc.steps.length - 1 && 'gst__st--end']} style={`--c: ${i + 1}`}>
@@ -254,8 +259,8 @@ const jsonLd: unknown[] = [
   /* ── the guide's steps as one path across the screen (Sergei 2026-11-19); phones: a numbered column ── */
   .gst { background: var(--paper); border-top: 1px solid var(--line-soft); }
   .gst__in { padding: var(--s6) var(--gut); }
-  .gst__h { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.12; letter-spacing: -.016em; color: var(--ink); }
-  .gst__lead { margin: 10px 0 0; font-size: var(--fs-s0); color: var(--muted); }
+  .gst__h { margin: 0; text-align: center; font-size: var(--fs-s3); font-weight: 300; line-height: 1.12; letter-spacing: -.016em; color: var(--ink); }
+  .gst__sub { display: block; margin-top: 10px; font-size: var(--fs-s0); font-weight: 400; letter-spacing: 0; color: var(--muted); }
   .gst__path { list-style: none; margin: var(--s5) 0 0; padding: 0; display: grid; gap: 0; }
   .gst__st { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); }
   .gst__n { font-size: var(--fs-s3); font-weight: 300; line-height: 1; letter-spacing: -.02em; color: var(--ink); }

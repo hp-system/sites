@@ -132,7 +132,11 @@ const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
 // intro on the right at the text size, every sentence the same («этот текст одинакового размера, не увеличивай»)
 // Pre-published (Sergei 2026-11-19 «сделай SEO-блок как он должен быть сейчас»): a page with the pre-published list takes
 // the SEO block too; the list stands as its own block above it
-const readCar = d.section !== 'legal' && readHeads.length > 1 && (!d.widget || d.widget === 'prepublished') && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
+// About us (Sergei 2026-11-19 «иди в каждую страницу в about us и сделай блоки SEO как нужно»): the company pages take the
+// block too — one section is enough there (Philosophy), and the cards (Careers' open positions) stand as a block under it
+const coPage = d.section === 'company';
+const readCar = d.section !== 'legal' && (readHeads.length > 1 || (coPage && readHeads.length >= 1)) && (!d.widget || d.widget === 'prepublished')
+  && (d.cards.length === 0 || coPage) && d.faq.length === 0 && /<h2/.test(readHtml)
   ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
 // two sections under the same H2 (Construction has «Build with us» twice) are one post: the second one's text joins
@@ -148,6 +152,34 @@ if (readCar) {
     out.push(sc);
   }
   readCar.body = out.join('');
+}
+// company pages: a page of one H2 with H3 parts (Values: the values, our people) — the parts are the posts; a video in
+// the text stands centred above the block (as on Our partners); a picture standing on its own in a section becomes that
+// post's photo; a section with no text (Careers' «Open positions») leaves the posts and heads the cards block instead
+let carVid = '';
+const secImgs: (MosaicPhoto | null)[] = [];
+let cardsH = '';
+if (readCar && coPage) {
+  let b: string = readCar.body;
+  // the H3 parts are posts of their own (Values: our people; Responsibility: sports, plans — one post was two screens long)
+  if (/<h3[^>]*>/.test(b)) b = b.replace(/<h3[^>]*>/g, '<h2>').replace(/<\/h3>/g, '</h2>');
+  carVid = b.match(/<figure class="vid"[\s\S]*?<\/figure>/)?.[0] ?? '';
+  if (carVid) b = b.replace(carVid, '');
+  const secs = b.split(/(?=<h2>)/).filter((x) => x.trim());
+  const kept: string[] = [];
+  for (const sc of secs) {
+    const rest = sc.replace(/<h2>[\s\S]*?<\/h2>/, '').trim();
+    if (!rest) { cardsH ||= sc.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? ''; continue; }
+    const im = sc.match(/(?:<p>\s*)?<img\s[^>]*>(?:\s*<\/p>)?/);
+    const inLi = im ? /<li>(?:(?!<\/li>)[\s\S])*$/.test(sc.slice(0, im.index)) : false;
+    if (im && !inLi) {
+      const src = im[0].match(/src="([^"]+)"/)?.[1] ?? '';
+      const alt = im[0].match(/alt="([^"]*)"/)?.[1] ?? '';
+      secImgs.push(src ? { src, srcset: '', alt, style: '' } : null);
+      kept.push(sc.replace(im[0], ''));
+    } else { secImgs.push(null); kept.push(sc); }
+  }
+  readCar.body = kept.join('');
 }
 // Our partners (Sergei 2026-11-19 «первая статья может пойти просто заголовком над видео, а статей будет 3»): the first
 // section leaves the posts and stands as the heading over the video; the other three get a picture each
@@ -211,14 +243,52 @@ const PP_PH = [
     el: 'Laptop και κινητό στο χέρι: κάντε δωρεάν εγγραφή και μάθετε πρώτοι για το ακίνητο που σας ταιριάζει',
     ru: 'Ноутбук и телефон в руке: бесплатная регистрация, и вы первыми узнаёте о подходящем объекте' } },
 ];
-const PAGE_PH: Record<string, { dir: string; list: typeof CON_PH }> = {
+// About us pages (Sergei 2026-11-19): a photo per post — CC0 stock (sources in each page's posts/SOURCES.json), the
+// company's own pictures where they fit (Our story: the eras' pictures of the About us page; the pages' own banners);
+// null = the section's own picture (Philosophy, Book an online appointment)
+type PostPh = { f?: string; src?: string; alt: { en: string; el: string; ru: string } } | null;
+const stockPh = (f: string, en: string, el: string, ru: string): PostPh => ({ f, alt: { en, el, ru } });
+const ownPic = (src: string, en: string, el: string, ru: string): PostPh => ({ src, alt: { en, el, ru } });
+const PAGE_PH: Record<string, { dir: string; list: PostPh[] }> = {
   construction: { dir: CON_DIR, list: CON_PH },
   'pre-published-properties': { dir: PP_DIR, list: PP_PH },
+  'about-us/our-story': { dir: '', list: [
+    ownPic('/pages/sell/37818ed8-1623745980-card.webp', 'Buyer looking at a property for sale on a tablet', 'Αγοραστής βλέπει ακίνητο προς πώληση σε tablet', 'Покупатель смотрит объект на продажу на планшете'),
+    ownPic('/pages/services/01596b1d-1624545055-card.webp', 'Advisers showing a villa in Halkidiki to a couple of buyers', 'Σύμβουλοι δείχνουν βίλα στη Χαλκιδική σε ζευγάρι αγοραστών', 'Консультанты показывают виллу в Халкидиках паре покупателей'),
+    ownPic('/pages/about-us-our-story/f66781db-aboutus-our-story-banner-hero.webp', `Offices of ${brand.name}, the story since 2007`, `Τα γραφεία της ${brand.name}, η ιστορία από το 2007`, `Офис ${brand.name}, история с 2007 года`),
+    ownPic('/pages/construction/villa-natalia-7010-wm.jpg', 'Villa Natalia in Sithonia at dusk: living room and pool', 'Villa Natalia στη Σιθωνία το σούρουπο: σαλόνι και πισίνα', 'Villa Natalia в Ситонии в сумерках: гостиная и бассейн'),
+    ownPic('/pages/sell/49ed2b3f-1623746026-card.webp', 'Network of buyer profiles: technology that matches properties with buyers', 'Δίκτυο προφίλ αγοραστών: τεχνολογία που ταιριάζει ακίνητα με αγοραστές', 'Сеть профилей покупателей: технология подбирает объекты под покупателей'),
+  ] },
+  'about-us/values': { dir: '/pages/about-us-values/posts/', list: [
+    ownPic('/pages/about-us-values/4a4e6e1e-aboutus-values-banner-hero.webp', 'Wooden blocks reading core values, strategy and vision', 'Ξύλινα τουβλάκια με τις λέξεις αξίες, στρατηγική και όραμα', 'Деревянные кубики со словами «ценности», «стратегия» и «видение»'),
+    stockPh('our-people', 'Our team around one table: the people who make the company', 'Η ομάδα μας γύρω από ένα τραπέζι: οι άνθρωποι που κάνουν την εταιρεία', 'Наша команда за одним столом: люди, которые делают компанию'),
+  ] },
+  'about-us/company-social-responsibility': { dir: '/pages/about-us-company-social-responsibility/posts/', list: [
+    stockPh('people', 'A colleague showing a teammate the work on a laptop: training and growth in our team', 'Συνάδελφος δείχνει τη δουλειά σε laptop: εκπαίδευση και εξέλιξη στην ομάδα μας', 'Коллега показывает работу на ноутбуке: обучение и рост в нашей команде'),
+    ownPic('/pages/about-us-company-social-responsibility/7adfe48a-aboutus-company-responsibility-banner-hero.webp', 'Tote bag reading coexist with the earth: our environmental policy', 'Υφασμάτινη τσάντα με τη φράση coexist with the earth: η περιβαλλοντική μας πολιτική', 'Сумка с надписью coexist with the earth: наша экологическая политика'),
+    stockPh('social-contribution', 'Children playing outdoors on the grass: our support for children', 'Παιδιά παίζουν έξω στο γρασίδι: η στήριξή μας στα παιδιά', 'Дети играют на траве: наша поддержка детей'),
+    stockPh('sports', 'Children playing basketball on an outdoor court: our support for sport', 'Παιδιά παίζουν μπάσκετ σε ανοιχτό γήπεδο: η στήριξή μας στον αθλητισμό', 'Дети играют в баскетбол на открытой площадке: наша поддержка спорта'),
+    stockPh('plans-and-future-goals', 'A lens held up to houses: our plans and goals for the future', 'Φακός μπροστά σε σπίτια: τα σχέδια και οι στόχοι μας για το μέλλον', 'Линза на фоне домов: наши планы и цели на будущее'),
+  ] },
+  careers: { dir: '/pages/careers/posts/', list: [
+    stockPh('working-at-halkidiki-properties', `Colleagues working together at one table: working at ${brand.name}`, `Συνάδελφοι δουλεύουν μαζί σε ένα τραπέζι: δουλεύοντας στη ${brand.name}`, `Коллеги работают за одним столом: работа в ${brand.name}`),
+    stockPh('how-to-apply', 'Writing an application on a laptop: send us your CV', 'Αίτηση σε laptop: στείλτε μας το βιογραφικό σας', 'Заявка на ноутбуке: пришлите нам резюме'),
+  ] },
+  'careers/bulgarian-speaker': { dir: '/pages/careers-bulgarian-speaker/posts/', list: [
+    stockPh('we-are-looking-for', 'Laptop, phone and coffee on a desk: a customer support agent at work', 'Laptop, κινητό και καφές σε γραφείο: εκπρόσωπος εξυπηρέτησης πελατών στη δουλειά', 'Ноутбук, телефон и кофе на столе: специалист поддержки клиентов за работой'),
+    stockPh('requirements', 'A checklist in a notebook: the requirements of the position', 'Λίστα ελέγχου σε σημειωματάριο: οι απαιτήσεις της θέσης', 'Список в блокноте: требования к кандидату'),
+    stockPh('benefits', 'Team planning at a table with notes: full-time work in our team', 'Η ομάδα σχεδιάζει σε τραπέζι με σημειώσεις: πλήρης απασχόληση στην ομάδα μας', 'Команда планирует за столом с заметками: полная занятость в нашей команде'),
+  ] },
+  'book-an-online-appointment': { dir: '/pages/book-an-online-appointment/posts/', list: [
+    null, null,
+    stockPh('how-an-online-viewing-works', 'Watching a property live on a phone: how an online viewing works', 'Παρακολούθηση ακινήτου ζωντανά στο κινητό: πώς γίνεται μια online προβολή', 'Просмотр объекта вживую на телефоне: как проходит онлайн-просмотр'),
+  ] },
 };
 const pagePh = PAGE_PH[d.key];
-const conPhotos: (MosaicPhoto | null)[] = pagePh ? pagePh.list.map((p) => ({
+const ownPh: (MosaicPhoto | null)[] = pagePh ? pagePh.list.map((p: any) => !p ? null : p.src ? ({ src: p.src, srcset: '', alt: p.alt[lang] ?? p.alt.en, style: '' }) : ({
   src: `${pagePh.dir}${p.f}_960w.webp`, srcset: [640, 960].map((w) => `${pagePh.dir}${p.f}_${w}w.webp ${w}w`).join(', '),
   alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
+const conPhotos: (MosaicPhoto | null)[] = Array.from({ length: Math.max(ownPh.length, secImgs.length) }, (_, i) => ownPh[i] ?? secImgs[i] ?? null);
 const prtPhotos: (MosaicPhoto | null)[] = prtFirst ? PRT_PH.map((p) => ({
   src: `${PRT_DIR}${p.f}_960w.webp`, srcset: p.w.map((w) => `${PRT_DIR}${p.f}_${w}w.webp ${w}w`).join(', '),
   alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
@@ -686,7 +756,12 @@ if (faqItems.length) {
         {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
         <SpecPosts page={readCar} lang={lang} photos={prtPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={prtHeads.map(() => [])} cta={null} />
       </> :
-      readCar ? <>{d.widget && !d.form_split && <section class="wrap rc-widget"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></section>}{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && !d.form_top && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
+      readCar ? <>{d.widget && !d.form_split && <section class="wrap rc-widget"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></section>}{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && !d.form_top && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}{carVid && <div class="wrap prt-vid" set:html={carVid} />}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} />{coPage && d.cards.length > 0 && (
+        <section class="wrap rc-cards" aria-labelledby="rc-cards-h">
+          {cardsH && <h2 id="rc-cards-h" class="rc-cards__h">{cardsH}</h2>}
+          <div class="rp-cards">{d.cards.map((c) => <PageCard href={c.href} title={c.title} text={c.text} img={c.image || undefined} alt={c.image_alt || c.title} />)}</div>
+        </section>
+      )}</> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
@@ -959,6 +1034,9 @@ if (faqItems.length) {
   .info-h1 { margin: var(--s5) 0 var(--s4); max-width: 24ch; }
   .rc-pre { padding-block: var(--s6) 0; }
   .rc-widget { padding-block: var(--s6); }
+  .rc-cards { padding-block: var(--s6) var(--s7); }
+  .rc-cards__h { margin: 0 0 var(--s4); font-size: var(--fs-s3); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; color: var(--ink); }
+  .rc-cards .rp-cards { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
   /* Construction: the dark band that opens the page (the form band's look: ink-deep, white text) */
   .ftb { background: var(--ink-deep); color: #fff; padding-block: var(--s6); scroll-margin-top: 24px; }
   .ftb__g { display: grid; gap: var(--s5); }

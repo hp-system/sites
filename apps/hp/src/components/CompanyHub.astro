@@ -98,16 +98,18 @@ const logos = [...pBody.matchAll(/<img src="([^"]+)" alt="([^"]+)"/g)].map((m) =
 
 // ── doors: careers (George's card on this page) and contact ──
 const careersCard = d.cards.find((c) => c.href === careersPg?.data.path);
+const storyL = storyPg ? linkTo(storyPg.data.path) || storyPg.data.h1 : '';
 const DOORS = [
   careersPg && { href: careersPg.data.path, h: careersCard?.title || careersPg.data.h1, p: careersCard?.text || careersPg.data.description, cta: tt('co.careers_cta') },
   { href: contact, h: linkTo(contact) || tt('co.contact'), p: tt('co.contact_p', { phone: brand.contact.phoneText }), cta: tt('co.contact_cta', { brand: brand.name }) },
+  // Our story as the third door (2026-11-19): its title, its description, the related label as the call
+  storyPg && { href: storyPg.data.path, h: storyPg.data.h1, p: storyPg.data.description, cta: storyL || storyPg.data.h1 },
 ].filter(Boolean) as { href: string; h: string; p: string; cta: string }[];
 
 const FACTS = [
   { b: tt('co.f1'), s: tt('co.f1_s') }, { b: tt('co.f2'), s: '' }, { b: tt('co.f3'), s: '' }, { b: tt('co.f4'), s: tt('co.f4_s') },
 ];
 const valuesL = valuesPg ? linkTo(valuesPg.data.path) || valuesPg.data.h1 : '';
-const storyL = storyPg ? linkTo(storyPg.data.path) || storyPg.data.h1 : '';
 const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h1 : '';
 ---
 <div class="w1-d co" data-lang={lang}>
@@ -152,37 +154,8 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     </section>
   )}
 
-  {eras.length > 0 && storyPg && (
-    <section class="co-story" aria-labelledby="coStoryH">
-      <div class="wrap co-story__in">
-        <div>
-          <p class="co-lbl">{tt('co.f1')}</p>
-          <h2 class="co-story__h" id="coStoryH">{storyPg.data.h1}</h2>
-          <div class="co-acclist" id="coAcc">
-            {eras.map((e, i) => (
-              <div class="co-acc">
-                <h3 class="co-acc__h">
-                  <button type="button" class="co-acb" id={`coEraB${i}`} aria-expanded={i === open ? 'true' : 'false'} aria-controls={`coEra${i}`} data-i={i}>
-                    <span class="co-act">{e.y}</span>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 9l7 7 7-7"></path></svg>
-                  </button>
-                </h3>
-                <div class:list={['co-accw', { on: i === open }]} id={`coEra${i}`} role="region" aria-labelledby={`coEraB${i}`}>
-                  <div><p class="co-acp">{e.k && <span class="co-ack">{e.k}</span>}{e.t}</p></div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p class="co-more"><a class="lnkg" href={storyPg.data.path}>{storyL} <span aria-hidden="true">›</span></a></p>
-        </div>
-        <div class="co-accimg">
-          {eras.map((e, i) => (
-            <img class:list={{ on: i === open }} src={e.img.src} alt={e.img.alt} width="800" height="500" loading="lazy" decoding="async" data-i={i} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
+  {/* «Our story» years accordion removed (Sergei 2026-11-19 «убирай блок Our story, а в этот вставь третий квадрат Our story»):
+      Our story has its own page with the video and the five periods; here it is the third door below */}
 
   {partnersPg && logos.length > 0 && (
     <section class="co-prt" aria-labelledby="coPrtH">

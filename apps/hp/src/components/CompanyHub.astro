@@ -166,11 +166,12 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
             <h2 class="co-prt__h" id="coPrtH">{partnersH2 || partnersPg.data.h1}</h2>
             {partnersP && <p class="co-prt__p">{partnersP}</p>}
           </div>
-          <a class="co-prt__all" href={partnersPg.data.path}>{tt('co.all_partners')} <span aria-hidden="true">›</span></a>
         </div>
       </div>
-      {/* every partner's logo across the whole screen (Sergei 2026-11-19 «картинки всех партнёров пусть будут на весь экран») */}
+      {/* every partner's logo across the whole screen (Sergei 2026-11-19 «картинки всех партнёров пусть будут на весь экран»);
+          the heading centred and the link a button centred under the logos («центрируй, а кнопку сделай в центре») */}
       <div class="co-prt__mq"><LogoMarquee logos={logos} full /></div>
+      <p class="co-prt__go"><a class="btn btn--ghost co-prt__btn" href={partnersPg.data.path}>{tt('co.all_partners')}</a></p>
     </section>
   )}
 
@@ -258,6 +259,10 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     /* ── partners: the logos float by, held under the pointer ── */
     .co-prt { padding: 32px 0 30px; }
     .co-prt__mq { margin-top: 18px; }
+    .co-prt .co-prt__hd { display: block; text-align: center; }
+    .co-prt .co-prt__p { margin-inline: auto; max-width: 70ch; }
+    .co-prt__go { margin: 22px 0 0; text-align: center; }
+    .co-prt__btn { display: inline-flex; width: auto; padding: 0 28px; }
     /* «Our people» stays while «Partners» slides over it from below (Sergei 2026-11-19 «между этими двумя блоками сделай
        3D эффект, чтобы нижний налазил на верхний»): sticky inside the page's company part, the blocks after it above it on
        a ground of their own with a soft top shadow; the script sinks and dims it as it is covered */

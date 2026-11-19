@@ -127,6 +127,29 @@ const prtPre = prtLogos.length ? readPreAll.replace(prtVid, '').trim() : '';
 const readCar = d.section !== 'legal' && readHeads.length > 1 && !d.widget && d.cards.length === 0 && d.faq.length === 0 && /<h2/.test(readHtml)
   ? ({ body: readHtml.slice(readHtml.indexOf('<h2')).replace(/<h2[^>]*>/g, '<h2>'), faq: [], questionMarks: [], standout: [], path: d.path, linksOut: [] } as any)
   : null;
+// Our partners (Sergei 2026-11-19 «первая статья может пойти просто заголовком над видео, а статей будет 3»): the first
+// section leaves the posts and stands as the heading over the video; the other three get a picture each
+const prtFirst = (() => {
+  if (!readCar || !prtLogos.length) return null;
+  const b: string = readCar.body;
+  const i2 = b.indexOf('<h2', 4);
+  if (i2 < 0) return null;
+  const sec = b.slice(0, i2);
+  readCar.body = b.slice(i2);
+  return { h2: sec.match(/<h2>([\s\S]*?)<\/h2>/)?.[1] ?? '', html: sec.replace(/<h2>[\s\S]*?<\/h2>/, '').trim() };
+})();
+const prtHeads = prtFirst ? readHeads.slice(1) : readHeads;
+// our own construction projects (the photos of /construction), in the order of the three posts: who the partners are
+// (a finished interior with its kitchen), why they matter (a house being built), working with us (Villa Natalia)
+const PRT_PH = [
+  { src: '/pages/construction/97fdaa1c-main.webp', alt: { en: 'Living room and kitchen finished with our partners’ materials and furniture',
+    el: 'Σαλόνι και κουζίνα με υλικά και έπιπλα των συνεργατών μας', ru: 'Гостиная и кухня, отделанные материалами и мебелью наших партнёров' } },
+  { src: '/pages/construction/2e419fa8-main.webp', alt: { en: 'A house under construction in Halkidiki, coordinated by our construction team',
+    el: 'Κατοικία υπό κατασκευή στη Χαλκιδική, με συντονισμό της κατασκευαστικής μας ομάδας', ru: 'Строительство дома в Халкидиках под контролем нашей строительной команды' } },
+  { src: '/pages/construction/villa-natalia-7010-wm.jpg', alt: { en: 'Villa Natalia in Sithonia at dusk: living room and pool',
+    el: 'Villa Natalia στη Σιθωνία το σούρουπο: σαλόνι και πισίνα', ru: 'Villa Natalia в Ситонии в сумерках: гостиная и бассейн' } },
+];
+const prtPhotos: (MosaicPhoto | null)[] = prtFirst ? PRT_PH.map((p) => ({ src: p.src, srcset: '', alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
 
 const url = d.path;
 // A page with an approved new text (own page P22+, D-20261106-SS-2) keeps this design (Sergei
@@ -527,8 +550,9 @@ if (faqItems.length) {
     {!fresh ? (
       readCar && prtLogos.length ? <>
         <section class="prt-mq" aria-label={d.h1}><LogoMarquee logos={prtLogos} full /></section>
+        {prtFirst && <div class="wrap prt-first"><h2 class="prt-first__h">{prtFirst.h2}</h2>{prtFirst.html && <div class="prt-first__p" set:html={prtFirst.html} />}</div>}
         {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
-        <SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} cta={null} />
+        <SpecPosts page={readCar} lang={lang} photos={prtPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={prtHeads.map(() => [])} cta={null} />
       </> :
       readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
@@ -817,7 +841,11 @@ if (faqItems.length) {
     .prt-hd__g { width: 100%; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }
   }
   .prt-mq { padding-block: var(--s5) var(--s3); }
-  .prt-vid { padding-block: var(--s6) var(--s7); }
+  .prt-vid { padding-block: var(--s4) var(--s7); }
+  .prt-first { padding-top: var(--s6); text-align: center; }
+  .prt-first__h { margin: 0; font-size: var(--fs-s4); font-weight: 300; line-height: 1.1; letter-spacing: -.016em; color: var(--ink); text-wrap: balance; }
+  .prt-first__p { margin-top: 12px; font-size: var(--fs-s0); line-height: 1.65; color: var(--muted); }
+  .prt-first__p :global(p) { margin: 0; }
   .prt-vid :global(figure.vid) { max-width: 960px; margin: 0 auto !important; }
   .rc-pre--c { text-align: center; padding-bottom: var(--s6); }
   .rc-pre--c .prose { margin-inline: auto; text-wrap: balance; }

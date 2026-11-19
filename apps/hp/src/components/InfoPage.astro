@@ -635,8 +635,9 @@ if (faqItems.length) {
               ))}
               <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
             </nav>
-            <h1 id="ctb-h" class="t-display info-h1">{d.h1}</h1>
-            {d.lead && <p class="ctb__lead">{d.lead}</p>}
+            <h1 id="ctb-h" class="t-display info-h1">{fresh?.h1 ?? d.h1}</h1>
+            {/* a page with its own brief (Sell, Sergei 2026-11-19 «сделай форму в шапке, как мы уже делали»): its intro */}
+            {fresh ? <div class="ctb__lead"><SpecText page={fresh} part="intro" lang={lang} /></div> : d.lead && <p class="ctb__lead">{d.lead}</p>}
             {/* the pre-published list (or its note) under the text (Sergei 2026-11-19 «просто перенеси это вверх к тексту») */}
             {d.widget && <div class="ctb__w"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
             {d.cta && <p class="ctb__cta"><a class="k-act k-gild" href={d.cta.href} rel="nofollow" data-ev="register:info">{d.cta.label}</a></p>}
@@ -1246,6 +1247,7 @@ if (faqItems.length) {
   .ctb__sec { display: grid; gap: 12px; align-content: start; }
   .ctb__ad { display: contents; font-style: normal; }
   .ctb__hd { grid-column: 1 / -1; }
+  .ctb__lead :global(p) { margin: 0; font-size: inherit; line-height: inherit; color: inherit; max-width: none; }
   .ctb__lead { margin: 18px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); max-width: 52ch; }
   .ctb__cta { margin: 28px 0 0; }
   .ctb__ph { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin: 28px 0 0; font-size: var(--fs-s0); }

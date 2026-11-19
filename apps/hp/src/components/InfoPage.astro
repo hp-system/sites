@@ -179,6 +179,22 @@ const PRT_PH = [
     el: `Χειραψία πάνω από ένα τραπέζι μετά από συμφωνία: νέα συνεργασία με τη ${brand.name}`,
     ru: `Рукопожатие за столом после договорённости: новое партнёрство с ${brand.name}` } },
 ];
+// Construction (Sergei 2026-11-19 «для двоих статей найди подходящие картинки»): engineers over the plans (build with us),
+// an olive grove on a hillside (a plot to build on); CC0, sources in public/pages/construction/posts/SOURCES.json
+const CON_DIR = '/pages/construction/posts/';
+const CON_PH = [
+  { f: 'build-with-us', alt: {
+    en: 'Engineers going over the construction plans together: studies, licences and building a home in Halkidiki',
+    el: 'Μηχανικοί εξετάζουν μαζί τα κατασκευαστικά σχέδια: μελέτες, άδειες και κατασκευή κατοικίας στη Χαλκιδική',
+    ru: 'Инженеры вместе разбирают строительные чертежи: проект, разрешения и строительство дома в Халкидиках' } },
+  { f: 'have-a-plot-or-an-idea', alt: {
+    en: 'Olive grove on a green hillside: a plot of land to build your home on',
+    el: 'Ελαιώνας σε πράσινη πλαγιά: οικόπεδο για να χτίσετε το σπίτι σας',
+    ru: 'Оливковая роща на зелёном склоне: участок земли под строительство дома' } },
+];
+const conPhotos: (MosaicPhoto | null)[] = d.key === 'construction' ? CON_PH.map((p) => ({
+  src: `${CON_DIR}${p.f}_960w.webp`, srcset: [640, 960].map((w) => `${CON_DIR}${p.f}_${w}w.webp ${w}w`).join(', '),
+  alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
 const prtPhotos: (MosaicPhoto | null)[] = prtFirst ? PRT_PH.map((p) => ({
   src: `${PRT_DIR}${p.f}_960w.webp`, srcset: p.w.map((w) => `${PRT_DIR}${p.f}_${w}w.webp ${w}w`).join(', '),
   alt: (p.alt as any)[lang] ?? p.alt.en, style: '' })) : [];
@@ -621,7 +637,7 @@ if (faqItems.length) {
         {prtVid && <div class="wrap prt-vid" set:html={prtVid} />}
         <SpecPosts page={readCar} lang={lang} photos={prtPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={prtHeads.map(() => [])} cta={null} />
       </> :
-      readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && !d.form_top && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={[]} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
+      readCar ? <>{ctPre ? <div class="wrap rc-pre rc-pre--c"><div class="prose" set:html={ctPre.html} />{ctPre.href && <p class="rc-pre__go"><a class="btn" href={ctPre.href}>{ctPre.label}</a></p>}</div> : readPre && !d.form_top && <div class="wrap rc-pre"><div class="prose" set:html={readPre} /></div>}<SpecPosts page={readCar} lang={lang} photos={conPhotos} faqH={ui.faq} member={Boolean(memberToken)} items={items} sectionLinks={readHeads.map(() => [])} {...(d.section === 'sell' ? {} : { cta: null })} /></> :
       <ReadPage lang={lang} heads={readHeads} side={false}>
         <Content />
         {d.widget && <div class="rp-wide"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}

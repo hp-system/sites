@@ -45,3 +45,21 @@ export async function ownProperties(token: string): Promise<{ ok: boolean; api: 
     })),
   };
 }
+
+/**
+ * Does this member own a property in the CRM? (Sergei 2026-11-23: a buyer who submitted their own property saw no
+ * Buy / Sell tabs.) The Sell side of the panel follows ownership as well as the sign-up role. Kept per token for 60 s in
+ * this server's memory only — within the member's own session, as George asks for `member/properties` — and dropped
+ * after a submission so the tabs show at once.
+ */
+const owners = new Map<string, { at: number; v: boolean }>();
+export async function ownsProperties(token: string): Promise<boolean> {
+  const hit = owners.get(token);
+  if (hit && Date.now() - hit.at < 60_000) return hit.v;
+  const r = await ownProperties(token);
+  const v = r.ok && r.items.length > 0;
+  owners.set(token, { at: Date.now(), v });
+  if (owners.size > 500) { const k = owners.keys().next().value; if (k !== undefined) owners.delete(k); }
+  return v;
+}
+export function forgetOwner(token: string | undefined): void { if (token) owners.delete(token); }

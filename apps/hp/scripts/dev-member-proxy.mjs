@@ -23,6 +23,7 @@ const PREFIX = 'local-dev.';
 const favs = new Map();   // email → Set(ref)
 const names = new Map();  // email → { name, phone }
 const searches = new Map(); // email → [Search]   (CRM #496 member/searches, memory only)
+const submitted = new Set(); // emails that submitted a property here (they become owners, as in the CRM)
 const prefs = new Map();    // email → Preferences (CRM #496 member/preferences, memory only)
 const PREFS0 = { gender: null, contactWays: ['email', 'whatsapp'], frequency: 'week' };
 
@@ -120,7 +121,8 @@ const server = createServer(async (req, res) => {
     if (what === 'delete-request') { console.log(`[member] delete request from ${me.email}`); return send(200, { ok: true }); }
     if (what === 'properties') {
       // a seller owns two: one online (a real public number), one not yet
-      const items = parse(me.email).role !== 'seller' ? [] : [
+      const own = submitted.has(me.email) ? [{ id: '9902', title: 'Apartment · Afitos', status: 'draft', published: false, createdAt: new Date().toISOString(), views: { members: 0, visitors: 0, last30: 0 }, attributes: {} }] : [];
+      const items = parse(me.email).role !== 'seller' ? own : [...own, 
         { id: '6544', title: 'Maisonette, Kassandra', status: 'published', published: true, createdAt: '2026-09-01T09:00:00Z', views: { members: 41, visitors: 268, last30: 57 }, attributes: {} },
         { id: '9901', title: 'Plot in Sithonia', status: 'draft', published: false, createdAt: '2026-11-20T09:00:00Z', views: { members: 0, visitors: 0, last30: 0 }, attributes: {} },
       ];
@@ -141,6 +143,7 @@ const server = createServer(async (req, res) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     const body = await readBody(req);
     console.log(`[blocked write] ${req.method} ${p} ${JSON.stringify(body).slice(0, 200)}`);
+    if (p === '/api/site/property-submission') { const m = memberOf(req); if (m) submitted.add(m.email); }
     return send(200, { ok: true, id: 'local-dev', local: true });
   }
 

@@ -22,6 +22,7 @@ import { muniKey, municipalityOf } from '../lib/gate';
 import { prefix, t, type Lang } from '../lib/i18n';
 import type { Member } from '../lib/member';
 import { company } from '../lib/company';
+import { ownsProperties } from '../lib/member-api';
 import { brand } from '../brand/index';
 
 export type PanelSection = 'fav' | 'compare' | 'collection' | 'request' | 'profile' | 'submit' | 'properties' | 'coop' | 'exclusive';
@@ -42,7 +43,10 @@ const fsMunis = muniKeys.map((k) => {
 // the CRM (member · exclusive). Agents of both kinds see as guests and have no level of their own.
 const role = me.role;
 const isAgent = role === 'agent' || role === 'partner' || me.level === 'agent';
-const isSeller = role === 'seller' && !isAgent;
+// the Sell side: a seller by sign-up role, or anyone who owns a property in the CRM (e.g. a buyer who submitted one)
+const token = Astro.cookies.get('member_token')?.value;
+const owns = !isAgent && role !== 'seller' && token ? await ownsProperties(token) : false;
+const isSeller = (role === 'seller' || owns) && !isAgent;
 const isExclusive = me.level === 'exclusive';
 const first = (me.name || '').trim().split(/\s+/)[0] || t(lang, 'pnl.welcome');
 const favN = me.favorites.length;

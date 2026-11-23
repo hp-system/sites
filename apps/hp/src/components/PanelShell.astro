@@ -196,8 +196,11 @@ const items = tab === 'sell' ? sellRows : buyRows;
   .ps__row:hover { background: var(--paper-2); color: var(--ink); }
   .ps__row:hover svg, .ps__row[aria-current='page'] svg { transform: scale(1); }
   .ps__row[aria-current='page'] { background: var(--paper-2); color: var(--ink); font-weight: 600; }
-  .ps__row--gold { color: var(--gold-lo); }
-  .ps__row--gold[aria-current='page'] { background: transparent; box-shadow: inset 0 0 0 1px var(--gold); }
+  /* the closed collection keeps its gold in every state (E3 .gtxt): a gilded label, a gold lock; open = a gold frame */
+  .ps__row--gold, .ps__row--gold:hover, .ps__row--gold[aria-current='page'] { color: var(--gold); }
+  .ps__row--gold > span:first-of-type { background: linear-gradient(105deg, var(--gold-hi) 0%, var(--gold) 35%, var(--gold-lo) 60%, var(--gold) 85%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .ps__row--gold[aria-current='page'], .ps__row--gold[aria-current='page']:hover { background: transparent; box-shadow: inset 0 0 0 1px var(--gold); }
   .ps__n { margin-left: auto; font-size: var(--fs-s-1); font-weight: 400; letter-spacing: 0; color: var(--muted); }
   .ps__row:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 

@@ -81,12 +81,15 @@ try {
   const pb = await (await fetch(SITE + '/en/panel', { headers: M })).text();
   // design E3 since 2026-11-11 (Sergei «AFTER main v3»): /panel sends the member where something waits; the side
   // panel carries the Buy / Sell tabs (Buy current), the sections, no cooperation for a member
-  check('panel E3: lands on a section, tabs Buy / Sell, buy open', /class="ps__tabs"/.test(pb) && /aria-current="page"[^>]*>I buy</.test(pb)
+  // 2026-11-23 (Sergei, E3 by role): a buyer (the CRM sends no role yet) has no Buy / Sell tabs; the selling door
+  // under the menu; no cooperation for a member
+  check('panel E3: lands on a section, buyer: no tabs, the selling door', !/class="ps__tabs"/.test(pb) && /class="ps__sell"/.test(pb)
     && pb.includes('href="/en/panel/submit"') && !pb.includes('?tab=coop'), 'tabs');
-  check('panel: request + Exclusive rows, no compare row', pb.includes('href="/en/panel/request"') && pb.includes('href="/en/panel/exclusive"') && !pb.includes('href="/en/panel/compare"'), 'rows');
+  // the closed collection is a row for everyone since 2026-11-23 (locked inside unless Exclusive)
+  check('panel: request + closed collection rows, no compare row', pb.includes('href="/en/panel/request"') && pb.includes('href="/en/panel/collection"') && !pb.includes('href="/en/panel/compare"'), 'rows');
   const ps = await (await fetch(SITE + '/en/panel?tab=sell', { headers: M })).text();
   // the Sell tab lands on «send a property» (the owner statistics wait for the CRM: not shown, not invented)
-  check('panel sell tab: the submit form, Sell current', /aria-current="page"[^>]*>I sell</.test(ps) && ps.includes('class="sb'), 'sell');
+  check('panel sell tab: the submit form, the selling door current', /class="ps__sell"[^>]*aria-current="page"/.test(ps) && ps.includes('class="sb'), 'sell');
   const before = (await (await fetch(stub.base.replace('/api', '') + '/__captured')).json()).length;
   const rq = (b) => fetch(SITE + '/api/panel/request', { method: 'POST', headers: { ...M, 'content-type': 'application/json', origin: SITE }, body: JSON.stringify(b) }).then((r) => r.json());
   const r1 = await rq({ type: 'request', kind: 'home', where: 'Sithonia', maxPrice: '450,000', lang: 'en' });
@@ -99,7 +102,8 @@ try {
   const rg = await fetch(SITE + '/api/panel/request', { method: 'POST', headers: { 'content-type': 'application/json', origin: SITE }, body: '{}' }).then((r) => r.json());
   check('guest request refused', rg.code === 'expired', JSON.stringify(rg));
   const rpage = await (await fetch(SITE + '/en/panel/request', { headers: M })).text();
-  check('request page: one screen, no contact fields', rpage.includes('name="kind"') && rpage.includes('name="maxPrice"') && !rpage.includes('name="email"'), 'form');
+  // 2026-11-23: the Requests page — «Add a request» opens the list's filter window in request mode; no contact fields
+  check('request page: add opens the filter window, no contact fields', rpage.includes('data-fs-open') && rpage.includes('data-mode="request"') && !rpage.includes('name="email"'), 'form');
   await post({ ref: '10010' }); await post({ ref: '10011' });
   const fv = await (await fetch(SITE + '/en/panel/favorites', { headers: M })).text();
   check('favourites: Compare button with 2+ saved', fv.includes('href="/en/panel/compare"'), 'button');

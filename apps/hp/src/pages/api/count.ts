@@ -17,6 +17,7 @@ import type { APIRoute } from 'astro';
 import { allProperties, visitorCountry, priceOf, priceVisible } from '../../lib/api';
 import { muniKey } from '../../lib/gate';
 import { hasPool } from '../../lib/listing';
+import { coverOf, marked } from '../../lib/photos';
 
 export const prerender = false;
 
@@ -49,7 +50,7 @@ export const GET: APIRoute = async ({ url, cookies, request }) => {
     const beds = n(q.get('bedrooms'));
     const pool = q.get('pool') === '1';
 
-    const total = items.filter((p) => {
+    const hits = items.filter((p) => {
       const a = p.attributes ?? {};
       if (subs.length && !subs.includes(String(a.subcategory ?? ''))) return false;
       if (cat && a.category !== cat) return false;
@@ -71,11 +72,18 @@ export const GET: APIRoute = async ({ url, cookies, request }) => {
         if (pMax && pr > pMax) return false;
       }
       return true;
-    }).length;
+    });
+    const total = hits.length;
+
+    // `cover=1` (the panel's saved requests, Sergei 2026-11-23): the watermarked cover of the first match, as on a card.
+    let cover: string | undefined;
+    if (q.get('cover') === '1') {
+      for (const p of hits) { const c = coverOf(p.attributes ?? {}); if (c?.url && !p.locked) { cover = marked(c.url, 800); break; } }
+    }
 
     // No property counts in public output (George 17/10): the endpoint only says whether
     // anything matches, so the filter button can show "no results".
-    return new Response(JSON.stringify({ any: total > 0 }), {
+    return new Response(JSON.stringify({ any: total > 0, ...(cover ? { cover } : {}) }), {
       headers: {
         'content-type': 'application/json',
         // B-06 (traps T-K08): a member's count includes private properties — never shared caches.

@@ -663,8 +663,21 @@ if (faqItems.length) {
           </div>
         </div>
         <div class="ctb__f">
-          <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
-                    look="wave1" lang={lang} bare />
+          {d.form_panel ? (
+            /* Add your property (Sergei 2026-11-23 «форма не корректная… одну кнопку которая перебрасывает на panel/submit;
+               если не зареган — попап с регистрацией»): one button. A member goes straight to the panel's form; a guest to
+               /login with the way back, which the site's sign-in window (LoginDialog) opens in place. */
+            <div class="ctb__go">
+              <h2 class="ctb__go-h">{d.form.title || t(lang, 'sb.start')}</h2>
+              <p class="ctb__go-s" set:html={t(lang, 'sb.fine', { b: `<b>${t(lang, 'sb.fine_b')}</b>` })}></p>
+              <p class="ctb__go-s">{t(lang, 'sb.start_s')}</p>
+              <a class="ctb__go-b" href={memberToken ? `${prefix(lang)}/panel/submit` : `${prefix(lang)}/login?next=${encodeURIComponent(`${prefix(lang)}/panel/submit`)}`}
+                 data-ev="register:info">{t(lang, 'sb.start')}</a>
+            </div>
+          ) : (
+            <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+                      look="wave1" lang={lang} bare />
+          )}
         </div>
       </section>
     )}
@@ -1271,6 +1284,16 @@ if (faqItems.length) {
   .ctb__w :global(.pw-empty), .ctb__w :global(.pw-pre) { margin: 10px 0 0; max-width: 52ch; }
   .ctb__cta .k-act { display: inline-flex; width: auto !important; padding: 0 28px; }
   @media (min-width: 1024px) { .ctb--top .ctb__ct { align-content: center; } }
+  /* the one-button half (form_panel, 2026-11-23): the form's title, the «not published» line, the button in the form's own white */
+  .ctb__go { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .ctb__go-h { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; color: var(--paper); }
+  .ctb__go-s { margin: 0; font-size: var(--fs-s0); line-height: 1.6; color: rgba(255,255,255,.78); max-width: 46ch; }
+  .ctb__go-s :global(b) { color: var(--paper); font-weight: 600; }
+  .ctb__go-b { margin-top: 12px; display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 32px;
+    background: var(--paper); color: var(--ink); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    text-decoration: none; transition: background .2s ease; }
+  .ctb__go-b:hover { background: var(--paper-2); }
+  .ctb__go-b:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
   .ctb__hd .info-h1 { margin: 14px 0 0; font-weight: 300; line-height: 1.06; letter-spacing: -.021em; }
   .ctb__l { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
   .ctb__v { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.35; }

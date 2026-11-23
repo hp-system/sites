@@ -105,7 +105,7 @@ const ICO_DET = 'M2 4.5h12M4.5 8h7M6.8 11.5h2.4';
           </div>
 
           {/* what «Details» holds, in one short line once filled */}
-          <p class="sum" data-sum hidden><span data-sum-t></span> <button type="button" class="sum__b" data-det>{t(lang, 'sb.change')}</button></p>
+          <div class="sum" data-sum hidden><div class="sum__l" data-sum-t></div><button type="button" class="sum__b" data-det>{t(lang, 'sb.change')}</button></div>
           <p class="soon" data-soon hidden>{t(lang, 'sb.files_soon')}</p>
 
           <p class="err" id="e" role="alert" aria-live="polite" hidden></p>
@@ -204,16 +204,37 @@ const ICO_DET = 'M2 4.5h12M4.5 8h7M6.8 11.5h2.4';
   const dlg = form?.querySelector<HTMLDialogElement>('[data-dlg]');
   const nOf = (k: string) => (form?.querySelector<HTMLInputElement>(`[data-files="${k}"]`)?.files?.length ?? 0);
 
-  // the short line under the bar: area · m² · price · levels · orientation
+  // what the owner added, shown under the bar after «Done» (Sergei 2026-11-23 «нужно показывать что он добавил»):
+  // compact pairs «label · value», the labels taken from the window itself, plus the files chosen
   const summary = () => {
+    const lab = (id: string) => (dlg?.querySelector(`label[for="${id}"]`)?.textContent ?? '').trim();
+    const leg = (name: string) => (dlg?.querySelector(`input[name="${name}"]`)?.closest('fieldset')?.querySelector('legend')?.textContent ?? '').trim();
     const sel = (name: string) => { const r = form?.querySelector<HTMLInputElement>(`input[type=radio][name="${name}"]:checked`); return r && r.value ? (r.closest('label')?.textContent ?? '').trim() : ''; };
     const sqm = val('sqm').replace(/\D/g, ''), price = val('price').replace(/\D/g, '');
-    const bits = [val('area'), val('address'), sqm && `${sqm} m²`, price && `€${Number(price).toLocaleString('en-US')}`,
-      val('levels') && `${sel('levels')} · ${L.levels.toLowerCase()}`, sel('orient'), sel('road')].filter(Boolean);
+    const desc = val('desc');
+    const files = (k: string) => {
+      const fs = [...(form?.querySelector<HTMLInputElement>(`[data-files="${k}"]`)?.files ?? [])].map((f) => f.name);
+      return fs.length ? (fs.length > 2 ? `${fs.slice(0, 2).join(', ')} +${fs.length - 2}` : fs.join(', ')) : '';
+    };
+    const cellName = (k: string) => (form?.querySelector(`[data-files="${k}"]`)?.closest('.cell')?.querySelector('span')?.textContent ?? '').trim();
+    const pairs: [string, string][] = ([
+      [lab('area'), val('area')], [lab('address'), val('address')], [lab('sqm'), sqm && `${Number(sqm).toLocaleString('en-US')} m²`],
+      [lab('price'), price && `€${Number(price).toLocaleString('en-US')}`], [leg('levels'), sel('levels')], [leg('orient'), sel('orient')],
+      [leg('road'), sel('road')], [lab('desc'), desc.length > 60 ? `${desc.slice(0, 60)}…` : desc],
+      [cellName('ph'), files('ph')], [cellName('dc'), files('dc')],
+    ] as [string, string][]).filter(([, v]) => !!v);
     const sum = form?.querySelector<HTMLElement>('[data-sum]');
-    const t = form?.querySelector<HTMLElement>('[data-sum-t]');
-    if (sum && t) { t.textContent = bits.join(' · '); sum.hidden = bits.length === 0; }
-    form?.querySelector('.bar [data-det]')?.classList.toggle('cell--on', bits.length > 0);
+    const list = form?.querySelector<HTMLElement>('[data-sum-t]');
+    if (sum && list) {
+      list.replaceChildren(...pairs.map(([k, v]) => {
+        const d = document.createElement('span'); d.className = 'sum__i';
+        const kk = document.createElement('span'); kk.className = 'sum__k'; kk.textContent = k;
+        const vv = document.createElement('span'); vv.className = 'sum__v'; vv.textContent = v;
+        d.append(kk, vv); return d;
+      }));
+      sum.hidden = pairs.length === 0;
+    }
+    form?.querySelector('.bar [data-det]')?.classList.toggle('cell--on', !!val('area'));
   };
 
   form?.querySelectorAll('[data-det]').forEach((b) => b.addEventListener('click', () => dlg?.showModal()));
@@ -239,6 +260,7 @@ const ICO_DET = 'M2 4.5h12M4.5 8h7M6.8 11.5h2.4';
     if (out) out.textContent = n ? String(n) : '';
     inp.closest('.cell')?.classList.toggle('cell--on', n > 0);
     form.querySelector<HTMLElement>('[data-soon]')!.hidden = nOf('ph') + nOf('dc') === 0;
+    summary();
   }));
 
   form?.addEventListener('submit', async (ev) => {
@@ -332,8 +354,14 @@ const ICO_DET = 'M2 4.5h12M4.5 8h7M6.8 11.5h2.4';
   .cell__n { font-size: var(--fs-s-1); font-weight: 400; color: var(--muted); }
   .cell:focus-visible, .cell:has(input:focus-visible) { outline: 2px solid var(--brand); outline-offset: -2px; }
 
-  .sum { margin: 10px 0 0; font-size: var(--fs-s-1); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .sum__b { all: unset; cursor: pointer; margin-inline-start: 8px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+  /* what was added: small pairs on one band, wrapping; label in small caps, value in ink */
+  .sum[hidden] { display: none; }
+  .sum { display: flex; align-items: flex-start; gap: 16px; margin: 10px 0 0; padding: 10px 12px; background: var(--paper-2); }
+  .sum__l { display: flex; flex-wrap: wrap; gap: 6px 18px; flex: 1; min-width: 0; }
+  :global(.sum__i) { display: inline-flex; align-items: baseline; gap: 6px; min-width: 0; font-size: var(--fs-s-1); }
+  :global(.sum__k) { color: var(--faint); letter-spacing: .1em; text-transform: uppercase; font-weight: 600; white-space: nowrap; }
+  :global(.sum__v) { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 30ch; }
+  .sum__b { all: unset; flex: none; cursor: pointer; font-size: var(--fs-s-1); color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
   .sum__b:hover { color: var(--ink); }
   .soon { margin: 6px 0 0; font-size: var(--fs-s-1); color: var(--faint); }
   .go { margin-top: 18px; }

@@ -78,7 +78,8 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
 ---
 <dialog class="fs" id="filter-sheet" aria-label={t(lang, 'ui.filters')}>
   <form class="fs__form" action={listUrl(lang)} method="get" data-ev={isReq ? 'member:request_filters' : 'search:submit'}
-        data-family={JSON.stringify(FAMILY)} data-mode={mode} data-sent={t(lang, 'req.sent')} data-fail={t(lang, 'sb.e.fail')}>
+        data-family={JSON.stringify(FAMILY)} data-mode={mode} data-sent={t(lang, 'req.sent')} data-fail={t(lang, 'sb.e.fail')}
+        data-from={t(lang, 'list.from')} data-upto={t(lang, 'list.upto')}>
     <div class="fs__bar">
       <p class="fs__title">{isReq ? t(lang, 'pnl.req') : t(lang, 'ui.filters')}</p>
       <button class="fs__x" type="button" data-fs-close aria-label={t(lang, 'ui.close')}>
@@ -248,11 +249,26 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       document.documentElement.style.overflow = 'hidden';
     });
     // any [data-fs-open] opens it too (the member panel's «Tell us what you look for»; the link stays as the no-JS way)
-    document.querySelectorAll('[data-fs-open]').forEach((a) => a.addEventListener('click', (e) => {
-      e.preventDefault();
+    // [data-fs-open] opens it empty; the event «fs:edit» {id, q} opens it filled with a saved request (the panel's
+    // Requests page makes those buttons itself, after this script ran)
+    const openWith = (id = '', qs = '') => {
+      const f = dlg.querySelector('form')!;
+      f.reset();
+      dlg.dataset.edit = id;
+      if (qs) {
+        const q = new URLSearchParams(qs);
+        f.querySelectorAll<HTMLInputElement>('input[name]').forEach((i) => {
+          const all = q.getAll(i.name);
+          if (i.type === 'radio' || i.type === 'checkbox') i.checked = all.length ? all.includes(i.value) : i.hasAttribute('data-any') || (i.type === 'radio' && i.defaultChecked);
+          else if (all.length) i.value = all[0];
+        });
+        f.dispatchEvent(new Event('input', { bubbles: true }));
+      }
       dlg.showModal();
       document.documentElement.style.overflow = 'hidden';
-    }));
+    };
+    document.querySelectorAll<HTMLElement>('[data-fs-open]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openWith(); }));
+    document.addEventListener('fs:edit', (e) => { const d = (e as CustomEvent).detail ?? {}; openWith(d.id ?? '', d.q ?? ''); });
     const close = () => { dlg.close(); document.documentElement.style.overflow = ''; };
     dlg.querySelector('[data-fs-close]')?.addEventListener('click', close);
     dlg.addEventListener('close', () => { document.documentElement.style.overflow = ''; });
@@ -279,18 +295,38 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
           .map((i) => (i.closest('label')?.textContent ?? i.value).replace(/\s+/g, ' ').trim());
         if (picked.length) parts.push(`${lg}: ${picked.join(', ')}`);
       });
-      // the price and built-area boxes sit outside the groups: written as their names say (price_max=900000)
-      form.querySelectorAll<HTMLInputElement>('input[type=number][name]').forEach((i) => { if (i.value) parts.push(`${i.name}=${i.value}`); });
+      // the price and built-area pairs: «Price: up to €900,000», «Built area: from 120 m²», «Price: €300,000 – €900,000»
+      form.querySelectorAll<HTMLElement>('.fs__pair').forEach((pr) => {
+        const lo = pr.querySelector<HTMLInputElement>('input[name$=_min]')?.value, hi = pr.querySelector<HTMLInputElement>('input[name$=_max]')?.value;
+        if (!lo && !hi) return;
+        const fmt = (v: string) => pr.dataset.unit === 'eur' ? `€${Number(v).toLocaleString('en-US')}` : `${Number(v).toLocaleString('en-US')} m²`;
+        const lbl = pr.querySelector('.fs__h')?.textContent?.trim() ?? '';
+        const v = lo && hi ? `${fmt(lo)} – ${fmt(hi)}` : lo ? (form.dataset.from ?? '{v}').replace('{v}', fmt(lo)) : (form.dataset.upto ?? '{v}').replace('{v}', fmt(hi!));
+        parts.push(`${lbl}: ${v}`);
+      });
       const btn = form.querySelector<HTMLButtonElement>('.fs__go')!;
       btn.disabled = true;
       try {
         const r = await fetch('/api/panel/request', { method: 'POST', headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ type: 'filters', filters: parts.join('; ') || 'any', lang: document.documentElement.lang }) });
         const j = await r.json().catch(() => ({}));
-        out.textContent = j?.ok ? (form.dataset.sent ?? '') : (form.dataset.fail ?? '');
-        if (j?.ok) setTimeout(close, 1600);
-      } catch { out.textContent = form.dataset.fail ?? ''; }
-      finally { setTimeout(() => { btn.disabled = false; out.textContent = showAll; }, 1700); }
+        if (!j?.ok) { out.textContent = form.dataset.fail ?? ''; setTimeout(() => { btn.disabled = false; out.textContent = showAll; }, 1700); return; }
+        // saved (Sergei 2026-11-23): the CRM has the request (the adviser sees it); the panel's list of requests is kept
+        // in this browser until the CRM stores searches; then straight to the list, filtered as chosen
+        const q = new URLSearchParams();
+        new FormData(form).forEach((v, k) => { if (String(v).trim()) q.append(k, String(v)); });
+        try {
+          const KEY = 'hp.requests';
+          const list: { id: string; q: string; text: string; at: number }[] = JSON.parse(localStorage.getItem(KEY) || '[]');
+          const id = dlg.dataset.edit || String(Date.now());
+          const item = { id, q: q.toString(), text: parts.join('; '), at: Date.now() };
+          const at = list.findIndex((x) => x.id === id);
+          if (at >= 0) list[at] = item; else list.unshift(item);
+          localStorage.setItem(KEY, JSON.stringify(list.slice(0, 30)));
+        } catch { /* storage off: the request still reached the adviser */ }
+        out.textContent = form.dataset.sent ?? '';
+        location.href = `${form.action}${q.toString() ? `?${q}` : ''}`;
+      } catch { out.textContent = form.dataset.fail ?? ''; setTimeout(() => { btn.disabled = false; out.textContent = showAll; }, 1700); }
     });
 
     async function refresh() {

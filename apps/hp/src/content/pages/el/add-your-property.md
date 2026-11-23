@@ -37,6 +37,7 @@ form:
 look: wave1
 form_top: true
 form_split: true
+form_panel: true
 ---
 
 ## Πώς λειτουργεί

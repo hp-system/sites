@@ -30,6 +30,7 @@ import CollectionPage from '../components/CollectionPage.astro';
 import ComparePage from '../components/ComparePage.astro';
 import SubmitPage from '../components/SubmitPage.astro';
 import RequestPage from '../components/RequestPage.astro';
+import RequestsPage from '../components/RequestsPage.astro';
 import ContentPage from '../components/ContentPage.astro';
 import AreaPage from '../components/AreaPage.astro';
 import { areaPage, type AreaPage as AreaContent } from '../content/areas/en';
@@ -338,7 +339,8 @@ if (crmDown) { Astro.response.status = 503; Astro.response.headers.set('Retry-Af
   : isPanel && me && panelSeg === 'collection' ? <CollectionPage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'compare' ? <ComparePage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'submit' ? <SubmitPage lang={lang} me={me} />
-  : isPanel && me && (panelSeg === 'request' || panelSeg === 'exclusive') ? <RequestPage lang={lang} me={me} kind={panelSeg} />
+  : isPanel && me && panelSeg === 'request' ? <RequestsPage lang={lang} me={me} />
+  : isPanel && me && panelSeg === 'exclusive' ? <RequestPage lang={lang} me={me} kind={panelSeg} />
   : isPanel && me ? <PanelPage lang={lang} me={me} />
   : area ? <AreaPage page={area} />
   : article ? <ArticlePage article={article} />

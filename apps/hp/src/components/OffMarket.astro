@@ -67,8 +67,8 @@ if (count < 1) return null;
       <div class="off__act">
         <p class="off__ask">{t(lang, 'off.ask2')}</p>
         <a class="btn h-gild off__btn" href={`${prefix(lang)}/login`} rel="nofollow" data-ev="register:off_market">
-          {/* the lock on the button too (Sergei 2026-11-23), drawn like the band's lock, in the text's colour */}
-          <svg class="off__bl" width="11" height="14" viewBox="0 0 24 30" aria-hidden="true">
+          {/* the lock on the button too (Sergei 2026-11-23), drawn like the band's lock, in the text's colour, a little larger */}
+          <svg class="off__bl" width="14" height="18" viewBox="0 0 24 30" aria-hidden="true">
             <path d="M6 13V8.5a6 6 0 0 1 12 0V13" fill="none" stroke="currentColor" stroke-width="2" />
             <rect x="2.5" y="13" width="19" height="15" fill="none" stroke="currentColor" stroke-width="2" />
             <circle cx="12" cy="19.5" r="1.8" fill="currentColor" />
@@ -101,7 +101,7 @@ if (count < 1) return null;
 
   .off__act { align-self: end; }
   .off__btn { display: inline-flex; align-items: center; gap: 10px; }
-  .off__bl { flex: none; width: 11px; height: 14px; margin-top: -2px; }
+  .off__bl { flex: none; width: 14px; height: 18px; margin-top: -3px; }
   .off__ask { margin: 0 0 var(--s4); font-size: var(--fs-s0); color: rgba(255,255,255,.86); max-width: 40ch; }
   .off__act .btn { background: #fff; color: var(--ink-deep); border-color: #fff; }
   .off__fine { margin: var(--s3) 0 0; font-size: var(--fs-s-1); color: rgba(255,255,255,.42); }

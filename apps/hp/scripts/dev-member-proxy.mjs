@@ -49,7 +49,7 @@ const memberOf = (req) => {
 
 const readBody = (req) => new Promise((resolve) => {
   let s = '';
-  req.on('data', (c) => { s += c; if (s.length > 1e6) req.destroy(); });
+  req.on('data', (c) => { s += c; if (s.length > 22e6) req.destroy(); });
   req.on('end', () => { try { resolve(s ? JSON.parse(s) : {}); } catch { resolve({}); } });
 });
 
@@ -111,6 +111,11 @@ const server = createServer(async (req, res) => {
       if ('contactWays' in body) cur.contactWays = body.contactWays;
       if ('frequency' in body) cur.frequency = body.frequency;
       prefs.set(me.email, cur); console.log(`[member] preferences ${JSON.stringify(cur)}`); return send(200, cur);
+    }
+    if (what === 'uploads') {
+      const kb = Math.round(String(body.data ?? '').length * 3 / 4 / 1024);
+      console.log(`[member] upload ${body.kind} «${body.name}» ${kb} KB`);
+      return send(200, { uploadId: `u${Date.now().toString(36)}`, kind: body.kind, name: body.name, size: kb * 1024, type: 'image/jpeg' });
     }
     if (what === 'delete-request') { console.log(`[member] delete request from ${me.email}`); return send(200, { ok: true }); }
     if (what === 'properties') {

@@ -21,6 +21,7 @@ import { forwardIp } from '../../../lib/clientip';
 import { originHeader } from '../../../lib/origin';
 
 export const prerender = false;
+const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://localhost:3020/api';
 
 
 // B-15: the site's own errors go out as a `code`; the page shows its translation (all 9 languages).
@@ -44,8 +45,11 @@ const KIND: Record<string, { category: string; subcategory: string }> = {
 
 // The Details window (Sergei 2026-11-23): since CRM #496 the CRM stores address, levels, orientation and road access in
 // the property's own fields (`address`, `levels`, `orientation`, `road_access` below; unknown values are dropped there).
-// Only what it cannot take yet — how many photos / documents the owner has ready (no file upload yet, P1-4) — stays a
-// plain `[Details]` line on top of the owner's note.
+// Files (CRM #498): uploaded one by one before (/api/panel/upload) and attached here as `uploads: [{uploadId, kind}]`;
+// the CRM attaches them to the draft and links the member as its owner — both need the member's token, so this send
+// goes straight to the CRM with it. Only if the CRM cannot take it now does it fall back to the outbox, WITHOUT the
+// token (a token is never written to disk) and without the files; then the `[Details]` line tells the adviser how many
+// photos / documents the owner has ready.
 const ORIENT = new Set(['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']);
 const ROAD = new Set(['asphalt', 'paved', 'dirt', 'boat']);
 function extras(b: Record<string, unknown>) {
@@ -100,7 +104,19 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
 
   // never lost: kept in the outbox and resent when the CRM cannot take it now (lib/lead-outbox, 2026-11-11);
   // the site origin goes with it as with every other form (forms audit: it was missing here)
-  const sent = await sendLead('/site/property-submission', { ...forwardIp(request, clientAddress), ...originHeader(request, url) }, payload, 12_000);
+  const uploads = (Array.isArray(b.uploads) ? b.uploads : []).slice(0, 40)
+    .map((u: any) => ({ uploadId: clean(u?.uploadId, 80), kind: u?.kind === 'document' ? 'document' : 'photo' }))
+    .filter((u: { uploadId: string }) => u.uploadId);
+  const hdr = { ...forwardIp(request, clientAddress), ...originHeader(request, url) };
+  try {
+    const r = await fetch(`${API}/site/property-submission`, {
+      method: 'POST', headers: { 'content-type': 'application/json', 'x-member-token': token!, ...hdr },
+      body: JSON.stringify({ ...payload, ...(uploads.length ? { uploads } : {}) }), signal: AbortSignal.timeout(20_000),
+    });
+    if (r.ok) return json({ ok: true, files: uploads.length });
+    if (r.status < 500) return json({ ok: false, code: 'fail' });
+  } catch { /* unreachable: the outbox below */ }
+  const sent = await sendLead('/site/property-submission', hdr, payload, 12_000);
   // a 4xx here means «name/email missing», not «page gone»
   return json(sent.ok ? { ok: true } : { ok: false, code: sent.status >= 500 ? 'offline' : 'fail' });
 };

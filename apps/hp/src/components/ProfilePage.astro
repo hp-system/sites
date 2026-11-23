@@ -236,8 +236,11 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
   const val = (xs: HTMLInputElement[]) => xs.find((x) => x.checked)?.value ?? '';
   const ways = [...(root?.querySelectorAll<HTMLInputElement>('[data-way]') ?? [])];
   const inCrm = root?.dataset.crm === '1';
-  if (!inCrm) try {
+  // a browser copy from before the CRM kept them (until 2026-11-23) is applied here and, with the CRM, sent there once
+  let carry = false;
+  try {
     const st = JSON.parse(localStorage.getItem(KEY) || 'null');
+    carry = inCrm && !!st;
     if (st) {
       if (st.gender) pick(gs, st.gender);
       if (st.often) pick(os, st.often);
@@ -270,6 +273,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
   };
   [...gs, ...os].forEach((x) => x.addEventListener('change', save));
   ways.forEach((w) => w.addEventListener('change', save));
+  if (carry) { paint(); save(); try { localStorage.removeItem(KEY); } catch { /* storage off */ } }
 
   // Delete my account: asks first; then the adviser gets the request (the site deletes nothing by itself)
   const box = root?.querySelector<HTMLElement>('[data-del-box]');

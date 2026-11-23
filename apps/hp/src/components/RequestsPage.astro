@@ -124,7 +124,7 @@ const JS_T = { saved: t(lang, 'rq.saved'), see: t(lang, 'rq.see'), change: t(lan
     if (mine.length) {
       let all = true;
       for (const r of [...mine].reverse()) {
-        if (items.some((x) => x.q === r.q && x.text === r.text)) continue;
+        if (!r.q || items.some((x) => x.q === r.q && x.text === r.text)) continue;   // an empty one («everything») is not kept
         const a = await fetch('/api/panel/searches', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q: r.q, text: r.text }) })
           .then((x) => x.json()).catch(() => null);
         if (a?.ok && a.item) items = [a.item, ...items]; else { all = false; if (a?.code === 'limit') break; }

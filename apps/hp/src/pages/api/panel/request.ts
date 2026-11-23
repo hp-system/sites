@@ -40,6 +40,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   let message: string;
   let topic: 'request' | 'exclusive' | 'preferences' | 'account_delete' = 'request';
   let saved: ReturnType<typeof panelSearch> | null = null;
+  let noKeep = false;
   if (type === 'prefs') {
     // My details (Sergei 2026-11-23): gender, contact ways, how often — the CRM has no fields for them yet, so the
     // adviser gets them as a line; only known values pass
@@ -70,10 +71,15 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
     // the saved search: a CRM id → change it; a new one (or a browser-only id) → add it
     const q = String(b.q ?? '').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 1000);
     const id = clean(b.id, 80);
-    let r = id && !/^\d{10,}$/.test(id) ? await memberCall(token, 'PATCH', `searches/${encodeURIComponent(id)}`, { q, label: f }) : { status: 404, body: {} };
-    if (r.status === 404) r = await memberCall(token, 'POST', 'searches', { q, label: f });
-    if (r.status === 409) return json({ ok: false, code: 'limit' });
-    if (r.status === 200 || r.status === 201) saved = panelSearch(r.body);
+    // no filter at all (q empty) = «everything»: the CRM refuses an empty search (400), so nothing is kept — the adviser
+    // still hears of it. A CRM that has searches (any answer but 404 / unreachable) is the only place the list lives.
+    if (q) {
+      let r = id && !/^\d{10,}$/.test(id) ? await memberCall(token, 'PATCH', `searches/${encodeURIComponent(id)}`, { q, label: f }) : { status: 404, body: {} };
+      if (r.status === 404) r = await memberCall(token, 'POST', 'searches', { q, label: f });
+      if (r.status === 409) return json({ ok: false, code: 'limit' });
+      if (r.status === 200 || r.status === 201) saved = panelSearch(r.body);
+      else if (r.status !== 404 && r.status !== 0) return json({ ok: false, code: 'save' });
+    } else noKeep = true;
   } else if (type === 'request') {
     const kind = String(b.kind ?? '');
     if (!KINDS.has(kind)) return json({ ok: false, code: 'kind' });
@@ -90,6 +96,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
     { name: me.name || me.email, email: me.email, phone: me.phone, message, topic, lang: clean(b.lang, 5) });
   // a search kept in the CRM counts as saved even if the adviser's note waits in the outbox
   if (saved) return json({ ok: true, crm: true, item: saved });
+  if (noKeep && sent.ok) return json({ ok: true, crm: true });
   return json(sent.ok ? { ok: true } : { ok: false, code: 'save' });
 };
 

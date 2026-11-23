@@ -19,8 +19,6 @@ related:
   href: /en/services/investor-services
 - label: Construction services
   href: /en/services/construction-services
-- label: Construction projects
-  href: /en/construction
 - label: Full property management
   href: /en/services/buyer-services/full-property-management
 - label: Contact an adviser
@@ -64,13 +62,6 @@ cards:
   image_alt: Concrete frame of a new house under construction
   width: 800
   height: 500
-- title: Construction projects
-  href: /en/construction
-  text: Villa Natalia in Sithonia, renovated homes and villas, and architectural designs.
-  image: /pages/construction/villa-natalia-7010-wm.jpg
-  image_alt: Villa Natalia in Sithonia at night, seen from above
-  width: 800
-  height: 500
 contact_card: false
 catalog: []
 # Desktop redesign, wave 1 (#106, approved by George 2026-11-02): ServicesHub on desktop, George's layout on phones.
@@ -88,6 +79,6 @@ A property in Halkidiki touches many professions: the search and the viewings, t
 - **[Buyer services](/en/services/buyer-services):** viewing trips and selection of properties, negotiation, appraisals, legal and accounting checks, company set-up, translations and [full property management](/en/services/buyer-services/full-property-management) after the purchase.
 - **[Seller services](/en/services/seller-services):** professional photography, aerial photos and videos, 360° views, energy certificates (PEA) and advertising packages on property portals worldwide.
 - **[Investor services](/en/services/investor-services):** support in HRADF tenders for state-owned property, hotel design and construction, and the design of ports and marinas.
-- **[Construction services](/en/services/construction-services):** studies, building licences, bioclimatic homes, swimming pools, renewable energy systems, renovations and a construction guarantee. See our [construction projects](/en/construction).
+- **[Construction services](/en/services/construction-services):** studies, building licences, bioclimatic homes, swimming pools, renewable energy systems, renovations and a construction guarantee.
 
 Not sure where to start? [Talk to an adviser](/en/contact) and tell us what you need.

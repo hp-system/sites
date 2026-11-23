@@ -17,6 +17,7 @@
 // The window posts through InfoForm (look="pop") to the same /api/inquiry with the same
 // protections (honeypot, 3-second timer; Origin check + rate limit on the server).
 // ═══════════════════════════════════════════════════════════════════════════
+import { contentUrl } from '../lib/pages';
 import FaqSearch from './FaqSearch.astro';
 import FoldText from './FoldText.astro';
 import InfoForm from './InfoForm.astro';
@@ -45,7 +46,8 @@ const pageIn = async (slug: string) => (await findInfoPage(`${prefix(lang)}/${sl
 const bookUrl = await pageIn('book-an-online-appointment');
 const addUrl = await pageIn('add-your-property');
 const pmUrl = await pageIn('services/buyer-services/full-property-management');
-const build = Math.max(0, roles.findIndex((r) => /\/construction$/.test(r.href)));
+// «See what we build» → the construction services page (the projects page merged into it, #340)
+const build = Math.max(0, roles.findIndex((r) => r.href === contentUrl('services/developers', lang) || /\/construction$/.test(r.href)));
 
 // Role icons by the page they open (buyer, seller, investor, construction services, projects, property management).
 const ICON_KEYS = [/buyer-services$/, /seller-services$/, /investor-services$/, /construction-services$/, /\/construction$/, /full-property-management$/];

@@ -17,6 +17,7 @@
 // The window posts through InfoForm (look="pop") to the same /api/inquiry with the same
 // protections (honeypot, 3-second timer; Origin check + rate limit on the server).
 // ═══════════════════════════════════════════════════════════════════════════
+import { contentUrl } from '../lib/pages';
 import FaqSearch from './FaqSearch.astro';
 import FoldText from './FoldText.astro';
 import InfoForm from './InfoForm.astro';
@@ -45,7 +46,8 @@ const pageIn = async (slug: string) => (await findInfoPage(`${prefix(lang)}/${sl
 const bookUrl = await pageIn('book-an-online-appointment');
 const addUrl = await pageIn('add-your-property');
 const pmUrl = await pageIn('services/buyer-services/full-property-management');
-const build = Math.max(0, roles.findIndex((r) => /\/construction$/.test(r.href)));
+// «See what we build» → the construction services page (the projects page merged into it, #340)
+const build = Math.max(0, roles.findIndex((r) => r.href === contentUrl('services/developers', lang) || /\/construction$/.test(r.href)));
 
 // Role icons by the page they open (buyer, seller, investor, construction services, projects, property management).
 const ICON_KEYS = [/buyer-services$/, /seller-services$/, /investor-services$/, /construction-services$/, /\/construction$/, /full-property-management$/];
@@ -261,10 +263,10 @@ const GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABA
     .svc-doors { display: flex; gap: 12px; height: 280px; }
     .svc-door { flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; box-sizing: border-box;
       padding: 30px 32px 26px; background: var(--paper); color: var(--ink); overflow: hidden; text-decoration: none;
-      transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease; }
-    .svc-door.on { flex-grow: 1.6; background: var(--ink-deep); color: #fff; }
-    .svc-door b { display: block; font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.014em; transition: font-size .4s ease; }
-    .svc-door.on b { font-size: var(--fs-s2); }
+      transition: background-color .25s ease, color .25s ease; }
+    /* #338 (George via Sergei 2026-11-23: no opening-door animation): the doors keep their width and heading size; the hovered one only changes colour. */
+    .svc-door.on { background: var(--ink-deep); color: #fff; }
+    .svc-door b { display: block; font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.014em; }
     .svc-door .dp { display: block; margin-top: 10px; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); max-width: 42ch; transition: color .35s ease; }
     .svc-door.on .dp { color: rgba(255,255,255,.78); }
     .svc-door .dl { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }

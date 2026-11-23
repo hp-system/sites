@@ -334,7 +334,7 @@ if (crmDown) { Astro.response.status = 503; Astro.response.headers.set('Retry-Af
   : info ? <InfoPageView page={info} />
   : pageKey && content ? (
       <ContentPage lang={lang} page={content} langs={pageLangs(pageKey)}
-        pathFor={(l) => contentUrl(pageKey, l)} />
+        pathFor={(l) => contentUrl(pageKey, l)} construction={pageKey === 'services/developers'} />
     )
   : isPanel && me && panelSeg === 'favorites' ? <FavoritesPage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'profile' ? <ProfilePage lang={lang} me={me} />

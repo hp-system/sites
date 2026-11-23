@@ -46,6 +46,7 @@ import ServicesHub, { type Role } from './ServicesHub.astro';
 import CompanyHub from './CompanyHub.astro';
 import { t } from '../lib/i18n';
 import { redirectFor } from '../lib/redirects';
+import Construction from './Construction.astro';
 import SpecText from './SpecText.astro';
 import LogoMarquee from './LogoMarquee.astro';
 import SpecPosts from './SpecPosts.astro';
@@ -761,6 +762,9 @@ if (faqItems.length) {
         </picture>
       )}
     </header>}
+
+    {/* #340 (Sergei 2026-11-23): the home page's «Design & construction» block lives on the construction services page */}
+    {d.construction_block && <Construction lang={lang} portfolio={false} />}
 
     {/* Contact (Sergei 2026-11-18): the details (light) and the form (dark) in one full-width box that opens the page;
         chosen of four looks tried on the dev server («split»); the button «Send us a message» is gone. */}

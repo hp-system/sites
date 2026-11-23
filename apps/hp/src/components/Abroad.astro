@@ -358,10 +358,10 @@ const viberLink = viberHref(co.whatsappE164);
        on no risk…» slides over «We do the rest for you.» — each band stays (sticky in the page's main; .ab3 is display:
        contents for that) while the next one, later in the page and so painted above it, comes up with a soft shadow */
     .ab3 { display: contents; }
-    .ab3 > .abroad { position: sticky; top: var(--ab-top, 0px); z-index: 1; overflow: hidden; }
+    /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow. */
+    .ab3 > .abroad { position: relative; overflow: hidden; }
     .ab3 > .abroad::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--ab-dim, 0); pointer-events: none; }
-    .ab3 > .abroad, .abc-stage { box-shadow: 0 -18px 40px rgba(14, 18, 20, .16); }
-    .abc-stage { position: relative; z-index: 1; background: var(--paper); clip-path: none !important; }
+    .abc-stage { position: relative; z-index: 1; background: var(--paper); clip-path: none !important; box-shadow: none; }   /* #338: no white 100vmax ground from the Construction rule, unclipped here */
     .abroad, .abroad--you { min-height: var(--abh); height: var(--abh); align-items: flex-start; padding-top: var(--abp, 80px); padding-bottom: 0; }
     .ab__grid { align-items: baseline; }
     .abroad__head { position: relative; }

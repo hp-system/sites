@@ -16,6 +16,7 @@
 import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
+import Construction from './Construction.astro';
 import { listUrl, prefix, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
 import { contentUrl, type PageContent, type PageKey } from '../lib/pages';
@@ -25,8 +26,8 @@ import { EVENTS } from '../lib/track';
 //    όλες τις γλώσσες) ή `pathFor(lang)` (όταν το slug αλλάζει ανά γλώσσα, όπως στα
 //    «Έργα»). Το είχα γράψει με φανταστικά ονόματα — θα περνούσαν σιωπηλά και τα
 //    canonical θα έδειχναν όλα στην αρχική.
-interface Props { lang: Lang; page: PageContent; pathFor: (l: Lang) => string; langs: Lang[] }
-const { lang, page, pathFor, langs } = Astro.props;
+interface Props { lang: Lang; page: PageContent; pathFor: (l: Lang) => string; langs: Lang[]; construction?: boolean }
+const { lang, page, pathFor, langs, construction = false } = Astro.props;
 // B-16: in a language without its own text the page shows the English (else Greek) original;
 // that copy points its canonical at the original instead of claiming to be a version of its own.
 const canonicalLang = langs.includes(lang) ? undefined : (langs.includes('en') ? 'en' : langs[0]);
@@ -82,6 +83,8 @@ const ctaHref = page.cta
         </div>
       )}
     </article>
+    {/* #340: the «Design & construction» block on the construction services page in the other languages too */}
+    {construction && <Construction lang={lang} portfolio={false} />}
   </main>
 
   <Footer lang={lang} />

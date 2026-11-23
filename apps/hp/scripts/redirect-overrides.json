@@ -231,9 +231,9 @@
     },
     {
       "from": "/el/κατασκευες",
-      "to": "/κατασκευες",
+      "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
       "status": 301,
-      "reason": "D-20261112-SS-1 (#262): the Greek page lives at its own Greek URL (George's slug without /el)"
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
     },
     {
       "from": "/el/επικοινωνια",
@@ -465,9 +465,9 @@
     },
     {
       "from": "/εργα",
-      "to": "/κατασκευες",
+      "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
       "status": 301,
-      "reason": "D-20261112-SS-1 (#262): the Greek construction page at George's Greek URL"
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
     },
     {
       "from": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
@@ -531,9 +531,9 @@
     },
     {
       "from": "/ru/proekty",
-      "to": "/ru/stroitelstvo",
+      "to": "/ru/uslugi/stroitelnye-uslugi",
       "status": 301,
-      "reason": "#265 (D-20261112-SS-1): the Russian page lives at its own Russian URL"
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
     },
     {
       "from": "/ru/vip",
@@ -546,6 +546,102 @@
       "to": "/en/properties/polygyros",
       "status": 301,
       "reason": "Sergei 2026-11-16: the old Polygyros area guide had the same H1 as the list with our P58 text (two pages for one query); like the other four municipalities (George sheet rows), it goes to the list. Its only link was «About the area» on the property page, removed the same day."
+    },
+    {
+      "from": "/en/construction",
+      "to": "/en/services/construction-services",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/en/projects",
+      "to": "/en/services/construction-services",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/κατασκευες",
+      "to": "/υπηρεσιες/υπηρεσιες-κατασκευαστες",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/ru/stroitelstvo",
+      "to": "/ru/uslugi/stroitelnye-uslugi",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/ru/projects",
+      "to": "/ru/uslugi/stroitelnye-uslugi",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/bg/проекти",
+      "to": "/bg/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/bg/projects",
+      "to": "/bg/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/sr/projekti",
+      "to": "/sr/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/sr/projects",
+      "to": "/sr/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/de/projekte",
+      "to": "/de/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/de/projects",
+      "to": "/de/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/ro/proiecte",
+      "to": "/ro/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/ro/projects",
+      "to": "/ro/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/tr/projeler",
+      "to": "/tr/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/tr/projects",
+      "to": "/tr/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
+    },
+    {
+      "from": "/he/projects",
+      "to": "/he/services/developers",
+      "status": 301,
+      "reason": "#340 (Sergei 2026-11-23): construction projects merged into construction services (one page; the address with the search history: GSC 9,453 impressions, P39 brief); «Our latest projects» removed"
     }
   ],
   "moves": [],

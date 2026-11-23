@@ -7,13 +7,13 @@ const API = import.meta.env.EALIDA_API || process.env.EALIDA_API || 'http://loca
 
 export type CrmAnswer = { status: number; body: any };
 
-export async function memberCall(token: string, method: 'GET' | 'POST' | 'PATCH' | 'DELETE', path: string, body?: unknown): Promise<CrmAnswer> {
+export async function memberCall(token: string, method: 'GET' | 'POST' | 'PATCH' | 'DELETE', path: string, body?: unknown, timeout = 8000): Promise<CrmAnswer> {
   try {
     const r = await fetch(`${API}/site/member/${path}`, {
       method,
       headers: { 'x-member-token': token, accept: 'application/json', ...(body !== undefined ? { 'content-type': 'application/json' } : {}) },
       body: body !== undefined ? JSON.stringify(body) : undefined,
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(timeout),
     });
     return { status: r.status, body: await r.json().catch(() => ({})) };
   } catch {

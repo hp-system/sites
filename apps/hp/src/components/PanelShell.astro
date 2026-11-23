@@ -27,32 +27,45 @@ const { lang, me, current, title, description } = Astro.props;
 const p = prefix(lang);
 const co = await company();
 
-const isAgent = me.level === 'agent';
+// Two axes (design E3 demo strip): the role chosen at sign-up (buyer · seller · agent · partner) and the level from
+// the CRM (member · exclusive). Agents of both kinds see as guests and have no level of their own.
+const role = me.role;
+const isAgent = role === 'agent' || role === 'partner' || me.level === 'agent';
+const isSeller = role === 'seller' && !isAgent;
 const isExclusive = me.level === 'exclusive';
 const first = (me.name || '').trim().split(/\s+/)[0] || t(lang, 'pnl.welcome');
 const favN = me.favorites.length;
-const badge = isExclusive ? t(lang, 'lvl.exclusive') : isAgent ? t(lang, 'lvl.agent') : t(lang, 'lvl.member');
+const badge = role === 'partner' ? t(lang, 'lvl.partner') : isAgent ? t(lang, 'lvl.agent') : isExclusive ? t(lang, 'lvl.exclusive') : t(lang, 'lvl.member');
+// Buy / Sell only for a seller; the tab follows the page (no state of its own)
+const tab: 'buy' | 'sell' = isSeller && current === 'submit' ? 'sell' : 'buy';
+const tabs = [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'sell', href: `${p}/panel/submit`, label: t(lang, 'pnl.tab_sell') }];
 // the adviser: the CRM holds no personal adviser per member yet, so the office stands in (initials, name, phone)
 const advName = brand.name;
 const advIni = advName.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
-// E3 side box (Sergei 2026-11-23, board PanelE3): no Buy / Sell tabs; menu rows with an icon and a count,
-// the selling door at the bottom. The count shows only where the CRM holds the number (favourites).
+// E3 side box (Sergei 2026-11-23, board PanelE3): Buy / Sell tabs for sellers only; menu rows with an icon and a count;
+// the selling door at the bottom for everyone else. The Exclusive card moved under the closed collection (Sergei 2026-11-23). The count shows only where the CRM holds the number (favourites).
 const IC = {
   fav: 'M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z',
   request: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
   compare: 'M4 6h7v12H4zM13 6h7v12h-7z',
   collection: 'M5 11h14v10H5zM8 11V7.5a4 4 0 0 1 8 0V11',
+  home: 'M3 21V10l6-5 6 5v11M15 21v-9l3-2.5 3 2.5v9M3 21h18',
   coop: 'M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 20c0-3 2.7-5 6-5s6 2 6 5M14 15.2c.6-.1 1.3-.2 2-.2 3.3 0 6 2 6 5',
 } as const;
 type Item = { id: PanelSection; href: string; label: string; ic: string; n?: number; gold?: boolean };
-const items: Item[] = [
+const buyRows: Item[] = [
   { id: 'fav', href: `${p}/panel/favorites`, label: t(lang, 'pnl.row_fav'), ic: IC.fav, n: favN },
   ...(favN >= 2 ? [{ id: 'compare' as const, href: `${p}/panel/compare`, label: t(lang, 'pnl.compare'), ic: IC.compare }] : []),
   { id: 'request', href: `${p}/panel/request`, label: t(lang, 'pnl.row_req'), ic: IC.request },
-  ...(isExclusive ? [{ id: 'collection' as const, href: `${p}/panel/collection`, label: t(lang, 'pnl.collection'), ic: IC.collection, gold: true }] : []),
+  // the closed collection for everyone (Sergei 2026-11-23); inside, the cards stay locked unless Exclusive
+  { id: 'collection', href: `${p}/panel/collection`, label: t(lang, 'pnl.collection'), ic: IC.collection, gold: true },
   ...(isAgent ? [{ id: 'coop' as const, href: `${p}/panel?tab=coop`, label: t(lang, 'pnl.tab_coop'), ic: IC.coop }] : []),
 ];
+const sellRows: Item[] = [
+  { id: 'submit', href: `${p}/panel/submit`, label: t(lang, 'pnl.submit'), ic: IC.home },
+];
+const items = tab === 'sell' ? sellRows : buyRows;
 ---
 <Base lang={lang} title={title} noindex description={description ?? t(lang, 'pnl.meta_desc')}>
   <Header lang={lang} solid />
@@ -76,6 +89,12 @@ const items: Item[] = [
           </details>
         </div>
 
+        {isSeller && (
+          <nav class="ps__tabs" aria-label={t(lang, 'pnl.title')}>
+            {tabs.map((x) => <a href={x.href} aria-current={x.id === tab ? 'page' : undefined}><span>{x.label}</span></a>)}
+          </nav>
+        )}
+
         <nav class="ps__nav" aria-label={t(lang, 'pnl.title')}>
           {items.map((it) => (
             <a class:list={['ps__row', { 'ps__row--gold': it.gold }]} href={it.href} aria-current={it.id === current ? 'page' : undefined}>
@@ -94,17 +113,8 @@ const items: Item[] = [
           <p class="ps__ways"><WaLink /> <a href={`mailto:${co.email}`}>{t(lang, 'pf.email')}</a></p>
         </div>
 
-        {!isExclusive && !isAgent && (
-          /* the Exclusive door (E3): dark card with the lock; it asks, it does not register */
-          <div class="ps__ex">
-            <span class="ps__ex-l">Exclusive</span>
-            <span class="ps__ex-h">{t(lang, 'pnl.ex_h')} <b><bdi>{t(lang, 'pnl.ex_price')}</bdi></b></span>
-            <svg class="ps__ex-lock" width="46" height="52" viewBox="0 0 64 72" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 34V22a14 14 0 0 1 28 0v12"></path><rect x="8" y="34" width="48" height="34"></rect><path d="M32 48v8"></path></svg>
-            <a class="ps__ex-go" href={`${p}/panel/exclusive`} aria-current={current === 'exclusive' ? 'page' : undefined}>{t(lang, 'pnl.ex_cta')}</a>
-          </div>
-        )}
 
-        {!isAgent && (
+        {!isSeller && (
           <a class="ps__sell" href={`${p}/panel/submit`} aria-current={current === 'submit' ? 'page' : undefined}>
             <svg width="24" height="22" viewBox="0 0 26 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V3M5 5h15M8 5v3M17 5v3M7 8h12v8H7z"></path><path d="M10 12h6"></path></svg>
             <span><span>{t(lang, 'pnl.sell_1')}</span><span>{t(lang, 'pnl.sell_2')}</span></span>
@@ -149,6 +159,16 @@ const items: Item[] = [
   .ps__menu form { margin: 0; }
   .ps__dim { color: var(--muted) !important; border-top: 1px solid var(--line-soft) !important; }
 
+  /* Buy / Sell (sellers only): two halves on a hairline, the open one underlined in ink */
+  .ps__tabs { display: grid; grid-template-columns: 1fr 1fr; margin-top: -6px; box-shadow: inset 0 -1px 0 var(--line-soft); }
+  .ps__tabs a { display: flex; align-items: center; justify-content: center; height: 40px; border-bottom: 2px solid transparent;
+    font-size: var(--fs-s-1); letter-spacing: .16em; text-transform: uppercase; color: var(--faint); text-decoration: none;
+    transition: color .15s ease, border-color .15s ease, background .15s ease; }
+  .ps__tabs a > span { display: inline-block; transform: scale(.92); transition: transform .18s ease; }
+  .ps__tabs a:hover { color: var(--ink); background: var(--paper-2); }
+  .ps__tabs a:hover > span, .ps__tabs a[aria-current='page'] > span { transform: scale(1); }
+  .ps__tabs a[aria-current='page'] { border-bottom-color: var(--ink); color: var(--ink); font-weight: 600; }
+
   /* the menu rows: icon, small caps, the count on the right; the open section on the beige plate */
   .ps__nav { display: flex; flex-direction: column; gap: 2px; margin: -6px 0; }
   .ps__row { display: flex; align-items: center; gap: 14px; padding: 11px 14px; font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase;
@@ -174,18 +194,6 @@ const items: Item[] = [
   .ps__ways > a:not(.wab) { color: var(--muted); font-size: var(--fs-s-1); text-decoration: none; }
   .ps__ways > a:not(.wab):hover { color: var(--ink); }
   .ps__ways :global(.wab) { padding-left: 0; }
-
-  /* the Exclusive door: dark card, a faint lock, the gilded button (a call to join) */
-  .ps__ex { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 22px 20px 20px;
-    background: var(--ink-deep); color: var(--paper); }
-  .ps__ex-l { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.62); }
-  .ps__ex-h { position: relative; font-size: var(--fs-s1); font-weight: 300; line-height: 1.22; letter-spacing: -.01em; }
-  .ps__ex-h b { font-weight: 600; }
-  .ps__ex-lock { position: absolute; right: 16px; top: 16px; color: rgba(255,255,255,.14); }
-  .ps__ex-go { display: flex; align-items: center; justify-content: center; height: 40px; margin-top: 4px; border: 1px solid var(--gold-dk);
-    color: var(--gold-dk-text); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; text-decoration: none;
-    transition: color .3s ease, border-color .3s ease; }
-  .ps__ex-go:hover, .ps__ex-go:focus-visible { color: var(--gold-dk-hover); border-color: var(--gold-dk-hi); }
 
   /* the selling door: framed, a flag, two lines */
   .ps__sell { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; margin-top: 8px; padding: 8px 14px;

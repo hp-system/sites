@@ -34,7 +34,19 @@ export type Member = {
   favorites: string[];
   level: Level;
   blocked: boolean;
+  /** The role chosen at sign-up (D-20261105-SS-1): buyer · seller · agent (competitor) · partner (agent association).
+   *  Read from the CRM's `role` when it sends one; until then a buyer, and an `agent` level counts as an agent. */
+  role: Role;
 };
+
+export type Role = 'buyer' | 'seller' | 'agent' | 'partner';
+export function roleOf(raw: unknown, level: Level): Role {
+  const r = String(raw ?? '').toLowerCase();
+  if (r === 'partner' || r === 'association') return 'partner';
+  if (level === 'agent' || r === 'agent') return 'agent';
+  if (r === 'seller' || r === 'both' || r === 'owner') return 'seller';
+  return 'buyer';
+}
 
 const TTL = 30_000;
 const MAX_ENTRIES = 500;                      // ένα ανά συνδεδεμένο θεατή· αρκετά
@@ -93,7 +105,9 @@ export async function memberOf(token: string | undefined): Promise<Member | null
         // τιμής να μην κλειδώνει έξω τους 9.830 υπάρχοντες.
         level: lv === 'exclusive' ? 'exclusive' : lv === 'agent' ? 'agent' : 'member',
         blocked: b?.blocked === true,
+        role: 'buyer',
       };
+      m.role = roleOf(b?.role, m.level);
       remember(token, m);
       return m;
     } catch {

@@ -284,9 +284,8 @@ if (isPanel) {
   // 🎚️ Ο ΜΕΣΙΤΗΣ ΒΛΕΠΕΙ Ο,ΤΙ Ο ΕΠΙΣΚΕΠΤΗΣ (George 6/8) — άρα καμία δουλειά στην
   //    κλειστή συλλογή. Ανακατεύθυνση στον πίνακά του, όχι 404: υπάρχει λογαριασμός,
   //    απλώς δεν του ανήκει αυτή η σελίδα.
-  if (me.level === 'agent' && panelSeg === 'collection') {
-    return Astro.redirect(`${prefix(lang)}/panel`, 302);
-  }
+  // (the agent's redirect away from the closed collection is gone: Sergei 2026-11-23 opened it to everyone,
+  //  locked inside unless Exclusive — CollectionPage)
   // Design E3 (Sergei 2026-11-11 «no Home page: you land where something waits»): /panel itself is only the
   // agent's cooperation section; everyone else goes where something waits — the seller tab to the submit form,
   // a buyer to the saved homes, else (Exclusive) the closed collection, else «tell us what you look for».

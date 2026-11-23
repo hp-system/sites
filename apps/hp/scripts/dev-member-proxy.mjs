@@ -7,9 +7,8 @@
 //   - every other POST (inquiry, callback, property submission, viewing order …) is
 //     answered "ok" here and never reaches the CRM — so the forms are safe to try locally.
 //
-// The level follows the e-mail you sign in with:
-//   exclusive@local.test → exclusive · agent@local.test → agent · blocked@local.test → blocked
-//   anything else → member
+// The role and the level follow the e-mail you sign in with (see `parse` below):
+//   buyer@ · seller@ · agent@ · partner@ · blocked@ — and «.exclusive», e.g. seller.exclusive@local.test
 //
 // Usage: node scripts/dev-member-proxy.mjs [port=3031] [upstream=http://127.0.0.1:3020]
 //        then run the site with EALIDA_API=http://127.0.0.1:3031/api
@@ -24,10 +23,16 @@ const PREFIX = 'local-dev.';
 const favs = new Map();   // email → Set(ref)
 const names = new Map();  // email → { name, phone }
 
-const levelOf = (email) => {
-  const l = email.split('@')[0];
-  return ['exclusive', 'agent', 'blocked'].includes(l) ? l : 'member';
+// The e-mail's name sets the role and the level, as the demo strip of the design board:
+//   buyer@ · seller@ · agent@ (agent competitor) · partner@ (agent association) · blocked@
+//   add «.exclusive» for the Exclusive level: seller.exclusive@local.test. Any other e-mail = buyer, member.
+const parse = (email) => {
+  const [role0, lvl0] = email.split('@')[0].split('.');
+  const role = ['buyer', 'seller', 'agent', 'partner'].includes(role0) ? role0 : 'buyer';
+  const level = role0 === 'blocked' ? 'blocked' : role === 'agent' || role === 'partner' ? 'agent' : lvl0 === 'exclusive' ? 'exclusive' : 'member';
+  return { role, level };
 };
+const levelOf = (email) => parse(email).level;
 const memberOf = (req) => {
   const tok = String(req.headers['x-member-token'] ?? '');
   if (!tok.startsWith(PREFIX)) return null;
@@ -66,13 +71,13 @@ const server = createServer(async (req, res) => {
       const id = String(body.identifier ?? '').toLowerCase();
       const email = id.includes('@') ? id : 'sergei@local.test';
       if (levelOf(email) === 'blocked') return send(401, { message: 'Ο λογαριασμός έχει ανασταλεί.' });
-      console.log(`[member] signed in as ${email} (${levelOf(email)})`);
+      console.log(`[member] signed in as ${email} (${parse(email).role}, ${levelOf(email)})`);
       return send(200, { ok: true, token: PREFIX + Buffer.from(email).toString('base64url'), name: (names.get(email) ?? { name: 'Sergei Local' }).name, needs: [] });
     }
     const me = memberOf(req);
     if (!me) return send(401, { message: 'not signed in (local)' });
     if (what === 'me') {
-      return send(200, { email: me.email, name: me.name, phone: me.phone, favorites: [...favs.get(me.email)], level: levelOf(me.email), blocked: false });
+      return send(200, { email: me.email, name: me.name, phone: me.phone, favorites: [...favs.get(me.email)], level: levelOf(me.email), role: parse(me.email).role, blocked: false });
     }
     if (what === 'favorite') {
       const set = favs.get(me.email);
@@ -102,10 +107,24 @@ const server = createServer(async (req, res) => {
   // ── reads: the real CRM, as guest (a local token means nothing to it) ────────────────
   const headers = { ...req.headers };
   delete headers.host;
-  if (String(headers['x-member-token'] ?? '').startsWith(PREFIX)) delete headers['x-member-token'];
+  const local = String(headers['x-member-token'] ?? '').startsWith(PREFIX);
+  if (local) delete headers['x-member-token'];
   try {
     const r = await fetch(UPSTREAM + req.url, { method: req.method, headers, signal: AbortSignal.timeout(30000) });
-    const out = Buffer.from(await r.arrayBuffer());
+    let out = Buffer.from(await r.arrayBuffer());
+    // The CRM gives the closed collection only to a real member token; a local sign-in reads as a guest and would see
+    // none. For a local member every 25th home is marked secret here, so the closed collection has something to show.
+    // Local preview only: nothing is written anywhere.
+    if (local && r.ok && p === '/api/site/properties') {
+      try {
+        const d = JSON.parse(out.toString('utf8'));
+        (d.items ?? []).forEach((it) => {
+          const h = [...String(it.id)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+          if (h % 25 === 0) it.attributes = { ...(it.attributes ?? {}), secret_portfolio: true };
+        });
+        out = Buffer.from(JSON.stringify(d));
+      } catch { /* leave the answer as it came */ }
+    }
     const h = {};
     r.headers.forEach((v, k) => { if (!['content-encoding', 'content-length', 'transfer-encoding', 'connection'].includes(k)) h[k] = v; });
     res.writeHead(r.status, h);
@@ -117,5 +136,5 @@ const server = createServer(async (req, res) => {
 
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`Local member proxy on http://127.0.0.1:${PORT}/api → reads from ${UPSTREAM}`);
-  console.log('Sign in with any e-mail and any 6 digits. exclusive@local.test / agent@local.test / blocked@local.test switch the level.');
+  console.log('Sign in with any e-mail and any 6 digits. buyer@ seller@ agent@ partner@ (+ .exclusive, e.g. seller.exclusive@local.test) set the role and level.');
 });

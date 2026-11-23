@@ -16,44 +16,69 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import WaLink from './WaLink.astro';
+import FilterSheet from './FilterSheet.astro';
+import { allProperties, visitorCountry } from '../lib/api';
+import { muniKey, municipalityOf } from '../lib/gate';
 import { prefix, t, type Lang } from '../lib/i18n';
 import type { Member } from '../lib/member';
 import { company } from '../lib/company';
+import { brand } from '../brand/index';
 
-export type PanelSection = 'fav' | 'compare' | 'collection' | 'request' | 'profile' | 'submit' | 'coop' | 'exclusive';
+export type PanelSection = 'fav' | 'compare' | 'collection' | 'request' | 'profile' | 'submit' | 'properties' | 'coop' | 'exclusive';
 interface Props { lang: Lang; me: Member; current: PanelSection; title: string; description?: string }
 const { lang, me, current, title, description } = Astro.props;
 const p = prefix(lang);
 const co = await company();
+// «Tell us what you look for» opens the list's filter window in request mode (Sergei 2026-11-23); its municipalities
+// as on the list (the four with homes). If the set cannot be read, the window offers «All Halkidiki» only.
+const all = await allProperties(undefined, visitorCountry(Astro.request)).catch(() => []);
+const muniKeys = [...new Set(all.map((x) => muniKey(x.attributes ?? {})).filter(Boolean))].slice(0, 4);
+const fsMunis = muniKeys.map((k) => {
+  const src = all.find((x) => muniKey(x.attributes ?? {}) === k);
+  return { name: municipalityOf(src?.attributes ?? {}, lang) || k, n: 0, key: k };
+});
 
-const isAgent = me.level === 'agent';
+// Two axes (design E3 demo strip): the role chosen at sign-up (buyer · seller · agent · partner) and the level from
+// the CRM (member · exclusive). Agents of both kinds see as guests and have no level of their own.
+const role = me.role;
+const isAgent = role === 'agent' || role === 'partner' || me.level === 'agent';
+const isSeller = role === 'seller' && !isAgent;
 const isExclusive = me.level === 'exclusive';
 const first = (me.name || '').trim().split(/\s+/)[0] || t(lang, 'pnl.welcome');
 const favN = me.favorites.length;
-const badge = isExclusive ? t(lang, 'lvl.exclusive') : isAgent ? t(lang, 'lvl.agent') : t(lang, 'lvl.member');
-// the tab follows the page (no state of its own): selling pages → Sell, cooperation → the agent's tab
-const tab: 'buy' | 'sell' | 'coop' = current === 'submit' ? 'sell' : current === 'coop' ? 'coop' : 'buy';
+const badge = role === 'partner' ? t(lang, 'lvl.partner') : isAgent ? t(lang, 'lvl.agent') : isExclusive ? t(lang, 'lvl.exclusive') : t(lang, 'lvl.member');
+// Buy / Sell only for a seller; the tab follows the page (no state of its own)
+const tab: 'buy' | 'sell' = isSeller && (current === 'submit' || current === 'properties') ? 'sell' : 'buy';
+const tabs = [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'sell', href: `${p}/panel/properties`, label: t(lang, 'pnl.tab_sell') }];
+// the adviser: the CRM holds no personal adviser per member yet, so the office stands in (initials, name, phone)
+const advName = brand.name;
+const advIni = advName.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
-type Item = { id: PanelSection; href: string; label: string; n?: number };
-const buy: Item[] = [
-  { id: 'fav', href: `${p}/panel/favorites`, label: t(lang, 'pnl.fav'), n: favN },
-  ...(favN >= 2 ? [{ id: 'compare' as const, href: `${p}/panel/compare`, label: t(lang, 'pnl.compare') }] : []),
-  ...(isExclusive ? [{ id: 'collection' as const, href: `${p}/panel/collection`, label: t(lang, 'pnl.collection') }] : []),
-  { id: 'request', href: `${p}/panel/request`, label: t(lang, 'pnl.searches') },
-  { id: 'profile', href: `${p}/panel/profile`, label: t(lang, 'pnl.profile') },
+// E3 side box (Sergei 2026-11-23, board PanelE3): Buy / Sell tabs for sellers only; menu rows with an icon and a count;
+// the selling door under the menu for everyone else, the adviser at the bottom (Sergei 2026-11-23). The Exclusive card moved under the closed collection (Sergei 2026-11-23). The count shows only where the CRM holds the number (favourites).
+const IC = {
+  fav: 'M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z',
+  request: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
+  compare: 'M4 6h7v12H4zM13 6h7v12h-7z',
+  collection: 'M5 11h14v10H5zM8 11V7.5a4 4 0 0 1 8 0V11',
+  home: 'M3 21V10l6-5 6 5v11M15 21v-9l3-2.5 3 2.5v9M3 21h18',
+  add: 'M12 5v14M5 12h14',
+} as const;
+type Item = { id: PanelSection; href: string; label: string; ic: string; n?: number; gold?: boolean };
+const buyRows: Item[] = [
+  { id: 'fav', href: `${p}/panel/favorites`, label: t(lang, 'pnl.row_fav'), ic: IC.fav, n: favN },
+  ...(favN >= 2 ? [{ id: 'compare' as const, href: `${p}/panel/compare`, label: t(lang, 'pnl.compare'), ic: IC.compare }] : []),
+  { id: 'request', href: `${p}/panel/request`, label: t(lang, 'pnl.row_req'), ic: IC.request },
+  // the closed collection for everyone (Sergei 2026-11-23); inside, the cards stay locked unless Exclusive
+  { id: 'collection', href: `${p}/panel/collection`, label: t(lang, 'pnl.collection'), ic: IC.collection, gold: true },
+  // no Cooperation row: cooperation lives in the CRM; on the site an agent is a status and a level (Sergei 2026-11-23)
 ];
-const sell: Item[] = [
-  { id: 'submit', href: `${p}/panel/submit`, label: t(lang, 'pnl.submit') },
-  { id: 'profile', href: `${p}/panel/profile`, label: t(lang, 'pnl.profile') },
+const sellRows: Item[] = [
+  // the seller's own properties (CRM #496, George 2026-11-23: option b of D-174 — only their own, read-only)
+  { id: 'properties', href: `${p}/panel/properties`, label: t(lang, 'mp.h'), ic: IC.home },
+  { id: 'submit', href: `${p}/panel/submit`, label: t(lang, 'pnl.submit'), ic: IC.add },
 ];
-const coop: Item[] = [
-  { id: 'coop', href: `${p}/panel?tab=coop`, label: t(lang, 'pnl.tab_coop') },
-  { id: 'profile', href: `${p}/panel/profile`, label: t(lang, 'pnl.profile') },
-];
-const items = tab === 'sell' ? sell : tab === 'coop' ? coop : buy;
-const tabs = isAgent
-  ? [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'coop', href: `${p}/panel?tab=coop`, label: t(lang, 'pnl.tab_coop') }]
-  : [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'sell', href: `${p}/panel/submit`, label: t(lang, 'pnl.tab_sell') }];
+const items = tab === 'sell' ? sellRows : buyRows;
 ---
 <Base lang={lang} title={title} noindex description={description ?? t(lang, 'pnl.meta_desc')}>
   <Header lang={lang} solid />
@@ -62,10 +87,13 @@ const tabs = isAgent
     <div class="wrap ps__in">
       <aside class="ps__side" aria-label={t(lang, 'pnl.title')}>
         <div class="ps__who">
-          <p class="t-label ps__hi">{t(lang, 'pnl.welcome')} <span class="ps__lvl">{badge}</span></p>
+          <div class="ps__top">
+            <p class="ps__lbl">{t(lang, 'pnl.welcome')}</p>
+            <span class="ps__lvl">{badge}</span>
+          </div>
           {/* the account menu: a plain <details>, so it works without JavaScript */}
           <details class="ps__acct">
-            <summary class="ps__name">{first}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+            <summary class="ps__name">{first}<svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 4.5h12M4.5 8h7M6.8 11.5h2.4" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"></path></svg></summary>
             <div class="ps__menu">
               <a href={`${p}/panel/profile`}>{t(lang, 'pnl.profile')}</a>
               <form method="post" action="/api/auth/logout"><button type="submit">{t(lang, 'pnl.logout')}</button></form>
@@ -74,45 +102,46 @@ const tabs = isAgent
           </details>
         </div>
 
-        <nav class="ps__tabs" aria-label={t(lang, 'pnl.title')}>
-          {tabs.map((x) => <a href={x.href} aria-current={x.id === tab ? 'page' : undefined}>{x.label}</a>)}
+        {isSeller && (
+          <nav class="ps__tabs" aria-label={t(lang, 'pnl.title')}>
+            {tabs.map((x) => <a href={x.href} aria-current={x.id === tab ? 'page' : undefined}><span>{x.label}</span></a>)}
+          </nav>
+        )}
+
+        <nav class="ps__nav" aria-label={t(lang, 'pnl.title')}>
+          {items.map((it) => (
+            <a class:list={['ps__row', { 'ps__row--gold': it.gold }]} href={it.href} aria-current={it.id === current ? 'page' : undefined}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={it.ic}></path></svg>
+              <span>{it.label}</span>{it.n ? <span class="ps__n">{it.n}</span> : null}
+            </a>
+          ))}
         </nav>
 
-        <ul class="k-side__list ps__nav">
-          {items.map((it) => (
-            <li><a class:list={['k-side__it', { on: it.id === current }]} href={it.href} aria-current={it.id === current ? 'page' : undefined}>
-              <span>{it.label}</span>{it.n ? <b class="ps__n">{it.n}</b> : null}
-            </a></li>
-          ))}
-        </ul>
-
-        {tab === 'buy' && !isAgent && (
-          <a class="ps__sell" href={`${p}/panel/submit`}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
-            {t(lang, 'pnl.submit')}
+        {!isSeller && (
+          <a class="ps__sell" href={`${p}/panel/submit`} aria-current={current === 'submit' ? 'page' : undefined}>
+            <svg width="24" height="22" viewBox="0 0 26 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V3M5 5h15M8 5v3M17 5v3M7 8h12v8H7z"></path><path d="M10 12h6"></path></svg>
+            <span><span>{t(lang, 'pnl.sell_1')}</span><span>{t(lang, 'pnl.sell_2')}</span></span>
           </a>
         )}
 
         <div class="ps__adv">
-          <p class="t-label">{t(lang, 'pnl.adv')}</p>
-          <a class="ps__tel" href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a>
+          <p class="ps__lbl">{t(lang, 'pnl.adv')}</p>
+          <div class="ps__who2">
+            <span class="ps__ava" aria-hidden="true">{advIni}</span>
+            <span class="ps__wn"><b>{advName}</b><a href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a></span>
+          </div>
           <p class="ps__ways"><WaLink /> <a href={`mailto:${co.email}`}>{t(lang, 'pf.email')}</a></p>
         </div>
 
-        {!isExclusive && !isAgent && (
-          /* the Exclusive door (E3): dark, at the bottom of the panel; it asks, it does not register */
-          <a class="ps__ex" href={`${p}/panel/exclusive`}>
-            <span class="t-label">Exclusive</span>
-            <b>{t(lang, 'pnl.up_h')}</b>
-            <span class="ps__ex-go">{t(lang, 'pnl.up_cta')} →</span>
-          </a>
-        )}
+
+
       </aside>
 
       <div class="ps__main"><slot /></div>
     </div>
   </main>
 
+  <FilterSheet lang={lang} total={all.length} munis={fsMunis} mode="request" />
   <Footer lang={lang} />
 </Base>
 
@@ -122,20 +151,23 @@ const tabs = isAgent
   .ps__main { min-width: 0; }
   .ps__side { display: flex; flex-direction: column; gap: 16px; }
   @media (min-width: 1000px) {
-    .ps__in { grid-template-columns: 260px minmax(0, 1fr); column-gap: var(--s6); padding-block: var(--s6) var(--s8); }
+    .ps__in { grid-template-columns: 310px minmax(0, 1fr); column-gap: var(--s6); padding-block: var(--s6) var(--s8); }
     .ps__side { position: sticky; top: var(--s5); align-self: start; padding: 4px 28px 4px 0; border-right: 1px solid var(--line-soft);
-      max-height: calc(100vh - var(--s5) - 24px); overflow-y: auto; transition: top .25s ease; }
+      transition: top .25s ease; }
   }
   :global(html.hdr-up) .ps__side { top: calc(var(--hdr-h, 88px) + 12px); }
 
-  .ps__hi { margin: 0; display: flex; align-items: center; gap: 10px; color: var(--faint); }
-  .ps__lvl { padding: 3px 7px; border: 1px solid var(--line); font-size: var(--fs-s-1); letter-spacing: .14em; color: var(--ink); }
-  .ps__acct { position: relative; margin-top: 6px; }
-  .ps__name { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; font-size: var(--fs-s3); font-weight: 600;
+  .ps__who { display: flex; flex-direction: column; gap: 4px; padding-bottom: 16px; border-bottom: 1px solid var(--line-soft); }
+  .ps__top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .ps__lbl { margin: 0; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+  /* the level badge: a thin gold frame, as on the board */
+  .ps__lvl { padding: 3px 7px; border: 1px solid var(--gold); color: var(--gold-lo); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+  .ps__acct { position: relative; display: flex; justify-content: center; }
+  .ps__name { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; font-size: var(--fs-s2); font-weight: 600;
     line-height: 1.1; letter-spacing: -.016em; color: var(--ink); }
   .ps__name::-webkit-details-marker { display: none; }
-  .ps__name:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .ps__menu { position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; min-width: 240px; padding: 6px 0; background: var(--paper);
+  .ps__name:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
+  .ps__menu { position: absolute; z-index: 20; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); min-width: 240px; padding: 6px 0; background: var(--paper);
     border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(11,14,16,.12); }
   .ps__menu a, .ps__menu button { display: block; width: 100%; padding: 10px 16px; text-align: start; font: inherit; font-size: var(--fs-s0);
     color: var(--ink); text-decoration: none; background: none; border: 0; cursor: pointer; }
@@ -143,27 +175,58 @@ const tabs = isAgent
   .ps__menu form { margin: 0; }
   .ps__dim { color: var(--muted) !important; border-top: 1px solid var(--line-soft) !important; }
 
-  .ps__tabs { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
-  .ps__tabs a { display: flex; align-items: center; justify-content: center; min-height: 40px; font-size: var(--fs-s-1); font-weight: 400;
-    letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
-  .ps__tabs a[aria-current='page'] { background: var(--paper-2); color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--ink); }
-  .ps__nav { margin: 0; }
-  .ps__n { margin-left: auto; font-size: var(--fs-s-1); font-weight: 600; color: var(--ink); letter-spacing: 0; }
+  /* Buy / Sell (sellers only): two halves on a hairline, the open one underlined in ink */
+  .ps__tabs { display: grid; grid-template-columns: 1fr 1fr; margin-top: -6px; box-shadow: inset 0 -1px 0 var(--line-soft); }
+  .ps__tabs a { display: flex; align-items: center; justify-content: center; height: 40px; border-bottom: 2px solid transparent;
+    font-size: var(--fs-s-1); letter-spacing: .16em; text-transform: uppercase; color: var(--faint); text-decoration: none;
+    transition: color .15s ease, border-color .15s ease, background .15s ease; }
+  .ps__tabs a > span { display: inline-block; transform: scale(.92); transition: transform .18s ease; }
+  .ps__tabs a:hover { color: var(--ink); background: var(--paper-2); }
+  .ps__tabs a:hover > span, .ps__tabs a[aria-current='page'] > span { transform: scale(1); }
+  .ps__tabs a[aria-current='page'] { border-bottom-color: var(--ink); color: var(--ink); font-weight: 600; }
 
-  .ps__sell { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border: 1px solid var(--ink); color: var(--ink);
-    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; }
-  .ps__sell:hover { background: var(--paper-2); }
+  /* the menu rows: icon, small caps, the count on the right; the open section on the beige plate */
+  .ps__nav { display: flex; flex-direction: column; gap: 2px; margin: -6px 0; }
+  /* one line per row, always (Sergei 2026-11-23): no wrap; the longest name (de «Die geschlossene Sammlung») fits */
+  .ps__row { display: flex; align-items: center; gap: 10px; padding: 11px 10px; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--faint); text-decoration: none; white-space: nowrap; transition: background .15s ease, color .15s ease; }
+  .ps__row > span:first-of-type { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* E3: a row not open reads a step smaller; the open one and the hovered one come to full size */
+  .ps__row > span:first-of-type { display: inline-block; transform: scale(.92); transform-origin: 0 50%; transition: transform .18s ease; }
+  .ps__row:hover > span:first-of-type, .ps__row[aria-current='page'] > span:first-of-type { transform: scale(1); }
+  @media (prefers-reduced-motion: reduce) { .ps__row > span:first-of-type, .ps__row svg { transition: none; } }
+  .ps__row svg { flex: none; transform: scale(.9); transition: transform .18s ease; }
+  .ps__row:hover { background: var(--paper-2); color: var(--ink); }
+  .ps__row:hover svg, .ps__row[aria-current='page'] svg { transform: scale(1); }
+  .ps__row[aria-current='page'] { background: var(--paper-2); color: var(--ink); font-weight: 600; }
+  /* the closed collection keeps its gold in every state (E3 .gtxt): a gilded label, a gold lock; open = a gold frame */
+  .ps__row--gold, .ps__row--gold:hover, .ps__row--gold[aria-current='page'] { color: var(--gold); }
+  .ps__row--gold > span:first-of-type { background: linear-gradient(105deg, var(--gold-hi) 0%, var(--gold) 35%, var(--gold-lo) 60%, var(--gold) 85%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .ps__row--gold[aria-current='page'], .ps__row--gold[aria-current='page']:hover { background: transparent; box-shadow: inset 0 0 0 1px var(--gold); }
+  .ps__n { margin-left: auto; font-size: var(--fs-s-1); font-weight: 400; letter-spacing: 0; color: var(--muted); }
+  .ps__row:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
-  .ps__adv { display: grid; gap: 6px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
-  .ps__adv .t-label { margin: 0; color: var(--faint); }
-  .ps__tel { color: var(--ink); font-weight: 600; text-decoration: none; }
-  .ps__ways { margin: 0; display: flex; align-items: center; gap: 16px; font-size: var(--fs-s-1); }
-  .ps__ways > a { color: var(--ink); }
+  .ps__adv { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+  .ps__who2 { display: flex; align-items: center; gap: 12px; }
+  .ps__ava { width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--ink); color: var(--paper); display: flex; align-items: center;
+    justify-content: center; font-size: var(--fs-s-1); font-weight: 600; }
+  .ps__wn { display: flex; flex-direction: column; line-height: 1.35; }
+  .ps__wn b { font-weight: 600; color: var(--ink); }
+  .ps__wn a { font-size: var(--fs-s-1); color: var(--muted); text-decoration: none; }
+  .ps__wn a:hover { color: var(--ink); }
+  .ps__ways { margin: 0; display: flex; align-items: center; gap: 6px; }
+  .ps__ways > a:not(.wab) { color: var(--muted); font-size: var(--fs-s-1); text-decoration: none; }
+  .ps__ways > a:not(.wab):hover { color: var(--ink); }
+  .ps__ways :global(.wab) { padding-left: 0; }
 
-  .ps__ex { display: grid; gap: 8px; padding: 18px; background: var(--ink-deep); color: var(--paper); text-decoration: none; }
-  .ps__ex .t-label { color: var(--paper); opacity: .6; }
-  .ps__ex b { font-size: var(--fs-s1); font-weight: 300; line-height: 1.25; }
-  .ps__ex-go { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
-  .ps__ex:hover .ps__ex-go { text-decoration: underline; text-underline-offset: 4px; }
+  /* the selling door: framed, a flag, two lines */
+  .ps__sell { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; margin-top: 4px; padding: 8px 14px;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink); text-decoration: none;
+    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; line-height: 1.3; transition: background .2s ease; }
+  .ps__sell svg { flex: none; }
+  .ps__sell > span { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: start; }
+  .ps__sell:hover, .ps__sell[aria-current='page'] { background: var(--paper-2); }
   @media (prefers-reduced-motion: reduce) { .ps__side { transition: none; } }
 </style>
+

@@ -11,6 +11,8 @@ export function crmError(status: number, body: unknown, fallback: string): CrmEr
     const s = Number(b.retryAfterSec);
     return { code: 'too_many', retryAfterSec: Number.isFinite(s) && s > 0 ? Math.ceil(s) : 60, message };
   }
+  // CRM #495: an insert that meets an existing contact answers 409 contact_exists (was a 500 shown as «wrong code»).
+  if (status === 409 && b.code === 'contact_exists') return { code: 'contact_exists', message };
   const m = message ?? '';
   if (/αν[εα]σταλ|αναστολ/i.test(m)) return { code: 'suspended', message };
   const left = m.match(/Απομένουν\s+(\d+)/);

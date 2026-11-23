@@ -22,7 +22,7 @@ import PanelShell from './PanelShell.astro';
 // ═══════════════════════════════════════════════════════════════════════════
 import PropertyCard from './PropertyCard.astro';
 import { listUrl, prefix, t, type Lang } from '../lib/i18n';
-import { allProperties, refOf, type SiteProperty } from '../lib/api';
+import { allProperties, refOf, priceOf, priceVisible, type SiteProperty } from '../lib/api';
 import { viewerFor } from '../lib/gate';
 import type { Member } from '../lib/member';
 
@@ -60,23 +60,42 @@ const missing = failed ? 0 : Math.max(0, me.favorites.length - items.length);
       {failed ? (
         <p class="say">{t(lang, 'fav.fail')}</p>
       ) : items.length === 0 ? (
-        /* Το άδειο δεν είναι σφάλμα — είναι η πρώτη επίσκεψη. Δίνουμε δρόμο, όχι λύπη. */
+        /* E3: the empty state is a framed box in the middle with the way forward (Sergei 2026-11-23) */
         <div class="empty">
-          <p class="empty__h">{t(lang, 'fav.empty_h')}</p>
+          <p class="empty__h">{t(lang, 'fav.none_h')}</p>
           <p class="empty__s">{t(lang, 'fav.empty_s')}</p>
-          <a class="btn" href={listUrl(lang)}>{t(lang, 'ui.see_props')}</a>
+          <span class="empty__go">
+            <a class="btn" href={`${p}/panel/request`} data-fs-open>{t(lang, 'pnl.req')}</a>
+            <a class="lnk" href={listUrl(lang)}>{t(lang, 'ui.see_props')}</a>
+          </span>
         </div>
       ) : (
         <>
-          <div class="favbar">
-            <p class="say">{items.length === 1
-              ? t(lang, 'ui.one_prop')
-              : t(lang, 'pnl.n_props', { n: items.length })}</p>
-            {/* Compare lives inside the saved properties now (q13), not as its own panel row. */}
-            {items.length >= 2 && <a class="btn btn--ghost" href={`${p}/panel/compare`}>{t(lang, 'fav.compare')}</a>}
+          {/* E3 tools over the grid, on the right: the order, compare, «+ Tell us what you look for».
+              The Saved / Closed collection / Searches bar of the board is not taken: the side menu has them (Sergei 2026-11-23). */}
+          <div class="tools">
+            <label class="srt">
+              <span>{t(lang, 'fav.sort')}</span>
+              <select data-sort>
+                <option value="new">{t(lang, 'fav.s_new')}</option>
+                <option value="old">{t(lang, 'fav.s_old')}</option>
+                <option value="lo">{t(lang, 'fav.s_lo')}</option>
+                <option value="hi">{t(lang, 'fav.s_hi')}</option>
+              </select>
+            </label>
+            {items.length >= 2 && <a class="tl" href={`${p}/panel/compare`}>{t(lang, 'fav.compare')}</a>}
+            <a class="tl tl--add" href={`${p}/panel/request`} data-fs-open>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              <b>{t(lang, 'pnl.req')}</b>
+            </a>
           </div>
-          <div class="grid">
-            {items.map((it, i) => <PropertyCard p={it} lang={lang} viewer={viewer} eager={i < 2} />)}
+          <div class="grid" data-grid>
+            {items.map((it, i) => {
+              const a = it.attributes ?? {};
+              const price = priceVisible(a, viewer.exclusive) ? priceOf(a) : 0;
+              // the member's order is «oldest saved» first (the CRM keeps the order of saving); «newest» reverses it
+              return <div class="gi" data-i={i} data-price={price}><PropertyCard p={it} lang={lang} viewer={viewer} eager={i < 3} /></div>;
+            })}
           </div>
           {missing > 0 && (
             /* 🪤 ΤΟ ΛΕΜΕ, ΔΕΝ ΤΟ ΚΡΥΒΟΥΜΕ. Αν ο πίνακας έλεγε «7» και εδώ βλέπει 5,
@@ -91,28 +110,52 @@ const missing = failed ? 0 : Math.max(0, me.favorites.length - items.length);
     </div>
 </PanelShell>
 
+<script>
+  // the order of the saved homes: on the page only, nothing is stored
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  const sel = document.querySelector<HTMLSelectElement>('[data-sort]');
+  const order = (how: string) => {
+    if (!grid) return;
+    const els = [...grid.querySelectorAll<HTMLElement>('.gi')];
+    const n = (e: HTMLElement, k: string) => Number(e.dataset[k]) || 0;
+    els.sort((a, b) => how === 'old' ? n(a, 'i') - n(b, 'i')
+      : how === 'lo' ? (n(a, 'price') || Infinity) - (n(b, 'price') || Infinity)
+      : how === 'hi' ? n(b, 'price') - n(a, 'price')
+      : n(b, 'i') - n(a, 'i'));
+    els.forEach((e) => grid.appendChild(e));
+  };
+  order('new');
+  sel?.addEventListener('change', () => order(sel.value));
+</script>
+
 <style>
-  .fav { padding: var(--s6) 0 var(--s9); }
-  .fav .wrap { max-width: 1180px; }
-  .crumb { font-size: var(--fs-s-1); color: var(--faint); display: flex; gap: 7px; align-items: center;
-           margin-bottom: 10px; }
-  .crumb a { color: var(--muted); }
-  .crumb span { color: var(--line); }
-  .fav__h { margin: 0 0 6px; }
+  .fav { padding: 0 0 var(--s9); }
+  .fav__h { margin: 0 0 var(--s4); }
   .say { font-size: var(--fs-s0); color: var(--faint); margin: 0 0 22px; }
-  .favbar { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .favbar .say { margin-bottom: 16px; }
-  .favbar .btn { margin-bottom: 16px; }
 
-  .grid { display: grid; gap: var(--s4);
-          grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); }
-  /* min-width:0 — χωρίς αυτό μια μεγάλη λέξη μέσα στην κάρτα φουσκώνει τη στήλη
-     και σπάει το πλέγμα στο κινητό. Το πληρώσαμε ήδη μία φορά στις μακέτες. */
+  /* E3 tools: right-aligned, quiet; the add link on a beige plate on hover */
+  .tools { display: flex; justify-content: flex-end; align-items: center; gap: 28px; margin: 0 0 18px; font-size: var(--fs-s-1); }
+  .srt { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+  .srt select { appearance: none; border: 0; background: none; font: inherit; font-weight: 600; color: var(--ink); cursor: pointer; padding: 4px 16px 4px 0;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: right 4px center, right 0 center; background-size: 4px 4px; background-repeat: no-repeat; }
+  .srt select:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .tl { color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; transition: background .15s ease; }
+  .tl:hover { background: var(--paper-2); }
+  .tl--add { margin-inline-end: -12px; }
+  .tl b { font-weight: 600; }
+
+  .grid { display: grid; gap: 32px 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .grid > :global(*) { min-width: 0; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
 
-  .empty { border: 1px solid var(--line); padding: 28px 22px; max-width: 46ch; }
-  .empty__h { margin: 0 0 8px; font-size: var(--fs-s0); font-weight: 400; }
-  .empty__s { margin: 0 0 18px; font-size: var(--fs-s0); color: var(--muted); }
+  .empty { border: 1px solid var(--line); padding: 32px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .empty__h { margin: 0; font-size: var(--fs-s1); font-weight: 300; }
+  .empty__s { margin: 0; font-size: var(--fs-s-1); color: var(--muted); max-width: 46ch; }
+  .empty__go { display: flex; align-items: center; gap: 20px; margin-top: 6px; flex-wrap: wrap; justify-content: center; }
+  .lnk { font-size: var(--fs-s-1); color: var(--muted); }
+  .lnk:hover { color: var(--ink); }
 
   .gone { margin: 22px 0 0; font-size: var(--fs-s-1); color: var(--faint); max-width: 60ch; }
 </style>

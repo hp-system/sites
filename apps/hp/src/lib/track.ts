@@ -25,6 +25,9 @@ export const EVENTS = {
   REGISTER_PROPERTY_BLOCK: 'register:property_block', // property page: "what this page does not show" (D-061)
   REGISTER_OFF_MARKET: 'register:off_market',         // το μπλοκ των 79
   REGISTER_INFO: 'register:info',                     // members pages (why-register, vip, pre-published): Sign in / Register
+  /** The closed collection, not Exclusive (Sergei 2026-11-23): the band at the top and a locked card. */
+  REGISTER_COLLECTION_BAND: 'register:collection_band',
+  REGISTER_COLLECTION_LOCKED: 'register:collection_locked',
   MEMBER_JOIN_FROM_LIST: 'member:join_from_list',
   MEMBER_FAVORITE: 'member:favorite_property',
   MEMBER_SAVE_SEARCH: 'member:save_search',
@@ -32,6 +35,8 @@ export const EVENTS = {
   MEMBER_EXCLUSIVE_REQUEST: 'member:exclusive_request',
   /** The one-screen request "tell us what you look for" (q12, #74). */
   LEAD_REQUEST: 'lead:request_submit',
+  /** «Tell us what you look for» sent from the filter window in the panel (Sergei 2026-11-23). */
+  MEMBER_REQUEST_FILTERS: 'member:request_filters',
   PANEL_HEADER: 'panel:header',
   PANEL_MENU: 'panel:menu',
 

@@ -20,8 +20,8 @@ If the import does not load, open that file and read it before anything else.
 ## Hard rules (non-negotiable)
 1. **Nothing is deleted:** archive, rename to `.old_YYYYMMDD`, or supersede.
 2. **No secrets** in code, commits, PRs, issues, logs or chat: no passwords, tokens, keys, `.env` values.
-3. **Visibility:** guests never see exact area, coordinates or address. Only the municipality. Guest pages read only guest fields. Member-tier data (area, exact location) comes only from the CRM API with the member's token. Owner data never reaches a site (D-174).
-4. **Photos of properties are always watermarked**, in every size. Never put a real photo URL in a page for a locked photo.
+3. **Visibility:** guests never see exact area, coordinates or address. Only the municipality. Guest pages read only guest fields. Member-tier data (area, exact location) comes only from the CRM API with the member's token. Owner data never reaches a site (D-174) — one exception (George 2026-11-23, option b): a signed-in member reads their own properties, read-only, uncached (`member/properties`).
+4. **The logo watermark is on property cards and the property page only** (gallery, big photo, a property's share image), in every size; every other photo uses the clean files (Sergei + George 2026-11-23, #326). Never put a real photo URL in a page for a locked photo.
 5. **All languages:** every text, label and route ships in every language the site publishes. Never one language only.
 6. **No production actions** unless your user is George or Sergei (the only people with server access): deploys, servers, Cloudflare/DNS. After a merge into `main`, tell George or Sergei that the tag is ready to deploy.
 7. The CRM's internal name never appears in public artefacts: page source, public URLs, meta tags, public repos.

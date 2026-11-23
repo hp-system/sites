@@ -31,6 +31,7 @@ import ComparePage from '../components/ComparePage.astro';
 import SubmitPage from '../components/SubmitPage.astro';
 import RequestPage from '../components/RequestPage.astro';
 import MyPropertiesPage from '../components/MyPropertiesPage.astro';
+import { ownsProperties } from '../lib/member-api';
 import RequestsPage from '../components/RequestsPage.astro';
 import ContentPage from '../components/ContentPage.astro';
 import AreaPage from '../components/AreaPage.astro';
@@ -294,7 +295,7 @@ if (isPanel) {
   if (panelSeg === '') {
     const tabQ = Astro.url.searchParams.get('tab');
     const to = (seg: string) => Astro.redirect(`${prefix(lang)}/panel/${seg}`, 302);
-    if (tabQ === 'sell') return to(me.role === 'seller' ? 'properties' : 'submit');
+    if (tabQ === 'sell') return to(me.role === 'seller' || (memberToken && await ownsProperties(memberToken)) ? 'properties' : 'submit');
     // Sergei 2026-11-23: cooperation lives in the CRM; on the site an agent is only a status and a level of access —
     // so an agent lands like everyone else (no cooperation section on the site any more)
     if (me.favorites.length > 0) return to('favorites');

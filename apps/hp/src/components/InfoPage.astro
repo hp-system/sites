@@ -53,7 +53,7 @@ import ReadPage from './ReadPage.astro';
 import FaqSearch from './FaqSearch.astro';
 import SectionCards from './SectionCards.astro';
 import { specByPath, specTitle, specSections, linksBySection } from '../lib/seo-pages';
-import { cleanSrcSet, photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
+import { cleanSrcSet, photosOf, isPhotoOpen, clean, altOf, focalStyle, shareImage, SHARE_W, SHARE_H } from '../lib/photos';
 import type { MosaicPhoto } from './SpecMosaic.astro';
 
 interface Props { page: InfoPage }
@@ -418,7 +418,7 @@ const autoPhoto = (() => {
   if (!pool.length) return null;
   let h = 0; for (const c of d.path) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const { ph, a } = pool[h % pool.length];
-  return { url: marked(ph.url, 1920), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`) };
+  return { url: clean(ph.url), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`) };
 })();
 // no property photo in memory (the CRM down, a local run): the home page's hero shot, never an empty half
 const heroFallback = !d.desk_image && !autoPhoto && w1 && !d.contact_card ? HERO_SHOTS[0] : undefined;
@@ -596,7 +596,7 @@ if (fresh?.postPhotos?.length) {
         if (!ph) continue;
         used.add(p.id);
         // #251: not the CRM item title (English, with the village — R-006): type and municipality in the page language
-        hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`), style: focalStyle(ph) };
+        hit = { src: clean(ph.url), srcset: cleanSrcSet(ph.url), alt: altOf(ph, lang, `${subName(a, lang)} — ${municipalityOf(a, lang)}`), style: focalStyle(ph) };
         break;
       }
     }

@@ -4,7 +4,7 @@
 // SEO (George's rule 15): the caption link is the tile's only link text — his exact anchor where the tile is one of
 // his links — stretched over the tile; «from €» sits outside the link. The rail script is LinkTiles' (data-lt-rail).
 import type { BlockTile } from '../lib/list-blocks';
-import { marked, markedSrcSetSmall, altOf } from '../lib/photos';
+import { clean, cleanSrcSetSmall, altOf } from '../lib/photos';
 import { t, listUrl, type Lang } from '../lib/i18n';
 import { money } from '../lib/format';
 
@@ -41,7 +41,7 @@ const pages = Math.ceil(cats.length / 4);
       <ul class="k-rail pb__rail" id={rail} data-lt-rail>
         {cats.map((x) => (
           <li class="k-tile">
-            {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 4), 80vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+            {x.photo && <img src={clean(x.photo.url, 800)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 4), 80vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
             <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a><span class="k-tile__s">{x.sub}</span></span>
           </li>
         ))}
@@ -61,7 +61,7 @@ const pages = Math.ceil(cats.length / 4);
       <ul class="k-tiles pb__areas" style={`--n: ${areas.length}`}>
         {areas.map((x) => (
           <li class="k-tile">
-            {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 5), 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+            {x.photo && <img src={clean(x.photo.url, 800)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 5), 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
             <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a><span class="k-tile__s">{x.sub}</span></span>
           </li>
         ))}

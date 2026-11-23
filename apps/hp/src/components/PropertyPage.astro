@@ -27,7 +27,7 @@ import type { SiteProperty } from '../lib/api';
 import { refOf, priceOf, priceVisible, pick, allProperties } from '../lib/api';
 import { viewerOf, muniKey, municipalityOf, placeOf } from '../lib/gate';
 import { memberOf } from '../lib/member';
-import { coverOf, orderedPhotos, isPhotoOpen, blurSrc, marked, markedSrcSet, markedSrcSetSmall,
+import { coverOf, orderedPhotos, isPhotoOpen, blurSrc, marked, clean, markedSrcSet, markedSrcSetSmall,
          altOf, shareImage, SHARE_W, SHARE_H, heroReady } from '../lib/photos';
 import { priceTables } from '../lib/prices';
 import { DIAL, flag } from '../lib/callback';
@@ -169,7 +169,7 @@ const coverAlt = muniOwn ? seo.alt : altOf(cover, lang, heading);
 // 🪤 ΤΟ ΙΔΙΟ STRING ΠΑΕΙ ΚΑΙ ΣΤΟ JSON-LD παρακάτω — άρα το κόψιμο πρέπει να είναι
 //    σωστό ΜΙΑ φορά, εδώ. Το σκέτο `.slice()` έκοβε στη μέση λέξης («…newly built co»).
 const metaDesc = muniOwn ? clamp(seo.meta, 160) : clamp(desc || heading, 155);
-const share = shareImage(cover);
+const share = shareImage(cover, { mark: true });   // #326: a property's own share image keeps the logo
 const here = pathFor(lang);
 
 // 🛡️ ΤΟ JSON-LD ΔΕΝ ΚΟΥΒΑΛΑ ΘΕΣΗ. Το schema.org δέχεται `geo` και `address` —
@@ -704,7 +704,7 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
                   and only when the band comes near — phones never download it. */}
               {bandPhoto && (
                 <div class="band__win" aria-hidden="true"><div class="band__ph">
-                  <img data-src={marked(bandPhoto.url, 1920)} alt={altOf(bandPhoto, lang, t(lang, 'home.area_alt', { name: muniName }))} decoding="async" />
+                  <img data-src={clean(bandPhoto.url)} alt={altOf(bandPhoto, lang, t(lang, 'home.area_alt', { name: muniName }))} decoding="async" />
                 </div></div>
               )}
               {/* Frosted glass (Sergei 2026-11-16, his Photoshop settings): Gaussian blur 9 + Glass distortion —

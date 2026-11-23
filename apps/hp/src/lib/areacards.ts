@@ -4,12 +4,12 @@
 // pages: the list of that municipality, the area guide (English), a photo.
 //
 // 🔒 Visibility: only the MUNICIPALITY (public). Never the area / village.
-// 🔒 Photos: the cover of a property in that municipality, watermarked (`marked`), picked as
+// 🔒 Photos: the cover of a property in that municipality, clean since #326 (`clean`), picked as
 //    the home «by area» tiles pick theirs (#101): a ready cover, visible price, dearest first.
 // ═══════════════════════════════════════════════════════════════════════════
 import type { SiteProperty } from './api';
 import { priceOf, priceVisible } from './api';
-import { coverOf, heroReady, marked, markedSrcSetSmall, altOf } from './photos';
+import { coverOf, heroReady, clean, cleanSrcSetSmall, altOf } from './photos';
 import { muniKey } from './gate';
 import { FACETS, facetUrl } from './listing';
 import { AREA_PAGES, areaUrl } from '../content/areas/en';
@@ -35,7 +35,7 @@ export function areaCards(items: SiteProperty[], lang: Lang): AreaCard[] {
       key: p.slug, name,
       href: facet ? facetUrl(lang, facet.key) : listUrl(lang),
       guide: lang === 'en' ? areaUrl(p.slug) : '',
-      img: marked(photo.url, 800), srcset: markedSrcSetSmall(photo.url), alt: altOf(photo, lang, alt),
+      img: clean(photo.url, 800), srcset: cleanSrcSetSmall(photo.url), alt: altOf(photo, lang, alt),
     });
   }
   return out;

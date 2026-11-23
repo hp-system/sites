@@ -182,7 +182,7 @@ export function cleanSrcSetSmall(url: string): string {
   return `${clean(url, 400)} 400w, ${clean(url, 800)} 800w`;
 }
 
-/** Υδατογραφημένη εκδοχή — για κάρτες και πλακίδια. */
+/** Υδατογραφημένη εκδοχή — ΜΟΝΟ για κάρτες ακινήτων και τη σελίδα του ακινήτου (#326, 23/11). */
 export function marked(url: string, size: 400 | 800 | 1920 = 800): string {
   return viaCdn(markedRaw(url, size));
 }
@@ -233,9 +233,11 @@ export function markedSrcSetSmall(url: string): string {
 export const SHARE_W = 800;
 export const SHARE_H = 533;
 
-export function shareImage(p: Photo | null): string | undefined {
+// #326 (Sergei + George 2026-11-23): the logo only on property cards and the property page. A share image is clean,
+// except the property page's own, which asks for `mark` (and a landscape `hero` photo is always clean).
+export function shareImage(p: Photo | null, o: { mark?: boolean } = {}): string | undefined {
   if (!p?.url) return undefined;
-  return p.tag === 'hero' ? cleanRaw(p.url, SHARE_W) : markedRaw(p.url, SHARE_W);   // always JPEG for crawlers
+  return o.mark && p.tag !== 'hero' ? markedRaw(p.url, SHARE_W) : cleanRaw(p.url, SHARE_W);   // always JPEG for crawlers
 }
 
 /**

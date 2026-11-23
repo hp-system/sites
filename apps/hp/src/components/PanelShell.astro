@@ -149,10 +149,9 @@ const items = tab === 'sell' ? sellRows : buyRows;
   .ps__main { min-width: 0; }
   .ps__side { display: flex; flex-direction: column; gap: 16px; }
   @media (min-width: 1000px) {
-    .ps__in { grid-template-columns: 300px minmax(0, 1fr); column-gap: var(--s6); padding-block: var(--s6) var(--s8); }
+    .ps__in { grid-template-columns: 310px minmax(0, 1fr); column-gap: var(--s6); padding-block: var(--s6) var(--s8); }
     .ps__side { position: sticky; top: var(--s5); align-self: start; padding: 4px 28px 4px 0; border-right: 1px solid var(--line-soft);
-      max-height: calc(100vh - var(--s5) - 24px); overflow-y: auto; scrollbar-width: none; transition: top .25s ease; }
-    .ps__side::-webkit-scrollbar { display: none; }
+      transition: top .25s ease; }
   }
   :global(html.hdr-up) .ps__side { top: calc(var(--hdr-h, 88px) + 12px); }
 
@@ -186,8 +185,10 @@ const items = tab === 'sell' ? sellRows : buyRows;
 
   /* the menu rows: icon, small caps, the count on the right; the open section on the beige plate */
   .ps__nav { display: flex; flex-direction: column; gap: 2px; margin: -6px 0; }
-  .ps__row { display: flex; align-items: center; gap: 14px; padding: 11px 14px; font-size: var(--fs-s-1); letter-spacing: .14em; text-transform: uppercase;
-    color: var(--faint); text-decoration: none; transition: background .15s ease, color .15s ease; }
+  /* one line per row, always (Sergei 2026-11-23): no wrap; the longest name (de «Die geschlossene Sammlung») fits */
+  .ps__row { display: flex; align-items: center; gap: 10px; padding: 11px 10px; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--faint); text-decoration: none; white-space: nowrap; transition: background .15s ease, color .15s ease; }
+  .ps__row > span:first-of-type { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .ps__row svg { flex: none; transform: scale(.9); transition: transform .18s ease; }
   .ps__row:hover { background: var(--paper-2); color: var(--ink); }
   .ps__row:hover svg, .ps__row[aria-current='page'] svg { transform: scale(1); }

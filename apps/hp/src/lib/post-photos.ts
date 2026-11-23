@@ -2,7 +2,7 @@
 // listing of the page itself, so a Kassandra page shows Kassandra homes and a land page shows land.
 // Only open photos, always watermarked (R-007); never a locked property; alt from the photo's own texts.
 import type { MosaicPhoto } from '../components/SpecMosaic.astro';
-import { photosOf, isPhotoOpen, marked, markedSrcSet, altOf, focalStyle } from './photos';
+import { photosOf, isPhotoOpen, clean, cleanSrcSet, altOf, focalStyle } from './photos';
 import { subName } from './property';
 import { municipalityOf } from './gate';
 import type { Lang } from './i18n';
@@ -24,7 +24,7 @@ export function postPhotos(items: Item[], sections: number, lang: string): (Mosa
       // guest never sees (R-006). Now the type and the municipality in the page language.
       const a = p.attributes ?? {};
       const own = `${subName(a, lang as Lang)} — ${municipalityOf(a, lang as Lang)}`;
-      hit = { src: marked(ph.url, 1920), srcset: markedSrcSet(ph.url), alt: altOf(ph, lang, own), style: focalStyle(ph) };
+      hit = { src: clean(ph.url), srcset: cleanSrcSet(ph.url), alt: altOf(ph, lang, own), style: focalStyle(ph) };
       break;
     }
     out.push(hit);

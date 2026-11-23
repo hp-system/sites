@@ -3,7 +3,7 @@
 // клики … ссылки как картинки»). Used under each SEO section (variant «section») and at the end of a page
 // (variant «page»).
 //   · a link to a property list (types P02, P04–P10, pairs P15–P18, municipality pages) → a photo tile
-//     like the home Collections / by-area: the cover of a listing that page shows (watermarked), the
+//     like the home Collections / by-area: the cover of a listing that page shows (clean since #326), the
 //     spec anchor as the caption; a municipality tile also carries «from €»;
 //   · «page»: the type tiles in a row of four with dashes, then the five municipalities (the spec anchor
 //     where the spec links that area), then the other links as text;
@@ -14,7 +14,7 @@ import { specByPath, LINK_GROUPS } from '../lib/seo-pages';
 import { facetBySlug, matches, FACETS, PAIRS, facetUrl, paramsOf } from '../lib/listing';
 import { fromPrice } from '../lib/prices';
 import { pickCover, buildAreaTiles } from '../lib/area-tiles';
-import { marked, markedSrcSetSmall, altOf, type Photo } from '../lib/photos';
+import { clean, cleanSrcSetSmall, altOf, type Photo } from '../lib/photos';
 import { t, listUrl, type Lang } from '../lib/i18n';
 import { money } from '../lib/format';
 
@@ -58,7 +58,7 @@ const typeTiles: Tile[] = [], areaTiles: Tile[] = [], text: Link[] = [], secTile
 for (const l of links) {
   // #275 (Sergei 2026-11-12): under a SEO section the page's area / category rows are not repeated.
   // Sergei 2026-11-19 («сделай её также как здесь какой-то подходящей картинкой»): a link to a property list
-  // is a small photo tile like the home «by area» (a cover of a listing that list shows, watermarked; the
+  // is a small photo tile like the home «by area» (a cover of a listing that list shows, clean since #326; the
   // spec anchor as its only text); every other link stays text
   if (variant === 'section') {
     const m = muniOf(l.href);
@@ -66,7 +66,7 @@ for (const l of links) {
     const fs = facetsOf(l.href);
     if (fs || idOf(l.href) === 'P02') { secTiles.push({ href: l.href, text: l.text, photo: photoFor(fs ?? []) }); continue; }
     // every other link a card too (Sergei 2026-11-19 «сделай ссылки как карточки, как везде»): a cover of an open listing
-    // (watermarked, never the same twice on a page), the link's anchor as its only text
+    // (clean since #326, never the same twice on a page), the link's anchor as its only text
     secTiles.push({ href: l.href, text: l.text, photo: photoFor([]) }); continue;
   }
   const m = muniOf(l.href);
@@ -161,7 +161,7 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
         <ul class="k-tiles lt__sm" style={`--n: ${Math.min(5, Math.max(3, secTiles.length))}`}>
           {secTiles.map((x) => (
             <li class="k-tile">
-              {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="200px" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
+              {x.photo && <img src={clean(x.photo.url, 400)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="200px" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
               <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
             </li>
           ))}
@@ -171,7 +171,7 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
         <ul class:list={['k-tiles lt__row', rowAreas ? 'lt__row--areas' : 'lt__row--cats']} style={`--n: ${rowTiles.length}`}>
           {rowTiles.map((x) => (
             <li class="k-tile">
-              {x.photo && <img src={marked(x.photo.url, 400)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 200px, 45vw" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
+              {x.photo && <img src={clean(x.photo.url, 400)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 200px, 45vw" alt={altOf(x.photo, lang, x.text)} width="400" height="267" loading="lazy" decoding="async" />}
               <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
             </li>
           ))}
@@ -199,7 +199,7 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
           <ul class="k-rail" id={rail} data-lt-rail>
             {typeTiles.map((x) => (
               <li class="k-tile">
-                {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 300px, 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+                {x.photo && <img src={clean(x.photo.url, 800)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 300px, 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
                 <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a></span>
               </li>
             ))}
@@ -215,7 +215,7 @@ const tile = (x: Tile, sizes: string) => ({ x, sizes });
           <ul class="k-tiles lt__areas">
             {pageAreas.map((x) => (
               <li class="k-tile">
-                {x.photo && <img src={marked(x.photo.url, 800)} srcset={markedSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 240px, 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
+                {x.photo && <img src={clean(x.photo.url, 800)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) 240px, 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
                 <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a>{x.sub && <span class="k-tile__s">{x.sub}</span>}</span>
               </li>
             ))}

@@ -1,5 +1,9 @@
 ---
-// In the panel frame (PanelShell, design E3 — Sergei 2026-11-11 «AFTER main v3»)
+// In the panel frame (PanelShell, design E3 — Sergei 2026-11-11 «AFTER main v3»). The head of the page as on the
+// board (Sergei 2026-11-23): round initials, the name with a pencil, e-mail and mobile under it. The pencil opens
+// «how to change them» (only the adviser changes a checked detail, see below). The board's gender, contact ways
+// and «how often» are not shown: the CRM holds none of them yet, and a field that does not save is worse than none.
+// Sign out lives in the account menu under the name in the side box (every panel page).
 import PanelShell from './PanelShell.astro';
 // ═══════════════════════════════════════════════════════════════════════════
 // ΤΑ ΣΤΟΙΧΕΙΑ ΜΟΥ — `/panel/profile`
@@ -20,6 +24,7 @@ import PanelShell from './PanelShell.astro';
 // ═══════════════════════════════════════════════════════════════════════════
 import { prefix, t, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
+import WaLink from './WaLink.astro';
 import type { Member } from '../lib/member';
 
 interface Props { lang: Lang; me: Member }
@@ -33,9 +38,8 @@ const parts = (me.name || '').trim().split(/\s+/).filter(Boolean);
 const first = parts[0] ?? '';
 const last = parts.slice(1).join(' ');
 
-const isExclusive = me.level === 'exclusive';
-const isAgent = me.level === 'agent';
-const badge = isExclusive ? t(lang, 'lvl.exclusive') : isAgent ? t(lang, 'lvl.agent') : t(lang, 'lvl.member');
+const full = [first, last].filter(Boolean).join(' ');
+const ini = (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : (parts[0] ?? me.email ?? '?').slice(0, 2)).toUpperCase();
 
 const missing: string[] = [];
 if (!me.name) missing.push(t(lang, 'pf.m_name'));
@@ -45,87 +49,84 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
 
 <PanelShell lang={lang} me={me} current={'profile'} title={t(lang, 'pnl.profile')} description={t(lang, 'pf.meta_desc')}>
   <div class="pf">
+    <h1 class="sr-only">{t(lang, 'pnl.profile')}</h1>
 
-      <div class="hd">
-        <h1 class="t-h2 pf__h">{t(lang, 'pnl.profile')}</h1>
-        <span class:list={['badge', isExclusive && 'badge--gold']}>{badge}</span>
+    <div class="pf__head">
+      <span class="pf__ava" aria-hidden="true">{ini}</span>
+      <div class="pf__id">
+        <p class="pf__nm">
+          <span>{full || <span class="none">{t(lang, 'pf.none')}</span>}</span>
+          <button type="button" class="pf__pen" data-pf-chg aria-label={t(lang, 'pf.chg_h')} title={t(lang, 'pf.chg_h')}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"></path></svg>
+          </button>
+        </p>
+        <p class="pf__ln">{me.email || <span class="none">{t(lang, 'pf.none')}</span>}</p>
+        <p class="pf__ln"><bdi dir="ltr">{me.phone || ''}</bdi>{!me.phone && <span class="none">{t(lang, 'pf.none')}</span>}</p>
       </div>
-
-      <dl class="facts">
-        <div class="fact">
-          <dt>{t(lang, 'auth.first')}</dt>
-          <dd>{first || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
-        </div>
-        <div class="fact">
-          <dt>{t(lang, 'auth.last')}</dt>
-          <dd>{last || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
-        </div>
-        <div class="fact">
-          <dt>{t(lang, 'pf.email')}</dt>
-          <dd class="mono">{me.email || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
-        </div>
-        <div class="fact">
-          <dt>{t(lang, 'auth.phone')}</dt>
-          <dd class="mono">{me.phone || <span class="none">{t(lang, 'pf.none')}</span>}</dd>
-        </div>
-      </dl>
-
-      {missing.length > 0 && (
-        /* Ο ΜΟΝΟΣ δρόμος που υπάρχει σήμερα, και είναι ο σωστός: το νέο στοιχείο
-           επαληθεύεται με κωδικό πριν μπει.
-           🪤 ΔΥΟ ΚΛΕΙΔΙΑ, ΟΧΙ ΕΝΑ ΜΕ ΑΡΙΘΜΟ: το παλιό «Λείπει {n} στοιχεία» τύπωνε
-              «Λείπει 2 στοιχεία». Ο ενικός και ο πληθυντικός είναι άλλη πρόταση. */
-        <div class="ask">
-          <p class="ask__h">{missing.length === 1
-            ? t(lang, 'pf.miss1')
-            : t(lang, 'pf.miss_n', { n: missing.length })}</p>
-          <p class="ask__s">{t(lang, 'pf.miss_s', { list: missing.join(t(lang, 'pf.and')) })}</p>
-          <a class="btn" href={`${p}/login?next=${encodeURIComponent(`${p}/panel/profile`)}`}>{t(lang, 'pf.fill')}</a>
-        </div>
-      )}
-
-      <div class="note">
-        <p class="note__h">{t(lang, 'pf.chg_h')}</p>
-        <p class="note__s">{t(lang, 'pf.chg_s')}</p>
-        <a class="btn" href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a>
-      </div>
-
-      <form method="post" action="/api/auth/logout" class="out">
-        <button class="lnk" type="submit">{t(lang, 'pnl.logout')}</button>
-      </form>
     </div>
+
+    {missing.length > 0 && (
+      /* Ο ΜΟΝΟΣ δρόμος που υπάρχει σήμερα, και είναι ο σωστός: το νέο στοιχείο
+         επαληθεύεται με κωδικό πριν μπει.
+         🪤 ΔΥΟ ΚΛΕΙΔΙΑ, ΟΧΙ ΕΝΑ ΜΕ ΑΡΙΘΜΟ: το παλιό «Λείπει {n} στοιχεία» τύπωνε
+            «Λείπει 2 στοιχεία». Ο ενικός και ο πληθυντικός είναι άλλη πρόταση. */
+      <div class="ask">
+        <p class="ask__h">{missing.length === 1
+          ? t(lang, 'pf.miss1')
+          : t(lang, 'pf.miss_n', { n: missing.length })}</p>
+        <p class="ask__s">{t(lang, 'pf.miss_s', { list: missing.join(t(lang, 'pf.and')) })}</p>
+        <a class="btn" href={`${p}/login?next=${encodeURIComponent(`${p}/panel/profile`)}`}>{t(lang, 'pf.fill')}</a>
+      </div>
+    )}
+
+    {/* the pencil's answer: a checked detail changes only through the adviser (see the note at the top) */}
+    <dialog class="chg" data-pf-dlg aria-labelledby="pf-chg-h">
+      <div class="chg__top">
+        <p class="chg__h" id="pf-chg-h">{t(lang, 'pf.chg_h')}</p>
+        <button type="button" class="chg__x" data-pf-x aria-label={t(lang, 'ui.close')}><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.4"></path></svg></button>
+      </div>
+      <p class="chg__s">{t(lang, 'pf.chg_s')}</p>
+      <p class="chg__ways"><WaLink /><a href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a></p>
+    </dialog>
+  </div>
 </PanelShell>
 
 <style>
-  .pf { padding: var(--s6) 0 var(--s9); }
-  .pf .wrap { max-width: 620px; }
-  .crumb { font-size: var(--fs-s-1); color: var(--faint); display: flex; gap: 7px; align-items: center;
-           margin-bottom: 10px; }
-  .crumb a { color: var(--muted); }
-  .crumb span { color: var(--line); }
-  .hd { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
-  .pf__h { margin: 0; }
-  .badge { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; padding: 6px 10px;
-           border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap; }
-  .badge--gold { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .pf { padding: 0 0 var(--s9); max-width: 760px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  .facts { margin: 0; border-top: 1px solid var(--line-soft); }
-  .fact { display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
-          padding: 13px 0; border-bottom: 1px solid var(--line-soft); }
-  .fact dt { font-size: var(--fs-s-1); color: var(--faint); flex: none; }
-  .fact dd { margin: 0; font-size: var(--fs-s0); text-align: right; min-width: 0; overflow-wrap: anywhere; }
-  .mono { font-variant-numeric: tabular-nums; }
-  .none { color: var(--faint); font-style: italic; font-size: var(--fs-s-1); }
+  .pf__head { display: flex; align-items: center; gap: 18px; padding: 0 16px 24px; border-bottom: 1px solid var(--line-soft); }
+  .pf__ava { width: 72px; height: 72px; flex: none; border-radius: 50%; background: var(--ink); color: var(--paper); display: flex;
+    align-items: center; justify-content: center; font-size: var(--fs-s1); font-weight: 600; }
+  .pf__id { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .pf__nm { margin: 0; display: flex; align-items: center; gap: 10px; font-size: var(--fs-s2); font-weight: 600; letter-spacing: -.012em; line-height: 1.2; }
+  .pf__pen { width: 32px; height: 32px; flex: none; display: flex; align-items: center; justify-content: center; border: 0; background: none;
+    color: var(--ink); cursor: pointer; transition: background .15s ease; }
+  .pf__pen:hover { background: var(--paper-2); }
+  .pf__pen:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .pf__ln { margin: 0; font-size: var(--fs-s-1); color: var(--muted); overflow-wrap: anywhere; }
+  .none { color: var(--faint); font-style: italic; font-size: var(--fs-s-1); font-weight: 400; }
 
-  .ask { border: 1px solid var(--line); padding: 18px; margin-top: 24px; }
+  .ask { border: 1px solid var(--ink); padding: 20px 22px; margin-top: 24px; }
   .ask__h { margin: 0 0 6px; font-size: var(--fs-s0); font-weight: 600; }
   .ask__s { margin: 0 0 14px; font-size: var(--fs-s-1); color: var(--muted); }
 
-  .note { border: 1px solid var(--line-soft); padding: 17px; margin-top: 16px; }
-  .note__h { margin: 0 0 5px; font-size: var(--fs-s0); font-weight: 600; }
-  .note__s { margin: 0 0 13px; font-size: var(--fs-s-1); color: var(--muted); }
-
-  .out { margin-top: 30px; }
-  .lnk { all: unset; cursor: pointer; text-decoration: underline; color: var(--muted); font-size: var(--fs-s-1); }
-  .lnk:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .chg { width: 420px; max-width: calc(100vw - 32px); padding: 28px 28px 24px; border: 0; background: var(--paper); color: var(--ink); }
+  .chg::backdrop { background: rgba(14,18,20,.5); }
+  .chg[open] { display: flex; flex-direction: column; gap: 14px; }
+  .chg__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .chg__h { margin: 0; font-size: var(--fs-s1); font-weight: 600; line-height: 1.25; }
+  .chg__x { background: none; border: 0; padding: 4px; cursor: pointer; display: flex; color: var(--ink); }
+  .chg__s { margin: 0; font-size: var(--fs-s-1); line-height: 1.55; color: var(--muted); }
+  .chg__ways { margin: 6px 0 0; display: flex; align-items: center; gap: 18px; }
+  .chg__ways > a:not(.wab) { color: var(--muted); font-size: var(--fs-s-1); text-decoration: none; }
+  .chg__ways > a:not(.wab):hover { color: var(--ink); }
 </style>
+
+<script>
+  // the pencil opens «how to change your details»; Esc and the backdrop close it (native <dialog>)
+  const dlg = document.querySelector<HTMLDialogElement>('[data-pf-dlg]');
+  document.querySelector('[data-pf-chg]')?.addEventListener('click', () => dlg?.showModal());
+  dlg?.querySelector('[data-pf-x]')?.addEventListener('click', () => dlg.close());
+  dlg?.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+</script>

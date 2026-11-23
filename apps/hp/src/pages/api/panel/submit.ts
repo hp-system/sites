@@ -42,6 +42,28 @@ const KIND: Record<string, { category: string; subcategory: string }> = {
   commercial: { category: 'commercial',  subcategory: 'commercial' },
 };
 
+// The Details window (Sergei 2026-11-23) asks more than the CRM stores in its own fields: address, levels, orientation,
+// road access, and how many photos / documents the owner has ready (sending files is not open yet). They go into the
+// description as one plain line on top, so the adviser reads them; only known values pass.
+const ORIENT = new Set(['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']);
+const ROAD = new Set(['asphalt', 'paved', 'dirt', 'boat']);
+function describe(b: Record<string, unknown>): string {
+  const bits: string[] = [];
+  const addr = clean(b.address, 160);
+  if (addr) bits.push(`address=${addr}`);
+  const lv = Number(String(b.levels ?? '').replace(/\D/g, ''));
+  if (lv >= 1 && lv <= 9) bits.push(`levels=${lv}`);
+  const o = clean(b.orient, 4).toLowerCase();
+  if (ORIENT.has(o)) bits.push(`orientation=${o.toUpperCase()}`);
+  const r = clean(b.road, 10).toLowerCase();
+  if (ROAD.has(r)) bits.push(`road=${r}`);
+  const ph = Math.min(99, Number(b.photosN) || 0), dc = Math.min(99, Number(b.docsN) || 0);
+  if (ph > 0) bits.push(`photos ready=${ph}`);
+  if (dc > 0) bits.push(`documents ready=${dc}`);
+  const desc = clean(b.desc, 3000);
+  return [bits.length ? `[Details] ${bits.join('; ')}` : '', desc].filter(Boolean).join('\n\n').slice(0, 3400);
+}
+
 export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) => {
   const token = cookies.get('member_token')?.value;
   const me = await memberOf(token);
@@ -67,7 +89,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
     area,
     sqm: Number(String(b.sqm ?? '').replace(/\D/g, '')) || undefined,
     price: Number(String(b.price ?? '').replace(/\D/g, '')) || undefined,
-    description: clean(b.desc, 3000) || undefined,
+    description: describe(b) || undefined,
   };
 
   // never lost: kept in the outbox and resent when the CRM cannot take it now (lib/lead-outbox, 2026-11-11);

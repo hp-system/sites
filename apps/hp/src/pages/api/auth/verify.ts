@@ -81,7 +81,8 @@ export const POST: APIRoute = async ({ request, cookies, url, clientAddress }) =
         // κωδικοί. Δες `lib/clientip.ts`.
         ...forwardIp(request, clientAddress),
       },
-      body: JSON.stringify({ identifier, code }),
+      // CRM #495: the sign-up role (buy | sell | agent); the CRM ignores any other value and writes it only at birth.
+      body: JSON.stringify({ identifier, code, intent: ['buy', 'sell', 'agent'].includes(String(body.intent)) ? String(body.intent) : undefined }),
       signal: AbortSignal.timeout(12000),
     });
     const b = await r.json().catch(() => ({}));

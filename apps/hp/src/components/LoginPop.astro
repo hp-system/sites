@@ -23,7 +23,8 @@
 // 0 (design LoginRole, Sergei 2026-11-11 «sign-up asks the role first: buy / sell / agent»): the role. The CRM's
 //    site API has no field for it, and the site keeps no roles (Sergei: «роли и доступы должна хранить СРМ»): the
 //    choice lives only in this window and decides the welcome and where Continue leads — buy: back to the page,
-//    sell: the submit form, agent: Cooperation. When the CRM stores the role, the choice is sent there.
+//    sell: the submit form, agent: the panel. Since CRM #495 (2026-11-23) the choice is sent as `intent` and the CRM
+//    stores it (member_role) when the member is born.
 // «Continue with Google»: there is no Google sign-in in the CRM's site API, so the button is
 // behind GOOGLE (off) and is not rendered.
 // ═══════════════════════════════════════════════════════════════════════════
@@ -64,7 +65,7 @@ const ROLES = [
   { id: 'sell', h: t(lang, 'auth.role_sell'), s: t(lang, 'auth.role_sell_s') },
   { id: 'agent', h: t(lang, 'auth.role_agent'), s: t(lang, 'auth.role_agent_s') },
 ];
-const roleTo = { sell: `${prefix(lang)}/panel/submit`, agent: `${prefix(lang)}/panel?tab=coop` };
+const roleTo = { sell: `${prefix(lang)}/panel/submit`, agent: `${prefix(lang)}/panel` };
 const JS_T = {
   done_buy: t(lang, 'auth.done_s'), done_sell: t(lang, 'auth.done_sell'), done_agent: t(lang, 'auth.done_agent'),
   go_buy: t(lang, 'auth.continue'), go_sell: t(lang, 'svc.add_cta'), go_agent: t(lang, 'pnl.tab_coop'),
@@ -80,7 +81,7 @@ const JS_T = {
   e_resend: t(lang, 'auth.e.resend'), e_generic: t(lang, 'auth.e.generic'),
   e_signup_closed: t(lang, 'auth.e.signup_closed'), e_closed: t(lang, 'auth.e.closed'),
   e_not_mobile: t(lang, 'auth.e.not_mobile'), e_too_many: raw('auth.e.too_many'),
-  e_suspended: t(lang, 'auth.e.suspended'), e_code_left: raw('auth.e.code_left'),
+  e_suspended: t(lang, 'auth.e.suspended'), e_contact_exists: t(lang, 'auth.e.contact_exists'), e_code_left: raw('auth.e.code_left'),
   e_need_email: t(lang, 'auth.e.need_email'), e_expired: t(lang, 'auth.e.expired'),
   e_fill: t(lang, 'auth.e.fill'), e_offline: t(lang, 'sb.e.offline'),
 };
@@ -412,9 +413,12 @@ const JS_T = {
 
   // ── 0: the role — only for this window (the CRM keeps no role yet): the welcome and Continue follow it
   let role: 'buy' | 'sell' | 'agent' = 'buy';
+  // CRM #495 (2026-11-23): the CRM stores the pick as member_role when the member is born and never overwrites it;
+  // an agent gets level agent at once. Sent on request-code AND verify-code (the CRM keeps it in memory between).
+  let picked = false;
   const opts = Array.from(document.querySelectorAll<HTMLButtonElement>('.rl__o'));
   opts.forEach((b) => b.addEventListener('click', () => {
-    role = (b.dataset.role as typeof role) || 'buy';
+    role = (b.dataset.role as typeof role) || 'buy'; picked = true;
     opts.forEach((x) => x.setAttribute('aria-checked', String(x === b)));
     $('p4s').textContent = (L as Record<string, string>)[`done_${role}`];
     $('go').textContent = (L as Record<string, string>)[`go_${role}`];
@@ -490,7 +494,7 @@ const JS_T = {
     if (busy) return; busy = true;
     const btn = ($(formId) as HTMLFormElement).querySelector('button[type=submit]') as HTMLButtonElement;
     btn.disabled = true; btn.textContent = L.sending;
-    const r = await post('/api/auth/request', { identifier: email });
+    const r = await post('/api/auth/request', { identifier: email, ...(picked ? { intent: role } : {}) });
     busy = false; btn.disabled = false; btn.textContent = formId === 'f1' ? L.cont : L.verify;
     if (!r.ok) {
       const m: Record<string, string> = {
@@ -515,7 +519,7 @@ const JS_T = {
     if (busy) return; busy = true;
     const btn = ($('f2') as HTMLFormElement).querySelector('button[type=submit]') as HTMLButtonElement;
     btn.disabled = true; btn.textContent = L.checking;
-    const r = await post('/api/auth/verify', { identifier: email, code });
+    const r = await post('/api/auth/verify', { identifier: email, code, ...(picked ? { intent: role } : {}) });
     busy = false; btn.disabled = false; btn.textContent = L.verify;
     if (!r.ok) return fail('e2', said(r, r.needEmail ? L.e_need_email : L.e_code_bad));
     clearInterval(timer);
@@ -577,7 +581,7 @@ const JS_T = {
   }
   $('again').addEventListener('click', async () => {
     clear('e2');
-    const r = await post('/api/auth/request', { identifier: email });
+    const r = await post('/api/auth/request', { identifier: email, ...(picked ? { intent: role } : {}) });
     if (!r.ok) return fail('e2', L.e_resend);
     countdown();
   });

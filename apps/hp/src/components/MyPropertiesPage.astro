@@ -1,0 +1,108 @@
+---
+// In the panel frame (PanelShell, design E3). A SELLER'S OWN PROPERTIES — `/panel/properties` (Sell tab).
+//
+// 🔒 George 2026-11-23 chose option (b) of D-174 (CRM #496, `GET /site/member/properties`): the CRM answers only the
+//    properties where this member is linked as owner / co-owner, read-only, never cached (`private, no-store`). From each
+//    one only the public number, the title, online or not, and the view counts. Nothing of another owner, no minimum
+//    price, no fee, no legal data — and this page shows no more than that.
+//    A property that is online is shown as its own card from the public list (watermarked, as every card); one that is
+//    not online yet is a plain plate with its title. Never the CRM's attributes: the card reads the same data a guest sees.
+import PanelShell from './PanelShell.astro';
+import PropertyCard from './PropertyCard.astro';
+import { prefix, t, type Lang } from '../lib/i18n';
+import { allProperties, refOf, type SiteProperty } from '../lib/api';
+import { viewerFor } from '../lib/gate';
+import type { Member } from '../lib/member';
+import { ownProperties, type OwnProperty } from '../lib/member-api';
+
+interface Props { lang: Lang; me: Member; token?: string }
+const { lang, me, token } = Astro.props;
+const p = prefix(lang);
+const viewer = viewerFor(me.level);
+
+let rows: { own: OwnProperty; card: SiteProperty | null }[] = [];
+let failed = false;
+const own = token ? await ownProperties(token) : { ok: false, api: true, items: [] as OwnProperty[] };
+if (!own.ok) failed = true;
+else if (own.items.length) {
+  let byRef = new Map<string, SiteProperty>();
+  try { byRef = new Map((await allProperties(token)).map((x) => [refOf(x).toLowerCase(), x])); } catch { /* cards fall back to plates */ }
+  rows = own.items.map((o) => ({ own: o, card: o.published ? byRef.get(o.id.toLowerCase()) ?? null : null }));
+}
+const nf = new Intl.NumberFormat(lang === 'el' ? 'el-GR' : lang);
+---
+<PanelShell lang={lang} me={me} current="properties" title={t(lang, 'mp.h')} description={t(lang, 'mp.meta_desc')}>
+  <div class="mp">
+    <div class="mp__top">
+      <h1 class="t-h2 mp__h">{t(lang, 'mp.h')}</h1>
+      <a class="mp__add" href={`${p}/panel/submit`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+        <b>{t(lang, 'mp.add')}</b>
+      </a>
+    </div>
+
+    {failed ? (
+      <p class="say">{t(lang, 'mp.fail')}</p>
+    ) : rows.length === 0 ? (
+      <div class="empty">
+        <p class="empty__h">{t(lang, 'mp.none_h')}</p>
+        <p class="empty__s">{t(lang, 'mp.none_s')}</p>
+        <a class="btn" href={`${p}/panel/submit`}>{t(lang, 'mp.add')}</a>
+      </div>
+    ) : (
+      <>
+        <div class="grid">
+          {rows.map(({ own: o, card }, i) => (
+            <article class="it">
+              {card ? <PropertyCard p={card} lang={lang} viewer={viewer} eager={i < 3} /> : (
+                <div class="plate">
+                  <p class="plate__t">{o.title || `ID ${o.id}`}</p>
+                  <p class="plate__id">ID {o.id}</p>
+                </div>
+              )}
+              <p class:list={['st', { 'st--on': o.published }]}>{o.published ? t(lang, 'mp.st_on') : t(lang, 'mp.st_off')}</p>
+              <dl class="vw">
+                <div><dt>{t(lang, 'mp.v_30')}</dt><dd>{nf.format(o.views.last30)}</dd></div>
+                <div><dt>{t(lang, 'mp.v_mem')}</dt><dd>{nf.format(o.views.members)}</dd></div>
+                <div><dt>{t(lang, 'mp.v_vis')}</dt><dd>{nf.format(o.views.visitors)}</dd></div>
+              </dl>
+            </article>
+          ))}
+        </div>
+        <p class="note">{t(lang, 'mp.note')}</p>
+      </>
+    )}
+  </div>
+</PanelShell>
+
+<style>
+  .mp { padding: 0 0 var(--s9); }
+  .mp__top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0 0 var(--s4); flex-wrap: wrap; }
+  .mp__h { margin: 0; }
+  .mp__add { color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; margin-inline-end: -12px;
+    font-size: var(--fs-s-1); transition: background .15s ease; }
+  .mp__add:hover { background: var(--paper-2); }
+  .mp__add b { font-weight: 600; }
+  .say { font-size: var(--fs-s0); color: var(--faint); margin: 0 0 22px; }
+
+  .grid { display: grid; gap: 32px 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid > * { min-width: 0; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .it { display: flex; flex-direction: column; gap: 10px; }
+  .plate { aspect-ratio: 3 / 2; max-width: 100%; background: var(--paper-2); display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 16px; }
+  .plate__t { margin: 0; font-size: var(--fs-s0); color: var(--ink); }
+  .plate__id { margin: 0; font-size: var(--fs-s-1); color: var(--muted); }
+  /* the status and the counts line up across a row, whether above them is a card or a plate */
+  .st { margin: auto 0 0; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .st--on { color: var(--ink); font-weight: 600; }
+  .vw { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .vw > div { padding: 10px 0 0; }
+  .vw dt { font-size: var(--fs-s-1); color: var(--muted); }
+  .vw dd { margin: 2px 0 0; font-size: var(--fs-s1); font-weight: 300; color: var(--ink); }
+
+  .empty { border: 1px solid var(--line); padding: 32px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .empty__h { margin: 0; font-size: var(--fs-s1); font-weight: 300; }
+  .empty__s { margin: 0 0 6px; font-size: var(--fs-s-1); color: var(--muted); max-width: 46ch; }
+  .note { margin: 22px 0 0; font-size: var(--fs-s-1); color: var(--faint); max-width: 60ch; }
+</style>

@@ -42,6 +42,33 @@ const KIND: Record<string, { category: string; subcategory: string }> = {
   commercial: { category: 'commercial',  subcategory: 'commercial' },
 };
 
+// The Details window (Sergei 2026-11-23): since CRM #496 the CRM stores address, levels, orientation and road access in
+// the property's own fields (`address`, `levels`, `orientation`, `road_access` below; unknown values are dropped there).
+// Only what it cannot take yet — how many photos / documents the owner has ready (no file upload yet, P1-4) — stays a
+// plain `[Details]` line on top of the owner's note.
+const ORIENT = new Set(['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']);
+const ROAD = new Set(['asphalt', 'paved', 'dirt', 'boat']);
+function extras(b: Record<string, unknown>) {
+  const addr = clean(b.address, 160).replace(/[\u0000-\u001f\u007f]/g, ' ');
+  const lv = Number(String(b.levels ?? '').replace(/\D/g, ''));
+  const o = clean(b.orient, 4).toLowerCase();
+  const r = clean(b.road, 10).toLowerCase();
+  return {
+    address: addr || undefined,
+    levels: lv >= 1 && lv <= 9 ? lv : undefined,
+    orientation: ORIENT.has(o) ? o : undefined,
+    road_access: ROAD.has(r) ? r : undefined,
+  };
+}
+function describe(b: Record<string, unknown>): string {
+  const bits: string[] = [];
+  const ph = Math.min(99, Number(b.photosN) || 0), dc = Math.min(99, Number(b.docsN) || 0);
+  if (ph > 0) bits.push(`photos ready=${ph}`);
+  if (dc > 0) bits.push(`documents ready=${dc}`);
+  const desc = clean(b.desc, 3000);
+  return [bits.length ? `[Details] ${bits.join('; ')}` : '', desc].filter(Boolean).join('\n\n').slice(0, 3400);
+}
+
 export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) => {
   const token = cookies.get('member_token')?.value;
   const me = await memberOf(token);
@@ -67,7 +94,8 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
     area,
     sqm: Number(String(b.sqm ?? '').replace(/\D/g, '')) || undefined,
     price: Number(String(b.price ?? '').replace(/\D/g, '')) || undefined,
-    description: clean(b.desc, 3000) || undefined,
+    ...extras(b),
+    description: describe(b) || undefined,
   };
 
   // never lost: kept in the outbox and resent when the CRM cannot take it now (lib/lead-outbox, 2026-11-11);

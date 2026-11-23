@@ -139,13 +139,13 @@ const rows: Row[] = [
 </PanelShell>
 
 <style>
-  .cmp { padding: var(--s6) 0 var(--s9); }
+  .cmp { padding: 0 0 var(--s9); }
   .cmp .wrap { max-width: 1180px; }
   .crumb { font-size: var(--fs-s-1); color: var(--faint); display: flex; gap: 7px; align-items: center;
            margin-bottom: 10px; flex-wrap: wrap; }
   .crumb a { color: var(--muted); }
   .crumb span { color: var(--line); }
-  .cmp__h { margin: 0 0 8px; }
+  .cmp__h { margin: 0 0 var(--s4); }
   .say { font-size: var(--fs-s0); color: var(--faint); margin: 0 0 18px; }
 
   /* Ο πίνακας κυλάει ΜΕΣΑ στο κουτί του — η σελίδα δεν κουνιέται ποτέ πλάγια. */
@@ -167,7 +167,9 @@ const rows: Row[] = [
   .pick img { display: block; width: 120px; height: 80px; object-fit: cover; margin-bottom: 7px; }
   .pick b { font-size: var(--fs-s-1); font-weight: 600; line-height: 1.3; display: block; }
 
-  .empty { border: 1px solid var(--line); padding: 26px 22px; max-width: 46ch; }
-  .empty__h { margin: 0 0 8px; font-size: var(--fs-s0); font-weight: 400; }
-  .empty__s { margin: 0 0 18px; font-size: var(--fs-s0); color: var(--muted); }
+  /* the empty state as on every panel page (E3): a framed box, centred */
+  .empty { border: 1px solid var(--line); padding: 32px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .empty__h { margin: 0; font-size: var(--fs-s1); font-weight: 300; }
+  .empty__s { margin: 0 0 6px; font-size: var(--fs-s-1); color: var(--muted); max-width: 46ch; }
 </style>
+

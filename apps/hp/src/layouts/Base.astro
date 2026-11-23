@@ -221,5 +221,20 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   {!embed && isMember && <MemberEvents />}
   {/* Σήμανση: ένα listener για όλη τη σελίδα, χωρίς βιβλιοθήκη. Δες lib/track.ts. */}
   <script is:inline set:html={TRACK_SNIPPET} />
+  <script>
+    // Every pop-up menu closes on a click outside it and on Esc (Sergei 2026-11-23 «все попапы должны закрываться
+    // когда клик вне попапа»): the account menu, the language switch, the list's sort and per-page boxes, and any
+    // <details data-pop>. FAQ answers are <details> too, but not menus — they are left alone. (The list's filter
+    // cells and every <dialog> already close themselves.)
+    const POPS = 'details.ps__acct[open], details.lsw[open], details.sortbox[open], details[data-pop][open]';
+    document.addEventListener('pointerdown', (e) => {
+      const t = e.target as Node | null;
+      document.querySelectorAll<HTMLDetailsElement>(POPS).forEach((d) => { if (!t || !d.contains(t)) d.open = false; });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll<HTMLDetailsElement>(POPS).forEach((d) => { d.open = false; d.querySelector('summary')?.focus(); });
+    });
+  </script>
 </body>
 </html>

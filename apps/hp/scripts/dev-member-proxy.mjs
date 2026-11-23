@@ -64,14 +64,14 @@ const server = createServer(async (req, res) => {
     const what = p.slice('/api/site/member/'.length);
     const body = req.method === 'POST' ? await readBody(req) : {};
     if (what === 'request-code') {
-      console.log(`[member] code asked for ${body.identifier} — type any 6 digits`);
+      console.log(`[member] code asked for ${body.identifier}${body.intent ? ` (intent ${body.intent})` : ''} — type any 6 digits`);
       return send(200, { ok: true, delivered: true, channel: String(body.identifier ?? '').includes('@') ? 'email' : 'sms', hint: 'any 6 digits (local)' });
     }
     if (what === 'verify-code') {
       const id = String(body.identifier ?? '').toLowerCase();
       const email = id.includes('@') ? id : 'sergei@local.test';
       if (levelOf(email) === 'blocked') return send(401, { message: 'Ο λογαριασμός έχει ανασταλεί.' });
-      console.log(`[member] signed in as ${email} (${parse(email).role}, ${levelOf(email)})`);
+      console.log(`[member] signed in as ${email} (${parse(email).role}, ${levelOf(email)})${body.intent ? ` intent ${body.intent}` : ''}`);
       return send(200, { ok: true, token: PREFIX + Buffer.from(email).toString('base64url'), name: (names.get(email) ?? { name: 'Sergei Local' }).name, needs: [] });
     }
     const me = memberOf(req);

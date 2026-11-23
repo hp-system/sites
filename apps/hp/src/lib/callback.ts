@@ -32,7 +32,8 @@ export function checkPhone(code: string, raw: string): PhoneCheck {
   const t = String(raw ?? '').trim();
   let digits = t.replace(/\D/g, '');
   let cc = String(code ?? '').replace(/\D/g, '');
-  if (/^(\+|00)/.test(t)) {
+  const explicit = /^(\+|00)/.test(t);
+  if (explicit) {
     if (t.startsWith('00')) digits = digits.slice(2);
     const hit = DIAL.map((d) => d.code).sort((a, b) => b.length - a.length).find((c) => digits.startsWith(c));
     if (!hit) return digits.length >= 9 && digits.length <= 15 ? { ok: true, e164: '+' + digits } : { ok: false, code: 'short' };
@@ -41,6 +42,10 @@ export function checkPhone(code: string, raw: string): PhoneCheck {
   // the trunk 0 a visitor types out of habit (Germany 0151…), except Italy where it belongs to the number
   if (cc !== '39' && digits.startsWith('0')) digits = digits.replace(/^0+/, '');
   if (cc === '30') return /^(2\d{9}|69\d{8})$/.test(digits) ? { ok: true, e164: '+30' + digits } : { ok: false, code: 'gr' };
+  // a Greek mobile (69 + 8 digits) typed under another country's flag is the wrong flag, not a foreign number: no listed
+  // country but Germany (069 Frankfurt) has a 10-digit national number starting 69 (2026-11-23: +1 69… reached the SMS
+  // provider and failed). Only when no + / 00 was typed — then the visitor chose the country on purpose.
+  if (!explicit && cc !== '30' && cc !== '49' && /^69\d{8}$/.test(digits)) return { ok: true, e164: '+30' + digits };
   if (cc === '1') return /^\d{10}$/.test(digits) ? { ok: true, e164: '+1' + digits } : { ok: false, code: 'short' };
   // no other listed country has a mobile number under 7 digits
   if (digits.length < 7 || cc.length + digits.length > 15) return { ok: false, code: 'short' };

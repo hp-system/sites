@@ -6,9 +6,11 @@
 import { DIAL, LANG_CC } from './callback';
 
 /** First guess of the country: the browser's region (de-AT → Austria), else the page language. */
+// «en-US» is the default of most English browsers wherever the person lives, so a US region says nothing: it is skipped
+// (Sergei 2026-11-23: a Greek mobile was sent as +1 69…, the SMS failed). Other regions (de-AT, ro-RO …) still count.
 export function guessCc(lang: string): string {
   const region = (navigator.languages ?? [navigator.language])
-    .map((l) => l.split('-')[1]?.toUpperCase()).find((r) => r && DIAL.some((d) => d.cc === r));
+    .map((l) => l.split('-')[1]?.toUpperCase()).find((r) => r && r !== 'US' && DIAL.some((d) => d.cc === r));
   return region || LANG_CC[lang] || 'GR';
 }
 

@@ -21,7 +21,7 @@ import { listUrl, prefix, propertyUrl, t, type Lang } from '../lib/i18n';
 import { allProperties, refOf, priceOf, priceVisible, pick, type SiteProperty } from '../lib/api';
 import { viewerFor, placeOf } from '../lib/gate';
 import { money, num, sqm as sqmFmt } from '../lib/format';
-import { coverOf, marked, altOf } from '../lib/photos';
+import { coverOf, clean, altOf } from '../lib/photos';
 import type { Member } from '../lib/member';
 
 interface Props { lang: Lang; me: Member; token?: string }
@@ -113,7 +113,7 @@ const rows: Row[] = [
                           const ttl = pick(x.attributes?.title, lang) || x.title;
                           // `altOf` θέλει ΤΡΙΑ ορίσματα — το τρίτο είναι η εφεδρεία.
                           return cv
-                            ? <img src={marked(cv.url, 400)} alt={altOf(cv, lang, ttl)}
+                            ? <img src={clean(cv.url, 400)} alt={altOf(cv, lang, ttl)}
                                    width="120" height="80" loading="lazy" decoding="async" />
                             : <span class="noimg" aria-hidden="true"></span>;
                         })()}

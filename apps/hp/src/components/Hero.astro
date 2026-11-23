@@ -12,8 +12,7 @@
 // μέγεθος — δες τον κανόνα στο lib/photos.ts (διόρθωση George 29/7).
 import { t, type Lang } from '../lib/i18n';
 import {
-  clean, cleanSrcSet, cleanSrcSetSmall,
-  marked, markedSrcSet, markedSrcSetSmall, focalStyle, type Photo,
+  clean, cleanSrcSet, cleanSrcSetSmall, focalStyle, type Photo,
 } from '../lib/photos';
 import { heroMessage } from '../lib/hero-messages';
 import { isProd } from '../lib/seo';
@@ -47,11 +46,12 @@ const video = msg?.look === 'video' ? msg.video : undefined;
 //    φωτογραφία βγαίνει από τον δικό μας πίνακα τοπίων. Αν ο πίνακας αδειάσει,
 //    πέφτει σε `coverOf()` — δηλαδή σε φωτογραφία ΑΚΙΝΗΤΟΥ, που ως τις 29/7
 //    θα σερβιριζόταν καθαρή στα 1920px. Ο κανόνας κοιτάζει το ΠΕΡΙΕΧΟΜΕΝΟ:
-//    τοπίο → καθαρή, ακίνητο → υδατογραφημένη, ό,τι κι αν συμβεί στον πίνακα.
-const scenic = photo?.tag === 'hero';
-const src = photo ? (scenic ? clean(photo.url) : marked(photo.url, 1920)) : '';
-const setBig = photo ? (scenic ? cleanSrcSet(photo.url) : markedSrcSet(photo.url)) : '';
-const setSmall = photo ? (scenic ? cleanSrcSetSmall(photo.url) : markedSrcSetSmall(photo.url)) : '';
+//    (ως τις 23/11: τοπίο → καθαρή, ακίνητο → υδατογραφημένη· δες #326 από κάτω.)
+// #326 (Sergei + George 2026-11-23): the logo only on property cards and the property page — the hero is clean
+// whether it is a landscape or a property photo (before: a property photo here was watermarked).
+const src = photo ? clean(photo.url) : '';
+const setBig = photo ? cleanSrcSet(photo.url) : '';
+const setSmall = photo ? cleanSrcSetSmall(photo.url) : '';
 ---
 <div class:list={['hero', msg && 'hero--msg', plain && 'hero--plain']} style={focalStyle(photo)} data-hero-msg={msg?.id}>
   <div class="hero__bg">

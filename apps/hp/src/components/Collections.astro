@@ -17,7 +17,7 @@
 //    Στατική λίστα εξαιρέσεων δεν μπορεί να τα προλάβει ΠΟΤΕ.
 // ⏭️ Το σωστό τελικό είναι ξεχωριστές φωτογραφίες τοπίου για τις συλλογές
 //    (επιλογή George) — τότε ξαναγυρίζουν σε καθαρές, νόμιμα.
-import { marked, altOf, markedSrcSet, type Photo, markedSrcSetSmall} from '../lib/photos';
+import { clean, altOf, cleanSrcSet, type Photo, cleanSrcSetSmall } from '../lib/photos';
 import { t, listUrl, type Lang } from '../lib/i18n';
 import { num } from '../lib/format';
 
@@ -63,8 +63,8 @@ const pages = Math.ceil(items.length / 4);
                 (Ναι, ξαναπάτησα την παγίδα του σχολίου δύο γραμμές πιο πάνω.) */}
             {/* #101: desktop tiles are ¼ of the column, phone ~80% (swiped row). */}
             {c.photo && (
-              <img src={marked(c.photo.url, 800)} alt={altOf(c.photo, lang, c.title)}
-                   srcset={markedSrcSetSmall(c.photo.url)}
+              <img src={clean(c.photo.url, 800)} alt={altOf(c.photo, lang, c.title)}
+                   srcset={cleanSrcSetSmall(c.photo.url)}
                    sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 4), 80vw"
                    width="800" height="533" loading="lazy" decoding="async" />
             )}

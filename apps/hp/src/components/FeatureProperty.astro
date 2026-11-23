@@ -13,7 +13,7 @@
 import type { SiteProperty } from '../lib/api';
 import { subName } from '../lib/property';
 import { priceOf, priceVisible, refOf } from '../lib/api';
-import { coverOf, marked, markedSrcSet, markedSrcSetSmall, focalStyle, altOf } from '../lib/photos';
+import { coverOf, clean, cleanSrcSet, cleanSrcSetSmall, focalStyle, altOf } from '../lib/photos';
 import { money, sqm, seaLabel, factLine } from '../lib/format';
 import { t, propertyUrl, type Lang } from '../lib/i18n';
 import { placeOf, municipalityOf, type Viewer } from '../lib/gate';
@@ -57,16 +57,16 @@ const rent = rentalUrl(id);
       ακινήτου **12.000.000 €** κυριαρχεί και υποβαθμίζει ακριβώς το ακίνητο που
       θέλουμε να εντυπωσιάσει. Η θέση αυτή ΠΟΥΛΑΕΙ — δεν είναι κατάλογος.
       ⚠️ Η ΕΞΑΙΡΕΣΗ ΕΙΝΑΙ ΜΟΝΟ ΕΔΩ. Κάρτες, πλακίδια και γκαλερί μένουν
-         υδατογραφημένα· δες τον κανόνα στο lib/photos.ts.
+         υδατογραφημένα· δες τον κανόνα στο lib/photos.ts. → #326 (23/11): ΚΑΘΑΡΑ — λογότυπο μόνο σε κάρτες και σελίδα ακινήτου.
       srcset: στα 390px αλλιώς κατέβαινε το πλήρες 1920×1280 για πλάτος 390.
       🪤 Το σχόλιο ΜΕΝΕΙ ΕΞΩ από το `{cover && (…)}`: μέσα στην παρένθεση δύο
       αδέλφια (σχόλιο + στοιχείο) δεν είναι έγκυρη έκφραση και το build σκάει. */}
   <div class="feature__bg">
     {cover && (
       <picture>
-        <source media="(max-width: 759px)" srcset={markedSrcSetSmall(cover.url)} sizes="100vw" />
-        <img src={marked(cover.url, 1920)} alt={altOf(cover, lang, title)}
-             srcset={markedSrcSet(cover.url)}
+        <source media="(max-width: 759px)" srcset={cleanSrcSetSmall(cover.url)} sizes="100vw" />
+        <img src={clean(cover.url)} alt={altOf(cover, lang, title)}
+             srcset={cleanSrcSet(cover.url)}
              sizes="100vw"
              width="1920" height="1280" loading="lazy" decoding="async" />
       </picture>

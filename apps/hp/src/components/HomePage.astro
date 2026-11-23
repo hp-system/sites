@@ -24,7 +24,7 @@ import REGISTRY from '../data/page-registry.json';
 
 import { allProperties, visitorCountry, refOf, priceOf, priceVisible } from '../lib/api';
 import { buildHome } from '../lib/home';
-import { coverOf, marked, clean, heroReady, shareImage, SHARE_W, SHARE_H, type Photo } from '../lib/photos';
+import { coverOf, clean, heroReady, shareImage, SHARE_W, SHARE_H, type Photo } from '../lib/photos';
 import { hasPool, catKey, facetUrl, FACETS } from '../lib/listing';
 import { fromPrice } from '../lib/prices';
 import { muniKey } from '../lib/gate';
@@ -212,7 +212,7 @@ const jsonLd = [
           // ⚠️ ΔΗΜΟΣ, όχι περιοχή. Το structured data είναι δημόσιο κείμενο:
           // αν γράψει «Βουρβουρού», το κλείδωμα της γεωγραφίας καταρρέει εδώ.
           name: `${a.subcategory ?? ''} — ${municipalityOf(a, lang)}`.trim(),
-          ...(c ? { image: marked(c.url, 800) } : {}),
+          ...(c ? { image: clean(c.url, 800) } : {}),
           ...(priceVisible(a) ? {
             offers: { '@type': 'Offer', price: priceOf(a), priceCurrency: brand.market.currency,
                       availability: 'https://schema.org/InStock' },

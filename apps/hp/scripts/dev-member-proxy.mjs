@@ -22,6 +22,9 @@ const PREFIX = 'local-dev.';
 /** The token is the e-mail (base64url, cookie-safe), so a restart of this process keeps you signed in. */
 const favs = new Map();   // email → Set(ref)
 const names = new Map();  // email → { name, phone }
+const searches = new Map(); // email → [Search]   (CRM #496 member/searches, memory only)
+const prefs = new Map();    // email → Preferences (CRM #496 member/preferences, memory only)
+const PREFS0 = { gender: null, contactWays: ['email', 'whatsapp'], frequency: 'week' };
 
 // The e-mail's name sets the role and the level, as the demo strip of the design board:
 //   buyer@ · seller@ · agent@ (agent competitor) · partner@ (agent association) · blocked@
@@ -62,7 +65,7 @@ const server = createServer(async (req, res) => {
   // ── the member endpoints: answered here ────────────────────────────────────────────
   if (p.startsWith('/api/site/member/')) {
     const what = p.slice('/api/site/member/'.length);
-    const body = req.method === 'POST' ? await readBody(req) : {};
+    const body = req.method === 'POST' || req.method === 'PATCH' ? await readBody(req) : {};
     if (what === 'request-code') {
       console.log(`[member] code asked for ${body.identifier}${body.intent ? ` (intent ${body.intent})` : ''} — type any 6 digits`);
       return send(200, { ok: true, delivered: true, channel: String(body.identifier ?? '').includes('@') ? 'email' : 'sms', hint: 'any 6 digits (local)' });
@@ -77,7 +80,7 @@ const server = createServer(async (req, res) => {
     const me = memberOf(req);
     if (!me) return send(401, { message: 'not signed in (local)' });
     if (what === 'me') {
-      return send(200, { email: me.email, name: me.name, phone: me.phone, favorites: [...favs.get(me.email)], level: levelOf(me.email), role: parse(me.email).role, blocked: false });
+      return send(200, { email: me.email, name: me.name, phone: me.phone, favorites: [...favs.get(me.email)], level: levelOf(me.email), role: parse(me.email).role, preferences: prefs.get(me.email) ?? PREFS0, blocked: false });
     }
     if (what === 'favorite') {
       const set = favs.get(me.email);
@@ -85,6 +88,38 @@ const server = createServer(async (req, res) => {
       const on = !set.has(ref);
       if (on) set.add(ref); else set.delete(ref);
       return send(200, { favorite: on, total: set.size });
+    }
+    // ── the panel endpoints of CRM #496, in memory ──
+    if (what === 'searches' || what.startsWith('searches/')) {
+      const list = searches.get(me.email) ?? []; searches.set(me.email, list);
+      const id = decodeURIComponent(what.slice('searches/'.length));
+      const now = new Date().toISOString();
+      if (what === 'searches' && req.method === 'GET') return send(200, { items: list });
+      if (what === 'searches' && req.method === 'POST') {
+        if (list.length >= 30) return send(409, { code: 'limit', message: 'limit' });
+        const it = { id: `s${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, q: String(body.q ?? ''), label: String(body.label ?? ''), createdAt: now, updatedAt: now };
+        list.unshift(it); console.log(`[member] search saved: ${it.label}`); return send(201, it);
+      }
+      const at = list.findIndex((x) => x.id === id);
+      if (at < 0) return send(404, { code: 'not_found' });
+      if (req.method === 'PATCH') { list[at] = { ...list[at], ...('q' in body ? { q: String(body.q) } : {}), ...('label' in body ? { label: String(body.label) } : {}), updatedAt: now }; return send(200, list[at]); }
+      if (req.method === 'DELETE') { list.splice(at, 1); return send(200, { ok: true }); }
+    }
+    if (what === 'preferences' && req.method === 'PATCH') {
+      const cur = { ...(prefs.get(me.email) ?? PREFS0) };
+      if ('gender' in body) cur.gender = body.gender;
+      if ('contactWays' in body) cur.contactWays = body.contactWays;
+      if ('frequency' in body) cur.frequency = body.frequency;
+      prefs.set(me.email, cur); console.log(`[member] preferences ${JSON.stringify(cur)}`); return send(200, cur);
+    }
+    if (what === 'delete-request') { console.log(`[member] delete request from ${me.email}`); return send(200, { ok: true }); }
+    if (what === 'properties') {
+      // a seller owns two: one online (a real public number), one not yet
+      const items = parse(me.email).role !== 'seller' ? [] : [
+        { id: '6544', title: 'Maisonette, Kassandra', status: 'published', published: true, createdAt: '2026-09-01T09:00:00Z', views: { members: 41, visitors: 268, last30: 57 }, attributes: {} },
+        { id: '9901', title: 'Plot in Sithonia', status: 'draft', published: false, createdAt: '2026-11-20T09:00:00Z', views: { members: 0, visitors: 0, last30: 0 }, attributes: {} },
+      ];
+      return send(200, { items });
     }
     if (what === 'complete') {
       const n = names.get(me.email) ?? { name: me.name, phone: me.phone };

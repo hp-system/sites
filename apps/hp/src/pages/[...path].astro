@@ -30,6 +30,7 @@ import CollectionPage from '../components/CollectionPage.astro';
 import ComparePage from '../components/ComparePage.astro';
 import SubmitPage from '../components/SubmitPage.astro';
 import RequestPage from '../components/RequestPage.astro';
+import MyPropertiesPage from '../components/MyPropertiesPage.astro';
 import RequestsPage from '../components/RequestsPage.astro';
 import ContentPage from '../components/ContentPage.astro';
 import AreaPage from '../components/AreaPage.astro';
@@ -100,7 +101,7 @@ const isLogin = !isHome && rest.length === 1 && rest[0].toLowerCase() === 'login
 // 🛡️ ΛΕΥΚΗ ΛΙΣΤΑ, ΟΧΙ «ό,τι αρχίζει με panel». Χωρίς αυτήν, το `/panel/οτιδήποτε`
 //    θα έδινε τον πίνακα σε άπειρες διευθύνσεις — διπλότυπα για τη Google και
 //    ψέμα για τον επισκέπτη.
-const PANEL_PAGES = ['', 'favorites', 'profile', 'collection', 'compare', 'submit', 'request', 'exclusive'] as const;
+const PANEL_PAGES = ['', 'favorites', 'profile', 'collection', 'compare', 'submit', 'properties', 'request', 'exclusive'] as const;
 const panelRoot = !isHome && rest.length >= 1 && rest[0].toLowerCase() === 'panel';
 const panelSeg = panelRoot ? (rest[1] ?? '').toLowerCase() : '';
 const isPanel = panelRoot && rest.length <= 2 && (PANEL_PAGES as readonly string[]).includes(panelSeg);
@@ -293,7 +294,7 @@ if (isPanel) {
   if (panelSeg === '') {
     const tabQ = Astro.url.searchParams.get('tab');
     const to = (seg: string) => Astro.redirect(`${prefix(lang)}/panel/${seg}`, 302);
-    if (tabQ === 'sell') return to('submit');
+    if (tabQ === 'sell') return to(me.role === 'seller' ? 'properties' : 'submit');
     // Sergei 2026-11-23: cooperation lives in the CRM; on the site an agent is only a status and a level of access —
     // so an agent lands like everyone else (no cooperation section on the site any more)
     if (me.favorites.length > 0) return to('favorites');
@@ -339,6 +340,7 @@ if (crmDown) { Astro.response.status = 503; Astro.response.headers.set('Retry-Af
   : isPanel && me && panelSeg === 'collection' ? <CollectionPage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'compare' ? <ComparePage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'submit' ? <SubmitPage lang={lang} me={me} />
+  : isPanel && me && panelSeg === 'properties' ? <MyPropertiesPage lang={lang} me={me} token={memberToken} />
   : isPanel && me && panelSeg === 'request' ? <RequestsPage lang={lang} me={me} />
   : isPanel && me && panelSeg === 'exclusive' ? <RequestPage lang={lang} me={me} kind={panelSeg} />
   : isPanel && me ? <PanelPage lang={lang} me={me} />

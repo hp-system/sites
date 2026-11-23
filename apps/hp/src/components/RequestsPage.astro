@@ -6,9 +6,10 @@
 // property list filtered as chosen. Each saved request: its line, the date, «See the homes» (the list with those
 // filters), change (the window filled with it), remove.
 //
-// 🗄️ WHERE THE LIST LIVES: in this browser (localStorage `hp.requests`), by Sergei's choice of 2026-11-23, until the
-//    CRM stores searches and gives them back; then this page reads the CRM instead. The page says so in one line.
-//    Nothing private is in it: the filters only. Removing here does not withdraw the request the adviser received.
+// 🗄️ WHERE THE LIST LIVES: in the CRM since #496 (2026-11-23, `/site/member/searches`, via /api/panel/searches), so it
+//    is the same on every device. The first time the CRM answers, the browser copy (localStorage `hp.requests`, kept
+//    there before) is moved into the CRM once and cleared. Only an older CRM (404) leaves the list to this browser, and
+//    then the page says so in one line. Removing here archives the search in the CRM; the adviser's note stays.
 import PanelShell from './PanelShell.astro';
 import { t, listUrl, type Lang } from '../lib/i18n';
 import type { Member } from '../lib/member';
@@ -44,8 +45,19 @@ const JS_T = { saved: t(lang, 'rq.saved'), see: t(lang, 'rq.see'), change: t(lan
   const KEY = 'hp.requests';
   const root = document.querySelector<HTMLElement>('[data-rs]');
   const L: Record<string, string> = JSON.parse(root?.dataset.i18n || '{}');
-  const read = (): Req[] => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } };
+  const local = (): Req[] => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } };
   const write = (xs: Req[]) => { try { localStorage.setItem(KEY, JSON.stringify(xs)); } catch { /* storage off */ } };
+  // `crm` = the list comes from the CRM; null = an older CRM, the browser copy is the list
+  let crm: Req[] | null = null;
+  const read = (): Req[] => crm ?? local();
+  const remove = async (id: string) => {
+    if (crm) {
+      const j = await fetch(`/api/panel/searches?id=${encodeURIComponent(id)}`, { method: 'DELETE' }).then((x) => x.json()).catch(() => ({}));
+      if (!j?.ok) return;
+      crm = crm.filter((x) => x.id !== id);
+    } else write(local().filter((x) => x.id !== id));
+    render();
+  };
 
   const render = () => {
     if (!root) return;
@@ -74,7 +86,7 @@ const JS_T = { saved: t(lang, 'rq.saved'), see: t(lang, 'rq.see'), change: t(lan
       const del = document.createElement('button');
       del.type = 'button'; del.className = 'rq__ic'; del.title = L.del; del.setAttribute('aria-label', L.del);
       del.innerHTML = svg('M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13');
-      del.addEventListener('click', () => { write(read().filter((x) => x.id !== r.id)); render(); });
+      del.addEventListener('click', () => { void remove(r.id); });
       const tools = document.createElement('span'); tools.className = 'rq__tools'; tools.append(ed, del);
       ph.append(tools);
       const top = document.createElement('a');
@@ -97,13 +109,31 @@ const JS_T = { saved: t(lang, 'rq.saved'), see: t(lang, 'rq.see'), change: t(lan
     });
     list.hidden = xs.length === 0;
     root.querySelector<HTMLElement>('[data-rs-empty]')!.hidden = xs.length > 0;
-    root.querySelector<HTMLElement>('[data-rs-note]')!.hidden = xs.length === 0;
+    root.querySelector<HTMLElement>('[data-rs-note]')!.hidden = xs.length === 0 || !!crm;
     // the change buttons are made here, after the filter window wired its openers: hand them over
     list.querySelectorAll<HTMLElement>('[data-fs-edit]').forEach((b) => b.addEventListener('click', () => {
       document.dispatchEvent(new CustomEvent('fs:edit', { detail: { id: b.dataset.fsEdit, q: b.dataset.fsQ } }));
     }));
   };
-  render();
+  // the CRM's list; the browser copy moves there once (oldest first, so the newest stays on top), then is cleared
+  (async () => {
+    const j = await fetch('/api/panel/searches').then((x) => x.json()).catch(() => null);
+    if (!j?.ok || !j.api) { render(); return; }
+    let items: Req[] = j.items;
+    const mine = local();
+    if (mine.length) {
+      let all = true;
+      for (const r of [...mine].reverse()) {
+        if (items.some((x) => x.q === r.q && x.text === r.text)) continue;
+        const a = await fetch('/api/panel/searches', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q: r.q, text: r.text }) })
+          .then((x) => x.json()).catch(() => null);
+        if (a?.ok && a.item) items = [a.item, ...items]; else { all = false; if (a?.code === 'limit') break; }
+      }
+      if (all) try { localStorage.removeItem(KEY); } catch { /* storage off */ }
+    }
+    crm = items;
+    render();
+  })();
 </script>
 
 <style>

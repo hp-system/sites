@@ -24,7 +24,7 @@ import type { Member } from '../lib/member';
 import { company } from '../lib/company';
 import { brand } from '../brand/index';
 
-export type PanelSection = 'fav' | 'compare' | 'collection' | 'request' | 'profile' | 'submit' | 'coop' | 'exclusive';
+export type PanelSection = 'fav' | 'compare' | 'collection' | 'request' | 'profile' | 'submit' | 'properties' | 'coop' | 'exclusive';
 interface Props { lang: Lang; me: Member; current: PanelSection; title: string; description?: string }
 const { lang, me, current, title, description } = Astro.props;
 const p = prefix(lang);
@@ -48,8 +48,8 @@ const first = (me.name || '').trim().split(/\s+/)[0] || t(lang, 'pnl.welcome');
 const favN = me.favorites.length;
 const badge = role === 'partner' ? t(lang, 'lvl.partner') : isAgent ? t(lang, 'lvl.agent') : isExclusive ? t(lang, 'lvl.exclusive') : t(lang, 'lvl.member');
 // Buy / Sell only for a seller; the tab follows the page (no state of its own)
-const tab: 'buy' | 'sell' = isSeller && current === 'submit' ? 'sell' : 'buy';
-const tabs = [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'sell', href: `${p}/panel/submit`, label: t(lang, 'pnl.tab_sell') }];
+const tab: 'buy' | 'sell' = isSeller && (current === 'submit' || current === 'properties') ? 'sell' : 'buy';
+const tabs = [{ id: 'buy', href: `${p}/panel/favorites`, label: t(lang, 'pnl.tab_buy') }, { id: 'sell', href: `${p}/panel/properties`, label: t(lang, 'pnl.tab_sell') }];
 // the adviser: the CRM holds no personal adviser per member yet, so the office stands in (initials, name, phone)
 const advName = brand.name;
 const advIni = advName.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
@@ -62,6 +62,7 @@ const IC = {
   compare: 'M4 6h7v12H4zM13 6h7v12h-7z',
   collection: 'M5 11h14v10H5zM8 11V7.5a4 4 0 0 1 8 0V11',
   home: 'M3 21V10l6-5 6 5v11M15 21v-9l3-2.5 3 2.5v9M3 21h18',
+  add: 'M12 5v14M5 12h14',
 } as const;
 type Item = { id: PanelSection; href: string; label: string; ic: string; n?: number; gold?: boolean };
 const buyRows: Item[] = [
@@ -73,7 +74,9 @@ const buyRows: Item[] = [
   // no Cooperation row: cooperation lives in the CRM; on the site an agent is a status and a level (Sergei 2026-11-23)
 ];
 const sellRows: Item[] = [
-  { id: 'submit', href: `${p}/panel/submit`, label: t(lang, 'pnl.submit'), ic: IC.home },
+  // the seller's own properties (CRM #496, George 2026-11-23: option b of D-174 — only their own, read-only)
+  { id: 'properties', href: `${p}/panel/properties`, label: t(lang, 'mp.h'), ic: IC.home },
+  { id: 'submit', href: `${p}/panel/submit`, label: t(lang, 'pnl.submit'), ic: IC.add },
 ];
 const items = tab === 'sell' ? sellRows : buyRows;
 ---

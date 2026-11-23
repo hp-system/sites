@@ -306,16 +306,16 @@ const PLOT_STEPS = steps([0, 10000, 500], [15000, 100000, 5000]);
       });
       const btn = form.querySelector<HTMLButtonElement>('.fs__go')!;
       btn.disabled = true;
+      const q = new URLSearchParams();
+      new FormData(form).forEach((v, k) => { if (String(v).trim()) q.append(k, String(v)); });
       try {
         const r = await fetch('/api/panel/request', { method: 'POST', headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ type: 'filters', filters: parts.join('; ') || 'any', lang: document.documentElement.lang }) });
+          body: JSON.stringify({ type: 'filters', filters: parts.join('; ') || 'any', q: q.toString(), id: dlg.dataset.edit || '', lang: document.documentElement.lang }) });
         const j = await r.json().catch(() => ({}));
         if (!j?.ok) { out.textContent = form.dataset.fail ?? ''; setTimeout(() => { btn.disabled = false; out.textContent = showAll; }, 1700); return; }
-        // saved (Sergei 2026-11-23): the CRM has the request (the adviser sees it); the panel's list of requests is kept
-        // in this browser until the CRM stores searches; then straight to the list, filtered as chosen
-        const q = new URLSearchParams();
-        new FormData(form).forEach((v, k) => { if (String(v).trim()) q.append(k, String(v)); });
-        try {
+        // saved (Sergei 2026-11-23): the adviser hears of it; the search itself is kept by the CRM (CRM #496, `crm`) —
+        // only an older CRM leaves it to this browser; then straight to the list, filtered as chosen
+        if (!j.crm) try {
           const KEY = 'hp.requests';
           const list: { id: string; q: string; text: string; at: number }[] = JSON.parse(localStorage.getItem(KEY) || '[]');
           const id = dlg.dataset.edit || String(Date.now());

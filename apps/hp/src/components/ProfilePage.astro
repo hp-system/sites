@@ -36,6 +36,9 @@ const isAgent = me.level === 'agent' || me.role === 'agent' || me.role === 'part
 // to the adviser as a line (/api/panel/request, type «prefs») and the page keeps the choice in this browser.
 const WAYS: [string, string][] = [['email', t(lang, 'pf.email')], ['call', t(lang, 'pf.w_call')], ['whatsapp', 'WhatsApp'], ['viber', 'Viber'], ['sms', t(lang, 'pf.w_sms')]];
 const OFTEN: [string, string][] = [['now', t(lang, 'pf.o_now')], ['day', t(lang, 'pf.o_day')], ['week', t(lang, 'pf.o_week')], ['never', t(lang, 'pf.o_never')]];
+// My details from the CRM (#496); `null` = an older CRM, then the browser copy and the defaults (email + WhatsApp, weekly)
+const pr = me.preferences;
+const wayOn = (v: string) => pr ? pr.contactWays.includes(v) : v === 'email' || v === 'whatsapp';
 const PF_T = { saved: t(lang, 'pf.saved'), fail: t(lang, 'sb.e.fail'), del_done: t(lang, 'pf.del_done') };
 const co = await company();
 
@@ -55,7 +58,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
 ---
 
 <PanelShell lang={lang} me={me} current={'profile'} title={t(lang, 'pnl.profile')} description={t(lang, 'pf.meta_desc')}>
-  <div class="pf" data-pf data-i18n={JSON.stringify(PF_T)}>
+  <div class="pf" data-pf data-crm={pr ? '1' : undefined} data-i18n={JSON.stringify(PF_T)}>
     <h1 class="sr-only">{t(lang, 'pnl.profile')}</h1>
 
     <div class="pf__head">
@@ -93,7 +96,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
       <details class="dd" data-pop>
         <summary class="dd__b dd__b--tags" aria-label={t(lang, 'pf.ways_q')}><span class="tags" data-ways-tags></span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
         <div class="dd__m" role="group" aria-label={t(lang, 'pf.ways_q')}>
-          {WAYS.map(([v, n]) => <label class="dd__i"><input type="checkbox" value={v} data-way data-name={n} checked={v === 'email' || v === 'whatsapp'} /><span class="dd__box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg></span><span>{n}</span></label>)}
+          {WAYS.map(([v, n]) => <label class="dd__i"><input type="checkbox" value={v} data-way data-name={n} checked={wayOn(v)} /><span class="dd__box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg></span><span>{n}</span></label>)}
         </div>
       </details>
     </div>
@@ -102,7 +105,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
       <details class="dd" data-pop>
         <summary class="dd__b" aria-label={t(lang, 'pf.often_q')}><span data-o-val>{t(lang, 'pf.o_week')}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
         <div class="dd__m" role="radiogroup" aria-label={t(lang, 'pf.often_q')}>
-          {OFTEN.map(([v, n]) => <label class="dd__i"><input type="radio" name="pf-often" value={v} data-o data-name={n} checked={v === 'week'} /><span class="dd__dot"></span><span>{n}</span></label>)}
+          {OFTEN.map(([v, n]) => <label class="dd__i"><input type="radio" name="pf-often" value={v} data-o data-name={n} checked={v === (pr?.frequency ?? 'week')} /><span class="dd__dot"></span><span>{n}</span></label>)}
         </div>
       </details>
     </div>
@@ -112,7 +115,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
         <summary class="dd__b" aria-label={t(lang, 'pf.gender')}><span data-g-val>—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
         <div class="dd__m" role="radiogroup" aria-label={t(lang, 'pf.gender')}>
           {([['female', t(lang, 'pf.g_f')], ['male', t(lang, 'pf.g_m')], ['none', t(lang, 'pf.g_n')]] as [string, string][]).map(([v, n]) => (
-            <label class="dd__i"><input type="radio" name="pf-gender" value={v} data-g data-name={n} /><span class="dd__dot"></span><span>{n}</span></label>
+            <label class="dd__i"><input type="radio" name="pf-gender" value={v} data-g data-name={n} checked={pr?.gender === v} /><span class="dd__dot"></span><span>{n}</span></label>
           ))}
         </div>
       </details>
@@ -223,7 +226,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
   dlg?.querySelector('[data-pf-x]')?.addEventListener('click', () => dlg.close());
   dlg?.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
 
-  // About you: kept in this browser, and each change goes to the adviser (the CRM has no fields for it yet)
+  // About you: kept by the CRM since #496 (the page comes filled from it); an older CRM → this browser + a line to the adviser
   const root = document.querySelector<HTMLElement>('[data-pf]');
   const T: Record<string, string> = JSON.parse(root?.dataset.i18n || '{}');
   const KEY = 'hp.prefs';
@@ -232,7 +235,8 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
   const pick = (xs: HTMLInputElement[], v: string) => xs.forEach((x) => { x.checked = x.value === v; });
   const val = (xs: HTMLInputElement[]) => xs.find((x) => x.checked)?.value ?? '';
   const ways = [...(root?.querySelectorAll<HTMLInputElement>('[data-way]') ?? [])];
-  try {
+  const inCrm = root?.dataset.crm === '1';
+  if (!inCrm) try {
     const st = JSON.parse(localStorage.getItem(KEY) || 'null');
     if (st) {
       if (st.gender) pick(gs, st.gender);
@@ -254,7 +258,7 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
   let timer: number | undefined;
   const save = () => {
     const st = { gender: val(gs), often: val(os) || 'week', ways: ways.filter((w) => w.checked).map((w) => w.value) };
-    try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* storage off */ }
+    if (!inCrm) try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* storage off */ }
     window.clearTimeout(timer);
     timer = window.setTimeout(async () => {
       try {

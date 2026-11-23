@@ -42,21 +42,26 @@ const KIND: Record<string, { category: string; subcategory: string }> = {
   commercial: { category: 'commercial',  subcategory: 'commercial' },
 };
 
-// The Details window (Sergei 2026-11-23) asks more than the CRM stores in its own fields: address, levels, orientation,
-// road access, and how many photos / documents the owner has ready (sending files is not open yet). They go into the
-// description as one plain line on top, so the adviser reads them; only known values pass.
+// The Details window (Sergei 2026-11-23): since CRM #496 the CRM stores address, levels, orientation and road access in
+// the property's own fields (`address`, `levels`, `orientation`, `road_access` below; unknown values are dropped there).
+// Only what it cannot take yet — how many photos / documents the owner has ready (no file upload yet, P1-4) — stays a
+// plain `[Details]` line on top of the owner's note.
 const ORIENT = new Set(['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']);
 const ROAD = new Set(['asphalt', 'paved', 'dirt', 'boat']);
+function extras(b: Record<string, unknown>) {
+  const addr = clean(b.address, 160).replace(/[\u0000-\u001f\u007f]/g, ' ');
+  const lv = Number(String(b.levels ?? '').replace(/\D/g, ''));
+  const o = clean(b.orient, 4).toLowerCase();
+  const r = clean(b.road, 10).toLowerCase();
+  return {
+    address: addr || undefined,
+    levels: lv >= 1 && lv <= 9 ? lv : undefined,
+    orientation: ORIENT.has(o) ? o : undefined,
+    road_access: ROAD.has(r) ? r : undefined,
+  };
+}
 function describe(b: Record<string, unknown>): string {
   const bits: string[] = [];
-  const addr = clean(b.address, 160);
-  if (addr) bits.push(`address=${addr}`);
-  const lv = Number(String(b.levels ?? '').replace(/\D/g, ''));
-  if (lv >= 1 && lv <= 9) bits.push(`levels=${lv}`);
-  const o = clean(b.orient, 4).toLowerCase();
-  if (ORIENT.has(o)) bits.push(`orientation=${o.toUpperCase()}`);
-  const r = clean(b.road, 10).toLowerCase();
-  if (ROAD.has(r)) bits.push(`road=${r}`);
   const ph = Math.min(99, Number(b.photosN) || 0), dc = Math.min(99, Number(b.docsN) || 0);
   if (ph > 0) bits.push(`photos ready=${ph}`);
   if (dc > 0) bits.push(`documents ready=${dc}`);
@@ -89,6 +94,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
     area,
     sqm: Number(String(b.sqm ?? '').replace(/\D/g, '')) || undefined,
     price: Number(String(b.price ?? '').replace(/\D/g, '')) || undefined,
+    ...extras(b),
     description: describe(b) || undefined,
   };
 

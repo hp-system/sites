@@ -17,7 +17,7 @@ import type { APIRoute } from 'astro';
 import { allProperties, visitorCountry, priceOf, priceVisible } from '../../lib/api';
 import { muniKey } from '../../lib/gate';
 import { hasPool } from '../../lib/listing';
-import { coverOf, marked } from '../../lib/photos';
+import { coverOf, clean } from '../../lib/photos';
 
 export const prerender = false;
 
@@ -78,7 +78,7 @@ export const GET: APIRoute = async ({ url, cookies, request }) => {
     // `cover=1` (the panel's saved requests, Sergei 2026-11-23): the watermarked cover of the first match, as on a card.
     let cover: string | undefined;
     if (q.get('cover') === '1') {
-      for (const p of hits) { const c = coverOf(p.attributes ?? {}); if (c?.url && !p.locked) { cover = marked(c.url, 800); break; } }
+      for (const p of hits) { const c = coverOf(p.attributes ?? {}); if (c?.url && !p.locked) { cover = clean(c.url, 800); break; } }
     }
 
     // No property counts in public output (George 17/10): the endpoint only says whether

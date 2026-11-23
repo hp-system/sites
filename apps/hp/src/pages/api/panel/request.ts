@@ -27,9 +27,18 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   if (!me.email) return json({ ok: false, code: 'need_email' });
   let b: Record<string, unknown> = {};
   try { b = await request.json(); } catch { /* empty */ }
-  const type = b.type === 'exclusive' ? 'exclusive' : b.type === 'filters' ? 'filters' : 'request';
+  const type = b.type === 'exclusive' ? 'exclusive' : b.type === 'filters' ? 'filters' : b.type === 'prefs' ? 'prefs' : b.type === 'delete' ? 'delete' : 'request';
   let message: string;
-  if (type === 'filters') {
+  if (type === 'prefs') {
+    // My details (Sergei 2026-11-23): gender, contact ways, how often — the CRM has no fields for them yet, so the
+    // adviser gets them as a line; only known values pass
+    const G = new Set(['female', 'male', 'none']), W = new Set(['email', 'call', 'whatsapp', 'viber', 'sms']), O = new Set(['now', 'day', 'week', 'never']);
+    const g = String(b.gender ?? ''), o = String(b.often ?? '');
+    const w = (Array.isArray(b.ways) ? b.ways : []).map(String).filter((x) => W.has(x));
+    message = `[Preferences] gender=${G.has(g) ? g : '-'}; contact=${w.join(',') || '-'}; frequency=${O.has(o) ? o : '-'}`;
+  } else if (type === 'delete') {
+    message = '[Account] The member asks to delete the account (My details). Confirm with them by e-mail.';
+  } else if (type === 'filters') {
     // «Tell us what you look for» from the filter window (Sergei 2026-11-23): the choices as one readable line
     const f = String(b.filters ?? '').replace(/\s+/g, ' ').trim().slice(0, 800);
     if (!f) return json({ ok: false, code: 'kind' });

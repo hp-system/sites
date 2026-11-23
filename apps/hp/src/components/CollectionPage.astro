@@ -112,7 +112,7 @@ const total = secret.length + ultra.length;
 </PanelShell>
 
 <style>
-  .cl { padding: var(--s6) 0 var(--s9); }
+  .cl { padding: 0 0 var(--s9); }
   .cl .wrap { max-width: 1180px; }
   .crumb { font-size: var(--fs-s-1); color: var(--faint); display: flex; gap: 7px; align-items: center;
            margin-bottom: 10px; }
@@ -126,9 +126,10 @@ const total = secret.length + ultra.length;
           grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); }
   .grid > :global(*) { min-width: 0; }
 
-  .empty { border: 1px solid var(--line); padding: 26px 22px; max-width: 46ch; margin-top: 18px; }
-  .empty__h { margin: 0 0 8px; font-size: var(--fs-s0); font-weight: 400; }
-  .empty__s { margin: 0 0 18px; font-size: var(--fs-s0); color: var(--muted); }
+  /* the empty state as on every panel page (E3): a framed box, centred */
+  .empty { border: 1px solid var(--line); padding: 32px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .empty__h { margin: 0; font-size: var(--fs-s1); font-weight: 300; }
+  .empty__s { margin: 0 0 6px; font-size: var(--fs-s-1); color: var(--muted); max-width: 46ch; }
 
   /* a locked card: the destroyed copy blurred (a dark plate when even that is not ours to send), a lock and a line */
   .lk { display: flex; flex-direction: column; gap: 10px; color: var(--ink); text-decoration: none; }
@@ -156,3 +157,4 @@ const total = secret.length + ultra.length;
   .xb__go:hover, .xb__go:focus-visible { color: var(--gold-dk-hover); border-color: var(--gold-dk-hi); }
   @media (max-width: 760px) { .xb { flex-direction: column; align-items: stretch; padding: 24px 20px; } .xb__lock { right: 16px; top: 24px; transform: none; } }
 </style>
+

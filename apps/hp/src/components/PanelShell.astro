@@ -188,6 +188,10 @@ const items = tab === 'sell' ? sellRows : buyRows;
   .ps__row { display: flex; align-items: center; gap: 10px; padding: 11px 10px; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase;
     color: var(--faint); text-decoration: none; white-space: nowrap; transition: background .15s ease, color .15s ease; }
   .ps__row > span:first-of-type { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  /* E3: a row not open reads a step smaller; the open one and the hovered one come to full size */
+  .ps__row > span:first-of-type { display: inline-block; transform: scale(.92); transform-origin: 0 50%; transition: transform .18s ease; }
+  .ps__row:hover > span:first-of-type, .ps__row[aria-current='page'] > span:first-of-type { transform: scale(1); }
+  @media (prefers-reduced-motion: reduce) { .ps__row > span:first-of-type, .ps__row svg { transition: none; } }
   .ps__row svg { flex: none; transform: scale(.9); transition: transform .18s ease; }
   .ps__row:hover { background: var(--paper-2); color: var(--ink); }
   .ps__row:hover svg, .ps__row[aria-current='page'] svg { transform: scale(1); }
@@ -219,3 +223,4 @@ const items = tab === 'sell' ? sellRows : buyRows;
   .ps__sell:hover, .ps__sell[aria-current='page'] { background: var(--paper-2); }
   @media (prefers-reduced-motion: reduce) { .ps__side { transition: none; } }
 </style>
+

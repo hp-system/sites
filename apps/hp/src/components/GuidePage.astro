@@ -219,10 +219,10 @@ const jsonLd: unknown[] = [
     :global(.gp--lux > .xi ~ *) { position: relative; z-index: 1; }
     /* the black top stays and the bento «What Exclusive gives you» slides over it from below (Sergei 2026-11-19 «пусть
        наезжает скроллом 3D наверх»); the script dims the top as it is covered */
-    .gp.gp--lux .gp__top { position: sticky; top: var(--lux-top, 0px); z-index: 0; }
+    /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow. */
+    .gp.gp--lux .gp__top { position: relative; z-index: 0; }
     .gp--lux .gp__top::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%);
                                background: #000; opacity: var(--lux-dim, 0); pointer-events: none; z-index: 1; }
-    :global(.gp--lux > .xi .xi__win) { box-shadow: 0 -18px 40px rgba(0, 0, 0, .25); }
     /* a block without a ground of its own gets white at the full width (a .wrap block is narrower than the screen) */
     :global(:where(.gp--lux > .xi ~ *)) { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
   }
@@ -277,12 +277,12 @@ const jsonLd: unknown[] = [
   @media (min-width: 1000px) {
     /* depth (Sergei 2026-11-19 «сделай эту секцию в глубину как 3D эффект, пусть сайт скроллится над ней»): the band
        stays where it is and the page slides over it with a soft shadow; the script sinks it a little as it is covered */
-    .gst { position: sticky; top: var(--gst-top, 0px); z-index: 0; overflow: hidden; }
+    /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow */
+    .gst { position: relative; z-index: 0; overflow: hidden; }
     .gst__in { transform-origin: 50% 0; will-change: transform; }
     .gst::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--gst-dim, 0); pointer-events: none; }
     :global(.gp > .gst ~ *) { position: relative; z-index: 1; }
     :global(:where(.gp > .gst ~ *)) { background: var(--paper); }   /* only where a block has no ground of its own (zero specificity) */
-    :global(.gp > .gst + *) { box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); }
     .gst__in { padding: 56px max(var(--gut), 4vw) 64px; }
     .gst__h { font-size: var(--fs-s4); }
     /* one line across the whole width, a station per step; the steps stand above and below it in turn */

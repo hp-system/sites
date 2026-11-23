@@ -188,7 +188,7 @@ const ICONS = [
        stands in the page as it is (no window onto a fixed bento any more); it stays where it is while the black band
        below slides over it with a soft shadow, and sinks a little (the script) */
     .xi__win { --pw: 100vw; --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
-               position: sticky; top: var(--xi-top, 0px); z-index: 0; width: var(--pw); overflow: hidden; background: var(--paper-3); padding-block: 48px; }
+               position: relative; z-index: 0; width: var(--pw); overflow: hidden; background: var(--paper-3); padding-block: 48px; }
     .xi__win::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--xi-dim, 0); pointer-events: none; }
     .xi__bento { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(560px, calc(var(--tw) * .5), calc(100vh - 96px));
                  box-sizing: border-box; padding: 0; margin-inline: var(--off); width: var(--tw); height: var(--th); transform-origin: 50% 0; will-change: transform;
@@ -198,8 +198,8 @@ const ICONS = [
        box, then the posts. The band's white ground and its soft top shadow run the full width (a pseudo behind it). */
     .xi { display: contents; }
     .xi__row { position: relative; z-index: 1; }
-    .xi__row::before { content: ""; position: absolute; inset: 0 -100vmax; z-index: -1; background: var(--paper);
-                       box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); pointer-events: none; }
+    /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow. */
+    .xi__row::before { content: ""; position: absolute; inset: 0 -100vmax; z-index: -1; background: var(--paper); pointer-events: none; }
     .xi { padding-block: 0; }   /* the black box touches the ends of its band (Sergei 2026-11-16) */
     .xi__give { align-self: end; padding: 0 0 6px; font-size: var(--fs-s4); font-weight: 300; line-height: 1.05; letter-spacing: -.022em;
                 text-transform: none; color: var(--ink); }

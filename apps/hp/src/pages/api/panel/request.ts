@@ -27,9 +27,14 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   if (!me.email) return json({ ok: false, code: 'need_email' });
   let b: Record<string, unknown> = {};
   try { b = await request.json(); } catch { /* empty */ }
-  const type = b.type === 'exclusive' ? 'exclusive' : 'request';
+  const type = b.type === 'exclusive' ? 'exclusive' : b.type === 'filters' ? 'filters' : 'request';
   let message: string;
-  if (type === 'request') {
+  if (type === 'filters') {
+    // «Tell us what you look for» from the filter window (Sergei 2026-11-23): the choices as one readable line
+    const f = String(b.filters ?? '').replace(/\s+/g, ' ').trim().slice(0, 800);
+    if (!f) return json({ ok: false, code: 'kind' });
+    message = `[Request] ${f}`;
+  } else if (type === 'request') {
     const kind = String(b.kind ?? '');
     if (!KINDS.has(kind)) return json({ ok: false, code: 'kind' });
     const where = clean(b.where, 60);

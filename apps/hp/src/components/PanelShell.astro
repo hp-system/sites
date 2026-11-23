@@ -16,6 +16,9 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import WaLink from './WaLink.astro';
+import FilterSheet from './FilterSheet.astro';
+import { allProperties, visitorCountry } from '../lib/api';
+import { muniKey, municipalityOf } from '../lib/gate';
 import { prefix, t, type Lang } from '../lib/i18n';
 import type { Member } from '../lib/member';
 import { company } from '../lib/company';
@@ -26,6 +29,14 @@ interface Props { lang: Lang; me: Member; current: PanelSection; title: string; 
 const { lang, me, current, title, description } = Astro.props;
 const p = prefix(lang);
 const co = await company();
+// «Tell us what you look for» opens the list's filter window in request mode (Sergei 2026-11-23); its municipalities
+// as on the list (the four with homes). If the set cannot be read, the window offers «All Halkidiki» only.
+const all = await allProperties(undefined, visitorCountry(Astro.request)).catch(() => []);
+const muniKeys = [...new Set(all.map((x) => muniKey(x.attributes ?? {})).filter(Boolean))].slice(0, 4);
+const fsMunis = muniKeys.map((k) => {
+  const src = all.find((x) => muniKey(x.attributes ?? {}) === k);
+  return { name: municipalityOf(src?.attributes ?? {}, lang) || k, n: 0, key: k };
+});
 
 // Two axes (design E3 demo strip): the role chosen at sign-up (buyer · seller · agent · partner) and the level from
 // the CRM (member · exclusive). Agents of both kinds see as guests and have no level of their own.
@@ -44,7 +55,7 @@ const advName = brand.name;
 const advIni = advName.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
 // E3 side box (Sergei 2026-11-23, board PanelE3): Buy / Sell tabs for sellers only; menu rows with an icon and a count;
-// the selling door at the bottom for everyone else. The Exclusive card moved under the closed collection (Sergei 2026-11-23). The count shows only where the CRM holds the number (favourites).
+// the selling door under the menu for everyone else, the adviser at the bottom (Sergei 2026-11-23). The Exclusive card moved under the closed collection (Sergei 2026-11-23). The count shows only where the CRM holds the number (favourites).
 const IC = {
   fav: 'M12 21C7 16.6 3 13.3 3 9.3A4.6 4.6 0 0 1 12 7.6 4.6 4.6 0 0 1 21 9.3c0 4-4 7.3-9 11.7Z',
   request: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
@@ -104,6 +115,13 @@ const items = tab === 'sell' ? sellRows : buyRows;
           ))}
         </nav>
 
+        {!isSeller && (
+          <a class="ps__sell" href={`${p}/panel/submit`} aria-current={current === 'submit' ? 'page' : undefined}>
+            <svg width="24" height="22" viewBox="0 0 26 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V3M5 5h15M8 5v3M17 5v3M7 8h12v8H7z"></path><path d="M10 12h6"></path></svg>
+            <span><span>{t(lang, 'pnl.sell_1')}</span><span>{t(lang, 'pnl.sell_2')}</span></span>
+          </a>
+        )}
+
         <div class="ps__adv">
           <p class="ps__lbl">{t(lang, 'pnl.adv')}</p>
           <div class="ps__who2">
@@ -114,18 +132,14 @@ const items = tab === 'sell' ? sellRows : buyRows;
         </div>
 
 
-        {!isSeller && (
-          <a class="ps__sell" href={`${p}/panel/submit`} aria-current={current === 'submit' ? 'page' : undefined}>
-            <svg width="24" height="22" viewBox="0 0 26 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V3M5 5h15M8 5v3M17 5v3M7 8h12v8H7z"></path><path d="M10 12h6"></path></svg>
-            <span><span>{t(lang, 'pnl.sell_1')}</span><span>{t(lang, 'pnl.sell_2')}</span></span>
-          </a>
-        )}
+
       </aside>
 
       <div class="ps__main"><slot /></div>
     </div>
   </main>
 
+  <FilterSheet lang={lang} total={all.length} munis={fsMunis} mode="request" />
   <Footer lang={lang} />
 </Base>
 
@@ -137,7 +151,8 @@ const items = tab === 'sell' ? sellRows : buyRows;
   @media (min-width: 1000px) {
     .ps__in { grid-template-columns: 300px minmax(0, 1fr); column-gap: var(--s6); padding-block: var(--s6) var(--s8); }
     .ps__side { position: sticky; top: var(--s5); align-self: start; padding: 4px 28px 4px 0; border-right: 1px solid var(--line-soft);
-      max-height: calc(100vh - var(--s5) - 24px); overflow-y: auto; transition: top .25s ease; }
+      max-height: calc(100vh - var(--s5) - 24px); overflow-y: auto; scrollbar-width: none; transition: top .25s ease; }
+    .ps__side::-webkit-scrollbar { display: none; }
   }
   :global(html.hdr-up) .ps__side { top: calc(var(--hdr-h, 88px) + 12px); }
 
@@ -196,7 +211,7 @@ const items = tab === 'sell' ? sellRows : buyRows;
   .ps__ways :global(.wab) { padding-left: 0; }
 
   /* the selling door: framed, a flag, two lines */
-  .ps__sell { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; margin-top: 8px; padding: 8px 14px;
+  .ps__sell { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; margin-top: 4px; padding: 8px 14px;
     border: 1px solid var(--line); background: var(--paper); color: var(--ink); text-decoration: none;
     font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; line-height: 1.3; transition: background .2s ease; }
   .ps__sell svg { flex: none; }

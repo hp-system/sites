@@ -70,14 +70,6 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
         <p class="pf__ln">{me.email || <span class="none">{t(lang, 'pf.none')}</span>}</p>
         <p class="pf__ln"><bdi dir="ltr">{me.phone || ''}</bdi>{!me.phone && <span class="none">{t(lang, 'pf.none')}</span>}</p>
       </div>
-      <label class="pf__g">
-        <span class="pf__lbl">{t(lang, 'pf.gender')}</span>
-        <span class="ways" role="radiogroup" aria-label={t(lang, 'pf.gender')}>
-          {([['female', t(lang, 'pf.g_f')], ['male', t(lang, 'pf.g_m')], ['none', t(lang, 'pf.g_n')]] as [string, string][]).map(([v, n]) => (
-            <label class="way"><input type="radio" name="pf-gender" value={v} data-g /><span>{n}</span></label>
-          ))}
-        </span>
-      </label>
     </div>
 
     {missing.length > 0 && (
@@ -94,27 +86,38 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
       </div>
     )}
 
+    {/* E3 (Sergei 2026-11-23 «как в макете, гендер в самый низ»): each answer is a small drop-down — the site's own,
+        not a native select; it closes on a click outside (Base, details[data-pop]) */}
     <div class="qa">
       <p class="qq">{t(lang, 'pf.ways_q')}</p>
-      <div class="ways" role="group" aria-label={t(lang, 'pf.ways_q')}>
-        {WAYS.map(([v, n]) => <label class="way"><input type="checkbox" value={v} data-way checked={v === 'email' || v === 'whatsapp'} /><span>{n}</span></label>)}
-      </div>
+      <details class="dd" data-pop>
+        <summary class="dd__b dd__b--tags" aria-label={t(lang, 'pf.ways_q')}><span class="tags" data-ways-tags></span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+        <div class="dd__m" role="group" aria-label={t(lang, 'pf.ways_q')}>
+          {WAYS.map(([v, n]) => <label class="dd__i"><input type="checkbox" value={v} data-way data-name={n} checked={v === 'email' || v === 'whatsapp'} /><span class="dd__box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"></path></svg></span><span>{n}</span></label>)}
+        </div>
+      </details>
     </div>
     <div class="qa">
       <p class="qq">{t(lang, 'pf.often_q')}</p>
-      <div class="ways" role="radiogroup" aria-label={t(lang, 'pf.often_q')}>
-        {OFTEN.map(([v, n]) => <label class="way"><input type="radio" name="pf-often" value={v} data-o checked={v === 'week'} /><span>{n}</span></label>)}
-      </div>
+      <details class="dd" data-pop>
+        <summary class="dd__b" aria-label={t(lang, 'pf.often_q')}><span data-o-val>{t(lang, 'pf.o_week')}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+        <div class="dd__m" role="radiogroup" aria-label={t(lang, 'pf.often_q')}>
+          {OFTEN.map(([v, n]) => <label class="dd__i"><input type="radio" name="pf-often" value={v} data-o data-name={n} checked={v === 'week'} /><span class="dd__dot"></span><span>{n}</span></label>)}
+        </div>
+      </details>
+    </div>
+    <div class="qa">
+      <p class="qq">{t(lang, 'pf.gender')}</p>
+      <details class="dd" data-pop>
+        <summary class="dd__b" aria-label={t(lang, 'pf.gender')}><span data-g-val>—</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+        <div class="dd__m" role="radiogroup" aria-label={t(lang, 'pf.gender')}>
+          {([['female', t(lang, 'pf.g_f')], ['male', t(lang, 'pf.g_m')], ['none', t(lang, 'pf.g_n')]] as [string, string][]).map(([v, n]) => (
+            <label class="dd__i"><input type="radio" name="pf-gender" value={v} data-g data-name={n} /><span class="dd__dot"></span><span>{n}</span></label>
+          ))}
+        </div>
+      </details>
     </div>
     <p class="pf__saved" data-pf-saved role="status" aria-live="polite" hidden></p>
-
-    <div class="qa">
-      <p class="qq qq--row"><span>{t(lang, 'pf.mem_h')}</span><span class="pf__lvl">{isAgent ? t(lang, me.role === 'partner' ? 'lvl.partner' : 'lvl.agent') : isExclusive ? t(lang, 'lvl.exclusive') : t(lang, 'lvl.member')}</span></p>
-      <div class="mem">
-        <p class="mem__s">{isAgent ? t(lang, 'pf.lv_agent') : isExclusive ? t(lang, 'pf.lv_excl') : t(lang, 'pf.lv_member')}</p>
-        {!isAgent && !isExclusive && <a class="mem__go" href={`${p}/panel/exclusive`} data-ev="member:exclusive_request">{t(lang, 'pf.make_ex')}</a>}
-      </div>
-    </div>
 
     <div class="del" data-pf-del>
       <button type="button" class="del__ask" data-del-ask>{t(lang, 'pf.del')}</button>
@@ -154,29 +157,36 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
   .pf__ln { margin: 0; font-size: var(--fs-s-1); color: var(--muted); overflow-wrap: anywhere; }
   .none { color: var(--faint); font-style: italic; font-size: var(--fs-s-1); font-weight: 400; }
 
-  .pf__g { margin-inline-start: auto; align-self: flex-start; display: flex; align-items: center; gap: 12px; }
-  .pf__lbl { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
 
   /* E3 questions: a hairline above each, the question in bold, the answer under it */
   .qa { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 18px 16px; border-bottom: 1px solid var(--line-soft); }
   .qq { margin: 0; font-size: var(--fs-s0); font-weight: 600; letter-spacing: -.005em; }
-  .qq--row { display: flex; align-items: center; gap: 12px; }
-  .ways { display: flex; flex-wrap: wrap; gap: 6px; }
-  .way { position: relative; display: inline-flex; cursor: pointer; }
-  .way input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
-  .way > span { display: flex; align-items: center; min-height: 36px; padding: 0 12px; border: 1px solid transparent; font-size: var(--fs-s-1); color: var(--ink-2);
-    transition: border-color .14s ease, color .14s ease, background .14s ease; }
-  .way:hover > span { border-color: var(--ink-2); color: var(--ink); }
-  .way input:checked + span { border-color: var(--ink); background: var(--paper-2); color: var(--ink); }
-  .way input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 3px; }
+  /* the drop-downs (E3 .ddb): a framed button, the menu under it */
+  .dd { position: relative; }
+  .dd__b { list-style: none; display: inline-flex; align-items: center; gap: 10px; min-height: 34px; padding: 4px 12px; border: 1px solid var(--line);
+    background: var(--paper); font-size: var(--fs-s-1); color: var(--ink); cursor: pointer; transition: background .15s ease, border-color .15s ease; }
+  .dd__b::-webkit-details-marker { display: none; }
+  .dd__b:hover, .dd[open] > .dd__b { background: var(--paper-2); }
+  .dd__b:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .dd__b svg { flex: none; transition: transform .2s ease; }
+  .dd[open] > .dd__b svg { transform: rotate(180deg); }
+  .dd__b--tags { padding-inline-start: 5px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  :global(.tag) { background: var(--paper-2); padding: 3px 9px; font-size: var(--fs-s-1); line-height: 1.4; }
+  .dd[open] .dd__b--tags :global(.tag) { background: var(--paper); }
+  .dd__m { position: absolute; top: calc(100% + 4px); left: 0; z-index: 40; min-width: 220px; padding: 8px 0; background: var(--paper);
+    border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(11,14,16,.12); }
+  .dd__i { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 16px; font-size: var(--fs-s-1); color: var(--ink); cursor: pointer; }
+  .dd__i:hover { background: var(--paper-2); }
+  .dd__i input { position: absolute; opacity: 0; pointer-events: none; }
+  .dd__box { flex: none; width: 18px; height: 18px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: transparent; }
+  .dd__i input:checked + .dd__box { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .dd__dot { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--line); }
+  .dd__i input:checked + .dd__dot { border: 5px solid var(--ink); }
+  .dd__i:has(input:focus-visible) { outline: 2px solid var(--brand); outline-offset: -2px; }
+
   .pf__saved { margin: 8px 16px 0; font-size: var(--fs-s-1); color: var(--muted); }
 
-  .pf__lvl { padding: 3px 7px; border: 1px solid var(--gold); color: var(--gold-lo); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
-  .mem { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; width: 100%; }
-  .mem__s { margin: 0; font-size: var(--fs-s-1); color: var(--ink-2); max-width: 52ch; line-height: 1.55; }
-  .mem__go { flex: none; display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border: 1px solid var(--gold); color: var(--gold-lo);
-    font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; transition: color .3s ease, background .3s ease; }
-  .mem__go:hover { background: var(--paper-2); color: var(--ink); }
 
   .del { padding: 18px 16px 0; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
   .del__ask { all: unset; cursor: pointer; font-size: var(--fs-s-1); color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
@@ -230,6 +240,16 @@ if (!me.phone) missing.push(t(lang, 'pf.m_phone'));
       if (Array.isArray(st.ways)) ways.forEach((w) => { w.checked = st.ways.includes(w.value); });
     }
   } catch { /* storage off: the defaults stay */ }
+  // what each drop-down shows closed: the chosen ways as small tags, the chosen frequency / gender as text
+  const paint = () => {
+    const tags = root?.querySelector<HTMLElement>('[data-ways-tags]');
+    if (tags) tags.replaceChildren(...ways.filter((w) => w.checked).map((w) => { const s = document.createElement('span'); s.className = 'tag'; s.textContent = w.dataset.name ?? w.value; return s; }));
+    const ov = root?.querySelector<HTMLElement>('[data-o-val]'); const oc = os.find((x) => x.checked); if (ov && oc) ov.textContent = oc.dataset.name ?? oc.value;
+    const gv = root?.querySelector<HTMLElement>('[data-g-val]'); const gc = gs.find((x) => x.checked); if (gv) gv.textContent = gc ? (gc.dataset.name ?? gc.value) : '—';
+  };
+  paint();
+  [...gs, ...os].forEach((x) => x.addEventListener('change', () => { const d = x.closest('details'); if (d) d.open = false; }));
+  [...gs, ...os, ...ways].forEach((x) => x.addEventListener('change', paint));
   const saved = root?.querySelector<HTMLElement>('[data-pf-saved]');
   let timer: number | undefined;
   const save = () => {

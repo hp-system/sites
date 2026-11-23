@@ -294,11 +294,11 @@ if (isPanel) {
     const tabQ = Astro.url.searchParams.get('tab');
     const to = (seg: string) => Astro.redirect(`${prefix(lang)}/panel/${seg}`, 302);
     if (tabQ === 'sell') return to('submit');
-    if (!(me.level === 'agent' && tabQ !== 'buy')) {
-      if (me.favorites.length > 0) return to('favorites');
-      if (me.level === 'exclusive') return to('collection');
-      return to('request');
-    }
+    // Sergei 2026-11-23: cooperation lives in the CRM; on the site an agent is only a status and a level of access —
+    // so an agent lands like everyone else (no cooperation section on the site any more)
+    if (me.favorites.length > 0) return to('favorites');
+    if (me.level === 'exclusive') return to('collection');
+    return to('request');
   }
 }
 

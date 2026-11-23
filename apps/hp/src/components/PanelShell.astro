@@ -62,7 +62,6 @@ const IC = {
   compare: 'M4 6h7v12H4zM13 6h7v12h-7z',
   collection: 'M5 11h14v10H5zM8 11V7.5a4 4 0 0 1 8 0V11',
   home: 'M3 21V10l6-5 6 5v11M15 21v-9l3-2.5 3 2.5v9M3 21h18',
-  coop: 'M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 20c0-3 2.7-5 6-5s6 2 6 5M14 15.2c.6-.1 1.3-.2 2-.2 3.3 0 6 2 6 5',
 } as const;
 type Item = { id: PanelSection; href: string; label: string; ic: string; n?: number; gold?: boolean };
 const buyRows: Item[] = [
@@ -71,7 +70,7 @@ const buyRows: Item[] = [
   { id: 'request', href: `${p}/panel/request`, label: t(lang, 'pnl.row_req'), ic: IC.request },
   // the closed collection for everyone (Sergei 2026-11-23); inside, the cards stay locked unless Exclusive
   { id: 'collection', href: `${p}/panel/collection`, label: t(lang, 'pnl.collection'), ic: IC.collection, gold: true },
-  ...(isAgent ? [{ id: 'coop' as const, href: `${p}/panel?tab=coop`, label: t(lang, 'pnl.tab_coop'), ic: IC.coop }] : []),
+  // no Cooperation row: cooperation lives in the CRM; on the site an agent is a status and a level (Sergei 2026-11-23)
 ];
 const sellRows: Item[] = [
   { id: 'submit', href: `${p}/panel/submit`, label: t(lang, 'pnl.submit'), ic: IC.home },

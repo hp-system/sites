@@ -179,7 +179,10 @@ const ICO_DET = 'M2 4.5h12M4.5 8h7M6.8 11.5h2.4';
       <div class="done" id="ok" hidden>
         <p class="done__h">{t(lang, 'sb.ok_h')}</p>
         <p class="done__s">{t(lang, 'sb.ok_s')}</p>
-        <a class="btn" href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a>
+        <span class="done__go">
+          <a class="btn" href={co.phoneHref}><bdi dir="ltr">{co.phone}</bdi></a>
+          <a class="lnk" href={`${prefix(lang)}/panel/properties`}>{t(lang, 'mp.h')} →</a>
+        </span>
       </div>
     </div>
 </PanelShell>
@@ -462,5 +465,8 @@ const ICO_DET = 'M2 4.5h12M4.5 8h7M6.8 11.5h2.4';
   .done { border: 1px solid var(--line); padding: 24px 22px; }
   .done__h { margin: 0 0 8px; font-size: var(--fs-s1); font-weight: 300; }
   .done__s { margin: 0 0 16px; font-size: var(--fs-s0); color: var(--muted); }
+  .done__go { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .lnk { font-size: var(--fs-s-1); color: var(--muted); }
+  .lnk:hover { color: var(--ink); }
 </style>
 

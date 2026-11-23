@@ -17,6 +17,7 @@
 import type { APIRoute } from 'astro';
 import { sendLead } from '../../../lib/lead-outbox';
 import { memberOf } from '../../../lib/member';
+import { forgetOwner } from '../../../lib/member-api';
 import { forwardIp } from '../../../lib/clientip';
 import { originHeader } from '../../../lib/origin';
 
@@ -113,7 +114,7 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
       method: 'POST', headers: { 'content-type': 'application/json', 'x-member-token': token!, ...hdr },
       body: JSON.stringify({ ...payload, ...(uploads.length ? { uploads } : {}) }), signal: AbortSignal.timeout(20_000),
     });
-    if (r.ok) return json({ ok: true, files: uploads.length });
+    if (r.ok) { forgetOwner(token); return json({ ok: true, files: uploads.length }); }
     if (r.status < 500) return json({ ok: false, code: 'fail' });
   } catch { /* unreachable: the outbox below */ }
   const sent = await sendLead('/site/property-submission', hdr, payload, 12_000);

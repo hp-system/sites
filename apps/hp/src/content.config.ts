@@ -80,6 +80,8 @@ const pages = defineCollection({
     form_split: z.boolean().default(false),
     // the dark half holds one button to the member panel's «add a property» instead of the form (Sergei 2026-11-23)
     form_panel: z.boolean().default(false),
+    /** #340: the «Design & construction» block (once on the home page) under the top — the construction services page */
+    construction_block: z.boolean().default(false),
     /** Services described on the page (sections of a services page) → Service.hasOfferCatalog. */
     catalog: z.array(z.object({ name: z.string(), url: z.string() })).default([]),
     /** Live data block rendered after the text: price tables, "from €" guide, pre-published list. */

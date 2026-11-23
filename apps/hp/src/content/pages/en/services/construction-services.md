@@ -31,6 +31,7 @@ old_url: /en/services/construction-services
 needs_content: false
 cards: []
 contact_card: false
+construction_block: true
 catalog:
 - name: Remote monitoring systems
   url: /en/services/construction-services#remote-monitoring-systems
@@ -394,9 +395,3 @@ Also, there is a discussion about possible alternatives that will help the more 
 Our company undertakes such studies for small or large projects, consistently, professionally and at affordable prices.
 
 <img src="/pages/services-construction-services/665864e3-1607084145.webp" alt="Environmental Impact Studies (M.P.E.) — construction services by Halkidiki Properties" width="400" height="300" loading="lazy" decoding="async" />
-
-<h2 id="our-projects">Our construction projects</h2>
-
-See what we have built and renovated in Halkidiki and beyond: [construction projects by Halkidiki Properties](/en/construction).
-
-<img src="/pages/services-construction-services/76855af3-1624604213.webp" alt="Concrete frame of a new house under construction" width="400" height="291" loading="lazy" decoding="async" />

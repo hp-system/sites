@@ -12,7 +12,6 @@ import FeatureProperty from './FeatureProperty.astro';
 import OffMarket from './OffMarket.astro';
 import Collections from './Collections.astro';
 import Areas from './Areas.astro';
-import Construction from './Construction.astro';
 import Valuation from './Valuation.astro';
 import Doors from './Doors.astro';
 import Abroad from './Abroad.astro';
@@ -316,8 +315,7 @@ if (spec?.faq.length) jsonLd.push({
     {/* 9 τρεις πόρτες */}
     <Doors lang={lang} />
 
-    {/* 7b moved here (Sergei 03/11): Design & construction right after «Three paths» */}
-    <Construction lang={lang} />
+    {/* 7b «Design & construction» moved to the construction services page (Sergei 2026-11-23, #340) */}
 
 
     {/* George, 28/7: «η αγορά της Χαλκιδικής» και «ποιοι είμαστε» φεύγουν τελείως.

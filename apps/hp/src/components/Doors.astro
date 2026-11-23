@@ -72,11 +72,11 @@ const DOORS = [
       position: relative; flex: 1 1 0; min-width: 0; min-height: 250px;
       display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
       padding: 24px 30px 26px; background: var(--paper-3); color: var(--ink); overflow: hidden;
-      transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease;
+      transition: background-color .25s ease, color .25s ease;
     }
-    .door.on { flex-grow: 1.6; background: #fff; color: var(--ink); }
-    .door__h { font-size: var(--fs-s1); line-height: 1.15; transition: font-size .4s ease; }
-    .door.on .door__h { font-size: var(--fs-s3); }
+    /* #338 (George via Sergei 2026-11-23: no opening-door animation): the doors keep their width and heading size; the hovered one only changes colour. */
+    .door.on { background: #fff; color: var(--ink); }
+    .door__h { font-size: var(--fs-s1); line-height: 1.15; }
     .door p:not([data-h]) { margin: 12px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); max-width: 40ch; }
     .dl {
       display: flex; justify-content: space-between; align-items: center;

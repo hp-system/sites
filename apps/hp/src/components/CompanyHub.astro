@@ -268,14 +268,15 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
        a ground of their own with a soft top shadow; the script sinks and dims it as it is covered */
     /* since 2026-11-19 the chain starts at the values («3D пусть начинает налазить от блока Our company's core values»):
        the values stay and Our people slides over them, then Our people stays and Partners slides over it */
-    .co-vals, .co-ppl { position: sticky; top: var(--ppl-top, 0px); overflow: hidden; }
+    /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow. */
+    .co-vals, .co-ppl { position: relative; overflow: hidden; }
     .co-vals { z-index: 0; }
-    .co-ppl { z-index: 1; background: var(--paper); box-shadow: 0 -18px 40px rgba(14, 18, 20, .18); }
+    .co-ppl { z-index: 1; background: var(--paper); }
     .co-vals::after, .co-ppl::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--ppl-dim, 0); pointer-events: none; }
     .co-vals::after { background: #000; }
     .co-vals > .wrap, .co-ppl > .wrap { transform-origin: 50% 0; will-change: transform; }
     .co-ppl ~ * { position: relative; z-index: 2; }
-    .co-ppl ~ .co-prt { background: var(--paper); box-shadow: 0 -18px 40px rgba(14, 18, 20, .12); }
+    .co-ppl ~ .co-prt { background: var(--paper); }
     .co-prt__hd { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 14px; }
     .co-prt__h { margin: 6px 0 0; font-size: var(--fs-s2); font-weight: 300; letter-spacing: -.016em; line-height: 1.2; color: var(--ink); }
     .co-prt__p { margin: 6px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); }
@@ -287,10 +288,10 @@ const partnersL = partnersPg ? linkTo(partnersPg.data.path) || partnersPg.data.h
     .co-doors { display: flex; gap: 12px; height: 280px; }
     .co-door { flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; box-sizing: border-box;
       padding: 32px 34px 28px; background: var(--paper); color: var(--ink); text-decoration: none; overflow: hidden;
-      transition: flex-grow .55s cubic-bezier(.4,0,.2,1), background-color .35s ease, color .35s ease; }
-    .co-door.on { flex-grow: 1.6; background: var(--ink-deep); color: #fff; }
-    .co-door b { display: block; font-size: var(--fs-s1); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; white-space: nowrap; transition: font-size .4s ease; }
-    .co-door.on b { font-size: var(--fs-s3); }
+      transition: background-color .25s ease, color .25s ease; }
+    /* #338 (George via Sergei 2026-11-23: no opening-door animation): the doors keep their width and heading size; the hovered one only changes colour. */
+    .co-door.on { background: var(--ink-deep); color: #fff; }
+    .co-door b { display: block; font-size: var(--fs-s1); font-weight: 300; line-height: 1.15; letter-spacing: -.016em; white-space: nowrap; }
     .co-dp { display: block; margin-top: 12px; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); max-width: 40ch; transition: color .35s ease; }
     .co-door.on .co-dp { color: rgba(255,255,255,.78); }
     .co-dl { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }

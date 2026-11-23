@@ -635,7 +635,32 @@ if (faqItems.length) {
         </div>
       </header>
     )}
-    {d.form_top && d.form && d.form_split && (
+    {d.form_top && d.form && d.form_split && d.form_panel && (
+      /* Add your property as ONE block (Sergei 2026-11-23 «сделай этот блок единым, центрируй всё»): the beige ground, one
+         centred column — crumbs, H1, lead, «not published», the short-form line, the button to the panel's form (a guest:
+         the sign-in window, then there), phone and WhatsApp */
+      <section class="one" id="form" aria-labelledby="one-h">
+        <div class="one__in">
+          <nav class="crumb one__crumb" aria-label={t(lang, 'a11y.crumb')}>
+            {crumbs.slice(0, -1).map((c, i) => (
+              <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+            ))}
+            <span class="w1-d" aria-hidden="true">·</span><span class="w1-d" aria-current="page">{short}</span>
+          </nav>
+          <h1 id="one-h" class="t-display info-h1 one__h">{fresh?.h1 ?? d.h1}</h1>
+          {d.lead && <p class="one__lead">{d.lead}</p>}
+          <p class="one__s" set:html={t(lang, 'sb.fine', { b: `<b>${t(lang, 'sb.fine_b')}</b>` })}></p>
+          <p class="one__s">{t(lang, 'sb.start_s')}</p>
+          <a class="one__b" href={memberToken ? `${prefix(lang)}/panel/submit` : `${prefix(lang)}/login?next=${encodeURIComponent(`${prefix(lang)}/panel/submit`)}`}
+             data-ev="register:info">{t(lang, 'sb.start')}</a>
+          <p class="one__ph">
+            <a href={brand.contact.phoneHref} data-ev="call:footer"><bdi dir="ltr">{brand.contact.phoneText}</bdi></a>
+            <WaLink />
+          </p>
+        </div>
+      </section>
+    )}
+    {d.form_top && d.form && d.form_split && !d.form_panel && (
       /* Pre-published (Sergei 2026-11-19 «сделай шапку и форму как на странице contact»): the Contact box — the crumbs,
          the H1, the lead and the call to register on the light half, the form on the dark half; no top picture */
       <section class="ctb ctb--top" id="form" aria-labelledby="ctb-h">
@@ -663,21 +688,8 @@ if (faqItems.length) {
           </div>
         </div>
         <div class="ctb__f">
-          {d.form_panel ? (
-            /* Add your property (Sergei 2026-11-23 «форма не корректная… одну кнопку которая перебрасывает на panel/submit;
-               если не зареган — попап с регистрацией»): one button. A member goes straight to the panel's form; a guest to
-               /login with the way back, which the site's sign-in window (LoginDialog) opens in place. */
-            <div class="ctb__go">
-              <h2 class="ctb__go-h">{d.form.title || t(lang, 'sb.start')}</h2>
-              <p class="ctb__go-s" set:html={t(lang, 'sb.fine', { b: `<b>${t(lang, 'sb.fine_b')}</b>` })}></p>
-              <p class="ctb__go-s">{t(lang, 'sb.start_s')}</p>
-              <a class="ctb__go-b" href={memberToken ? `${prefix(lang)}/panel/submit` : `${prefix(lang)}/login?next=${encodeURIComponent(`${prefix(lang)}/panel/submit`)}`}
-                 data-ev="register:info">{t(lang, 'sb.start')}</a>
-            </div>
-          ) : (
-            <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
-                      look="wave1" lang={lang} bare />
-          )}
+          <InfoForm source={d.form.source} headTag="h2" title={d.form.title || undefined} message={d.form.message} terms={terms} privacy={privacy}
+                    look="wave1" lang={lang} bare />
         </div>
       </section>
     )}
@@ -1284,16 +1296,22 @@ if (faqItems.length) {
   .ctb__w :global(.pw-empty), .ctb__w :global(.pw-pre) { margin: 10px 0 0; max-width: 52ch; }
   .ctb__cta .k-act { display: inline-flex; width: auto !important; padding: 0 28px; }
   @media (min-width: 1024px) { .ctb--top .ctb__ct { align-content: center; } }
-  /* the one-button half (form_panel, 2026-11-23): the form's title, the «not published» line, the button in the form's own white */
-  .ctb__go { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
-  .ctb__go-h { margin: 0; font-size: var(--fs-s3); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; color: var(--paper); }
-  .ctb__go-s { margin: 0; font-size: var(--fs-s0); line-height: 1.6; color: rgba(255,255,255,.78); max-width: 46ch; }
-  .ctb__go-s :global(b) { color: var(--paper); font-weight: 600; }
-  .ctb__go-b { margin-top: 12px; display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 32px;
-    background: var(--paper); color: var(--ink); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
-    text-decoration: none; transition: background .2s ease; }
-  .ctb__go-b:hover { background: var(--paper-2); }
-  .ctb__go-b:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+  /* the one block (form_panel, 2026-11-23): beige, one centred column */
+  .one { background: var(--paper-2); color: var(--ink); scroll-margin-top: 24px; }
+  .one__in { max-width: 760px; margin: 0 auto; padding: 64px var(--gut) 72px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .one__crumb { justify-content: center; }
+  .one__h { margin: 14px 0 0; font-weight: 300; line-height: 1.06; letter-spacing: -.021em; text-wrap: balance; }
+  .one__lead { margin: 18px 0 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); max-width: 52ch; }
+  .one__s { margin: 10px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--muted); max-width: 52ch; }
+  .one__s :global(b) { color: var(--ink); font-weight: 600; }
+  .one__lead + .one__s { margin-top: 24px; }
+  .one__b { margin-top: 28px; display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 36px; background: var(--ink);
+    color: var(--paper); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; text-decoration: none; transition: background .2s ease; }
+  .one__b:hover { background: var(--ink-deep); }
+  .one__b:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+  .one__ph { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 28px; margin: 28px 0 0; font-size: var(--fs-s0); }
+  .one__ph > a:first-child { color: var(--ink); text-decoration: none; }
+  @media (min-width: 1024px) { .one__h { font-size: var(--fs-s5); } .one__in { padding-block: 88px 96px; } }
   .ctb__hd .info-h1 { margin: 14px 0 0; font-weight: 300; line-height: 1.06; letter-spacing: -.021em; }
   .ctb__l { font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
   .ctb__v { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.35; }

@@ -29,7 +29,7 @@ try {
   // /en/add-your-property has no form since 2026-11-23 (Sergei): one button to the panel's «add a property» (checked below)
   for (const p of SELL_FORM.filter((x) => !movedTo(x))) pages[p] = await checkPage(p, { types: [p === '/en/work-with-us-exclusively' ? 'Article' : p.includes('why-') ? 'WebPage' : 'Service'], form: p !== '/en/add-your-property' });
   const ayp = pages['/en/add-your-property'];
-  if (ayp) check('/en/add-your-property: one button to the panel (guest → sign-in with the way back)', ayp.includes('class="ctb__go-b"') && ayp.includes('href="/en/login?next=%2Fen%2Fpanel%2Fsubmit"') && !/class="iform__f"/.test(ayp), 'button');
+  if (ayp) check('/en/add-your-property: one button to the panel (guest → sign-in with the way back)', ayp.includes('class="one__b"') && ayp.includes('href="/en/login?next=%2Fen%2Fpanel%2Fsubmit"') && !/class="iform__f"/.test(ayp), 'button');
   for (const p of ABOUT) pages[p] = await checkPage(p, { types: ['AboutPage'] });
   pages['/en/our-partners'] = await checkPage('/en/our-partners', { types: ['CollectionPage'] });
   pages['/en/careers'] = await checkPage('/en/careers', { types: ['CollectionPage'] });

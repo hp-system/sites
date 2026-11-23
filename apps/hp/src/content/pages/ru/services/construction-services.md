@@ -32,6 +32,7 @@ old_url: ''
 needs_content: false
 cards: []
 contact_card: false
+construction_block: true
 catalog:
 - name: Системы удалённого наблюдения
   url: /ru/uslugi/stroitelnye-uslugi#remote-monitoring-systems
@@ -395,9 +396,3 @@ form:
 Наша компания выполняет такие исследования для малых и крупных проектов — последовательно, профессионально и по доступным ценам.
 
 <img src="/pages/services-construction-services/665864e3-1607084145.webp" alt="Оценка воздействия на окружающую среду (M.P.E.) — строительные услуги от Halkidiki Properties" width="400" height="300" loading="lazy" decoding="async" />
-
-<h2 id="our-projects">Наши строительные проекты</h2>
-
-Посмотрите, что мы построили и отремонтировали в Халкидиках и за их пределами: [строительные проекты Halkidiki Properties](/ru/stroitelstvo).
-
-<img src="/pages/services-construction-services/76855af3-1624604213.webp" alt="Бетонный каркас строящегося дома" width="400" height="291" loading="lazy" decoding="async" />

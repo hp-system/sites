@@ -10,6 +10,7 @@
 //   · «section»: only the section's own links, small tiles in a row, others as text.
 // SEO (rule 15): the caption link is the link's only text = the exact anchor, to the exact target; it is
 // stretched over the tile; the photo is decoration; «from €» sits outside the link.
+import { redirectFor } from '../lib/redirects';
 import { specByPath, LINK_GROUPS } from '../lib/seo-pages';
 import { facetBySlug, matches, FACETS, PAIRS, facetUrl, paramsOf } from '../lib/listing';
 import { fromPrice } from '../lib/prices';
@@ -33,7 +34,12 @@ interface Props {
 const { lang, links: raw, items, variant = 'section', self = '', facets: pageKeys = [], collections = false } = Astro.props;
 
 const pathOf = (href: string) => { try { return decodeURI(new URL(href, 'https://x').pathname); } catch { return href; } };
-const links = raw.filter((l) => pathOf(l.href) !== pathOf(self));
+// a link whose page moved (301) goes straight to its new address; then never to itself, never twice (#340: the brief's
+// «construction projects» link now lands on construction services)
+const moved = (h: string) => { const r = redirectFor(pathOf(h)); return r?.status === 301 && r.to ? r.to : h; };
+const seen = new Set<string>();
+const links = raw.map((l) => ({ ...l, href: moved(l.href) }))
+  .filter((l) => pathOf(l.href) !== pathOf(self) && !seen.has(pathOf(l.href)) && !!seen.add(pathOf(l.href)));
 const idOf = (href: string) => specByPath(pathOf(href))?.id ?? '';
 const base = pathOf(listUrl(lang));
 // the facets a list URL shows: its slugs after the list base (/en/properties/kassandra/villas-for-sale)

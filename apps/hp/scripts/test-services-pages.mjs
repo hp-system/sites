@@ -21,19 +21,19 @@ try {
   for (const s of SECTIONS) pages[`/en/services/${s}`] = await checkPage(`/en/services/${s}`, { types: ['Service'], form: true });
   const fpm = '/en/services/buyer-services/full-property-management';
   pages[fpm] = await checkPage(fpm, { types: ['Service'], form: true });
-  pages['/en/construction'] = await checkPage('/en/construction', { types: ['CollectionPage'], form: true });
+  // #340 (2026-11-23): construction projects merged into construction services — /en/construction is a 301
 
-  // Hub → sections and projects.
+  // Hub → sections.
   const hub = pages['/en/services'] ?? '';
-  for (const s of [...SECTIONS.map((x) => `/en/services/${x}`), '/en/construction']) check(`/en/services links ${s}`, hub.includes(`href="${s}"`), 'card');
+  for (const s of SECTIONS.map((x) => `/en/services/${x}`)) check(`/en/services links ${s}`, hub.includes(`href="${s}"`), 'card');
 
   // #106 desktop hub: every role panel, door and question is in the HTML (switching only shows / hides);
   // the panel photos are the service pages' watermarked heroes; phones keep George's page.
   const panels = [...hub.matchAll(/role="tabpanel"/g)].length;
-  // 6 since the own brief P35 (2026-11-11): property management got its own panel
-  check('/en/services hub: 6 role panels in the HTML', panels === 6, `${panels}`);
+  // 6 since the own brief P35 (2026-11-11): property management got its own panel; 5 since #340 (projects merged)
+  check('/en/services hub: 5 role panels in the HTML', panels === 5, `${panels}`);
   check('/en/services hub: one H1', (hub.match(/<h1[\s>]/g) ?? []).length === 1, 'h1');
-  for (const id of ['ums_4761/land-sea-view-halkidiki-2986326863', 'ums_4494/detached-house-aerial-halkidiki-2980294460', 'ums_7010/detached-house-pool-halkidiki-2974736545']) {
+  for (const id of ['ums_4761/land-sea-view-halkidiki-2986326863', 'ums_4494/detached-house-aerial-halkidiki-2980294460']) {
     check(`/en/services hub photo ${id}`, hub.includes(`${id}_800w.jpg 800w`) && hub.includes(`${id}_1920w.jpg 1920w`), 'srcset');
   }
   check('/en/services hub: no prototype images', !hub.includes('/_blob/'), 'no /_blob/');
@@ -60,9 +60,8 @@ try {
     const n = svc?.hasOfferCatalog?.itemListElement?.length ?? 0;
     check(`/en/services/${s} Service.hasOfferCatalog`, n >= 3, `${n} offers`);
   }
-  check('construction services link the projects', (pages['/en/services/construction-services'] ?? '').includes('href="/en/construction"'), 'link');
+  check('construction services carry the Design & construction block (#340)', (pages['/en/services/construction-services'] ?? '').includes('class="cx'), 'block');
   check('buyer services link full property management', (pages['/en/services/buyer-services'] ?? '').includes(`href="${fpm}"`), 'link');
-  check('/en/construction gallery', ((pages['/en/construction'] ?? '').match(/<figure>/g) ?? []).length >= 8, 'figures');
   check('no "more than 70" / "20 countries" claim', !/more than 70|more than 20 countries/i.test(pages['/en/services/seller-services'] ?? ''), 'seller services');
 
   // Redirect map: 5 languages, every target exists, every anchor is an H2 id on its page.
@@ -89,14 +88,15 @@ try {
   await checkRedirect('/en/services/owners', '/en/services/seller-services');
   await checkRedirect('/en/services/investors', '/en/services/investor-services');
   await checkRedirect('/en/services/developers', '/en/services/construction-services');
-  await checkRedirect('/en/projects', '/en/construction');
+  await checkRedirect('/en/projects', '/en/services/construction-services');
+  await checkRedirect('/en/construction', '/en/services/construction-services');
 
   // English footer links the new URLs directly.
   const home = await (await fetch(SITE + '/en')).text();
   check('/en footer → section URLs', home.includes('href="/en/services/buyer-services"') && !home.includes('href="/en/services/buyers"'), 'footer');
 
   const sm = await productionSitemap();
-  for (const p of ['/en/services', '/en/services/construction-services', fpm, '/en/construction']) check(`sitemap ${p}`, sm.includes(`${p}</loc>`), 'loc');
+  for (const p of ['/en/services', '/en/services/construction-services', fpm]) check(`sitemap ${p}`, sm.includes(`${p}</loc>`), 'loc');
   check('sitemap without /en/services/buyers', !/\/en\/services\/buyers<\/loc>/.test(sm), 'moved');
 } finally {
   stop();

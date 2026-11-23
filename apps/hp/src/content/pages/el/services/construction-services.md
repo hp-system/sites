@@ -32,6 +32,7 @@ old_url: /el/υπηρεσιες/υπηρεσιες-κατασκευαστες
 needs_content: false
 cards: []
 contact_card: false
+construction_block: true
 catalog:
 - name: Συστήματα απομακρυσμένης εποπτείας
   url: /υπηρεσιες/υπηρεσιες-κατασκευαστες#remote-monitoring-systems
@@ -399,9 +400,3 @@ form:
 Η εταιρεία μας αναλαμβάνει τέτοιου είδους μελέτες για μικρά ή μεγάλα έργα, με συνέπεια, επαγγελματισμό και σε πολύ οικονομικές τιμές.
 
 <img src="/pages/services-construction-services/665864e3-1607084145.webp" alt="Μελέτες Περιβαλλοντικών Επιπτώσεων (Μ.Π.Ε.) — υπηρεσίες κατασκευαστή από τη Halkidiki Properties" width="400" height="300" loading="lazy" decoding="async" />
-
-<h2 id="our-projects">Οι κατασκευές μας</h2>
-
-Δείτε τι έχουμε χτίσει και ανακαινίσει στη Χαλκιδική και αλλού: [Κατασκευές της Halkidiki Properties](/κατασκευες).
-
-<img src="/pages/services-construction-services/76855af3-1624604213.webp" alt="Σκελετός από μπετόν νέας κατοικίας υπό κατασκευή" width="400" height="291" loading="lazy" decoding="async" />

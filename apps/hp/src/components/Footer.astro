@@ -82,7 +82,7 @@ import { consentText } from '../lib/consent';
         <p data-h class="fcol__h">{t(lang, 'foot.company')}</p>
         {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
         {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
-        {has('projects') && <a href={moved('projects')}>{t(lang, 'foot.projects')}</a>}
+        {/* «Projects» is gone: merged into construction services (#340, Sergei 2026-11-23), listed under Services */}
         {has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'foot.contact')}</a>}
       </nav>
     </div>

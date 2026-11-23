@@ -11,6 +11,11 @@ import { startStub } from './stub-api.mjs';
 register(new URL('./ts-hooks.mjs', import.meta.url));
 const { PUBLISHED } = await import(new URL('../src/lib/i18n.ts', import.meta.url));
 const { PAGE_KEYS, pageExists, pageLangs, contentUrl } = await import(new URL('../src/lib/pages.ts', import.meta.url));
+// the redirect table's 301 rows (what the sitemap leaves out, #152)
+const { readFileSync } = await import('node:fs');
+const MOVED = new Set(JSON.parse(readFileSync(new URL('../src/data/redirects.json', import.meta.url), 'utf8')).rows
+  .filter((r) => r.status === 301).map((r) => r.from.toLowerCase()));
+const redirectFor = (p) => MOVED.has(p.toLowerCase());
 
 const SITE = 'http://127.0.0.1:4331';
 const ORIGIN = 'https://www.halkidikiproperties.com';
@@ -54,6 +59,8 @@ await withSite('production', async () => {
   const keys = PAGE_KEYS.filter(pageExists);
   const wrong = [];
   for (const k of keys) for (const l of PUBLISHED) {
+    // a URL the redirect engine moves (301) is never in the sitemap (#152) — e.g. projects merged into construction services (#340)
+    if (redirectFor(contentUrl(k, l))) { if (locs.has(ORIGIN + encodeURI(contentUrl(k, l)))) wrong.push(`${k}/${l} (moved)`); continue; }
     const u = ORIGIN + encodeURI(contentUrl(k, l));
     if (locs.has(u) !== pageLangs(k).includes(l)) wrong.push(`${k}/${l}`);
   }

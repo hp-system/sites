@@ -31,8 +31,9 @@ import { contentUrl } from '../lib/pages';
 import { pageExists } from '../lib/pages';
 import { company } from '../lib/company';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+// portfolio: the «See what we build» button (off on the construction page itself, #340 — the projects page is merged there)
+interface Props { lang: Lang; portfolio?: boolean }
+const { lang, portfolio = true } = Astro.props;
 
 const CAPS = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
 const STRIP = ['s1', 's2', 's3', 's4'];
@@ -119,9 +120,9 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
             projects που έχουμε χτίσει θα κάνουμε ειδική σελίδα που θα οδηγεί
             εκεί»). Γι' αυτό το μπλοκ εδώ ΔΕΝ χρειάζεται φωτογραφίες έργων:
             λέει τι μπορούμε, και η απόδειξη ζει ένα κλικ παρακάτω. */}
-        <a class="btn cx__btn" href={contentUrl('projects', lang)} data-ev="construction:portfolio">
+        {portfolio && <a class="btn cx__btn" href={contentUrl('projects', lang)} data-ev="construction:portfolio">
           {t(lang, 'cx.cta1')}
-        </a>
+        </a>}
         {/* Ο ιδιοκτήτης οικοπέδου είναι ΑΛΛΟ κοινό από τον αγοραστή — δικό του κουμπί. */}
         <a class="btn btn--ghost cx__btn cx__btn--ghost" href={contactHref}
            data-ev="construction:have_land">{t(lang, 'cx.cta2')}</a>
@@ -347,9 +348,7 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
               display: block; position: relative; z-index: 0; width: var(--pw); box-sizing: border-box;
               padding-block: 0 48px; overflow: hidden; background: var(--paper-3); }   /* Sergei 08/11: beige behind the tiles; 2026-11-19: the tiles touch the white top («прикрепи эти блочки к верху белому») */
     .cx__rw::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--cx-dim, 0); pointer-events: none; }
-    /* every block after the cards slides over them, on a ground of its own (a block without one gets white, full width) */
-    :global(main > .cx__rw ~ *) { position: relative; z-index: 1; }
-    :global(:where(main > .cx__rw ~ *)) { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
+    /* (until #338 every block after the cards slid over them on a white ground of its own; gone with the effect) */
     /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow. */
     /* Sergei 08/11: the tiles as wide as the text (the page's text lines), and lower to match;
        centred on the screen's height, the beige window around them. */

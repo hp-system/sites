@@ -20,8 +20,6 @@ related:
   href: /ru/uslugi/dlya-investorov
 - label: Строительные услуги
   href: /ru/uslugi/stroitelnye-uslugi
-- label: Строительные проекты
-  href: /ru/stroitelstvo
 - label: Полное управление недвижимостью
   href: /ru/uslugi/dlya-pokupateley/upravlenie-nedvizhimostyu
 - label: Связаться с консультантом
@@ -65,13 +63,6 @@ cards:
   image_alt: Бетонный каркас строящегося дома
   width: 800
   height: 500
-- title: Строительные проекты
-  href: /ru/stroitelstvo
-  text: Villa Natalia в Ситонии, отремонтированные дома и виллы, архитектурные проекты.
-  image: /pages/construction/villa-natalia-7010-wm.jpg
-  image_alt: Villa Natalia в Ситонии ночью, вид сверху
-  width: 800
-  height: 500
 contact_card: false
 catalog: []
 # Desktop redesign, wave 1 (#106, approved by George 2026-11-02): ServicesHub on desktop, George's layout on phones.
@@ -89,6 +80,6 @@ look: wave1
 - **[Услуги для покупателей](/ru/uslugi/dlya-pokupateley):** ознакомительные поездки и подбор объектов, переговоры, оценка, юридическая и бухгалтерская проверка, открытие компании, переводы и [полное управление недвижимостью](/ru/uslugi/dlya-pokupateley/upravlenie-nedvizhimostyu) после покупки.
 - **[Услуги для продавцов](/ru/uslugi/dlya-prodavtsov):** профессиональная фотосъёмка, аэрофото и видео, обзоры 360°, энергетические сертификаты (PEA) и рекламные пакеты на порталах недвижимости по всему миру.
 - **[Услуги для инвесторов](/ru/uslugi/dlya-investorov):** сопровождение в тендерах HRADF на государственную недвижимость, проектирование и строительство отелей, проектирование портов и марин.
-- **[Строительные услуги](/ru/uslugi/stroitelnye-uslugi):** проекты, разрешения на строительство, биоклиматические дома, бассейны, системы возобновляемой энергии, ремонт и гарантия на строительство. Посмотрите наши [строительные проекты](/ru/stroitelstvo).
+- **[Строительные услуги](/ru/uslugi/stroitelnye-uslugi):** проекты, разрешения на строительство, биоклиматические дома, бассейны, системы возобновляемой энергии, ремонт и гарантия на строительство.
 
 Не знаете, с чего начать? [Поговорите с консультантом](/ru/kontakty) и расскажите, что вам нужно.

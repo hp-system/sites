@@ -13,6 +13,22 @@ import { money } from './format';
 import { t, listUrl, type Lang } from './i18n';
 import { specOf } from './seo-pages';
 import REGISTRY from '../data/page-registry.json';
+import { brand } from '../brand/index';
+
+/**
+ * One chosen photo per area (Sergei 2026-11-24): picked by the area's character from the company's own photos
+ * (Kassandra lively — a town with its marina; Sithonia nature — Mount Athos and islets over blue sea; Aristotelis —
+ * olive slope with Athos; Nea Propontida — beach and village; Polygyros — a village under green hills). Clean files
+ * (no logo: not a property card, rule 4). They stay put instead of following the listings; an area without an
+ * entry keeps the listing cover. The number in each comment is the property the photo was taken for.
+ */
+const AREA_PHOTO: Record<string, string> = {
+  kassandra: '/properties/ums_8331/plot-aerial-halkidiki-2973511937.jpg',          // 8331
+  sithonia: '/properties/ums_8433/land-panoramic-view-halkidiki-2987720715.jpg',   // 8433
+  aristotelis: '/properties/ums_3308/land-sea-view-halkidiki-2973992816.jpg',      // 3308
+  'nea-propontida': '/properties/ums_8207/maisonette-aerial-halkidiki-2974386572.jpg', // 8207
+  polygyros: '/properties/ums_7793/plot-mountain-view-halkidiki-2987321273.jpg',   // 7793
+};
 
 type Item = { id: string; attributes?: any };
 
@@ -50,6 +66,7 @@ export function buildAreaTiles(items: Item[], lang: Lang, pick: (f: (a: any) => 
     })
     .filter((x) => x.from > 0)
     .slice(0, max)
-    .map(({ keep, ...x }) => ({ ...x, fromText: t(lang, 'home.from', { price: money(x.from, lang) }), photo: pick(keep) }));
+    .map(({ keep, ...x }) => ({ ...x, fromText: t(lang, 'home.from', { price: money(x.from, lang) }),
+      photo: AREA_PHOTO[x.key] ? { url: `${brand.web.mediaOrigin}${AREA_PHOTO[x.key]}`, alt: null } : pick(keep) }));
   return { tiles, from: tiles.length ? Math.min(...tiles.map((x) => x.from)) : 0 };
 }

@@ -154,6 +154,6 @@
 /* a filter puts the photo on a layer above the (unpositioned) caption, so the names vanished: the caption now covers the
    whole tile (absolute, inset 0) and sits its text at the bottom — painted above the photo, and the link's ::after still
    has the whole tile as its box. Its shade stays at the bottom only. */
-.k-tile__t { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+.k-tile__t { position: absolute; inset: 0; align-self: stretch; justify-self: stretch; display: flex; flex-direction: column; justify-content: flex-end;
   background: linear-gradient(0deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,0) 100%) bottom / 100% 60% no-repeat; }
 @media (prefers-reduced-motion: reduce) { .k-tile > img, .k-tile::before { transition: none; } }

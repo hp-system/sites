@@ -157,3 +157,8 @@
 .ra__b[aria-disabled='true'] .ra__d { opacity: .12; }
 .ra__b:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
 @media (prefers-reduced-motion: reduce) { .ra__d, .ra__c { transition: none; } }
+/* a wider hover zone around each arrow, so it needs no aiming (Sergei 2026-11-24); the look does not move.
+   Outward and up/down only, so the two zones never overlap. */
+.ra__b::before { content: ''; position: absolute; inset-block: -16px; }
+.ra__b--p::before { inset-inline-start: -24px; inset-inline-end: 0; }
+.ra__b--n::before { inset-inline-start: 0; inset-inline-end: -24px; }

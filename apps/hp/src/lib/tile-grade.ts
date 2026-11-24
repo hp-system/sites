@@ -17,3 +17,18 @@ export function tileGrade(key: string): string | undefined {
   const g = GRADE[key];
   return g ? `--tile-grade: saturate(${g[0]}) brightness(${g[1]}) sepia(${g[2]})` : undefined;
 }
+
+// The same correction found by the photo itself (the kit tiles of lists, guides and info pages carry no key):
+// the chosen photos are known by path, so a tile showing one of them gets that photo's correction anywhere.
+import { COLL_PHOTO } from './tile-photos';
+import { AREA_PHOTO } from './area-tiles';
+const BY_PATH = new Map<string, string>([
+  ...Object.entries(COLL_PHOTO).map(([k, p]) => [p, k] as [string, string]),
+  ...Object.entries(AREA_PHOTO).map(([k, p]) => [p, k] as [string, string]),
+]);
+/** The correction for a tile by its photo (chosen photos only; others get only the shared tone). */
+export function tileGradeFor(photo: { url: string } | null | undefined): string | undefined {
+  if (!photo?.url) return undefined;
+  for (const [p, k] of BY_PATH) if (photo.url.endsWith(p)) return tileGrade(k);
+  return undefined;
+}

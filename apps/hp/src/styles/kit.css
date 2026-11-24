@@ -144,3 +144,11 @@
 :is(.coll, .atile):is(:hover, :focus-visible) img { filter: none; }
 :is(.coll, .atile):is(:hover, :focus-visible)::before { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .coll img, .atile img, .coll::before, .atile::before { transition: none !important; } }
+/* the same look on the kit tiles of lists, guides and info pages (Sergei 2026-11-24): each chosen photo's own
+   correction (--tile-grade, set by lib/tile-grade.ts), the shared light tone, the name centred, no «from €» */
+.k-tile > img { filter: var(--tile-grade, none); transition: transform .45s ease, filter .45s ease; }
+.k-tile::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: #2c3e46; mix-blend-mode: color; opacity: .16; transition: opacity .45s ease; }   /* blend «color»: the white names stay white */
+.k-tile:is(:hover, :focus-within) > img { filter: none; }
+.k-tile:is(:hover, :focus-within)::before { opacity: 0; }
+.k-tile__t { text-align: center; }   /* no position here: the link's ::after must keep the whole tile as its box (see above) */
+@media (prefers-reduced-motion: reduce) { .k-tile > img, .k-tile::before { transition: none; } }

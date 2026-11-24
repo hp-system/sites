@@ -22,7 +22,7 @@ import { brand } from '../brand/index';
  * (no logo: not a property card, rule 4). They stay put instead of following the listings; an area without an
  * entry keeps the listing cover. The number in each comment is the property the photo was taken for.
  */
-const AREA_PHOTO: Record<string, string> = {
+export const AREA_PHOTO: Record<string, string> = {
   kassandra: '/properties/ums_8331/plot-aerial-halkidiki-2973511937.jpg',          // 8331
   sithonia: '/properties/ums_8433/land-panoramic-view-halkidiki-2987720715.jpg',   // 8433
   aristotelis: '/properties/ums_3308/land-sea-view-halkidiki-2973992816.jpg',      // 3308

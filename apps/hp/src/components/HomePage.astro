@@ -36,6 +36,7 @@ import { viewerOf, municipalityOf } from '../lib/gate';
 import { company } from '../lib/company';
 import { cmsText, cmsImage } from '../lib/content';
 import { brand } from '../brand/index';
+import { COLL_PHOTO, photoOf } from '../lib/tile-photos';
 
 interface Props { lang?: Lang }
 const lang: Lang = Astro.props.lang ?? DEFAULT_LANG;
@@ -151,19 +152,7 @@ const COLLS: { key: string; title: string; href: string; keep: (a: any) => boole
 // Photos are picked in the OLD order (sea, pool, land, top…): «above one million»
 // would otherwise take the dearest land plot and leave «Land & plots» a second-best.
 const PICK_ORDER = ['sea', 'pool', 'land', 'top', 'houses', 'maisonettes', 'apartments', 'business'];
-// One chosen photo per collection (Sergei 2026-11-24, two rounds): the type's character, from the dearest properties —
-// clean files (rule 4: not a property card). They stay put instead of following the listings; a collection without
-// an entry keeps the listing photo. The number in each comment is the property the photo was taken for.
-const COLL_PHOTO: Record<string, string> = {
-  sea: '/properties/ums_4494/detached-house-aerial-halkidiki-2980294460.jpg',            // 4494
-  pool: '/properties/ums_7949/detached-house-pool-halkidiki-2974710903.jpg',             // 7949
-  top: '/properties/ums_7010/detached-house-terrace-halkidiki-2974736311.jpg',           // 7010
-  land: '/properties/ums_5105/land-land-aerial-halkidiki-2973811209.jpg',                // 5105
-  houses: '/properties/ums_5171/detached-house-facade-halkidiki-kassandra-2974791374.jpg', // 5171
-  maisonettes: '/properties/ums_5273/maisonette-facade-halkidiki-kassandra-2974446704.jpg', // 5273
-  apartments: '/properties/ums_8329/apartment-balcony-halkidiki-2982729506.jpg',         // 8329
-  business: '/properties/ums_8204/hotel-aerial-halkidiki-2987976803.jpg',                // 8204, by day (pending Sergei's pick)
-};
+// One chosen photo per collection: lib/tile-photos.ts (shared with the type tiles of every page).
 const collPhoto = new Map<string, ReturnType<typeof pickPhoto>>();
 for (const k of PICK_ORDER) {
   const c = COLLS.find((x) => x.key === k);
@@ -172,7 +161,7 @@ for (const k of PICK_ORDER) {
 const collections = COLLS
   .filter((c) => collPhoto.has(c.key))
   .map((c) => ({ key: c.key, title: c.title, sub: t(lang, 'f.show_all'), href: c.href,
-    photo: COLL_PHOTO[c.key] ? { url: `${brand.web.mediaOrigin}${COLL_PHOTO[c.key]}`, alt: null } : collPhoto.get(c.key) ?? null }));
+    photo: COLL_PHOTO[c.key] ? photoOf(COLL_PHOTO[c.key]) : collPhoto.get(c.key) ?? null }));
 
 // ── By area (#101): the four municipality pages with their «from €» ──────────
 // English links the area pages (/en/property-for-sale/…), other languages the

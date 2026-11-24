@@ -13,8 +13,10 @@ interface Props {
   page: SpecPage; lang: Lang; faqH: string; faqHref?: string;
   /** George's links per section (the same lists the loud block shows as tiles) */
   sectionLinks?: { href: string; text: string }[][];
+  /** the small label over the rows (default «Buying in Halkidiki») */
+  label?: string;
 }
-const { page, lang, faqH, faqHref, sectionLinks = [] } = Astro.props;
+const { page, lang, faqH, faqHref, sectionLinks = [], label } = Astro.props;
 
 // the spec body cut at each <h2>: [intro?, section 1, section 2, …]
 const parts = page.body.split(/(?=<h2>)/);
@@ -29,7 +31,7 @@ const sections = parts.map((html, i) => {
   <div class="wrap sa__in">
     {intro && <div class="sa__intro" set:html={intro} />}
     {/* small labels as «Three paths» (Sergei 2026-11-24), not big titles */}
-    <p class="t-label sa__lbl">{t(lang, 'home.seo_lbl')}</p>
+    <p class="t-label sa__lbl">{label ?? t(lang, 'home.seo_lbl')}</p>
     <div class="sa__list">
       {sections.map((s) => (
         <details class="sa__it" id={`${s.id}-box`} name="seo">   {/* one open at a time (Sergei 2026-11-24), as the questions */}
@@ -67,39 +69,7 @@ const sections = parts.map((html, i) => {
   .sa__lbl { margin: 0 0 calc(-1 * var(--s5)); color: var(--faint); }
   /* hairlines between the rows only: none above the first, none under the last (Sergei 2026-11-24) */
   .sa__it + .sa__it { border-top: 1px solid var(--line); }
-  /* the questions: the same small label instead of the big title, and the same hairlines between rows only */
-  .sa__faq :global(.fqs__h) { margin: 0 0 var(--s2); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-    text-align: left; color: var(--faint); line-height: 1.4; }
-  .sa__faq :global(.k-faq__q) { border-top: 0; border-bottom: 0; }
-  .sa__faq :global(.k-faq__q + .k-faq__q) { border-top: 1px solid var(--line); }
-  /* the questions look like the text rows above (Sergei 2026-11-24): regular weight, the quiet ink, the same thin plus */
-  .sa__faq :global(.k-faq__q summary) { padding: 18px 0; align-items: center; }
-  .sa__faq :global(.k-faq__q h3) { font-weight: 400; color: var(--ink-2); transition: color .2s ease; }
-  .sa__faq :global(.k-faq__q summary:hover h3), .sa__faq :global(.k-faq__q[open] h3) { color: var(--ink); }
-  .sa__faq :global(.k-faq__q i) { position: relative; flex: none; width: 12px; height: 12px; font-size: 0; }
-  .sa__faq :global(.k-faq__q i::before), .sa__faq :global(.k-faq__q i::after) { content: ''; position: absolute; left: 0; top: 50%;
-    width: 12px; height: 1px; background: var(--muted); transition: transform .25s ease; }
-  .sa__faq :global(.k-faq__q i::after) { transform: rotate(90deg); }
-  .sa__faq :global(.k-faq__q[open] i::after) { transform: rotate(0deg); }
-  .sa__faq :global(.k-faq__a) { color: var(--muted); font-size: var(--fs-s0); line-height: 1.65; max-width: 70ch; }
-  .sa__sum { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
-    padding: 18px 0; cursor: pointer; }
-  .sa__sum::-webkit-details-marker { display: none; }
-  .sa__h { margin: 0; font-size: var(--fs-s0); font-weight: 400; line-height: 1.4; color: var(--ink-2); transition: color .2s ease; }
-  .sa__sum:hover .sa__h, .sa__it[open] .sa__h { color: var(--ink); }
-  /* a thin plus that turns into a minus */
-  .sa__pm { position: relative; flex: none; width: 12px; height: 12px; }
-  .sa__pm::before, .sa__pm::after { content: ''; position: absolute; left: 0; top: 50%; width: 12px; height: 1px; background: var(--muted); transition: transform .25s ease; }
-  .sa__pm::after { transform: rotate(90deg); }
-  .sa__it[open] .sa__pm::after { transform: rotate(0deg); }
-  .sa__sum:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .sa__body { padding: 0 0 var(--s5); display: grid; gap: var(--s3); }
-  .sa__txt { max-width: 70ch; color: var(--muted); font-size: var(--fs-s0); line-height: 1.65; }
-  .sa__txt :global(p) { margin: 0 0 var(--s3); }
-  .sa__txt :global(h3) { margin: var(--s4) 0 var(--s2); font-size: var(--fs-s0); font-weight: 600; color: var(--ink-2); }
-  .sa__txt :global(ul) { margin: 0 0 var(--s3); padding-left: 1.2em; }
-  .sa__txt :global(a), .sa__links a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-  .sa__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: var(--fs-s-1); }
+  /* the questions' look (small label, rows as these): styles/kit.css + FaqSearch.astro, the same on every page */
   .sa__faq { padding-top: var(--s5); }
   @media (min-width: 1024px) { .sa { padding-block: 80px; } .sa__sum { padding: 20px 0; } }
   @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h { transition: none; } }

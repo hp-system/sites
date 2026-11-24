@@ -1,0 +1,320 @@
+---
+// The Sell FAQ and posts with an on-page navigator beside them (Sergei 2026-11-10: «сделаем
+// етот блок который станет вместе с Frequently asked questions, и будет ехать вниз с скролом.
+// Там мы разметим все заголовки статей … навигатор между ними»).
+// Sergei 2026-11-10, second pass:
+//   · the FAQ on a white band across the whole width, apart from the posts below;
+//   · the posts on the light beige of the home page (--paper-2), never the dark beige;
+//   · the side panel styled as the member panel's (prototype PanelV4: left column, a soft
+//     rule on its right, sections split by a rule, sticky; the big black «Add your property»);
+//   · a conversion button instead of «Contact an adviser»: guests go to sign-up and then
+//     straight to the add-property form (/login?next=/panel/submit, gilded edge: a call to
+//     register); members go to the form.
+// The current post in the list is bold ink, as the chosen item of the services menu.
+// Phones (< 1000 px): no side panel, as on the article page.
+// SEO: every heading, question and answer stays in the HTML in the spec order; the links are
+// plain #anchors.
+import FaqSearch from './FaqSearch.astro';
+import SpecMosaic, { type MosaicPhoto } from './SpecMosaic.astro';
+import { linkPath } from '../lib/list-blocks';
+import { h2Id, linksBySection, type SpecPage } from '../lib/seo-pages';
+import { prefix, t, type Lang } from '../lib/i18n';
+
+interface Props {
+  page: SpecPage; lang: Lang; photos: (MosaicPhoto | null)[]; faqH: string;
+  /** the page with every question (the services hub links George's FAQ page) */
+  faqHref?: string;
+  /** a member is signed in: the button goes straight to the add-property form */
+  member?: boolean;
+  /** another call to action (listings: sign in / register for buyers); null = none. Default: Sell's
+   *  «Add your property» (guests → sign-up → the form, gilded; members → the form). */
+  /** the listings, for the photos of the link tiles (D-20261110-SS-3) */
+  items?: { id: string | number; attributes?: any }[];
+  /** the links of each section, when the caller already assigned them on the whole page (Sell: before some
+   *  sections became cards) */
+  sectionLinks?: { href: string; text: string }[][];
+  /** #275: links already shown by the page blocks above (their paths): left out of the sections */
+  drop?: Set<string>;
+  /** #267: the list page's facets, for the area / category tiles */
+  facets?: string[];
+  cta?: { text: string; href: string; ev: 'member:join_from_list' | 'content:sell' | 'register:info'; gild: boolean; plus?: boolean } | null;   // events from the closed list (B-11)
+}
+const { page, lang, photos, faqH, faqHref, member = false, items = [], facets = [] } = Astro.props;
+const drop = Astro.props.drop ?? new Set<string>();
+const sectionLinks = (Astro.props.sectionLinks ?? linksBySection(page)).map((ls) => ls.filter((l) => !drop.has(linkPath(l.href))));
+const heads = (page.body.match(/<h2>[\s\S]*?<\/h2>/g) ?? []).map((h) => h.replace(/<[^>]+>/g, '').trim());
+// the posts only (Sergei 2026-11-10: the FAQ is not in the side panel)
+const nav = heads.map((h) => ({ id: h2Id(h), text: h, ask: (page.questionMarks ?? []).includes(h) }));
+const submit = `${prefix(lang)}/panel/submit`;
+const go = member ? submit : `${prefix(lang)}/login?next=${encodeURIComponent(submit)}`;
+const cta = Astro.props.cta === undefined
+  ? { text: t(lang, 'svc.add_cta'), href: go, ev: member ? 'content:sell' : 'register:info', gild: !member, plus: true }
+  : Astro.props.cta;
+// The SEO block pattern for the whole site (Sergei 2026-11-19 «вот такой стиль я хочу применить на все страницы где
+// есть сео блок … сделать паттерном для всего сайта»), chosen from the looks tried on 2026-11-18: chapters — big
+// numbered titles across the top, the post at the full width below, one screen high (desktop ≥1000px). The other
+// look (?pn=ix, an editorial index) and the old panel are in git history. Pages that hold much more text get their
+// own fixes one by one.
+const look = 'ch';
+---
+<section class:list={['pn', look && `pn--${look}`]}>
+  <div class="wrap pn__in">
+    {/* the stage: the menu and the posts; in the tried looks one screen high (Sergei 2026-11-18), otherwise not drawn */}
+    <div class="pn__stage" data-pn-stage>
+    <aside class="pn__side" aria-label={t(lang, 'info.on_page')}>
+      <nav class="pn__nav" data-pn>
+        <p class="t-label k-side__lbl">{t(lang, 'info.on_page')}</p>
+        <ul class="k-side__list">{nav.map((n, i) => <li><a class="k-side__it" href={`#${n.id}`} data-pn-to={n.id}><b class="pn__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</b><span>{n.text}</span>{n.ask && <i class="pn__q" aria-hidden="true"></i>}</a></li>)}</ul>
+      </nav>
+      {cta && (
+        <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>
+          {cta.plus && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>}
+          {cta.text}
+        </a>
+      )}
+    </aside>
+    {/* phones (no side panel): the same button in a bar that sticks to the bottom while this block is on
+        screen (SEO/design audit 2026-11-10: no conversion button on phones) */}
+    <div class="pn__posts"><SpecMosaic html={page.body} photos={photos} standout={page.standout} marks={page.questionMarks} carousel lang={lang}
+                                     sectionLinks={sectionLinks} items={items} self={page.path} facets={facets} /></div>
+    </div>
+    {/* FAQ after the text, as the spec's rule 9 orders a page (text → FAQ → links); Sergei 2026-11-10: «делай по правилам» */}
+    {page.faq.length > 0 && <div class="pn__faq"><FaqSearch lang={lang} h={faqH} href={faqHref} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
+    {cta && <div class="pn__bar">
+      {cta && (
+        <a class:list={['k-act pn__go', cta.gild && 'k-gild']} href={cta.href} rel={cta.gild ? 'nofollow' : undefined} data-ev={cta.ev === 'member:join_from_list' ? 'member:join_from_list' : cta.ev === 'content:sell' ? 'content:sell' : 'register:info'}>
+          {cta.plus && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>}
+          {cta.text}
+        </a>
+      )}
+    </div>}
+  </div>
+</section>
+
+<style>
+  .pn { background: var(--paper-2); overflow-x: clip; }
+  .pn__in { display: grid; }
+  .pn__faq, .pn__posts { min-width: 0; padding-block: var(--s7); }
+  /* the FAQ band: white across the whole width */
+  .pn__faq { background: var(--paper); box-shadow: 0 0 0 100vmax var(--paper); clip-path: inset(0 -100vmax); }
+  .pn__side { display: none; }
+  .pn__bar { position: sticky; bottom: 0; z-index: 5; padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--paper-2); }
+  .pn__bar .k-act { margin: 0; height: 48px; }
+  .pn__bar .k-gild { background: var(--paper); }
+  @media (min-width: 1000px) {
+    .pn__in { grid-template-columns: 260px minmax(0, 1fr); column-gap: var(--s6); }
+    .pn__faq, .pn__posts { grid-column: 2; }
+    .pn__bar { display: none; }
+    .pn__side { display: flex; flex-direction: column; gap: 14px; grid-column: 1; grid-row: 1 / span 2;
+      position: sticky; top: var(--s5); align-self: start; z-index: 1;
+      margin-block: var(--s7); padding: 16px; background: var(--paper); border-right: 1px solid var(--line-soft); }   /* white as the panel page, so the beige of the current item shows on the beige band */
+  }
+  /* the posts' beige «?», small, beside the item (Sergei 2026-11-10) */
+  /* the «?» is drawn by CSS: no stray character in the page text (SEO re-check 2026-11-11) */
+  .pn__q::before { content: "?"; }
+  .pn__q { margin-left: auto; flex: none; font-style: normal; font-size: var(--fs-s1); font-weight: 600; line-height: 1; letter-spacing: 0;
+    color: var(--paper-2); transform: rotate(12deg); }
+  :global(.k-side__it:hover) .pn__q, :global(.k-side__it.on) .pn__q { color: var(--paper); }
+  /* never under the site header: while the header bar is shown the panel sits below it (as the article side) */
+  :global(html.hdr-up) .pn__side { top: calc(var(--hdr-h, 88px) + 12px); }
+  .pn__side { transition: top .25s ease; }
+  .pn__side .k-act { margin-top: var(--s2); }   /* the button: kit .k-act (+ .k-gild for guests) */
+  @media (prefers-reduced-motion: reduce) { .pn__side { transition: none; } }
+  .pn__n { display: none; }
+  .pn__stage { display: contents; }
+  /* ── the pattern (Sergei 2026-11-18/19): one screen high whatever the post holds (no scroll inside a post: see
+     fit() in the script), no «Add your property» beside the menu, no dashes; a click on the menu brings the whole stage on
+     screen; the posts turn by themselves while the pointer is not on the menu ── */
+  @media (min-width: 1000px) {
+    .pn--ch .pn__stage { display: grid; height: 100vh; height: 100svh; box-sizing: border-box; min-height: 0; }
+    .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); }
+    .pn--ch .pn__faq { grid-column: 1; }
+    /* the questions at the site's working width, not the full screen as the chapters (Sergei 2026-11-19 «Frequently asked
+       questions везде должны быть шириной не на весь экран, а на рабочую область сайта») */
+    .pn--ch .pn__faq { justify-self: center; width: 100%; max-width: calc(var(--max) - 2 * var(--gut)); }
+    .pn--ch .pn__side .k-act { display: none; }
+    .pn--ch :global(.sp__dash) { display: none; }
+    .pn--ch .pn__posts { min-height: 0 !important; height: 100%; padding: 0; }
+    .pn--ch :global(.sp) { height: 100%; }
+    .pn--ch :global(.sp--car .sp__grid) { height: 100% !important; align-items: stretch; }
+    .pn--ch :global(.sp--car .sp__post) { height: 100%; max-height: none; }
+    .pn--ch :global(.sp--car .sp__b) { max-height: none; height: 100%; }
+    /* no scroll inside a post (Sergei 2026-11-19 «скрол в сео отделе не должен быть»): the script scales a long
+       post's content down until it fits the box (see fit() below) */
+    .pn--ch :global(.sp--car .sp__b) { overflow: hidden; overscroll-behavior: auto; }
+    /* the wheel always scrolls the page over a post (Sergei 2026-11-19 «почему когда мышка в SEO-блоке скролл не работает?
+       везде»): the old «contain» of the scrolling post stayed on a box that no longer scrolls and swallowed the wheel */
+    .pn--ch :global(.sp--car .sp__grid) { overscroll-behavior: auto; }
+    /* step 1 for a long post: its text in two columns */
+    .pn--ch :global(.sp__b.is-cols .sp__tx) { columns: 2; column-gap: 48px; }
+    .pn--ch :global(.sp__b.is-cols .sp__tx li), .pn--ch :global(.sp__b.is-cols .sp__tx h3) { break-inside: avoid; }
+    /* a long post with a photo (Sergei 2026-11-19 «фото меньше, а некоторый текст во всю ширину … сохранить стиль»): the
+       photo shrinks to a corner of the post and the text flows beside it, then on at the full width under it */
+    .pn--ch :global(.sp__post.is-wrap) { display: block !important; }
+    /* the script moves the photo into the text (a float only wraps text in its own block) */
+    .pn--ch :global(.sp__post.is-wrap .sp__tx > .sp__ph) { float: left; width: 28%; height: auto; min-height: 0; aspect-ratio: 3 / 2; margin: 6px 40px 16px 0; }
+    .pn--ch :global(.sp__post.is-wrap:nth-child(even) .sp__tx > .sp__ph) { float: right; margin: 4px 0 16px 40px; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx ul), .pn--ch :global(.sp__post.is-wrap .sp__tx ol) { display: flow-root; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx p) { max-width: none; }
+    .pn--ch :global(.sp__post.is-bare .sp__tx > .sp__ph) { display: none; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx > .sp__ph img) { max-height: none; margin: 0; }   /* the text's own image rules do not apply to the photo */
+    .pn--ch :global(.sp__post.is-wrap .sp__b) { padding: 40px 48px; }
+    /* a list of four or more in two columns; the link tile beside the text links, smaller */
+    .pn--ch :global(.sp__post.is-wrap .sp__tx ul:has(> li:nth-child(4))), .pn--ch :global(.sp__post.is-wrap .sp__tx ol:has(> li:nth-child(4))) { columns: 2; column-gap: 40px; }
+    .pn--ch :global(.sp__post.is-wrap .sp__tx li) { break-inside: avoid; }
+    .pn--ch :global(.sp__post.is-wrap .lt--sec) { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px 32px; }
+    .pn--ch :global(.sp__post.is-wrap .lt__sm) { grid-template-columns: repeat(var(--n, 3), 200px); }
+    /* last step, a post that does not fit one screen even so: the stage grows to the longest post (every post the
+       same height, so the box still does not jump), the page scrolls, never the post */
+    .pn__stage.is-tall { height: auto !important; min-height: 100svh; }
+    .pn__stage.is-tall .pn__posts, .pn__stage.is-tall :global(.sp), .pn__stage.is-tall :global(.sp--car .sp__grid),
+    .pn__stage.is-tall :global(.sp--car .sp__post), .pn__stage.is-tall :global(.sp--car .sp__b) { height: auto !important; }
+    .pn__stage.is-tall :global(.sp--car .sp__b) { overflow: visible; }
+    .pn--ch .pn__side { grid-column: 1; grid-row: 1; }
+    .pn--ch .pn__posts { grid-column: 1; grid-row: 2; }
+    .pn--ch .pn__stage { grid-template-rows: auto minmax(0, 1fr); row-gap: 28px; padding-block: 32px 40px; }
+    .pn--ch .pn__side { margin: 0; }
+  }
+  /* ── chapters across the top, the post at the full width (Sergei 2026-11-18, the site pattern since 2026-11-19) ── */
+  @media (min-width: 1000px) {
+    .pn--ch .pn__in { grid-template-columns: minmax(0, 1fr); max-width: none; padding-inline: max(var(--gut), 4vw); }
+    .pn--ch .pn__side { grid-column: 1; grid-row: auto; position: static; flex-direction: row; align-items: flex-end; gap: 40px;
+      padding: 0; background: transparent; border: 0; }
+    .pn--ch .pn__nav { flex: 1; min-width: 0; }
+    .pn--ch .pn__side .k-act { flex: none; width: auto; padding-inline: 28px; margin: 0; }
+    .pn--ch :global(.k-side__list) { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 32px; margin-top: 20px; }
+    .pn--ch :global(.k-side__it) { flex-direction: column; align-items: flex-start; gap: 14px; height: 100%; padding: 20px 0 0; border-top: 2px solid var(--line);
+      background: transparent !important; font-size: var(--fs-s1); font-weight: 300; line-height: 1.2; letter-spacing: -.005em; text-transform: none; color: var(--faint); }
+    .pn--ch :global(.k-side__it > span) { transform: none; }
+    .pn--ch :global(.k-side__it:hover), .pn--ch :global(.k-side__it.on) { color: var(--ink); font-weight: 300; }
+    .pn--ch :global(.k-side__it.on) { border-top-color: var(--ink); }
+    .pn--ch .pn__n { display: block; font-size: var(--fs-s5); font-weight: 300; line-height: 1; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 1px var(--faint); }
+    .pn--ch :global(.k-side__it.on) .pn__n { color: var(--ink); -webkit-text-stroke: 0; }
+    .pn--ch .pn__q { display: none; }
+    .pn--ch :global(.sp--car .sp__b h2) { font-size: var(--fs-s4) !important; line-height: 1.08; }
+    .pn--ch :global(.sp__tx p) { font-size: var(--fs-s1); font-weight: 300; line-height: 1.6; max-width: 60ch; }
+    .pn--ch :global(.sp--car .sp__b) { padding: 56px 64px; }
+  }
+  .pn :global([data-spc]), .pn :global([id]) { scroll-margin-top: calc(var(--hdr-h, 88px) + var(--s3)); }
+</style>
+
+<script>
+  // The side menu and the posts carousel (SpecMosaic): a click turns the carousel to that post and brings the
+  // block into view; the menu marks the post on show. Without the carousel: the post whose top passed a third
+  // of the screen.
+  const initPn = () => document.querySelectorAll<HTMLElement>('[data-pn]:not([data-on])').forEach((box) => {
+    box.dataset.on = '1';
+    const links = Array.from(box.querySelectorAll<HTMLAnchorElement>('[data-pn-to]'));
+    const mark = (id?: string) => links.forEach((a) => a.classList.toggle('on', a.dataset.pnTo === id));
+    const car = box.closest('.pn')?.querySelector<HTMLElement>('[data-spc]');
+    if (car) {
+      car.addEventListener('spc:change', (e) => mark((e as CustomEvent).detail));
+      // the carousel follows the post on show (2026-11-16), so a short post could leave the side panel hanging over the
+      // FAQ band: the posts block is at least as tall as the panel (its padding included)
+      const side = box.closest<HTMLElement>('.pn__side');
+      const postsEl = box.closest('.pn')?.querySelector<HTMLElement>('.pn__posts');
+      const keep = () => {
+        if (!side || !postsEl) return;
+        const pad = parseFloat(getComputedStyle(postsEl).paddingTop) + parseFloat(getComputedStyle(postsEl).paddingBottom);
+        postsEl.style.minHeight = side.offsetParent ? `${side.offsetHeight + pad}px` : '';
+      };
+      keep();
+      addEventListener('resize', keep);
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // the tried looks (Sergei 2026-11-18): the stage is one screen high; a click puts it exactly on the screen
+      const pnBox = box.closest<HTMLElement>('.pn');
+      const stage = pnBox?.querySelector<HTMLElement>('[data-pn-stage]');
+      const staged = () => !!stage && /pn--ch/.test(pnBox?.className ?? '') && getComputedStyle(stage).display === 'grid';
+      // every post fits its one-screen box, no scroll inside (Sergei 2026-11-19): a long post is first zoomed down a
+      // little (to 80%); then a post with a photo gets the photo smaller in its corner and the text round it and on at
+      // the full width (is-wrap: lists in two columns, to 75%), and as the last step loses the photo (is-bare); a post
+      // without one gets its text in two columns; if one still does not fit, the whole stage grows to the longest
+      // post instead (the page scrolls, the post never does)
+      const over = (b: HTMLElement) => b.scrollHeight > b.clientHeight + 1;
+      // the photo into the text and back (is-wrap)
+      const wrap = (b: HTMLElement) => {
+        const post = b.closest('.sp__post'); const ph = post?.querySelector(':scope > .sp__ph'); const tx = b.querySelector('.sp__tx');
+        if (!post || !ph || !tx) return false;
+        tx.prepend(ph); post.classList.add('is-wrap'); return true;
+      };
+      const unwrap = (b: HTMLElement) => {
+        const post = b.closest('.sp__post'); const ph = b.querySelector('.sp__tx > .sp__ph');
+        if (post && ph) post.prepend(ph);
+        post?.classList.remove('is-wrap', 'is-bare');
+      };
+      const fit = () => {
+        const bs = [...car.querySelectorAll<HTMLElement>('.sp__b')];
+        stage?.classList.remove('is-tall');
+        bs.forEach((b) => { b.classList.remove('is-cols'); unwrap(b); [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = ''; }); });
+        if (!staged()) return;
+        let tall = false;
+        const zoomTo = (b: HTMLElement, z: string) => [...b.children].forEach((k) => { (k as HTMLElement).style.zoom = z; });
+        const shrink = (b: HTMLElement, min = 80) => { for (let z = 95; over(b) && z >= min; z -= 5) zoomTo(b, String(z / 100)); };
+        bs.forEach((b) => {
+          if (!over(b)) return;
+          shrink(b);   // a little smaller first, one column
+          if (over(b) && b.closest('.sp__post')?.querySelector(':scope > .sp__ph')) {
+            zoomTo(b, ''); wrap(b); shrink(b, 75);   // then the photo smaller (the text a little smaller still: 75%)
+            if (over(b)) { zoomTo(b, ''); b.closest('.sp__post')?.classList.add('is-bare'); shrink(b, 75); }   // last: the post without its photo
+          }
+          else if (over(b) && b.clientWidth > 640) { zoomTo(b, ''); b.classList.add('is-cols'); shrink(b); }   // or two columns
+          if (over(b)) tall = true;
+        });
+        // the stage grows: every post back to one column at its full size
+        if (tall) { bs.forEach((b) => { b.classList.remove('is-cols'); unwrap(b); zoomTo(b, ''); }); stage?.classList.add('is-tall'); }
+      };
+      fit();
+      addEventListener('resize', fit);
+      document.fonts?.ready.then(fit);
+      addEventListener('load', fit);
+      let held = 0;   // the time of the visitor's last own turn: the automatic turning waits after it
+      links.forEach((a) => a.addEventListener('click', (e) => {
+        e.preventDefault();
+        held = Date.now();
+        car.dispatchEvent(new CustomEvent('spc:go', { detail: a.dataset.pnTo }));
+        if (staged()) {
+          scrollTo({ top: stage!.getBoundingClientRect().top + scrollY, behavior: still ? 'auto' : 'smooth' });
+        } else {
+          const top = car.getBoundingClientRect().top;
+          if (top < 0 || top > innerHeight * 0.6) car.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+        }
+        history.replaceState(null, '', `#${a.dataset.pnTo}`);
+      }));
+      // …and the posts turn by themselves, one after another, while the stage is on screen and the pointer is not on
+      // the menu (Sergei 2026-11-18 «если мышка не на уровне кнопок … перелистываеться автоматически на следущее»).
+      // Never with reduced motion, never in a hidden tab.
+      if (stage && !still) {
+        let onMenu = false, seen = false;
+        box.addEventListener('pointerenter', () => { onMenu = true; });
+        box.addEventListener('pointerleave', () => { onMenu = false; });
+        box.addEventListener('focusin', () => { onMenu = true; });
+        box.addEventListener('focusout', () => { onMenu = false; });
+        if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { seen = en.intersectionRatio > 0.6; }, { threshold: [0, 0.6, 1] }).observe(stage);
+        const ids = links.map((l) => l.dataset.pnTo);
+        setInterval(() => {
+          if (!staged() || !seen || onMenu || document.hidden || Date.now() - held < 12000) return;
+          const now = links.findIndex((l) => l.classList.contains('on'));
+          car.dispatchEvent(new CustomEvent('spc:go', { detail: ids[(now + 1) % ids.length] }));
+        }, 7000);
+      }
+      const first = car.querySelector<HTMLElement>('.sp__post')?.id;
+      mark(links.some((l) => `#${l.dataset.pnTo}` === location.hash) ? location.hash.slice(1) : first);
+      return;
+    }
+    const targets = links.map((a) => document.getElementById(a.dataset.pnTo ?? '')).filter((x): x is HTMLElement => !!x);
+    if (!targets.length) return;
+    let raf = 0;
+    const scan = () => {
+      raf = 0;
+      const line = window.innerHeight / 3;
+      let k = -1;
+      targets.forEach((el, i) => { if (el.getBoundingClientRect().top <= line) k = i; });
+      mark(targets[k]?.id);
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(scan); }, { passive: true });
+    addEventListener('resize', scan);
+    scan();
+  });
+  initPn();
+  document.addEventListener('hp:swap', initPn);   // the listing page swaps its parts in place (#193)
+</script>

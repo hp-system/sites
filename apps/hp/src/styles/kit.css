@@ -150,5 +150,10 @@
 .k-tile::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: #2c3e46; mix-blend-mode: color; opacity: .16; transition: opacity .45s ease; }   /* blend «color»: the white names stay white */
 .k-tile:is(:hover, :focus-within) > img { filter: none; }
 .k-tile:is(:hover, :focus-within)::before { opacity: 0; }
-.k-tile__t { text-align: center; }   /* no position here: the link's ::after must keep the whole tile as its box (see above) */
+.k-tile__t { text-align: center; }
+/* a filter puts the photo on a layer above the (unpositioned) caption, so the names vanished: the caption now covers the
+   whole tile (absolute, inset 0) and sits its text at the bottom — painted above the photo, and the link's ::after still
+   has the whole tile as its box. Its shade stays at the bottom only. */
+.k-tile__t { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+  background: linear-gradient(0deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,0) 100%) bottom / 100% 60% no-repeat; }
 @media (prefers-reduced-motion: reduce) { .k-tile > img, .k-tile::before { transition: none; } }

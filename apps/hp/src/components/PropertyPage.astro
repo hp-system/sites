@@ -190,6 +190,8 @@ const xAddress = viewer.exclusive ? addressOf(a) : '';
 const hasExclusive = xVideos.length + xDocs.length + xHistory.length > 0 || !!xAddress;
 // Τρία είδη, τρεις λίστες (#45): γη · επαγγελματικό/ξενοδοχείο · κατοικία.
 const facts = land ? landFactsOf(a, lang) : biz ? businessFactsOf(a, lang) : homeFactsOf(a, lang);
+// Sergei 2026-11-24: the facts drawn as the Features (icon + text); the icon is matched on the English label
+const factsEn = land ? landFactsOf(a, 'en') : biz ? businessFactsOf(a, 'en') : homeFactsOf(a, 'en');
 
 const types = schemaTypesOf(a);
 const isAccommodation = types.length > 1;          // η γη μένει σκέτο Product
@@ -531,11 +533,14 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
             /* Ό,τι ρωτάει πρώτο όποιος αγοράζει γη: χτίζεται; τι δρόμο έχει;
                ρεύμα, νερό; Η ίδια σειρά με το σημερινό site. Για σπίτι: κατάσταση,
                θέρμανση, στάθμευση· για ξενοδοχείο: αστέρια, δωμάτια, κλίνες (#45). */
-            <dl class:list={['lfacts', sheet.length > 0 && 'lfacts--ph']}>
-              {facts.map((f) => (
-                <div class="lfact"><dt>{f.label}</dt><dd>{f.value}</dd></div>
+            <ul class:list={['lfacts ffacts', sheet.length > 0 && 'lfacts--ph']}>
+              {facts.map((f, i) => (
+                <li class="ffact">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d={featureIcon(factsEn[i]?.label ?? f.label)} /></svg>
+                  <span><i class="ffact__k">{f.label}</i><b class="ffact__v">{f.value}</b></span>
+                </li>
               ))}
-            </dl>
+            </ul>
           )}
 
           {desc && (<>
@@ -1143,6 +1148,13 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
   .feats li { display: flex; gap: 10px; align-items: center; font-size: var(--fs-s0); color: var(--ink-2); }
   .feats svg { width: 19px; height: 19px; flex: none; color: var(--ink); }
+  /* the facts look like the Features (Sergei 2026-11-24): an icon, the name small above its value, three columns on desktop */
+  .lfacts.ffacts { list-style: none; padding: 0; border: 0; display: grid; gap: 16px var(--s4); grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+  .ffact { display: flex; gap: 10px; align-items: center; }
+  .ffact svg { width: 22px; height: 22px; flex: none; color: var(--ink); }
+  .ffact span { display: flex; flex-direction: column; min-width: 0; }
+  .ffact__k { font-style: normal; font-size: var(--fs-s-1); color: var(--faint); }
+  .ffact__v { font-weight: 400; font-size: var(--fs-s0); color: var(--ink-2); }
 
   .floors { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
   .fl { border: 1px solid var(--line-soft); padding: 14px 16px; }
@@ -2001,8 +2013,13 @@ const waHref = `https://wa.me/${co.whatsappE164.replace('+', '')}?text=${waText}
     // #338 (2026-11-23): the cards no longer drift over the area photo (the photo scrolls with the page now); the band
     // only grows to hold them
     if (band && cards) {
-      const need = cards.offsetHeight + 48;
+      // Sergei 2026-11-24: the two glass cards drift down the photo again while the band crosses the screen (the photo
+      // itself keeps scrolling with the page — no fixed window); the band is taller than the cards to give them the room
+      const need = cards.offsetHeight + 160;
       if (band.clientHeight < need) band.style.minHeight = need + 'px';
+      const r = band.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (vh - r.height - r.top) / Math.max(1, vh - r.height - 96)));
+      cards.style.transform = `translateY(${(p * Math.max(0, band.clientHeight - cards.offsetHeight - 48)).toFixed(1)}px)`;
     }
     if (lock?.parentElement) {
       const lr = lock.parentElement.getBoundingClientRect();

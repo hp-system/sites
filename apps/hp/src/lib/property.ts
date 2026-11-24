@@ -233,6 +233,8 @@ export function featureIcon(f: Feature | string): string {
   if (/storage|αποθηκ/.test(s) && !/parking|σταθμευσ|παρκινγκ/.test(s)) return ICON.box;
   if (/master bedroom|guest ?house|ξενωνα|υπνοδωμ/.test(s)) return ICON.bed;
   if (/electricity|ρευμα/.test(s)) return ICON.bolt;
+  if (/orientation|προσανατολ/.test(s)) return ICON.sun;   // the facts as features (Sergei 2026-11-24)
+  if (/beds?|rooms?|κλιν|δωματ/.test(s)) return ICON.bed;
   if (/^νερο\b|\bwater\b(?! tank)/.test(s)) return ICON.drop;
   if (/κουζιν|kitchen/.test(s)) return ICON.kitchen;
   // Sergei 03/11: the mockup's icons, matched on the words the catalogue uses (en + el)

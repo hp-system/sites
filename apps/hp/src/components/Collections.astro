@@ -33,7 +33,9 @@ const pages = Math.ceil(items.length / 4);
         (dashes top right). Every tile is in the HTML. Phone: the row is swiped. */}
     <div class="shead hz-head">
       <div>
-        <p data-h id="coll-h" class="t-h2">{t(lang, 'coll.h2')}</p>
+        {/* Sergei 2026-11-24: a real H2 with George's P01 headings («Houses, apartments, villas and land», «Seafront
+            property in Halkidiki»); the line under it carries the keywords. Was «Collections» in a <p>. */}
+        <h2 data-h id="coll-h" class="t-h2">{t(lang, 'home.coll_h2')}</h2>
         <p>{t(lang, 'home.coll_sub')}</p>
       </div>
       {pages > 1 && (

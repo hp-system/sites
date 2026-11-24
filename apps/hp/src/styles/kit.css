@@ -143,11 +143,11 @@
 .ra__b { position: relative; display: inline-block; width: 40px; height: 40px; cursor: pointer; color: var(--ink); outline: none; }
 .ra__d {
   position: absolute; top: 50%; width: 6px; height: 2px; margin-top: -1px; background: currentColor; opacity: .25;
-  transition: width .35s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+  transition: width .16s cubic-bezier(.4,0,.2,1), opacity .12s ease;   /* faster (Sergei 2026-11-24) */
 }
 .ra__b--p .ra__d { inset-inline-end: 17px; }
 .ra__b--n .ra__d { inset-inline-start: 17px; }
-.ra__c { position: absolute; top: 50%; margin-top: -6px; opacity: 0; transition: opacity .2s ease .12s; }
+.ra__c { position: absolute; top: 50%; margin-top: -6px; opacity: 0; transition: opacity .1s ease .06s; }
 .ra__b--p .ra__c { inset-inline-start: 3px; }
 .ra__b--n .ra__c { inset-inline-end: 3px; }
 [dir='rtl'] .ra__c { transform: scaleX(-1); }

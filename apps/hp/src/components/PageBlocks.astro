@@ -88,7 +88,8 @@ const areas2 = areas.map((x) => ({ ...x, photo: tilePhoto(x.href, lang, x.photo)
   .pb__areas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   @media (min-width: 760px) { .pb__areas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   /* #281 (Sergei 2026-11-12: «они слишком большие»): the home's size — five columns, 4:3, whatever the count */
-  @media (min-width: 1024px) { .pb__areas { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  /* as many columns as tiles, so a row without the page's own area still fills the width (Sergei 2026-11-24) */
+  @media (min-width: 1024px) { .pb__areas { grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); } }
   .pb__areas :global(.k-tile) { aspect-ratio: 4 / 3; }
   .pb :global(.k-tile__l) { font-size: var(--fs-s1); line-height: 1.2; }
   @media (min-width: 1024px) { .pb { padding-block: var(--s7); } }

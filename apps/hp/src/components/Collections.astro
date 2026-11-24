@@ -110,7 +110,7 @@ const pages = Math.ceil(items.length / 4);
   @media (min-width: 1024px) {
     .hz-head { display: flex; justify-content: space-between; align-items: flex-end; }
     /* Sergei 2026-11-24: the keyword line on one row (no 56ch limit on desktop) */
-    .hz-head p:not([data-h]) { max-width: none; white-space: nowrap; }
+    .hz-head p:not([data-h]) { max-width: none; }
     .hz-head .h-dash { display: flex; }
     .colls {
       display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
@@ -126,4 +126,6 @@ const pages = Math.ceil(items.length / 4);
     .coll:hover .coll__t b { transform: translateY(-2px); }
   }
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .colls { scroll-behavior: auto; } }
+  /* one row where the widest language (Greek, ~1080 px) fits beside the arrows; narrower desktops wrap */
+  @media (min-width: 1360px) { .hz-head p:not([data-h]) { white-space: nowrap; } }
 </style>

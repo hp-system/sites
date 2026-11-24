@@ -268,7 +268,7 @@ if (spec?.faq.length) jsonLd.push({
 
   <main id="main" data-list-path={new URL(url, "http://x").pathname}>
     {apiDown && (
-      <div class="wrap" style="padding:var(--s7) 0">
+      <div class="wrap" style="padding-block:var(--s7)">   {/* padding-block: keeps the side gutter, in line with the content (Sergei 2026-11-24) */}
         <p class="t-body">{t(lang, 'home.api_down')}</p>
       </div>
     )}

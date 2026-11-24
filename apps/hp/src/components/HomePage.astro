@@ -18,6 +18,7 @@ import Abroad from './Abroad.astro';
 import Footer from './Footer.astro';
 import { specOf, specTitle, linksBySection, FAQ_H } from '../lib/seo-pages';
 import SpecPosts from './SpecPosts.astro';
+import SpecAccordion from './SpecAccordion.astro';
 import { postPhotos } from '../lib/post-photos';
 import REGISTRY from '../data/page-registry.json';
 
@@ -330,8 +331,8 @@ if (spec?.faq.length) jsonLd.push({
     {/* Sergei 2026-11-19 «на главной странице сделай SEO блок как он должен быть и вопросы тоже»: the site's SEO block
         (chapters, one screen high, a photo per post) and the questions under it at the site's width, as on every page;
         George's links stay with their sections, P13 / P14 joined to the section that links P11 as before */}
-    {spec && <SpecPosts page={spec} lang={lang} photos={postPhotos(items as any, (spec.body.match(/<h2>/g) ?? []).length, lang)}
-      faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={null}
+    {/* #365 (Sergei with George 2026-11-24): the quiet accordion instead of the loud chapters — trial on the home page */}
+    {spec && <SpecAccordion page={spec} lang={lang} faqH={FAQ_H[lang]}
       sectionLinks={linksBySection(spec, { join: (['P13', 'P14'] as const).map((id) => specOf(id, lang)).filter((x) => !!x)
         .map((x) => ({ href: x!.path, text: x!.anchor, withId: 'P11' })) })} />}
   </main>

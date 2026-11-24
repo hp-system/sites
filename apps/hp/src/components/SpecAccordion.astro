@@ -1,0 +1,88 @@
+---
+// The SEO text block, quiet (#365, Sergei with George 2026-11-24): «the SEO block is the loudest thing on the page».
+// Rules: the site's working width (not the full screen), compact, no photos, nothing that pulls the eye. George's spec
+// text as an accordion: one quiet line per H2 with a hairline between them; a click opens the section's text and its
+// links. SEO: every H2, paragraph and link stays in the HTML in the spec order (closed <details> content is in the
+// page and read by search engines); the headings keep their ids (#anchors from elsewhere still open them).
+// Trial on the home page; the loud block (SpecPosts) stays for the other pages until this is chosen.
+import FaqSearch from './FaqSearch.astro';
+import { h2Id, type SpecPage } from '../lib/seo-pages';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  page: SpecPage; lang: Lang; faqH: string; faqHref?: string;
+  /** George's links per section (the same lists the loud block shows as tiles) */
+  sectionLinks?: { href: string; text: string }[][];
+}
+const { page, lang, faqH, faqHref, sectionLinks = [] } = Astro.props;
+
+// the spec body cut at each <h2>: [intro?, section 1, section 2, …]
+const parts = page.body.split(/(?=<h2>)/);
+const intro = parts[0] && !parts[0].startsWith('<h2>') ? parts.shift()! : '';
+const sections = parts.map((html, i) => {
+  const m = html.match(/^<h2>([\s\S]*?)<\/h2>/);
+  const head = (m?.[1] ?? '').replace(/<[^>]+>/g, '').trim();
+  return { id: h2Id(head), head, body: html.replace(/^<h2>[\s\S]*?<\/h2>/, ''), links: sectionLinks[i] ?? [] };
+});
+---
+<section class="sa" aria-label={sections[0]?.head ?? ''}>
+  <div class="wrap sa__in">
+    {intro && <div class="sa__intro" set:html={intro} />}
+    <div class="sa__list">
+      {sections.map((s) => (
+        <details class="sa__it" id={`${s.id}-box`}>
+          <summary class="sa__sum"><h2 id={s.id} class="sa__h">{s.head}</h2><span class="sa__pm" aria-hidden="true"></span></summary>
+          <div class="sa__body">
+            <div class="sa__txt" set:html={s.body} />
+            {s.links.length > 0 && (
+              <ul class="sa__links">{s.links.map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+    {page.faq.length > 0 && <div class="sa__faq"><FaqSearch lang={lang} h={faqH} href={faqHref} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
+  </div>
+</section>
+
+<script>
+  // an #anchor to one of the headings opens its section (links from elsewhere on the site)
+  const open = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const h = id ? document.getElementById(id) : null;
+    const d = h?.closest('details.sa__it') as HTMLDetailsElement | null;
+    if (d) { d.open = true; h!.scrollIntoView({ block: 'start' }); }
+  };
+  open();
+  window.addEventListener('hashchange', open);
+</script>
+
+<style>
+  .sa { background: var(--paper); padding-block: var(--s8); }
+  .sa__in { display: grid; gap: var(--s6); }
+  .sa__intro { max-width: 70ch; color: var(--ink-2); font-size: var(--fs-s0); line-height: 1.65; }
+  .sa__intro :global(p) { margin: 0 0 var(--s3); }
+  .sa__list { border-top: 1px solid var(--line); }
+  .sa__it { border-bottom: 1px solid var(--line); }
+  .sa__sum { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
+    padding: 18px 0; cursor: pointer; }
+  .sa__sum::-webkit-details-marker { display: none; }
+  .sa__h { margin: 0; font-size: var(--fs-s0); font-weight: 400; line-height: 1.4; color: var(--ink-2); transition: color .2s ease; }
+  .sa__sum:hover .sa__h, .sa__it[open] .sa__h { color: var(--ink); }
+  /* a thin plus that turns into a minus */
+  .sa__pm { position: relative; flex: none; width: 12px; height: 12px; }
+  .sa__pm::before, .sa__pm::after { content: ''; position: absolute; left: 0; top: 50%; width: 12px; height: 1px; background: var(--muted); transition: transform .25s ease; }
+  .sa__pm::after { transform: rotate(90deg); }
+  .sa__it[open] .sa__pm::after { transform: rotate(0deg); }
+  .sa__sum:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .sa__body { padding: 0 0 var(--s5); display: grid; gap: var(--s3); }
+  .sa__txt { max-width: 70ch; color: var(--muted); font-size: var(--fs-s0); line-height: 1.65; }
+  .sa__txt :global(p) { margin: 0 0 var(--s3); }
+  .sa__txt :global(h3) { margin: var(--s4) 0 var(--s2); font-size: var(--fs-s0); font-weight: 600; color: var(--ink-2); }
+  .sa__txt :global(ul) { margin: 0 0 var(--s3); padding-left: 1.2em; }
+  .sa__txt :global(a), .sa__links a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .sa__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: var(--fs-s-1); }
+  .sa__faq { padding-top: var(--s4); }
+  @media (min-width: 1024px) { .sa { padding-block: 80px; } .sa__sum { padding: 20px 0; } }
+  @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h { transition: none; } }
+</style>

@@ -658,6 +658,7 @@ if (spec?.faq.length) jsonLd.push({
     const p = Math.min(1, Math.max(0, (vh - r.height - r.top) / span));
     const travel = Math.max(0, band.clientHeight - (lock.getBoundingClientRect().height || 100));
     lock.style.transform = `translateY(${(p * travel).toFixed(1)}px)`;
+    band.style.setProperty('--offp', p.toFixed(3));   // the band's content drifts with the lock (Sergei 2026-11-24, trial)
   };
 
   // ── Back to top: after one screen.

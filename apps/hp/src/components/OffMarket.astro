@@ -123,6 +123,11 @@ if (count < 1) return null;
   @media (min-width: 1024px) {
     .off { position: relative; overflow: hidden; padding: 72px 0; }   /* more air (Sergei 2026-11-24, was 48 px); the big lock still drifts edge to edge — its travel is the band height */
     .off .wrap { position: relative; z-index: 1; }
+    /* trial (Sergei 2026-11-24): the content drifts down with the big lock, on the same scroll — within the band's
+       padding (from 48 px above the middle to 48 px below, 24 px clear of each edge), since the lock's own travel
+       (the band's height) would take the text out of the band */
+    .off .wrap { transform: translateY(calc((var(--offp, .5) - .5) * 96px)); will-change: transform; }
+    @media (prefers-reduced-motion: reduce) { .off .wrap { transform: none; } }
     .off__grid { align-items: center; }
     .off__lock { display: none; }
     /* Sergei 03/11: the heading in two lines, not three — a wider left column, no ch limit */

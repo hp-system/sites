@@ -36,6 +36,7 @@ import { viewerOf, municipalityOf } from '../lib/gate';
 import { company } from '../lib/company';
 import { cmsText, cmsImage } from '../lib/content';
 import { brand } from '../brand/index';
+import { COLL_PHOTO, photoOf } from '../lib/tile-photos';
 
 interface Props { lang?: Lang }
 const lang: Lang = Astro.props.lang ?? DEFAULT_LANG;
@@ -151,6 +152,7 @@ const COLLS: { key: string; title: string; href: string; keep: (a: any) => boole
 // Photos are picked in the OLD order (sea, pool, land, top…): «above one million»
 // would otherwise take the dearest land plot and leave «Land & plots» a second-best.
 const PICK_ORDER = ['sea', 'pool', 'land', 'top', 'houses', 'maisonettes', 'apartments', 'business'];
+// One chosen photo per collection: lib/tile-photos.ts (shared with the type tiles of every page).
 const collPhoto = new Map<string, ReturnType<typeof pickPhoto>>();
 for (const k of PICK_ORDER) {
   const c = COLLS.find((x) => x.key === k);
@@ -158,7 +160,8 @@ for (const k of PICK_ORDER) {
 }
 const collections = COLLS
   .filter((c) => collPhoto.has(c.key))
-  .map((c) => ({ key: c.key, title: c.title, sub: t(lang, 'f.show_all'), href: c.href, photo: collPhoto.get(c.key) ?? null }));
+  .map((c) => ({ key: c.key, title: c.title, sub: t(lang, 'f.show_all'), href: c.href,
+    photo: COLL_PHOTO[c.key] ? photoOf(COLL_PHOTO[c.key]) : collPhoto.get(c.key) ?? null }));
 
 // ── By area (#101): the four municipality pages with their «from €» ──────────
 // English links the area pages (/en/property-for-sale/…), other languages the

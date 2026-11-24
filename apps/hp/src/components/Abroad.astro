@@ -457,7 +457,7 @@ const viberLink = viberHref(co.whatsappE164);
   @media (min-width: 1024px) {
     .ab__path { display: block; position: absolute; width: 1px; background: var(--line); z-index: 2; pointer-events: none; }
     /* the numbers sit on the path: centred on it, on a paper patch so the line runs between them */
-    .ab3 .two__n { position: relative; z-index: 3; text-align: center; background: var(--paper); }
+    .ab3 .two__n { position: relative; z-index: 3; text-align: center; background: var(--paper); align-self: start; }   /* start: the patch only as tall as the digit, so the path shows between 1 and 2 too */
     .ab__path i { position: absolute; inset: 0; background: var(--ink); transform-origin: 50% 0; transform: scaleY(var(--k, 0)); }
   }
 </style>

@@ -133,3 +133,32 @@
 .k-rail > * { flex: none; width: calc((100% - var(--s3)) / 2); scroll-snap-align: start; }
 @media (min-width: 1024px) { .k-rail > * { width: calc((100% - 3 * var(--s3)) / 4); } }
 @media (prefers-reduced-motion: reduce) { .k-rail { scroll-behavior: auto; } }
+
+/* ── #349 carousel arrows (Sergei with George 2026-11-24) ─────────────────────────────────────────────────────────
+   Every carousel's page dashes become two arrows that unfold on hover like the list pager's: a short mark at rest,
+   stretching into an arrow under the pointer. Built by lib/rail-arrows.ts inside the dash group (`.ra`), which keeps
+   its own buttons (hidden here) and its own visibility rules. Colour = the text colour, so it works on dark bands. */
+.ra { align-items: center; gap: 4px !important; margin-left: 0 !important; }
+.ra > button { display: none !important; }
+.ra__b { position: relative; display: inline-block; width: 40px; height: 40px; cursor: pointer; color: var(--ink); outline: none; }
+.ra__d {
+  position: absolute; top: 50%; width: 6px; height: 2px; margin-top: -1px; background: currentColor; opacity: .25;
+  transition: width .16s cubic-bezier(.4,0,.2,1), opacity .12s ease;   /* faster (Sergei 2026-11-24) */
+}
+.ra__b--p .ra__d { inset-inline-end: 17px; }
+.ra__b--n .ra__d { inset-inline-start: 17px; }
+.ra__c { position: absolute; top: 50%; margin-top: -6px; opacity: 0; transition: opacity .1s ease .06s; }
+.ra__b--p .ra__c { inset-inline-start: 3px; }
+.ra__b--n .ra__c { inset-inline-end: 3px; }
+[dir='rtl'] .ra__c { transform: scaleX(-1); }
+.ra__b:not([aria-disabled='true']):is(:hover, :focus-visible) .ra__d { width: 20px; opacity: 1; }
+.ra__b:not([aria-disabled='true']):is(:hover, :focus-visible) .ra__c { opacity: 1; }
+.ra__b[aria-disabled='true'] { cursor: default; }
+.ra__b[aria-disabled='true'] .ra__d { opacity: .12; }
+.ra__b:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
+@media (prefers-reduced-motion: reduce) { .ra__d, .ra__c { transition: none; } }
+/* a wider hover zone around each arrow, so it needs no aiming (Sergei 2026-11-24); the look does not move.
+   Outward and up/down only, so the two zones never overlap. */
+.ra__b::before { content: ''; position: absolute; inset-block: -16px; }
+.ra__b--p::before { inset-inline-start: -24px; inset-inline-end: 0; }
+.ra__b--n::before { inset-inline-start: 0; inset-inline-end: -24px; }

@@ -465,4 +465,12 @@ const viberLink = viberHref(co.whatsappE164);
   .abc__more a:is(:hover, :focus-visible) .abc__ar { opacity: 1; transform: translateX(4px); }
   :global([dir='rtl']) .abc__ar { transform: translateX(4px) scaleX(-1); }
   :global([dir='rtl']) .abc__more a:is(:hover, :focus-visible) .abc__ar { transform: translateX(-4px) scaleX(-1); }
+  /* the three channels (Sergei 2026-11-24): quiet at rest — icon and black words only; on hover each becomes the
+     button it was: an ink outline for WhatsApp / Viber, filled ink for the phone */
+  @media (min-width: 1024px) {
+    .abc__btn, .abc__btn--main { background: transparent; color: var(--ink); border-color: transparent;
+      transition: background .25s ease, color .25s ease, border-color .25s ease; }
+    .abc__btn:is(:hover, :focus-visible) { background: transparent; color: var(--ink); border-color: var(--ink); }
+    .abc__btn--main:is(:hover, :focus-visible) { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  }
 </style>

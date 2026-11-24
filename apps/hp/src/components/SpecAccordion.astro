@@ -72,6 +72,16 @@ const sections = parts.map((html, i) => {
     text-align: left; color: var(--faint); line-height: 1.4; }
   .sa__faq :global(.k-faq__q) { border-top: 0; border-bottom: 0; }
   .sa__faq :global(.k-faq__q + .k-faq__q) { border-top: 1px solid var(--line); }
+  /* the questions look like the text rows above (Sergei 2026-11-24): regular weight, the quiet ink, the same thin plus */
+  .sa__faq :global(.k-faq__q summary) { padding: 18px 0; align-items: center; }
+  .sa__faq :global(.k-faq__q h3) { font-weight: 400; color: var(--ink-2); transition: color .2s ease; }
+  .sa__faq :global(.k-faq__q summary:hover h3), .sa__faq :global(.k-faq__q[open] h3) { color: var(--ink); }
+  .sa__faq :global(.k-faq__q i) { position: relative; flex: none; width: 12px; height: 12px; font-size: 0; }
+  .sa__faq :global(.k-faq__q i::before), .sa__faq :global(.k-faq__q i::after) { content: ''; position: absolute; left: 0; top: 50%;
+    width: 12px; height: 1px; background: var(--muted); transition: transform .25s ease; }
+  .sa__faq :global(.k-faq__q i::after) { transform: rotate(90deg); }
+  .sa__faq :global(.k-faq__q[open] i::after) { transform: rotate(0deg); }
+  .sa__faq :global(.k-faq__a) { color: var(--muted); font-size: var(--fs-s0); line-height: 1.65; max-width: 70ch; }
   .sa__sum { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
     padding: 18px 0; cursor: pointer; }
   .sa__sum::-webkit-details-marker { display: none; }

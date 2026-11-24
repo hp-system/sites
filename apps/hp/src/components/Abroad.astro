@@ -111,8 +111,9 @@ const viberLink = viberHref(co.whatsappE164);
       {/* Sergei 2026-11-24: «Every legal matter is ours.» (ab.us_lead) dropped — the heading and the steps say it */}
       <ol class="two__l two__l--us" aria-label={t(lang, 'ab.us_h')}>
         {/* Sergei 2026-11-24: who does each step (ab.us*_d) is no longer shown — the line above says it */}
-        {US.map(([tk]) => (
-          <li><b>{t(lang, tk)}</b></li>
+        {/* Sergei 2026-11-24: numbered and set like the client's steps, going on from them (3–7), no rules between */}
+        {US.map(([tk], i) => (
+          <li><span class="two__n" aria-hidden="true">{YOU.length + i + 1}</span><b>{t(lang, tk)}</b></li>
         ))}
       </ol>
       </div>
@@ -308,12 +309,11 @@ const viberLink = viberHref(co.whatsappE164);
     .two__n { display: block; grid-row: span 2; padding-top: 9px; font-size: var(--fs-s-1); font-weight: 600; color: var(--faint); }
     .two__l--you b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
     .two__l--you i { margin-top: 6px; font-size: var(--fs-s0); color: var(--muted); }
-    /* «we»: the five steps as a ledger — the step, and who does it */
-    .two__l--us li { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; padding: 13px 0; border-top: 1px solid rgba(255,255,255,.14); }
-    .two__l--us li:first-child { border-top: 0; padding-top: 0; }
-    .two__l--us li:last-child { padding-bottom: 0; }
-    .two__l--us b { min-width: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.25; }
-    .two__l--us i { flex: none; margin: 0; font-size: var(--fs-s-1); color: rgba(255,255,255,.6); text-align: end; }
+    /* «we»: the five steps set like the client's two, numbered on from them, no rules */
+    .two__l--us { display: grid; gap: 16px; }
+    .two__l--us li { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; }
+    .two__l--us .two__n { grid-row: auto; color: rgba(255,255,255,.5); }
+    .two__l--us b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
 
     /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */
     .abc { min-height: 300px; box-sizing: border-box; display: flex; align-items: center; text-align: center; padding: 40px 0; background: var(--paper); }

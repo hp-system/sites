@@ -10,6 +10,24 @@ Two white-label site templates on the CRM: `apps/hp` and `apps/rewize`, shared c
 
 If the import does not load, open that file and read it before anything else.
 
+## Where to look — by task (read before you start)
+Paths are in the `ssot` clone next to this repo (`../ssot/docs/`). The full router with code files is `HUB.md` §3;
+this table sends you there by the kind of work. Agents you start get the row that matches their task.
+
+| Task | Read first | Then |
+|---|---|---|
+| Any visual change (layout, colour, type, spacing, motion, photos) | `40_frontend/fe-design-rules.md` | the page's note below; checklist §12 |
+| A page or block of HP (home, list, property, guides, info pages) | `HUB.md` §3 → `fe-home-page`, `fe-listing-facets`, `fe-property-page`, `fe-content-pages` | `fe-design-rules.md` §9 page recipes |
+| Texts and languages | `40_frontend/fe-i18n.md` | all 9 languages (rule 5) |
+| SEO (titles, H1/H2, meta, hreflang, sitemap, redirects) | `70_seo/seo-build-spec.md`, `40_frontend/fe-seo-layer.md`, `70_seo/seo-redirects.md` | George's spec texts verbatim |
+| Members, sign-in, panel | `40_frontend/fe-members-ui.md`, `50_backend/be-member-auth.md` | visibility, rule 3 |
+| Photos | `40_frontend/fe-photos-media.md` | rule 4 (logo only on property cards / page) |
+| The CRM, its API or admin (George's `ealida`) | `50_backend/be-overview.md`, `be-site-api-contract.md`, `be-change-requests.md` | **read-only**: a change is a request to George |
+| Release, deploy, server | `80_operations/ops-deploy-runbook.md`, `ops-release-state.md` | Workflow §1, rule 6 |
+| Run or test locally | `80_operations/ops-local-dev.md`, `ops-verification.md` | full data loaded before showing |
+| Documentation, decisions, diaries | `00_meta/conventions.md`, `00_meta/team-rules-for-claude.md` | one subject per note, links both ways |
+| Rewize | `HUB.md` §3 (Rewize row) | deploys only by Sergei, from GitHub |
+
 ## Workflow
 1. Binding rules: `ssot/ENGINEERING.md`. Work only on a branch from `dev` named `<type>/<issue>-<slug>` (`feature/`, `fix/`, `refactor/`, `test/`, `chore/`; `hotfix/` from `main`). **Never push to `main` or `dev`.** Merging into `main` ships to the server: before it, **stop and ask your user** what ships, say it becomes the next server update and what was or was not tested, and wait for a clear yes (`ssot/ENGINEERING.md` §5). Conventional Commits with scope `hp` / `rewize` / `kit`.
 2. One topic per PR to `dev`, template filled, CI green, then squash-merge. **Never request a reviewer** unless your user asks and names who.

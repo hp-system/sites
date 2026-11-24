@@ -251,7 +251,7 @@ const viberLink = viberHref(co.whatsappE164);
   /* ── Phone / tablet: George's two blocks, one under the other ─────────── */
   .abroad { padding: var(--s6) 0; }
   .abroad--you { background: var(--paper-2); border-top: 1px solid var(--line); padding-top: var(--s7); }
-  .abroad--us { background: var(--ink-deep); color: #fff; }
+  .abroad--us { background: var(--paper); color: var(--ink); border-top: 1px solid var(--line); }   /* white, not black: less contrast (Sergei 2026-11-24); a hairline keeps the two parts apart */
   .abroad__head { max-width: 52ch; }
   .abroad__eyebrow { color: var(--faint); }
   .abroad__h { margin: var(--s2) 0 0; }
@@ -260,14 +260,14 @@ const viberLink = viberHref(co.whatsappE164);
 
   .two__l { list-style: none; margin: 0; padding: 0; }
   .two__l li { padding: 11px 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.4; }
-  .abroad--us .two__l li { border-top-color: rgba(255,255,255,.14); }
+  .abroad--us .two__l li { border-top-color: var(--line); }
   .two__l li:first-child { border-top: 0; }
   .two__l b { display: block; font-weight: 600; }
   .two__l i { display: block; font-style: normal; font-size: var(--fs-s-1); color: var(--muted); margin-top: 3px; }
-  .abroad--us .two__l i { color: rgba(255,255,255,.5); }
+  .abroad--us .two__l i { color: var(--muted); }
   .two__n { display: none; }
-  .abroad--us .abroad__sub { color: rgba(255,255,255,.6); }
-  .ab__lead { margin: 0 0 var(--s3); font-size: var(--fs-s0); font-weight: 600; color: #fff; }
+  .abroad--us .abroad__sub { color: var(--muted); }
+  .ab__lead { margin: 0 0 var(--s3); font-size: var(--fs-s0); font-weight: 600; color: var(--ink); }
 
   .abc { padding: var(--s6) 0 var(--s7); background: var(--paper-2); }
   .abc__p { margin: 0; font-size: var(--fs-s0); max-width: 64ch; line-height: 1.55; }
@@ -289,7 +289,7 @@ const viberLink = viberHref(co.whatsappE164);
     .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }   /* Sergei 03/11: both sides centred on one height */
     .abroad__head { max-width: none; }
     .abroad__h { margin: 14px 0 0; font-size: var(--fs-s4); line-height: 1.1; }   /* Sergei 03/11: the same size as «The land is where it begins.» */
-    .abroad__h--we { margin: 0; color: #fff; }   /* Sergei 08/11: every text centred on the band's height */
+    .abroad__h--we { margin: 0; color: var(--ink); }   /* Sergei 08/11: every text centred on the band's height */
     .abroad__sub { margin: 18px 0 0; line-height: 1.65; max-width: 60ch; text-wrap: balance; }
 
     /* #345 (Sergei with George 2026-11-24): every step shown at once — no turning, no switches, no fixed band height */
@@ -312,7 +312,7 @@ const viberLink = viberHref(co.whatsappE164);
     /* «we»: the five steps set like the client's two, numbered on from them, no rules */
     .two__l--us { display: grid; gap: 16px; }
     .two__l--us li { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; }
-    .two__l--us .two__n { grid-row: auto; color: rgba(255,255,255,.5); }
+    .two__l--us .two__n { grid-row: auto; color: var(--faint); }
     .two__l--us b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
 
     /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */

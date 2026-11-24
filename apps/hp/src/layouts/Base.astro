@@ -222,10 +222,6 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   {/* Σήμανση: ένα listener για όλη τη σελίδα, χωρίς βιβλιοθήκη. Δες lib/track.ts. */}
   <script is:inline set:html={TRACK_SNIPPET} />
   <script>
-    // Trial (Sergei 2026-11-24): ?look=a|b|c picks one of three tile-photo looks (styles/kit.css) to compare
-    { const l = new URLSearchParams(location.search).get('look'); if (l === 'a' || l === 'b' || l === 'c') document.documentElement.dataset.look = l; }
-  </script>
-  <script>
     // Every pop-up menu closes on a click outside it and on Esc (Sergei 2026-11-23 «все попапы должны закрываться
     // когда клик вне попапа»): the account menu, the language switch, the list's sort and per-page boxes, and any
     // <details data-pop>. FAQ answers are <details> too, but not menus — they are left alone. (The list's filter

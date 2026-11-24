@@ -98,7 +98,7 @@ const setSmall = photo ? cleanSrcSetSmall(photo.url) : '';
       </>
     ) : (
       <>
-        <h1 class="t-display">{h1b ? <>{h1a}{' '}<span class="hero__h1b">{h1b}</span></> : H1}</h1>
+        <h1 class="t-display">{h1b ? <>{h1a}{' '}<br />{h1b}</> : H1}</h1>
         {/* Sergei 08/11: «hero.sub» («Singular collections…») removed — the ticker below carries the spec intro */}
       </>
     )}
@@ -158,7 +158,6 @@ const setSmall = photo ? cleanSrcSetSmall(photo.url) : '';
 
   .hero__copy { position: relative; color: #fff; padding: 0 var(--gut) var(--s5); }
   .hero__copy h1 { max-width: 16ch; }
-  .hero__h1b { display: block; }
   .hero__sub {
     margin: var(--s3) 0 0; font-size: var(--fs-s0); line-height: 1.55;
     color: rgba(255,255,255,.88); max-width: 34ch;

@@ -30,7 +30,8 @@ const { lang, items, from, headHref } = Astro.props;
     <div class="shead hz-head">
       <div>
         <h2 data-h id="area-h" class="t-h2">{headHref ? <a class="area-ha" href={headHref}>{t(lang, 'home.area_h2')}</a> : t(lang, 'home.area_h2')}</h2>
-        {from > 0 && <p>{t(lang, 'home.area_sub', { price: money(from, lang) })}</p>}
+        {/* Sergei 2026-11-24: the areas by name, no price (was «Verified listings… · from {price}») */}
+        <p>{t(lang, 'home.area_sub')}</p>
       </div>
     </div>
 

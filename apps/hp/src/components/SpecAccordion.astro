@@ -7,7 +7,7 @@
 // Trial on the home page; the loud block (SpecPosts) stays for the other pages until this is chosen.
 import FaqSearch from './FaqSearch.astro';
 import { h2Id, type SpecPage } from '../lib/seo-pages';
-import type { Lang } from '../lib/i18n';
+import { t, type Lang } from '../lib/i18n';
 
 interface Props {
   page: SpecPage; lang: Lang; faqH: string; faqHref?: string;
@@ -28,6 +28,8 @@ const sections = parts.map((html, i) => {
 <section class="sa" aria-label={sections[0]?.head ?? ''}>
   <div class="wrap sa__in">
     {intro && <div class="sa__intro" set:html={intro} />}
+    {/* small labels as «Three paths» (Sergei 2026-11-24), not big titles */}
+    <p class="t-label sa__lbl">{t(lang, 'home.seo_lbl')}</p>
     <div class="sa__list">
       {sections.map((s) => (
         <details class="sa__it" id={`${s.id}-box`}>
@@ -62,8 +64,14 @@ const sections = parts.map((html, i) => {
   .sa__in { display: grid; gap: var(--s6); }
   .sa__intro { max-width: 70ch; color: var(--ink-2); font-size: var(--fs-s0); line-height: 1.65; }
   .sa__intro :global(p) { margin: 0 0 var(--s3); }
-  .sa__list { border-top: 1px solid var(--line); }
-  .sa__it { border-bottom: 1px solid var(--line); }
+  .sa__lbl { margin: 0 0 calc(-1 * var(--s5)); color: var(--faint); }
+  /* hairlines between the rows only: none above the first, none under the last (Sergei 2026-11-24) */
+  .sa__it + .sa__it { border-top: 1px solid var(--line); }
+  /* the questions: the same small label instead of the big title, and the same hairlines between rows only */
+  .sa__faq :global(.fqs__h) { margin: 0 0 var(--s2); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    text-align: left; color: var(--faint); line-height: 1.4; }
+  .sa__faq :global(.k-faq__q) { border-top: 0; border-bottom: 0; }
+  .sa__faq :global(.k-faq__q + .k-faq__q) { border-top: 1px solid var(--line); }
   .sa__sum { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
     padding: 18px 0; cursor: pointer; }
   .sa__sum::-webkit-details-marker { display: none; }
@@ -82,7 +90,7 @@ const sections = parts.map((html, i) => {
   .sa__txt :global(ul) { margin: 0 0 var(--s3); padding-left: 1.2em; }
   .sa__txt :global(a), .sa__links a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
   .sa__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: var(--fs-s-1); }
-  .sa__faq { padding-top: var(--s4); }
+  .sa__faq { padding-top: var(--s5); }
   @media (min-width: 1024px) { .sa { padding-block: 80px; } .sa__sum { padding: 20px 0; } }
   @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h { transition: none; } }
 </style>

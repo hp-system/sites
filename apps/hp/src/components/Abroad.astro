@@ -52,11 +52,11 @@ const c2 = cRest.join(' ');
 const closeQ = Astro.url.searchParams.get('close') ?? '';
 const closeV = closeQ === 'plain' ? '' : closeQ === 'slices' ? 'slices' : 'stage';
 // Sergei 08/11: the close's key words in bold (as «The land … begins» above), in every language.
-const CLOSE_BOLD: Record<Lang, string[]> = {
-  en: ['no risk', 'checked'], el: ['κανένα ρίσκο', 'ελέγξει'], bg: ['риск', 'проверили'],
-  sr: ['nijedan rizik', 'proverili'], de: ['kein Risiko', 'geprüft'], ro: ['niciun risc', 'verificat'],
-  tr: ['hiçbir riski', 'kontrol'], he: ['שום סיכון', 'בדקנו'], ru: ['ни одного риска', 'проверили'],
-};
+const CLOSE_BOLD: Record<Lang, string[]> = {   // Sergei 2026-11-24: «You take no risk — we check everything first.»
+  en: ['no risk', 'check everything'], el: ['κανένα ρίσκο', 'τα ελέγχουμε όλα'], bg: ['никакъв риск', 'проверяваме всичко'],
+  sr: ['nikakav rizik', 'sve proveravamo'], de: ['kein Risiko', 'prüfen alles'], ro: ['niciun risc', 'verificăm totul'],
+  tr: ['Hiçbir risk', 'kontrol ederiz'], he: ['שום סיכון', 'בודקים הכול'], ru: ['ничем не рискуете', 'всё проверяем'],
+}
 const c2parts = (() => {
   const out: { s: string; b: boolean }[] = [];
   let rest = c2;

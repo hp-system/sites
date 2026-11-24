@@ -103,13 +103,19 @@ const viberLink = viberHref(co.whatsappE164);
     <div class="wrap ab__grid">
       <div>
         <p data-h id="abroad-h2" class="t-h2 abroad__h abroad__h--we">{t(lang, 'ab.h2_we')}</p>
+        {/* the slogan (Sergei 2026-11-24) */}
+        <p class="abroad__sub abroad__sub--we">{t(lang, 'ab.we_sub')}</p>
       </div>
-      {/* the five steps as a ledger: the step, and who does it */}
+      {/* the five steps, one per line */}
+      <div>
+      <p class="ab__lead">{t(lang, 'ab.us_lead')}</p>
       <ol class="two__l two__l--us" aria-label={t(lang, 'ab.us_h')}>
-        {US.map(([tk, dk]) => (
-          <li><b>{t(lang, tk)}</b><i>{t(lang, dk)}</i></li>
+        {/* Sergei 2026-11-24: who does each step (ab.us*_d) is no longer shown — the line above says it */}
+        {US.map(([tk]) => (
+          <li><b>{t(lang, tk)}</b></li>
         ))}
       </ol>
+      </div>
     </div>
   </section>
 </div>
@@ -259,6 +265,8 @@ const viberLink = viberHref(co.whatsappE164);
   .two__l i { display: block; font-style: normal; font-size: var(--fs-s-1); color: var(--muted); margin-top: 3px; }
   .abroad--us .two__l i { color: rgba(255,255,255,.5); }
   .two__n { display: none; }
+  .abroad--us .abroad__sub { color: rgba(255,255,255,.6); }
+  .ab__lead { margin: 0 0 var(--s3); font-size: var(--fs-s0); font-weight: 600; color: #fff; }
 
   .abc { padding: var(--s6) 0 var(--s7); background: var(--paper-2); }
   .abc__p { margin: 0; font-size: var(--fs-s0); max-width: 64ch; line-height: 1.55; }
@@ -292,6 +300,8 @@ const viberLink = viberHref(co.whatsappE164);
     .abroad__eyebrow { margin: 0 0 14px; }
     .abroad__h { white-space: nowrap; }   /* Sergei 08/11: one line; the script above shrinks a line that is too long */
     .two__l li { padding: 0; border: 0; }
+    .abroad__sub--we { margin-top: 18px; }
+    .ab__lead { margin: 0 0 20px; }
     /* «you»: the two steps, numbered */
     .two__l--you { display: grid; gap: 24px; }
     .two__l--you li { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; }

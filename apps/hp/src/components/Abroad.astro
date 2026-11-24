@@ -178,7 +178,8 @@ const viberLink = viberHref(co.whatsappE164);
         if (!deskP.matches) { path.style.display = 'none'; return; }
         path.style.display = '';
         const h = host.getBoundingClientRect();
-        const a = nums[0].getBoundingClientRect(), b = nums[nums.length - 1].getBoundingClientRect();
+        // Sergei 2026-11-24: only between 2 (the client's last step) and 3 (our first) — the handover
+        const a = nums[1].getBoundingClientRect(), b = nums[2].getBoundingClientRect();
         path.style.left = `${a.left + a.width / 2 - h.left}px`;
         path.style.top = `${a.bottom + 6 - h.top}px`;
         path.style.height = `${Math.max(0, b.top - 6 - a.bottom - 6)}px`;
@@ -450,7 +451,9 @@ const viberLink = viberHref(co.whatsappE164);
     .abc__p { position: absolute; left: 0; right: 0; bottom: calc(100% + 30px); }   /* 30: the stage motion moves it down by up to 16 px at the start */
     .abc__h { margin: 0; }
     .abc__acts { position: absolute; left: 0; right: 0; top: calc(100% + 48px); margin: 0; }
-    .abc__more { position: absolute; left: 0; right: 0; top: calc(100% + 48px + 48px + 56px); margin: 0; }
+    .abc__more { position: absolute; left: 0; right: 0; top: calc(100% + 48px + 48px + 24px); margin: 0; }   /* closer to the three (Sergei 2026-11-24) */
+    /* «Contact us» comes forward with the three buttons during the stage motion */
+    .abc-stage--stage.is-live .abc__more { opacity: calc(.2 + .8 * var(--p, 0)); transform: translateY(calc(24px * (var(--sc) - 1))); }
   }
   /* the path 1 → 7 (trial, Sergei 2026-11-24): a faint track and an ink line that draws itself down it */
   .ab__path { display: none; }
@@ -458,7 +461,7 @@ const viberLink = viberHref(co.whatsappE164);
     .ab__path { display: block; position: absolute; width: 1px; background: var(--line); z-index: 2; pointer-events: none; }
     /* the numbers sit on the path: centred on it, on a paper patch so the line runs between them */
     .ab3 .two__n { position: relative; z-index: 3; text-align: center; background: var(--paper); align-self: start; }   /* start: the patch only as tall as the digit, so the path shows between 1 and 2 too */
-    .ab__path i { position: absolute; inset: 0; background: var(--ink); transform-origin: 50% 0; transform: scaleY(var(--k, 0)); }
+    .ab__path i { display: none; position: absolute; inset: 0; background: var(--ink); transform-origin: 50% 0; transform: scaleY(var(--k, 0)); }
   }
   /* «Contact us» (Sergei 2026-11-24): no arrow at rest; on hover it fades in and slides, as the «Three paths» doors */
   .abc__ar { display: inline-block; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }

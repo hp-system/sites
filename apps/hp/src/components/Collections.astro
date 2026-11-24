@@ -109,6 +109,8 @@ const pages = Math.ceil(items.length / 4);
   /* ── #101 desktop ─────────────────────────────────────────────────────── */
   @media (min-width: 1024px) {
     .hz-head { display: flex; justify-content: space-between; align-items: flex-end; }
+    /* Sergei 2026-11-24: the keyword line on one row (no 56ch limit on desktop) */
+    .hz-head p:not([data-h]) { max-width: none; white-space: nowrap; }
     .hz-head .h-dash { display: flex; }
     .colls {
       display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;

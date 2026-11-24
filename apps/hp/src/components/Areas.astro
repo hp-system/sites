@@ -92,4 +92,6 @@ const { lang, items, from, headHref } = Astro.props;
     .atile__t b { font-size: var(--fs-s1); }
     .alinks { justify-content: space-between; font-size: var(--fs-s0); }
   }
+  /* Sergei 2026-11-24: the question on one row where it fits beside nothing wider than the column (≥1360 px) */
+  @media (min-width: 1360px) { .hz-head p:not([data-h]) { max-width: none; white-space: nowrap; } }
 </style>

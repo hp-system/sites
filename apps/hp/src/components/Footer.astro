@@ -28,7 +28,9 @@ const co = await company();
 // Δήμοι πρώτα, μετά οι συλλογές — ό,τι δείχνει και η αρχική.
 // Never a page that is always noindex (MIN_LIVE Infinity: Detached houses, withdrawn 2026-11-12, D-20261112-SS-1;
 // Sergei 2026-11-16 saw it in the footer).
-const seoLinks = FACETS.filter((f) => MIN_LIVE[f.key] !== Infinity).map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang] }));
+const seoLinks = FACETS.filter((f) => MIN_LIVE[f.key] !== Infinity).map((f) => ({ href: facetUrl(lang, f.key), name: f.name[lang], muni: !!f.q.municipality }));
+// Sergei 2026-11-24: shorter groups — the areas apart from the property types
+const areaLinks = seoLinks.filter((x) => x.muni), typeLinks = seoLinks.filter((x) => !x.muni);
 
 // 🛡️ ΔΙΧΤΥ: ΔΕΝ ΔΕΙΧΝΟΥΜΕ ΣΥΝΔΕΣΜΟ ΓΙΑ ΣΕΛΙΔΑ ΠΟΥ ΔΕΝ ΥΠΑΡΧΕΙ.
 //    Έτσι γεννήθηκαν οι 124 νεκροί σύνδεσμοι: τα μενού γράφτηκαν πριν τις σελίδες και
@@ -56,10 +58,15 @@ import { consentText } from '../lib/consent';
         </p>
       </div>
 
-      <nav aria-label={t(lang, 'foot.properties')}>
-        <p data-h class="fcol__h">{t(lang, 'foot.properties')}</p>
-        {seoLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
+      <nav aria-label={t(lang, 'foot.areas')}>
+        <p data-h class="fcol__h">{t(lang, 'foot.areas')}</p>
+        {areaLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
         <a href={listUrl(lang)}>{t(lang, 'foot.properties')} →</a>
+      </nav>
+
+      <nav aria-label={t(lang, 'foot.types')}>
+        <p data-h class="fcol__h">{t(lang, 'foot.types')}</p>
+        {typeLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
       </nav>
 
       <nav aria-label={t(lang, 'foot.services')}>
@@ -97,7 +104,7 @@ import { consentText } from '../lib/consent';
 </footer>
 
 <style>
-  .site-footer { background: var(--paper-2); padding: var(--s7) 0 var(--s6); border-top: 1px solid var(--line); }
+  .site-footer { background: var(--paper-2); padding: var(--s7) 0 var(--s5); border-top: 1px solid var(--line); }
   .fcols { display: grid; gap: var(--s5); }
   .brand {
     display: inline-flex; align-items: center; gap: 10px;
@@ -106,20 +113,22 @@ import { consentText } from '../lib/consent';
   .brand svg { width: 24px; height: 24px; flex: none; }
   /* Κάθε στοιχείο επικοινωνίας σε δική του γραμμή — δεν σπάει σε τυχαίο σημείο. */
   .fbrand__addr {
-    margin: var(--s3) 0 0; color: var(--muted); font-size: var(--fs-s0); max-width: 34ch; line-height: 1.7;
+    margin: var(--s3) 0 0; color: var(--muted); font-size: var(--fs-s-1); max-width: 34ch; line-height: 1.8;   /* compact (Sergei 2026-11-24) */
     display: flex; flex-direction: column; align-items: flex-start;
   }
   .fbrand__hq i { font-style: normal; color: var(--faint); }
   .fcol__h {
     font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--muted); margin: 0 0 var(--s2);
+    color: var(--faint); margin: 0 0 var(--s2);
   }
-  .fcols nav a { display: block; padding: 5px 0; font-size: var(--fs-s0); color: var(--ink-2); min-height: 30px; }
+  /* compact (Sergei 2026-11-24): 13 px, rows 24 px apart — was 17 px in 40 px rows */
+  .fcols nav a { display: block; padding: 3px 0; font-size: var(--fs-s-1); line-height: 1.4; color: var(--ink-2); }
   .fcols nav a:hover { color: var(--ink); }
   .fbot {
-    margin: var(--s6) 0 0; padding-top: var(--s4); border-top: 1px solid var(--line);
+    margin: var(--s5) 0 0; padding-top: var(--s4); border-top: 1px solid var(--line);
     font-size: var(--fs-s-1); color: var(--faint);
   }
   .fcookie { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
-  @media (min-width: 760px) { .fcols { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: var(--s6); } }
+  @media (min-width: 760px) { .fcols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s5); } }
+  @media (min-width: 1024px) { .fcols { grid-template-columns: 1.6fr repeat(5, minmax(0, 1fr)); gap: var(--s5); } }
 </style>

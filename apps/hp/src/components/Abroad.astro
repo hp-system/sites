@@ -118,9 +118,9 @@ const viberLink = viberHref(co.whatsappE164);
       </ol>
       </div>
     </div>
-    {/* Sergei 2026-11-24: a hairline under «We do the rest», as wide as the texts; it shrinks to its middle while
+    {/* Sergei 2026-11-24: a hairline under «We do the rest», the full width of the screen; it shrinks to its middle while
         scrolling and is gone when «You take on no risk» comes (script below) */}
-    <div class="wrap ab__rulew" aria-hidden="true"><span class="ab__rule"></span></div>
+    <div class="ab__rulew" aria-hidden="true"><span class="ab__rule"></span></div>
   </section>
 </div>
 
@@ -407,4 +407,13 @@ const viberLink = viberHref(co.whatsappE164);
   :global(html.ab-anim) .ab3 .abroad--us.is-in .ab__grid > div:first-child > *:nth-child(2) { transition-delay: .08s; }
   :global(html.ab-anim) .ab3 .abroad.is-in .abroad__head > *:nth-child(3),
   :global(html.ab-anim) .ab3 .abroad--us.is-in .ab__grid > div:first-child > *:nth-child(3) { transition-delay: .16s; }
+  /* the close (Sergei 2026-11-24): «You take on no risk…» on the screen's middle — the small line hangs above it,
+     the buttons lower (48 px) and «Contact us» lower still; they no longer push the big line up */
+  @media (min-width: 1024px) {
+    .abc__in { position: relative; }
+    .abc__p { position: absolute; left: 0; right: 0; bottom: calc(100% + 14px); }
+    .abc__h { margin: 0; }
+    .abc__acts { position: absolute; left: 0; right: 0; top: calc(100% + 48px); margin: 0; }
+    .abc__more { position: absolute; left: 0; right: 0; top: calc(100% + 48px + 48px + 56px); margin: 0; }
+  }
 </style>

@@ -133,3 +133,20 @@
 .k-rail > * { flex: none; width: calc((100% - var(--s3)) / 2); scroll-snap-align: start; }
 @media (min-width: 1024px) { .k-rail > * { width: calc((100% - 3 * var(--s3)) / 4); } }
 @media (prefers-reduced-motion: reduce) { .k-rail { scroll-behavior: auto; } }
+
+/* ── #361 one light look for the tile photos (Collections, by area) — Sergei 2026-11-24 ─────────────────────────
+   The photos were taken in different light; a light, even grade makes them one series. CSS only: the files, their
+   addresses and alts stay the same (no SEO change, no extra bytes). Never darker: saturation down a little,
+   brightness slightly up. On hover the photo comes back to its own colour. Trial: ?look=a|b|c picks one of three
+   (lib below, Base.astro); the chosen one becomes the default. */
+.coll img, .atile img { transition: transform .45s ease, filter .45s ease !important; }   /* !important: beats the scoped transition of each component */
+.coll::before, .atile::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .45s ease; }
+/* a — calm natural: the acid turquoise goes, contrast evened */
+html[data-look='a'] :is(.coll, .atile) img { filter: saturate(.86) contrast(.97) brightness(1.03); }
+/* b — warm film: a touch of warmth and softness */
+html[data-look='b'] :is(.coll, .atile) img { filter: sepia(.14) saturate(.88) contrast(.96) brightness(1.04); }
+/* c — the brand's tone: colour shifted slightly toward the ink, no darkening (blend «color» changes hue only) */
+html[data-look='c'] :is(.coll, .atile) img { filter: saturate(.8) brightness(1.04); }
+html[data-look='c'] :is(.coll, .atile)::before { background: #2c3e46; mix-blend-mode: color; opacity: .14; }
+html[data-look] :is(.coll, .atile):is(:hover, :focus-visible) img { filter: none; }
+html[data-look] :is(.coll, .atile):is(:hover, :focus-visible)::before { opacity: 0; }

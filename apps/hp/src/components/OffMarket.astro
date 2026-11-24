@@ -66,7 +66,13 @@ if (count < 1) return null;
 
       <div class="off__act">
         <p class="off__ask">{t(lang, 'off.ask2')}</p>
-        <a class="btn h-gild" href={`${prefix(lang)}/login`} rel="nofollow" data-ev="register:off_market">
+        <a class="btn h-gild off__btn" href={`${prefix(lang)}/login`} rel="nofollow" data-ev="register:off_market">
+          {/* the lock on the button too (Sergei 2026-11-23), drawn like the band's lock, in the text's colour, a little larger */}
+          <svg class="off__bl" width="14" height="18" viewBox="0 0 24 30" aria-hidden="true">
+            <path d="M6 13V8.5a6 6 0 0 1 12 0V13" fill="none" stroke="currentColor" stroke-width="2" />
+            <rect x="2.5" y="13" width="19" height="15" fill="none" stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="19.5" r="1.8" fill="currentColor" />
+          </svg>
           {t(lang, 'off.access', { b: t(lang, 'off.brand') })}
         </a>
       </div>
@@ -94,6 +100,8 @@ if (count < 1) return null;
   .off__adj { font-weight: 600; }
 
   .off__act { align-self: end; }
+  .off__btn { display: inline-flex; align-items: center; gap: 10px; }
+  .off__bl { flex: none; width: 14px; height: 18px; margin-top: -3px; }
   .off__ask { margin: 0 0 var(--s4); font-size: var(--fs-s0); color: rgba(255,255,255,.86); max-width: 40ch; }
   .off__act .btn { background: #fff; color: var(--ink-deep); border-color: #fff; }
   .off__fine { margin: var(--s3) 0 0; font-size: var(--fs-s-1); color: rgba(255,255,255,.42); }
@@ -113,8 +121,13 @@ if (count < 1) return null;
 
   /* ── #101 desktop ─────────────────────────────────────────────────────── */
   @media (min-width: 1024px) {
-    .off { position: relative; overflow: hidden; padding: 48px 0; }
+    .off { position: relative; overflow: hidden; padding: 72px 0; }   /* more air (Sergei 2026-11-24, was 48 px); the big lock still drifts edge to edge — its travel is the band height */
     .off .wrap { position: relative; z-index: 1; }
+    /* trial (Sergei 2026-11-24): the content drifts down with the big lock, on the same scroll — within the band's
+       padding (from 48 px above the middle to 48 px below, 24 px clear of each edge), since the lock's own travel
+       (the band's height) would take the text out of the band */
+    .off .wrap { transform: translateY(calc((var(--offp, .5) - .5) * 96px)); will-change: transform; }
+    @media (prefers-reduced-motion: reduce) { .off .wrap { transform: none; } }
     .off__grid { align-items: center; }
     .off__lock { display: none; }
     /* Sergei 03/11: the heading in two lines, not three — a wider left column, no ch limit */

@@ -271,7 +271,7 @@ if (spec?.faq.length) jsonLd.push({
 
   <main id="main" data-list-path={new URL(url, "http://x").pathname}>
     {apiDown && (
-      <div class="wrap" style="padding:var(--s7) 0">
+      <div class="wrap" style="padding-block:var(--s7)">   {/* padding-block: keeps the side gutter, in line with the content (Sergei 2026-11-24) */}
         <p class="t-body">{t(lang, 'home.api_down')}</p>
       </div>
     )}
@@ -414,7 +414,7 @@ if (spec?.faq.length) jsonLd.push({
     .h-gild.grun { animation: h-gturn 1.1s ease-in-out 1; }
 
     /* Collections + by area: together one screen, half each; Collections on beige */
-    #main .hz { height: 50vh; min-height: 340px; box-sizing: border-box; padding: 28px 0; display: flex; }
+    #main .hz { height: 50vh; min-height: 340px; box-sizing: border-box; padding: 80px 0; display: flex; }   /* more air, the same above and below (Sergei 2026-11-24, was 28 px) */
     /* Sergei 02/11 (live, 2nd): every tile of both rows has ONE height — the photo shape of the property
        cards above (3:2) — whatever the screen height; the sections size to their tiles. */
     #main .hz { height: auto; min-height: 0; max-height: none; }
@@ -661,6 +661,7 @@ if (spec?.faq.length) jsonLd.push({
     const p = Math.min(1, Math.max(0, (vh - r.height - r.top) / span));
     const travel = Math.max(0, band.clientHeight - (lock.getBoundingClientRect().height || 100));
     lock.style.transform = `translateY(${(p * travel).toFixed(1)}px)`;
+    band.style.setProperty('--offp', p.toFixed(3));   // the band's content drifts with the lock (Sergei 2026-11-24, trial)
   };
 
   // ── Back to top: after one screen.

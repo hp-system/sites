@@ -17,6 +17,7 @@
 //    Στατική λίστα εξαιρέσεων δεν μπορεί να τα προλάβει ΠΟΤΕ.
 // ⏭️ Το σωστό τελικό είναι ξεχωριστές φωτογραφίες τοπίου για τις συλλογές
 //    (επιλογή George) — τότε ξαναγυρίζουν σε καθαρές, νόμιμα.
+import { tileGrade } from '../lib/tile-grade';   // #361: each photo's own correction
 import { clean, altOf, cleanSrcSet, type Photo, cleanSrcSetSmall } from '../lib/photos';
 import { t, listUrl, type Lang } from '../lib/i18n';
 import { num } from '../lib/format';
@@ -33,7 +34,9 @@ const pages = Math.ceil(items.length / 4);
         (dashes top right). Every tile is in the HTML. Phone: the row is swiped. */}
     <div class="shead hz-head">
       <div>
-        <p data-h id="coll-h" class="t-h2">{t(lang, 'coll.h2')}</p>
+        {/* Sergei 2026-11-24: a real H2 with George's P01 headings («Houses, apartments, villas and land», «Seafront
+            property in Halkidiki»); the line under it carries the keywords. Was «Collections» in a <p>. */}
+        <h2 data-h id="coll-h" class="t-h2">{t(lang, 'home.coll_h2')}</h2>
         <p>{t(lang, 'home.coll_sub')}</p>
       </div>
       {pages > 1 && (
@@ -49,7 +52,7 @@ const pages = Math.ceil(items.length / 4);
     <ul class="colls h-rail" id="railCl" data-hrail data-gap="12">
       {items.map((c) => (
         <li>
-          <a class="coll" href={c.href}>
+          <a class="coll" href={c.href} style={tileGrade(c.key)}>
             {/* 🪤 ΤΟ ΣΧΟΛΙΟ ΜΕΝΕΙ ΕΞΩ ΑΠΟ ΤΟ `{cond && ( … )}` — μέσα του το Astro
                 σκάει με «Expected ")" but found $$render».
                 Το πλακίδιο ΕΙΧΕ ΜΟΝΟ `src`: σέρβιρε πάντα `_800w` ακόμα και στα
@@ -70,7 +73,7 @@ const pages = Math.ceil(items.length / 4);
             )}
             <span class="coll__t">
               <b set:html={c.title}></b>
-              <span>{c.sub}</span>
+              {/* Sergei 2026-11-24: no «Show properties» line (c.sub) under the title */}
             </span>
           </a>
         </li>
@@ -85,7 +88,7 @@ const pages = Math.ceil(items.length / 4);
   .coll img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
   .coll:hover img { transform: scale(1.03); }
   .coll__t {
-    position: absolute; inset: auto 0 0 0; padding: var(--s4); color: #fff;
+    position: absolute; inset: auto 0 0 0; padding: var(--s4); color: #fff; text-align: center;   /* the name centred at the bottom (Sergei 2026-11-24) */
     background: linear-gradient(0deg, rgba(0,0,0,.7), rgba(0,0,0,0));
   }
   .coll__t b { display: block; font-size: var(--fs-s1); font-weight: 300; }
@@ -107,6 +110,8 @@ const pages = Math.ceil(items.length / 4);
   /* ── #101 desktop ─────────────────────────────────────────────────────── */
   @media (min-width: 1024px) {
     .hz-head { display: flex; justify-content: space-between; align-items: flex-end; }
+    /* Sergei 2026-11-24: the keyword line on one row (no 56ch limit on desktop) */
+    .hz-head p:not([data-h]) { max-width: none; }
     .hz-head .h-dash { display: flex; }
     .colls {
       display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
@@ -122,4 +127,6 @@ const pages = Math.ceil(items.length / 4);
     .coll:hover .coll__t b { transform: translateY(-2px); }
   }
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) { .colls { scroll-behavior: auto; } }
+  /* one row where the widest language (Greek, ~1080 px) fits beside the arrows; narrower desktops wrap */
+  @media (min-width: 1360px) { .hz-head p:not([data-h]) { white-space: nowrap; } }
 </style>

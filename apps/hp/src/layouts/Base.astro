@@ -22,6 +22,7 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/kit.css';   // shared design kit (#186)
 import { brand } from '../brand/index';
+import { ui } from '../lib/listing';
 import { HERO_SHOTS } from '../lib/hero';
 import { clean, SHARE_W, SHARE_H } from '../lib/photos';
 
@@ -212,7 +213,7 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
     <script type="application/ld+json" set:html={JSON.stringify(b).replace(/</g, '\\u003c')} />
   ))}
 </head>
-<body class:list={[embed && 'embed']}>
+<body class:list={[embed && 'embed']} data-ra-prev={ui(lang, 'prev')} data-ra-next={ui(lang, 'next')}>
   {!embed && <a class="sr-only" href="#main">{t(lang, 'a11y.skip')}</a>}
   <slot />
   {!embed && <CookieConsent lang={lang} />}
@@ -221,6 +222,13 @@ const tf = typeface();   // 'mont' | 'fallback' — μία ρύθμιση, δε�
   {!embed && isMember && <MemberEvents />}
   {/* Σήμανση: ένα listener για όλη τη σελίδα, χωρίς βιβλιοθήκη. Δες lib/track.ts. */}
   <script is:inline set:html={TRACK_SNIPPET} />
+  <script>
+    // #349: every carousel's page dashes → two arrows that unfold like the pager's (lib/rail-arrows.ts)
+    import { railArrows } from '../lib/rail-arrows';
+    const raRun = () => railArrows({ prev: document.body.dataset.raPrev || 'Previous', next: document.body.dataset.raNext || 'Next' });
+    raRun();
+    document.addEventListener('astro:page-load', raRun);
+  </script>
   <script>
     // Every pop-up menu closes on a click outside it and on Esc (Sergei 2026-11-23 «все попапы должны закрываться
     // когда клик вне попапа»): the account menu, the language switch, the list's sort and per-page boxes, and any

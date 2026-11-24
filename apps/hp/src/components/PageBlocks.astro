@@ -3,6 +3,8 @@
 // for this page) on the beige band, then «by area» (the five areas, for this page) on white. Data: lib/list-blocks.
 // SEO (George's rule 15): the caption link is the tile's only link text — his exact anchor where the tile is one of
 // his links — stretched over the tile; «from €» sits outside the link. The rail script is LinkTiles' (data-lt-rail).
+import { tilePhoto } from '../lib/tile-photos';   // the chosen photo for a whole-type tile (Sergei 2026-11-24)
+import { tileGradeFor } from '../lib/tile-grade';   // each chosen photo's own correction
 import type { BlockTile } from '../lib/list-blocks';
 import { clean, cleanSrcSetSmall, altOf } from '../lib/photos';
 import { t, listUrl, type Lang } from '../lib/i18n';
@@ -20,6 +22,9 @@ interface Props {
 const { lang, cats, areas, areasFrom, catsSub, areasSub, catsH } = Astro.props;
 const rail = `pb${Math.random().toString(36).slice(2, 8)}`;
 const pages = Math.ceil(cats.length / 4);
+// Sergei 2026-11-24: the chosen photo on a whole-type tile; names centred, no «from €» (styles/kit.css)
+const cats2 = cats.map((x) => ({ ...x, photo: tilePhoto(x.href, lang, x.photo) }));
+const areas2 = areas.map((x) => ({ ...x, photo: tilePhoto(x.href, lang, x.photo) }));
 ---
 {cats.length > 0 && (
   <section class="pb pb--cats" aria-labelledby={`${rail}-c`}>
@@ -39,10 +44,10 @@ const pages = Math.ceil(cats.length / 4);
         )}
       </div>
       <ul class="k-rail pb__rail" id={rail} data-lt-rail>
-        {cats.map((x) => (
-          <li class="k-tile">
+        {cats2.map((x) => (
+          <li class="k-tile" style={tileGradeFor(x.photo)}>
             {x.photo && <img src={clean(x.photo.url, 800)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 4), 80vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
-            <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a><span class="k-tile__s">{x.sub}</span></span>
+            <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a></span>
           </li>
         ))}
       </ul>
@@ -59,10 +64,10 @@ const pages = Math.ceil(cats.length / 4);
         </div>
       </div>
       <ul class="k-tiles pb__areas" style={`--n: ${areas.length}`}>
-        {areas.map((x) => (
-          <li class="k-tile">
+        {areas2.map((x) => (
+          <li class="k-tile" style={tileGradeFor(x.photo)}>
             {x.photo && <img src={clean(x.photo.url, 800)} srcset={cleanSrcSetSmall(x.photo.url)} sizes="(min-width: 1024px) calc((min(100vw, 1280px) - 116px) / 5), 50vw" alt={altOf(x.photo, lang, x.text)} width="800" height="533" loading="lazy" decoding="async" />}
-            <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a><span class="k-tile__s">{x.sub}</span></span>
+            <span class="k-tile__t"><a class="k-tile__l" href={x.href}>{x.text}</a></span>
           </li>
         ))}
       </ul>

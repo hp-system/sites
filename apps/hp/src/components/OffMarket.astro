@@ -121,7 +121,7 @@ if (count < 1) return null;
 
   /* ── #101 desktop ─────────────────────────────────────────────────────── */
   @media (min-width: 1024px) {
-    .off { position: relative; overflow: hidden; padding: 48px 0; }
+    .off { position: relative; overflow: hidden; padding: 72px 0; }   /* more air (Sergei 2026-11-24, was 48 px); the big lock still drifts edge to edge — its travel is the band height */
     .off .wrap { position: relative; z-index: 1; }
     .off__grid { align-items: center; }
     .off__lock { display: none; }

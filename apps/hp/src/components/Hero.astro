@@ -34,6 +34,11 @@ const { lang, photo: basePhoto, alt, munis, total, h1, intro } = Astro.props;
 // count it, or would treat it as hidden.
 const introText = (intro ?? '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const H1 = h1 || t(lang, 'hero.h1');
+// Sergei 2026-11-24: «Halkidiki Real Estate: Your Local Agency…» — no colon on screen, the part after it on its own
+// line. The H1 keeps the same words in the same order (a space between the two parts), so search engines read the
+// same heading; only the line break is visual.
+const [h1a, ...h1rest] = H1.split(/:\s+/);
+const h1b = h1rest.join(': ');
 
 // The message slot (lib/hero-messages.ts): a dated message replaces the default copy, and its
 // own picture / video / plain ground. `?hero=<id>` previews one off production only.
@@ -93,7 +98,7 @@ const setSmall = photo ? cleanSrcSetSmall(photo.url) : '';
       </>
     ) : (
       <>
-        <h1 class="t-display">{H1}</h1>
+        <h1 class="t-display">{h1b ? <>{h1a}{' '}<br />{h1b}</> : H1}</h1>
         {/* Sergei 08/11: «hero.sub» («Singular collections…») removed — the ticker below carries the spec intro */}
       </>
     )}

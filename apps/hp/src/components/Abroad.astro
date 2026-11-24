@@ -52,11 +52,11 @@ const c2 = cRest.join(' ');
 const closeQ = Astro.url.searchParams.get('close') ?? '';
 const closeV = closeQ === 'plain' ? '' : closeQ === 'slices' ? 'slices' : 'stage';
 // Sergei 08/11: the close's key words in bold (as «The land … begins» above), in every language.
-const CLOSE_BOLD: Record<Lang, string[]> = {
-  en: ['no risk', 'checked'], el: ['κανένα ρίσκο', 'ελέγξει'], bg: ['риск', 'проверили'],
-  sr: ['nijedan rizik', 'proverili'], de: ['kein Risiko', 'geprüft'], ro: ['niciun risc', 'verificat'],
-  tr: ['hiçbir riski', 'kontrol'], he: ['שום סיכון', 'בדקנו'], ru: ['ни одного риска', 'проверили'],
-};
+const CLOSE_BOLD: Record<Lang, string[]> = {   // Sergei 2026-11-24: «You take no risk — we check everything first.»
+  en: ['no risk', 'check everything'], el: ['κανένα ρίσκο', 'τα ελέγχουμε όλα'], bg: ['никакъв риск', 'проверяваме всичко'],
+  sr: ['nikakav rizik', 'sve proveravamo'], de: ['kein Risiko', 'prüfen alles'], ro: ['niciun risc', 'verificăm totul'],
+  tr: ['Hiçbir risk', 'kontrol ederiz'], he: ['שום סיכון', 'בודקים הכול'], ru: ['ничем не рискуете', 'всё проверяем'],
+}
 const c2parts = (() => {
   const out: { s: string; b: boolean }[] = [];
   let rest = c2;
@@ -83,25 +83,21 @@ const viberLink = viberHref(co.whatsappE164);
 {/* Sergei 03/11: the two stacks keep turning under the pointer (no data-rot-hold any more) */}
 <div class="ab3">
   <section class="abroad abroad--you" aria-labelledby="abroad-h">
+    {/* trial (Sergei 2026-11-24): one path through the seven numbers, from the client's two steps into our five,
+        across the gap between the bands; it draws itself while scrolling (script below). Desktop only. */}
+    <span class="ab__path" aria-hidden="true"><i></i></span>
     <div class="wrap ab__grid">
       <div class="abroad__head">
         <p class="t-label abroad__eyebrow">{t(lang, 'abroad.eyebrow')}</p>
         <p data-h id="abroad-h" class="t-h2 abroad__h">{h2a}</p>
         <p class="abroad__sub">{t(lang, 'ab.sub')}</p>
       </div>
-      <div class="ab__rot" role="region" aria-label={t(lang, 'ab.you_h')}>
-        <ul class="two__l h-stack" data-rot="ab">
-          {YOU.map(([tk, dk], i) => (
-            <li class:list={['h-sx', i === 0 && 'on']}><b>{t(lang, tk)}</b><i>{t(lang, dk)}</i></li>
-          ))}
-        </ul>
-        <div class="h-bars" role="group" aria-label={t(lang, 'ab.you_h')}>
-          {YOU.map(([tk], i) => (
-            <button type="button" class:list={['h-bar', i === 0 && 'on']} aria-pressed={i === 0 ? 'true' : 'false'}
-                    aria-label={t(lang, tk)}><span></span></button>
-          ))}
-        </div>
-      </div>
+      {/* #345 (Sergei with George 2026-11-24): every step shown at once — no turning, shorter texts */}
+      <ol class="two__l two__l--you" aria-label={t(lang, 'ab.you_h')}>
+        {YOU.map(([tk, dk], i) => (
+          <li style={`--i:${i}`}><span class="two__n" aria-hidden="true">{i + 1}</span><b>{t(lang, tk)}</b><i>{t(lang, dk)}</i></li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -110,21 +106,24 @@ const viberLink = viberHref(co.whatsappE164);
     <div class="wrap ab__grid">
       <div>
         <p data-h id="abroad-h2" class="t-h2 abroad__h abroad__h--we">{t(lang, 'ab.h2_we')}</p>
+        {/* the slogan (Sergei 2026-11-24) */}
+        <p class="abroad__sub abroad__sub--we">{t(lang, 'ab.we_sub')}</p>
       </div>
-      <div class="ab__rot" role="region" aria-label={t(lang, 'ab.us_h')}>
-        <ul class="two__l h-stack" data-rot="ab">
-          {US.map(([tk, dk], i) => (
-            <li class:list={['h-sx', i === 0 && 'on']}><b>{t(lang, tk)}</b><i>{t(lang, dk)}</i></li>
-          ))}
-        </ul>
-        <div class="h-bars h-bars--dk" role="group" aria-label={t(lang, 'ab.us_h')}>
-          {US.map(([tk], i) => (
-            <button type="button" class:list={['h-bar', i === 0 && 'on']} aria-pressed={i === 0 ? 'true' : 'false'}
-                    aria-label={t(lang, tk)}><span></span></button>
-          ))}
-        </div>
+      {/* the five steps, one per line */}
+      <div>
+      {/* Sergei 2026-11-24: «Every legal matter is ours.» (ab.us_lead) dropped — the heading and the steps say it */}
+      <ol class="two__l two__l--us" aria-label={t(lang, 'ab.us_h')}>
+        {/* Sergei 2026-11-24: who does each step (ab.us*_d) is no longer shown — the line above says it */}
+        {/* Sergei 2026-11-24: numbered and set like the client's steps, going on from them (3–7), no rules between */}
+        {US.map(([tk], i) => (
+          <li style={`--i:${i}`}><span class="two__n" aria-hidden="true">{YOU.length + i + 1}</span><b>{t(lang, tk)}</b></li>
+        ))}
+      </ol>
       </div>
     </div>
+    {/* Sergei 2026-11-24: a hairline under «We do the rest», the full width of the screen; it shrinks to its middle while
+        scrolling and is gone when «You take on no risk» comes (script below) */}
+    <div class="ab__rulew" aria-hidden="true"><span class="ab__rule"></span></div>
   </section>
 </div>
 
@@ -147,35 +146,76 @@ const viberLink = viberHref(co.whatsappE164);
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c5 0 8 2.4 8 7.5S17 18 12 18l-3.5 3v-3.4C5.6 16.6 4 14.2 4 10.5 4 5.4 7 3 12 3Z"/><path d="M12.5 7.5a3 3 0 0 1 3 3"/></svg>
         Viber</a>
     </p>
-    {pageExists('contact') && <p class="abc__more"><a href={contentUrl('contact', lang)}>{t(lang, 'co.contact')} <span aria-hidden="true">→</span></a></p>}
+    {pageExists('contact') && <p class="abc__more"><a href={contentUrl('contact', lang)}>{t(lang, 'co.contact')} <span class="abc__ar" aria-hidden="true">→</span></a></p>}
   </div>
 </section>
 </div>
 
 
 <script>
-  // depth of the two «abroad» bands (desktop; none with reduced motion): each sticks where its bottom meets the screen's
-  // and dims as the next block slides over it
+  // Sergei 2026-11-24: a little life — each band's texts come in when it is reached: the left side fades up, the
+  // numbered steps on the right one after another; and the hairline under «We do the rest» shrinks to its middle
+  // as the page scrolls on. Nothing moves with reduced motion; without the script everything is simply shown.
   {
-    const desk = matchMedia('(min-width: 1024px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)');
     const bands = Array.from(document.querySelectorAll<HTMLElement>('.ab3 > .abroad'));
-    const nextOf = (b: HTMLElement) => (b.nextElementSibling ?? b.parentElement?.nextElementSibling) as HTMLElement | null;
-    let raf = 0;
-    const place = () => bands.forEach((b) => b.style.setProperty('--ab-top', `${Math.min(0, innerHeight - b.offsetHeight)}px`));
-    const tick = () => {
-      raf = 0;
-      bands.forEach((b) => {
-        const n = nextOf(b);
-        if (!n || !desk.matches || still.matches) { b.style.setProperty('--ab-dim', '0'); return; }
-        const r = b.getBoundingClientRect();
-        const covered = Math.min(1, Math.max(0, (r.bottom - n.getBoundingClientRect().top) / r.height));
-        b.style.setProperty('--ab-dim', String(covered * 0.3));
-      });
-    };
-    const ask = () => { if (!raf) raf = requestAnimationFrame(tick); };
-    place(); tick();
-    addEventListener('scroll', ask, { passive: true });
-    addEventListener('resize', () => { place(); ask(); });
+    if (!still.matches && 'IntersectionObserver' in window && bands.length) {
+      document.documentElement.classList.add('ab-anim');
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { (e.target as HTMLElement).classList.add('is-in'); io.unobserve(e.target); }
+      }), { threshold: 0.3 });
+      bands.forEach((b) => io.observe(b));
+    }
+    // the path 1 → 7: placed on the numbers' column from the first number to the last; its ink part grows with the
+    // scroll (its tip ~70 % down the screen), so the client's steps visibly run on into ours
+    const path = document.querySelector<HTMLElement>('.ab__path');
+    const nums = Array.from(document.querySelectorAll<HTMLElement>('.ab3 .two__n'));
+    if (path && nums.length > 1) {
+      const host = path.parentElement as HTMLElement;
+      const deskP = window.matchMedia('(min-width: 1024px)');
+      let qp = false;
+      const lay = () => {
+        if (!deskP.matches) { path.style.display = 'none'; return; }
+        path.style.display = '';
+        const h = host.getBoundingClientRect();
+        // Sergei 2026-11-24: only between 2 (the client's last step) and 3 (our first) — the handover
+        const a = nums[1].getBoundingClientRect(), b = nums[2].getBoundingClientRect();
+        path.style.left = `${a.left + a.width / 2 - h.left}px`;
+        path.style.top = `${a.bottom + 6 - h.top}px`;
+        path.style.height = `${Math.max(0, b.top - 6 - a.bottom - 6)}px`;
+      };
+      const draw = () => {
+        qp = false;
+        if (!deskP.matches) return;
+        if (still.matches) { path.style.setProperty('--k', '1'); return; }
+        const r = path.getBoundingClientRect();
+        const k = Math.min(1, Math.max(0, (window.innerHeight * 0.7 - r.top) / (r.height || 1)));
+        path.style.setProperty('--k', k.toFixed(3));
+      };
+      const askP = () => { if (!qp) { qp = true; requestAnimationFrame(draw); } };
+      const relay = () => { lay(); askP(); };
+      relay();
+      document.fonts?.ready.then(relay);
+      window.addEventListener('resize', relay);
+      window.addEventListener('scroll', askP, { passive: true });
+      window.setTimeout(relay, 1500);   // after the steps have come in
+    }
+    const rule = document.querySelector<HTMLElement>('.ab__rule');
+    if (rule && !still.matches) {
+      let q = false;
+      const place = () => {
+        q = false;
+        const vh = window.innerHeight || 800;
+        const y = rule.getBoundingClientRect().top;
+        // whole while the line is in the lower part of the screen; gone by the time it reaches the top quarter
+        const k = Math.min(1, Math.max(0, (y - vh * 0.25) / (vh * 0.5)));
+        rule.style.transform = `scaleX(${k.toFixed(3)})`;
+      };
+      const ask = () => { if (!q) { q = true; requestAnimationFrame(place); } };
+      window.addEventListener('scroll', ask, { passive: true });
+      window.addEventListener('resize', ask);
+      place();
+    }
   }
   // Sergei 08/11 (desktop): every big line of the two bands stays on ONE line. Where a language's
   // line is longer than its column, the font shrinks just enough — one size for the two left
@@ -183,7 +223,6 @@ const viberLink = viberHref(co.whatsappE164);
   const desk = window.matchMedia('(min-width: 1024px)');
   const groups = [
     () => Array.from(document.querySelectorAll<HTMLElement>('.ab3 .abroad__h, .abc__h')),   // the close's line keeps the headings' size
-    () => Array.from(document.querySelectorAll<HTMLElement>('.ab3 .two__l b')),
   ];
   const fit = () => {
     for (const get of groups) {
@@ -198,19 +237,6 @@ const viberLink = viberHref(co.whatsappE164);
       }
       if (k < 1) els.forEach((el) => { el.style.fontSize = `${Math.floor(base * k * 10) / 10}px`; });
     }
-    // centre each band's text group: from the label (or the big line) to the lowest text
-    document.querySelectorAll<HTMLElement>('.ab3 .abroad').forEach((band) => {
-      band.style.removeProperty('--abp');
-      if (!desk.matches) return;
-      const r = band.getBoundingClientRect();
-      const pad = parseFloat(getComputedStyle(band).paddingTop);
-      const parts = Array.from(band.querySelectorAll<HTMLElement>('.abroad__eyebrow, .abroad__h, .abroad__sub, .two__l .h-sx.on b, .two__l .h-sx.on i'))
-        .filter((e) => e.getClientRects().length).map((e) => e.getBoundingClientRect());
-      if (!parts.length) return;
-      const top = Math.min(...parts.map((q) => q.top)) - r.top, bottom = Math.max(...parts.map((q) => q.bottom)) - r.top;
-      const lift = top - pad;                     // the label hangs above the padding line
-      band.style.setProperty('--abp', `${Math.round((r.height - (bottom - top)) / 2 - lift)}px`);
-    });
   };
   fit();
   document.fonts?.ready.then(fit);
@@ -295,7 +321,7 @@ const viberLink = viberHref(co.whatsappE164);
   /* ── Phone / tablet: George's two blocks, one under the other ─────────── */
   .abroad { padding: var(--s6) 0; }
   .abroad--you { background: var(--paper-2); border-top: 1px solid var(--line); padding-top: var(--s7); }
-  .abroad--us { background: var(--ink-deep); color: #fff; }
+  .abroad--us { background: var(--paper); color: var(--ink); }   /* white, not black: less contrast; no line between the two parts (Sergei 2026-11-24) */
   .abroad__head { max-width: 52ch; }
   .abroad__eyebrow { color: var(--faint); }
   .abroad__h { margin: var(--s2) 0 0; }
@@ -304,12 +330,14 @@ const viberLink = viberHref(co.whatsappE164);
 
   .two__l { list-style: none; margin: 0; padding: 0; }
   .two__l li { padding: 11px 0; border-top: 1px solid var(--line); font-size: var(--fs-s0); line-height: 1.4; }
-  .abroad--us .two__l li { border-top-color: rgba(255,255,255,.14); }
+  .abroad--us .two__l li { border-top-color: var(--line); }
   .two__l li:first-child { border-top: 0; }
   .two__l b { display: block; font-weight: 600; }
   .two__l i { display: block; font-style: normal; font-size: var(--fs-s-1); color: var(--muted); margin-top: 3px; }
-  .abroad--us .two__l i { color: rgba(255,255,255,.5); }
-  .h-bars { display: none; }
+  .abroad--us .two__l i { color: var(--muted); }
+  .two__n { display: none; }
+  .abroad--us .abroad__sub { color: var(--muted); }
+  .ab__lead { margin: 0 0 var(--s3); font-size: var(--fs-s0); font-weight: 600; color: var(--ink); }
 
   .abc { padding: var(--s6) 0 var(--s7); background: var(--paper-2); }
   .abc__p { margin: 0; font-size: var(--fs-s0); max-width: 64ch; line-height: 1.55; }
@@ -331,42 +359,31 @@ const viberLink = viberHref(co.whatsappE164);
     .ab__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }   /* Sergei 03/11: both sides centred on one height */
     .abroad__head { max-width: none; }
     .abroad__h { margin: 14px 0 0; font-size: var(--fs-s4); line-height: 1.1; }   /* Sergei 03/11: the same size as «The land is where it begins.» */
-    .abroad__h--we { margin: 0; color: #fff; }   /* Sergei 08/11: every text centred on the band's height */
-    .abroad__sub { margin: 18px 0 0; line-height: 1.65; max-width: 60ch; }
-    .ab__rot { padding-top: 0; }
+    .abroad__h--we { margin: 0; color: var(--ink); }   /* Sergei 08/11: every text centred on the band's height */
+    .abroad__sub { margin: 18px 0 0; line-height: 1.65; max-width: 60ch; text-wrap: balance; }
 
-    .two__l li { padding: 0; border: 0; }
-    .two__l b { font-size: var(--fs-s3); font-weight: 300; line-height: 1.16; letter-spacing: -.016em; }
-    .abroad__h, .two__l b { white-space: nowrap; }   /* Sergei 08/11: one line; the script above shrinks a line that is too long */
-    .two__l i { margin-top: 12px; font-size: var(--fs-s0); color: var(--muted); }
-    .abroad--us .two__l i { color: rgba(255,255,255,.6); }
-    .h-bars { display: flex; }
-    /* Sergei 08/11: the switches sit in the band's top-right corner, as in the other blocks */
-    .abroad { position: relative; }
-    .abroad .h-bars { position: absolute; margin: 0; top: 20px; right: max(var(--gut), calc((100% - var(--max)) / 2 + var(--gut))); }
-    /* Sergei 08/11: the BIG lines of both columns on one line, through the band's middle; the small
-       text hangs above (label) or below (sub, role) and no longer pushes them. 116 px = 140 (half of
-       280) − half the 46 px heading line. The columns share the heading's baseline. */
-    /* Sergei 08/11: both bands the same height (--abh) and the big lines on the middle of each:
-       padding-top = half the band − half the 46 px line. --abh leaves room for three lines of
-       17 px text under the line in every language. */
-    /* Sergei 08/11 (2): the WHOLE text group of each band (label, big line, text under it) sits on
-       the band's middle, not the big line alone — the label above made the group look low. The
-       script measures the group and sets --abp per band; both bands 300 px. */
-    .ab3 { --abh: 300px; }
-    /* depth (Sergei 2026-11-19): «We do the rest for you.» slides over «One signature from you.», and the close «You take
-       on no risk…» slides over «We do the rest for you.» — each band stays (sticky in the page's main; .ab3 is display:
-       contents for that) while the next one, later in the page and so painted above it, comes up with a soft shadow */
+    /* #345 (Sergei with George 2026-11-24): every step shown at once — no turning, no switches, no fixed band height */
     .ab3 { display: contents; }
-    /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow. */
-    .ab3 > .abroad { position: relative; overflow: hidden; }
-    .ab3 > .abroad::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--ab-dim, 0); pointer-events: none; }
+    .ab3 > .abroad { position: relative; }
     .abc-stage { position: relative; z-index: 1; background: var(--paper); clip-path: none !important; box-shadow: none; }   /* #338: no white 100vmax ground from the Construction rule, unclipped here */
-    .abroad, .abroad--you { min-height: var(--abh); height: var(--abh); align-items: flex-start; padding-top: var(--abp, 80px); padding-bottom: 0; }
-    .ab__grid { align-items: baseline; }
-    .abroad__head { position: relative; }
-    .abroad__eyebrow { position: absolute; left: 0; bottom: 100%; margin: 0 0 14px; }
-    .abroad__h { margin-top: 0; }
+    .abroad, .abroad--you { min-height: 0; height: auto; align-items: center; padding: 64px 0; }
+    .ab__grid { align-items: center; }
+    .abroad__eyebrow { margin: 0 0 14px; }
+    .abroad__h { white-space: nowrap; }   /* Sergei 08/11: one line; the script above shrinks a line that is too long */
+    .two__l li { padding: 0; border: 0; }
+    .abroad__sub--we { margin-top: 18px; }
+    .ab__lead { margin: 0 0 20px; }
+    /* «you»: the two steps, numbered */
+    .two__l--you { display: grid; gap: 24px; }
+    .two__l--you li { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; }
+    .two__n { display: block; grid-row: span 2; padding-top: 9px; font-size: var(--fs-s-1); font-weight: 600; color: var(--faint); }
+    .two__l--you b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
+    .two__l--you i { margin-top: 6px; font-size: var(--fs-s0); color: var(--muted); }
+    /* «we»: the five steps set like the client's two, numbered on from them, no rules */
+    .two__l--us { display: grid; gap: 16px; }
+    .two__l--us li { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; }
+    .two__l--us .two__n { grid-row: auto; color: var(--faint); }
+    .two__l--us b { font-size: var(--fs-s2); font-weight: 300; line-height: 1.2; letter-spacing: -.012em; }
 
     /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */
     .abc { min-height: 300px; box-sizing: border-box; display: flex; align-items: center; text-align: center; padding: 40px 0; background: var(--paper); }
@@ -408,5 +425,55 @@ const viberLink = viberHref(co.whatsappE164);
     .abc-stage--stage.is-live .abc__h { transform: scale(var(--sc)); transition: none; }
     .abc-stage--stage.is-live .abc__p { opacity: calc(.35 + .65 * var(--p, 0)); transform: translateY(calc(16px * (1 - var(--p, 0)) - 24px * (var(--sc) - 1))); }
     .abc-stage--stage.is-live .abc__acts { opacity: calc(.2 + .8 * var(--p, 0)); transform: translateY(calc(24px * (var(--sc) - 1))); }
+  }
+  /* ── a little life (Sergei 2026-11-24) ── */
+  .ab__rulew { display: none; }
+  @media (min-width: 1024px) {
+    .ab__rulew { display: block; position: absolute; left: 0; right: 0; bottom: 0; }
+    .ab__rule { display: block; height: 1px; background: var(--line); transform-origin: 50% 50%; will-change: transform; }
+  }
+  :global(html.ab-anim) .ab3 .abroad__head > *, :global(html.ab-anim) .ab3 .abroad--us .ab__grid > div:first-child > *,
+  :global(html.ab-anim) .ab3 .two__l li {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  :global(html.ab-anim) .ab3 .abroad.is-in .abroad__head > *,
+  :global(html.ab-anim) .ab3 .abroad--us.is-in .ab__grid > div:first-child > * { opacity: 1; transform: none; }
+  :global(html.ab-anim) .ab3 .abroad.is-in .two__l li { opacity: 1; transform: none; transition-delay: calc(.25s + var(--i, 0) * .14s); }
+  :global(html.ab-anim) .ab3 .abroad.is-in .abroad__head > *:nth-child(2),
+  :global(html.ab-anim) .ab3 .abroad--us.is-in .ab__grid > div:first-child > *:nth-child(2) { transition-delay: .08s; }
+  :global(html.ab-anim) .ab3 .abroad.is-in .abroad__head > *:nth-child(3),
+  :global(html.ab-anim) .ab3 .abroad--us.is-in .ab__grid > div:first-child > *:nth-child(3) { transition-delay: .16s; }
+  /* the close (Sergei 2026-11-24): «You take on no risk…» on the screen's middle — the small line hangs above it,
+     the buttons lower (48 px) and «Contact us» lower still; they no longer push the big line up */
+  @media (min-width: 1024px) {
+    .abc__in { position: relative; }
+    .abc__p { position: absolute; left: 0; right: 0; bottom: calc(100% + 30px); }   /* 30: the stage motion moves it down by up to 16 px at the start */
+    .abc__h { margin: 0; }
+    .abc__acts { position: absolute; left: 0; right: 0; top: calc(100% + 48px); margin: 0; }
+    .abc__more { position: absolute; left: 0; right: 0; top: calc(100% + 48px + 48px + 24px); margin: 0; }   /* closer to the three (Sergei 2026-11-24) */
+    /* «Contact us» comes forward with the three buttons during the stage motion */
+    .abc-stage--stage.is-live .abc__more { opacity: calc(.2 + .8 * var(--p, 0)); transform: translateY(calc(24px * (var(--sc) - 1))); }
+  }
+  /* the path 1 → 7 (trial, Sergei 2026-11-24): a faint track and an ink line that draws itself down it */
+  .ab__path { display: none; }
+  @media (min-width: 1024px) {
+    .ab__path { display: block; position: absolute; width: 1px; background: var(--line); z-index: 2; pointer-events: none; }
+    /* the numbers sit on the path: centred on it, on a paper patch so the line runs between them */
+    .ab3 .two__n { position: relative; z-index: 3; text-align: center; background: var(--paper); align-self: start; }   /* start: the patch only as tall as the digit, so the path shows between 1 and 2 too */
+    .ab__path i { display: none; position: absolute; inset: 0; background: var(--ink); transform-origin: 50% 0; transform: scaleY(var(--k, 0)); }
+  }
+  /* «Contact us» (Sergei 2026-11-24): no arrow at rest; on hover it fades in and slides, as the «Three paths» doors */
+  .abc__ar { display: inline-block; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
+  .abc__more a:is(:hover, :focus-visible) .abc__ar { opacity: 1; transform: translateX(4px); }
+  :global([dir='rtl']) .abc__ar { transform: translateX(4px) scaleX(-1); }
+  :global([dir='rtl']) .abc__more a:is(:hover, :focus-visible) .abc__ar { transform: translateX(-4px) scaleX(-1); }
+  /* the three channels (Sergei 2026-11-24): quiet at rest — icon and black words only; on hover each becomes the
+     button it was: an ink outline for WhatsApp / Viber, filled ink for the phone */
+  @media (min-width: 1024px) {
+    .abc__btn, .abc__btn--main { background: transparent; color: var(--ink); border-color: transparent;
+      transition: background .25s ease, color .25s ease, border-color .25s ease; }
+    .abc__btn:is(:hover, :focus-visible) { background: transparent; color: var(--ink); border-color: var(--ink); }
+    .abc__btn--main:is(:hover, :focus-visible) { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   }
 </style>

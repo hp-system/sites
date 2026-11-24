@@ -1344,11 +1344,15 @@ const tilePhoto = (() => {
     .pgw { position: relative; width: 40px; height: 40px; display: inline-block; color: var(--ink); }
     .pgd {
       position: absolute; top: 50%; width: 6px; height: 2px; margin-top: -1px; background: rgba(14,18,20,.25);
-      transition: width .35s cubic-bezier(.4,0,.2,1), background .25s ease;
+      transition: width .16s cubic-bezier(.4,0,.2,1), background .12s ease;   /* faster (Sergei 2026-11-24, as the carousel arrows #349) */
     }
     .lpg__c > .pgw:first-child .pgd { inset-inline-end: 17px; }
     .lpg__c > .pgw:last-child .pgd { inset-inline-start: 17px; }
-    .pga { position: absolute; top: 50%; margin-top: -6px; opacity: 0; transition: opacity .2s ease .12s; }
+    .pga { position: absolute; top: 50%; margin-top: -6px; opacity: 0; transition: opacity .1s ease .06s; }
+    /* a wider hover zone, no aiming (Sergei 2026-11-24): up/down and outward only, the look does not move */
+    .pgw::before { content: ''; position: absolute; inset-block: -16px; }
+    .lpg__c > .pgw:first-child::before { inset-inline-start: -24px; inset-inline-end: 0; }
+    .lpg__c > .pgw:last-child::before { inset-inline-start: 0; inset-inline-end: -24px; }
     .pga--l { left: 3px; }
     .pga--r { right: 3px; }
     [dir='rtl'] .pga { transform: scaleX(-1); }

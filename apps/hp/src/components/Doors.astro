@@ -65,7 +65,7 @@ const DOORS = [
   /* ── #101 desktop ─────────────────────────────────────────────────────── */
   @media (min-width: 1024px) {
     /* Sergei 03/11 (mockup «two home blocks»): black band, beige doors, the chosen one white */
-    .doors-sec { background: var(--ink-deep); padding: 36px 0 40px; }
+    .doors-sec { background: var(--ink-deep); padding: 80px 0; }   /* more air, as Collections / by area (Sergei 2026-11-24, was 36 / 40 px) */
     .doors__lbl { display: block; margin: 0 0 16px; color: rgba(255,255,255,.6); }
     .doors { display: flex; gap: 12px; background: none; border: 0; }
     .door {
@@ -87,6 +87,9 @@ const DOORS = [
     .door__a:focus-visible { outline: 0; }
     .door:has(.door__a:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
     .ar { display: inline; font-size: var(--fs-s0); letter-spacing: 0; transition: transform .3s ease; }
+    /* Sergei 2026-11-24: the CTA words and the arrow show only on the door under the pointer (the white one) */
+    .dl { opacity: 0; transition: opacity .2s ease; }
+    .door.on .dl, .door:has(.door__a:focus-visible) .dl { opacity: 1; }
     .door.on .ar { transform: translateX(6px); }
     :global([dir='rtl']) .ar { transform: scaleX(-1); }
     :global([dir='rtl']) .door.on .ar { transform: translateX(-6px) scaleX(-1); }

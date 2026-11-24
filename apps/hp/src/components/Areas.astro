@@ -11,6 +11,7 @@
 // Photos: clean files (#326, Sergei + George 2026-11-23: the logo only on property cards and the property page).
 // 🔢 No counts (George 17/10): prices only.
 // ═══════════════════════════════════════════════════════════════════════════
+import { tileGrade } from '../lib/tile-grade';   // #361: each photo's own correction
 import { clean, cleanSrcSetSmall, altOf, type Photo } from '../lib/photos';
 import { t, type Lang } from '../lib/i18n';
 import { money } from '../lib/format';
@@ -37,7 +38,7 @@ const { lang, items, from, headHref } = Astro.props;
     <ul class="atiles" style={`--acols: ${Math.max(4, items.length)}`}>
       {items.map((a) => (
         <li>
-          <a class="atile" href={a.href}>
+          <a class="atile" href={a.href} style={tileGrade(a.key)}>
             {a.photo && (
               <img src={clean(a.photo.url, 800)} alt={altOf(a.photo, lang, a.alt)}
                    srcset={cleanSrcSetSmall(a.photo.url)}

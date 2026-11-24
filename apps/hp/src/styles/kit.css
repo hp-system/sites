@@ -133,3 +133,14 @@
 .k-rail > * { flex: none; width: calc((100% - var(--s3)) / 2); scroll-snap-align: start; }
 @media (min-width: 1024px) { .k-rail > * { width: calc((100% - 3 * var(--s3)) / 4); } }
 @media (prefers-reduced-motion: reduce) { .k-rail { scroll-behavior: auto; } }
+
+/* ── #361 one even look for the tile photos (Collections, by area) — Sergei 2026-11-24 ──────────────────────────────
+   Each photo is corrected toward one target by its own filter (lib/tile-grade.ts, inline --tile-grade on the tile),
+   then one shared tone lies over all of them: a light shift of colour toward the brand's ink (blend «color» changes
+   hue only, never darker). CSS only: the files, their addresses and alts stay the same (no SEO change, no extra
+   bytes). On hover the photo shows its own colours again. */
+.coll img, .atile img { filter: var(--tile-grade, none); transition: transform .45s ease, filter .45s ease !important; }   /* !important: beats the components' scoped transition */
+.coll::before, .atile::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: #2c3e46; mix-blend-mode: color; opacity: .16; transition: opacity .45s ease; }
+:is(.coll, .atile):is(:hover, :focus-visible) img { filter: none; }
+:is(.coll, .atile):is(:hover, :focus-visible)::before { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .coll img, .atile img, .coll::before, .atile::before { transition: none !important; } }

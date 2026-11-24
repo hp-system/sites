@@ -17,6 +17,7 @@
 //    Στατική λίστα εξαιρέσεων δεν μπορεί να τα προλάβει ΠΟΤΕ.
 // ⏭️ Το σωστό τελικό είναι ξεχωριστές φωτογραφίες τοπίου για τις συλλογές
 //    (επιλογή George) — τότε ξαναγυρίζουν σε καθαρές, νόμιμα.
+import { tileGrade } from '../lib/tile-grade';   // #361: each photo's own correction
 import { clean, altOf, cleanSrcSet, type Photo, cleanSrcSetSmall } from '../lib/photos';
 import { t, listUrl, type Lang } from '../lib/i18n';
 import { num } from '../lib/format';
@@ -51,7 +52,7 @@ const pages = Math.ceil(items.length / 4);
     <ul class="colls h-rail" id="railCl" data-hrail data-gap="12">
       {items.map((c) => (
         <li>
-          <a class="coll" href={c.href}>
+          <a class="coll" href={c.href} style={tileGrade(c.key)}>
             {/* 🪤 ΤΟ ΣΧΟΛΙΟ ΜΕΝΕΙ ΕΞΩ ΑΠΟ ΤΟ `{cond && ( … )}` — μέσα του το Astro
                 σκάει με «Expected ")" but found $$render».
                 Το πλακίδιο ΕΙΧΕ ΜΟΝΟ `src`: σέρβιρε πάντα `_800w` ακόμα και στα

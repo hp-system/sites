@@ -216,6 +216,13 @@ export const FACETS: Facet[] = [
     slug: { el: 'πολυτελη', en: 'luxury', bg: 'luksozni-imoti', sr: 'luksuzne-nekretnine', de: 'luxusimmobilien',
             ro: 'lux', tr: 'luks', he: 'yukra', ru: 'elitnaya' } },
 
+  // ── #372 (Sergei 2026-11-25, Search Console): «nekretnine grcka do 50000e» 4,527 impressions / 221 clicks.
+  //    A list page in every language; its texts: lib/own-seo.ts.
+  { key: 'under50k', n: 23, q: { priceCap: 50000 },
+    name: { el: 'Έως 50.000 €', en: 'Under €50,000', bg: 'До 50 000 €', sr: 'Do 50.000 €', de: 'Bis 50.000 €', ro: 'Până la 50.000 €', tr: "50.000 €'ya kadar", he: 'עד 50,000 €', ru: 'До 50 000 €' },
+    slug: { el: 'εως-50000', en: 'under-50000', bg: 'do-50000', sr: 'nekretnine-do-50000-eura', de: 'bis-50000',
+            ro: 'pana-la-50000', tr: '50000-e-kadar', he: 'ad-50000', ru: 'do-50000' } },
+
   // ── #160 NEW FACETS OF GEORGE'S SPEC (05/11): slugs exactly as the spec's URLs.
   //    P05 apartments: «subcategory=apartment|studio». P10 affordable: «price_max=150000».
   { key: 'apartments', n: 26, q: { subs: ['apartment', 'studio'] },
@@ -252,6 +259,8 @@ export const minLive = (keys: string[]): number => Math.max(6, ...keys.map((k) =
 export const PAIRS: Array<[string, string]> = [
   ['kassandra', 'villas'], ['sithonia', 'villas'],
   ['kassandra', 'seafront'], ['sithonia', 'seafront'],
+  // #372 (Search Console 2026-11-25): the only other pair people search — «sithonia house for sale», «haus kaufen sithonia»
+  ['sithonia', 'homes'],
 ];
 
 export function facetBySlug(lang: Lang, slug: string): Facet | undefined {

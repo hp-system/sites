@@ -38,6 +38,7 @@ import PageBlocks from './PageBlocks.astro';
 import { pageBlocks } from '../lib/list-blocks';
 import { postPhotos } from '../lib/post-photos';
 import { specByPath, specTitle, FAQ_H } from '../lib/seo-pages';
+import { ownSeo } from '../lib/own-seo';
 import {
   runQuery, queryFromParams, paramsOf, indexable as isIndexable,
   facetUrl, ui, FACETS, SORTS, SORT_DEFAULT, PER_PAGE, PER_PAGE_OPTIONS,
@@ -123,13 +124,17 @@ const selfQuery = !firstPage && onlyPage ? `?page=${res.page}` : '';
 
 // «Page 2», never «2 of 10»: the number of pages would reveal the catalogue size (no counts).
 const pageNote = firstPage ? '' : ` – ${t(lang, 'home.page', { n: res.page })}`;
+// #372: our own texts where George's spec has no page (luxury, Sithonia homes, under €50,000, Polygyros)
+const own = spec ? undefined : ownSeo(facets.map((f) => f.key), lang);
 const title = spec
   ? specTitle(spec.title, brand.name) + pageNote
+  : own ? specTitle(own.title, brand.name) + pageNote
   : (isThemed ? `${heading} — ${ui(lang, 'all')}` : ui(lang, 'all')) + pageNote;
 const desc = spec
   ? spec.meta
+  : own ? own.meta
   : isThemed ? `${heading}. ${ui(lang, 'all')}.` : ui(lang, 'all');
-const h1 = spec ? spec.h1 : heading;
+const h1 = spec ? spec.h1 : own ? own.h1 : heading;
 // The free-account tile speaks as the sign-in window (Sergei 2026-11-16: «Unlock большим, три надписи как на попапе регистрации»).
 const escHtml = (x: string) => x.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" } as Record<string, string>)[c]);
 const unLines = [1, 2, 3].map((n) => t(lang, `auth.un${n}`, { b: `<b>${escHtml(t(lang, `auth.un${n}_b`))}</b>` }));
@@ -430,6 +435,7 @@ const tilePhoto = (() => {
       <h1 class={isThemed || spec ? 't-display head__h' : 't-h2 head__h'}>{h1}</h1>
       {/* #290 (Sergei 2026-11-12): the spec intro as the home page's ticker under the H1 (rule 9: H1 → intro → grid) */}
       {spec && firstPage && spec.intro && <IntroTicker html={spec.intro} />}
+      {!spec && own && firstPage && <IntroTicker html={`<p>${own.intro.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' } as Record<string, string>)[c])}</p>`} />}
       {apiDown && <p class="count t-data">—</p>}
     </div>
   </div>

@@ -71,7 +71,7 @@ const sections = parts.map((html, i) => {
   .sa__in { display: grid; gap: var(--s6); }
   .sa__intro { max-width: 70ch; color: var(--ink-2); font-size: var(--fs-s0); line-height: 1.65; }
   .sa__intro :global(p) { margin: 0 0 var(--s3); }
-  .sa__lbl { margin: 0 0 calc(-1 * var(--s5)); color: var(--faint); }
+  .sa__lbl { margin: 0 0 var(--s2); color: var(--faint); }   /* as the questions' label (.fqs__h), so both columns line up */
   /* hairlines between the rows only: none above the first, none under the last (Sergei 2026-11-24) */
   .sa__it + .sa__it { border-top: 1px solid var(--line); }
   .sa__sum { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
@@ -94,10 +94,10 @@ const sections = parts.map((html, i) => {
   .sa__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: var(--fs-s-1); }
   /* the questions' look (small label, rows as these): styles/kit.css + FaqSearch.astro, the same on every page */
   .sa__cols { display: grid; gap: var(--s5); }
-  .sa__col { display: grid; gap: var(--s6); align-content: start; min-width: 0; }
+  .sa__col { min-width: 0; }
   .sa__faq { padding-top: var(--s5); min-width: 0; }
   @media (min-width: 1024px) {
-    .sa { padding-block: 80px; } .sa__sum { padding: 20px 0; }
+    .sa { padding-block: 80px; }   /* rows stay 18px, the same height as the questions' rows */
     .sa__cols--2 { grid-template-columns: 1fr 1fr; column-gap: 80px; align-items: start; }
     .sa__cols--2 .sa__faq { padding-top: 0; }
   }

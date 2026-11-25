@@ -700,6 +700,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'Τα τρέχουμε μαζί σου από την πρώτη μέρα. Οι περισσότεροι πελάτες μας έρχονται στην Ελλάδα δύο φορές: μία για να δουν, μία για να υπογράψουν.',
     'zmap.rest': 'Αλλού στη Χαλκιδική',
     'foot.hq': 'κεντρικά γραφεία',
+    'foot.map': 'Χάρτης',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Νέο Ρύσιο, Θεσσαλονίκη',
     'foot.reg': 'Αρ. ΓΕΜΗ',
     'a11y.skip': 'Μετάβαση στο περιεχόμενο',
@@ -1197,6 +1198,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'We run these with you from day one. Most of our clients come to Greece twice: once to see, once to sign.',
     'zmap.rest': 'Elsewhere in Halkidiki',
     'foot.hq': 'head office',
+    'foot.map': 'Map',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Neo Rysio, Thessaloniki',
     'foot.reg': 'Companies Reg. no.',
     'a11y.skip': 'Skip to content',
@@ -1685,6 +1687,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'Минаваме през тях с вас от първия ден. Повечето наши клиенти идват в Гърция два пъти: веднъж да видят, веднъж да подпишат.',
     'zmap.rest': 'Другаде в Халкидики',
     'foot.hq': 'централен офис',
+    'foot.map': 'Карта',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Нео Рисио, Солун',
     'foot.reg': 'Рег. номер',
     'a11y.skip': 'Към съдържанието',
@@ -2173,6 +2176,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'Prolazimo kroz to s vama od prvog dana. Većina naših klijenata dolazi u Grčku dva puta: jednom da vidi, jednom da potpiše.',
     'zmap.rest': 'Drugde na Halkidikiju',
     'foot.hq': 'centrala',
+    'foot.map': 'Mapa',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Neo Risio, Solun',
     'foot.reg': 'Reg. broj',
     'a11y.skip': 'Pređi na sadržaj',
@@ -2661,6 +2665,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'Wir begleiten Sie vom ersten Tag an. Die meisten unserer Kunden kommen zweimal nach Griechenland: einmal zum Ansehen, einmal zum Unterschreiben.',
     'zmap.rest': 'Anderswo auf Chalkidiki',
     'foot.hq': 'Hauptsitz',
+    'foot.map': 'Karte',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Neo Rysio, Thessaloniki',
     'foot.reg': 'Handelsreg.-Nr.',
     'a11y.skip': 'Zum Inhalt springen',
@@ -3149,6 +3154,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'Vă însoțim de la prima zi. Majoritatea clienților noștri vin în Grecia de două ori: o dată să vadă, o dată să semneze.',
     'zmap.rest': 'În altă parte în Halkidiki',
     'foot.hq': 'sediu central',
+    'foot.map': 'Hartă',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Neo Rysio, Salonic',
     'foot.reg': 'Nr. reg. com.',
     'a11y.skip': 'Salt la conținut',
@@ -3638,6 +3644,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'Bu adımları ilk günden itibaren sizinle birlikte yürütüyoruz. Müşterilerimizin çoğu Yunanistan\'a iki kez geliyor: biri görmek, diğeri imzalamak için.',
     'zmap.rest': 'Halkidiki\'nin diğer bölgeleri',
     'foot.hq': 'merkez ofis',
+    'foot.map': 'Harita',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Neo Rysio, Selanik',
     'foot.reg': 'Ticaret Sicil No.',
     'a11y.skip': 'İçeriğe geç',
@@ -4127,6 +4134,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'אנחנו מנהלים את התהליך יחד אתכם מהיום הראשון. רוב הלקוחות שלנו מגיעים ליוון פעמיים: פעם כדי לראות, פעם כדי לחתום.',
     'zmap.rest': 'שאר חלקידיקי',
     'foot.hq': 'משרד ראשי',
+    'foot.map': 'מפה',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'נאו ריסיו, סלוניקי',
     'foot.reg': 'מס׳ רישום חברה',
     'a11y.skip': 'דילוג לתוכן',
@@ -4616,6 +4624,7 @@ const U: Record<Lang, Dict> = {
     'abroad.close': 'Мы ведём всё это вместе с Вами с первого дня. Большинство наших клиентов приезжают в Грецию дважды: один раз — посмотреть, второй — подписать.',
     'zmap.rest': 'Другие районы Халкидики',
     'foot.hq': 'головной офис',
+    'foot.map': 'Карта',   // #366 «Map» opens the directions (Sergei 2026-11-25)
     'foot.addr': 'Нео Рисио, Салоники',
     'foot.reg': 'Рег. № в торговом реестре',
     'a11y.skip': 'Перейти к содержанию',

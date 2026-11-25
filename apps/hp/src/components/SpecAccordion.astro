@@ -31,6 +31,9 @@ const sections = parts.map((html, i) => {
   <div class="wrap sa__in">
     {intro && <div class="sa__intro" set:html={intro} />}
     {/* small labels as «Three paths» (Sergei 2026-11-24), not big titles */}
+    {/* two columns on desktop: the SEO rows left, the questions right (Sergei 2026-11-25: «укоротить длину») */}
+    <div class={page.faq.length > 0 ? 'sa__cols sa__cols--2' : 'sa__cols'}>
+    <div class="sa__col">
     <p class="t-label sa__lbl">{label ?? t(lang, 'home.seo_lbl')}</p>
     <div class="sa__list">
       {sections.map((s) => (
@@ -45,7 +48,9 @@ const sections = parts.map((html, i) => {
         </details>
       ))}
     </div>
+    </div>
     {page.faq.length > 0 && <div class="sa__faq"><FaqSearch lang={lang} h={faqH} href={faqHref} items={page.faq} id="faq" bare search={false} headTag="p" /></div>}
+    </div>
   </div>
 </section>
 
@@ -88,7 +93,13 @@ const sections = parts.map((html, i) => {
   .sa__txt :global(a), .sa__links a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
   .sa__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: var(--fs-s-1); }
   /* the questions' look (small label, rows as these): styles/kit.css + FaqSearch.astro, the same on every page */
-  .sa__faq { padding-top: var(--s5); }
-  @media (min-width: 1024px) { .sa { padding-block: 80px; } .sa__sum { padding: 20px 0; } }
+  .sa__cols { display: grid; gap: var(--s5); }
+  .sa__col { display: grid; gap: var(--s6); align-content: start; min-width: 0; }
+  .sa__faq { padding-top: var(--s5); min-width: 0; }
+  @media (min-width: 1024px) {
+    .sa { padding-block: 80px; } .sa__sum { padding: 20px 0; }
+    .sa__cols--2 { grid-template-columns: 1fr 1fr; column-gap: 80px; align-items: start; }
+    .sa__cols--2 .sa__faq { padding-top: 0; }
+  }
   @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h { transition: none; } }
 </style>

@@ -7,7 +7,8 @@
 //                       «haus kaufen sithonia chalkidiki»)
 //   · under50k          «nekretnine grcka do 50000e»: 4,527 impressions, 221 clicks (Serbian)
 //   · polygyros         ~3,650 impressions, mostly its seaside villages (Gerakini, Psakoudia)
-// George's spec pages (src/content/seo) always win; these fill the gap only where it has no page. Title, meta,
+// George's spec pages (src/content/seo) and our full-format pages (src/content/seo-own: P22+, en/el/ru) always win;
+// these fill the gap only where neither has the page (e.g. Polygyros in the six languages without a seo-own file). Title, meta,
 // H1 and a short intro per language; no links in the text (the page blocks below carry them). Villages are general
 // information only: cards still show the municipality (lib/gate.ts).
 // ═══════════════════════════════════════════════════════════════════════════

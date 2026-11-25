@@ -1,6 +1,6 @@
 ---
-title: 'Greece Property Tax Calculator 2026 + Guide for Foreigners'
-description: 'Free property tax calculator for Greece: transfer tax 3.09 %, VAT, notary and lawyer fees, the full cost of buying. Plus ENFIA, rental tax and the 15 % non-EU rate.'
+title: 'Greece Property Tax for Foreigners: 2026 Guide + Calculator'
+description: 'Transfer tax 3.09 %, VAT on new builds, ENFIA, rental income tax and the announced 15 % non-EU rate. Free calculator: full cost of buying in Halkidiki.'
 h1: Property tax in Greece for foreigners (2026)
 category: business-news
 slug: taxes-foreigners-properties-greece

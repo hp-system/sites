@@ -14,7 +14,7 @@ interface Props {
   lang: Lang; cats: BlockTile[]; areas: BlockTile[]; areasFrom: number;
   /** the line under the Collections heading (default: the home's; '' = none) */
   catsSub?: string;
-  /** the heading of the first row (default «Collections»); info pages use it for «Related» (Sergei 2026-11-16: one pattern) */
+  /** the heading of the first row (default the home's H2, #373); info pages use it for «Related» (Sergei 2026-11-16: one pattern) */
   catsH?: string;
   /** the line under the «by area» heading (default: the home's «from €») */
   areasSub?: string;
@@ -34,7 +34,9 @@ const areas2 = areas.map((x) => ({ ...x, photo: tilePhoto(x.href, lang, x.photo)
     <div class="wrap pb__in">
       <div class="pb__head">
         <div>
-          <p data-h id={`${rail}-c`} class="t-h2 pb__h">{catsH ?? t(lang, 'coll.h2')}</p>
+          {/* #373: George's H2 as on the home (was «Collections» in a <p>); info pages keep their «Related» */}
+          {catsH ? <p data-h id={`${rail}-c`} class="t-h2 pb__h">{catsH}</p>
+                 : <h2 data-h id={`${rail}-c`} class="t-h2 pb__h">{t(lang, 'home.coll_h2')}</h2>}
           {catsSub !== '' && <p class="pb__sub">{catsSub ?? t(lang, 'home.coll_sub')}</p>}
         </div>
         {pages > 1 && (
@@ -100,3 +102,8 @@ const areas2 = areas.map((x) => ({ ...x, photo: tilePhoto(x.href, lang, x.photo)
   .pb :global(.k-tile__l) { font-size: var(--fs-s1); line-height: 1.2; }
   @media (min-width: 1024px) { .pb { padding-block: var(--s7); } }
 </style>
+
+<script>
+  import { wireRails } from '../lib/tile-rail';
+  wireRails();
+</script>

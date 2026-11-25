@@ -102,7 +102,8 @@ const id = Astro.props.id ?? `fqs${Math.random().toString(36).slice(2, 8)}`;
     q?.addEventListener('input', () => { items.forEach((d) => { d.open = false; }); filter(); });
     all?.addEventListener('click', () => { if (list) list.dataset.all = '1'; filter(); });
     // one answer open at a time (also where `<details name>` is not supported)
-    items.forEach((d) => d.addEventListener('toggle', () => { if (d.open) items.forEach((x) => { if (x !== d) x.open = false; }); }));
+    // (inside the SEO block the block's own script does this, with the closing animation: SpecAccordion.astro)
+    items.forEach((d) => d.addEventListener('toggle', () => { if (d.open && !box.closest('[data-sa-anim]')) items.forEach((x) => { if (x !== d) x.open = false; }); }));
   });
   initFqs();
   document.addEventListener('hp:swap', initFqs);   // the listing page swaps its parts in place (#193)

@@ -64,6 +64,74 @@ const sections = parts.map((html, i) => {
   };
   open();
   window.addEventListener('hashchange', open);
+
+  // Sergei 2026-11-25: «the block itself does not change height» and a short smooth open / close.
+  // 1) Desktop: the two columns get a fixed height = the tallest state (each answer opened in turn, measured once,
+  //    again on resize), so opening an answer never moves what is below the block.
+  // 2) Open and close animate the row's height (220 ms); one open per column, the other closes at the same time.
+  //    `name` is removed here so the browser does not snap the other row shut; without JS `name` still works.
+  const box = document.querySelector<HTMLElement>('.sa__cols');
+  if (box) {
+    box.dataset.saAnim = '1';
+    const all = Array.from(box.querySelectorAll<HTMLDetailsElement>('details'));
+    const cols = Array.from(box.children) as HTMLElement[];
+    const wide = matchMedia('(min-width: 1024px)');
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    all.forEach((d) => d.removeAttribute('name'));
+
+    const fix = () => {
+      box.style.minHeight = '';
+      if (!wide.matches) return;
+      const was = all.filter((d) => d.open);
+      all.forEach((d) => { d.open = false; });
+      let max = 0;
+      for (const c of cols) {
+        let m = c.offsetHeight;
+        for (const d of Array.from(c.querySelectorAll<HTMLDetailsElement>('details'))) { d.open = true; m = Math.max(m, c.offsetHeight); d.open = false; }
+        max = Math.max(max, m);
+      }
+      all.forEach((d) => { d.open = was.includes(d); });
+      box.style.minHeight = `${Math.ceil(max)}px`;
+    };
+
+    const run = (d: HTMLDetailsElement, from: number, to: number, done?: () => void) => {
+      d.getAnimations().forEach((x) => x.cancel());
+      if (still.matches) { done?.(); return; }
+      d.style.overflow = 'hidden';
+      const an = d.animate({ height: [`${from}px`, `${to}px`] }, { duration: 220, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      an.onfinish = () => { d.style.overflow = ''; done?.(); };
+      an.oncancel = () => { d.style.overflow = ''; };
+    };
+    const shut = (d: HTMLDetailsElement) => {
+      const from = d.offsetHeight;
+      const to = d.querySelector('summary')!.offsetHeight + (d.offsetHeight - d.clientHeight);
+      d.classList.add('is-shut');
+      run(d, from, to, () => { d.open = false; d.classList.remove('is-shut'); });
+    };
+    const show = (d: HTMLDetailsElement) => {
+      const from = d.offsetHeight;
+      d.open = true;
+      run(d, from, d.offsetHeight);
+    };
+
+    all.forEach((d) => {
+      const sum = d.querySelector('summary');
+      sum?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (e.detail > 0) sum.blur();   // a mouse click leaves no focus frame; the keyboard keeps it
+        if (d.open && !d.classList.contains('is-shut')) { shut(d); return; }
+        const col = cols.find((c) => c.contains(d));
+        col?.querySelectorAll<HTMLDetailsElement>('details[open]').forEach((x) => { if (x !== d && !x.classList.contains('is-shut')) shut(x); });
+        d.classList.remove('is-shut');
+        show(d);
+      });
+    });
+
+    fix();
+    document.fonts?.ready.then(fix);
+    let t = 0;
+    addEventListener('resize', () => { clearTimeout(t); t = window.setTimeout(fix, 150); });
+  }
 </script>
 
 <style>
@@ -83,7 +151,7 @@ const sections = parts.map((html, i) => {
   .sa__pm { position: relative; flex: none; width: 12px; height: 12px; }
   .sa__pm::before, .sa__pm::after { content: ''; position: absolute; left: 0; top: 50%; width: 12px; height: 1px; background: var(--muted); transition: transform .25s ease; }
   .sa__pm::after { transform: rotate(90deg); }
-  .sa__it[open] .sa__pm::after { transform: rotate(0deg); }
+  .sa__it[open]:not(.is-shut) .sa__pm::after { transform: rotate(0deg); }
   .sa__sum:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
   .sa__body { padding: 0 0 var(--s5); display: grid; gap: var(--s3); }
   .sa__txt { max-width: 70ch; color: var(--muted); font-size: var(--fs-s0); line-height: 1.65; }

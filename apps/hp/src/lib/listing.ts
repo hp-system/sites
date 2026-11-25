@@ -209,6 +209,13 @@ export const FACETS: Facet[] = [
     slug: { el: 'βιλες', en: 'villas-for-sale', bg: 'vili', sr: 'vile', de: 'villen',
             ro: 'vile', tr: 'villa', he: 'vilot', ru: 'villy' } },
 
+  // ── #370 (Sergei 2026-11-25): every property with the CRM's luxury flag (lux_prop, ~103 in the public mirror;
+  //    the cards' «LUXURY» badge), the header's Buy → Luxury. A plain list like Hotels: no George text yet.
+  { key: 'luxury', n: 103, q: { luxury: true },
+    name: { el: 'Πολυτελή ακίνητα', en: 'Luxury properties', bg: 'Луксозни имоти', sr: 'Luksuzne nekretnine', de: 'Luxusimmobilien', ro: 'Proprietăți de lux', tr: 'Lüks mülkler', he: 'נכסי יוקרה', ru: 'Элитная недвижимость' },
+    slug: { el: 'πολυτελη', en: 'luxury', bg: 'luksozni-imoti', sr: 'luksuzne-nekretnine', de: 'luxusimmobilien',
+            ro: 'lux', tr: 'luks', he: 'yukra', ru: 'elitnaya' } },
+
   // ── #160 NEW FACETS OF GEORGE'S SPEC (05/11): slugs exactly as the spec's URLs.
   //    P05 apartments: «subcategory=apartment|studio». P10 affordable: «price_max=150000».
   { key: 'apartments', n: 26, q: { subs: ['apartment', 'studio'] },

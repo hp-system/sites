@@ -181,7 +181,7 @@ const jsonLd: unknown[] = [
         </div>
       </section>
     )}
-    {page.id === 'P52' ? <ExclusiveIntro lang={lang} cta={cta} /> : <PageBlocks lang={lang} cats={blocks.cats} areas={blocks.areas} areasFrom={blocks.areasFrom} />}
+    {page.id === 'P52' ? <ExclusiveIntro lang={lang} cta={cta} /> : <PageBlocks lang={lang} cats={blocks.cats} areas={blocks.areas} areasFrom={blocks.areasFrom} areasFirst={page.id === 'P21'} />}
     <SpecPosts page={postsPage} lang={lang} photos={photos} faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={cta} drop={page.id === 'P52' ? undefined : blocks.consumed} />
     {kids.length > 0 && (
       <section class="wrap gp__kids" aria-labelledby="gp-kids-h">

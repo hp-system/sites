@@ -17,7 +17,7 @@ import { memberOf } from '../lib/member';
 import { pageExists, contentUrl } from '../lib/pages';
 import { brand } from '../brand/index';
 import { PAGES, pathOf } from '../lib/skeleton';
-import { FACETS, facetUrl, MIN_LIVE } from '../lib/listing';
+import { FACETS, facetUrl } from '../lib/listing';
 interface Props {
   lang: Lang; solid?: boolean;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -70,17 +70,10 @@ const item = (id: string): Item => ({
   href: pathOf(id, lang) ?? '#',
   label: (lang === 'el' ? LABEL_EL[id] : lang === 'ru' ? LABEL_RU[id] : undefined) ?? LABEL[id] ?? nameOf(id),
 });
-// every property type (Sergei 2026-11-25 «все типы»): the same list, names and URLs as the footer's «Property types»
-const typeItems: Item[] = ['homes', 'apartments', 'villas', 'maisonettes', 'land', 'seafront', 'affordable', 'hotels']
-  .map((k) => FACETS.find((f) => f.key === k))
-  .filter((f): f is (typeof FACETS)[number] => !!f && MIN_LIVE[f.key] !== Infinity)
-  .map((f) => ({ href: facetUrl(lang, f.key), label: f.name[lang] }));
 const nav5: Sec[] | null = MENU_LANGS.includes(lang) ? [
-  { label: t(lang, 'nav.buy'), groups: [
-    { h: t(lang, 'nav.g_types'), items: [item('P02'), ...typeItems] },
-    { h: t(lang, 'nav.g_areas'), items: ['P11', 'P12', 'P13', 'P14', 'P58', 'P21'].map(item) },
-    { h: t(lang, 'nav.g_guides'), items: [item('P19'), item('P36'), { href: '/en/articles/all-news', label: t(lang, 'nav.blog') }] },
-  ] },
+  // Sergei 2026-11-25: the full search, the areas and the types are on the pages below; the header keeps only the most
+  // valuable: everything, the luxury list (the brand's direction) and the areas (the Halkidiki guide, its area tiles first)
+  { label: t(lang, 'nav.buy'), items: [item('P02'), { href: facetUrl(lang, 'luxury'), label: FACETS.find((f) => f.key === 'luxury')!.name[lang] }, { ...item('P21'), label: t(lang, 'nav.g_areas') }] },
   { label: t(lang, 'nav.sell'), items: ['P24', 'P26', 'P37', 'P40'].map(item) },
   { label: t(lang, 'nav.build'), items: [item('P39')] },
   { label: t(lang, 'nav.exclusive'), items: ['P52', 'P23', 'P53'].map(item) },

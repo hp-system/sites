@@ -42,7 +42,7 @@ const sections = parts.map((html, i) => {
           <div class="sa__body">
             <div class="sa__txt" set:html={s.body} />
             {s.links.length > 0 && (
-              <ul class="sa__links">{s.links.map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>
+              <ul class="sa__links">{s.links.map((l) => <li><a href={l.href}>{l.text} <span class="sa__ar" aria-hidden="true">→</span></a></li>)}</ul>
             )}
           </div>
         </details>
@@ -90,7 +90,15 @@ const sections = parts.map((html, i) => {
   .sa__txt :global(p) { margin: 0 0 var(--s3); }
   .sa__txt :global(h3) { margin: var(--s4) 0 var(--s2); font-size: var(--fs-s0); font-weight: 600; color: var(--ink-2); }
   .sa__txt :global(ul) { margin: 0 0 var(--s3); padding-left: 1.2em; }
-  .sa__txt :global(a), .sa__links a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .sa__txt :global(a) { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  /* the section links as «Contact us» (Sergei 2026-11-25): quiet at rest, no underline; on hover ink, underline and an
+     arrow that fades in and slides (Abroad.astro .abc__more) */
+  .sa__links a { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+  .sa__links a:is(:hover, :focus-visible) { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .sa__ar { display: inline-block; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
+  .sa__links a:is(:hover, :focus-visible) .sa__ar { opacity: 1; transform: translateX(4px); }
+  :global([dir='rtl']) .sa__ar { transform: translateX(4px) scaleX(-1); }
+  :global([dir='rtl']) .sa__links a:is(:hover, :focus-visible) .sa__ar { transform: translateX(-4px) scaleX(-1); }
   .sa__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: var(--fs-s-1); }
   /* the questions' look (small label, rows as these): styles/kit.css + FaqSearch.astro, the same on every page */
   .sa__cols { display: grid; gap: var(--s5); }
@@ -101,5 +109,5 @@ const sections = parts.map((html, i) => {
     .sa__cols--2 { grid-template-columns: 1fr 1fr; column-gap: 80px; align-items: start; }
     .sa__cols--2 .sa__faq { padding-top: 0; }
   }
-  @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h, .sa__ar { transition: none; } }
 </style>

@@ -56,42 +56,43 @@ import { consentText } from '../lib/consent';
           <a class="num" href={co.phoneHref} data-ev="call:footer"><bdi dir="ltr">{co.phone}</bdi></a>
           <a href={`mailto:${co.email}`}>{co.email}</a>
         </p>
+        {/* Company under the contact facts, so the footer is one row (Sergei 2026-11-25) */}
+        <nav class="fco" aria-label={t(lang, 'foot.company')}>
+          <p data-h class="fcol__h">{t(lang, 'foot.company')}</p>
+          {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')} <span class="far" aria-hidden="true">→</span></a>}
+          {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')} <span class="far" aria-hidden="true">→</span></a>}
+          {/* «Projects» is gone: merged into construction services (#340, Sergei 2026-11-23), listed under Services */}
+          {has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'foot.contact')} <span class="far" aria-hidden="true">→</span></a>}
+        </nav>
       </div>
 
       <nav aria-label={t(lang, 'foot.areas')}>
         <p data-h class="fcol__h">{t(lang, 'foot.areas')}</p>
-        {areaLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
-        <a href={listUrl(lang)}>{t(lang, 'foot.properties')} →</a>
+        {areaLinks.map((x) => (<a href={x.href}>{x.name} <span class="far" aria-hidden="true">→</span></a>))}
+        <a href={listUrl(lang)}>{t(lang, 'foot.properties')} <span class="far far--on" aria-hidden="true">→</span></a>
       </nav>
 
       <nav aria-label={t(lang, 'foot.types')}>
         <p data-h class="fcol__h">{t(lang, 'foot.types')}</p>
-        {typeLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
+        {typeLinks.map((x) => (<a href={x.href}>{x.name} <span class="far" aria-hidden="true">→</span></a>))}
       </nav>
 
       <nav aria-label={t(lang, 'foot.services')}>
         <p data-h class="fcol__h">{t(lang, 'foot.services')}</p>
-        {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')}</a>}
-        {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')}</a>}
-        {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')}</a>}
-        {has('services/developers') && <a href={moved('services/developers')}>{t(lang, 'foot.builders')}</a>}
+        {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')} <span class="far" aria-hidden="true">→</span></a>}
+        {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')} <span class="far" aria-hidden="true">→</span></a>}
+        {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')} <span class="far" aria-hidden="true">→</span></a>}
+        {has('services/developers') && <a href={moved('services/developers')}>{t(lang, 'foot.builders')} <span class="far" aria-hidden="true">→</span></a>}
       </nav>
 
       {/* Guides, as on the live site (#69): its three most-read articles + the hub. English-only for now. */}
       <nav aria-label={t(lang, 'foot.guides')}>
         <p data-h class="fcol__h">{t(lang, 'foot.guides')}</p>
-        <a href="/en/properties/homes-for-sale">{t(lang, 'foot.g_houses')}</a>
-        <a href="/en/buying-property-in-greece">{t(lang, 'foot.g_buy')}</a>
-        <a href="/en/articles/all-news">{t(lang, 'foot.all_articles')} →</a>
+        <a href="/en/properties/homes-for-sale">{t(lang, 'foot.g_houses')} <span class="far" aria-hidden="true">→</span></a>
+        <a href="/en/buying-property-in-greece">{t(lang, 'foot.g_buy')} <span class="far" aria-hidden="true">→</span></a>
+        <a href="/en/articles/all-news">{t(lang, 'foot.all_articles')} <span class="far far--on" aria-hidden="true">→</span></a>
       </nav>
 
-      <nav aria-label={t(lang, 'foot.company')}>
-        <p data-h class="fcol__h">{t(lang, 'foot.company')}</p>
-        {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
-        {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
-        {/* «Projects» is gone: merged into construction services (#340, Sergei 2026-11-23), listed under Services */}
-        {has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'foot.contact')}</a>}
-      </nav>
     </div>
 
     {/* 🪤 ΤΟ ΤΡΕΧΟΝ ΕΤΟΣ ΗΤΑΝ ΚΑΡΦΩΤΟ (`const year = 2026`). Την 1η Ιανουαρίου
@@ -123,12 +124,23 @@ import { consentText } from '../lib/consent';
   }
   /* compact (Sergei 2026-11-24): 13 px, rows 24 px apart — was 17 px in 40 px rows */
   .fcols nav a { display: block; padding: 3px 0; font-size: var(--fs-s-1); line-height: 1.4; color: var(--ink-2); }
-  .fcols nav a:hover { color: var(--ink); }
+  /* hover as «Contact us» (Sergei 2026-11-25): ink, a thin underline, an arrow that fades in and slides;
+     «Properties →» and «All articles →» keep their arrow and it slides */
+  .fcols a { transition: color .15s ease; }
+  .fcols nav a:is(:hover, :focus-visible), .fbrand__addr a:is(:hover, :focus-visible) { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .far { display: inline-block; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
+  .far--on { opacity: 1; transform: none; }
+  .fcols nav a:is(:hover, :focus-visible) .far { opacity: 1; transform: translateX(4px); }
+  :global([dir='rtl']) .far { transform: translateX(4px) scaleX(-1); }
+  :global([dir='rtl']) .far--on { transform: scaleX(-1); }
+  :global([dir='rtl']) .fcols nav a:is(:hover, :focus-visible) .far { transform: translateX(-4px) scaleX(-1); }
+  @media (prefers-reduced-motion: reduce) { .far, .fcols a { transition: none; } }
+  .fco { margin-top: var(--s5); }
   .fbot {
     margin: var(--s5) 0 0; padding-top: var(--s4); border-top: 1px solid var(--line);
     font-size: var(--fs-s-1); color: var(--faint);
   }
   .fcookie { appearance: none; background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
   @media (min-width: 760px) { .fcols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s5); } }
-  @media (min-width: 1024px) { .fcols { grid-template-columns: 1.6fr repeat(5, minmax(0, 1fr)); gap: var(--s5); } }
+  @media (min-width: 1024px) { .fcols { grid-template-columns: 1.6fr repeat(4, minmax(0, 1fr)); gap: var(--s5); } }
 </style>

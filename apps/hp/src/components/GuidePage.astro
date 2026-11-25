@@ -28,6 +28,7 @@ import { allProperties, visitorCountry, type SiteProperty } from '../lib/api';
 import { postPhotos } from '../lib/post-photos';
 import { buildAreaTiles } from '../lib/area-tiles';
 import { listUrl } from '../lib/i18n';
+import { pageExists, contentUrl } from '../lib/pages';
 
 interface Props { page: SpecPage }
 const { page } = Astro.props;
@@ -55,6 +56,16 @@ const kids = (await Promise.all(kidsReg.map(async (r) => {
   const d = (await findInfoPage(r.paths![lang]))?.data;
   return d ? { href: r.paths![lang], name: d.h1 || d.title } : null;
 }))).filter((k): k is { href: string; name: string } => !!k);
+// #370 (Sergei 2026-11-25): Golden Visa and the investor services left the header; the buying guide links to both
+if (page.id === 'P19') {
+  const gv = specOf('P20', lang);
+  if (gv && !kids.some((k) => k.href === gv.path)) kids.push({ href: gv.path, name: gv.h1 });
+  if (pageExists('services/investors')) {
+    const href = contentUrl('services/investors', lang);
+    const inv = (await findInfoPage(href))?.data;
+    if (!kids.some((k) => k.href === href)) kids.push({ href, name: inv?.h1 || inv?.title || t(lang, 'foot.investors') });
+  }
+}
 const abs = (u: string) => siteRoot + encodeURI(u);
 // the listings: open photos for the posts and the tiles, the by-area block (none when the CRM is down)
 const memberToken = Astro.cookies.get('member_token')?.value;

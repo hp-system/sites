@@ -68,6 +68,17 @@ const d = { ...page.data,
   ...(page.data.cta ? { cta: { ...page.data.cta, href: fin(page.data.cta.href) } } : {}),
 } as typeof page.data;
 const lang: Lang = d.lang;                        // #94: info pages may be in any of the 9 languages
+// #370 (Sergei 2026-11-25): the services left the header; the construction page (now «Build» in the header) links to
+// every service, so none of them is reached only from the footer.
+if (pageExists('services/developers') && d.path === contentUrl('services/developers', lang)) {
+  const more = [
+    pageExists('services') && { href: contentUrl('services', lang), label: t(lang, 'nav.services') },
+    pageExists('services/buyers') && { href: contentUrl('services/buyers', lang), label: t(lang, 'foot.buyers') },
+    pageExists('services/owners') && { href: contentUrl('services/owners', lang), label: t(lang, 'foot.owners') },
+    pageExists('services/investors') && { href: contentUrl('services/investors', lang), label: t(lang, 'foot.investors') },
+  ].filter(Boolean) as { href: string; label: string }[];
+  for (const m of more) if (!d.related.some((r: any) => r.href === m.href)) (d.related as any[]).push(m);
+}
 
 // Page chrome in the page language (#94). Greek in the singular.
 const UI: Record<Lang, { onPage: string; related: string; forSale: string; forSaleIn: string; ctaH: string; ctaP: string;

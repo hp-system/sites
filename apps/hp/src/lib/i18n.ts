@@ -114,6 +114,7 @@ type Dict = Record<string, string>;
 /** Τα κείμενα της αρχικής. Στη Φ2 έρχονται από το CMS — η δομή είναι ήδη ίδια. */
 export const T: Record<Lang, Dict> = {
   el: {
+    'nav.buy': 'Αγόρασε', 'nav.build': 'Χτίσε', 'nav.exclusive': 'Exclusive', 'nav.contact': 'Επικοινωνία', 'nav.g_types': 'Τύποι', 'nav.g_areas': 'Περιοχές', 'nav.g_guides': 'Οδηγοί',   // #370
     'nav.properties': 'Ακίνητα', 'nav.halkidiki': 'Χαλκιδική', 'nav.sell': 'Πούλησε',
     'nav.services': 'Υπηρεσίες', 'nav.company': 'Η εταιρεία', 'nav.login': 'Σύνδεση',
     'nav.blog': 'Άρθρα', 'foot.guides': 'Οδηγοί', 'foot.g_houses': 'Σπίτια προς πώληση στη Χαλκιδική', 'foot.g_tax': 'Υπολογιστής φόρων & εξόδων', 'foot.g_buy': 'Πώς αγοράζω ακίνητο στη Χαλκιδική', 'foot.all_articles': 'Όλα τα άρθρα',
@@ -160,6 +161,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'Επιλεγμένα ακίνητα στη Χαλκιδική — Κασσάνδρα, Σιθωνία, Άθως. Σπίτια, βίλες και οικόπεδα, πολλά στην πρώτη γραμμή της θάλασσας.',
   },
   en: {
+    'nav.buy': 'Buy', 'nav.build': 'Build', 'nav.exclusive': 'Exclusive', 'nav.contact': 'Contact', 'nav.g_types': 'Types', 'nav.g_areas': 'Areas', 'nav.g_guides': 'Guides',   // #370
     'nav.properties': 'Properties', 'nav.halkidiki': 'Halkidiki', 'nav.sell': 'Sell',
     'nav.services': 'Services', 'nav.company': 'Company', 'nav.login': 'Sign in',
     'nav.blog': 'Blog', 'foot.guides': 'Guides', 'foot.g_houses': 'Houses for sale in Halkidiki', 'foot.g_tax': 'Property tax & costs calculator', 'foot.g_buy': 'How to buy property in Halkidiki', 'foot.all_articles': 'All articles',
@@ -206,6 +208,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'Selected property in Greece — homes, villas and land in Halkidiki, many on the seafront. Our own listings, our own photos, since 2007.',
   },
   bg: {
+    'nav.buy': 'Купете', 'nav.build': 'Постройте', 'nav.exclusive': 'Exclusive', 'nav.contact': 'Контакти', 'nav.g_types': 'Видове', 'nav.g_areas': 'Райони', 'nav.g_guides': 'Наръчници',   // #370
     'nav.properties': 'Имоти', 'nav.halkidiki': 'Халкидики', 'nav.sell': 'Продайте',
     'nav.services': 'Услуги', 'nav.company': 'Компанията', 'nav.login': 'Вход',
     'nav.blog': 'Блог', 'foot.guides': 'Наръчници', 'foot.g_houses': 'Къщи за продажба в Халкидики', 'foot.g_tax': 'Калкулатор на данъци и разходи', 'foot.g_buy': 'Как да купя имот в Халкидики', 'foot.all_articles': 'Всички статии',
@@ -252,6 +255,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'Избрани имоти в Гърция, Халкидики — къщи, вили и парцели, много от тях на първа линия на морето. Агенция от 2007 г.',
   },
   sr: {
+    'nav.buy': 'Kupite', 'nav.build': 'Gradite', 'nav.exclusive': 'Exclusive', 'nav.contact': 'Kontakt', 'nav.g_types': 'Vrste', 'nav.g_areas': 'Oblasti', 'nav.g_guides': 'Vodiči',   // #370
     'nav.properties': 'Nekretnine', 'nav.halkidiki': 'Halkidiki', 'nav.sell': 'Prodajte',
     'nav.services': 'Usluge', 'nav.company': 'Kompanija', 'nav.login': 'Prijava',
     'nav.blog': 'Blog', 'foot.guides': 'Vodiči', 'foot.g_houses': 'Kuće na prodaju na Halkidikiju', 'foot.g_tax': 'Kalkulator poreza i troškova', 'foot.g_buy': 'Kako kupiti nekretninu na Halkidikiju', 'foot.all_articles': 'Svi članci',
@@ -298,6 +302,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'Izdvojene nekretnine u Grčkoj, na Halkidikiju — kuće, vile i placevi, mnoge u prvom redu do mora. Agencija od 2007.',
   },
   de: {
+    'nav.buy': 'Kaufen', 'nav.build': 'Bauen', 'nav.exclusive': 'Exclusive', 'nav.contact': 'Kontakt', 'nav.g_types': 'Arten', 'nav.g_areas': 'Regionen', 'nav.g_guides': 'Ratgeber',   // #370
     'nav.properties': 'Immobilien', 'nav.halkidiki': 'Chalkidiki', 'nav.sell': 'Verkaufen',
     'nav.services': 'Leistungen', 'nav.company': 'Unternehmen', 'nav.login': 'Anmelden',
     'nav.blog': 'Blog', 'foot.guides': 'Ratgeber', 'foot.g_houses': 'Häuser zum Verkauf auf Chalkidiki', 'foot.g_tax': 'Rechner für Steuern & Kosten', 'foot.g_buy': 'So kaufen Sie eine Immobilie auf Chalkidiki', 'foot.all_articles': 'Alle Artikel',
@@ -344,6 +349,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'Ausgewählte Immobilien in Griechenland, auf Chalkidiki — Häuser, Villen und Grundstücke, viele in erster Meereslinie. Seit 2007.',
   },
   ro: {
+    'nav.buy': 'Cumpărați', 'nav.build': 'Construiți', 'nav.exclusive': 'Exclusive', 'nav.contact': 'Contact', 'nav.g_types': 'Tipuri', 'nav.g_areas': 'Zone', 'nav.g_guides': 'Ghiduri',   // #370
     'nav.properties': 'Proprietăți', 'nav.halkidiki': 'Halkidiki', 'nav.sell': 'Vindeți',
     'nav.services': 'Servicii', 'nav.company': 'Compania', 'nav.login': 'Autentificare',
     'nav.blog': 'Blog', 'foot.guides': 'Ghiduri', 'foot.g_houses': 'Case de vânzare în Halkidiki', 'foot.g_tax': 'Calculator de taxe și costuri', 'foot.g_buy': 'Cum cumpăr o proprietate în Halkidiki', 'foot.all_articles': 'Toate articolele',
@@ -390,6 +396,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'Proprietăți selectate în Grecia, peninsula Halkidiki — case, vile și terenuri, multe pe prima linie la mare. Din 2007.',
   },
   tr: {
+    'nav.buy': 'Satın alın', 'nav.build': 'İnşa edin', 'nav.exclusive': 'Exclusive', 'nav.contact': 'İletişim', 'nav.g_types': 'Türler', 'nav.g_areas': 'Bölgeler', 'nav.g_guides': 'Rehberler',   // #370
     'nav.properties': 'Gayrimenkuller',
     'nav.halkidiki': 'Halkidiki',
     'nav.sell': 'Satışa verin',
@@ -464,6 +471,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'Yunanistan\'ın Halkidiki bölgesinde seçilmiş gayrimenkuller — Kassandra, Sithonia, Athos. Evler, villalar ve arsalar, birçoğu denize sıfır.',
   },
   he: {
+    'nav.buy': 'קנייה', 'nav.build': 'בנייה', 'nav.exclusive': 'Exclusive', 'nav.contact': 'צור קשר', 'nav.g_types': 'סוגים', 'nav.g_areas': 'אזורים', 'nav.g_guides': 'מדריכים',   // #370
     'nav.properties': 'נכסים',
     'nav.halkidiki': 'חלקידיקי',
     'nav.sell': 'מכירת נכס',
@@ -538,6 +546,7 @@ export const T: Record<Lang, Dict> = {
     'meta.desc': 'נכסים נבחרים ביוון, בחלקידיקי — קסנדרה, סיתוניה, אתוס. בתים, וילות ומגרשים, רבים בקו ראשון לים. צילומים משלנו.',
   },
   ru: {
+    'nav.buy': 'Купить', 'nav.build': 'Построить', 'nav.exclusive': 'Exclusive', 'nav.contact': 'Контакты', 'nav.g_types': 'Типы', 'nav.g_areas': 'Районы', 'nav.g_guides': 'Гиды',   // #370
     'nav.properties': 'Недвижимость',
     'nav.halkidiki': 'Халкидики',
     'nav.sell': 'Продать',

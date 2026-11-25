@@ -14,9 +14,9 @@ import LangSwitch from './LangSwitch.astro';
 import { listUrl, prefix, t, type Lang } from '../lib/i18n';
 import { company } from '../lib/company';
 import { memberOf } from '../lib/member';
-import { pageExists } from '../lib/pages';
+import { pageExists, contentUrl } from '../lib/pages';
 import { brand } from '../brand/index';
-import { SECTIONS, SECTION_LABEL, menuOf, pathOf } from '../lib/skeleton';
+import { PAGES, pathOf } from '../lib/skeleton';
 interface Props {
   lang: Lang; solid?: boolean;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -33,56 +33,53 @@ const co = await company();
 // list of its pages. Pages not built yet stay out (Team P49 and Exclusive P52 wait for their text;
 // a menu link to a 404 is what made the 124 dead links). Other languages keep the old menu until
 // their stage: most new pages have no URL in them yet.
-const NOT_BUILT = new Set<string>();   // P49 is dropped (D-20261109-SS-4); P52 Exclusive is built (batch 1)
+// Sergei with George 2026-11-25 (#370): the header carries only Buy · Sell · Build · Exclusive · Contact; the phone
+// moves into Contact on desktop (the mobile header keeps its call button). Everything else moved:
+//   Halkidiki's areas and the buying guide → Buy (three columns: types, areas, guides; the blog is a guide),
+//   buyer services → Buy, seller services and property management → Sell, construction → Build,
+//   about us and our story → Contact. Footer only: the services hub, partners, careers, investors / Golden Visa
+//   (linked also from their related pages). Replaces the 7-section menu of 08/11 (#250 kept its «fewer choices» rule).
+// Languages whose menu pages all exist (#262, #265) get the dropdowns; the others the same five as plain links.
+const MENU_LANGS: Lang[] = ['en', 'el', 'ru'];
 const LABEL: Record<string, string> = {
-  P03: 'Property in Greece', P19: 'Buying property in Greece', P22: 'Hotels & commercial', P04: 'Houses',
-  P23: 'Pre-published', P10: 'Affordable, up to €150,000',
-};
-// Sergei 12/11 (#250): «слишком много выбора, юзер будет теряться» — each dropdown keeps the main
-// choices (Buy had 12). The pages left out stay in the sitemap and are reached from page blocks,
-// collections and the footer: Maisonettes, Hotels & commercial, Affordable, Property in Greece,
-// Golden Visa · Investor services, Construction projects, For agents · Philosophy, Values, Social
-// responsibility. A section not listed here keeps all its pages.
-const MENU_KEEP: Record<string, Set<string>> = {
-  buy: new Set(['P02', 'P04', 'P05', 'P07', 'P08', 'P09', 'P19']),
-  services: new Set(['P35', 'P36', 'P37', 'P40', 'P39']),
-  about: new Set(['P43', 'P44', 'P48', 'P50']),
-};
-// #262 languages stage, Greek first (Sergei 2026-11-12): the same menu in Greek; its pages have Greek paths
-// in the registry (George's slugs). A language joins MENU_LANGS when all its menu pages exist.
-const MENU_LANGS: Lang[] = ['en', 'el', 'ru'];   // #265: Russian joins
-const SECTION_RU: Record<string, string> = {
-  buy: 'Купить', sell: 'Продать', halkidiki: 'Халкидики', services: 'Услуги', about: 'О компании', exclusive: 'Exclusive', contact: 'Контакты',
+  P04: 'Houses', P19: 'Buying property in Greece', P40: 'Property management', P57: 'Online meeting', P23: 'Pre-published properties',
 };
 const LABEL_RU: Record<string, string> = {
   P02: 'Вся недвижимость', P04: 'Дома', P05: 'Квартиры', P07: 'Виллы', P08: 'Земля', P09: 'У моря', P19: 'Как купить недвижимость в Греции',
   P24: 'Продать', P26: 'Добавить объект',
   P21: 'Гид по Халкидики', P11: 'Кассандра', P12: 'Ситония', P13: 'Неа-Пропонтида', P14: 'Аристотелис', P58: 'Полигирос',
-  P35: 'Услуги', P36: 'Покупателям', P37: 'Продавцам', P40: 'Управление недвижимостью', P39: 'Строительные услуги',
-  P43: 'О нас', P44: 'Наша история', P48: 'Партнёры', P50: 'Вакансии',
+  P36: 'Покупателям', P37: 'Продавцам', P40: 'Управление недвижимостью', P39: 'Строительные услуги',
+  P43: 'О нас', P44: 'Наша история',
   P52: 'Exclusive', P23: 'Объекты до публикации', P53: 'Зачем регистрироваться',
   P56: 'Контакты', P57: 'Онлайн-встреча',
-};
-const SECTION_EL: Record<string, string> = {
-  buy: 'Αγορά', sell: 'Πώληση', halkidiki: 'Χαλκιδική', services: 'Υπηρεσίες', about: 'Η εταιρεία', exclusive: 'Exclusive', contact: 'Επικοινωνία',
 };
 const LABEL_EL: Record<string, string> = {
   P02: 'Όλα τα ακίνητα', P04: 'Σπίτια', P05: 'Διαμερίσματα', P07: 'Βίλες', P08: 'Γη', P09: 'Παραθαλάσσια', P19: 'Αγορά ακινήτου στην Ελλάδα',
   P24: 'Πώληση', P26: 'Πρόσθεσε το ακίνητό σου',
   P21: 'Οδηγός Χαλκιδικής', P11: 'Κασσάνδρα', P12: 'Σιθωνία', P13: 'Νέα Προποντίδα', P14: 'Αριστοτέλης', P58: 'Πολύγυρος',
-  P35: 'Υπηρεσίες', P36: 'Για αγοραστές', P37: 'Για πωλητές', P40: 'Διαχείριση ακινήτων', P39: 'Κατασκευαστικές υπηρεσίες',
-  P43: 'Η εταιρεία', P44: 'Η ιστορία μας', P48: 'Συνεργάτες', P50: 'Θέσεις εργασίας',
+  P36: 'Για αγοραστές', P37: 'Για πωλητές', P40: 'Διαχείριση ακινήτων', P39: 'Κατασκευαστικές υπηρεσίες',
+  P43: 'Η εταιρεία', P44: 'Η ιστορία μας',
   P52: 'Exclusive', P23: 'Προ-δημοσιευμένα ακίνητα', P53: 'Γιατί να εγγραφείτε',
   P56: 'Επικοινωνία', P57: 'Online ραντεβού',
 };
-const menu7 = MENU_LANGS.includes(lang)
-  ? SECTIONS.map((sec) => ({
-      key: sec, label: lang === 'el' ? SECTION_EL[sec] : lang === 'ru' ? SECTION_RU[sec] : SECTION_LABEL[sec],
-      items: menuOf(sec).filter((r) => !NOT_BUILT.has(r.id) && (!MENU_KEEP[sec] || MENU_KEEP[sec].has(r.id)))
-        .map((r) => ({ href: pathOf(r.id, lang) ?? '#',
-          label: (lang === 'el' ? LABEL_EL[r.id] : lang === 'ru' ? LABEL_RU[r.id] : undefined) ?? LABEL[r.id] ?? r.name.replace(/\s*\(.*\)\s*$/, '') })),
-    })).filter((s) => s.items.length)
-  : null;
+type Item = { href: string; label: string; tel?: boolean };
+type Sec = { label: string; items?: Item[]; groups?: { h: string; items: Item[] }[] };
+const nameOf = (id: string) => (PAGES.find((r) => r.id === id)?.name ?? id).replace(/\s*\(.*\)\s*$/, '');
+const item = (id: string): Item => ({
+  href: pathOf(id, lang) ?? '#',
+  label: (lang === 'el' ? LABEL_EL[id] : lang === 'ru' ? LABEL_RU[id] : undefined) ?? LABEL[id] ?? nameOf(id),
+});
+const nav5: Sec[] | null = MENU_LANGS.includes(lang) ? [
+  { label: t(lang, 'nav.buy'), groups: [
+    { h: t(lang, 'nav.g_types'), items: ['P02', 'P04', 'P05', 'P07', 'P08', 'P09'].map(item) },
+    { h: t(lang, 'nav.g_areas'), items: ['P11', 'P12', 'P13', 'P14', 'P58', 'P21'].map(item) },
+    { h: t(lang, 'nav.g_guides'), items: [item('P19'), item('P36'), { href: '/en/articles/all-news', label: t(lang, 'nav.blog') }] },
+  ] },
+  { label: t(lang, 'nav.sell'), items: ['P24', 'P26', 'P37', 'P40'].map(item) },
+  { label: t(lang, 'nav.build'), items: [item('P39')] },
+  { label: t(lang, 'nav.exclusive'), items: ['P52', 'P23', 'P53'].map(item) },
+  { label: t(lang, 'nav.contact'), items: [item('P56'), item('P57'), { href: co.phoneHref, label: co.phone, tel: true }, item('P43'), item('P44')] },
+] : null;
 
 // ── ΕΙΝΑΙ ΜΕΣΑ; ────────────────────────────────────────────────────────────
 // 🔴 ΤΟ ΚΕΝΟ ΠΟΥ ΚΛΕΙΝΕΙ ΕΔΩ: η κεφαλίδα έλεγε **πάντα** «Σύνδεση», ακόμη και σε
@@ -114,28 +111,34 @@ const has = (k: string) => pageExists(k as any);
     <span class="brandlink__md"><Logo variant="mono" size="md" /></span>
   </a>
 
-  {menu7 ? (
+  {nav5 ? (
   <nav class="navlinks nav7" aria-label={t(lang, 'a11y.nav')}>
-    {menu7.map((sec) => sec.items.length === 1 ? (
-      <a href={sec.items[0].href}>{sec.label}</a>
+    {nav5.map((sec) => !sec.groups && sec.items!.length === 1 ? (
+      <a href={sec.items![0].href}>{sec.label}</a>
     ) : (
       <div class="nav7__s">
-        <a class="nav7__t" href={sec.items[0].href} aria-haspopup="true">{sec.label}</a>
-        <ul class="nav7__dd">{sec.items.map((it) => <li><a href={it.href}>{it.label}</a></li>)}</ul>
+        <a class="nav7__t" href={(sec.groups ? sec.groups[0].items[0] : sec.items![0]).href} aria-haspopup="true">{sec.label}</a>
+        {sec.groups ? (
+          <div class="nav7__dd nav7__dd--cols">
+            {sec.groups.map((g) => (
+              <div class="nav7__g"><p class="nav7__gh">{g.h}</p><ul>{g.items.map((it) => <li><a href={it.href}>{it.label}</a></li>)}</ul></div>
+            ))}
+          </div>
+        ) : (
+          <ul class="nav7__dd">{sec.items!.map((it) => <li>{it.tel
+            ? <a class="num" href={it.href} data-ev="call:header"><bdi dir="ltr">{it.label}</bdi></a>
+            : <a href={it.href}>{it.label}</a>}</li>)}</ul>
+        )}
       </div>
     ))}
-    {/* Blog stays in the header (#69, as on the live site): the articles' only link from the top */}
-    <a href="/en/articles/all-news">{t(lang, 'nav.blog')}</a>
   </nav>
   ) : (
   <nav class="navlinks" aria-label={t(lang, 'a11y.nav')}>
-    <a href={listUrl(lang)}>{t(lang, 'nav.properties')}</a>
-    {has('halkidiki') && <a href={`${p}/halkidiki`}>{t(lang, 'nav.halkidiki')}</a>}
+    {/* languages whose new pages have no URL yet: the same five, as far as their pages exist */}
+    <a href={listUrl(lang)}>{t(lang, 'nav.buy')}</a>
     {has('sell') && <a href={`${p}/sell`}>{t(lang, 'nav.sell')}</a>}
-    {has('services') && <a href={`${p}/services`}>{t(lang, 'nav.services')}</a>}
-    {has('about') && <a href={aboutHref}>{t(lang, 'nav.company')}</a>}
-    {/* Blog, as on the live site (#69). Articles are English-only for now → the English hub. */}
-    <a href="/en/articles/all-news">{t(lang, 'nav.blog')}</a>
+    {has('services/developers') && <a href={contentUrl('services/developers', lang)}>{t(lang, 'nav.build')}</a>}
+    {has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'nav.contact')}</a>}
   </nav>
   )}
 
@@ -259,6 +262,13 @@ const has = (k: string) => pageExists(k as any);
     .nav7__dd a { display: block; padding: 9px var(--s4); color: var(--ink-2); font-size: var(--fs-s0); white-space: nowrap; text-decoration: none; }
     .nav7__dd a:hover, .nav7__dd a:focus-visible { color: var(--ink); background: var(--paper-2); }
     .nav7__s::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }   /* hover bridge */
+    /* Buy: three columns (types, areas, guides) with small labels, as the page labels */
+    .nav7__dd--cols { display: grid; grid-template-columns: repeat(3, max-content); gap: 0 var(--s4); padding: var(--s4) var(--s2); }
+    .nav7__dd--cols ul { list-style: none; margin: 0; padding: 0; }
+    .nav7__gh { margin: 0 0 var(--s1); padding: 0 var(--s4); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--faint); }
+    /* the phone lives in Contact on desktop (#370); below 1080 the header keeps its call button */
+    .tel { display: none; }
   }
   /* #262: the Greek menu is ~90px wider than the English one; between 1080 and 1319px the header row would
      overflow (logo + 8 items + phone + language + sign in). Tighter gaps and the phone as its icon only (the

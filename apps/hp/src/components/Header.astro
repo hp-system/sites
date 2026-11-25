@@ -17,6 +17,7 @@ import { memberOf } from '../lib/member';
 import { pageExists, contentUrl } from '../lib/pages';
 import { brand } from '../brand/index';
 import { PAGES, pathOf } from '../lib/skeleton';
+import { FACETS, facetUrl, MIN_LIVE } from '../lib/listing';
 interface Props {
   lang: Lang; solid?: boolean;
   /** Η ίδια σελίδα σε άλλη γλώσσα — μόνο όπου το slug ΜΕΤΑΦΡΑΖΕΤΑΙ (λίστα, ακίνητο).
@@ -69,9 +70,14 @@ const item = (id: string): Item => ({
   href: pathOf(id, lang) ?? '#',
   label: (lang === 'el' ? LABEL_EL[id] : lang === 'ru' ? LABEL_RU[id] : undefined) ?? LABEL[id] ?? nameOf(id),
 });
+// every property type (Sergei 2026-11-25 «все типы»): the same list, names and URLs as the footer's «Property types»
+const typeItems: Item[] = ['homes', 'apartments', 'villas', 'maisonettes', 'land', 'seafront', 'affordable', 'hotels']
+  .map((k) => FACETS.find((f) => f.key === k))
+  .filter((f): f is (typeof FACETS)[number] => !!f && MIN_LIVE[f.key] !== Infinity)
+  .map((f) => ({ href: facetUrl(lang, f.key), label: f.name[lang] }));
 const nav5: Sec[] | null = MENU_LANGS.includes(lang) ? [
   { label: t(lang, 'nav.buy'), groups: [
-    { h: t(lang, 'nav.g_types'), items: ['P02', 'P04', 'P05', 'P07', 'P08', 'P09'].map(item) },
+    { h: t(lang, 'nav.g_types'), items: [item('P02'), ...typeItems] },
     { h: t(lang, 'nav.g_areas'), items: ['P11', 'P12', 'P13', 'P14', 'P58', 'P21'].map(item) },
     { h: t(lang, 'nav.g_guides'), items: [item('P19'), item('P36'), { href: '/en/articles/all-news', label: t(lang, 'nav.blog') }] },
   ] },

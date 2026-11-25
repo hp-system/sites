@@ -77,7 +77,7 @@ if (pageExists('services/developers') && d.path === contentUrl('services/develop
     pageExists('services/owners') && { href: contentUrl('services/owners', lang), label: t(lang, 'foot.owners') },
     pageExists('services/investors') && { href: contentUrl('services/investors', lang), label: t(lang, 'foot.investors') },
   ].filter(Boolean) as { href: string; label: string }[];
-  for (const m of more) if (!d.related.some((r: any) => r.href === m.href)) (d.related as any[]).push(m);
+  for (const m of more) if (!d.related.some((r: any) => r.href === m.href)) (d.related as any[]).push({ text: '', image: '', image_alt: '', button: '', ...m });   // the schema's defaults
 }
 
 // Page chrome in the page language (#94). Greek in the singular.

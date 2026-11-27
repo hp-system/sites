@@ -166,6 +166,22 @@ const viberLink = viberHref(co.whatsappE164);
       }), { threshold: 0.3 });
       bands.forEach((b) => io.observe(b));
     }
+    // Sergei 2026-11-27: both step lists as wide as their longest line (in any language), so the space right of them is
+    // the space left of the heading; the numbers stay in one line for the path 2 → 3
+    const fit = () => {
+      const box = document.querySelector<HTMLElement>('.ab3');
+      if (!box) return;
+      let w = 0;
+      box.querySelectorAll<HTMLElement>('.two__l li').forEach((li) => {
+        li.querySelectorAll<HTMLElement>('b, i').forEach((x) => {
+          const r = document.createRange(); r.selectNodeContents(x);
+          w = Math.max(w, r.getBoundingClientRect().width);
+        });
+      });
+      if (w) box.style.setProperty('--two-w', `${Math.ceil(w + 28 + 12 + 2)}px`);   // number column + gap
+    };
+    fit(); document.fonts?.ready.then(fit);
+    window.addEventListener('resize', fit);
     // the path 1 → 7: placed on the numbers' column from the first number to the last; its ink part grows with the
     // scroll (its tip ~70 % down the screen), so the client's steps visibly run on into ours
     const path = document.querySelector<HTMLElement>('.ab__path');
@@ -380,6 +396,9 @@ const viberLink = viberHref(co.whatsappE164);
                                       padding-block: 14px; }
     /* no hairlines between the rows (Sergei 2026-11-27) */
     .two__l--us li { padding-block: 7px; }   /* our steps closer together (Sergei 2026-11-27, was 14 px) */
+    /* both step lists one width, set against the column's right edge: the space right of them matches the space left of
+       «Buying from abroad» (Sergei 2026-11-27); one width keeps the numbers 1–7 in one line for the path 2 → 3 */
+    .two__l--you, .two__l--us { justify-self: end; width: min(100%, var(--two-w, 420px)); }   /* --two-w: the longest line (script) */
     .two__n { display: block; grid-row: span 2; font-size: var(--fs-s-1); font-weight: 600; color: var(--faint); }
     .two__l--us .two__n { grid-row: auto; }
     .ab3 .two__n.two__n { align-self: baseline; }   /* on the name's line */

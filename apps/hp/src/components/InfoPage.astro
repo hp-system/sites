@@ -639,11 +639,9 @@ if (faqItems.length) {
     {d.form_top && d.form && d.form_pop && (
       /* Pre-published (Sergei 2026-11-27): the Exclusive top turned light — white, everything centred, a large faint clock
          behind the words (properties before their time); ONE button. A member opens the form in a popup at once; a guest
-         signs in (the login popup, LoginDialog) and comes back with ?form=1, and the popup opens by itself. */
+         signs in (the login popup, LoginDialog) and comes back with ?form=1, and the popup opens by itself.
+         No sign behind the words (Sergei 2026-11-27: «убери часы»). */
       <section class="ppt" id="form" aria-labelledby="ppt-h">
-        <svg class="ppt__sign" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".3" stroke-linecap="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="9"></circle><path d="M12 6.5V12l3.6 2.2"></path>
-        </svg>
         <div class="ppt__in">
           <nav class="crumb ppt__crumb" aria-label={t(lang, 'a11y.crumb')}>
             {crumbs.slice(0, -1).map((c, i) => (
@@ -1439,7 +1437,9 @@ if (faqItems.length) {
     .w1-co .w1-more { margin-top: 88px; }
 
     .w1-dir { display: block !important; background: var(--paper-2); padding: 22px 0 0; font-size: var(--fs-s-1); }
-    .w1-dir__in { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--line); color: var(--muted); }
+    .w1-dir__in { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; color: var(--muted); }   /* no line under it (Sergei 2026-11-27) */
+    /* …and none between it and the footer: the bar and the footer are one beige ground (Sergei 2026-11-27) */
+    :global(main:has(.w1-dir) + .site-footer) { border-top: 0; }
     .w1-dir__in a { color: var(--muted); text-decoration: none; }
     .w1-dir__in a:hover { color: var(--ink); }
   }
@@ -1451,8 +1451,6 @@ if (faqItems.length) {
   .ppt { position: relative; overflow: hidden; isolation: isolate; background: var(--paper); color: var(--ink);
          min-height: min(86vh, 860px); box-sizing: border-box; display: grid; place-items: center; text-align: center;
          padding-block: 72px; padding-inline: var(--gut); }
-  .ppt__sign { position: absolute; left: 50%; top: 50%; width: min(70vh, 560px); height: auto; transform: translate(-50%, -50%);
-               color: var(--ink); opacity: .05; z-index: -1; pointer-events: none; }
   .ppt__in { display: grid; justify-items: center; gap: var(--s4); max-width: 1180px; }
   .ppt__crumb { justify-content: center; }
   .ppt__h { margin: 0; max-width: 26ch; text-wrap: balance; }

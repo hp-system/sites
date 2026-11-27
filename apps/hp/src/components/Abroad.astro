@@ -378,11 +378,11 @@ const viberLink = viberHref(co.whatsappE164);
     .two__l--you, .two__l--us { display: grid; }
     .two__l--you li, .two__l--us li { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; align-items: baseline;
                                       padding-block: 14px; }
-    .two__l--you li + li, .two__l--us li + li { border-top: 1px solid var(--line); }
+    /* no hairlines between the rows (Sergei 2026-11-27) */
     .two__n { display: block; grid-row: span 2; font-size: var(--fs-s-1); font-weight: 600; color: var(--faint); }
     .two__l--us .two__n { grid-row: auto; }
     .ab3 .two__n.two__n { align-self: baseline; }   /* on the name's line */
-    .two__l--you b, .two__l--us b { font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; color: var(--ink); letter-spacing: 0; }
+    .two__l--you b, .two__l--us b { font-size: var(--fs-s0); font-weight: 400; line-height: 1.4; color: var(--ink); letter-spacing: 0; }   /* not bold (Sergei 2026-11-27) */
     .two__l--you i { margin-top: 2px; font-size: var(--fs-s0); line-height: 1.55; color: var(--muted); }
 
     /* the close: George's two last sentences and a contact button (ink outline: the gilded edge is only for calls to register, Sergei 03/11) */
@@ -458,7 +458,7 @@ const viberLink = viberHref(co.whatsappE164);
   /* the path 1 → 7 (trial, Sergei 2026-11-24): a faint track and an ink line that draws itself down it */
   .ab__path { display: none; }
   @media (min-width: 1024px) {
-    .ab__path { display: none; }   /* Sergei 2026-11-27: the list as on Exclusive, no drawn path (was the 2026-11-24 trial) */
+    .ab__path { display: block; position: absolute; width: 1px; background: var(--line); z-index: 2; pointer-events: none; }   /* back (Sergei 2026-11-27): the one line from 2 to 3 */
     /* the numbers sit on the path: centred on it, on a paper patch so the line runs between them */
     .ab3 .two__n { position: relative; z-index: 3; text-align: center; background: var(--paper); align-self: start; }   /* start: the patch only as tall as the digit, so the path shows between 1 and 2 too */
     .ab__path i { display: none; position: absolute; inset: 0; background: var(--ink); transform-origin: 50% 0; transform: scaleY(var(--k, 0)); }

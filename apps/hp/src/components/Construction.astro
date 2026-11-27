@@ -380,4 +380,27 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     .cx__rw { position: relative; }
     .cx__rail { height: auto; grid-template-rows: none; grid-auto-rows: 250px; }
   }
+
+  /* ── Sergei 2026-11-27 (the calm, assured concept: «сделать нормально, как я объяснял про стиль»): on a desktop the
+        block no longer shouts. The heading's two sentences on two plain lines (no «The» two lines high, no bold words);
+        the ten cards become a quiet list — five columns, the name at text size, its line in muted ink — with no tiles,
+        icons, dark facts, beige window or depth effect. The texts are unchanged; phones keep their blocks. ── */
+  @media (min-width: 1024px) {
+    .cx .cx__h { font-weight: 300; }
+    .cx .cx__h b { font-weight: inherit; }
+    .cx .cx__h--pair .cx__pair { display: block; }
+    .cx .cx__w2 { display: inline; }
+    .cx__pw { font-size: inherit; line-height: inherit; letter-spacing: inherit; }
+    .cx__pw + .cx__pl { display: inline; }
+    .cx__pl { display: block; }
+    .cx__rw { background: none; padding-block: 24px 72px; overflow: visible; }
+    .cx__rw::after { display: none; }
+    .cx__rail { height: auto; transform: none !important; will-change: auto; grid-template-areas: none; grid-template-rows: none;
+                grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px 40px; }
+    .cx__rail .cd, .cx__rail .cd--fact { grid-area: auto; background: none; color: var(--ink); padding: 0; overflow: visible;
+                justify-content: flex-start; gap: 4px; }
+    .cx__rail .cd svg { display: none; }
+    .cx__rail .cd h3 { margin: 0; font-size: var(--fs-s0); font-weight: 400; line-height: 1.4; letter-spacing: 0; color: var(--ink); }
+    .cx__rail .cd p { margin: 0; max-width: none; font-size: var(--fs-s0); line-height: 1.55; color: var(--muted); }
+  }
 </style>

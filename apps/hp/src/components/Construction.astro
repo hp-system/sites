@@ -33,8 +33,8 @@ import { company } from '../lib/company';
 import { clean } from '../lib/photos';
 // Sergei 2026-11-27 (a reference he liked: a wide photo on top, a white box rising into it, the text and a dark
 // button, a photo beside it): our own work — Villa Natalia's pool for the band, a modern house by its pool beside the
-// text. Clean files (the logo goes only on property cards and the property page, #326).
-const SIDE = 'https://media.onsea.gr/properties/ums_7985/detached-house-facade-halkidiki-2982420238.jpg';
+// text (the side photo: Villa Natalia, Sergei 2026-11-27). Clean files (the logo goes only on property cards and the property page, #326).
+const SIDE = 'https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736689.jpg';   // Villa Natalia, the terrace over the sea (Sergei 2026-11-27, photo 11)
 // the seven points in three groups, names only; Design to keys, Our own team and You choose the land are left out:
 // the paragraph and the heading already say them (Sergei 2026-11-27)
 // Sergei 2026-11-27: a short paragraph under each label instead of the names (his texts, 9 languages)
@@ -442,7 +442,8 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     .cx__fig { display: block; grid-area: fig; align-self: center; margin: -48px 0 0 48px; }   /* lower, centred on the box (Sergei 2026-11-27) */
     .cx__fig img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
     /* three centred paragraphs across the page column (Sergei 2026-11-27) */
-    .cx__groups { grid-area: groups; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; margin-top: 80px; text-align: center; }
+    /* one under the other, centred, across the page column (Sergei 2026-11-27, were three columns) */
+    .cx__groups { grid-area: groups; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; margin-top: 80px; text-align: center; }
     .cx__gl { margin: 0 0 12px; color: var(--faint); }
     .cx__gp { margin: 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); text-wrap: pretty; }
     .cx__rw { display: none; }

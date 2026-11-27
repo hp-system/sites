@@ -57,6 +57,9 @@ const pop = look === 'pop';
 // A signed-in member sees their own details already filled in (#64). Guests: empty fields.
 const me = await memberOf(Astro.cookies.get('member_token')?.value);
 const mine = me && !me.blocked ? me : null;
+// Sergei 2026-11-27: a member's phone is their verified one — shown, not editable (and the server sends the account's
+// number whatever the field says, pages/api/inquiry.ts); a new number is changed in the profile, with an SMS code
+const lockPh = !!mine?.phone;
 const id = `f-${source.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 const regionName = (() => {
   try { const d = new Intl.DisplayNames([lang], { type: 'region' }); return (cc: string) => d.of(cc) ?? cc; }
@@ -78,11 +81,11 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
         <input class="pop__i" name="last" autocomplete="family-name" maxlength="60" placeholder={pui(lang, 'fSurname')} aria-label={pui(lang, 'fSurname')} value={last} />
         <input class="pop__i" name="email" type="email" autocomplete="email" required maxlength="200" placeholder={pui(lang, 'fEmail')} aria-label={pui(lang, 'fEmail')} value={mine?.email || undefined} />
         <div class="iform__ph">
-          <button type="button" class="dial" aria-haspopup="listbox" aria-expanded="false" aria-controls={`${id}-pdp`} aria-label={pui(lang, 'cbCountry')}>
+          <button type="button" class="dial" hidden={lockPh} aria-haspopup="listbox" aria-expanded="false" aria-controls={`${id}-pdp`} aria-label={pui(lang, 'cbCountry')}>
             <span data-dial-l>🇬🇷 +30</span>
             <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
           </button>
-          <input name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder={pui(lang, 'cbPhone')} aria-label={pui(lang, 'cbPhone')} value={mine?.phone || undefined} />
+          <input name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder={pui(lang, 'cbPhone')} aria-label={pui(lang, 'cbPhone')} value={mine?.phone || undefined} readonly={lockPh} aria-describedby={lockPh ? `${id}-pv` : undefined} />
           <div class="dial__pop" id={`${id}-pdp`} hidden>
             <div class="dial__s">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
@@ -104,6 +107,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
       <input type="hidden" name="extra" value="" />
       <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
       <input type="hidden" name="source" value={source} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={openedAt} />
+      {lockPh && <p class="ph-ok" id={`${id}-pv`}>✓ {t(lang, 'form.ph_ok')}</p>}
       <p class="consent">
         <Fragment set:html={consent} />
       </p>
@@ -137,11 +141,11 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     <div class="iform__fld"><label class="iform__l" for={`${id}-e`}>{pui(lang, 'fEmail')}</label><input id={`${id}-e`} name="email" type="email" autocomplete="email" required maxlength="200" placeholder={pui(lang, 'fEmail')} value={mine?.email || undefined} /></div>
     <div class="iform__fld"><label class="iform__l" for={`${id}-p`}>{pui(lang, 'fPhone')}</label>
       <div class="iform__ph">
-        <button type="button" class="dial" aria-haspopup="listbox" aria-expanded="false" aria-controls={`${id}-dp`} aria-label={pui(lang, 'cbCountry')}>
+        <button type="button" class="dial" hidden={lockPh} aria-haspopup="listbox" aria-expanded="false" aria-controls={`${id}-dp`} aria-label={pui(lang, 'cbCountry')}>
           <span data-dial-l>🇬🇷 +30</span>
           <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
         </button>
-        <input id={`${id}-p`} name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder={pui(lang, 'cbPhone')} value={mine?.phone || undefined} />
+        <input id={`${id}-p`} name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder={pui(lang, 'cbPhone')} value={mine?.phone || undefined} readonly={lockPh} aria-describedby={lockPh ? `${id}-pv` : undefined} />
         <div class="dial__pop" id={`${id}-dp`} hidden>
           <div class="dial__s">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
@@ -163,6 +167,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
     <input type="hidden" name="source" value={source} /><input type="hidden" name="lang" value={lang} /><input type="hidden" name="t" value={openedAt} />
     <div class="wide iform__end">
+      {lockPh && <p class="ph-ok" id={`${id}-pv`}>✓ {t(lang, 'form.ph_ok')}</p>}
       <p class="consent">
         <Fragment set:html={consent} />
       </p>
@@ -177,7 +182,8 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
   <form class="iform__f" data-source={source} method="post" action="/api/inquiry" data-msg={JSON.stringify(MSG)} novalidate>
     <label>{pui(lang, 'fName')}<input name="name" autocomplete="name" required maxlength="120" value={mine?.name || undefined} /></label>
     <label>{pui(lang, 'fEmail')}<input name="email" type="email" autocomplete="email" required maxlength="200" value={mine?.email || undefined} /></label>
-    <label>{pui(lang, 'fPhone')}<input name="phone" type="tel" autocomplete="tel" maxlength="40" value={mine?.phone || undefined} /></label>
+    <label>{pui(lang, 'fPhone')}<input name="phone" type="tel" autocomplete="tel" maxlength="40" value={mine?.phone || undefined} readonly={lockPh} aria-describedby={lockPh ? `${id}-pv` : undefined} /></label>
+    {lockPh && <p class="ph-ok wide" id={`${id}-pv`}>✓ {t(lang, 'form.ph_ok')}</p>}
     {when && <label class="wide">{whenL}<input name="when" type="datetime-local" required step="900" /></label>}
     {message && <label class="wide">{pui(lang, 'msgL')}<textarea name="message" rows="5" maxlength="1900"></textarea></label>}
     <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -268,6 +274,7 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
   .iform__end p, .iform__intro p { margin: 0; }
   .iform--w1 .iform__f ::placeholder { color: transparent; }
   .dial__pop[hidden] { display: none; }
+  .dial[hidden] { display: none !important; }   /* a member's verified phone needs no code picker */
   @media (min-width: 1024px) {
     .iform--w1 { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 64px; align-items: start;
                  border-top: 0; padding: 0; margin: 0; max-width: none; color: #fff; }
@@ -361,6 +368,9 @@ const last = full && cut > 0 ? full.slice(cut + 1) : undefined;
     .iform--w1.iform--lt .iform__role input:checked + span { background: var(--ink); border-color: var(--ink); color: #fff; }
   }
   /* ── look: pop (#106) — the light window of the Services page (desktop only, ServicesHub.astro) ── */
+  /* a member's verified phone (Sergei 2026-11-27): read-only, a quiet note under the fields */
+  .ph-ok { margin: 0; font-size: var(--fs-s-1); color: var(--muted); }
+  .iform input[readonly] { color: var(--muted); cursor: default; }
   .iform--pop { border-top: 0; padding: 0; margin: 0; max-width: none; }
   .iform--pop .iform__f { display: block; }
   .pop__body { padding: 18px 28px 20px; display: grid; gap: 16px; }

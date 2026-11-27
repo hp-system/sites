@@ -30,7 +30,11 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   const opened = Number(b.t ?? 0);
   if (clean(b.website, 10) || !Number.isFinite(opened) || Date.now() - opened < 3000) return json({ ok: true });
 
-  const chk = checkPhone(clean(b.code, 4), clean(b.phone, 40));
+  // A member is filed under their own contact; a guest under one address per phone number.
+  const me = await memberOf(cookies.get('member_token')?.value).catch(() => null);
+  const member = me && !me.blocked && me.email ? me : null;
+  // Sergei 2026-11-27: a member is called on the account's verified phone, whatever the field says
+  const chk = member?.phone ? { ok: true as const, e164: member.phone } : checkPhone(clean(b.code, 4), clean(b.phone, 40));
   if (!chk.ok) return json({ ok: false, code: chk.code }, 400);
   const rawId = clean(b.propertyId, 12);
   const propertyId = REF_RE.test(rawId) ? rawId : '';
@@ -38,9 +42,6 @@ export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) =
   const lang = clean(b.lang, 5);
   if (limited(clientIpOf(request, clientAddress) || chk.e164)) return json({ ok: false, code: 'too_many' }, 429);
 
-  // A member is filed under their own contact; a guest under one address per phone number.
-  const me = await memberOf(cookies.get('member_token')?.value).catch(() => null);
-  const member = me && !me.blocked && me.email ? me : null;
   const name = member?.name || chk.e164;
   const email = member?.email || phoneLeadEmail(chk.e164);
   const message = `[Call back] when=${when}; phone=${chk.e164}`;

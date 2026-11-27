@@ -26,6 +26,7 @@ import { forwardIp, clientIpOf } from '../../lib/clientip';
 import { originHeader, sameSite } from '../../lib/origin';
 import { limited } from '../../lib/ratelimit';
 import { sendLead } from '../../lib/lead-outbox';
+import { memberOf } from '../../lib/member';
 
 export const prerender = false;
 
@@ -33,7 +34,7 @@ const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), {
   status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
 });
 
-export const POST: APIRoute = async ({ request, url, clientAddress }) => {
+export const POST: APIRoute = async ({ request, url, cookies, clientAddress }) => {
   const ct = request.headers.get('content-type') ?? '';
   const isForm = ct.includes('application/x-www-form-urlencoded') || ct.includes('multipart/form-data');
   let b: Record<string, unknown> = {};
@@ -57,8 +58,16 @@ export const POST: APIRoute = async ({ request, url, clientAddress }) => {
   const clean = (v: unknown, max: number) => String(v ?? '').trim().slice(0, max);
   // a plain form sends the name in one field or as first + surname, and its source apart (JS puts it in the message)
   const name = clean(b.name, 120) || `${clean(b.first, 60)} ${clean(b.last, 60)}`.trim();
-  const email = clean(b.email, 200);
-  const phone = clean(b.phone, 40);
+  let phone = clean(b.phone, 40);
+  let email0 = '';
+  // Sergei 2026-11-27: «наша цель только верифицированные клиенты» — a signed-in member's request always carries the
+  // account's phone (verified by SMS at sign-up) and e-mail, whatever the form's fields say; the form shows them locked.
+  const me = await memberOf(cookies.get('member_token')?.value).catch(() => null);
+  if (me && !me.blocked) {
+    if (me.phone) phone = me.phone;
+    if (me.email) email0 = me.email;
+  }
+  const email = email0 || clean(b.email, 200);
   const source = clean(b.source, 80);
   const rawMessage = clean(b.message, 2000);
   const message = isForm && source && !rawMessage.startsWith('[') ? `[${source}] ${rawMessage}`.trim() : rawMessage;

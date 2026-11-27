@@ -1,4 +1,5 @@
 ---
+import { t } from '../lib/i18n';
 // «Να σε καλέσουμε» (#82) — the mockup George approved 21/10/2026 (GxAd7csAWSzviLSgvQJ2Zc):
 // country code + mobile, when it suits, one button. Rendered twice on the property page:
 // `d` opens next to the office phone in the card, `m` sits in the mobile Call sheet.
@@ -23,13 +24,15 @@ const privacyHref = privacyPath(lang);            // the policy in the page lang
   </div>
   <div class="cb__ph">
     <label class="sr-only" for={`${f}-c`}>{pui(lang, 'cbCountry')}</label>
-    <select id={`${f}-c`} name="code">
+    {/* a member's verified phone (Sergei 2026-11-27): no code picker, the number read-only; the server calls this number */}
+    <select id={`${f}-c`} name="code" hidden={!!phone}>
       {DIAL.map((d) => <option value={d.code} data-cc={d.cc}>{flag(d.cc)} +{d.code}</option>)}
     </select>
     <label class="sr-only" for={`${f}-p`}>{pui(lang, 'cbPhone')}</label>
     <input id={`${f}-p`} name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24"
-           placeholder={pui(lang, 'cbPhone')} value={phone || undefined} />
+           placeholder={pui(lang, 'cbPhone')} value={phone || undefined} readonly={!!phone} aria-describedby={phone ? `${f}-pv` : undefined} />
   </div>
+  {phone && <p class="cb__ok" id={`${f}-pv`}>✓ {t(lang, 'form.ph_ok')}</p>}
   <p class="cb__err" role="alert" hidden></p>
   <fieldset class="cb__when">
     <legend>{pui(lang, 'cbWhen')}</legend>
@@ -48,6 +51,9 @@ const privacyHref = privacyPath(lang);            // the policy in the page lang
 </form>
 
 <style>
+  .cb__ok { margin: 6px 0 0; font-size: var(--fs-s-1); color: var(--muted); }
+  .cb select[hidden] { display: none !important; }
+  .cb input[readonly] { color: var(--muted); }
   .cb { border: 1px solid var(--ink); padding: 14px; display: grid; gap: 10px; margin: 10px 0 4px;
         background: var(--paper); text-align: start; }
   .cb[hidden], .cb [hidden] { display: none !important; }   /* the parts' own display would win over [hidden] */

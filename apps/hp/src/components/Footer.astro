@@ -55,45 +55,45 @@ import { consentText } from '../lib/consent';
             έσπαγαν σε τυχαίο σημείο ανάλογα με το πλάτος. */}
         <p class="fbrand__addr">
           <span class="fbrand__hq">{t(lang, 'foot.addr')} <i>·</i> <a class="fmap" href={mapUrl} target="_blank" rel="noopener" data-ev="map:footer">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14.5s4.5-4.3 4.5-8a4.5 4.5 0 0 0-9 0c0 3.7 4.5 8 4.5 8Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="8" cy="6.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>{t(lang, 'foot.map')} <span class="far" aria-hidden="true">→</span></a></span>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14.5s4.5-4.3 4.5-8a4.5 4.5 0 0 0-9 0c0 3.7 4.5 8 4.5 8Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="8" cy="6.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>{t(lang, 'foot.map')}</a></span>
           <a class="num" href={co.phoneHref} data-ev="call:footer"><bdi dir="ltr">{co.phone}</bdi></a>
           <a href={`mailto:${co.email}`}>{co.email}</a>
         </p>
         {/* Company under the contact facts, so the footer is one row (Sergei 2026-11-25) */}
         <nav class="fco" aria-label={t(lang, 'foot.company')}>
           <p data-h class="fcol__h">{t(lang, 'foot.company')}</p>
-          {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')} <span class="far" aria-hidden="true">→</span></a>}
-          {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')} <span class="far" aria-hidden="true">→</span></a>}
+          {has('about') && <a href={aboutHref}>{t(lang, 'foot.about')}</a>}
+          {has('team') && <a href={`${p}/team`}>{t(lang, 'foot.team')}</a>}
           {/* «Projects» is gone: merged into construction services (#340, Sergei 2026-11-23), listed under Services */}
-          {has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'foot.contact')} <span class="far" aria-hidden="true">→</span></a>}
+          {has('contact') && <a href={contentUrl('contact', lang)}>{t(lang, 'foot.contact')}</a>}
         </nav>
       </div>
 
       <nav aria-label={t(lang, 'foot.areas')}>
         <p data-h class="fcol__h">{t(lang, 'foot.areas')}</p>
-        {areaLinks.map((x) => (<a href={x.href}>{x.name} <span class="far" aria-hidden="true">→</span></a>))}
-        <a href={listUrl(lang)}>{t(lang, 'foot.properties')} <span class="far" aria-hidden="true">→</span></a>
+        {areaLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
+        <a href={listUrl(lang)}>{t(lang, 'foot.properties')}</a>
       </nav>
 
       <nav aria-label={t(lang, 'foot.types')}>
         <p data-h class="fcol__h">{t(lang, 'foot.types')}</p>
-        {typeLinks.map((x) => (<a href={x.href}>{x.name} <span class="far" aria-hidden="true">→</span></a>))}
+        {typeLinks.map((x) => (<a href={x.href}>{x.name}</a>))}
       </nav>
 
       <nav aria-label={t(lang, 'foot.services')}>
         <p data-h class="fcol__h">{t(lang, 'foot.services')}</p>
-        {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')} <span class="far" aria-hidden="true">→</span></a>}
-        {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')} <span class="far" aria-hidden="true">→</span></a>}
-        {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')} <span class="far" aria-hidden="true">→</span></a>}
-        {has('services/developers') && <a href={moved('services/developers')}>{t(lang, 'foot.builders')} <span class="far" aria-hidden="true">→</span></a>}
+        {has('services/buyers') && <a href={moved('services/buyers')}>{t(lang, 'foot.buyers')}</a>}
+        {has('services/owners') && <a href={moved('services/owners')}>{t(lang, 'foot.owners')}</a>}
+        {has('services/investors') && <a href={moved('services/investors')}>{t(lang, 'foot.investors')}</a>}
+        {has('services/developers') && <a href={moved('services/developers')}>{t(lang, 'foot.builders')}</a>}
       </nav>
 
       {/* Guides, as on the live site (#69): its three most-read articles + the hub. English-only for now. */}
       <nav aria-label={t(lang, 'foot.guides')}>
         <p data-h class="fcol__h">{t(lang, 'foot.guides')}</p>
-        <a href="/en/properties/homes-for-sale">{t(lang, 'foot.g_houses')} <span class="far" aria-hidden="true">→</span></a>
-        <a href="/en/buying-property-in-greece">{t(lang, 'foot.g_buy')} <span class="far" aria-hidden="true">→</span></a>
-        <a href="/en/articles/all-news">{t(lang, 'foot.all_articles')} <span class="far" aria-hidden="true">→</span></a>
+        <a href="/en/properties/homes-for-sale">{t(lang, 'foot.g_houses')}</a>
+        <a href="/en/buying-property-in-greece">{t(lang, 'foot.g_buy')}</a>
+        <a href="/en/articles/all-news">{t(lang, 'foot.all_articles')}</a>
       </nav>
 
     </div>
@@ -131,13 +131,12 @@ import { consentText } from '../lib/consent';
      every link the same, «Properties» and «All articles» too (no arrow at rest) */
   .fcols a { transition: color .15s ease; }
   .fcols nav a:is(:hover, :focus-visible), .fbrand__addr a:is(:hover, :focus-visible) { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-  .far { display: inline-block; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
-  .fcols nav a:is(:hover, :focus-visible) .far, .fmap:is(:hover, :focus-visible) .far { opacity: 1; transform: translateX(4px); }
-  .fmap { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
-  .fmap svg { width: 13px; height: 13px; flex: none; }
-  :global([dir='rtl']) .far { transform: translateX(4px) scaleX(-1); }
-  :global([dir='rtl']) .fcols nav a:is(:hover, :focus-visible) .far { transform: translateX(-4px) scaleX(-1); }
-  @media (prefers-reduced-motion: reduce) { .far, .fcols a { transition: none; } }
+  /* the arrow is drawn by CSS, not written in the link, so the link text stays the plain name (2026-11-27) */
+  .fcols nav a::after, .fmap::after { content: '→'; display: inline-block; margin-left: .3em; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
+  .fcols nav a:is(:hover, :focus-visible)::after, .fmap:is(:hover, :focus-visible)::after { opacity: 1; transform: translateX(4px); }
+  :global([dir='rtl']) .fcols nav a::after, :global([dir='rtl']) .fmap::after { margin-left: 0; margin-right: .3em; transform: translateX(4px) scaleX(-1); }
+  :global([dir='rtl']) .fcols nav a:is(:hover, :focus-visible)::after, :global([dir='rtl']) .fmap:is(:hover, :focus-visible)::after { transform: translateX(-4px) scaleX(-1); }
+  @media (prefers-reduced-motion: reduce) { .fcols a, .fcols nav a::after, .fmap::after { transition: none; } }
   .fco { margin-top: var(--s5); }
   .fbot {
     margin: var(--s5) 0 0; padding-top: var(--s4); border-top: 1px solid var(--line);

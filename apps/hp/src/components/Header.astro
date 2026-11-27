@@ -248,7 +248,7 @@ const has = (k: string) => pageExists(k as any);
     }
     .burger { display: none; }
     /* the 7-section menu (en): a section opens its list on hover or keyboard focus */
-    .nav7 { gap: var(--s5); align-items: center; }
+    .nav7 { gap: var(--s7); align-items: center; }   /* five items: more air between them (Sergei 2026-11-27, was 24 px) */
     .nav7__s { position: relative; }
     .nav7__dd {
       position: absolute; top: 100%; left: calc(-1 * var(--s4)); z-index: 30; min-width: 260px;
@@ -273,7 +273,7 @@ const has = (k: string) => pageExists(k as any);
      overflow (logo + 8 items + phone + language + sign in). Tighter gaps and the phone as its icon only (the
      number stays in its aria-label); from 1320px everything as designed. */
   @media (min-width: 1080px) and (max-width: 1319px) {
-    .nav7 { gap: 18px; }
+    .nav7 { gap: var(--s6); }
     .navright { gap: var(--s3); }
     .tel__n { display: none; }
   }

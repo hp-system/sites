@@ -146,7 +146,7 @@ const jsonLd: unknown[] = [
       ) : image && (
         /* desktop only: phones get a 1-pixel placeholder and never download the photo */
         <picture class="gp__img">
-          <source media="(min-width: 1024px)" srcset={heroSet} sizes="(min-width: 1440px) 680px, 47vw" />
+          <source media="(min-width: 1024px)" srcset={heroSet} sizes="min(100vw, 1280px)" />
           <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt={imageAlt} width="1920" height="1280" fetchpriority="high" decoding="async" />
         </picture>
       )}
@@ -194,9 +194,17 @@ const jsonLd: unknown[] = [
   .gp__img { display: none; overflow: hidden; }
   .gp__img img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
   @media (min-width: 1024px) {
-    .gp__top { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; padding-block: 40px 56px; }
-    .gp__img { display: block; }
-    .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.06; letter-spacing: -.021em; }
+    /* Sergei 2026-11-27 («эта страница выпадает из дизайна»): the guides' top as Exclusive and Pre-published — one
+       centred column on white (crumbs, the H1 in two or three lines, the byline, the intro), the photo under it as a
+       wide band; was the title left and the photo right */
+    .gp__top { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 48px; padding-block: 72px 56px; }
+    .gp__top .gp__txt { justify-items: center; text-align: center; max-width: 1180px; }
+    .gp__top .gp__crumb { justify-self: center; }
+    .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.06; letter-spacing: -.021em; max-width: 26ch; text-wrap: balance; }
+    .gp .gp__top :global(.st-intro) { max-width: 96ch; }
+    .gp__top :global(.st-intro p) { text-wrap: balance; }
+    .gp__img { display: block; width: 100%; }
+    .gp__img img { aspect-ratio: 21 / 9; }
   }
   .gp__cta .k-act { width: auto; display: inline-flex; padding: 0 24px; }
   .gp__crumb { font-size: var(--fs-s-1); color: var(--muted); }

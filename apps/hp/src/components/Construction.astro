@@ -37,7 +37,8 @@ import { clean } from '../lib/photos';
 const SIDE = 'https://media.onsea.gr/properties/ums_7985/detached-house-facade-halkidiki-2982420238.jpg';
 // the seven points in three groups, names only; Design to keys, Our own team and You choose the land are left out:
 // the paragraph and the heading already say them (Sergei 2026-11-27)
-const GROUPS: [string, string[]][] = [['cx.g1', ['s4', 'c4', 'c3']], ['cx.g2', ['c1', 'c6']], ['cx.g3', ['c5', 'c2']]];
+// Sergei 2026-11-27: a short paragraph under each label instead of the names (his texts, 9 languages)
+const GROUPS: [string, string[]][] = [['cx.g1', []], ['cx.g2', []], ['cx.g3', []]];
 
 // portfolio: the «See what we build» button (off on the construction page itself, #340 — the projects page is merged there)
 interface Props { lang: Lang; portfolio?: boolean }
@@ -143,7 +144,7 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
       </figure>
       <div class="cx__groups">
         {GROUPS.map(([g, keys]) => (
-          <div class="cx__grp"><p class="t-label cx__gl">{t(lang, g)}</p><ul>{keys.map((k) => <li>{t(lang, `cx.${k}_t`)}</li>)}</ul></div>
+          <div class="cx__grp"><p class="t-label cx__gl">{t(lang, g)}</p><p class="cx__gp">{t(lang, `${g}_p`)}</p></div>
         ))}
       </div>
       <div class="cx__caps" data-acc>
@@ -425,6 +426,7 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
         heading, the paragraph and the buttons, a photo beside the box, then the three groups of names. Phones: the band,
         the photo and the groups stay hidden; they keep their blocks. ── */
   .cx__fig, .cx__groups { display: none; }
+  .cx__p { white-space: pre-line; }   /* one sentence a line (Sergei 2026-11-27) */
   @media (min-width: 1024px) {
     .cx { position: relative; z-index: 1; padding: 0 0 80px; overflow: visible; }   /* the box rises out of it */
     /* the white box: behind the left column, rising 96 px over the line that ends the page top (the reference: the box
@@ -441,9 +443,10 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     .cx .cx__btn--ghost:hover { background: var(--paper); color: var(--ink); }
     .cx__fig { display: block; grid-area: fig; margin: 24px 0 0 32px; }
     .cx__fig img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
-    .cx__groups { grid-area: groups; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 72px; }
+    /* three centred paragraphs across the page column (Sergei 2026-11-27) */
+    .cx__groups { grid-area: groups; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; margin-top: 80px; text-align: center; }
     .cx__gl { margin: 0 0 12px; color: var(--faint); }
-    .cx__grp ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-s0); color: var(--ink-2); }
+    .cx__gp { margin: 0; font-size: var(--fs-s0); line-height: 1.65; color: var(--ink-2); text-wrap: pretty; }
     .cx__rw { display: none; }
   }
 </style>

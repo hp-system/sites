@@ -667,7 +667,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Μίλα μαζί μας',
     'cx.eyebrow': 'Μελέτη & κατασκευή',
     'cx.h2': 'Η γη είναι η αρχή. Το σπίτι το χτίζουμε εμείς.',
-    'cx.p': 'Δεν είμαστε μόνο μεσιτικό γραφείο. Αναλαμβάνουμε ολόκληρη τη διαδρομή από τη γη ως τα κλειδιά: μελέτη, άδεια, κατασκευή, παράδοση — με τη δική μας ομάδα μηχανικών. Κάθε σπίτι σχεδιάζεται από την αρχή, για τον συγκεκριμένο άνθρωπο και τη συγκεκριμένη γη· γι\' αυτό αναλαμβάνουμε λίγα έργα κάθε φορά.',
+    'cx.p': 'Τα πιο εκλεκτά μας σπίτια δεν θα τα βρείτε σε κανένα portfolio: οι ιδιοκτήτες τους μας ζήτησαν να μείνουν ιδιωτικά, και έτσι μένουν.\nΚάθε σπίτι σχεδιάζεται μία φορά, για ένα οικόπεδο, και χτίζεται από τους δικούς μας μηχανικούς για να αντέξει γενιές.\nΑν ονειρεύεστε ένα τέτοιο σπίτι, είμαστε έτοιμοι να το χτίσουμε.',
     'cx.cta1': 'Δες τι χτίζουμε',
     'cx.cta2': 'Έχω γη',
     'cx.c1_t': 'Ολοκληρωμένη μελέτη',
@@ -829,6 +829,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Με την αποστολή αποδέχεσαι τους {terms} και την {privacy}.',
     'form.need': 'Γράψε το όνομά σου και ένα έγκυρο email.',
     'cx.g1': 'Τι χτίζουμε', 'cx.g2': 'Πώς χτίζουμε', 'cx.g3': 'Τι εγγυόμαστε',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Ιδιωτικές πολυτελείς κατοικίες και βίλες κύρους, ξενοδοχεία και οικιστικά συγκροτήματα, ολικές ανακαινίσεις, πισίνες κάθε μεγέθους και κήποι κάθε είδους. Το καθένα σχεδιάζεται μία φορά, για έναν ιδιοκτήτη και ένα οικόπεδο.', 'cx.g2_p': 'Οι δικοί μας μηχανικοί οδηγούν κάθε σπίτι από την πρώτη μελέτη στην οικοδομική άδεια και μέχρι τα κλειδιά. Χτίζουμε βιοκλιματικά, με γεωθερμία, φωτοβολταϊκά και συστήματα έξυπνου σπιτιού, και τίποτα δεν περνά σε χέρια που δεν γνωρίζουμε.', 'cx.g3_p': 'Ο προϋπολογισμός για όλο το σπίτι συμφωνείται γραπτώς πριν ξεκινήσουν οι εργασίες. Βλέπετε το έργο οποιαδήποτε στιγμή με ζωντανό βίντεο από το εργοτάξιο, όπου κι αν βρίσκεστε. Και διακριτικότητα: τα σπίτια που χτίζουμε μένουν ιδιωτικά.',   // Sergei 2026-11-27
     'form.fail': 'Η αποστολή απέτυχε. Κάλεσέ μας ή δοκίμασε ξανά σε ένα λεπτό.',
     'auth.role_h': 'Τι σε φέρνει εδώ;',
     'auth.role_buy': 'Θέλω να αγοράσω ακίνητο',
@@ -1165,7 +1166,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Speak to us',
     'cx.eyebrow': 'Design & construction',
     'cx.h2': 'The land is where it begins. The house is ours to build.',
-    'cx.p': 'We are not only an estate agency. We take on the whole route from the land to the keys: design, permits, construction and handover, with our own team of engineers. Each house is drawn from the beginning for the people who will live in it and for the land it stands on — one commission at a time, and never the same house twice.',
+    'cx.p': 'You will not find our finest houses in a portfolio: their owners asked us to keep them private, and we do.\nEvery house is drawn once, for one piece of land, and built by our own engineers to stand for generations.\nIf you dream of a house like that, we are ready to build it.',
     'cx.cta1': 'See what we build',
     'cx.cta2': 'I have land',
     'cx.c1_t': 'The complete design',
@@ -1327,6 +1328,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'By sending this form you accept the {terms} and the {privacy}.',
     'form.need': 'Please write your name and a valid email.',
     'cx.g1': 'What we build', 'cx.g2': 'How we build', 'cx.g3': 'What we promise',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Private luxury houses and prestigious villas, hotels and residential developments, complete renovations, pools of any size and gardens of any kind. Each one is drawn once, for one owner and one piece of land.', 'cx.g2_p': 'Our own engineers take every house from the first study to the building permit and on to the keys. We build bioclimatic, with geothermal, solar and smart-home systems, and nothing is handed to people we do not know.', 'cx.g3_p': 'The budget for the whole house is agreed in writing before work begins. Watch the work at any time on live video from the site, wherever you are in the world. And discretion: the houses we build stay private.',   // Sergei 2026-11-27
     'form.fail': 'Sending failed. Please call us or try again in a minute.',
     'auth.role_h': 'What brings you here?',
     'auth.role_buy': 'I want to buy property',
@@ -1654,7 +1656,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Свържете се с нас',
     'cx.eyebrow': 'Проектиране и строителство',
     'cx.h2': 'Земята е началото. Къщата я строим ние.',
-    'cx.p': 'Не сме само агенция за недвижими имоти. Поемаме целия път от земята до ключовете: проектиране, разрешение за строеж, строителство, предаване — със собствен екип от инженери. Не работим по готови проекти: всеки дом се създава от самото начало за конкретния човек и за конкретната земя.',
+    'cx.p': 'Най-хубавите ни къщи няма да намерите в портфолио: собствениците им ни помолиха да останат лични и ние спазваме това.\nВсяка къща се проектира веднъж, за един парцел, и се строи от нашите инженери, за да служи на поколения.\nАко мечтаете за такава къща, ние сме готови да я построим.',
     'cx.cta1': 'Вижте какво строим',
     'cx.cta2': 'Имам земя',
     'cx.c1_t': 'Пълно проектиране',
@@ -1816,6 +1818,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'С изпращането приемате {terms} и {privacy}.',
     'form.need': 'Моля, напишете името си и валиден имейл.',
     'cx.g1': 'Какво строим', 'cx.g2': 'Как строим', 'cx.g3': 'Какво гарантираме',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Частни луксозни къщи и престижни вили, хотели и жилищни комплекси, цялостни ремонти, басейни с всякакъв размер и градини от всякакъв вид. Всеки проект се създава веднъж — за един собственик и един парцел.', 'cx.g2_p': 'Нашите инженери водят всяка къща от първото проучване през разрешението за строеж до ключовете. Строим биоклиматично, с геотермални и соларни системи и системи за умен дом, и не поверяваме работата на хора, които не познаваме.', 'cx.g3_p': 'Бюджетът за цялата къща се договаря писмено преди началото на работата. Следете обекта по всяко време чрез видео на живо, където и да сте. И дискретност: къщите, които строим, остават лични.',   // Sergei 2026-11-27
     'form.fail': 'Изпращането не успя. Обадете ни се или опитайте отново след минута.',
     'auth.role_h': 'Какво ви води тук?',
     'auth.role_buy': 'Искам да купя имот',
@@ -2143,7 +2146,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Razgovarajmo',
     'cx.eyebrow': 'Projektovanje i gradnja',
     'cx.h2': 'Zemlja je tek početak. Kuću gradimo mi.',
-    'cx.p': 'Nismo samo agencija za nekretnine. Preuzimamo ceo put od zemlje do ključeva: projekat, dozvolu, gradnju i predaju — sa sopstvenim timom inženjera. Svaka kuća se crta iznova, za konkretnog čoveka i konkretnu zemlju, i zato istovremeno vodimo mali broj projekata.',
+    'cx.p': 'Naše najlepše kuće nećete naći u portfoliju: njihovi vlasnici su nas zamolili da ostanu privatne, i mi to poštujemo.\nSvaka kuća se projektuje jednom, za jednu parcelu, i grade je naši inženjeri da traje generacijama.\nAko sanjate o takvoj kući, spremni smo da je izgradimo.',
     'cx.cta1': 'Pogledajte šta gradimo',
     'cx.cta2': 'Imam zemlju',
     'cx.c1_t': 'Kompletan projekat',
@@ -2305,6 +2308,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Slanjem prihvatate {terms} i {privacy}.',
     'form.need': 'Upišite svoje ime i ispravan e-mail.',
     'cx.g1': 'Šta gradimo', 'cx.g2': 'Kako gradimo', 'cx.g3': 'Šta garantujemo',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Privatne luksuzne kuće i prestižne vile, hoteli i stambeni kompleksi, kompletne renovacije, bazeni svih veličina i bašte svih vrsta. Svaki projekat se crta jednom, za jednog vlasnika i jednu parcelu.', 'cx.g2_p': 'Naši inženjeri vode svaku kuću od prve studije preko građevinske dozvole do ključeva. Gradimo bioklimatski, sa geotermalnim i solarnim sistemima i sistemima pametne kuće, i ništa ne prepuštamo ljudima koje ne poznajemo.', 'cx.g3_p': 'Budžet za celu kuću dogovara se pismeno pre početka radova. Pratite gradilište u bilo kom trenutku putem video prenosa uživo, gde god da ste. I diskrecija: kuće koje gradimo ostaju privatne.',   // Sergei 2026-11-27
     'form.fail': 'Slanje nije uspelo. Pozovite nas ili pokušajte ponovo za minut.',
     'auth.role_h': 'Šta vas dovodi ovde?',
     'auth.role_buy': 'Želim da kupim nekretninu',
@@ -2632,7 +2636,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Sprechen Sie mit uns',
     'cx.eyebrow': 'Planung & Ausführung',
     'cx.h2': 'Am Anfang steht Grund und Boden. Das Haus bauen wir.',
-    'cx.p': 'Wir sind nicht nur Makler. Wir übernehmen den gesamten Weg von Grund und Boden bis zu den Schlüsseln: Planung, Genehmigung, Bau, Übergabe — mit unserem eigenen Ingenieurteam. Jeder Entwurf entsteht eigens für diesen einen Bauherrn und diesen einen Ort: ein Haus, keine Serie.',
+    'cx.p': 'Unsere schönsten Häuser finden Sie in keinem Portfolio: Ihre Eigentümer haben uns gebeten, sie privat zu halten, und daran halten wir uns.\nJedes Haus wird ein einziges Mal entworfen, für ein Grundstück, und von unseren eigenen Ingenieuren gebaut, um Generationen zu überdauern.\nWenn Sie von einem solchen Haus träumen, sind wir bereit, es zu bauen.',
     'cx.cta1': 'Sehen Sie, was wir bauen',
     'cx.cta2': 'Ich habe Grund und Boden',
     'cx.c1_t': 'Gesamtplanung',
@@ -2794,6 +2798,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Mit dem Absenden akzeptieren Sie die {terms} und die {privacy}.',
     'form.need': 'Bitte geben Sie Ihren Namen und eine gültige E-Mail-Adresse ein.',
     'cx.g1': 'Was wir bauen', 'cx.g2': 'Wie wir bauen', 'cx.g3': 'Was wir zusagen',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Private Luxushäuser und repräsentative Villen, Hotels und Wohnanlagen, Komplettsanierungen, Pools jeder Größe und Gärten jeder Art. Jedes Projekt wird einmal entworfen, für einen Eigentümer und ein Grundstück.', 'cx.g2_p': 'Unsere eigenen Ingenieure begleiten jedes Haus von der ersten Studie über die Baugenehmigung bis zur Schlüsselübergabe. Wir bauen bioklimatisch, mit Geothermie, Solartechnik und Smart-Home-Systemen, und nichts geht in Hände, die wir nicht kennen.', 'cx.g3_p': 'Das Budget für das ganze Haus wird vor Baubeginn schriftlich vereinbart. Verfolgen Sie die Baustelle jederzeit per Live-Video, wo auch immer Sie sind. Und Diskretion: Die Häuser, die wir bauen, bleiben privat.',   // Sergei 2026-11-27
     'form.fail': 'Senden fehlgeschlagen. Bitte rufen Sie uns an oder versuchen Sie es in einer Minute erneut.',
     'auth.role_h': 'Was führt Sie hierher?',
     'auth.role_buy': 'Ich möchte eine Immobilie kaufen',
@@ -3121,7 +3126,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Vorbiți cu noi',
     'cx.eyebrow': 'Proiectare & construcție',
     'cx.h2': 'Terenul este începutul. Casa o construim noi.',
-    'cx.p': 'Nu suntem doar o agenție imobiliară. Ne asumăm întregul drum, de la teren la chei: proiectare, autorizare, execuție, predare — cu propria noastră echipă de ingineri. Preluăm puține proiecte în același timp: fiecare casă este gândită de la zero, pentru omul care o va locui și pentru terenul pe care se ridică.',
+    'cx.p': 'Cele mai frumoase case ale noastre nu le veți găsi într-un portofoliu: proprietarii lor ne-au cerut să rămână private, iar noi respectăm asta.\nFiecare casă este proiectată o singură dată, pentru un singur teren, și construită de inginerii noștri ca să dăinuie generații.\nDacă visați la o astfel de casă, suntem gata s-o construim.',
     'cx.cta1': 'Vedeți ce construim',
     'cx.cta2': 'Am teren',
     'cx.c1_t': 'Proiectare completă',
@@ -3283,6 +3288,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Prin trimitere acceptați {terms} și {privacy}.',
     'form.need': 'Scrieți numele și un e-mail valid.',
     'cx.g1': 'Ce construim', 'cx.g2': 'Cum construim', 'cx.g3': 'Ce garantăm',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Case private de lux și vile de prestigiu, hoteluri și ansambluri rezidențiale, renovări complete, piscine de orice mărime și grădini de orice fel. Fiecare proiect este gândit o singură dată, pentru un proprietar și un teren.', 'cx.g2_p': 'Inginerii noștri duc fiecare casă de la primul studiu la autorizația de construire și până la chei. Construim bioclimatic, cu sisteme geotermale și solare și sisteme de casă inteligentă, și nu încredințăm nimic unor oameni pe care nu-i cunoaștem.', 'cx.g3_p': 'Bugetul pentru întreaga casă se stabilește în scris înainte de începerea lucrărilor. Urmăriți șantierul oricând, prin video în direct, oriunde v-ați afla. Și discreție: casele pe care le construim rămân private.',   // Sergei 2026-11-27
     'form.fail': 'Trimiterea a eșuat. Sunați-ne sau încercați din nou peste un minut.',
     'auth.role_h': 'Ce vă aduce aici?',
     'auth.role_buy': 'Vreau să cumpăr o proprietate',
@@ -3611,7 +3617,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Bizimle konuşun',
     'cx.eyebrow': 'Proje ve inşaat',
     'cx.h2': 'Arazi başlangıçtır. Evi biz inşa ederiz.',
-    'cx.p': 'Yalnızca bir emlak ofisi değiliz. Araziden anahtara kadar yolun tamamını üstleniyoruz: proje, ruhsat, inşaat, teslim — kendi mühendis ekibimizle. Her ev, o evde yaşayacak kişi ve üzerinde duracağı arazi için baştan çizilir; bu yüzden her seferinde az sayıda iş alıyoruz.',
+    'cx.p': 'En güzel evlerimizi hiçbir portföyde bulamazsınız: sahipleri gizli kalmasını istedi ve biz de buna uyuyoruz.\nHer ev tek bir arsa için bir kez tasarlanır ve nesiller boyu ayakta kalması için kendi mühendislerimiz tarafından inşa edilir.\nBöyle bir evin hayalini kuruyorsanız, onu inşa etmeye hazırız.',
     'cx.cta1': 'İnşa ettiklerimizi görün',
     'cx.cta2': 'Arazim var',
     'cx.c1_t': 'Eksiksiz proje',
@@ -3773,6 +3779,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Formu göndererek {terms} ve {privacy} kabul etmiş olursunuz.',
     'form.need': 'Lütfen adınızı ve geçerli bir e-posta yazın.',
     'cx.g1': 'Ne inşa ediyoruz', 'cx.g2': 'Nasıl inşa ediyoruz', 'cx.g3': 'Neyi garanti ediyoruz',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Özel lüks evler ve prestijli villalar, oteller ve konut projeleri, komple renovasyonlar, her boyutta havuzlar ve her türde bahçeler. Her biri tek bir sahip ve tek bir arsa için bir kez tasarlanır.', 'cx.g2_p': 'Kendi mühendislerimiz her evi ilk etüdden inşaat ruhsatına ve anahtar teslimine kadar götürür. Jeotermal ve güneş sistemleri ile akıllı ev sistemleriyle biyoklimatik inşa ediyoruz ve hiçbir işi tanımadığımız kişilere bırakmıyoruz.', 'cx.g3_p': 'Tüm evin bütçesi işe başlamadan önce yazılı olarak kararlaştırılır. Nerede olursanız olun, şantiyeyi istediğiniz an canlı videoyla izleyin. Ve gizlilik: inşa ettiğimiz evler özel kalır.',   // Sergei 2026-11-27
     'form.fail': 'Gönderilemedi. Lütfen bizi arayın veya bir dakika sonra tekrar deneyin.',
     'auth.role_h': 'Sizi buraya ne getirdi?',
     'auth.role_buy': 'Mülk satın almak istiyorum',
@@ -4101,7 +4108,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'דברו איתנו',
     'cx.eyebrow': 'תכנון ובנייה',
     'cx.h2': 'הקרקע היא ההתחלה. את הבית אנחנו בונים.',
-    'cx.p': 'אנחנו לא רק משרד תיווך. אנחנו לוקחים על עצמנו את כל הדרך מהקרקע ועד המפתחות: תכנון, רישוי, בנייה ומסירה — עם צוות המהנדסים שלנו. כל בית מתוכנן מהתחלה, לאדם שיגור בו ולקרקע שעליה ייבנה. לכן אנחנו נוטלים על עצמנו מעט פרויקטים בכל פעם.',
+    'cx.p': 'את הבתים הטובים ביותר שלנו לא תמצאו בשום תיק עבודות: בעליהם ביקשו שיישארו פרטיים, ואנחנו מכבדים זאת.\nכל בית מתוכנן פעם אחת, למגרש אחד, ונבנה בידי המהנדסים שלנו כדי לעמוד לדורות.\nאם אתם חולמים על בית כזה, אנחנו מוכנים לבנות אותו.',
     'cx.cta1': 'ראו מה אנחנו בונים',
     'cx.cta2': 'יש לי קרקע',
     'cx.c1_t': 'תכנון מלא',
@@ -4263,6 +4270,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'בשליחת הטופס אתם מאשרים את {terms} ואת {privacy}.',
     'form.need': 'נא לכתוב שם וכתובת אימייל תקינה.',
     'cx.g1': 'מה אנחנו בונים', 'cx.g2': 'איך אנחנו בונים', 'cx.g3': 'מה אנחנו מבטיחים',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'בתי יוקרה פרטיים ווילות יוקרתיות, מלונות ומתחמי מגורים, שיפוצים מלאים, בריכות בכל גודל וגינות מכל סוג. כל אחד מתוכנן פעם אחת, לבעלים אחד ולמגרש אחד.', 'cx.g2_p': 'המהנדסים שלנו מובילים כל בית מהתכנון הראשון, דרך היתר הבנייה ועד המפתח. אנחנו בונים בגישה ביו-אקלימית, עם מערכות גאותרמיות וסולאריות ומערכות בית חכם, ושום דבר לא עובר לידיים שאיננו מכירים.', 'cx.g3_p': 'התקציב לבית כולו מוסכם בכתב לפני תחילת העבודה. צפו באתר בכל רגע בווידאו חי, היכן שלא תהיו. ודיסקרטיות: הבתים שאנחנו בונים נשארים פרטיים.',   // Sergei 2026-11-27
     'form.fail': 'השליחה נכשלה. התקשרו אלינו או נסו שוב בעוד דקה.',
     'auth.role_h': 'מה מביא אתכם לכאן?',
     'auth.role_buy': 'אני רוצה לקנות נכס',
@@ -4591,7 +4599,7 @@ const U: Record<Lang, Dict> = {
     'ab.cta': 'Свяжитесь с нами',
     'cx.eyebrow': 'Проектирование и строительство',
     'cx.h2': 'Земля — это начало. Дом строим мы.',
-    'cx.p': 'Мы не только агентство недвижимости. Мы берём на себя весь путь от земли до ключей: проект, разрешение, строительство, передача — силами собственной команды инженеров. Каждый дом проектируется с нуля, под конкретного человека и конкретный участок; поэтому одновременно мы ведём лишь несколько проектов.',
+    'cx.p': 'Наши лучшие дома вы не найдёте в портфолио: их владельцы попросили оставить их закрытыми, и мы держим слово.\nКаждый дом проектируется один раз, для одного участка, и строится нашими инженерами, чтобы стоять поколениями.\nЕсли вы мечтаете о таком доме, мы готовы его построить.',
     'cx.cta1': 'Что мы строим',
     'cx.cta2': 'У меня есть участок',
     'cx.c1_t': 'Полный проект',
@@ -4753,6 +4761,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Отправляя форму, вы принимаете {terms} и {privacy}.',
     'form.need': 'Укажите имя и действующий e-mail.',
     'cx.g1': 'Что мы строим', 'cx.g2': 'Как мы строим', 'cx.g3': 'Что мы гарантируем',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.g1_p': 'Частные дома класса люкс и престижные виллы, отели и жилые комплексы, полная реконструкция, бассейны любого размера и сады любого вида. Каждый проект создаётся один раз — для одного владельца и одного участка.', 'cx.g2_p': 'Наши инженеры ведут каждый дом от первого проекта до разрешения на строительство и до ключей. Мы строим биоклиматические дома с геотермальными и солнечными системами и системами умного дома и не передаём работу тем, кого не знаем.', 'cx.g3_p': 'Бюджет всего дома согласуется письменно до начала работ. Следите за стройкой в любой момент по видео в прямом эфире, где бы вы ни были. И конфиденциальность: дома, которые мы строим, остаются закрытыми от чужих глаз.',   // Sergei 2026-11-27
     'form.fail': 'Не удалось отправить. Позвоните нам или попробуйте через минуту.',
     'auth.role_h': 'Что привело вас сюда?',
     'auth.role_buy': 'Я хочу купить недвижимость',

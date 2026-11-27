@@ -17,7 +17,7 @@ import MobileMenu from './MobileMenu.astro';
 import Footer from './Footer.astro';
 import InfoForm from './InfoForm.astro';
 import InfoWidget from './InfoWidget.astro';
-import { priceTables } from '../lib/prices';
+import { priceTables, isPrePublished } from '../lib/prices';
 import type { SiteProperty } from '../lib/api';
 import { allProperties, visitorCountry } from '../lib/api';
 import { muniKey, municipalityOf } from '../lib/gate';
@@ -652,8 +652,13 @@ if (faqItems.length) {
             <span aria-hidden="true">·</span><span aria-current="page">{short}</span>
           </nav>
           <h1 id="ppt-h" class="t-display info-h1 ppt__h">{d.h1}</h1>
-          {d.lead && <p class="ppt__lead">{d.lead}</p>}
-          {d.widget && <div class="ppt__w"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
+          {/* Sergei 2026-11-27: the lead in two lines, one sentence each */}
+          {d.lead && <p class="ppt__lead">{d.lead.split(/(?<=[.!?])\s+/).map((x) => <span>{x}</span>)}</p>}
+          {/* the list shows only when there is something in it (a member, and the CRM marks properties); the «none right
+              now» note is not shown (Sergei 2026-11-27) */}
+          {d.widget && memberToken && items.some((p) => isPrePublished(p.attributes ?? {})) && (
+            <div class="ppt__w"><InfoWidget kind={d.widget} items={items} member lang={lang} /></div>
+          )}
           <p class="ppt__cta">
             {memberToken
               ? <button type="button" class="k-act k-gild" data-ppop-open data-ev="lead:form_open">{d.form.title || t(lang, 'form.title')}</button>
@@ -1451,7 +1456,8 @@ if (faqItems.length) {
   .ppt__in { display: grid; justify-items: center; gap: var(--s4); max-width: 1180px; }
   .ppt__crumb { justify-content: center; }
   .ppt__h { margin: 0; max-width: 26ch; text-wrap: balance; }
-  .ppt__lead { margin: 0; max-width: 62ch; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); text-wrap: balance; }
+  .ppt__lead { margin: 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); }
+  .ppt__lead span { display: block; }
   .ppt__w { max-width: 62ch; color: var(--muted); }
   .ppt__w :global(*) { text-align: center; }
   .ppt__cta { margin: var(--s3) 0 0; }

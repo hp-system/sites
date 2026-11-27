@@ -4,7 +4,7 @@ key: pre-published-properties
 title: Pre-published Properties in Halkidiki
 description: 'Pre-published properties in Halkidiki: homes, land and hotels before they reach the market. Register free and be the first to hear about the ones you want.'
 h1: Pre-published properties
-lead: Find out about properties that have not entered the market yet. You are the first to be informed about what interests you, as soon as the owner is ready to sell.
+lead: Find out about properties that have not entered the market yet. You are the first to see properties before they reach the market.
 section: buy
 schema: CollectionPage
 parents: []

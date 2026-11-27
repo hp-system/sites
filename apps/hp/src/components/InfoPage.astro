@@ -1456,13 +1456,14 @@ if (faqItems.length) {
   .ppt { position: relative; overflow: hidden; isolation: isolate; background: var(--paper); color: var(--ink);
          min-height: min(86vh, 860px); box-sizing: border-box; display: grid; place-items: center; text-align: center;
          padding-block: 72px; padding-inline: var(--gut); }
-  .ppt__in { display: grid; justify-items: center; gap: var(--s4); max-width: 1180px; }
+  .ppt__in { display: grid; justify-items: center; gap: var(--s4); max-width: 1180px; width: 100%; }
   .ppt__crumb { justify-content: center; }
   .ppt__h { margin: 0; max-width: 26ch; text-wrap: balance; }
   .ppt__lead { margin: 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); }
   .ppt__lead span { display: block; }
-  .ppt__lead--spec { max-width: 96ch; }
-  .ppt__lead--spec :global(p) { margin: 0 0 var(--s2); text-wrap: balance; }
+  /* the brief's intro across the page column, so a sentence a line stays one line (Sergei 2026-11-27 «3 рядка») */
+  .ppt__lead--spec, .ppt__lead--spec :global(.st-intro) { max-width: none; width: 100%; }
+  .ppt__lead--spec :global(p) { margin: 0 0 var(--s2); text-wrap: pretty; }
   .ppt__w { max-width: 62ch; color: var(--muted); }
   .ppt__w :global(*) { text-align: center; }
   .ppt__cta { margin: var(--s3) 0 0; }

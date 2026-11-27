@@ -16,10 +16,11 @@ for (const f of ['pre-published-properties', 'property-for-sale-in-greece', 'hal
 }
 const stop = await start();
 try {
-  const pre = await checkPage('/en/pre-published-properties', { form: true, types: ['CollectionPage'] });
+  // #375 (2026-11-27): the form opens in a popup from the one button; a guest's page carries no form
+  const pre = await checkPage('/en/pre-published-properties', { form: false, types: ['CollectionPage'] });
   if (pre) {
-    check('pre-published: sign-in CTA', /href="\/en\/login"/.test(pre), 'CTA to /en/login');
-    check('pre-published: empty state for guests', /Pre-published properties are shown to registered members/.test(pre), 'guest empty state');
+    check('pre-published: sign-in CTA coming back to the form', pre.includes('href="/en/login?next=%2Fen%2Fpre-published-properties%3Fform%3D1"'), 'CTA to /en/login → ?form=1');
+    check('pre-published: no «none right now» note (Sergei 2026-11-27)', !/No pre-published properties right now/.test(pre) && !/Pre-published properties are shown to registered members/.test(pre), 'no empty note');
   }
 
   // D2 (#152): the Greece page moved to the spec URL; the old one answers 301.

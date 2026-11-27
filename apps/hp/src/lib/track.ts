@@ -72,6 +72,7 @@ export const EVENTS = {
   LEAD_CALLBACK_OPEN: 'lead:callback_open',
   LEAD_CALLSHEET_OPEN: 'lead:callsheet_open',
   LEAD_CALLBACK_SUBMIT: 'lead:callback_submit',
+  MAP_FOOTER: 'map:footer',   // the office on the map, from the footer (#366, 2026-11-24)
 
   // ΕΠΙΚΟΙΝΩΝΙΑ — η υψηλότερη πρόθεση σε όλη τη σελίδα.
   // Ξεχωριστό όνομα ΑΝΑ ΣΗΜΕΙΟ: αν όλα λέγονταν «κλικ στο τηλέφωνο», δεν θα

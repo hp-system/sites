@@ -426,17 +426,20 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
         the photo and the groups stay hidden; they keep their blocks. ── */
   .cx__fig, .cx__groups { display: none; }
   @media (min-width: 1024px) {
-    .cx { padding: 64px 0 80px; }
+    .cx { position: relative; z-index: 1; padding: 0 0 80px; overflow: visible; }   /* the box rises out of it */
+    /* the white box: behind the left column, rising 96 px over the line that ends the page top (the reference: the box
+       over the photo's edge) */
+    .cx .cx__top::before { content: ""; grid-area: 1 / 1 / 5 / 2; align-self: stretch; margin: -96px 0 0 -56px; background: var(--paper); z-index: 0; }
     .cx .cx__top { position: relative; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: 0; row-gap: 0;
       grid-template-areas: "eb fig" "h fig" "p fig" "acts fig" "groups groups"; align-items: start; }
     .cx .cx__top > *, .cx .cx__lead > * { position: relative; z-index: 1; }
-    .cx .cx__eyebrow { grid-area: eb; margin: 0 56px 0 0; }
+    .cx .cx__eyebrow { grid-area: eb; margin: -40px 56px 0 0; }
     .cx .cx__h { grid-area: h; margin: 18px 56px 0 0; font-size: var(--fs-s4); line-height: 1.12; }
     .cx .cx__p { grid-area: p; margin: 22px 56px 0 0; max-width: 60ch; }
     .cx .cx__acts { grid-area: acts; justify-content: flex-start; margin: 32px 0 0; align-self: start; }
     .cx .cx__btn--ghost { background: var(--ink); color: #fff; }
     .cx .cx__btn--ghost:hover { background: var(--paper); color: var(--ink); }
-    .cx__fig { display: block; grid-area: fig; margin: 0 0 0 32px; }
+    .cx__fig { display: block; grid-area: fig; margin: 24px 0 0 32px; }
     .cx__fig img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
     .cx__groups { grid-area: groups; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 72px; }
     .cx__gl { margin: 0 0 12px; color: var(--faint); }

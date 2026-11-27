@@ -174,8 +174,9 @@ const jsonLd: unknown[] = [
     <SpecPosts page={postsPage} lang={lang} photos={photos} faqH={FAQ_H[lang]} member={Boolean(memberToken)} items={items as any} cta={cta} drop={page.id === 'P52' ? undefined : blocks.consumed} />
     {kids.length > 0 && (
       <section class="wrap gp__kids" aria-labelledby="gp-kids-h">
-        <p data-h id="gp-kids-h" class="gp__label">{page.name}</p>
-        <ul>{kids.map((k) => <li><a href={k.href}>{k.name}</a></li>)}</ul>
+        {/* the internal note in the name («Exclusive (ex VIP)») is not shown (Sergei 2026-11-27) */}
+        <p data-h id="gp-kids-h" class="gp__label">{page.name.replace(/\s*\([^)]*\)\s*$/, '')}</p>
+        <ul>{kids.map((k) => <li><a href={k.href}>{k.name} <span class="gp__ar" aria-hidden="true">→</span></a></li>)}</ul>
       </section>
     )}
     {form && (
@@ -206,7 +207,17 @@ const jsonLd: unknown[] = [
   .gp :global(.st-intro) { max-width: 68ch; }
   .gp__cta { margin: 0; }
   .gp__kids, .gp__form { padding-block: var(--s6); }
-  .gp__kids ul { margin: var(--s3) 0 0; padding: 0; list-style: none; display: grid; gap: var(--s2); grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  /* centred, and the links as the footer's (Sergei 2026-11-27): grey at rest; on hover ink, a thin underline and an
+     arrow that fades in and slides (Footer.astro .far) */
+  .gp__kids { text-align: center; }
+  .gp__kids ul { margin: var(--s3) 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2) var(--s6); }
+  .gp__kids a { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+  .gp__kids a:is(:hover, :focus-visible) { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .gp__ar { display: inline-block; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
+  .gp__kids a:is(:hover, :focus-visible) .gp__ar { opacity: 1; transform: translateX(4px); }
+  :global([dir='rtl']) .gp__ar { transform: translateX(4px) scaleX(-1); }
+  :global([dir='rtl']) .gp__kids a:is(:hover, :focus-visible) .gp__ar { transform: translateX(-4px) scaleX(-1); }
+  @media (prefers-reduced-motion: reduce) { .gp__ar, .gp__kids a { transition: none; } }
   .gp__label { margin: 0; font-size: var(--fs-s-1); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
   /* ── Exclusive, the luxury face (Sergei 2026-11-16): a white header bar; the first screen black (--ink-deep, the

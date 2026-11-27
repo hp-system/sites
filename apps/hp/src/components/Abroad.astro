@@ -379,6 +379,7 @@ const viberLink = viberHref(co.whatsappE164);
     .two__l--you li, .two__l--us li { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; align-items: baseline;
                                       padding-block: 14px; }
     /* no hairlines between the rows (Sergei 2026-11-27) */
+    .two__l--us li { padding-block: 7px; }   /* our steps closer together (Sergei 2026-11-27, was 14 px) */
     .two__n { display: block; grid-row: span 2; font-size: var(--fs-s-1); font-weight: 600; color: var(--faint); }
     .two__l--us .two__n { grid-row: auto; }
     .ab3 .two__n.two__n { align-self: baseline; }   /* on the name's line */

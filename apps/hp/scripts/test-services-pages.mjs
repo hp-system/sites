@@ -55,7 +55,10 @@ try {
     const ids = brief ? [...html.matchAll(/<article id="([^"]+)"/g)].map((m) => m[1]) : [...html.matchAll(/<h2 id="([^"]+)"/g)].map((m) => m[1]);
     const jump = brief ? [...html.matchAll(/data-pn-to="([^"]+)"/g)].map((m) => m[1]) : [...html.matchAll(/<a href="#([^"]+)"/g)].map((m) => m[1]);
     check(`/en/services/${s} sections with ids`, ids.length >= (brief ? 5 : 3), `${ids.length} ids`);
-    check(`/en/services/${s} ${brief ? 'side menu' : 'jump list'} → every section`, jump.length > 0 && jump.every((j) => ids.includes(j)), `${jump.length} links`);
+    // #365 (2026-11-24): the SEO text is the quiet accordion — each section is its own row with an H2 id, so the rows are
+    // the navigation and no separate jump list is drawn
+    const acc = html.includes('class="sa"');
+    check(`/en/services/${s} ${acc ? 'accordion rows' : brief ? 'side menu' : 'jump list'} → every section`, acc ? /<h2 id="[^"]+" class="sa__h"/.test(html) : jump.length > 0 && jump.every((j) => ids.includes(j)), acc ? 'accordion' : `${jump.length} links`);
     const svc = lds(html).find((x) => x['@type'] === 'Service');
     const n = svc?.hasOfferCatalog?.itemListElement?.length ?? 0;
     check(`/en/services/${s} Service.hasOfferCatalog`, n >= 3, `${n} offers`);

@@ -79,20 +79,12 @@ const sections = parts.map((html, i) => {
     const still = matchMedia('(prefers-reduced-motion: reduce)');
     all.forEach((d) => d.removeAttribute('name'));
 
-    const fix = () => {
-      box.style.minHeight = '';
-      if (!wide.matches) return;
-      const was = all.filter((d) => d.open);
-      all.forEach((d) => { d.open = false; });
-      let max = 0;
-      for (const c of cols) {
-        let m = c.offsetHeight;
-        for (const d of Array.from(c.querySelectorAll<HTMLDetailsElement>('details'))) { d.open = true; m = Math.max(m, c.offsetHeight); d.open = false; }
-        max = Math.max(max, m);
-      }
-      all.forEach((d) => { d.open = was.includes(d); });
-      box.style.minHeight = `${Math.ceil(max)}px`;
-    };
+    // Sergei 2026-11-27: one height on every page, the same space above and below. The box height is a constant
+    // (--sa-h, CSS); an open answer shows in a window of fixed height (--sa-win) and scrolls inside it when longer.
+    // Here only: mark a window that scrolls, so it gets a soft fade at its bottom edge.
+    const mark = () => box.querySelectorAll<HTMLElement>('.sa__body, .k-faq__a').forEach((el) => {
+      el.classList.toggle('is-scroll', el.scrollHeight > el.clientHeight + 2);
+    });
 
     const run = (d: HTMLDetailsElement, from: number, to: number, done?: () => void) => {
       d.getAnimations().forEach((x) => x.cancel());
@@ -112,6 +104,7 @@ const sections = parts.map((html, i) => {
       const from = d.offsetHeight;
       d.open = true;
       run(d, from, d.offsetHeight);
+      mark();
     };
 
     all.forEach((d) => {
@@ -127,15 +120,14 @@ const sections = parts.map((html, i) => {
       });
     });
 
-    fix();
-    document.fonts?.ready.then(fix);
+    document.fonts?.ready.then(mark);
     let t = 0;
-    addEventListener('resize', () => { clearTimeout(t); t = window.setTimeout(fix, 150); });
+    addEventListener('resize', () => { clearTimeout(t); t = window.setTimeout(mark, 150); });
   }
 </script>
 
 <style>
-  .sa { background: var(--paper); padding-block: var(--s8); }
+  .sa { --sa-h: 720px; --sa-win: 240px; background: var(--paper); padding-block: var(--s8); }
   .sa__in { display: grid; gap: var(--s6); }
   .sa__intro { max-width: 70ch; color: var(--ink-2); font-size: var(--fs-s0); line-height: 1.65; }
   .sa__intro :global(p) { margin: 0 0 var(--s3); }
@@ -176,6 +168,14 @@ const sections = parts.map((html, i) => {
     .sa { padding-block: 80px; }   /* rows stay 18px, the same height as the questions' rows */
     .sa__cols--2 { grid-template-columns: 1fr 1fr; column-gap: 80px; align-items: start; }
     .sa__cols--2 .sa__faq { padding-top: 0; }
+    /* Sergei 2026-11-27: the block is one fixed height on every page (720 px = the tallest page, golden-visa-greece: 7 SEO rows closed 475 px + the 240 px answer window; measured 2026-11-27 on all 21 spec pages at 1440 px),
+       so the space under it never changes; a long answer scrolls in its own window instead of stretching the block */
+    .sa__cols--2 { min-height: var(--sa-h); }
+    .sa__cols--2 .sa__body, .sa__cols--2 :global(.k-faq__a) { max-height: var(--sa-win); overflow-y: auto;
+      overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+    .sa__cols--2 .sa__body.is-scroll, .sa__cols--2 :global(.k-faq__a.is-scroll) {
+      -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 32px), transparent);
+              mask-image: linear-gradient(180deg, #000 calc(100% - 32px), transparent); }
   }
   @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h, .sa__ar { transition: none; } }
 </style>

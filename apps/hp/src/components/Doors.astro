@@ -33,7 +33,10 @@ const DOORS = [
         grows and turns dark, the first one is open at rest. The whole door is a
         click target, but the LINK stays the CTA words (stretched link) — the anchor
         text search engines read does not change. */}
-    <p class="t-label doors__lbl" aria-hidden="true">{t(lang, 'doors.eyebrow')}</p>
+    {/* Sergei 2026-11-27: on a desktop the label stands upright left of the doors and travels from their top to their
+        bottom while the band crosses the screen (the script below); phones keep it hidden as before */}
+    <div class="doors-w" data-doors-w>
+    <p class="t-label doors__lbl" aria-hidden="true" data-doors-lbl>{t(lang, 'doors.eyebrow')}</p>
     <div class="doors" data-doors>
       {DOORS.map((d, i) => (
         <div class:list={['door', i === 0 && 'on']}>
@@ -48,8 +51,31 @@ const DOORS = [
         </div>
       ))}
     </div>
+    </div>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-doors-w]').forEach((w) => {
+    const lbl = w.querySelector<HTMLElement>('[data-doors-lbl]');
+    if (!lbl) return;
+    const desk = matchMedia('(min-width: 1024px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
+    let q = false;
+    const move = () => {
+      q = false;
+      if (!desk.matches || still.matches) { lbl.style.transform = ''; return; }
+      const r = w.getBoundingClientRect(), vh = window.innerHeight;
+      // 0 when the doors' top enters at the bottom of the screen, 1 when their bottom leaves at the top
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+      const room = Math.max(0, (w.querySelector<HTMLElement>('[data-doors]')?.offsetHeight ?? w.clientHeight) - lbl.offsetHeight);
+      lbl.style.transform = `translateY(${(p * room).toFixed(1)}px)`;
+    };
+    const on = () => { if (!q) { q = true; requestAnimationFrame(move); } };
+    window.addEventListener('scroll', on, { passive: true });
+    window.addEventListener('resize', on);
+    move();
+  });
+</script>
 
 <style>
   .doors { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
@@ -67,17 +93,24 @@ const DOORS = [
     /* Sergei 03/11 (mockup «two home blocks»): black band, beige doors, the chosen one white */
     /* Sergei 2026-11-27: the band white; the door under the pointer turns dark (the old white-on-black, inverted) */
     .doors-sec { background: var(--paper); padding: 80px 0; }   /* more air, as Collections / by area (Sergei 2026-11-24, was 36 / 40 px) */
-    .doors__lbl { display: block; margin: 0 0 16px; color: var(--faint); }
+    /* the label left of the doors, travelling from their top to their bottom with the scroll (script): in its own narrow
+       column, or in the page margin when the screen is wide enough for it (Sergei 2026-11-27: horizontal) */
+    .doors-w { display: grid; grid-template-columns: 112px minmax(0, 1fr); column-gap: 24px; align-items: start; }
+    .doors__lbl { display: block; margin: 0; color: var(--faint); white-space: nowrap; will-change: transform; }
+    @media (min-width: 1520px) {
+      .doors-w { display: block; position: relative; }
+      .doors__lbl { position: absolute; top: 0; right: calc(100% + 32px); }
+    }
     .doors { display: flex; gap: 12px; background: none; border: 0; }
     .door {
       position: relative; flex: 1 1 0; min-width: 0; min-height: 250px;
       display: flex; flex-direction: column; justify-content: space-between; gap: 20px;
-      padding: 24px 30px 26px; background: var(--paper-3); color: var(--ink); overflow: hidden;
-      transition: background-color .25s ease, color .25s ease;
+      padding: 24px 30px 26px; background: var(--paper); border: 1px solid var(--paper-3); color: var(--ink); overflow: hidden;   /* white, a beige outline (Sergei 2026-11-27) */
+      transition: background-color .25s ease, border-color .25s ease, color .25s ease;
     }
     .door p:not([data-h]) { transition: color .25s ease; }
     /* #338 (George via Sergei 2026-11-23: no opening-door animation): the doors keep their width and heading size; the hovered one only changes colour. */
-    .door.on { background: var(--ink-deep); color: #fff; }
+    .door.on { background: var(--ink-deep); border-color: var(--ink-deep); color: #fff; }
     .door.on p:not([data-h]) { color: rgba(255,255,255,.82); }
     .door__h { font-size: var(--fs-s1); line-height: 1.15; }
     .door p:not([data-h]) { margin: 12px 0 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); max-width: 40ch; }

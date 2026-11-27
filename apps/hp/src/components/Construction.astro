@@ -139,8 +139,8 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
       </p>
 
 
-      <figure class="cx__fig" aria-hidden="true">
-        <img src={clean(SIDE, 800)} srcset={`${clean(SIDE, 800)} 800w, ${clean(SIDE)} 1920w`} sizes="(min-width: 1440px) 560px, 40vw" alt="" width="800" height="533" loading="lazy" decoding="async" />
+      <figure class="cx__fig">
+        <img src={clean(SIDE, 800)} srcset={`${clean(SIDE, 800)} 800w, ${clean(SIDE)} 1920w`} sizes="(min-width: 1440px) 560px, 40vw" alt={t(lang, 'cx.fig_alt')} width="800" height="533" loading="lazy" decoding="async" />
       </figure>
       <div class="cx__groups">
         {GROUPS.map(([g, keys]) => (

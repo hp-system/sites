@@ -829,6 +829,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Με την αποστολή αποδέχεσαι τους {terms} και την {privacy}.',
     'form.need': 'Γράψε το όνομά σου και ένα έγκυρο email.',
     'cx.g1': 'Τι χτίζουμε', 'cx.g2': 'Πώς χτίζουμε', 'cx.g3': 'Τι εγγυόμαστε',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Βεράντα και πισίνα πάνω από τη θάλασσα σε βίλα που χτίσαμε στη Χαλκιδική',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Ιδιωτικές πολυτελείς κατοικίες και βίλες κύρους, ξενοδοχεία και οικιστικά συγκροτήματα, ολικές ανακαινίσεις, πισίνες κάθε μεγέθους και κήποι κάθε είδους. Το καθένα σχεδιάζεται μία φορά, για έναν ιδιοκτήτη και ένα οικόπεδο.', 'cx.g2_p': 'Οι δικοί μας μηχανικοί οδηγούν κάθε σπίτι από την πρώτη μελέτη στην οικοδομική άδεια και μέχρι τα κλειδιά. Χτίζουμε βιοκλιματικά, με γεωθερμία, φωτοβολταϊκά και συστήματα έξυπνου σπιτιού, και τίποτα δεν περνά σε χέρια που δεν γνωρίζουμε.', 'cx.g3_p': 'Ο προϋπολογισμός για όλο το σπίτι συμφωνείται γραπτώς πριν ξεκινήσουν οι εργασίες. Βλέπετε το έργο οποιαδήποτε στιγμή με ζωντανό βίντεο από το εργοτάξιο, όπου κι αν βρίσκεστε. Και διακριτικότητα: τα σπίτια που χτίζουμε μένουν ιδιωτικά.',   // Sergei 2026-11-27
     'form.fail': 'Η αποστολή απέτυχε. Κάλεσέ μας ή δοκίμασε ξανά σε ένα λεπτό.',
     'auth.role_h': 'Τι σε φέρνει εδώ;',
@@ -1328,6 +1329,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'By sending this form you accept the {terms} and the {privacy}.',
     'form.need': 'Please write your name and a valid email.',
     'cx.g1': 'What we build', 'cx.g2': 'How we build', 'cx.g3': 'What we promise',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Terrace and pool over the sea at a villa we built in Halkidiki',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Private luxury houses and prestigious villas, hotels and residential developments, complete renovations, pools of any size and gardens of any kind. Each one is drawn once, for one owner and one piece of land.', 'cx.g2_p': 'Our own engineers take every house from the first study to the building permit and on to the keys. We build bioclimatic, with geothermal, solar and smart-home systems, and nothing is handed to people we do not know.', 'cx.g3_p': 'The budget for the whole house is agreed in writing before work begins. Watch the work at any time on live video from the site, wherever you are in the world. And discretion: the houses we build stay private.',   // Sergei 2026-11-27
     'form.fail': 'Sending failed. Please call us or try again in a minute.',
     'auth.role_h': 'What brings you here?',
@@ -1818,6 +1820,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'С изпращането приемате {terms} и {privacy}.',
     'form.need': 'Моля, напишете името си и валиден имейл.',
     'cx.g1': 'Какво строим', 'cx.g2': 'Как строим', 'cx.g3': 'Какво гарантираме',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Тераса и басейн над морето във вила, която построихме в Халкидики',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Частни луксозни къщи и престижни вили, хотели и жилищни комплекси, цялостни ремонти, басейни с всякакъв размер и градини от всякакъв вид. Всеки проект се създава веднъж — за един собственик и един парцел.', 'cx.g2_p': 'Нашите инженери водят всяка къща от първото проучване през разрешението за строеж до ключовете. Строим биоклиматично, с геотермални и соларни системи и системи за умен дом, и не поверяваме работата на хора, които не познаваме.', 'cx.g3_p': 'Бюджетът за цялата къща се договаря писмено преди началото на работата. Следете обекта по всяко време чрез видео на живо, където и да сте. И дискретност: къщите, които строим, остават лични.',   // Sergei 2026-11-27
     'form.fail': 'Изпращането не успя. Обадете ни се или опитайте отново след минута.',
     'auth.role_h': 'Какво ви води тук?',
@@ -2308,6 +2311,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Slanjem prihvatate {terms} i {privacy}.',
     'form.need': 'Upišite svoje ime i ispravan e-mail.',
     'cx.g1': 'Šta gradimo', 'cx.g2': 'Kako gradimo', 'cx.g3': 'Šta garantujemo',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Terasa i bazen iznad mora u vili koju smo izgradili na Halkidikiju',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Privatne luksuzne kuće i prestižne vile, hoteli i stambeni kompleksi, kompletne renovacije, bazeni svih veličina i bašte svih vrsta. Svaki projekat se crta jednom, za jednog vlasnika i jednu parcelu.', 'cx.g2_p': 'Naši inženjeri vode svaku kuću od prve studije preko građevinske dozvole do ključeva. Gradimo bioklimatski, sa geotermalnim i solarnim sistemima i sistemima pametne kuće, i ništa ne prepuštamo ljudima koje ne poznajemo.', 'cx.g3_p': 'Budžet za celu kuću dogovara se pismeno pre početka radova. Pratite gradilište u bilo kom trenutku putem video prenosa uživo, gde god da ste. I diskrecija: kuće koje gradimo ostaju privatne.',   // Sergei 2026-11-27
     'form.fail': 'Slanje nije uspelo. Pozovite nas ili pokušajte ponovo za minut.',
     'auth.role_h': 'Šta vas dovodi ovde?',
@@ -2798,6 +2802,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Mit dem Absenden akzeptieren Sie die {terms} und die {privacy}.',
     'form.need': 'Bitte geben Sie Ihren Namen und eine gültige E-Mail-Adresse ein.',
     'cx.g1': 'Was wir bauen', 'cx.g2': 'Wie wir bauen', 'cx.g3': 'Was wir zusagen',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Terrasse und Pool über dem Meer an einer Villa, die wir auf Chalkidiki gebaut haben',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Private Luxushäuser und repräsentative Villen, Hotels und Wohnanlagen, Komplettsanierungen, Pools jeder Größe und Gärten jeder Art. Jedes Projekt wird einmal entworfen, für einen Eigentümer und ein Grundstück.', 'cx.g2_p': 'Unsere eigenen Ingenieure begleiten jedes Haus von der ersten Studie über die Baugenehmigung bis zur Schlüsselübergabe. Wir bauen bioklimatisch, mit Geothermie, Solartechnik und Smart-Home-Systemen, und nichts geht in Hände, die wir nicht kennen.', 'cx.g3_p': 'Das Budget für das ganze Haus wird vor Baubeginn schriftlich vereinbart. Verfolgen Sie die Baustelle jederzeit per Live-Video, wo auch immer Sie sind. Und Diskretion: Die Häuser, die wir bauen, bleiben privat.',   // Sergei 2026-11-27
     'form.fail': 'Senden fehlgeschlagen. Bitte rufen Sie uns an oder versuchen Sie es in einer Minute erneut.',
     'auth.role_h': 'Was führt Sie hierher?',
@@ -3288,6 +3293,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Prin trimitere acceptați {terms} și {privacy}.',
     'form.need': 'Scrieți numele și un e-mail valid.',
     'cx.g1': 'Ce construim', 'cx.g2': 'Cum construim', 'cx.g3': 'Ce garantăm',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Terasă și piscină deasupra mării la o vilă construită de noi în Halkidiki',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Case private de lux și vile de prestigiu, hoteluri și ansambluri rezidențiale, renovări complete, piscine de orice mărime și grădini de orice fel. Fiecare proiect este gândit o singură dată, pentru un proprietar și un teren.', 'cx.g2_p': 'Inginerii noștri duc fiecare casă de la primul studiu la autorizația de construire și până la chei. Construim bioclimatic, cu sisteme geotermale și solare și sisteme de casă inteligentă, și nu încredințăm nimic unor oameni pe care nu-i cunoaștem.', 'cx.g3_p': 'Bugetul pentru întreaga casă se stabilește în scris înainte de începerea lucrărilor. Urmăriți șantierul oricând, prin video în direct, oriunde v-ați afla. Și discreție: casele pe care le construim rămân private.',   // Sergei 2026-11-27
     'form.fail': 'Trimiterea a eșuat. Sunați-ne sau încercați din nou peste un minut.',
     'auth.role_h': 'Ce vă aduce aici?',
@@ -3779,6 +3785,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Formu göndererek {terms} ve {privacy} kabul etmiş olursunuz.',
     'form.need': 'Lütfen adınızı ve geçerli bir e-posta yazın.',
     'cx.g1': 'Ne inşa ediyoruz', 'cx.g2': 'Nasıl inşa ediyoruz', 'cx.g3': 'Neyi garanti ediyoruz',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Halkidiki’de inşa ettiğimiz bir villada denize bakan teras ve havuz',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Özel lüks evler ve prestijli villalar, oteller ve konut projeleri, komple renovasyonlar, her boyutta havuzlar ve her türde bahçeler. Her biri tek bir sahip ve tek bir arsa için bir kez tasarlanır.', 'cx.g2_p': 'Kendi mühendislerimiz her evi ilk etüdden inşaat ruhsatına ve anahtar teslimine kadar götürür. Jeotermal ve güneş sistemleri ile akıllı ev sistemleriyle biyoklimatik inşa ediyoruz ve hiçbir işi tanımadığımız kişilere bırakmıyoruz.', 'cx.g3_p': 'Tüm evin bütçesi işe başlamadan önce yazılı olarak kararlaştırılır. Nerede olursanız olun, şantiyeyi istediğiniz an canlı videoyla izleyin. Ve gizlilik: inşa ettiğimiz evler özel kalır.',   // Sergei 2026-11-27
     'form.fail': 'Gönderilemedi. Lütfen bizi arayın veya bir dakika sonra tekrar deneyin.',
     'auth.role_h': 'Sizi buraya ne getirdi?',
@@ -4270,6 +4277,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'בשליחת הטופס אתם מאשרים את {terms} ואת {privacy}.',
     'form.need': 'נא לכתוב שם וכתובת אימייל תקינה.',
     'cx.g1': 'מה אנחנו בונים', 'cx.g2': 'איך אנחנו בונים', 'cx.g3': 'מה אנחנו מבטיחים',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'מרפסת ובריכה מעל הים בווילה שבנינו בחלקידיקי',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'בתי יוקרה פרטיים ווילות יוקרתיות, מלונות ומתחמי מגורים, שיפוצים מלאים, בריכות בכל גודל וגינות מכל סוג. כל אחד מתוכנן פעם אחת, לבעלים אחד ולמגרש אחד.', 'cx.g2_p': 'המהנדסים שלנו מובילים כל בית מהתכנון הראשון, דרך היתר הבנייה ועד המפתח. אנחנו בונים בגישה ביו-אקלימית, עם מערכות גאותרמיות וסולאריות ומערכות בית חכם, ושום דבר לא עובר לידיים שאיננו מכירים.', 'cx.g3_p': 'התקציב לבית כולו מוסכם בכתב לפני תחילת העבודה. צפו באתר בכל רגע בווידאו חי, היכן שלא תהיו. ודיסקרטיות: הבתים שאנחנו בונים נשארים פרטיים.',   // Sergei 2026-11-27
     'form.fail': 'השליחה נכשלה. התקשרו אלינו או נסו שוב בעוד דקה.',
     'auth.role_h': 'מה מביא אתכם לכאן?',
@@ -4761,6 +4769,7 @@ const U: Record<Lang, Dict> = {
     'form.consent': 'Отправляя форму, вы принимаете {terms} и {privacy}.',
     'form.need': 'Укажите имя и действующий e-mail.',
     'cx.g1': 'Что мы строим', 'cx.g2': 'Как мы строим', 'cx.g3': 'Что мы гарантируем',   // Design & construction groups (Sergei 2026-11-27)
+    'cx.fig_alt': 'Терраса и бассейн над морем на вилле, которую мы построили в Халкидики',   // Villa Natalia, beside the Design & construction text
     'cx.g1_p': 'Частные дома класса люкс и престижные виллы, отели и жилые комплексы, полная реконструкция, бассейны любого размера и сады любого вида. Каждый проект создаётся один раз — для одного владельца и одного участка.', 'cx.g2_p': 'Наши инженеры ведут каждый дом от первого проекта до разрешения на строительство и до ключей. Мы строим биоклиматические дома с геотермальными и солнечными системами и системами умного дома и не передаём работу тем, кого не знаем.', 'cx.g3_p': 'Бюджет всего дома согласуется письменно до начала работ. Следите за стройкой в любой момент по видео в прямом эфире, где бы вы ни были. И конфиденциальность: дома, которые мы строим, остаются закрытыми от чужих глаз.',   // Sergei 2026-11-27
     'form.fail': 'Не удалось отправить. Позвоните нам или попробуйте через минуту.',
     'auth.role_h': 'Что привело вас сюда?',

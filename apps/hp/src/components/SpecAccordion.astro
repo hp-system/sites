@@ -42,7 +42,7 @@ const sections = parts.map((html, i) => {
           <div class="sa__body">
             <div class="sa__txt" set:html={s.body} />
             {s.links.length > 0 && (
-              <ul class="sa__links">{s.links.map((l) => <li><a href={l.href}>{l.text} <span class="sa__ar" aria-hidden="true">→</span></a></li>)}</ul>
+              <ul class="sa__links">{s.links.map((l) => <li><a href={l.href}>{l.text}</a></li>)}</ul>
             )}
           </div>
         </details>
@@ -155,10 +155,12 @@ const sections = parts.map((html, i) => {
      arrow that fades in and slides (Abroad.astro .abc__more) */
   .sa__links a { color: var(--muted); text-decoration: none; transition: color .15s ease; }
   .sa__links a:is(:hover, :focus-visible) { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-  .sa__ar { display: inline-block; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
-  .sa__links a:is(:hover, :focus-visible) .sa__ar { opacity: 1; transform: translateX(4px); }
-  :global([dir='rtl']) .sa__ar { transform: translateX(4px) scaleX(-1); }
-  :global([dir='rtl']) .sa__links a:is(:hover, :focus-visible) .sa__ar { transform: translateX(-4px) scaleX(-1); }
+  /* the arrow is drawn by CSS, not written in the link: the anchor text stays George's exact words (rule 15) — with a
+     «→» inside the <a> the spec check read «property for sale in Greece →» (2026-11-27) */
+  .sa__links a::after { content: '→'; display: inline-block; margin-left: .3em; opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .3s ease; }
+  .sa__links a:is(:hover, :focus-visible)::after { opacity: 1; transform: translateX(4px); }
+  :global([dir='rtl']) .sa__links a::after { margin-left: 0; margin-right: .3em; transform: translateX(4px) scaleX(-1); }
+  :global([dir='rtl']) .sa__links a:is(:hover, :focus-visible)::after { transform: translateX(-4px) scaleX(-1); }
   .sa__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: var(--fs-s-1); }
   /* the questions' look (small label, rows as these): styles/kit.css + FaqSearch.astro, the same on every page */
   .sa__cols { display: grid; gap: var(--s5); }
@@ -177,5 +179,5 @@ const sections = parts.map((html, i) => {
       -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 32px), transparent);
               mask-image: linear-gradient(180deg, #000 calc(100% - 32px), transparent); }
   }
-  @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h, .sa__ar { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .sa__pm::before, .sa__pm::after, .sa__h, .sa__links a::after { transition: none; } }
 </style>

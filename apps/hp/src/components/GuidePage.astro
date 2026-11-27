@@ -84,6 +84,9 @@ const cta = page.ctaHref && page.cta
 // slow motion; no photo behind the words (Sergei 2026-11-16, ExclusiveCinema no longer used).
 const lux = page.id === 'P52';
 const luxH1 = lux && /^[^:]{2,30}:\s+\S/.test(page.h1) ? [page.h1.split(/:\s+/)[0], page.h1.replace(/^[^:]+:\s+/, '')] as [string, string] : null;
+// the guides' «A: B» H1 on two lines, broken after the colon (Sergei 2026-11-27 «подели на два рядка»); the words and
+// the colon stay as George's spec has them, only a line break is added
+const guideH1 = !lux && /^[^:]{4,60}:\s+\S/.test(page.h1) ? [page.h1.split(/:\s+/)[0], page.h1.replace(/^[^:]+:\s+/, '')] as [string, string] : null;
 // Buying property in Greece (Sergei 2026-11-19 «давай линию, но на весь экран на всю ширину, тогда эти части текстов
 // можно убрать с SEO-блока; сделай это сразу под шапкой»): the step list of the guide — a line before it and six or more
 // points that each open with their name in bold — leaves its post and is drawn as one path across the screen right
@@ -128,6 +131,7 @@ const jsonLd: unknown[] = [
         </nav>
         {/* Exclusive: «Exclusive» small on top, the rest large on one line (Sergei 2026-11-16); the H1 text stays whole */}
         {luxH1 ? <h1 class="t-display gp__h1 gp__h1--split"><span class="gp__h1k">{luxH1[0]}</span><span class="sr-only">: </span><span class="gp__h1m">{luxH1[1]}</span></h1>
+               : guideH1 ? <h1 class="t-display gp__h1 gp__h1--two">{guideH1[0]}:{' '}<br />{guideH1[1]}</h1>
                : <h1 class="t-display gp__h1">{page.h1}</h1>}
         {page.editorialLine && <p class="gp__ed">{page.editorialLine}</p>}
         <SpecText page={page} part="intro" lang={lang} />
@@ -198,10 +202,11 @@ const jsonLd: unknown[] = [
        centred column on white (crumbs, the H1 in two or three lines, the byline, the intro), the photo under it as a
        wide band; was the title left and the photo right */
     .gp__top { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 48px; padding-block: 72px 56px; }
-    .gp__top .gp__txt { justify-items: center; text-align: center; max-width: 1180px; }
+    .gp__top .gp__txt { justify-items: center; text-align: center; width: 100%; }
     .gp__top .gp__crumb { justify-self: center; }
+    .gp__h1.gp__h1--two { max-width: none; }   /* each half on its own line */
     .gp__h1 { font-size: var(--fs-s5); font-weight: 300; line-height: 1.06; letter-spacing: -.021em; max-width: 26ch; text-wrap: balance; }
-    .gp .gp__top :global(.st-intro) { max-width: 96ch; }
+    .gp .gp__top :global(.st-intro) { max-width: none; }   /* the full width of the page column (Sergei 2026-11-27) */
     .gp__top :global(.st-intro p) { text-wrap: balance; }
     .gp__img { display: block; width: 100%; }
     .gp__img img { aspect-ratio: 21 / 9; }

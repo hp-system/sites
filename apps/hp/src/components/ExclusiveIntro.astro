@@ -53,27 +53,16 @@ const TX: Partial<Record<Lang, T>> = {
   },
 };
 const tx = TX[lang] ?? TX.en!;
-// line icons as on the home bento: a hidden folder, a bell, a person, a lock
-const ICONS = [
-  '<path d="M3 7h6l2 2h10v10H3z"/><path d="M3 7V5h6l2 2"/>',
-  '<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4l2-2Z"/><path d="M10 21h4"/>',
-  '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
-  '<rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
-];
 ---
 <section class="xi" aria-label={tx.give}>
-  <div class="xi__win" data-xi-win>
-    <div class="xi__bento">
-      {/* Sergei 2026-11-16: «What Exclusive gives you» inside the window too, in large type */}
-      <p class="xi__lbl xi__give"><span class="xi__q">{tx.give}<span class="xi__qm" aria-hidden="true"></span></span></p>
-      {tx.items.map(([h, s], i) => (
-        <div class={`xd xd--c${i + 1}`}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONS[i]}></svg>
-          <b>{h}</b><span>{s}</span>
-        </div>
-      ))}
-    </div>
-    <div class="xi__shade" aria-hidden="true"></div>
+  {/* #374 (George via Sergei 2026-11-27: «less loud» — the site is calm and assured, it does not shout): no window, no
+      white tiles, no icons, no big titles. The four points as a quiet list on the page's ground: a small label, a hairline
+      between rows, the name at text size and the line under it in muted ink; two columns on a desktop. */}
+  <div class="wrap xi__gv">
+    <p class="xi__lbl">{tx.give}</p>
+    <ul class="xi__list">
+      {tx.items.map(([h, s]) => <li><b>{h}</b><span>{s}</span></li>)}
+    </ul>
   </div>
   {/* Sergei 2026-11-16: one black box for the steps and the closing line, drifting down its white band on scroll as
       the property page About / Prices cards do (PropertyPage.astro drift()) */}
@@ -107,31 +96,6 @@ const ICONS = [
 </section>
 
 <script>
-  // The bento band: the page's width without the scrollbar (the tiles line up with the page column), and the depth.
-  document.querySelectorAll<HTMLElement>('[data-xi-win]').forEach((win) => {
-    const pw = () => win.style.setProperty('--pw', `${document.documentElement.clientWidth}px`);
-    window.addEventListener('resize', pw);
-    pw();
-    // the band below slides over the bento (2026-11-19): it sticks where its bottom meets the screen's, then sinks to
-    // 95% and dims to 30% as it is covered; desktop only, none with reduced motion
-    const bento = win.querySelector<HTMLElement>('.xi__bento');
-    const next = win.nextElementSibling as HTMLElement | null;
-    const desk = matchMedia('(min-width: 1024px)'), still = matchMedia('(prefers-reduced-motion: reduce)');
-    let raf = 0;
-    const place = () => win.style.setProperty('--xi-top', `${Math.min(0, window.innerHeight - win.offsetHeight)}px`);
-    const tick = () => {
-      raf = 0;
-      if (!bento || !next || !desk.matches || still.matches) { if (bento) bento.style.transform = ''; win.style.setProperty('--xi-dim', '0'); return; }
-      const w = win.getBoundingClientRect();
-      const covered = Math.min(1, Math.max(0, (w.bottom - next.getBoundingClientRect().top) / w.height));
-      bento.style.transform = `scale(${1 - covered * 0.05})`;
-      win.style.setProperty('--xi-dim', String(covered * 0.3));
-    };
-    const ask = () => { if (!raf) raf = requestAnimationFrame(tick); };
-    place(); tick();
-    window.addEventListener('scroll', ask, { passive: true });
-    window.addEventListener('resize', () => { place(); ask(); });
-  });
   // The black box drifts from the top of its white band to the bottom while the band crosses the screen, and the
   // faint lock down the box (the same formula as the property page About / Prices cards); desktop only, none with
   // reduced motion. Kept with the band sliding over the bento (Sergei 2026-11-19 «почему потерял анимацию?»).
@@ -161,19 +125,12 @@ const ICONS = [
   /* phones and tablets: the four tiles one under the other (two columns from 760), then the steps and the closing line */
   .xi { background: var(--paper); padding-block: var(--s7); }   /* white under «How to join» (Sergei 2026-11-16) */
   .xi__lbl { margin: 0 0 var(--s4); font-size: var(--fs-s-1); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
-  .xi__bento { display: grid; gap: 12px; padding-inline: var(--gut); }
-  .xi__shade { display: none; }
-  .xd { min-width: 0; background: var(--paper); padding: var(--s5); display: flex; flex-direction: column; gap: var(--s2); }
-  .xd svg { width: 40px; height: 40px; color: var(--ink); flex: none; margin-bottom: var(--s2); }
-  /* large type that catches the eye (Sergei 2026-11-16) */
-  .xd b { font-size: var(--fs-s3); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; }
-  .xd span { font-size: var(--fs-s1); font-weight: 300; line-height: 1.4; color: var(--ink-2); }
-  .xi__give { grid-column: 1 / -1; margin: 0; }
-  /* the tilted question mark after the heading, as the section cards have it (SectionCards .sc__q; Sergei 2026-11-16) */
-  .xi__q { position: relative; display: inline-block; }
-  .xi__qm { position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-58%) rotate(12deg);
-            font-size: var(--fs-s4); font-weight: 600; line-height: 1; letter-spacing: 0; color: var(--paper); pointer-events: none; user-select: none; }
-  .xi__qm::before { content: "?"; }
+  .xi__lbl.xi__lbl { margin: 0 0 var(--s2); }
+  .xi__list { list-style: none; margin: 0; padding: 0; display: grid; }
+  .xi__list li { display: grid; gap: var(--s1); padding-block: var(--s4); min-width: 0; }
+  .xi__list li + li { border-top: 1px solid var(--line); }
+  .xi__list b { font-size: var(--fs-s0); font-weight: 600; line-height: 1.4; color: var(--ink); }
+  .xi__list span { font-size: var(--fs-s0); line-height: 1.55; color: var(--muted); max-width: 52ch; }
   .xi__row { margin-top: var(--s7); }   /* the same space above and below (Sergei 2026-11-16) */
   .xi__box { position: relative; overflow: hidden; background: var(--ink-deep); color: #fff; padding: var(--s5); display: grid; gap: var(--s5); will-change: transform; }
   .xi__box > :not(.xi__lock) { position: relative; z-index: 1; }
@@ -191,43 +148,20 @@ const ICONS = [
   /* the gilded edge turns when the pointer is anywhere over this band, not only over the button (Sergei 2026-11-16) */
   .xi__row:hover .k-gild { opacity: 1; color: var(--gold-dk-hover); --gilda: 675deg; }
   @media (prefers-reduced-motion: reduce) { .xi__row:hover .k-gild { --gilda: 315deg; } }
-  @media (min-width: 760px) { .xi__bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
   /* desktop: only the four tiles in the home bento window (Sergei 2026-11-16) — a full-width beige window onto a
      2 × 2 bento fixed to the screen (Construction.astro technique); the steps and the closing line under it */
   @media (min-width: 1024px) {
-    /* Sergei 2026-11-19 «между шапкой и What Exclusive gives you убери 3D эффект; пусть 3D налазит только снизу»: the bento
-       stands in the page as it is (no window onto a fixed bento any more); it stays where it is while the black band
-       below slides over it with a soft shadow, and sinks a little (the script) */
-    .xi__win { --pw: 100vw; --off: max(var(--gut), calc((var(--pw) - var(--max)) / 2 + var(--gut)));
-               position: relative; z-index: 0; width: var(--pw); overflow: hidden; background: var(--paper-3); padding-block: 48px; }
-    .xi__win::after { content: ""; position: absolute; inset: 0; background: var(--ink-deep); opacity: var(--xi-dim, 0); pointer-events: none; }
-    .xi__bento { --tw: calc(var(--pw) - 2 * var(--off)); --th: clamp(560px, calc(var(--tw) * .5), calc(100vh - 96px));
-                 box-sizing: border-box; padding: 0; margin-inline: var(--off); width: var(--tw); height: var(--th); transform-origin: 50% 0; will-change: transform;
-                 grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(2, minmax(0, 1fr)); }
-    /* the bento stays put until the end of the page's main part (the section is display: contents, so the bento's
-       sticky box is the whole main), and every block after it slides over it: first this white band with the black
-       box, then the posts. The band's white ground and its soft top shadow run the full width (a pseudo behind it). */
-    .xi { display: contents; }
-    .xi__row { position: relative; z-index: 1; }
-    /* #338 (George via Sergei 2026-11-23: no 3D «the block below slides over» effect): no longer sticky, no shadow. */
-    .xi__row::before { content: ""; position: absolute; inset: 0 -100vmax; z-index: -1; background: var(--paper); pointer-events: none; }
-    .xi { padding-block: 0; }   /* the black box touches the ends of its band (Sergei 2026-11-16) */
-    .xi__give { align-self: end; padding: 0 0 6px; font-size: var(--fs-s4); font-weight: 300; line-height: 1.05; letter-spacing: -.022em;
-                text-transform: none; color: var(--ink); }
-    .xd b { font-size: var(--fs-s4); }
-    .xi__shade { display: none; }
-    .xd { padding: 32px 36px; overflow: hidden; justify-content: flex-end; gap: 12px; }
-    .xd svg { width: 56px; height: 56px; margin-bottom: auto; }
-    /* the white band is taller than the box: the box has room to drift */
-    .xi__row { margin-top: 0; min-height: 340px; }   /* the white band is taller than the box: the box has room to drift */
+    .xi { padding-block: var(--s8) 0; }
+    /* two columns, rows level across them; hairlines between rows only (as the SEO block below) */
+    .xi__list { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 80px; }
+    .xi__list li { padding-block: 20px; }
+    .xi__list li + li { border-top: 0; }
+    .xi__list li:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .xi__row { margin-top: var(--s7); min-height: 340px; }   /* the white band is taller than the box: the box has room to drift */
     .xi__box { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; padding: 44px 48px; align-items: center; }
     .xi__time p { font-size: var(--fs-s3); line-height: 1.14; text-wrap: balance; }
     .xi__lock { display: block; position: absolute; left: calc(50% - 50px); top: 0; width: 100px; height: 100px;
                 color: #fff; opacity: .07; pointer-events: none; z-index: 0; will-change: transform; }
-  }
-  @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
-    .xi__win { position: relative; overflow: visible; padding-block: 40px; }
-    .xi__bento { height: auto; grid-template-rows: none; grid-auto-rows: 260px; }
   }
 </style>

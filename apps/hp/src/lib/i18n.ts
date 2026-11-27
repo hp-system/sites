@@ -828,6 +828,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Στείλε μας ένα μήνυμα',
     'form.consent': 'Με την αποστολή αποδέχεσαι τους {terms} και την {privacy}.',
     'form.need': 'Γράψε το όνομά σου και ένα έγκυρο email.',
+    'cx.g1': 'Τι χτίζουμε', 'cx.g2': 'Πώς χτίζουμε', 'cx.g3': 'Τι εγγυόμαστε',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Η αποστολή απέτυχε. Κάλεσέ μας ή δοκίμασε ξανά σε ένα λεπτό.',
     'auth.role_h': 'Τι σε φέρνει εδώ;',
     'auth.role_buy': 'Θέλω να αγοράσω ακίνητο',
@@ -1325,6 +1326,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Send us a message',
     'form.consent': 'By sending this form you accept the {terms} and the {privacy}.',
     'form.need': 'Please write your name and a valid email.',
+    'cx.g1': 'What we build', 'cx.g2': 'How we build', 'cx.g3': 'What we promise',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Sending failed. Please call us or try again in a minute.',
     'auth.role_h': 'What brings you here?',
     'auth.role_buy': 'I want to buy property',
@@ -1813,6 +1815,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Изпратете ни съобщение',
     'form.consent': 'С изпращането приемате {terms} и {privacy}.',
     'form.need': 'Моля, напишете името си и валиден имейл.',
+    'cx.g1': 'Какво строим', 'cx.g2': 'Как строим', 'cx.g3': 'Какво гарантираме',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Изпращането не успя. Обадете ни се или опитайте отново след минута.',
     'auth.role_h': 'Какво ви води тук?',
     'auth.role_buy': 'Искам да купя имот',
@@ -2301,6 +2304,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Pošaljite nam poruku',
     'form.consent': 'Slanjem prihvatate {terms} i {privacy}.',
     'form.need': 'Upišite svoje ime i ispravan e-mail.',
+    'cx.g1': 'Šta gradimo', 'cx.g2': 'Kako gradimo', 'cx.g3': 'Šta garantujemo',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Slanje nije uspelo. Pozovite nas ili pokušajte ponovo za minut.',
     'auth.role_h': 'Šta vas dovodi ovde?',
     'auth.role_buy': 'Želim da kupim nekretninu',
@@ -2789,6 +2793,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Schreiben Sie uns',
     'form.consent': 'Mit dem Absenden akzeptieren Sie die {terms} und die {privacy}.',
     'form.need': 'Bitte geben Sie Ihren Namen und eine gültige E-Mail-Adresse ein.',
+    'cx.g1': 'Was wir bauen', 'cx.g2': 'Wie wir bauen', 'cx.g3': 'Was wir zusagen',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Senden fehlgeschlagen. Bitte rufen Sie uns an oder versuchen Sie es in einer Minute erneut.',
     'auth.role_h': 'Was führt Sie hierher?',
     'auth.role_buy': 'Ich möchte eine Immobilie kaufen',
@@ -3277,6 +3282,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Trimiteți-ne un mesaj',
     'form.consent': 'Prin trimitere acceptați {terms} și {privacy}.',
     'form.need': 'Scrieți numele și un e-mail valid.',
+    'cx.g1': 'Ce construim', 'cx.g2': 'Cum construim', 'cx.g3': 'Ce garantăm',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Trimiterea a eșuat. Sunați-ne sau încercați din nou peste un minut.',
     'auth.role_h': 'Ce vă aduce aici?',
     'auth.role_buy': 'Vreau să cumpăr o proprietate',
@@ -3766,6 +3772,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Bize mesaj gönderin',
     'form.consent': 'Formu göndererek {terms} ve {privacy} kabul etmiş olursunuz.',
     'form.need': 'Lütfen adınızı ve geçerli bir e-posta yazın.',
+    'cx.g1': 'Ne inşa ediyoruz', 'cx.g2': 'Nasıl inşa ediyoruz', 'cx.g3': 'Neyi garanti ediyoruz',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Gönderilemedi. Lütfen bizi arayın veya bir dakika sonra tekrar deneyin.',
     'auth.role_h': 'Sizi buraya ne getirdi?',
     'auth.role_buy': 'Mülk satın almak istiyorum',
@@ -4255,6 +4262,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'שלחו לנו הודעה',
     'form.consent': 'בשליחת הטופס אתם מאשרים את {terms} ואת {privacy}.',
     'form.need': 'נא לכתוב שם וכתובת אימייל תקינה.',
+    'cx.g1': 'מה אנחנו בונים', 'cx.g2': 'איך אנחנו בונים', 'cx.g3': 'מה אנחנו מבטיחים',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'השליחה נכשלה. התקשרו אלינו או נסו שוב בעוד דקה.',
     'auth.role_h': 'מה מביא אתכם לכאן?',
     'auth.role_buy': 'אני רוצה לקנות נכס',
@@ -4744,6 +4752,7 @@ const U: Record<Lang, Dict> = {
     'form.title': 'Напишите нам',
     'form.consent': 'Отправляя форму, вы принимаете {terms} и {privacy}.',
     'form.need': 'Укажите имя и действующий e-mail.',
+    'cx.g1': 'Что мы строим', 'cx.g2': 'Как мы строим', 'cx.g3': 'Что мы гарантируем',   // Design & construction groups (Sergei 2026-11-27)
     'form.fail': 'Не удалось отправить. Позвоните нам или попробуйте через минуту.',
     'auth.role_h': 'Что привело вас сюда?',
     'auth.role_buy': 'Я хочу купить недвижимость',

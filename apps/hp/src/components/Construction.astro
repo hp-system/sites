@@ -30,6 +30,15 @@ import { t, prefix, type Lang } from '../lib/i18n';
 import { contentUrl } from '../lib/pages';
 import { pageExists } from '../lib/pages';
 import { company } from '../lib/company';
+import { clean, cleanSrcSet } from '../lib/photos';
+// Sergei 2026-11-27 (a reference he liked: a wide photo on top, a white box rising into it, the text and a dark
+// button, a photo beside it): our own work — Villa Natalia's pool for the band, a modern house by its pool beside the
+// text. Clean files (the logo goes only on property cards and the property page, #326).
+const BAND = 'https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736545.jpg';
+const SIDE = 'https://media.onsea.gr/properties/ums_7985/detached-house-facade-halkidiki-2982420238.jpg';
+// the seven points in three groups, names only; Design to keys, Our own team and You choose the land are left out:
+// the paragraph and the heading already say them (Sergei 2026-11-27)
+const GROUPS: [string, string[]][] = [['cx.g1', ['s4', 'c4', 'c3']], ['cx.g2', ['c1', 'c6']], ['cx.g3', ['c5', 'c2']]];
 
 // portfolio: the «See what we build» button (off on the construction page itself, #340 — the projects page is merged there)
 interface Props { lang: Lang; portfolio?: boolean }
@@ -90,6 +99,9 @@ const ROW = ['s1', 'c1', 'c2', 'c3', 'c4', 'c5', 's2', 's3', 'c6', 's4'];
 const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await company()).phoneHref;   // #262: each language's own URL
 ---
 <section class="cx" aria-labelledby="cx-h">
+  <div class="cx__band" aria-hidden="true">
+    <img src={clean(BAND, 800)} srcset={cleanSrcSet(BAND)} sizes="100vw" alt="" width="1920" height="1280" loading="lazy" decoding="async" />
+  </div>
   <div class="wrap">
     {/* #101 desktop (George 2026-11-02): left — the text and the four facts turning
         every 3 s (dashes); right — the six things we take on as the Company page
@@ -129,6 +141,14 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
       </p>
 
 
+      <figure class="cx__fig" aria-hidden="true">
+        <img src={clean(SIDE, 800)} srcset={`${clean(SIDE, 800)} 800w, ${clean(SIDE)} 1920w`} sizes="(min-width: 1440px) 560px, 40vw" alt="" width="800" height="533" loading="lazy" decoding="async" />
+      </figure>
+      <div class="cx__groups">
+        {GROUPS.map(([g, keys]) => (
+          <div class="cx__grp"><p class="t-label cx__gl">{t(lang, g)}</p><ul>{keys.map((k) => <li>{t(lang, `cx.${k}_t`)}</li>)}</ul></div>
+        ))}
+      </div>
       <div class="cx__caps" data-acc>
         {CAPS.map((k, i) => (
           <div class:list={['cap', i === 0 && 'on']}>
@@ -402,5 +422,32 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     .cx__rail .cd svg { display: none; }
     .cx__rail .cd h3 { margin: 0; font-size: var(--fs-s0); font-weight: 400; line-height: 1.4; letter-spacing: 0; color: var(--ink); }
     .cx__rail .cd p { margin: 0; max-width: none; font-size: var(--fs-s0); line-height: 1.55; color: var(--muted); }
+  }
+
+  /* ── Sergei 2026-11-27, the reference layout (desktop): a wide photo, a white box rising into it with the label, the
+        heading, the paragraph and the buttons, a photo beside the box, then the three groups of names. Phones: the band,
+        the photo and the groups stay hidden; they keep their blocks. ── */
+  .cx__band, .cx__fig, .cx__groups { display: none; }
+  @media (min-width: 1024px) {
+    .cx { padding: 0 0 80px; }
+    .cx__band { display: block; height: min(52vh, 520px); overflow: hidden; }
+    .cx__band img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; display: block; }
+    .cx .cx__top { position: relative; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: 0; row-gap: 0;
+      grid-template-areas: "eb fig" "h fig" "p fig" "acts fig" "groups groups"; align-items: start; }
+    /* the white box: behind the left column, rising 96 px into the photo */
+    .cx .cx__top::before { content: ""; grid-area: 1 / 1 / 5 / 2; align-self: stretch; margin: -96px 0 0 -56px; background: var(--paper); z-index: 0; }
+    .cx .cx__top > *, .cx .cx__lead > * { position: relative; z-index: 1; }
+    .cx .cx__eyebrow { grid-area: eb; margin: -40px 56px 0 0; }
+    .cx .cx__h { grid-area: h; margin: 18px 56px 0 0; font-size: var(--fs-s4); line-height: 1.12; }
+    .cx .cx__p { grid-area: p; margin: 22px 56px 0 0; max-width: 60ch; }
+    .cx .cx__acts { grid-area: acts; justify-content: flex-start; margin: 32px 0 0; align-self: start; }
+    .cx .cx__btn--ghost { background: var(--ink); color: #fff; }
+    .cx .cx__btn--ghost:hover { background: var(--paper); color: var(--ink); }
+    .cx__fig { display: block; grid-area: fig; margin: 24px 0 0 32px; }
+    .cx__fig img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+    .cx__groups { grid-area: groups; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 72px; }
+    .cx__gl { margin: 0 0 12px; color: var(--faint); }
+    .cx__grp ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-s0); color: var(--ink-2); }
+    .cx__rw { display: none; }
   }
 </style>

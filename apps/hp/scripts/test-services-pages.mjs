@@ -18,9 +18,11 @@ const stop = await start();
 try {
   const pages = {};
   pages['/en/services'] = await checkPage('/en/services', { types: ['CollectionPage'] });
-  for (const s of SECTIONS) pages[`/en/services/${s}`] = await checkPage(`/en/services/${s}`, { types: ['Service'], form: true });
+  // #375 (2026-11-27): seller and construction services open their form in a popup (a guest's page has no form)
+  const POP = ['seller-services', 'construction-services'];
+  for (const s of SECTIONS) pages[`/en/services/${s}`] = await checkPage(`/en/services/${s}`, { types: ['Service'], form: !POP.includes(s) });
   const fpm = '/en/services/buyer-services/full-property-management';
-  pages[fpm] = await checkPage(fpm, { types: ['Service'], form: true });
+  pages[fpm] = await checkPage(fpm, { types: ['Service'], form: false });   // #375: the form in a popup
   // #340 (2026-11-23): construction projects merged into construction services — /en/construction is a 301
 
   // Hub → sections.

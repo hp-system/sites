@@ -636,6 +636,51 @@ if (faqItems.length) {
         </div>
       </header>
     )}
+    {d.form_top && d.form && d.form_pop && (
+      /* Pre-published (Sergei 2026-11-27): the Exclusive top turned light — white, everything centred, a large faint clock
+         behind the words (properties before their time); ONE button. A member opens the form in a popup at once; a guest
+         signs in (the login popup, LoginDialog) and comes back with ?form=1, and the popup opens by itself. */
+      <section class="ppt" id="form" aria-labelledby="ppt-h">
+        <svg class="ppt__sign" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".3" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle><path d="M12 6.5V12l3.6 2.2"></path>
+        </svg>
+        <div class="ppt__in">
+          <nav class="crumb ppt__crumb" aria-label={t(lang, 'a11y.crumb')}>
+            {crumbs.slice(0, -1).map((c, i) => (
+              <>{i > 0 && <span aria-hidden="true">·</span>}<a href={c.path}>{c.name}</a></>
+            ))}
+            <span aria-hidden="true">·</span><span aria-current="page">{short}</span>
+          </nav>
+          <h1 id="ppt-h" class="t-display info-h1 ppt__h">{d.h1}</h1>
+          {d.lead && <p class="ppt__lead">{d.lead}</p>}
+          {d.widget && <div class="ppt__w"><InfoWidget kind={d.widget} items={items} member={Boolean(memberToken)} lang={lang} /></div>}
+          <p class="ppt__cta">
+            {memberToken
+              ? <button type="button" class="k-act k-gild" data-ppop-open data-ev="lead:form_open">{d.form.title || t(lang, 'form.title')}</button>
+              : <a class="k-act k-gild" href={`${prefix(lang)}/login?next=${encodeURIComponent(`${url}?form=1`)}`} rel="nofollow" data-ev="register:info">{d.form.title || t(lang, 'form.title')}</a>}
+          </p>
+        </div>
+        {memberToken && (
+          <dialog class="ppop" id="ppop" aria-labelledby="ppop-t" data-auto={Astro.url.searchParams.get('form') === '1' ? '1' : undefined}>
+            <div class="ppop__hd">
+              <p class="ppop__t" id="ppop-t">{d.form.title || t(lang, 'form.title')}</p>
+              <button type="button" class="ppop__x" data-pop-x aria-label={t(lang, 'ui.close')}>
+                <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.4"></path></svg>
+              </button>
+            </div>
+            <div class="ppop__form">
+              <InfoForm look="pop" source={d.form.source} message={d.form.message} terms={terms} privacy={privacy} lang={lang}>
+                <p class="ppop__lead">{`${t(lang, 'info.form_note')} `}<b>{t(lang, 'info.form_priv')}</b>{` ${t(lang, 'info.form_priv2')}`}</p>
+              </InfoForm>
+            </div>
+            <div class="ppop__done" hidden>
+              <p>{t(lang, 'svc.thanks')}</p>
+              <div><button type="button" class="btn" data-pop-x>{t(lang, 'ui.close')}</button></div>
+            </div>
+          </dialog>
+        )}
+      </section>
+    )}
     {d.form_top && d.form && d.form_split && d.form_panel && (
       /* Add your property as ONE block (Sergei 2026-11-23 «сделай этот блок единым, центрируй всё»): the beige ground, one
          centred column — crumbs, H1, lead, «not published», the short-form line, the button to the panel's form (a guest:
@@ -661,7 +706,7 @@ if (faqItems.length) {
         </div>
       </section>
     )}
-    {d.form_top && d.form && d.form_split && !d.form_panel && (
+    {d.form_top && d.form && d.form_split && !d.form_panel && !d.form_pop && (
       /* Pre-published (Sergei 2026-11-19 «сделай шапку и форму как на странице contact»): the Contact box — the crumbs,
          the H1, the lead and the call to register on the light half, the form on the dark half; no top picture */
       <section class="ctb ctb--top" id="form" aria-labelledby="ctb-h">
@@ -1396,4 +1441,64 @@ if (faqItems.length) {
   @media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
     .w1 .w1-how__cards .cards li, .w1 .w1-how__cards .cards img { transition: none; }
   }
+  /* Pre-published top (Sergei 2026-11-27): the Exclusive top (GuidePage .gp--lux) on white — centred, a large faint
+     sign behind the words, the same slow rise of the words; the popup in the Services popup's look (ServicesHub .svc-pop) */
+  .ppt { position: relative; overflow: hidden; isolation: isolate; background: var(--paper); color: var(--ink);
+         min-height: min(86vh, 860px); box-sizing: border-box; display: grid; place-items: center; text-align: center;
+         padding-block: 72px; padding-inline: var(--gut); }
+  .ppt__sign { position: absolute; left: 50%; top: 50%; width: min(70vh, 560px); height: auto; transform: translate(-50%, -50%);
+               color: var(--ink); opacity: .05; z-index: -1; pointer-events: none; }
+  .ppt__in { display: grid; justify-items: center; gap: var(--s4); max-width: 1180px; }
+  .ppt__crumb { justify-content: center; }
+  .ppt__h { margin: 0; max-width: 26ch; text-wrap: balance; }
+  .ppt__lead { margin: 0; max-width: 62ch; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); text-wrap: balance; }
+  .ppt__w { max-width: 62ch; color: var(--muted); }
+  .ppt__w :global(*) { text-align: center; }
+  .ppt__cta { margin: var(--s3) 0 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ppt__in > * { opacity: 0; transform: translateY(14px); animation: ppt-rise 1.4s cubic-bezier(.2,.7,.2,1) forwards; }
+    .ppt__in > :nth-child(2) { animation-delay: .25s; }
+    .ppt__in > :nth-child(3) { animation-delay: .55s; }
+    .ppt__in > :nth-child(4) { animation-delay: .85s; }
+    .ppt__in > :nth-child(5) { animation-delay: 1.1s; }
+  }
+  @keyframes ppt-rise { to { opacity: 1; transform: none; } }
+  @media (min-width: 1024px) { .ppt { padding-block: 96px; } }
+
+  .ppop { display: none; }
+  .ppop[open] { display: flex; flex-direction: column; width: 760px; max-width: calc(100% - 32px); max-height: calc(100vh - 32px);
+                padding: 0; border: 0; background: var(--paper); color: var(--ink); overflow: auto; }
+  .ppop::backdrop { background: rgba(14,18,20,.5); }
+  .ppop__hd { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding: 12px 24px; border-bottom: 1px solid var(--line); }
+  .ppop__t { margin: 0; font-size: var(--fs-s0); font-weight: 300; }
+  .ppop__x { background: none; border: 0; padding: 8px; margin: -8px; cursor: pointer; display: flex; color: var(--ink); }
+  .ppop__x:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .ppop__lead { margin: 0; font-size: var(--fs-s0); color: var(--ink-2); }
+  .ppop__done p { margin: 0; padding: 36px 24px 32px; text-align: center; font-size: var(--fs-s1); font-weight: 300; }
+  .ppop__done div { display: flex; justify-content: center; padding: 0 24px 24px; }
+  @media (max-width: 560px) { .ppop[open] { width: 100%; max-width: 100%; height: 100%; max-height: 100%; } }
 </style>
+
+<script>
+  // Pre-published (Sergei 2026-11-27): the one button opens the form in a popup; back from signing in (?form=1) it
+  // opens by itself and the mark leaves the address. A sent form shows the thank-you view.
+  const pp = document.getElementById('ppop') as HTMLDialogElement | null;
+  if (pp && typeof pp.showModal === 'function') {
+    const form = pp.querySelector<HTMLElement>('.ppop__form')!, done = pp.querySelector<HTMLElement>('.ppop__done')!;
+    const open = () => { form.hidden = false; done.hidden = true; pp.showModal(); };
+    document.querySelectorAll('[data-ppop-open]').forEach((b) => b.addEventListener('click', open));
+    pp.querySelectorAll('[data-pop-x]').forEach((b) => b.addEventListener('click', () => pp.close()));
+    pp.addEventListener('click', (e) => {           // a click on the dimmed page beside the popup closes it
+      if (e.target !== pp) return;
+      const r = pp.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) pp.close();
+    });
+    pp.addEventListener('iform:sent', () => { form.hidden = true; done.hidden = false; });
+    if (pp.dataset.auto) {
+      const u = new URL(location.href); u.searchParams.delete('form');
+      history.replaceState(history.state, '', u.pathname + u.search + u.hash);
+      open();
+    }
+  }
+</script>
+

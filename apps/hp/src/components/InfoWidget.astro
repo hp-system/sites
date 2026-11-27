@@ -27,8 +27,8 @@ const W = {
     note: 'Asking prices of our own current listings, not sale prices — computed automatically and updated continuously. Homes with price and floor area; land with price and plot size. Free to quote with "Source: {brand}".',
     typesH: 'What is for sale right now', munisH: 'Properties by municipality', from: 'from', guideNote: 'Prices update automatically from our listings.',
     allLink: 'See all properties for sale in Halkidiki', preH: 'Properties before they reach the market', onRequest: 'Price on request',
-    preNoneMember: 'No pre-published properties right now. Leave your request below and you will be the first to know.',
-    preNoneGuest: 'Pre-published properties are shown to registered members. Sign in or register for free, or leave your request below and we will tell you first.',
+    preNoneMember: 'No pre-published properties right now. Tell us what you are looking for and you will be the first to know.',
+    preNoneGuest: 'Pre-published properties are shown to registered members. Register for free and tell us what you are looking for: we will tell you first.',
   },
   el: {
     homesH: 'Κατοικίες: διάμεση τιμή ανά τ.μ. ανά περιοχή', muni: 'Δήμος', medSqm: 'Διάμεση €/τ.μ.', mid: 'Μεσαίο εύρος', medPrice: 'Διάμεση τιμή',
@@ -37,8 +37,8 @@ const W = {
     note: 'Ζητούμενες τιμές των δικών μας τρεχουσών αγγελιών, όχι τιμές πώλησης — υπολογίζονται αυτόματα και ενημερώνονται συνεχώς. Κατοικίες με τιμή και εμβαδόν· γη με τιμή και εμβαδόν οικοπέδου. Ελεύθερη αναπαραγωγή με την αναφορά «Πηγή: {brand}».',
     typesH: 'Τι πωλείται αυτή τη στιγμή', munisH: 'Ακίνητα ανά δήμο', from: 'από', guideNote: 'Οι τιμές ενημερώνονται αυτόματα από τις αγγελίες μας.',
     allLink: 'Δείτε όλα τα ακίνητα προς πώληση στη Χαλκιδική', preH: 'Ακίνητα πριν βγουν στην αγορά', onRequest: 'Τιμή κατόπιν επικοινωνίας',
-    preNoneMember: 'Δεν υπάρχουν προ-δημοσιευμένα ακίνητα αυτή τη στιγμή. Αφήστε το αίτημά σας παρακάτω και θα το μάθετε πρώτοι.',
-    preNoneGuest: 'Τα προ-δημοσιευμένα ακίνητα εμφανίζονται στα εγγεγραμμένα μέλη. Συνδεθείτε ή εγγραφείτε δωρεάν, ή αφήστε το αίτημά σας παρακάτω και θα σας ενημερώσουμε πρώτους.',
+    preNoneMember: 'Δεν υπάρχουν προ-δημοσιευμένα ακίνητα αυτή τη στιγμή. Πείτε μας τι αναζητάτε και θα το μάθετε πρώτοι.',
+    preNoneGuest: 'Τα προ-δημοσιευμένα ακίνητα εμφανίζονται στα εγγεγραμμένα μέλη. Εγγραφείτε δωρεάν και πείτε μας τι αναζητάτε: θα σας ενημερώσουμε πρώτους.',
   },
 };
 const W_RU: typeof W.en = {
@@ -48,8 +48,8 @@ const W_RU: typeof W.en = {
   note: 'Цены предложения по нашим текущим объектам, а не цены сделок — рассчитываются автоматически и обновляются постоянно. Жильё — с ценой и площадью; земля — с ценой и площадью участка. Можно цитировать со ссылкой «Источник: {brand}».',
   typesH: 'Что продаётся сейчас', munisH: 'Недвижимость по муниципалитетам', from: 'от', guideNote: 'Цены обновляются автоматически по нашим объектам.',
   allLink: 'Вся недвижимость на продажу в Халкидики', preH: 'Объекты до выхода на рынок', onRequest: 'Цена по запросу',
-  preNoneMember: 'Сейчас объектов до публикации нет. Оставьте запрос ниже — вы узнаете первыми.',
-  preNoneGuest: 'Объекты до публикации видят зарегистрированные участники. Войдите или зарегистрируйтесь бесплатно либо оставьте запрос ниже — мы сообщим вам первыми.',
+  preNoneMember: 'Сейчас объектов до публикации нет. Расскажите, что вы ищете, — вы узнаете первыми.',
+  preNoneGuest: 'Объекты до публикации видят зарегистрированные участники. Зарегистрируйтесь бесплатно и расскажите, что вы ищете, — мы сообщим вам первыми.',
 };
 const w = lang === 'ru' ? W_RU : (W as Record<string, typeof W.en>)[lang] ?? W.en;
 const eur = (n: number) => money(n, lang);
@@ -63,6 +63,7 @@ const muniFrom = kind === 'greece-guide'
 const typeFrom = kind === 'greece-guide'
   ? TYPE_GUIDE.map((t) => ({ ...t, from: fromPrice(items, t.keep) })).filter((t) => t.from > 0)
   : [];
+// texts no longer say «below»: the form opens from the page's one button (Sergei 2026-11-27)
 const pre = kind === 'prepublished' && member ? items.filter((p) => isPrePublished(p.attributes ?? {})) : [];
 const priceText = (p: SiteProperty) => (priceVisible(p.attributes ?? {}) ? eur(priceOf(p.attributes ?? {})) : w.onRequest);
 ---

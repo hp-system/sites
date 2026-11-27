@@ -406,11 +406,8 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
   @media (min-width: 1024px) {
     .cx .cx__h { font-weight: 300; }
     .cx .cx__h b { font-weight: inherit; }
-    .cx .cx__h--pair .cx__pair { display: block; }
-    .cx .cx__w2 { display: inline; }
-    .cx__pw { font-size: inherit; line-height: inherit; letter-spacing: inherit; }
-    .cx__pw + .cx__pl { display: inline; }
-    .cx__pl { display: block; }
+    /* «The» set once, two lines high, again (Sergei 2026-11-27 «The сделай как было одну большую»); each line whole */
+    .cx .cx__pl { white-space: nowrap; }
     .cx__rw { background: none; padding-block: 24px 72px; overflow: visible; }
     .cx__rw::after { display: none; }
     .cx__rail { height: auto; transform: none !important; will-change: auto; grid-template-areas: none; grid-template-rows: none;
@@ -431,18 +428,19 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
     .cx { position: relative; z-index: 1; padding: 0 0 80px; overflow: visible; }   /* the box rises out of it */
     /* the white box: behind the left column, rising 96 px over the line that ends the page top (the reference: the box
        over the photo's edge) */
-    .cx .cx__top::before { content: ""; grid-area: 1 / 1 / 5 / 2; align-self: stretch; margin: -96px 0 0 -56px; background: var(--paper); z-index: 0; }
-    .cx .cx__top { position: relative; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: 0; row-gap: 0;
+    .cx .cx__top::before { content: ""; grid-area: 1 / 1 / 5 / 2; align-self: stretch; margin: -96px 0 0 -56px; background: var(--paper);
+      border: 1px solid var(--paper-3); z-index: 0; }   /* a beige outline (Sergei 2026-11-27) */
+    .cx .cx__top { position: relative; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); column-gap: 0; row-gap: 0;
       grid-template-areas: "eb fig" "h fig" "p fig" "acts fig" "groups groups"; align-items: start; }
     .cx .cx__top > *, .cx .cx__lead > * { position: relative; z-index: 1; }
     .cx .cx__eyebrow { grid-area: eb; margin: -40px 56px 0 0; }
     .cx .cx__h { grid-area: h; margin: 18px 56px 0 0; font-size: var(--fs-s4); line-height: 1.12; }
     .cx .cx__p { grid-area: p; margin: 22px 56px 0 0; max-width: 60ch; }
-    .cx .cx__acts { grid-area: acts; justify-content: flex-start; margin: 32px 0 0; align-self: start; }
+    .cx .cx__acts { grid-area: acts; justify-content: flex-start; margin: 32px 0 56px; align-self: start; }   /* air under the button, inside the outline */
     .cx .cx__btn--ghost { background: var(--ink); color: #fff; }
     .cx .cx__btn--ghost:hover { background: var(--paper); color: var(--ink); }
-    .cx__fig { display: block; grid-area: fig; margin: 24px 0 0 32px; }
-    .cx__fig img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+    .cx__fig { display: block; grid-area: fig; align-self: center; margin: -48px 0 0 48px; }   /* lower, centred on the box (Sergei 2026-11-27) */
+    .cx__fig img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
     /* three centred paragraphs across the page column (Sergei 2026-11-27) */
     .cx__groups { grid-area: groups; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; margin-top: 80px; text-align: center; }
     .cx__gl { margin: 0 0 12px; color: var(--faint); }

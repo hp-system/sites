@@ -1456,6 +1456,9 @@ if (faqItems.length) {
   .ppt { position: relative; overflow: hidden; isolation: isolate; background: var(--paper); color: var(--ink);
          min-height: min(86vh, 860px); box-sizing: border-box; display: grid; place-items: center; text-align: center;
          padding-block: 72px; padding-inline: var(--gut); }
+  /* a hairline where the top ends, across the page column (Sergei 2026-11-27 «чтобы было видно, что шапка закончилась») */
+  .ppt::after { content: ""; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+                width: min(calc(100% - 2 * var(--gut)), calc(var(--max) - 2 * var(--gut))); height: 1px; background: var(--line); }
   .ppt__in { display: grid; justify-items: center; gap: var(--s4); max-width: 1180px; width: 100%; }
   .ppt__crumb { justify-content: center; }
   .ppt__h { margin: 0; max-width: 26ch; text-wrap: balance; }

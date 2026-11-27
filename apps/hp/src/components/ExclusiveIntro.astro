@@ -90,7 +90,17 @@ const ICONS = [
     </div>
     <div class="xi__time">
       <p>{tx.time}</p>
-      {cta && <a class="btn k-gild k-gild--dk" href={cta.href} data-ev="register:info">{cta.text}</a>}
+      {cta && (
+        <a class="btn k-gild k-gild--dk xi__join" href={cta.href} data-ev="register:info">
+          {/* the lock as on the home page's Secret Portfolio button (OffMarket.astro), Sergei 2026-11-27 (#374) */}
+          <svg class="xi__jl" width="14" height="18" viewBox="0 0 24 30" aria-hidden="true">
+            <path d="M6 13V8.5a6 6 0 0 1 12 0V13" fill="none" stroke="currentColor" stroke-width="2" />
+            <rect x="2.5" y="13" width="19" height="15" fill="none" stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="19.5" r="1.8" fill="currentColor" />
+          </svg>
+          {cta.text}
+        </a>
+      )}
     </div>
     </div>
   </div>
@@ -176,6 +186,8 @@ const ICONS = [
   .xi__time p { margin: 0; font-size: var(--fs-s1); font-weight: 300; line-height: 1.3; letter-spacing: -.016em; }
   /* the home band's button: .btn with the gilded edge on the dark ground */
   .xi__time .btn { justify-self: start; }
+  .xi__join { display: inline-flex; align-items: center; gap: 10px; }
+  .xi__jl { flex: none; width: 14px; height: 18px; margin-top: -3px; }
   /* the gilded edge turns when the pointer is anywhere over this band, not only over the button (Sergei 2026-11-16) */
   .xi__row:hover .k-gild { opacity: 1; color: var(--gold-dk-hover); --gilda: 675deg; }
   @media (prefers-reduced-motion: reduce) { .xi__row:hover .k-gild { --gilda: 315deg; } }

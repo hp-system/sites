@@ -82,7 +82,9 @@ try {
     }
     if (!targets[path]) { check(`map target ${path}`, false, 'not 200'); continue; }
     // a page rebuilt on its own brief merged the old sub-sections: an old #anchor lands at the top of the page (accepted)
-    if (anchor && !targets[path].includes('class="pn') && !targets[path].includes(`id="${anchor}"`)) check(`map anchor ${r.to}`, false, `from ${r.from}`);
+    // pages built from their own brief (posts «pn», or since #365 the accordion «sa») no longer carry the old sections'
+    // ids: the old address lands on the page, as before
+    if (anchor && !targets[path].includes('class="pn') && !targets[path].includes('class="sa"') && !targets[path].includes(`id="${anchor}"`)) check(`map anchor ${r.to}`, false, `from ${r.from}`);
   }
   check('services.json: targets 200 + anchors exist', Object.values(targets).every(Boolean), `${Object.keys(targets).length} pages`);
 

@@ -27,7 +27,8 @@ interface Props { items: Collection[]; lang: Lang }
 const { items, lang } = Astro.props;
 const pages = Math.ceil(items.length / 4);
 ---
-<section class="section hz hz--beige colls-sec" aria-labelledby="coll-h">
+{/* white, as the same row on the other pages (PageBlocks; Sergei 2026-11-27, was hz--beige) */}
+<section class="section hz colls-sec" aria-labelledby="coll-h">
   <div class="wrap">
     {/* #101 (George 2026-11-02): eight tiles — the four ready-made searches and every
         type of property — in a row of four that turns a page every 5 s on desktop

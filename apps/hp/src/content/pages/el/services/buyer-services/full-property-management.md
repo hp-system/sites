@@ -41,6 +41,9 @@ form:
   source: 'Services: full property management'
   title: Ρωτήστε μας για τη διαχείριση του ακινήτου σας
   message: true
+form_top: true
+# Sergei 2026-11-27: the Pre-published top (white, centred, one button)
+form_pop: true
 ---
 
 Είστε ιδιοκτήτης ακινήτου στη Χαλκιδική και ψάχνετε έναν αξιόπιστο συνεργάτη να το διαχειρίζεται για εσάς; Η Halkidiki Properties είναι αυτό που χρειάζεστε.

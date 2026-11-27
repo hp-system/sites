@@ -62,6 +62,8 @@ form:
   source: Sell
   title: Tell us about your property
   message: true
+# Sergei 2026-11-27: the Pre-published top (white, centred, one button)
+form_pop: true
 ---
 
 Our experienced agents and our technology are here to help you sell your property. Choose how you want to work with us, or send us the details of your property and an adviser will call you.

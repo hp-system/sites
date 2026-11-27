@@ -649,21 +649,26 @@ if (faqItems.length) {
             ))}
             <span aria-hidden="true">·</span><span aria-current="page">{short}</span>
           </nav>
-          <h1 id="ppt-h" class="t-display info-h1 ppt__h">{d.h1}</h1>
-          {/* Sergei 2026-11-27: the lead in two lines, one sentence each */}
-          {d.lead && <p class="ppt__lead">{d.lead.split(/(?<=[.!?])\s+/).map((x) => <span>{x}</span>)}</p>}
+          <h1 id="ppt-h" class="t-display info-h1 ppt__h">{fresh?.h1 ?? d.h1}</h1>
+          {/* Sergei 2026-11-27: the lead in lines, one sentence each; a page with its own brief (Sell) shows the brief's intro */}
+          {fresh ? <div class="ppt__lead ppt__lead--spec"><SpecText page={fresh} part="intro" lang={lang} /></div>
+                 : d.lead && <p class="ppt__lead">{d.lead.split(/(?<=[.!?])\s+/).map((x) => <span>{x}</span>)}</p>}
           {/* the list shows only when there is something in it (a member, and the CRM marks properties); the «none right
               now» note is not shown (Sergei 2026-11-27) */}
           {d.widget && memberToken && items.some((p) => isPrePublished(p.attributes ?? {})) && (
             <div class="ppt__w"><InfoWidget kind={d.widget} items={items} member lang={lang} /></div>
           )}
           <p class="ppt__cta">
-            {memberToken
+            {d.form_panel ? (
+              /* Add your property: the button leads to the panel's property form (a guest: the sign-in window, then there) */
+              <a class="k-act k-gild" href={memberToken ? `${prefix(lang)}/panel/submit` : `${prefix(lang)}/login?next=${encodeURIComponent(`${prefix(lang)}/panel/submit`)}`}
+                 data-ev="register:info">{t(lang, 'sb.start')}</a>
+            ) : memberToken
               ? <button type="button" class="k-act k-gild" data-ppop-open data-ev="lead:form_open">{d.form.title || t(lang, 'form.title')}</button>
               : <a class="k-act k-gild" href={`${prefix(lang)}/login?next=${encodeURIComponent(`${url}?form=1`)}`} rel="nofollow" data-ev="register:info">{d.form.title || t(lang, 'form.title')}</a>}
           </p>
         </div>
-        {memberToken && (
+        {memberToken && !d.form_panel && (
           <dialog class="ppop" id="ppop" aria-labelledby="ppop-t" data-auto={Astro.url.searchParams.get('form') === '1' ? '1' : undefined}>
             <div class="ppop__hd">
               <p class="ppop__t" id="ppop-t">{d.form.title || t(lang, 'form.title')}</p>
@@ -684,7 +689,7 @@ if (faqItems.length) {
         )}
       </section>
     )}
-    {d.form_top && d.form && d.form_split && d.form_panel && (
+    {d.form_top && d.form && d.form_split && d.form_panel && !d.form_pop && (
       /* Add your property as ONE block (Sergei 2026-11-23 «сделай этот блок единым, центрируй всё»): the beige ground, one
          centred column — crumbs, H1, lead, «not published», the short-form line, the button to the panel's form (a guest:
          the sign-in window, then there), phone and WhatsApp */
@@ -742,7 +747,7 @@ if (faqItems.length) {
         </div>
       </section>
     )}
-    {d.form_top && d.form && !d.form_split && (
+    {d.form_top && d.form && !d.form_split && !d.form_pop && (
       /* Construction (Sergei 2026-11-19 «убери сверху картинку, сделай форму и заголовок и кнопки и маленький текст
          сверху»): one dark band opens the page — the crumbs, the H1, George's intro and the phone on the left, the form
          on the right; no top picture, no form band at the bottom */
@@ -1456,6 +1461,8 @@ if (faqItems.length) {
   .ppt__h { margin: 0; max-width: 26ch; text-wrap: balance; }
   .ppt__lead { margin: 0; font-size: var(--fs-s0); line-height: 1.6; color: var(--ink-2); }
   .ppt__lead span { display: block; }
+  .ppt__lead--spec { max-width: 96ch; }
+  .ppt__lead--spec :global(p) { margin: 0 0 var(--s2); text-wrap: balance; }
   .ppt__w { max-width: 62ch; color: var(--muted); }
   .ppt__w :global(*) { text-align: center; }
   .ppt__cta { margin: var(--s3) 0 0; }

@@ -40,6 +40,9 @@ form:
   source: 'Services: full property management'
   title: Ask about managing your property
   message: true
+form_top: true
+# Sergei 2026-11-27: the Pre-published top (white, centred, one button)
+form_pop: true
 ---
 
 Are you an owner of a property in Halkidiki, Greece, and are you looking for a reliable partner to manage it for you? Look no further than Halkidiki Properties.

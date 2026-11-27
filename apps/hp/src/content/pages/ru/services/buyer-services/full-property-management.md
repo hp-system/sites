@@ -41,6 +41,9 @@ form:
   source: 'Services: full property management'
   title: Спросите об управлении вашей недвижимостью
   message: true
+form_top: true
+# Sergei 2026-11-27: the Pre-published top (white, centred, one button)
+form_pop: true
 ---
 
 Вы владеете недвижимостью в Халкидиках, Греция, и ищете надёжного партнёра, который будет ею управлять? Вам не нужно искать дальше — это Halkidiki Properties.

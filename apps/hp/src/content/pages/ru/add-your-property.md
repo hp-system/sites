@@ -38,6 +38,8 @@ look: wave1
 form_top: true
 form_split: true
 form_panel: true
+# Sergei 2026-11-27: the Pre-published top (white, centred, one button)
+form_pop: true
 ---
 
 ## Как это работает

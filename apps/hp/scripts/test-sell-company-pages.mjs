@@ -22,14 +22,16 @@ try {
   const pages = {};
   // batch 1 (D-20261109-SS-4): Sell and the exclusive page carry the new texts — content pages, so
   // Article + BreadcrumbList + FAQPage (George's README rule 11), no longer CollectionPage / Service.
-  pages['/en/sell'] = await checkPage('/en/sell', { types: ['Article', 'FAQPage'], form: true });
+  // #375 (Sergei 2026-11-27): the form opens in a popup from the top's one button, after sign-in for a guest — a guest's
+  // page has no form in its HTML
+  pages['/en/sell'] = await checkPage('/en/sell', { types: ['Article', 'FAQPage'], form: false });
   // D-20261109-SS-5: one Sell page per language — the subpages and the exclusive page 301 to /en/sell.
   for (const p of [...SELL, ...SELL_FORM].filter((x) => movedTo(x))) await checkRedirect(p, movedTo(p));
   for (const p of SELL.filter((x) => !movedTo(x))) pages[p] = await checkPage(p, { types: [p.includes('future') ? 'WebPage' : 'Service'] });
   // /en/add-your-property has no form since 2026-11-23 (Sergei): one button to the panel's «add a property» (checked below)
   for (const p of SELL_FORM.filter((x) => !movedTo(x))) pages[p] = await checkPage(p, { types: [p === '/en/work-with-us-exclusively' ? 'Article' : p.includes('why-') ? 'WebPage' : 'Service'], form: p !== '/en/add-your-property' });
   const ayp = pages['/en/add-your-property'];
-  if (ayp) check('/en/add-your-property: one button to the panel (guest → sign-in with the way back)', ayp.includes('class="one__b"') && ayp.includes('href="/en/login?next=%2Fen%2Fpanel%2Fsubmit"') && !/class="iform__f"/.test(ayp), 'button');
+  if (ayp) check('/en/add-your-property: one button to the panel (guest → sign-in with the way back)', ayp.includes('class="ppt"') && ayp.includes('href="/en/login?next=%2Fen%2Fpanel%2Fsubmit"') && !/class="iform__f"/.test(ayp), 'button');
   for (const p of ABOUT) pages[p] = await checkPage(p, { types: ['AboutPage'] });
   pages['/en/our-partners'] = await checkPage('/en/our-partners', { types: ['CollectionPage'] });
   pages['/en/careers'] = await checkPage('/en/careers', { types: ['CollectionPage'] });
@@ -53,8 +55,9 @@ try {
   // #105 desktop redesign, wave 1 (approved by George 2026-11-02): the Sell page only.
   check('/en/sell wave 1 layout', sell.includes('class="info w1"'), 'main.w1');
   // Sergei 2026-11-19: the top is the Contact box (title and intro on the light half, the form on the dark half); no top picture
-  const top = sell.match(/<section class="ctb ctb--top"[\s\S]*?<\/section>/)?.[0] ?? '';
-  check('/en/sell top box: H1, intro and the form', /<h1 id="ctb-h"/.test(top) && /class="iform iform--w1/.test(top), top ? 'ctb' : 'missing');
+  // #375 (2026-11-27): the Pre-published top — white, centred, the H1, the brief's intro, one button
+  const top = sell.match(/<section class="ppt"[\s\S]*?<\/section>/)?.[0] ?? '';
+  check('/en/sell top: H1, intro and the one button', /<h1 id="ppt-h"/.test(top) && /class="ppt__lead/.test(top) && /class="ppt__cta"/.test(top), top ? 'ppt' : 'missing');
   check('/en/sell no top picture', !/<picture class="w1-top__img/.test(sell), 'none');
   // Since 2026-11-10 the three Sell cards are the SEO sections that carry their link (SectionCards: the
   // section H2 + text + the link with its spec anchor), in the brief's H2 order.
@@ -70,7 +73,7 @@ try {
   const area = rel.includes('id="w1Area"');
   check('/en/sell area row (when listed): municipality guides + H2', !area || (/>Property for sale in Halkidiki<\/h2>/.test(rel) && /href="\/en\/property-for-sale\/(kassandra|sithonia|aristotelis|nea-propontida|polygyros)"/.test(rel)), area ? 'about the area' : 'no area cards in the stub');
   check('/en/sell area photos watermarked', [...rel.matchAll(/<img [^>]*src="(https?:[^"]+)"/g)].every((m) => /_(400|800|1920)w\./.test(m[1])), 'marked');
-  check('/en/sell dark form: wave 1, picker, consent', /class="iform iform--w1/.test(sell) && /data-w1/.test(sell) && sell.includes('data-cc="GR"') && sell.includes('name="first"') && sell.includes('name="last"'), 'form');
+  check('/en/sell button: a guest signs in and comes back to the form (?form=1)', sell.includes('href="/en/login?next=%2Fen%2Fsell%3Fform%3D1"'), 'login → form');
   // Sell is an own page (P24): its H2 outline is the brief's 7 sections; «Get to know how we sell.» and «Related»
   // stay as design headings (p[data-h]) with the same look (SEO audit 2026-11-10).
   check('/en/sell «Get to know how we sell.» + Related as design headings, not H2', sell.includes('Get to know how we sell.')

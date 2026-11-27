@@ -30,11 +30,10 @@ import { t, prefix, type Lang } from '../lib/i18n';
 import { contentUrl } from '../lib/pages';
 import { pageExists } from '../lib/pages';
 import { company } from '../lib/company';
-import { clean, cleanSrcSet } from '../lib/photos';
+import { clean } from '../lib/photos';
 // Sergei 2026-11-27 (a reference he liked: a wide photo on top, a white box rising into it, the text and a dark
 // button, a photo beside it): our own work — Villa Natalia's pool for the band, a modern house by its pool beside the
 // text. Clean files (the logo goes only on property cards and the property page, #326).
-const BAND = 'https://media.onsea.gr/properties/ums_7010/detached-house-pool-halkidiki-2974736545.jpg';
 const SIDE = 'https://media.onsea.gr/properties/ums_7985/detached-house-facade-halkidiki-2982420238.jpg';
 // the seven points in three groups, names only; Design to keys, Our own team and You choose the land are left out:
 // the paragraph and the heading already say them (Sergei 2026-11-27)
@@ -99,9 +98,7 @@ const ROW = ['s1', 'c1', 'c2', 'c3', 'c4', 'c5', 's2', 's3', 'c6', 's4'];
 const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await company()).phoneHref;   // #262: each language's own URL
 ---
 <section class="cx" aria-labelledby="cx-h">
-  <div class="cx__band" aria-hidden="true">
-    <img src={clean(BAND, 800)} srcset={cleanSrcSet(BAND)} sizes="100vw" alt="" width="1920" height="1280" loading="lazy" decoding="async" />
-  </div>
+  {/* the wide photo band is off (Sergei 2026-11-27: the page's own top is the big header above this block) */}
   <div class="wrap">
     {/* #101 desktop (George 2026-11-02): left — the text and the four facts turning
         every 3 s (dashes); right — the six things we take on as the Company page
@@ -427,23 +424,19 @@ const contactHref = pageExists('contact') ? contentUrl('contact', lang) : (await
   /* ── Sergei 2026-11-27, the reference layout (desktop): a wide photo, a white box rising into it with the label, the
         heading, the paragraph and the buttons, a photo beside the box, then the three groups of names. Phones: the band,
         the photo and the groups stay hidden; they keep their blocks. ── */
-  .cx__band, .cx__fig, .cx__groups { display: none; }
+  .cx__fig, .cx__groups { display: none; }
   @media (min-width: 1024px) {
-    .cx { padding: 0 0 80px; }
-    .cx__band { display: block; height: min(52vh, 520px); overflow: hidden; }
-    .cx__band img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; display: block; }
+    .cx { padding: 24px 0 80px; }
     .cx .cx__top { position: relative; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: 0; row-gap: 0;
       grid-template-areas: "eb fig" "h fig" "p fig" "acts fig" "groups groups"; align-items: start; }
-    /* the white box: behind the left column, rising 96 px into the photo */
-    .cx .cx__top::before { content: ""; grid-area: 1 / 1 / 5 / 2; align-self: stretch; margin: -96px 0 0 -56px; background: var(--paper); z-index: 0; }
     .cx .cx__top > *, .cx .cx__lead > * { position: relative; z-index: 1; }
-    .cx .cx__eyebrow { grid-area: eb; margin: -40px 56px 0 0; }
+    .cx .cx__eyebrow { grid-area: eb; margin: 0 56px 0 0; }
     .cx .cx__h { grid-area: h; margin: 18px 56px 0 0; font-size: var(--fs-s4); line-height: 1.12; }
     .cx .cx__p { grid-area: p; margin: 22px 56px 0 0; max-width: 60ch; }
     .cx .cx__acts { grid-area: acts; justify-content: flex-start; margin: 32px 0 0; align-self: start; }
     .cx .cx__btn--ghost { background: var(--ink); color: #fff; }
     .cx .cx__btn--ghost:hover { background: var(--paper); color: var(--ink); }
-    .cx__fig { display: block; grid-area: fig; margin: 24px 0 0 32px; }
+    .cx__fig { display: block; grid-area: fig; margin: 0 0 0 32px; }
     .cx__fig img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
     .cx__groups { grid-area: groups; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 72px; }
     .cx__gl { margin: 0 0 12px; color: var(--faint); }
